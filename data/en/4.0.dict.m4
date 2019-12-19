@@ -314,14 +314,15 @@ nonCAP.zzz: ZZZ-;
 % The use of COa here needs to be carefully re-examined;
 %   it is used much too freely.
 % COa+ is used to block links to COd-
-% Xc+ & Ic+: connect to imperatives (infinitive verbs): "Anyhow, don't"
+% Xc+ & Ei+: connect to imperatives (infinitive verbs): "Anyhow, don't"
+% Xc+ & S**i+: connect to imperatives (infinitive verbs): "John, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
 %       This gets a fairly stiff cost if the comma is missing.
 % Wc- & Xc+ & Wq+: "O Mary, what have I done?"
 % Wc- & MG+: "O Yahweh of Armies, how long will you not have mercy?"
 <directive-opener>:
   {[[Wa-]]} &
-    ((Xc+ & Ic+) or
+    ((Xc+ & (S**i+ or Ei+)) or
     ({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
     ({Xd-} & {OH-} & (Xc+ or [[()]]) & [dCOa+]));
 
@@ -2779,7 +2780,7 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % {<verb-wall> or VJrpi-}: "I aim to help and also to do something"
 % SIp+ & N+: "Do you not want to know?"
 do.v:
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or ({Ic-} & Wi-)) & <vc-do>)
+  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or Wi-) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
@@ -2833,12 +2834,12 @@ better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
 % <verb-wall>: "I know he didn't", "I know they don't"
 % Wi-: "Don't!"
-% Ic- & Wi-: "In total, dont!"
+% Ei- & Wi-: "In total, don't!"
 % Wi- & I*d+: "Don't do that!"
 don't don’t:
   (((<verb-rq-aux> & (SIp+ or SFIp+) & I*d+)
     or ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) & (I*d+ or <verb-wall> or [[()]]))
-  or ({@E-} & {Ic-} & Wi- & {I*d+});
+  or (({@E-} or (Ei- & Xd-) or (S**i- & Xd-)) & Wi- & {I*d+});
 
 doesn't doesn’t:
   ((<verb-rq-aux> & (SIs+ or SFIs+) & I*d+) or <verb-x-s>)
@@ -2850,7 +2851,7 @@ didn't.v-d didn’t.v-d:
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
-  ({{Ic-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
+  ({{Ei-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]]));
 
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
@@ -3144,11 +3145,10 @@ am.v:
 % "Show me my notes and be nice about it."
 % ({@E-} & I- & B- & O+):
 %   "What are the chances that Einstein could really be a genius?"
-% Icx-: the x prevents link to does.v: "*It does be correct"
 % Ix- & <verb-wall>: "He is as smart as I expected him to be."
 % Ix- & <vc-be>: "I'm sure he'll still be popular."
 be.v:
-  ({@E-} & (({Icx-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
+  ({@E-} & ((Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
   or ({@E-} & Ix- & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
@@ -6317,8 +6317,9 @@ letting.g: (<vc-let> & <verb-ge>) or <verb-ge-d>;
 letting.v: <verb-pg> & <vc-let>;
 
 % Abbreviation for "let us"
-% Is there any reason to create a definition such as 's.n: Ox-?
-let's let’s: ({Ic-} & Wi- & {N+} & I+) or ({Ic-} & Wi- & N+);
+% This seems to never be used, becuase 's.#us below expands
+% Ei- & Wi-: "Oh, let's!"
+let's let’s: ({Ei-} & Wi- & {N+} & I+) or ({Ei-} & Wi- & N+);
 
 <vc-watch>:
   ((O+ or <b-minus>) & <mv-coord> & {I*j+ or Pg+}) or
@@ -6850,7 +6851,7 @@ was.w-d:
 been.w: {@E-} & PPf- & <vc-vote> & <verb-wall>;
 
 be.w:
-  {@E-} & (Ix- or ({Ic-} & Wi- & <verb-wall>) or [S*x-]) & <vc-vote>;
+  {@E-} & (Ix- or ({Ei-} & Wi- & <verb-wall>) or [S*x-]) & <vc-vote>;
 
 % S- & Vv+ & Xc+ & <embed-verb>:  "The answer being yes, ..."
 % S- & Xd- & MVg- & Vv+: "..., the answer being yes"
@@ -7898,7 +7899,6 @@ who:
 % Sp+: "what are the answers?"
 % Ww-: Dr. Who: "What!"
 % {EL+} & Ww-: "What else?" "What the fuck?"
-% Xc+ & Ic+: "What, were you expecting Santa?"
 % Wn- & O+: "What a jerk!"
 % QI-: "I'll tell you what", "Say what?"
 % Jw-: "To what do you owe your success?"
@@ -7916,8 +7916,7 @@ what:
   or (D+ & JQ-)
   or Jw-
   or [QI-]0.5
-  or dSJl+ or dSJr-
-  or (Xc+ & Ic+);
+  or dSJl+ or dSJr-;
 
 % [QI-]: "I do not know which"
 % (R+ & B*w+ & (QJ+ or QJ-)): "... which to pick and which to leave behind."
@@ -10218,7 +10217,7 @@ maybe.r:
 not.intj is_too is_not is_so unh_unh: Wa-;
 
 %suppress: DUP-BASE (for seriously.ij)
-% Openers to directives, commands (Ic+ connection to infinitives)
+% Openers to directives, commands (Xc+ & Ei+ connection to infinitives)
 % or single-word interjections, exclamations.
 % These are semantically important, so they've got to parse!
 % Wa- & Wa+: "Oh my God"
@@ -10287,7 +10286,7 @@ er err.ij errr um.ij umm
 anyways honey.ij man.ij baby.ij hush.ij:
   <ordinary-adj>
   or <adj-phone>
-  or ({{Ic-} & Wi-} & {{Xd-} & Xc+} & Ic+)
+  or ({{Ei-} & Wi-} & {{Xd-} & Xc+} & Ei+)
   or <directive-opener>
   or OH+
   or (({A-} or {E-} or {EE-}) & Wa-);
@@ -10310,7 +10309,7 @@ bye.ij goodbye.ij:
   OH+ or (Wa- & {Wa+});
 
 % Openers to directives, commands
-% Ic+: connection to infinitive imperatives: "on arrival, do it!"
+% Ei+: connection to infinitive imperatives: "on arrival, do it!"
 % E+: split infinitives, e.g. "you should instead go home"
 %     "It will, more often than not, go by train."
 prima_facie before_long
@@ -10428,7 +10427,7 @@ please.e:
   or <advcl-verb> or [[EA+]]);
 
 % polite command verb
-please.w thank_you: {Ic-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
+please.w thank_you: {Ei-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
 
 
 % ==========================================================
@@ -10861,11 +10860,12 @@ as.#that: [[that.j-c]0.05]colloquial;
 
 % Poetic contractions; Shakesperian contractions
 % The 's abbreviations are given a heavy cost to avoid conflict with possessives
+% The 't abbreviations are given a heavy cost to evade bad contractions like "don't".
 'r.#our ’r.#our: [[our]0.5]colloquial;
 % 's.#his ’s.#his: [[his]1.5]colloquial;
 % 's.#shall ’s.#shall: [[shall.v]1.5]colloquial;
 's.#us ’s.#us: [[us]1.5]colloquial;
-'t.#it ’t.#it: [it]colloquial;
+% 't.#it ’t.#it: [[it]1.5]colloquial;
 art.#are: [[are.v]0.2]colloquial;
 count'nance.#countenance count’nance.#countenance:
  [countenance.v]colloquial or [countenance.s]colloquial;
@@ -11016,7 +11016,12 @@ ample.#amply: [[amply]0.5]colloquial;
     or U-);
 
 <UNKNOWN-WORD>.v <QUOTED-WORD>.v:
-  {@E-} & ((Sp- & <verb-wall>) or (RS- & Bp-) or (I- & <verb-wall>) or ({Ic-} & Wa- & <verb-wall>)) & {O+ or <b-minus>} & <mv-coord>;
+  {@E-} & (
+    (Sp- & <verb-wall>) or
+    (RS- & Bp-) or
+    (I- & <verb-wall>) or
+    ({Ei-} & Wa- & <verb-wall>))
+  & {O+ or <b-minus>} & <mv-coord>;
 
 % Add a miniscule cost, so that the noun-form is preferred, when
 % available.
