@@ -670,7 +670,6 @@ brush.s
 brutality.s
 brute.n
 bubble.n
-buccaneer.n
 bucketful.n
 bucket.n
 buckle.n
@@ -1103,7 +1102,6 @@ charade.n
 chargeback.n
 charger.n
 charge.s
-charioteer.n
 chariot.n
 charity.s
 charlady.n
@@ -3291,7 +3289,6 @@ gavotte.n
 gay.n
 gazelle.n
 gaze.n
-gazetteer.n
 gazette.n
 gearbox.n
 gear.s
@@ -5137,7 +5134,6 @@ motto.n
 moulding.n
 mould.n
 mound.n
-mountaineer.n
 mountain.n
 mount.n
 mourner.n
@@ -5191,7 +5187,6 @@ museum.n
 mushroom.s
 musical.n
 musician.n
-musketeer.n
 musket.n
 muskrat.n
 mussel.n
@@ -5204,7 +5199,6 @@ mutation.s
 mute.n
 mutex.n
 mutilation.s
-mutineer.n
 mutiny.s
 mutterer.n
 mutt.n
@@ -5643,7 +5637,6 @@ peep.n
 peepshow.n
 peerage.n
 peeress.n
-peer.n
 pee.s
 peg.n
 pekinese.s
@@ -5840,7 +5833,6 @@ pin.n
 pinnacle.n
 pinpoint.n
 pinprick.n
-pioneer.n
 pipedream.n
 pipeful.n
 pipeline.n
@@ -6194,7 +6186,6 @@ priory.n
 prism.n
 prisoner.n
 prison.s
-privateer.n
 private.n
 privation.n
 privatization.s
@@ -6350,7 +6341,6 @@ punster.n
 punt.n
 pupil.n
 pup.n
-puppeteer.n
 puppet.n
 puppy.n
 purchaser.n
@@ -6414,8 +6404,6 @@ quatrain.n
 quatro.s
 quaver.n
 quay.n
-queen.n
-queer.n
 query.n
 quesadilla.n
 questioner.n
@@ -6453,7 +6441,6 @@ raccoon.n
 racecourse.n
 racer.n
 race.s
-racketeer.n
 racket.s
 rack.n
 raconteur.n
@@ -7277,7 +7264,6 @@ seedbed.n
 seedling.n
 seed.n
 seeker.n
-seer.n
 seesaw.n
 segfault.n
 segmentation.s
@@ -7514,7 +7500,6 @@ sieve.n
 sifter.n
 sigh.n
 sight.s
-sightseer.n
 sigma.s
 signal.n
 signatory.n
@@ -9192,7 +9177,6 @@ voltage.s
 volt.n
 volume.s
 voluntary.n
-volunteer.n
 vortex.n
 voter.n
 voucher.n
