@@ -322,7 +322,7 @@ nonCAP.zzz: ZZZ-;
 % Wc- & MG+: "O Yahweh of Armies, how long will you not have mercy?"
 <directive-opener>:
   {[[Wa-]]} &
-    ((Xc+ & (S**i+ or EI+)) or
+    ((Xc+ & EI+) or
     ({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
     ({Xd-} & {OH-} & (Xc+ or [[()]]) & [dCOa+]));
 
@@ -2493,7 +2493,7 @@ per "/.per": Us+ & Mp-;
 %       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]) & {@E-})
-                      or ({[hCO-]} & Wi- & {NM+}));
+                      or (({[hCO-]} or EI-) & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
@@ -10116,6 +10116,7 @@ certainly possibly probably importantly remarkably interestingly:
   or (Xd- & Xc+ & E+)
   or ({Xd- & Xc+} & <adv-as>)
   or ({Xc+ & {Xd-}} & dCO+)
+  or (Xc+ & EI+)
   or EBm-;
 
 % These are taken from words.adv.2 and allowed EB- when separated by
@@ -10365,11 +10366,18 @@ just.e:
 
 meantime.e secondly thirdly
 in_brief in_short in_sum in_essence:
-({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & dCO+);
-furthermore: ({Xd- & Xc+} & E+) or ({Xc+ & {Xd-}} & dCO+) or EB-;
+  ({Xd- & Xc+} & E+) or
+  ({Xc+ & {Xd-}} & dCO+) or
+  (Xc+ & EI+);
+furthermore:
+  ({Xd- & Xc+} & E+) or
+  ({Xc+ & {Xd-}} & dCO+) or
+  (Xc+ & EI+) or
+  EB-;
 mainly primarily:
   E+
   or ({Xc+ & {Xd-}} & dCO+)
+  or (Xc+ & EI+)
   or EB-
   or <comp-prep>;
 
