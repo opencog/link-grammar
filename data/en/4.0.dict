@@ -1910,7 +1910,7 @@ enough.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or ({@E-} & Dm+);
 
 % Wi-: "Enough rough-housing! Enough!"
 % S**i- & Wi-: John, enough!
-enough.ij: {EI- or S**i-} & Wi- & {Pg+};
+enough.ij: {Xd- & (EI- or S**i-)} & Wi- & {Pg+};
 
 not_enough:
   (OFd+ & Dm+)
@@ -2489,7 +2489,7 @@ per "/.per": Us+ & Mp-;
   or <verb-manner>;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
-% S**i- & Wi-: "John, stop that!"
+% S**i- & Wi-: "John, stop that!"; the comma is mandatory.
 % EI- & Wi-: "Hey, stop that!"
 % CO- & Wi-: "Finally, move it back".
 % [CO-]: cost because <verb-pl,i> & O+ occurs in many verbs, and
@@ -2502,10 +2502,10 @@ per "/.per": Us+ & Mp-;
 %       I want the wall, e.g. for "Did you see in which room?"
 %       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
-<verb-co>:   {@E-} & {EI- or S**i-} & Wi-;
+<verb-co>:   {@E-} & {Xd- & (EI- or S**i-)} & Wi-;
 <verb-sic>:  {@E-} & Wi- & Xc+ & SI*i+ & {Xc+};
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
-                      ({EI- or S**i- or [hCO-]} & Wi- & {NM+}) or
+                      ({Xd- & (EI- or S**i- or [hCO-])} & Wi- & {NM+}) or
                       (Wi- & Xc+ & SI*i+ & {Xc+})
                      ) & {@E-};
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
