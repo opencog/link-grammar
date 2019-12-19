@@ -6205,8 +6205,8 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
   (((O+ & {O*n+ or K+}) or <b-minus>)
      & <mv-coord> & {TH+ or RSe+ or Zs- or <too-verb> or QI+ or BW-})
   or ({O+ & <mv-coord>} & <embed-verb>)
-  or ({O+} & OF+)
-  or (Ox+ & Xc+ & SI+ & {Xc+ & OF+})
+  or ({O+ & <mv-coord>} & OF+ & {Xc+ & SI+})
+  or (Ox+ & {<mv-coord>} & Xc+ & SI+ & {Xc+ & OF+})
   or [()]0.3
   or (QI+ & {MV+})
   or ([[@MV+ & {O*n+} & <mv-coord>]]);
@@ -10595,7 +10595,8 @@ changequote dnl
 % ,.j
 % Comma as a form of a conjunction (thus the .j subscript).
 % This is given a very mild cost, so that other uses of comma can take
-% precedence, if possible.
+% precedence, if possible. XXX FIXME: Disallow use of comma as a
+% conjunction unless there's and/or occuring later.
 %
 % Comma can conjoin nouns only if used in a list of 3 or more items:
 % "This, that and the other thing"
