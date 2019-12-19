@@ -75,7 +75,6 @@ action.s
 activism.n
 activity.s
 act.n
-actor.n
 actress.n-f
 actuality.s
 actuator.n
@@ -99,13 +98,11 @@ adhesion.s
 adhesive.s
 adjective.n
 adjournment.n
-adjudicator.n
 adjunct.n
 adjuster.n
 adjustment.s
 adjutant.n
 administration.s
-administrator.n
 admiral.n
 admiralty.n
 admirer.n
@@ -172,7 +169,6 @@ aggression.s
 aggressor.n
 agidigbo.s
 agitation.s
-agitator.n
 agnostic.n
 agonist.n
 agony.s
@@ -284,7 +280,6 @@ analogy.s
 analysis.s
 analyst.n
 anapaest.n
-ancestor.n
 ancestry.n
 anchorage.n
 anchorite.n
@@ -300,7 +295,6 @@ angler.n
 anglicism.n
 angora.s
 animal.n
-animator.n
 anime.s
 animosity.s
 anise.n
@@ -404,7 +398,6 @@ arachnid.n
 arbiter.n
 arbitrager.n
 arbitration.s
-arbitrator.n
 arbour.n
 arcade.n
 archaism.n
@@ -535,7 +528,6 @@ audio.n
 audition.s
 audit.n
 auditorium.n
-auditor.n
 augmentation.s
 augury.n
 auntie.n-f
@@ -572,7 +564,6 @@ avenue.n
 average.n
 aversion.s
 aviary.n
-aviator.n
 avocado.s
 avocation.n
 avowal.s
@@ -620,10 +611,8 @@ edict.n
 edifice.n
 edition.n
 editorial.n
-editor.n
 ed.n
 education.s
-educator.n
 eel.n
 effect.s
 efficiency.s
@@ -646,7 +635,6 @@ elbow.n
 elder.n
 election.s
 electorate.n
-elector.n
 electrocardiogram.n
 electrocardiograph.n
 electrocution.s
@@ -880,7 +868,6 @@ executant.n
 executioner.n
 execution.s
 executive.n
-executor.n
 exegesis.n
 exemplification.s
 exemption.n
@@ -890,7 +877,6 @@ exhaust.s
 exhibitioner.n
 exhibition.s
 exhibit.n
-exhibitor.n
 exhortation.s
 exigency.n
 exile.s
@@ -987,7 +973,6 @@ ill.s
 illumination.s
 illusion.s
 illustration.s
-illustrator.n
 image.n
 imagination.s
 imam.n
@@ -995,7 +980,6 @@ imbalance.s
 imbecile.n
 imbroglio.n
 imitation.s
-imitator.n
 immensity.s
 immersion.s
 immigrant.n
@@ -1008,7 +992,6 @@ impeachment.s
 impediment.n
 imperfection.n
 impersonation.s
-impersonator.n
 impertinence.s
 implementation.s
 implement.n
@@ -1020,7 +1003,6 @@ importer.n
 import.n
 imposition.s
 impossibility.s
-impostor.n
 impresario.n
 imprimatur.n
 imprint.n
@@ -1115,7 +1097,6 @@ ingot.n
 ingredient.n
 inhabitant.n
 inheritance.s
-inheritor.n
 inhibition.s
 inhibitor.n
 iniquity.s
@@ -1139,7 +1120,6 @@ inning.n
 innkeeper.n
 inn.n
 innovation.s
-innovator.n
 innuendo.s
 inoculation.s
 input.s
@@ -1147,7 +1127,6 @@ inquest.n
 inquirer.n
 inquiry.s
 inquisition.s
-inquisitor.n
 inroad.n
 inscription.n
 insect.n
@@ -1167,12 +1146,10 @@ installment.n
 instalment.n
 instance.n
 instep.n
-instigator.n
 instinct.s
 institute.n
 institution.n
 instruction.s
-instructor.n
 instrument.n
 insubordination.s
 insulator.n
@@ -1192,7 +1169,6 @@ intensity.n
 intention.s
 interaction.s
 interception.s
-interceptor.n
 intercession.s
 interchange.s
 intercom.n
@@ -1202,7 +1178,6 @@ interest.s
 interface.n
 interior.n
 interjection.n
-interlocutor.n
 interloper.n
 interlude.n
 intermarriage.s
@@ -1224,7 +1199,6 @@ interregnum.n
 interrelation.s
 interrelationship.s
 interrogative.n
-interrogator.n
 interrupter.n
 interruption.s
 intersection.s
@@ -1251,14 +1225,11 @@ invalidation.s
 invalid.n
 invasion.n
 invention.s
-inventor.n
 inventory.s
 inversion.s
 invertebrate.n
 investigation.s
-investigator.n
 investment.s
-investor.n
 invitation.n
 invocation.s
 invoice.n
@@ -1306,7 +1277,6 @@ obituary.n
 objection.n
 objective.n
 object.n
-objector.n
 oblast.n
 oblong.n
 oboe.s
@@ -1380,7 +1350,6 @@ opener.n
 opera.s
 operation.s
 operative.n
-operator.n
 operetta.n
 ophicleide.s
 opiate.s
@@ -1397,7 +1366,6 @@ oral.n
 orange.s
 oration.n
 oratorio.n
-orator.n
 oratory.s
 orbit.n
 orb.n
@@ -1422,7 +1390,6 @@ oriental.n
 orientation.s
 orifice.n
 original.n
-originator.n
 origin.s
 oriole.n
 ornament.s
