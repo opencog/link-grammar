@@ -3153,6 +3153,7 @@ am.v:
     ({N+} & (Pg+ or Pv+))) & <verb-wall>;
 
 % S*x- used for passive participles: "this action be taken".
+% S**i- & Wi-: "Robert, be there at 5:00"
 % XXX I used verb-and-sp-i- but maybe this is wrong ..
 % "Show me my notes and be nice about it."
 % ({@E-} & I- & B- & O+):
@@ -3160,7 +3161,7 @@ am.v:
 % Ix- & <verb-wall>: "He is as smart as I expected him to be."
 % Ix- & <vc-be>: "I'm sure he'll still be popular."
 be.v:
-  ({@E-} & ((Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
+  ({@E-} & (({S**i-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
   or ({@E-} & Ix- & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))

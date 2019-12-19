@@ -3146,7 +3146,7 @@ am.v:
 % Ix- & <verb-wall>: "He is as smart as I expected him to be."
 % Ix- & <vc-be>: "I'm sure he'll still be popular."
 be.v:
-  ({@E-} & ((Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
+  ({@E-} & (({S**i-} & Wi- & {S**i-} & <verb-wall>) or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
   or ({@E-} & Ix- & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
