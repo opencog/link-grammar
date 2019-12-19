@@ -5399,8 +5399,11 @@ watch.i vigil.i pace.i: Vk-;
 track.i: Vk- & {OF+};
 
 <vc-set>:
-  ((K+ & {[[@MV+]]} & O*n+) or ({O+ or <b-minus>} & {K+ or Vs+})
-    or [[@MV+ & O*n+]]) & <mv-coord>;
+  (
+    (K+ & {[[@MV+]]} & O*n+) or
+    ({O+ or <b-minus>} & {K+ or Vs+}) or
+    [[@MV+ & O*n+]]
+  ) & <mv-coord>;
 
 set.v-d:
   VERB_SPPP_T(<vc-set>) or
@@ -10955,6 +10958,10 @@ wi'.#with: [with]colloquial;
 
 % Shakesperean
 ample.#amply: [[amply]0.5]colloquial;
+
+% Scottish, English alternate spellings
+% gell.#gale: [gale.n]colloquial;
+% gell.#girl: [girl.n]colloquial;
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

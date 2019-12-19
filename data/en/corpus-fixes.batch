@@ -1387,7 +1387,13 @@ He OK'd the orders.
 He OK'ed the orders.
 
 It gelled up into a nice pudding.
+
+% "gell" as Scottish alternate spelling for "gale."
 As we set sail, a full gell blew up.
+
+% "gell" as English alternate for "girl"
+You're a naughty little gell, that's what you are
+"You're a naughty little gell, that's what you are," said the fireman.
 
 % Some of the verbs classified as "intranstive" see rare usage as
 % transtivies; these should just have a high cost, that's all.
@@ -4206,8 +4212,8 @@ Step 4. Hit it hard.
 Step 5. Hit it hard.
 Step 6. Hit it hard.
 
-% The below fails because a determiner is desired. But determiners
-% are optional for imperatives and commands.
+% The below parses badly or not at all, because a determiner is desired.
+% But determiners are optional for imperatives and commands.
 A: Open cover gently.
 B: Press button firmly.
 B: Press the button firmly.
