@@ -5,7 +5,6 @@ baby.n
 babysitter.n
 baccalaureate.n
 bacchanal.n
-bachelor.n-m
 backache.n
 backbencher.n
 backbench.n
@@ -123,7 +122,6 @@ bargepole.n
 baritone.s
 barker.n
 bark.n
-barmaid.n-f
 bar.n
 barnacle.n
 barn.n
@@ -280,8 +278,6 @@ bench.n
 bend.n
 benediction.n
 benefaction.n
-benefactor.n
-benefactress.n-f
 beneficiary.n
 benefit.n
 bent.n
@@ -370,7 +366,6 @@ Bishop.n
 bishopric.n
 bison.s
 bistro.n
-bitch.n-f
 bite.n
 bitmap.n
 bivouac.n
@@ -645,9 +640,6 @@ brickkiln.n
 bricklayer.n
 brick.s
 bridal.n
-bridegroom.n-m
-bride.n
-bridesmaid.n-f
 bridgehead.n
 bridge.n
 bridle.n
@@ -686,9 +678,6 @@ broom.n
 broomstick.n
 brothel.n
 brotherhood.s
-brother.n
-Brother.n
-brother.n-m
 brouhaha.n
 brow.n
 brownie.n
@@ -741,8 +730,6 @@ bullfighter.n
 bullfight.n
 bullfinch.n
 bullfrog.n
-bull.n-m
-bullock.n-m
 bullring.n
 bullroarer.s
 bully.n
@@ -988,7 +975,6 @@ carrier.n
 carrot.s
 cartel.n
 carter.n
-carthorse.n-m
 cartilage.s
 cart.n
 cartographer.n
@@ -1123,7 +1109,6 @@ challenge.n
 challenger.n
 chalumeau.s
 chamberlain.n
-chambermaid.n-f
 chamber.n
 chamberpot.n
 chameleon.n
@@ -1928,7 +1913,6 @@ cowhand.n
 cowherd.n
 cowhide.s
 cowl.n
-cow.n-f
 cowslip.n
 coxcomb.n
 cox.n
@@ -2148,8 +2132,6 @@ dab.n
 dacha.n
 dachshund.n
 dactyl.n
-daddy.n-m
-dad.n-m
 daemon.n
 daffodil.n
 dagger.n
@@ -2158,7 +2140,6 @@ daguerreotype.n
 dahlia.n
 daily.n
 dainty.n
-dairymaid.n-f
 dairy.n
 dais.n
 daisy.n
@@ -2765,9 +2746,6 @@ drunkard.n
 drunk.n
 dryer.n
 ducat.n
-duchess.n
-Duchess.n
-duchess.n-f
 duchy.n
 duckling.n
 duck.s
@@ -2782,9 +2760,6 @@ duet.n
 duffer.n
 dugout.n
 dukedom.n
-duke.n
-Duke.n
-duke.n-m
 dulcian.s
 dulcimer.n
 dullard.n
@@ -2901,9 +2876,6 @@ fatality.n
 fate.s
 fathead.n
 fatherland.n
-father.n
-Father.n
-father.n-m
 fathom.n
 faucet.n
 fault.n
@@ -3205,7 +3177,6 @@ forecastle.n
 forecast.n
 foreclosure.s
 forecourt.n
-forefather.n-m
 forefinger.n
 forefront.n
 foreground.n
@@ -3483,8 +3454,6 @@ genius.s
 genome.n
 genre.n
 gentile.n
-gentleman.n-m
-gent.n-m
 gentry.s
 genus.s
 geographer.n
@@ -3583,14 +3552,9 @@ goat.s
 goatskin.s
 goblet.n
 goblin.n
-goddaughter.n-f
-goddess.n-f
-godfather.n-m
-godmother.n-f
 god.n
 godparent.n
 godsend.n
-godson.n-m
 goitre.n
 goldenrod.s
 goldfinch.n
@@ -3642,17 +3606,10 @@ grammar.s
 gramophone.n
 granary.n
 grandchild.n
-granddad.n-m
-granddaughter.n-f
-grandfather.n-m
-grandma.n-f
-grandmother.n-f
-grandpa.n-m
 grandparent.n
 grandson.n
 grandstand.n
 grange.n
-granny.n-f
 grant.n
 granule.n
 grapefruit.s
@@ -3853,7 +3810,6 @@ handkerchief.n
 handlebar.n
 handle.n
 handler.n
-handmaid.n-f
 hand.n
 handout.n
 handrail.n
@@ -3964,11 +3920,8 @@ hedge.n
 hedgerow.n
 hedonist.n
 heel.n
-heifer.n-f
 height.s
-heiress.n-f
 heirloom.n
-heir.n-m
 heist.n
 helicopter.n
 heliograph.n
@@ -4135,7 +4088,6 @@ hornpipe.n
 horoscope.n
 horror.s
 horsefly.n
-horse.n-m
 horserace.n
 horseradish.s
 horseshoe.n
@@ -4150,9 +4102,7 @@ hospital.n
 hostage.n
 hostel.n
 hostelry.n
-hostess.n-f
 hostility.s
-hostress.n-f
 hotbed.n
 hotdog.s
 hotelier.n
@@ -4171,13 +4121,11 @@ houseful.n
 householder.n
 household.n
 housekeeper.n
-housemaid.n-f
 housemaster.n
 housemate.n
 house.n
 housetop.n
 houseware.s
-housewife.n-f
 hovel.n
 hovercraft.s
 howitzer.n
@@ -4213,7 +4161,6 @@ hunchback.n
 Hungarian.s
 hunter.n
 hunt.n
-huntress.n-f
 hurdle.n
 hurdy_gurdy
 hurl.n
@@ -4483,11 +4430,9 @@ lack.s
 lacquer.s
 lacuna.n
 ladder.n
-laddie.n-m
 ladle.n
 lad.n
 ladybird.n
-lady.n-f
 lager.s
 laggard.n
 lag.n
@@ -4712,8 +4657,6 @@ linkage.s
 link.n
 linkup.n
 linotype.n
-lioness.n-f
-lion.n-m
 lipid.n
 lip.n
 lipstick.s
@@ -4889,10 +4832,6 @@ magnum.n
 magpie.n
 mahogany.s
 maidenhood.n
-maiden.n-f
-maid.n-f
-maid_of_honor
-maidservant.n-f
 mailbag.n
 mailboat.s
 mailbox.n
@@ -4985,7 +4924,6 @@ marble.s
 marcher.n
 march.n
 maréchal.n
-mare.n-f
 margin.s
 marigold.n
 marimbaphone.s
@@ -5075,7 +5013,6 @@ maximum.n
 mayday.n
 mayfly.n
 mayoralty.n
-mayoress.n-f
 mayor.n
 Mayor.n
 maypole.n
@@ -5156,7 +5093,6 @@ meridian.n
 meringue.s
 meritocracy.n
 merit.s
-mermaid.n-f
 merry-go-round.n
 merrymaker.n
 mesh.s
@@ -5227,7 +5163,6 @@ militant.n
 militarist.n
 military.n
 militia.n
-milkmaid.n-f
 milkman.n
 milkshake.n
 milksop.n
@@ -5381,7 +5316,6 @@ mongoose.n
 mongrel.n
 monitor.n
 monkey.n
-monk.n-m
 monochrome.n
 monocle.n
 monogamist.n
@@ -5440,7 +5374,6 @@ mothball.n
 motherland.n
 mother.n
 Mother.n
-mother.n-f
 moth.n
 motif.n
 motion.s
@@ -5605,14 +5538,10 @@ neglige.n
 negotiation.s
 negotiator.n
 neighborhood.n
-neighbor.n
 neighbourhood.n
-neighbour.n
 neigh.n
 nemesis.n
 neologism.n
-neophyte.n
-nephew.n-m
 nephritis.s
 nerve.s
 nestling.n
@@ -5652,7 +5581,6 @@ nickel.s
 nick.n
 nicknack.n
 nickname.n
-niece.n-f
 Nigerian.s
 Nigerien.s
 nightcap.n
@@ -5737,8 +5665,6 @@ numerator.n
 numskull.n
 nuncio.n
 nunnery.n
-nun.n-f
-nursemaid.n-f
 nurse.n
 nursery.n
 nurturer.n
@@ -5757,10 +5683,8 @@ pacemaker.n
 pace.n
 pacesetter.n
 pachyderm.n
-pacifist.n
 package.n
 packet.n
-packhorse.n-m
 pact.n
 paddle.n
 paddock.n
@@ -5829,7 +5753,6 @@ pantograph.n
 pantomime.s
 pantry.n
 papacy.n
-papa.n-m
 papaya.s
 paperback.n
 paperclip.n
@@ -6342,8 +6265,6 @@ podcast.n
 podium.n
 pod.n
 poem.n
-poetess.n-f
-poet.n
 pogrom.n
 poinsettia.s
 pointer.n
@@ -6398,7 +6319,6 @@ pool.n
 poolroom.n
 poop.n
 poorhouse.n
-pope.n-m
 popinjay.n
 poplar.s
 poppy.n
@@ -6587,8 +6507,6 @@ prime.s
 primitive.n
 primrose.n
 princedom.n
-prince.n-m
-princess.n-f
 principality.n
 principal.s
 printer.n
@@ -6880,7 +6798,6 @@ rabbit.s
 rabble.n
 raccoon.n
 racecourse.n
-racehorse.n-m
 racer.n
 race.s
 racist.n
@@ -7893,7 +7810,6 @@ shellfish.s
 shell.n
 shelter.s
 sheng.s
-shepherdess.n-f
 shepherd.n
 sherbet.s
 sheriff.n
@@ -8054,12 +7970,9 @@ siphon.n
 sip.n
 siren.n
 sirloin.s
-sir.n
 sirup.s
-sissy.n-f
 sister.n
 Sister.n
-sister.n-f
 sitar.s
 sitcom.n
 site.n
@@ -8374,7 +8287,6 @@ spine.n
 spinet.n
 spinoff.n
 spin.s
-spinster.n-f
 spiral.n
 spire.n
 spirit.s
@@ -8541,16 +8453,10 @@ stem.n
 stench.n
 stencil.n
 stenographer.n
-stepbrother.n-m
-stepdaughter.n-f
-stepfather.n-m
 stepladder.n
-stepmother.n-f
 step.n
 stepparent.n
 steppe.n
-stepsister.n-f
-stepson.n-m
 stereo.n
 stereoscope.n
 stereotype.s
@@ -9180,9 +9086,7 @@ tide.s
 tie.n
 tier.n
 tiff.n
-tiger.n-m
 tightrope.n
-tigress.n-f
 tilde.n
 tile.s
 tiller.n
@@ -9340,8 +9244,6 @@ trainee.n
 trainer.n
 train.n
 trait.n
-traitor.n
-traitress.n-f
 trajectory.n
 tramline.n
 tram.n
@@ -9825,7 +9727,6 @@ warehouse.n
 ware.n
 wargame.n
 warhead.n
-warhorse.n-m
 warlord.n
 warmer.n
 warmonger.n
@@ -10000,14 +9901,11 @@ wishbone.n
 wish.n
 wisp.n
 wisteria.s
-witch.n-f
 withdrawal.s
 witness.n
 witticism.n
-wizard.n-m
 wolfhound.n
 wolf.n
-womanizer.n-m
 woman.n
 wombat.n
 womb.n
