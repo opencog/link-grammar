@@ -2476,6 +2476,7 @@ per "/.per": Us+ & Mp-;
   or <verb-manner>;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
+% CO- & Wi-: "Finally, move it back".
 % [CO-]: cost because <verb-pl,i> & O+ occurs in many verbs, and
 %        allows a really weird subject-object inversion to proceed:
 %        e.g. "In the corner lay it" with it as object. That's just
@@ -2486,8 +2487,8 @@ per "/.per": Us+ & Mp-;
 %       I want the wall, e.g. for "Did you see in which room?"
 %       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
-<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]) & {@E-}) or
-                      ({[hCO-]} & Wi- & {NM+}));
+<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]) & {@E-})
+                      or ({[hCO-]} & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
