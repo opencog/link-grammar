@@ -6352,9 +6352,13 @@ letting.v: <verb-pg> & <vc-let>;
 % S**i- & Wi-: "Oh Sue, let's!"
 let's let’s: <verb-co> & {N+} & {I+};
 
+% K+: "watch out!"
+% K+ & MV+: "I watch out for you"
+% XXX But this is too loose, as "out" should be the only allowed particle.
 <vc-watch>:
   ((O+ or <b-minus>) & <mv-coord> & {I*j+ or Pg+}) or
   ([[@MV+ & O*n+ & <mv-coord>]]) or
+  (K+ & <mv-coord>) or
   <mv-coord>;
 
 watch.v: VERB_PLI(<vc-watch>);
