@@ -314,7 +314,6 @@ nonCAP.zzz: ZZZ-;
 % The use of COa here needs to be carefully re-examined;
 %   it is used much too freely.
 % COa+ is used to block links to COd-
-% Xc+ & S**i+: connect to imperatives (infinitive verbs): "John, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
 %       This gets a fairly stiff cost if the comma is missing.
 % Wc- & Xc+ & Wq+: "O Mary, what have I done?"
@@ -326,6 +325,9 @@ nonCAP.zzz: ZZZ-;
 
 % Xc+ & EI+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 <directive-adverb>: (Xc+ & EI+);
+
+% Xc+ & S**i+: connect to imperatives (infinitive verbs): "John, don't"
+<directive-subject>: (Xc+ & S**i+);
 
 % Just pure singular entities, no mass nouns
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and
@@ -363,7 +365,7 @@ nonCAP.zzz: ZZZ-;
       or ({[[@MX+]]} & [AN+]) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
   or ({@A- or G-} & {D-} & Wa- & {NM+})
-  or [<directive-opener>]0.2;
+  or [<directive-opener> or <directive-subject>]0.2;
 
 % As above, but with a tiny extra cost, so that a dictionary word is
 % preferred to the regex match (i.e. for a common noun starting a
@@ -387,7 +389,8 @@ nonCAP.zzz: ZZZ-;
       or AN+
       or G+))
   or ({@A- or G-} & {D-} & Wa- & {NM+})
-  or <directive-opener>;
+  or <directive-opener>
+  or <directive-subject>;
 
 % capitalized words ending in s
 % -- hmm .. proper names not used anywhere right now, has slot for plural ... !!??
@@ -439,7 +442,7 @@ nonCAP.zzz: ZZZ-;
 /en/words/entities.given-male.sing
 /en/words/entities.goddesses
 /en/words/entities.gods:
-  <marker-entity> or <given-names> or <directive-opener>;
+  <marker-entity> or <given-names> or <directive-opener> or <directive-subject>;
 
 % Given names An In So interfere with misc words -- give them a cost.
 An.f In.f So.f: [[<given-names>]];
@@ -2494,7 +2497,7 @@ per "/.per": Us+ & Mp-;
 %       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]) & {@E-})
-                      or (({[hCO-]} or EI-) & Wi- & {NM+}));
+                      or (({[hCO-]} or EI- or S**i-) & Wi- & {NM+}));
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
