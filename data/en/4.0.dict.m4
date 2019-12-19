@@ -314,7 +314,6 @@ nonCAP.zzz: ZZZ-;
 % The use of COa here needs to be carefully re-examined;
 %   it is used much too freely.
 % COa+ is used to block links to COd-
-% Xc+ & EI+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 % Xc+ & S**i+: connect to imperatives (infinitive verbs): "John, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
 %       This gets a fairly stiff cost if the comma is missing.
@@ -322,9 +321,11 @@ nonCAP.zzz: ZZZ-;
 % Wc- & MG+: "O Yahweh of Armies, how long will you not have mercy?"
 <directive-opener>:
   {[[Wa-]]} &
-    ((Xc+ & EI+) or
-    ({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
+    (({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
     ({Xd-} & {OH-} & (Xc+ or [[()]]) & [dCOa+]));
+
+% Xc+ & EI+: connect to imperatives (infinitive verbs): "Anyhow, don't"
+<directive-adverb>: (Xc+ & EI+);
 
 % Just pure singular entities, no mass nouns
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and
@@ -10023,7 +10024,7 @@ appropriately.e simply.ee:
     or ({Xc+ & {Xd-}} & dCO+)
     or ({Xc+ & {Xd-}} & EB-)
     or Qe+
-    or (Xc+ & EI+)
+    or <directive-adverb>
     or <advcl-verb>
     or [[EA+]]);
 
@@ -10116,7 +10117,7 @@ certainly possibly probably importantly remarkably interestingly:
   or (Xd- & Xc+ & E+)
   or ({Xd- & Xc+} & <adv-as>)
   or ({Xc+ & {Xd-}} & dCO+)
-  or (Xc+ & EI+)
+  or <directive-adverb>
   or EBm-;
 
 % These are taken from words.adv.2 and allowed EB- when separated by
@@ -10195,6 +10196,7 @@ ok.e okay.e OK.e fine.e sure.e whatever.e:
 thereafter.e overall.e lengthwise.e
 instead.e anyhow.e anyway.e:
   <directive-opener>
+  or <directive-adverb>
   or ({Xd- & Xc+} & (MVp- or E+ or EB-));
 
 % Wa-: Single-word responses to questions.
@@ -10203,6 +10205,7 @@ afterwards.e afterward.e worldwide.e nationwide.e
 statewide.e world-wide.e nation-wide.e state-wide.e industrywide.e
 the_world_over:
   <directive-opener>
+  or <directive-adverb>
   or ({Xd- & Xc+} & (MVp- or E+))
   or (Wa- & {Wa+});
 
@@ -10241,6 +10244,7 @@ uh_huh uh uhh uuh unh
 my.ij my_oh_my my_my my_my_my
 tsk tsk_tsk tsk_tsk_tsk:
   <directive-opener>
+  or <directive-adverb>
   or OH+
   or [Wa- & {Wa+}]0.1;
 
@@ -10290,6 +10294,7 @@ anyways honey.ij man.ij baby.ij hush.ij:
   or <adj-phone>
   or ({{EI-} & Wi-} & {{Xd-} & Xc+} & EI+)
   or <directive-opener>
+  or <directive-adverb>
   or OH+
   or (({A-} or {E-} or {EE-}) & Wa-);
 
@@ -10300,7 +10305,7 @@ anyways honey.ij man.ij baby.ij hush.ij:
 % Perhaps these should also appear as nouns? hello.n does ...
 hello.ij hello_there hallo halloo hollo hullo hillo hi
 ahoy ahoy_there ship_ahoy land_ahoy shh shhh:
-  [<directive-opener>]
+  [<directive-opener> or <directive-adverb>]
   or Vv-
   or ({A-} & Ds- & Jv-)
   or OH+
@@ -10324,15 +10329,17 @@ again_and_again time_and_again over_and_over
 day_by_day day_after_day step_by_step one_by_one
 even_so all_of_a_sudden:
   <directive-opener>
+  or <directive-adverb>
   or ({Xd- & Xc+} & (<adv-as> or E+));
 
 for_sure for_certain for_real:
   <directive-opener>
+  or <directive-adverb>
   or ({Xd- & {MV+} & Xc+} & <adv-as>);
 
 % sort-of-like given names ...
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
-  <directive-opener> or Wa- or OH+;
+  <directive-opener> or <directive-adverb> or Wa- or OH+;
 
 % Exclamations, vocatives
 oh.voc O: OH+;
@@ -10368,16 +10375,17 @@ meantime.e secondly thirdly
 in_brief in_short in_sum in_essence:
   ({Xd- & Xc+} & E+) or
   ({Xc+ & {Xd-}} & dCO+) or
-  (Xc+ & EI+);
+  <directive-adverb>;
 furthermore:
   ({Xd- & Xc+} & E+) or
   ({Xc+ & {Xd-}} & dCO+) or
-  (Xc+ & EI+) or
+  <directive-adverb> or
   EB-;
+and_furthermore: <directive-adverb>;
 mainly primarily:
   E+
   or ({Xc+ & {Xd-}} & dCO+)
-  or (Xc+ & EI+)
+  or <directive-adverb>
   or EB-
   or <comp-prep>;
 
@@ -10476,7 +10484,7 @@ so_on the_like vice_versa v.v.:
 so.ij:
   ((({Xd-} & ([MVs-]0.5 or <coord>) & Xs-) or ({Xc+} & Wc-))
      & (<subcl-verb> or [<sent-start>]0.5))
-  or (Xc+ & EI+);
+  or <directive-adverb>;
 
 % QU+ links to quoted phrases.
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
