@@ -327,7 +327,8 @@ nonCAP.zzz: ZZZ-;
 <directive-adverb>: (Xc+ & EI+);
 
 % Xc+ & S**i+: connect to imperatives (infinitive verbs): "John, don't"
-<directive-subject>: (Xc+ & S**i+);
+% OH-: "Oh Sue, let's go!"
+<directive-subject>: ({OH-} & Xc+ & S**i+);
 
 % Just pure singular entities, no mass nouns
 % The CAPITALIZED-WORDS rule is triggered by regex matching, and
