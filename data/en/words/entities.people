@@ -4,6 +4,8 @@ Bangladeshi.s
 Barbadian.s
 barbarian.n
 barmaid.n-f
+baroness.n-f
+Baroness.n-f
 Belarusian.s
 Belgian.s
 Belizian.s
@@ -28,6 +30,8 @@ Buddhist.n
 Bulgarian.s
 bull.n-m
 bullock.n-m
+burgess.n-f
+Burgess.n-f
 Burundian.s
 Cambodian.s
 Cameroonian.s
@@ -56,6 +60,8 @@ Comptroller.n
 congressman.n
 Congressman.n
 Corsican.s
+countess.n-f
+Countess.n-f
 cow.n-f
 Croatian.s
 Croat.s
@@ -113,6 +119,8 @@ goddess.n-f
 godfather.n-m
 godmother.n-f
 godson.n-m
+governess.n-f
+Governess.n-f
 governor.n
 Governor.n
 granddad.n-m
@@ -138,6 +146,8 @@ Headmistress.n-f
 heifer.n-f
 heiress.n-f
 heir.n-m
+highness.s
+Highness.s
 Hindu.n
 Honduran.s
 horse.n-m
@@ -212,6 +222,7 @@ mermaid.n-f
 Mexican.s
 Micronesian.s
 milkmaid.n-f
+millionaire.n
 minister.n
 Minister.n
 Moldovan.s
@@ -248,6 +259,8 @@ papa.n-m
 Paraguayan.s
 pastor.n
 Pastor.n
+peeress.n-f
+Peeress.n-f
 Peruvian.s
 poetess.n-f
 poet.n
@@ -263,6 +276,9 @@ premier.n
 Premier.n
 president.n
 President.n
+priestess.n-f
+Priestess.n-f
+priest.n
 prime_minister
 Prime_Minister
 Prime.n
@@ -333,6 +349,8 @@ Slovenian.s
 solicitor.n
 Solicitor.n
 Somalian.s
+sorceress.n-f
+Sorceress.n-f
 Spaniard.n
 speaker.n
 Speaker.n
@@ -369,6 +387,9 @@ viceroy.n
 Viceroy.n
 victim.n
 victor.n
+viscountess.n-f
+Viscountess.n-f
+viscount.n
 vizier.n
 warden.n
 Warden.n
@@ -383,24 +404,3 @@ Yugoslavian.s
 Yugoslav.s
 yuppie.n
 zealot.n
-baroness.n-f
-Baroness.n-f
-burgess.n-f
-Burgess.n-f
-countess.n-f
-Countess.n-f
-governess.n-f
-Governess.n-f
-highness.s
-Highness.s
-peeress.n-f
-Peeress.n-f
-priestess.n-f
-Priestess.n-f
-sorceress.n-f
-Sorceress.n-f
-viscountess.n-f
-Viscountess.n-f
-millionaire.n
-priest.n
-viscount.n
