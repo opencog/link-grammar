@@ -3738,6 +3738,7 @@ running.g beating.g catching.g driving.g striking.g:
 % unfortunately:
 %    *This is the man we love him
 <vc-trans>:
+  {Xc+ & SI*i+ & {Xc+}} &
   (O+
    or <b-minus>
    or [[@MV+ & O*n+]]
