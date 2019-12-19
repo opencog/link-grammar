@@ -663,6 +663,11 @@ USMC.y USN.y:
   <marker-common-entity> or <common-vowel-noun>;
 /en/words/words.n.1-const :
   <marker-common-entity> or <common-const-noun>;
+/en/words/entities.prof :
+  <marker-common-entity> or <common-const-noun>;
+
+/en/words/entities.people :
+  <marker-common-entity> or <common-const-noun> or <directive-subject>;
 
 % XXX eliminate this, it serves no purpose, sort into vowels and consts.
 /en/words/words.n.1.gerund :

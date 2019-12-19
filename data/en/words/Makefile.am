@@ -9,6 +9,8 @@ WORDS= \
 	entities.locations.sing \
 	entities.national.sing \
 	entities.organizations.sing \
+	entities.people \
+	entities.prof \
 	entities.us-states.sing \
 	measures.1 \
 	measures.2 \
