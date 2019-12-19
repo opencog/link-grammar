@@ -2707,9 +2707,10 @@ per "/.per": Us+ & Mp-;
 %    Getting the parenthesis cannot be acheived by hacking <verb-ico>
 %    or <verb-pl,i> and must be done here.
 % (dWi- & ($1) & Xc+ & SI*i+ & {Xc+}): "Bring out the Ring, Frodo!"
+% Sp- & SI*I+: "you hold my beer, John"
 define(`VERB_PLI',`'
   ((<verb-pl,i> & ($1)) or
-  ({@E-} & dWi- & ($1) & Xc+ & SI*i+ & {Xc+}) or
+  ({@E-} & {Sp-} & dWi- & ($1) & Xc+ & SI*i+ & {Xc+} & {@MV+}) or
   ({@E-} & hXd- & dWi- & ($1) & hXc+) or
   (<verb-and-pl-> & (($1) or ())) or
   ((($1) or [()]) & <verb-and-pl+>)))
