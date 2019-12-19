@@ -10366,8 +10366,9 @@ for_sure for_certain for_real:
   or ({Xd- & {MV+} & Xc+} & <adv-as>);
 
 % sort-of-like given names ...
+% Xd- & SIsi-: "thank ou, sir!"; the comma is mandatory.
 stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
-  <directive-opener> or <directive-adverb> or Wa- or OH+;
+  <directive-opener> or <directive-adverb> or Wa- or OH+ or (Xd- & SIsi-);
 
 % Exclamations, vocatives
 oh.voc O: OH+;
