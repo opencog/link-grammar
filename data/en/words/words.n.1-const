@@ -1011,7 +1011,6 @@ cedar.s
 cedilla.n
 ceiling.n
 celadon.s
-celebrant.n
 celebration.s
 celebrity.s
 celesta.s
@@ -1242,8 +1241,6 @@ cittern.s
 city.n
 civility.s
 civilization.s
-claimant.n
-clairvoyant.n
 clambake.n
 clam.n
 clamour.s
@@ -1417,7 +1414,6 @@ colt.n
 columbine.n
 column.n
 coma.n
-combatant.n
 combination.n
 combine.n
 comb.s
@@ -1450,7 +1446,6 @@ commonplace.n
 commonwealth.n
 commotion.s
 commune.n
-communicant.n
 communication.s
 communion.s
 communique.n
@@ -1472,7 +1467,6 @@ compensation.s
 competition.s
 compilation.s
 compiler.n
-complainant.n
 complement.n
 complexion.n
 complexity.s
@@ -1538,7 +1532,6 @@ confessional.n
 confession.s
 confessor.n
 confidante.n
-confidant.n
 configuration.n
 confine.n
 confirmation.s
@@ -1607,7 +1600,6 @@ construct.n
 consulate.n
 consul.n
 consulship.n
-consultant.n
 consultation.s
 consumer.n
 consummation.s
@@ -1619,7 +1611,6 @@ contaminant.n
 contemporary.n
 contender.n
 content.n
-contestant.n
 contest.n
 context.s
 continent.n
@@ -2163,7 +2154,6 @@ deodorant.n
 département.n
 department.n
 departure.n
-dependant.n
 dependency.s
 dependent.n
 depiction.s
@@ -2186,7 +2176,6 @@ derivative.n
 derrick.n
 dervish.n
 descant.n
-descendant.n
 descender.n
 descent.s
 description.n
@@ -2378,7 +2367,6 @@ displacement.s
 display.s
 disposition.s
 disproof.s
-disputant.n
 disputation.s
 dispute.s
 disquisition.n
@@ -3281,7 +3269,6 @@ ghetto.n
 ghost.n
 ghoul.n
 giantess.n
-giant.n
 gibbet.n
 gibbon.n
 gibe.n
@@ -3535,7 +3522,6 @@ gyration.s
 gyro.n
 gyroscope.n
 haberdasher.n
-habitant.n
 habitation.s
 habitat.s
 habit.s
@@ -4321,7 +4307,6 @@ letterhead.n
 letter.n
 lettuce.s
 leukemia.s
-leutenant.n
 levee.n
 leveller.n
 level.n
@@ -4351,7 +4336,6 @@ lick.n
 lid.n
 lie.n
 lien.n
-lieutenant.n
 lifebelt.n
 lifeboat.s
 lifebuoy.n
@@ -4620,7 +4604,6 @@ manoeuvre.n
 manoeuvrer.n
 manor.n
 mansard.n
-manservant.n
 mansion.n
 mantel.n
 mantelpiece.n
@@ -4766,7 +4749,6 @@ memory.s
 menace.s
 menage.n
 menagerie.n
-mendicant.n
 mend.n
 menial.n
 menopause.n
@@ -4832,7 +4814,6 @@ midst.n
 mien.n
 miff.n
 migraine.n
-migrant.n
 migration.s
 mikado.n
 mike.n
@@ -4840,7 +4821,6 @@ mileage.n
 mileometer.n
 milestone.n
 milieu.n
-militant.n
 military.n
 militia.n
 milkman.n
@@ -4904,7 +4884,6 @@ miscellany.n
 misconception.s
 misconfiguration.n
 miscount.n
-miscreant.n
 misdeal.n
 misdeed.n
 misdemeanour.n
@@ -5108,7 +5087,6 @@ mustache.n
 mustachio.n
 mustang.n
 muster.n
-mutant.n
 mutation.s
 mute.n
 mutex.n
@@ -5247,7 +5225,6 @@ nominal.n
 nomination.n
 nominee.n
 nonce.n
-noncombatant.n
 nondescript.n
 nonentity.n
 nonevent.n
@@ -5430,7 +5407,6 @@ parsing.n
 parsnip.s
 parsonage.n
 parson.n
-participant.n
 participle.n
 particle.n
 particular.n
@@ -5517,7 +5493,6 @@ peanut.s
 pearl.s
 pear.s
 pea.s
-peasant.n
 peasantry.n
 peashooter.n
 pebble.n
@@ -5527,7 +5502,6 @@ pecker.n
 peculiarity.s
 pedagogue.n
 pedal.n
-pedant.n
 peddler.n
 pederast.n
 pedestal.n
@@ -6970,7 +6944,6 @@ sausage.s
 savage.n
 savannah.n
 savanna.n
-savant.n
 saver.n
 savings.s
 saviour.n
@@ -7191,12 +7164,10 @@ sequin.n
 sequoia.n
 serenade.n
 serf.n
-sergeant.n
 serial.n
 series.s
 sermon.n
 serpent.n
-servant.n
 serve.n
 server.n
 service.s
@@ -8129,7 +8100,6 @@ supervillain.n
 supervisor.n
 supper.s
 supplement.n
-supplicant.n
 supplication.s
 supplier.n
 supply.s
@@ -8207,7 +8177,6 @@ swoop.n
 swordfish.s
 sword.n
 sycamore.s
-sycophant.n
 syllable.n
 syllabus.n
 syllogism.n
@@ -8368,7 +8337,6 @@ temp.n
 tempo.n
 temptress.n
 tenancy.s
-tenant.n
 tendency.n
 tenderfoot.n
 tender.n
@@ -8669,7 +8637,6 @@ transmutation.s
 transom.n
 transparency.s
 transplantation.s
-transplant.n
 transporter.n
 transport.s
 transposition.s
@@ -8770,7 +8737,6 @@ trout.s
 trove.n
 trowel.n
 truancy.s
-truant.n
 truce.n
 trucker.n
 truck.n
@@ -8866,7 +8832,6 @@ typhoon.n
 typographer.n
 typo.n
 tyranny.s
-tyrant.n
 tyre.n
 tzarina.n
 tzar.n
@@ -8880,7 +8845,6 @@ vacuum.n
 vagabond.n
 vagary.n
 vagina.n
-vagrant.n
 valediction.n
 vale.n
 valence.n
