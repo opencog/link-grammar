@@ -2495,8 +2495,9 @@ per "/.per": Us+ & Mp-;
 %       I want the wall, e.g. for "Did you see in which room?"
 %       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
+<verb-co>:   {@E-} & {EI- or S**i-} & Wi-;
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]))
-                      or (({[hCO-]} or EI- or S**i-) & Wi- & {NM+})) & {@E-};
+                      or ({EI- or S**i- or [hCO-]} & Wi- & {NM+})) & {@E-};
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
@@ -2580,7 +2581,7 @@ per "/.per": Us+ & Mp-;
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
 
-<verb-s-pl,i>: {@E-} & (((Sp- or If-) & <verb-wall>) or (RS- & Bp-) or Wi-);
+<verb-s-pl,i>: {@E-} & (((Sp- or If-) & <verb-wall>) or (RS- & Bp-) or <verb-co>);
 <verb-s-s>: {@E-} & (((Ss- or SFsi-) & <verb-wall>) or (RS- & Bs-));
 <verb-s-sp,pp>: {@E-} & (((S- or SFsi- or PPf-) & <verb-wall>) or (RS- & B-));
 <verb-s-sp>: {@E-} & (((S- or SFsi-) & <verb-wall>) or (RS- & B-));
@@ -2595,7 +2596,7 @@ per "/.per": Us+ & Mp-;
 % This is why they don't have & <verb-wall> in them: we don't want the
 % auxiliary attaching to the wall, we want only the main verb doing this.
 % The Ss- or Sp- prevent attachments to Sa- for "as.e" phrases.
-<verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or Wi-);
+<verb-x-pl,i>: {@E-} & (Sp- or SFp- or If- or (RS- & Bp-) or <verb-co>);
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
 <verb-x-sp,pp>: {@E-} & (Ss- or Sp- or SF- or PPf- or (RS- & B-));
@@ -2617,7 +2618,7 @@ per "/.per": Us+ & Mp-;
 % wall. We cannot use verb-s for this, since the SFsi prevents the parse
 % of sentences like  "there appears to be a problem".
 % If- blocks the Ix+ on would, be
-<verb-y-pl,i>: {@E-} & (((Sp- or SFp- or If-) & <verb-wall>) or (RS- & Bp-) or Wi-);
+<verb-y-pl,i>: {@E-} & (((Sp- or SFp- or If-) & <verb-wall>) or (RS- & Bp-) or <verb-co>);
 <verb-y-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
 <verb-y-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
 <verb-y-sp,pp>: {@E-} & (((S- or SF- or PPf-) & <verb-wall>) or (RS- & B-));
@@ -2766,7 +2767,7 @@ per "/.per": Us+ & Mp-;
 % {<verb-wall> or VJrpi-}: "I aim to help and also to do something"
 % SIp+ & N+: "Do you not want to know?"
 do.v:
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or Wi-) & <vc-do>)
+  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co>) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
@@ -2831,7 +2832,7 @@ better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 don't don’t:
   (((<verb-rq-aux> & (SIp+ or SFIp+) & I*d+)
     or ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) & (I*d+ or <verb-wall> or [[()]]))
-  or (({@E-} or EI- or S**i-) & Wi- & {I*d+});
+  or (<verb-co> & {I*d+});
 
 doesn't doesn’t:
   ((<verb-rq-aux> & (SIs+ or SFIs+) & I*d+) or <verb-x-s>)
@@ -3147,7 +3148,7 @@ am.v:
 % Ix- & <verb-wall>: "He is as smart as I expected him to be."
 % Ix- & <vc-be>: "I'm sure he'll still be popular."
 be.v:
-  ({@E-} & (({S**i-} & Wi- & <verb-wall>) or [S*x-]) & <vc-be>)
+  ({@E-} & ((<verb-co> & <verb-wall>) or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
   or ({@E-} & Ix- & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
@@ -8276,7 +8277,8 @@ letting.v: <verb-pg> & <vc-let>;
 % Abbreviation for "let us"
 % This seems to never be used, becuase 's.#us below expands
 % EI- & Wi-: "Oh, let's!"
-let's let’s: ({EI-} & Wi- & {N+} & I+) or ({EI-} & Wi- & N+);
+% S**i- & Wi-: "Oh Sue, let's!"
+let's let’s: <verb-co> & {N+} & {I+};
 
 <vc-watch>:
   ((O+ or <b-minus>) & <mv-coord> & {I*j+ or Pg+}) or
@@ -9098,7 +9100,7 @@ was.w-d:
 been.w: {@E-} & PPf- & <vc-vote> & <verb-wall>;
 
 be.w:
-  {@E-} & (Ix- or ({EI-} & Wi- & <verb-wall>) or [S*x-]) & <vc-vote>;
+  {@E-} & (Ix- or ({EI- or S**i-} & Wi- & <verb-wall>) or [S*x-]) & <vc-vote>;
 
 % S- & Vv+ & Xc+ & <embed-verb>:  "The answer being yes, ..."
 % S- & Xd- & MVg- & Vv+: "..., the answer being yes"
@@ -9703,7 +9705,7 @@ here:
   or <fronted>;
 
 % Wi-:  [come] Over here!
-over_here: Wi-;
+over_here: {EI- or S**i-} & Wi-;
 
 % EN- & Pp-: "you are halfway there"
 % EN- & J-: "we stopped about halway there"
