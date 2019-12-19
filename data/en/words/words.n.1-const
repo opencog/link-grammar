@@ -112,7 +112,6 @@ barn.n
 barnyard.n
 barometer.n
 baronage.n
-baroness.n
 baronetcy.n
 baronet.n
 baron.n
@@ -648,7 +647,6 @@ bureaucracy.s
 bureaucrat.n
 bureau.n
 burette.n
-burgess.n
 burgh.n
 burglar.n
 burglary.s
@@ -1616,7 +1614,6 @@ counterplot.n
 counterpoint.s
 counterproposal.n
 countertenor.s
-countess.n
 count.n
 country.n
 countryside.n
@@ -2997,7 +2994,6 @@ gherkin.n
 ghetto.n
 ghost.n
 ghoul.n
-giantess.n
 gibbet.n
 gibbon.n
 gibe.n
@@ -3102,7 +3098,6 @@ goulash.s
 gourd.n
 gourmand.n
 gourmet.n
-governess.n
 government.s
 gown.n
 grab.n
@@ -3444,7 +3439,6 @@ highball.n
 highland.n
 highlight.n
 high.n
-highness.s
 highroad.n
 highway.n
 hijack.n
@@ -3685,7 +3679,6 @@ jockey.n
 jog.n
 join.n
 joint.n
-jointress.n
 jointure.n
 joist.n
 joke.n
@@ -4433,8 +4426,6 @@ millennium.s
 millepede.n
 millimeter.n
 millimetre.n
-millionaire.n
-millionairess.n
 millipede.n
 milliwatt.n
 mill.n
@@ -4503,7 +4494,6 @@ misstatement.n
 missy.n
 mistake.n
 mistranslation.s
-mistress.n
 mistrial.n
 mist.s
 misuse.s
@@ -5021,7 +5011,6 @@ patricide.s
 patrimony.n
 patriot.n
 patrol.n
-patroness.n
 patron.n
 patronymic.n
 pattern.n
@@ -5069,7 +5058,6 @@ peephole.n
 peep.n
 peepshow.n
 peerage.n
-peeress.n
 pee.s
 peg.n
 pekinese.s
@@ -5547,10 +5535,7 @@ price.s
 pricetag.n
 prickle.n
 prick.n
-priestess.n
 priesthood.n
-priest.n
-prig.n
 primacy.s
 primary.n
 primate.n
@@ -6450,7 +6435,6 @@ schoolfriend.n
 schoolgirl.n
 schoolhouse.n
 schoolmate.n
-schoolmistress.n
 schoolroom.n
 school.s
 schooner.n
@@ -6513,7 +6497,6 @@ seafront.n
 seagull.n
 seal.n
 seam.n
-seamstress.n
 seance.n
 seaplane.n
 seaport.n
@@ -6969,7 +6952,6 @@ sophomore.n
 sop.n
 soprano.s
 sorbet.s
-sorceress.n
 sore.n
 sorority.n
 sorrel.s
@@ -7204,7 +7186,6 @@ stench.n
 stencil.n
 stepladder.n
 step.n
-stepparent.n
 steppe.n
 stereo.n
 stereoscope.n
@@ -7214,9 +7195,6 @@ sternum.n
 steroid.n
 stethoscope.n
 stetson.n
-stevedore.n
-stewardess.n
-steward.n
 stew.s
 sticker.n
 stick.n
@@ -7647,7 +7625,6 @@ template.n
 temple.n
 temp.n
 tempo.n
-temptress.n
 tenancy.s
 tendency.n
 tenderfoot.n
@@ -8241,8 +8218,6 @@ virus.s
 visage.n
 visa.n
 viscountcy.n
-viscountess.n
-viscount.n
 vision.s
 visitation.n
 visit.n
@@ -8291,7 +8266,6 @@ waistcoat.s
 waistline.n
 waist.n
 wait.n
-waitress.n
 waiver.n
 wake.n
 walk.n
@@ -8480,7 +8454,6 @@ wish.n
 wisp.n
 wisteria.s
 withdrawal.s
-witness.n
 witticism.n
 wolfhound.n
 wolf.n
