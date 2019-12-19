@@ -1916,7 +1916,8 @@ enough.r: EF-;
 enough.a: ({@E-} & Pa- & {Pg+ or Os+ or @MV+}) or ({@E-} & Dm+);
 
 % Wi-: "Enough rough-housing! Enough!"
-enough.ij: Wi- & {Pg+};
+% S**i- & Wi-: John, enough!
+enough.ij: {EI- or S**i-} & Wi- & {Pg+};
 
 not_enough:
   (OFd+ & Dm+)
@@ -2493,6 +2494,8 @@ per "/.per": Us+ & Mp-;
   or <verb-manner>;
 
 % Wi- & {NM+}: imperative numbered lists: "Step 5. Do this."
+% S**i- & Wi-: "John, stop that!"
+% EI- & Wi-: "Hey, stop that!"
 % CO- & Wi-: "Finally, move it back".
 % [CO-]: cost because <verb-pl,i> & O+ occurs in many verbs, and
 %        allows a really weird subject-object inversion to proceed:
@@ -6866,7 +6869,7 @@ was.w-d:
 been.w: {@E-} & PPf- & <vc-vote> & <verb-wall>;
 
 be.w:
-  {@E-} & (Ix- or ({EI- or S**i-} & Wi- & <verb-wall>) or [S*x-]) & <vc-vote>;
+  {@E-} & (Ix- or (<verb-co> & <verb-wall>) or [S*x-]) & <vc-vote>;
 
 % S- & Vv+ & Xc+ & <embed-verb>:  "The answer being yes, ..."
 % S- & Xd- & MVg- & Vv+: "..., the answer being yes"
@@ -7459,7 +7462,7 @@ here:
   or <fronted>;
 
 % Wi-:  [come] Over here!
-over_here: {EI- or S**i-} & Wi-;
+over_here: <verb-co>;
 
 % EN- & Pp-: "you are halfway there"
 % EN- & J-: "we stopped about halway there"
@@ -7946,7 +7949,7 @@ which:
 
 % <directive-opener> or Wi-: "Which way, left or right?"
 which_way:
-  <directive-opener> or Wi-;
+  <directive-opener> or <verb-co>;
 
 % Jw-: "From whom did you run?"
 whom:
@@ -10262,8 +10265,8 @@ tsk tsk_tsk tsk_tsk_tsk:
   or OH+
   or [Wa- & {Wa+}]0.1;
 
-% Like above, but also used as plain-old interjections, so treat
-% as adjectives, as well.
+% Like above, but also used as plain-old interjections.
+% XXX FIXME, this used to be done by treating as adjectives; but no more!?
 % A- & Wa-: "Holy Mother of God"
 howdy phew psst pssst ahem
 ah ahh a_ha aha eh ehh hmm hmmm huh
@@ -10304,13 +10307,12 @@ heck sodding_hell
 aw aww awww oh_great oh_wow
 er err.ij errr um.ij umm
 anyways honey.ij man.ij baby.ij hush.ij:
-  <ordinary-adj>
-  or <adj-phone>
-  or ({{EI-} & Wi-} & {{Xd-} & Xc+} & EI+)
-  or <directive-opener>
+  <directive-opener>
   or <directive-adverb>
   or OH+
-  or (({A-} or {E-} or {EE-}) & Wa-);
+  or ({{Xd-} & Xc+} & EI+)
+  or (({A-} or {E-} or {EE-}) & Wa-)
+  or [<ordinary-adj> or <adj-phone>];
 
 % A single plain hello all by itself.  Costly, because these days,
 % it's not normally a sentence opener.
@@ -10458,7 +10460,7 @@ please.e:
   or <advcl-verb> or [[EA+]]);
 
 % polite command verb
-please.w thank_you: {EI-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
+please.w thank_you: <verb-co> & {{Xc+} & Vv+} & <verb-wall>;
 
 
 % ==========================================================
@@ -10846,7 +10848,7 @@ an'.#and-j-n an’.#and-j-n: [[and.j-n]0.05]colloquial;
 an'.#and-j-v an’.#and-j-v: [[and.j-v]0.05]colloquial;
 
 % gimme.#give-me: [[give_me]0.05]colloquial;
-gimme.#give-me: Wi- & O+ & {@MV+};
+gimme.#give-me: <verb-co> & O+ & {@MV+};
 
 'em.#them ’em.#them 'm.#them ’m.#them : [them]colloquial;
 

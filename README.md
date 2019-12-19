@@ -1207,6 +1207,7 @@ phantom word in parenthesis, include:
  * It stopped me (from) flying off the cliff.
  * (It) looks good.
  * (You) go home!
+ * (That is) enough!
  * (I) heard that he's giving a test.
  * (Are) you all right?
  * He opened the door and (he) went in.
