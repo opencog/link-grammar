@@ -314,7 +314,7 @@ nonCAP.zzz: ZZZ-;
 % The use of COa here needs to be carefully re-examined;
 %   it is used much too freely.
 % COa+ is used to block links to COd-
-% Xc+ & Ei+: connect to imperatives (infinitive verbs): "Anyhow, don't"
+% Xc+ & EI+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 % Xc+ & S**i+: connect to imperatives (infinitive verbs): "John, don't"
 % Wc- & Xc+ & Qd+: subject-object inversion: "anyhow, am I right?"
 %       This gets a fairly stiff cost if the comma is missing.
@@ -322,7 +322,7 @@ nonCAP.zzz: ZZZ-;
 % Wc- & MG+: "O Yahweh of Armies, how long will you not have mercy?"
 <directive-opener>:
   {[[Wa-]]} &
-    ((Xc+ & (S**i+ or Ei+)) or
+    ((Xc+ & (S**i+ or EI+)) or
     ({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
     ({Xd-} & {OH-} & (Xc+ or [[()]]) & [dCOa+]));
 
@@ -2834,12 +2834,12 @@ better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
 % <verb-wall>: "I know he didn't", "I know they don't"
 % Wi-: "Don't!"
-% Ei- & Wi-: "In total, don't!"
+% EI- & Wi-: "In total, don't!"
 % Wi- & I*d+: "Don't do that!"
 don't don’t:
   (((<verb-rq-aux> & (SIp+ or SFIp+) & I*d+)
     or ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) & (I*d+ or <verb-wall> or [[()]]))
-  or (({@E-} or (Ei- & Xd-) or (S**i- & Xd-)) & Wi- & {I*d+});
+  or (({@E-} or EI- or S**i-) & Wi- & {I*d+});
 
 doesn't doesn’t:
   ((<verb-rq-aux> & (SIs+ or SFIs+) & I*d+) or <verb-x-s>)
@@ -2851,7 +2851,7 @@ didn't.v-d didn’t.v-d:
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
-  ({{Ei-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
+  ({{EI-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]]));
 
 % Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
@@ -6318,8 +6318,8 @@ letting.v: <verb-pg> & <vc-let>;
 
 % Abbreviation for "let us"
 % This seems to never be used, becuase 's.#us below expands
-% Ei- & Wi-: "Oh, let's!"
-let's let’s: ({Ei-} & Wi- & {N+} & I+) or ({Ei-} & Wi- & N+);
+% EI- & Wi-: "Oh, let's!"
+let's let’s: ({EI-} & Wi- & {N+} & I+) or ({EI-} & Wi- & N+);
 
 <vc-watch>:
   ((O+ or <b-minus>) & <mv-coord> & {I*j+ or Pg+}) or
@@ -6851,7 +6851,7 @@ was.w-d:
 been.w: {@E-} & PPf- & <vc-vote> & <verb-wall>;
 
 be.w:
-  {@E-} & (Ix- or ({Ei-} & Wi- & <verb-wall>) or [S*x-]) & <vc-vote>;
+  {@E-} & (Ix- or ({EI-} & Wi- & <verb-wall>) or [S*x-]) & <vc-vote>;
 
 % S- & Vv+ & Xc+ & <embed-verb>:  "The answer being yes, ..."
 % S- & Xd- & MVg- & Vv+: "..., the answer being yes"
@@ -7557,7 +7557,7 @@ forward.r: <common-prep> or K- or <adv-as>;
 upstream downstream 5' 3':
   A+ or
   NIfp+ or NItp- or
-  ({Yd- or EZ- or EE- or EI-} & {MVp+ or OF+} &
+  ({Yd- or EZ- or EE- or ET-} & {MVp+ or OF+} &
     (({Xc+ & Xd-} & (Ma- or dMJra-)) or
     hMJra+ or
     <fronted> or
@@ -7569,7 +7569,7 @@ upstream downstream 5' 3':
 %upstream downstream 3' 5':
 %A+ or
 %((EZ- or Y-) & (MVp+ or OF+) & (MV- or MV+)) or
-%(EI- or EZ- or Y- & Ma- & (MVp+ or OF+)) or
+%(ET- or EZ- or Y- & Ma- & (MVp+ or OF+)) or
 %(EE- or Y- & (FM- or TO-) & MVp+ or OF+);
 
 indoors outdoors underwater.r:
@@ -8175,14 +8175,14 @@ ever_since:
      & (({Xc+ & {Xd-}} & dCO*s+) or ({Xd- & Xc+} & MVs-));
 
 after:
-  {EI- or Yt-}
+  {ET- or Yt-}
     & (((Mgp+ or J+ or JT+) & (<prep-main-b> or UN- or <advcl-verb> or Qe+))
       or (J+ & <fronted>)
       or <locative>
       or (<subcl-verb> & (({Xc+ & {Xd-}} & dCO*s+) or ({Xd- & Xc+} & MVs-))));
 
 before:
-  ({EI- or Yt-}
+  ({ET- or Yt-}
     & (({Mgp+ or J+ or JT+} & (<prep-main-b> or UN-))
       or (J+ & <fronted>)
       or <locative>
@@ -10023,6 +10023,7 @@ appropriately.e simply.ee:
     or ({Xc+ & {Xd-}} & dCO+)
     or ({Xc+ & {Xd-}} & EB-)
     or Qe+
+    or (Xc+ & EI+)
     or <advcl-verb>
     or [[EA+]]);
 
@@ -10095,10 +10096,10 @@ independently:
 ({(MVp+ or OF+)} & {Xc+ & {Xd-}} & dCO+) or Qe+ or <advcl-verb> or [[EA+]]);
 
 
-shortly: {EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or E+ or EI+ or ({Xc+ & {Xd-}}
+shortly: {EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or E+ or ET+ or ({Xc+ & {Xd-}}
  & dCO+) or Qe+ or <advcl-verb>);
-immediately stat.e: ({Xd- & Xc+} & <adv-as>) or E+ or EI+ or ({Xc+ & {Xd-}} & dCO+) or EB-;
-soon: ({EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or E+ or EI+ or ({Xc+ & {Xd-}}
+immediately stat.e: ({Xd- & Xc+} & <adv-as>) or E+ or ET+ or ({Xc+ & {Xd-}} & dCO+) or EB-;
+soon: ({EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or E+ or ET+ or ({Xc+ & {Xd-}}
  & dCO+) or EB- or Qe+ or <advcl-verb>)) or ({EA- or EF+} & (Pa- or AF+));
 
 certainly possibly probably importantly remarkably interestingly:
@@ -10217,7 +10218,7 @@ maybe.r:
 not.intj is_too is_not is_so unh_unh: Wa-;
 
 %suppress: DUP-BASE (for seriously.ij)
-% Openers to directives, commands (Xc+ & Ei+ connection to infinitives)
+% Openers to directives, commands (Xc+ & EI+ connection to infinitives)
 % or single-word interjections, exclamations.
 % These are semantically important, so they've got to parse!
 % Wa- & Wa+: "Oh my God"
@@ -10286,7 +10287,7 @@ er err.ij errr um.ij umm
 anyways honey.ij man.ij baby.ij hush.ij:
   <ordinary-adj>
   or <adj-phone>
-  or ({{Ei-} & Wi-} & {{Xd-} & Xc+} & Ei+)
+  or ({{EI-} & Wi-} & {{Xd-} & Xc+} & EI+)
   or <directive-opener>
   or OH+
   or (({A-} or {E-} or {EE-}) & Wa-);
@@ -10309,7 +10310,7 @@ bye.ij goodbye.ij:
   OH+ or (Wa- & {Wa+});
 
 % Openers to directives, commands
-% Ei+: connection to infinitive imperatives: "on arrival, do it!"
+% EI+: connection to infinitive imperatives: "on arrival, do it!"
 % E+: split infinitives, e.g. "you should instead go home"
 %     "It will, more often than not, go by train."
 prima_facie before_long
@@ -10427,7 +10428,7 @@ please.e:
   or <advcl-verb> or [[EA+]]);
 
 % polite command verb
-please.w thank_you: {Ei-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
+please.w thank_you: {EI-} & Wi- & {{Xc+} & Vv+} & <verb-wall>;
 
 
 % ==========================================================
@@ -10465,8 +10466,9 @@ so_on the_like vice_versa v.v.:
 %    The cost on sent-start is to force preference for CV over WV,
 %    whenever possible.
 so.ij:
-  (({Xd-} & ([MVs-]0.5 or <coord>) & Xs-) or ({Xc+} & Wc-))
-     & (<subcl-verb> or [<sent-start>]0.5);
+  ((({Xd-} & ([MVs-]0.5 or <coord>) & Xs-) or ({Xc+} & Wc-))
+     & (<subcl-verb> or [<sent-start>]0.5))
+  or (Xc+ & EI+);
 
 % QU+ links to quoted phrases.
 % ZZZ+ is a "temporary" addition for randomly-quoted crap, and
@@ -11020,7 +11022,7 @@ ample.#amply: [[amply]0.5]colloquial;
     (Sp- & <verb-wall>) or
     (RS- & Bp-) or
     (I- & <verb-wall>) or
-    ({Ei-} & Wa- & <verb-wall>))
+    ({EI-} & Wa- & <verb-wall>))
   & {O+ or <b-minus>} & <mv-coord>;
 
 % Add a miniscule cost, so that the noun-form is preferred, when
