@@ -1442,8 +1442,9 @@ youse yous yis ye ya yo:
 %    "leave it alone" "make it rain"
 %   (the m prevents links as indirect object)
 % MX+ & Ss+: "it -- fried rice -- is very popular"
+% XXX FIXME: why does [J-] have a cost???
 it:
-   [J-]
+   [J-]0.5
    or (Osm- & {@M+})
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
@@ -10611,7 +10612,8 @@ changequote dnl
 % Comma as a form of a conjunction (thus the .j subscript).
 % This is given a very mild cost, so that other uses of comma can take
 % precedence, if possible. XXX FIXME: Disallow use of comma as a
-% conjunction unless there's and/or occuring later.
+% conjunction unless there's and/or occuring later. For now, hack
+% around this by upping the cost.
 %
 % Comma can conjoin nouns only if used in a list of 3 or more items:
 % "This, that and the other thing"
@@ -10633,7 +10635,7 @@ changequote dnl
   or <comma-adv-conjunction>
   or [<verb-conjunction>]0.5
   or (hSJl- & EBb+ & hSJr+ & Ou-)
-  or (hSJl- & J- & hSJr+)
+  or [hSJl- & J- & hSJr+]0.5
   or (hSJl- & hSJr+ & dSJl+)
   or (Xj- & hWl+ & {Xj+})]0.05;
 
