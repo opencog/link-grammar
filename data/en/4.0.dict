@@ -2403,6 +2403,8 @@ per "/.per": Us+ & Mp-;
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
 % <verb-si>   : subject inversion
+% <verb-co>   : optional subjects to imperatives (commands)
+% <verb-sic>  : imperative-subject inversion
 
 % <verb-wall>: these connect to the head verb:
 % WV connects the wall to the head-verb,
@@ -2500,8 +2502,11 @@ per "/.per": Us+ & Mp-;
 %       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
 <verb-co>:   {@E-} & {EI- or S**i-} & Wi-;
-<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]))
-                      or ({EI- or S**i- or [hCO-]} & Wi- & {NM+})) & {@E-};
+<verb-sic>:  {@E-} & Wi- & Xc+ & SI*i+ & {Xc+};
+<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
+                      ({EI- or S**i- or [hCO-]} & Wi- & {NM+}) or
+                      (Wi- & Xc+ & SI*i+ & {Xc+})
+                     ) & {@E-};
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
@@ -2690,8 +2695,9 @@ per "/.per": Us+ & Mp-;
 %    The first verb is expecting an object, but there isn't one.
 % ({@E-} & hXd- & dWi- & ($1) & hXc+):
 %    Parenthetical phrases: "(please refer to the list below)"
-%    Getting the parenthesis cannot be come by hacking <verb-ico>
+%    Getting the parenthesis cannot be acheived by hacking <verb-ico>
 %    or <verb-pl,i> and must be done here.
+% (dWi- & ($1) & Xc+ & SI*i+ & {Xc+}): "Bring out the Ring, Frodo!"
 
 
 % Generic singular intransitive form
@@ -2776,7 +2782,7 @@ do.v:
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
-  or (<verb-co> & {I*d+} & Xc+ & SI*i+)
+  or (<verb-co> & {I*d+} & Xc+ & SI*i+ & {Xc+})
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
     ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) &
@@ -3359,6 +3365,7 @@ mean.eq avg.eq avg..eq average.eq sum.eq difference.eq total.eq:
 /en/words/words.v.1.1:
   
   ((<verb-pl,i> & ({[[O+]]} & <vc-intrans>)) or
+  ({@E-} & dWi- & ({[[O+]]} & <vc-intrans>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & ({[[O+]]} & <vc-intrans>) & hXc+) or
   (<verb-and-pl-> & (({[[O+]]} & <vc-intrans>) or ())) or
   ((({[[O+]]} & <vc-intrans>) or [()]) & <verb-and-pl+>))
@@ -3415,6 +3422,7 @@ arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
 % barge.v booze.v bottom.v bow.v branch.v breeze.v brim.v bulge.v cave.v
 /en/words/words.v.5.1: 
   ((<verb-pl,i> & (<vc-bulge>)) or
+  ({@E-} & dWi- & (<vc-bulge>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-bulge>) & hXc+) or
   (<verb-and-pl-> & ((<vc-bulge>) or ())) or
   (((<vc-bulge>) or [()]) & <verb-and-pl+>));
@@ -3459,6 +3467,7 @@ lain.v:
 come.v:
   
   ((<verb-pl,i> & (<vc-come>)) or
+  ({@E-} & dWi- & (<vc-come>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-come>) & hXc+) or
   (<verb-and-pl-> & ((<vc-come>) or ())) or
   (((<vc-come>) or [()]) & <verb-and-pl+>))
@@ -3495,6 +3504,7 @@ coming.v:
 
 /en/words/words.v.2.1: 
   ((<verb-pl,i> & (<vc-tr,intr>)) or
+  ({@E-} & dWi- & (<vc-tr,intr>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-tr,intr>) & hXc+) or
   (<verb-and-pl-> & ((<vc-tr,intr>) or ())) or
   (((<vc-tr,intr>) or [()]) & <verb-and-pl+>));
@@ -3561,6 +3571,7 @@ shrunk.v withdrawn.v sunk.v forgiven.v:
 let.w sublet.v:
   
   ((<verb-pl,i> & (<vc-tr,intr>)) or
+  ({@E-} & dWi- & (<vc-tr,intr>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-tr,intr>) & hXc+) or
   (<verb-and-pl-> & ((<vc-tr,intr>) or ())) or
   (((<vc-tr,intr>) or [()]) & <verb-and-pl+>));
@@ -3606,6 +3617,7 @@ bid.v-d bade.v-d:
 
 judge.v: 
   ((<verb-pl,i> & (<vc-judge>)) or
+  ({@E-} & dWi- & (<vc-judge>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-judge>) & hXc+) or
   (<verb-and-pl-> & ((<vc-judge>) or ())) or
   (((<vc-judge>) or [()]) & <verb-and-pl+>));
@@ -3633,6 +3645,7 @@ judging.g:
 <vc-rise>: {K+ or OD+} & <mv-coord>;
 rise.v fall.v:
   ((<verb-pl,i> & (<vc-rise>)) or
+  ({@E-} & dWi- & (<vc-rise>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-rise>) & hXc+) or
   (<verb-and-pl-> & ((<vc-rise>) or ())) or
   (((<vc-rise>) or [()]) & <verb-and-pl+>));
@@ -3691,6 +3704,7 @@ rising.v falling.v:
 /en/words/words.v.6.1:
   
   ((<verb-pl,i> & (<vc-fill>)) or
+  ({@E-} & dWi- & (<vc-fill>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-fill>) & hXc+) or
   (<verb-and-pl-> & ((<vc-fill>) or ())) or
   (((<vc-fill>) or [()]) & <verb-and-pl+>));
@@ -3779,6 +3793,7 @@ stridden.v slain_dead:
 frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
   
   ((<verb-pl,i> & (<vc-fill>)) or
+  ({@E-} & dWi- & (<vc-fill>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-fill>) & hXc+) or
   (<verb-and-pl-> & ((<vc-fill>) or ())) or
   (((<vc-fill>) or [()]) & <verb-and-pl+>));
@@ -3788,6 +3803,7 @@ frizz.v frizzle.v prink.v slough.v scuff.v tog.v swot.v:
 bob.v:
   [ 
   ((<verb-pl,i> & (<vc-fill>)) or
+  ({@E-} & dWi- & (<vc-fill>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-fill>) & hXc+) or
   (<verb-and-pl-> & ((<vc-fill>) or ())) or
   (((<vc-fill>) or [()]) & <verb-and-pl+>)) ]0.2;
@@ -3821,6 +3837,7 @@ and.v-fill:
 catch.v drive.v strike.v:
   
   ((<verb-pl,i> & (<vc-run>)) or
+  ({@E-} & dWi- & (<vc-run>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-run>) & hXc+) or
   (<verb-and-pl-> & ((<vc-run>) or ())) or
   (((<vc-run>) or [()]) & <verb-and-pl+>));
@@ -3829,6 +3846,7 @@ catch.v drive.v strike.v:
 run.v:
   
   ((<verb-pl,i> & (<vc-run>)) or
+  ({@E-} & dWi- & (<vc-run>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-run>) & hXc+) or
   (<verb-and-pl-> & ((<vc-run>) or ())) or
   (((<vc-run>) or [()]) & <verb-and-pl+>))
@@ -3902,7 +3920,6 @@ running.g beating.g catching.g driving.g striking.g:
 % unfortunately:
 %    *This is the man we love him
 <vc-trans>:
-  {Xc+ & SI*i+ & {Xc+}} &
   (O+
    or <b-minus>
    or [[@MV+ & O*n+]]
@@ -3911,11 +3928,13 @@ running.g beating.g catching.g driving.g striking.g:
 
 /en/words/words.v.4.1 : 
   ((<verb-pl,i> & (<vc-trans>)) or
+  ({@E-} & dWi- & (<vc-trans>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-trans>) & hXc+) or
   (<verb-and-pl-> & ((<vc-trans>) or ())) or
   (((<vc-trans>) or [()]) & <verb-and-pl+>));
 /en/words/words-medical.v.4.1: 
   ((<verb-pl,i> & (<vc-trans>)) or
+  ({@E-} & dWi- & (<vc-trans>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-trans>) & hXc+) or
   (<verb-and-pl-> & ((<vc-trans>) or ())) or
   (((<vc-trans>) or [()]) & <verb-and-pl+>));
@@ -4006,6 +4025,7 @@ beset.v mistaken.v underwritten.v:
 
 frank.v : 
   ((<verb-pl,i> & (<vc-trans-unlikely>)) or
+  ({@E-} & dWi- & (<vc-trans-unlikely>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-trans-unlikely>) & hXc+) or
   (<verb-and-pl-> & ((<vc-trans-unlikely>) or ())) or
   (((<vc-trans-unlikely>) or [()]) & <verb-and-pl+>));
@@ -4021,6 +4041,7 @@ frank.v :
 corral.v crown.v decant.v ink.v intone.v rope.v:
   
   ((<verb-pl,i> & (<vc-corral>)) or
+  ({@E-} & dWi- & (<vc-corral>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-corral>) & hXc+) or
   (<verb-and-pl-> & ((<vc-corral>) or ())) or
   (((<vc-corral>) or [()]) & <verb-and-pl+>));
@@ -4054,6 +4075,7 @@ corralling.g crowning.g decanting.g inking.g intoning.g roping.g:
 bake.v dictate.v kiss.v slice.v:
   
   ((<verb-pl,i> & (<vc-bake>)) or
+  ({@E-} & dWi- & (<vc-bake>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-bake>) & hXc+) or
   (<verb-and-pl-> & ((<vc-bake>) or ())) or
   (((<vc-bake>) or [()]) & <verb-and-pl+>));
@@ -4096,6 +4118,7 @@ baking.g dictating.g kissing.g slicing.g:
   or <vc-ditrans>;
 butter.v: 
   ((<verb-pl,i> & (<vc-butter>)) or
+  ({@E-} & dWi- & (<vc-butter>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-butter>) & hXc+) or
   (<verb-and-pl-> & ((<vc-butter>) or ())) or
   (((<vc-butter>) or [()]) & <verb-and-pl+>));
@@ -4134,6 +4157,7 @@ buttering.g:
 
 /en/words/words.v.8.1: 
   ((<verb-pl,i> & (<vc-kick>)) or
+  ({@E-} & dWi- & (<vc-kick>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-kick>) & hXc+) or
   (<verb-and-pl-> & ((<vc-kick>) or ())) or
   (((<vc-kick>) or [()]) & <verb-and-pl+>));
@@ -4199,6 +4223,7 @@ cut.v-d:
 <vc-raise>: (((O+ or <b-minus>) & {OD+}) or [[@MV+ & O*n+]]) & <mv-coord>;
 raise.v lower.v up.v: 
   ((<verb-pl,i> & (<vc-raise>)) or
+  ({@E-} & dWi- & (<vc-raise>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-raise>) & hXc+) or
   (<verb-and-pl-> & ((<vc-raise>) or ())) or
   (((<vc-raise>) or [()]) & <verb-and-pl+>));
@@ -4228,6 +4253,7 @@ raising.g lowering.g upping.g: (<vc-raise> & <verb-ge>) or <verb-ge-d>;
   or (<mv-coord> & <null-verb>);
 tend.v: 
   ((<verb-pl,i> & (<vc-tend>)) or
+  ({@E-} & dWi- & (<vc-tend>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-tend>) & hXc+) or
   (<verb-and-pl-> & ((<vc-tend>) or ())) or
   (((<vc-tend>) or [()]) & <verb-and-pl+>));
@@ -4256,6 +4282,7 @@ tending.v: <verb-pg> & <vc-tend>;
 consent.v endeavor.v hesitate.v proceed.v aspire.v purport.v:
   
   ((<verb-pl,i> & (<vc-consent>)) or
+  ({@E-} & dWi- & (<vc-consent>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-consent>) & hXc+) or
   (<verb-and-pl-> & ((<vc-consent>) or ())) or
   (((<vc-consent>) or [()]) & <verb-and-pl+>));
@@ -4277,6 +4304,7 @@ consenting.v endeavoring.v hesitating.v proceeding.v aspiring.v purporting.v:
 <vc-deign>: {@MV+} & <to-verb>;
 endeavour.v condescend.v deign.v: 
   ((<verb-pl,i> & (<vc-deign>)) or
+  ({@E-} & dWi- & (<vc-deign>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-deign>) & hXc+) or
   (<verb-and-pl-> & ((<vc-deign>) or ())) or
   (((<vc-deign>) or [()]) & <verb-and-pl+>));
@@ -4322,6 +4350,7 @@ happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
   <vc-ditrans>;
 wish.v: 
   ((<verb-pl,i> & (<vc-wish>)) or
+  ({@E-} & dWi- & (<vc-wish>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-wish>) & hXc+) or
   (<verb-and-pl-> & ((<vc-wish>) or ())) or
   (((<vc-wish>) or [()]) & <verb-and-pl+>));
@@ -4348,6 +4377,7 @@ wishing.g: (<vc-wish> & <verb-ge>) or <verb-ge-d>;
 hope.v agree.v pretend.v swear.v pray.v protest.v vow.v vote.v:
   
   ((<verb-pl,i> & (<vc-hope>)) or
+  ({@E-} & dWi- & (<vc-hope>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-hope>) & hXc+) or
   (<verb-and-pl-> & ((<vc-hope>) or ())) or
   (((<vc-hope>) or [()]) & <verb-and-pl+>));
@@ -4464,6 +4494,7 @@ seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 <vc-care>: {@MV+} & {<to-verb> or <QI+pref>};
 care.v: 
   ((<verb-pl,i> & (<vc-care>)) or
+  ({@E-} & dWi- & (<vc-care>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-care>) & hXc+) or
   (<verb-and-pl-> & ((<vc-care>) or ())) or
   (((<vc-care>) or [()]) & <verb-and-pl+>));
@@ -4483,6 +4514,7 @@ assert.v contend.v remark.v retort.v intimate.v exclaim.v
 conjecture.v allege.v surmise.v opine.v insinuate.v suppose.v:
   
   ((<verb-pl,i> & (<vc-assert>)) or
+  ({@E-} & dWi- & (<vc-assert>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-assert>) & hXc+) or
   (<verb-and-pl-> & ((<vc-assert>) or ())) or
   (((<vc-assert>) or [()]) & <verb-and-pl+>)) or <verb-manner>;
@@ -4536,6 +4568,7 @@ supposing.v:
 theorize.v attest.v fantasize.v muse.v speculate.v concur.v:
   
   ((<verb-pl,i> & (<vc-muse>)) or
+  ({@E-} & dWi- & (<vc-muse>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-muse>) & hXc+) or
   (<verb-and-pl-> & ((<vc-muse>) or ())) or
   (((<vc-muse>) or [()]) & <verb-and-pl+>));
@@ -4561,6 +4594,7 @@ theorizing.v attesting.v fantasizing.v musing.v speculating.v concurring.v:
 reply.v argue.v sigh.v testify.v comment.v respond.v reason.v:
   
   ((<verb-pl,i> & (<vc-reply>)) or
+  ({@E-} & dWi- & (<vc-reply>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-reply>) & hXc+) or
   (<verb-and-pl-> & ((<vc-reply>) or ())) or
   (((<vc-reply>) or [()]) & <verb-and-pl+>));
@@ -4595,6 +4629,7 @@ reasoning.v:
 boast.v brag.v complain.v hint.v mutter.v whisper.v:
   
   ((<verb-pl,i> & (<vc-brag>)) or
+  ({@E-} & dWi- & (<vc-brag>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-brag>) & hXc+) or
   (<verb-and-pl-> & ((<vc-brag>) or ())) or
   (((<vc-brag>) or [()]) & <verb-and-pl+>));
@@ -4616,6 +4651,7 @@ boasting.v bragging.v complaining.v hinting.v muttering.v whispering.v:
 <vc-dream>: {@MV+} & {<embed-verb> or TH+ or RSe+ or <of-coord> or BW-};
 dream.v: 
   ((<verb-pl,i> & (<vc-dream>)) or
+  ({@E-} & dWi- & (<vc-dream>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-dream>) & hXc+) or
   (<verb-and-pl-> & ((<vc-dream>) or ())) or
   (((<vc-dream>) or [()]) & <verb-and-pl+>));
@@ -4643,6 +4679,7 @@ dreaming.v: <verb-pg> & <vc-dream>;
 
 think.v: 
   ((<verb-pl,i> & (<vc-think>)) or
+  ({@E-} & dWi- & (<vc-think>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-think>) & hXc+) or
   (<verb-and-pl-> & ((<vc-think>) or ())) or
   (((<vc-think>) or [()]) & <verb-and-pl+>));
@@ -4687,6 +4724,7 @@ mattering.v: (<vc-matter> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-suffice>: {@MV+} & {THi+};
 suffice.v: 
   ((<verb-pl,i> & (<vc-suffice>)) or
+  ({@E-} & dWi- & (<vc-suffice>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-suffice>) & hXc+) or
   (<verb-and-pl-> & ((<vc-suffice>) or ())) or
   (((<vc-suffice>) or [()]) & <verb-and-pl+>));
@@ -4703,6 +4741,7 @@ sufficing.v: (<vc-suffice> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-insist>: ({@MV+} & {TH+ or Zs- or TS+ or <embed-verb>}) or (SI*j+ & I*j+);
 insist.v: 
   ((<verb-pl,i> & (<vc-insist>)) or
+  ({@E-} & dWi- & (<vc-insist>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-insist>) & hXc+) or
   (<verb-and-pl-> & ((<vc-insist>) or ())) or
   (((<vc-insist>) or [()]) & <verb-and-pl+>));
@@ -4719,6 +4758,7 @@ insisting.v: (<vc-insist> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-wonder>: {@MV+} & {<QI+pref>};
 wonder.v inquire.v: 
   ((<verb-pl,i> & (<vc-wonder>)) or
+  ({@E-} & dWi- & (<vc-wonder>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-wonder>) & hXc+) or
   (<verb-and-pl-> & ((<vc-wonder>) or ())) or
   (((<vc-wonder>) or [()]) & <verb-and-pl+>));
@@ -4744,6 +4784,7 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
   {K+ or [[{Xc+} & Pa+]] or [Pg+] or I*g+ or <b-minus> or QI+} & <mv-coord>;
 go.v: 
   ((<verb-pl,i> & (<vc-go>)) or
+  ({@E-} & dWi- & (<vc-go>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-go>) & hXc+) or
   (<verb-and-pl-> & ((<vc-go>) or ())) or
   (((<vc-go>) or [()]) & <verb-and-pl+>));
@@ -4790,6 +4831,7 @@ gonna.v:
 <vc-stay>: {({@MV+} & (Pa+ or AF-)) or ({K+} & <mv-coord>) or (O+ & <mv-coord>)};
 stay.v: 
   ((<verb-pl,i> & (<vc-stay>)) or
+  ({@E-} & dWi- & (<vc-stay>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-stay>) & hXc+) or
   (<verb-and-pl-> & ((<vc-stay>) or ())) or
   (((<vc-stay>) or [()]) & <verb-and-pl+>));
@@ -4808,6 +4850,7 @@ staying.v: (<vc-stay> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-stand>: {({@MV+} & Pa+) or ({O+ or <b-minus>} & {K+} & <mv-coord>)};
 stand.v sit.v: 
   ((<verb-pl,i> & (<vc-stand>)) or
+  ({@E-} & dWi- & (<vc-stand>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-stand>) & hXc+) or
   (<verb-and-pl-> & ((<vc-stand>) or ())) or
   (((<vc-stand>) or [()]) & <verb-and-pl+>));
@@ -4827,6 +4870,7 @@ standing.g sitting.g: (<vc-stand> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 <vc-sound>: ({@MV+} & {LI+ or Pa+ or AF-}) or {O+ & K+ & <mv-coord>};
 sound.v: 
   ((<verb-pl,i> & (<vc-sound>)) or
+  ({@E-} & dWi- & (<vc-sound>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-sound>) & hXc+) or
   (<verb-and-pl-> & ((<vc-sound>) or ())) or
   (((<vc-sound>) or [()]) & <verb-and-pl+>));
@@ -4846,6 +4890,7 @@ sounding.v: (<vc-sound> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-act>: {({@MV+} & (LI+ or Pa+)) or ({K+ or AF-} & <mv-coord>)};
 act.v: 
   ((<verb-pl,i> & (<vc-act>)) or
+  ({@E-} & dWi- & (<vc-act>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-act>) & hXc+) or
   (<verb-and-pl-> & ((<vc-act>) or ())) or
   (((<vc-act>) or [()]) & <verb-and-pl+>));
@@ -4866,6 +4911,7 @@ acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
 % See also rule.v far below
 reign.v rule.w: 
   ((<verb-pl,i> & (<vc-reign>)) or
+  ({@E-} & dWi- & (<vc-reign>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-reign>) & hXc+) or
   (<verb-and-pl-> & ((<vc-reign>) or ())) or
   (((<vc-reign>) or [()]) & <verb-and-pl+>));
@@ -4893,6 +4939,7 @@ reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
   or (O+ & MV+ & <mv-coord>)};
 look.v: 
   ((<verb-pl,i> & (<vc-look>)) or
+  ({@E-} & dWi- & (<vc-look>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-look>) & hXc+) or
   (<verb-and-pl-> & ((<vc-look>) or ())) or
   (((<vc-look>) or [()]) & <verb-and-pl+>));
@@ -4917,6 +4964,7 @@ looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
   or <vc-ditrans>;
 wave.v: 
   ((<verb-pl,i> & (<vc-wave>)) or
+  ({@E-} & dWi- & (<vc-wave>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-wave>) & hXc+) or
   (<verb-and-pl-> & ((<vc-wave>) or ())) or
   (((<vc-wave>) or [()]) & <verb-and-pl+>));
@@ -4933,6 +4981,7 @@ waving.v: (<vc-wave> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-repent>: {{@MV+ or ({Xc+} & @EB+)} & OF+};
 repent.v disapprove.v: 
   ((<verb-pl,i> & (<vc-repent>)) or
+  ({@E-} & dWi- & (<vc-repent>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-repent>) & hXc+) or
   (<verb-and-pl-> & ((<vc-repent>) or ())) or
   (((<vc-repent>) or [()]) & <verb-and-pl+>));
@@ -4949,6 +4998,7 @@ repenting.v disapproving.v: (<vc-repent> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-talk>: <vc-repent> & <vc-fill>;
 talk.v: 
   ((<verb-pl,i> & (<vc-talk>)) or
+  ({@E-} & dWi- & (<vc-talk>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-talk>) & hXc+) or
   (<verb-and-pl-> & ((<vc-talk>) or ())) or
   (((<vc-talk>) or [()]) & <verb-and-pl+>));
@@ -4967,6 +5017,7 @@ talking.v: (<vc-repent> & <verb-pg,ge> & <vc-fill>) or <verb-ge-d>;
 <vc-consist>: {@MV+ or @EB+} & OF+;
 consist.v: 
   ((<verb-pl,i> & (<vc-consist>)) or
+  ({@E-} & dWi- & (<vc-consist>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-consist>) & hXc+) or
   (<verb-and-pl-> & ((<vc-consist>) or ())) or
   (((<vc-consist>) or [()]) & <verb-and-pl+>));
@@ -4983,6 +5034,7 @@ consisting.v: (<vc-consist> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-die>: {K+ or OF+} & <mv-coord>;
 die.v: 
   ((<verb-pl,i> & (<vc-die>)) or
+  ({@E-} & dWi- & (<vc-die>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-die>) & hXc+) or
   (<verb-and-pl-> & ((<vc-die>) or ())) or
   (((<vc-die>) or [()]) & <verb-and-pl+>));
@@ -4999,6 +5051,7 @@ dying.v: (<vc-die> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-last>: {({[[@MV+]]} & OT+) or BT-} & <mv-coord>;
 last.v wait.v: 
   ((<verb-pl,i> & (<vc-last>)) or
+  ({@E-} & dWi- & (<vc-last>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-last>) & hXc+) or
   (<verb-and-pl-> & ((<vc-last>) or ())) or
   (((<vc-last>) or [()]) & <verb-and-pl+>));
@@ -5021,6 +5074,7 @@ attempt.v undertake.v deserve.v manage.v plot.v prefer.v neglect.v
 afford.v commit.v profess.v desire.v please.v:
   
   ((<verb-pl,i> & (<vc-attempt>)) or
+  ({@E-} & dWi- & (<vc-attempt>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-attempt>) & hXc+) or
   (<verb-and-pl-> & ((<vc-attempt>) or ())) or
   (((<vc-attempt>) or [()]) & <verb-and-pl+>));
@@ -5099,6 +5153,7 @@ deserved.v-d desired.v-d pleased.v-d:
 
 seek.v: 
   ((<verb-pl,i> & (<vc-seek>)) or
+  ({@E-} & dWi- & (<vc-seek>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-seek>) & hXc+) or
   (<verb-and-pl-> & ((<vc-seek>) or ())) or
   (((<vc-seek>) or [()]) & <verb-and-pl+>));
@@ -5121,6 +5176,7 @@ seeking.v: <verb-pg> & <vc-seek>;
 decline.v fail.v hasten.v volunteer.v aim.v:
   
   ((<verb-pl,i> & (<vc-decline>)) or
+  ({@E-} & dWi- & (<vc-decline>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-decline>) & hXc+) or
   (<verb-and-pl-> & ((<vc-decline>) or ())) or
   (((<vc-decline>) or [()]) & <verb-and-pl+>));
@@ -5165,6 +5221,7 @@ declining.v failing.v hastening.v volunteering.v aiming.v:
     [[@MV+ & O*n+]]} & <mv-coord>);
 fight.v: 
   ((<verb-pl,i> & (<vc-fight>)) or
+  ({@E-} & dWi- & (<vc-fight>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-fight>) & hXc+) or
   (<verb-and-pl-> & ((<vc-fight>) or ())) or
   (((<vc-fight>) or [()]) & <verb-and-pl+>));
@@ -5191,6 +5248,7 @@ fighting.v: <verb-pg> & <vc-fight>;
 threaten.v mean.v arrange.v pledge.v:
   
   ((<verb-pl,i> & (<vc-threaten>)) or
+  ({@E-} & dWi- & (<vc-threaten>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-threaten>) & hXc+) or
   (<verb-and-pl-> & ((<vc-threaten>) or ())) or
   (((<vc-threaten>) or [()]) & <verb-and-pl+>));
@@ -5222,6 +5280,7 @@ meaning.v arranging.v threatening.v pledging.v:
   ({@MV+} & {<to-verb> or TH+ or Zs- or <embed-verb> or VC+});
 plan.v confess.v: 
   ((<verb-pl,i> & (<vc-plan>)) or
+  ({@E-} & dWi- & (<vc-plan>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-plan>) & hXc+) or
   (<verb-and-pl-> & ((<vc-plan>) or ())) or
   (((<vc-plan>) or [()]) & <verb-and-pl+>));
@@ -5250,6 +5309,7 @@ planning.v confessing.v: <verb-pg> & <vc-plan>;
 
 decide.v resolve.v: 
   ((<verb-pl,i> & (<vc-decide>)) or
+  ({@E-} & dWi- & (<vc-decide>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-decide>) & hXc+) or
   (<verb-and-pl-> & ((<vc-decide>) or ())) or
   (((<vc-decide>) or [()]) & <verb-and-pl+>));
@@ -5278,6 +5338,7 @@ deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 
 remember.v forget.v: 
   ((<verb-pl,i> & (<vc-forget>)) or
+  ({@E-} & dWi- & (<vc-forget>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-forget>) & hXc+) or
   (<verb-and-pl-> & ((<vc-forget>) or ())) or
   (((<vc-forget>) or [()]) & <verb-and-pl+>));
@@ -5314,6 +5375,7 @@ remembering.v forgetting.v: <verb-pg> & <vc-forget>;
       <QI+pref> or (OF+ & {{Xc+} & QI+} & <mv-coord>)));
 learn.v: 
   ((<verb-pl,i> & (<vc-learn>)) or
+  ({@E-} & dWi- & (<vc-learn>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-learn>) & hXc+) or
   (<verb-and-pl-> & ((<vc-learn>) or ())) or
   (((<vc-learn>) or [()]) & <verb-and-pl+>));
@@ -5339,6 +5401,7 @@ learning.v: <verb-pg> & <vc-learn>;
     Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
 propose.v: 
   ((<verb-pl,i> & (<vc-propose>)) or
+  ({@E-} & dWi- & (<vc-propose>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-propose>) & hXc+) or
   (<verb-and-pl-> & ((<vc-propose>) or ())) or
   (((<vc-propose>) or [()]) & <verb-and-pl+>));
@@ -5371,6 +5434,7 @@ proposing.v: <verb-pg> & <vc-propose>;
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 demand.v: 
   ((<verb-pl,i> & (<vc-demand>)) or
+  ({@E-} & dWi- & (<vc-demand>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-demand>) & hXc+) or
   (<verb-and-pl-> & ((<vc-demand>) or ())) or
   (((<vc-demand>) or [()]) & <verb-and-pl+>));
@@ -5397,6 +5461,7 @@ demanding.g: (<vc-demand> & <verb-ge>) or <verb-ge-d>;
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
 beg.v plead.v: 
   ((<verb-pl,i> & (<vc-beg>)) or
+  ({@E-} & dWi- & (<vc-beg>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-beg>) & hXc+) or
   (<verb-and-pl-> & ((<vc-beg>) or ())) or
   (((<vc-beg>) or [()]) & <verb-and-pl+>));
@@ -5448,6 +5513,7 @@ bearing.v: <verb-pg> & <vc-bear>;
 
 love.v dislike.v hate.v: 
   ((<verb-pl,i> & (<vc-love>)) or
+  ({@E-} & dWi- & (<vc-love>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-love>) & hXc+) or
   (<verb-and-pl-> & ((<vc-love>) or ())) or
   (((<vc-love>) or [()]) & <verb-and-pl+>));
@@ -5477,6 +5543,7 @@ loving.v disliking.v hating.v: <verb-pg> & <vc-love>;
 
 begin.v continue.v cease.v: 
   ((<verb-pl,i> & (<vc-begin>)) or
+  ({@E-} & dWi- & (<vc-begin>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-begin>) & hXc+) or
   (<verb-and-pl-> & ((<vc-begin>) or ())) or
   (((<vc-begin>) or [()]) & <verb-and-pl+>));
@@ -5527,6 +5594,7 @@ beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
 
 start.v stop.v try.v: 
   ((<verb-pl,i> & (<vc-start>)) or
+  ({@E-} & dWi- & (<vc-start>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-start>) & hXc+) or
   (<verb-and-pl-> & ((<vc-start>) or ())) or
   (((<vc-start>) or [()]) & <verb-and-pl+>));
@@ -5563,6 +5631,7 @@ record.v deduce.v envision.v recount.v signify.v clarify.v disclose.v
 recollect.v adduce.v posit.v reiterate.v infer.v presuppose.v:
   
   ((<verb-pl,i> & (<vc-dispute>)) or
+  ({@E-} & dWi- & (<vc-dispute>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-dispute>) & hXc+) or
   (<verb-and-pl-> & ((<vc-dispute>) or ())) or
   (((<vc-dispute>) or [()]) & <verb-and-pl+>));
@@ -5602,6 +5671,7 @@ undisputed.v: (<verb-s-pv> & {THi+});
 <vc-repeat>: {<vc-trans>} or ({@MV+} & TH+) or MVp+;
 repeat.v reflect.v provide.v counter.v signal.v: 
   ((<verb-pl,i> & (<vc-repeat>)) or
+  ({@E-} & dWi- & (<vc-repeat>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-repeat>) & hXc+) or
   (<verb-and-pl-> & ((<vc-repeat>) or ())) or
   (((<vc-repeat>) or [()]) & <verb-and-pl+>));
@@ -5647,6 +5717,7 @@ sense.v doubt.v reaffirm.v reckon.v regret.v ascertain.v discern.v
 stipulate.v affirm.v certify.v trust.v postulate.v ensure.v imply.v verify.v:
   
   ((<verb-pl,i> & (<vc-sense>)) or
+  ({@E-} & dWi- & (<vc-sense>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-sense>) & hXc+) or
   (<verb-and-pl-> & ((<vc-sense>) or ())) or
   (((<vc-sense>) or [()]) & <verb-and-pl+>));
@@ -5692,6 +5763,7 @@ postulating.g ensuring.g implying.g verifying.g:
 proclaim.v:
   
   ((<verb-pl,i> & (<vc-proclaim>)) or
+  ({@E-} & dWi- & (<vc-proclaim>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-proclaim>) & hXc+) or
   (<verb-and-pl-> & ((<vc-proclaim>) or ())) or
   (((<vc-proclaim>) or [()]) & <verb-and-pl+>));
@@ -5726,6 +5798,7 @@ proclaiming.g:
   ({@MV+} & Pg+);
 imagine.v: 
   ((<verb-pl,i> & (<vc-imagine>)) or
+  ({@E-} & dWi- & (<vc-imagine>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-imagine>) & hXc+) or
   (<verb-and-pl-> & ((<vc-imagine>) or ())) or
   (((<vc-imagine>) or [()]) & <verb-and-pl+>));
@@ -5758,6 +5831,7 @@ declare.v conclude.v suspect.v concede.v foresee.v
 emphasize.v maintain.v acknowledge.v note.v confirm.v stress.v:
   
   ((<verb-pl,i> & (<vc-declare>)) or
+  ({@E-} & dWi- & (<vc-declare>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-declare>) & hXc+) or
   (<verb-and-pl-> & ((<vc-declare>) or ())) or
   (((<vc-declare>) or [()]) & <verb-and-pl+>)) or <verb-manner>;
@@ -5814,6 +5888,7 @@ noting.v confirming.v stressing.v:
 fear.v presume.v assume.v waver.v:
   
   ((<verb-pl,i> & (<vc-assume>)) or
+  ({@E-} & dWi- & (<vc-assume>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-assume>) & hXc+) or
   (<verb-and-pl-> & ((<vc-assume>) or ())) or
   (((<vc-assume>) or [()]) & <verb-and-pl+>)) or <verb-manner>;
@@ -5850,6 +5925,7 @@ fearing.v presuming.v assuming.v wavering.v:
 
 believe.v answer.v worry.v: 
   ((<verb-pl,i> & (<vc-believe>)) or
+  ({@E-} & dWi- & (<vc-believe>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-believe>) & hXc+) or
   (<verb-and-pl-> & ((<vc-believe>) or ())) or
   (((<vc-believe>) or [()]) & <verb-and-pl+>));
@@ -5879,6 +5955,7 @@ believing.v answering.v worrying.v: <verb-pg> & <vc-believe>;
      [[@MV+ & O*n+]]) & <mv-coord>);
 rule.v add.v: 
   ((<verb-pl,i> & (<vc-rule>)) or
+  ({@E-} & dWi- & (<vc-rule>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-rule>) & hXc+) or
   (<verb-and-pl-> & ((<vc-rule>) or ())) or
   (((<vc-rule>) or [()]) & <verb-and-pl+>));
@@ -5906,6 +5983,7 @@ ruling.v adding.v: <verb-pg> & <vc-rule>;
   ([[@MV+ & O*n+]]);
 figure.v: 
   ((<verb-pl,i> & (<vc-figure>)) or
+  ({@E-} & dWi- & (<vc-figure>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-figure>) & hXc+) or
   (<verb-and-pl-> & ((<vc-figure>) or ())) or
   (((<vc-figure>) or [()]) & <verb-and-pl+>));
@@ -5941,6 +6019,7 @@ analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
 hypothesize.v hypothesise.v document.v envisage.v:
   
   ((<verb-pl,i> & (<vc-predict>)) or
+  ({@E-} & dWi- & (<vc-predict>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-predict>) & hXc+) or
   (<verb-and-pl-> & ((<vc-predict>) or ())) or
   (((<vc-predict>) or [()]) & <verb-and-pl+>))
@@ -6006,6 +6085,7 @@ hypothesizing.v hypothesising.v documenting.v envisaging.v:
 guess.v estimate.v understand.v notice.v explain.v esplain.v demonstrate.v:
   
   ((<verb-pl,i> & (<vc-guess>)) or
+  ({@E-} & dWi- & (<vc-guess>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-guess>) & hXc+) or
   (<verb-and-pl-> & ((<vc-guess>) or ())) or
   (((<vc-guess>) or [()]) & <verb-and-pl+>));
@@ -6049,6 +6129,7 @@ demonstrating.v: <verb-pg> & <vc-guess>;
   or ({Xc+} & (MVa+ or MVb+));
 know.v: 
   ((<verb-pl,i> & (<vc-know> & {dCPu-})) or
+  ({@E-} & dWi- & (<vc-know> & {dCPu-}) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-know> & {dCPu-}) & hXc+) or
   (<verb-and-pl-> & ((<vc-know> & {dCPu-}) or ())) or
   (((<vc-know> & {dCPu-}) or [()]) & <verb-and-pl+>)) or <verb-manner>;
@@ -6080,6 +6161,7 @@ knowing.v: <verb-pg> & <vc-know>;
   ({@MV+} & (TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 request.v: 
   ((<verb-pl,i> & (<vc-request>)) or
+  ({@E-} & dWi- & (<vc-request>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-request>) & hXc+) or
   (<verb-and-pl-> & ((<vc-request>) or ())) or
   (((<vc-request>) or [()]) & <verb-and-pl+>));
@@ -6105,6 +6187,7 @@ requesting.v: <verb-pg> & <vc-request>;
   ({@MV+} & (Pa+ or TH+ or <embed-verb> or RSe+ or AF- or Vf+ or (LI+ or <mv-coord>) or [Pv+]));
 feel.v: 
   ((<verb-pl,i> & (<vc-feel>)) or
+  ({@E-} & dWi- & (<vc-feel>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-feel>) & hXc+) or
   (<verb-and-pl-> & ((<vc-feel>) or ())) or
   (((<vc-feel>) or [()]) & <verb-and-pl+>));
@@ -6125,6 +6208,7 @@ feeling.v: <verb-pg> & <vc-feel>;
   ({@MV+} & (QI+ or TH+ or Pg+));
 mind.v: 
   ((<verb-pl,i> & (<vc-mind>)) or
+  ({@E-} & dWi- & (<vc-mind>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-mind>) & hXc+) or
   (<verb-and-pl-> & ((<vc-mind>) or ())) or
   (((<vc-mind>) or [()]) & <verb-and-pl+>));
@@ -6145,6 +6229,7 @@ minding.v: <verb-pg> & <vc-mind>;
 <vc-study>: {<vc-trans>} or ({@MV+} & <QI+pref>);
 study.v: 
   ((<verb-pl,i> & (<vc-study>)) or
+  ({@E-} & dWi- & (<vc-study>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-study>) & hXc+) or
   (<verb-and-pl-> & ((<vc-study>) or ())) or
   (((<vc-study>) or [()]) & <verb-and-pl+>));
@@ -6170,6 +6255,7 @@ studying.v: <verb-pg> & <vc-study>;
 <vc-discuss>: <vc-trans> or ({@MV+} & (Pg+ or QI+));
 discuss.v: 
   ((<verb-pl,i> & (<vc-discuss>)) or
+  ({@E-} & dWi- & (<vc-discuss>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-discuss>) & hXc+) or
   (<verb-and-pl-> & ((<vc-discuss>) or ())) or
   (((<vc-discuss>) or [()]) & <verb-and-pl+>));
@@ -6196,6 +6282,7 @@ oppose.v enjoy.v advocate.v contemplate.v entail.v necessitate.v
 justify.v risk.v avoid.v involve.v favor.v:
   
   ((<verb-pl,i> & (<vc-oppose>)) or
+  ({@E-} & dWi- & (<vc-oppose>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-oppose>) & hXc+) or
   (<verb-and-pl-> & ((<vc-oppose>) or ())) or
   (((<vc-oppose>) or [()]) & <verb-and-pl+>));
@@ -6231,6 +6318,7 @@ favoring.v:
 <vc-finish>: {<vc-trans>} or ({@MV+} & Pg+) or (MVp+ & {VC+});
 finish.v practice.v resist.v: 
   ((<verb-pl,i> & (<vc-finish>)) or
+  ({@E-} & dWi- & (<vc-finish>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-finish>) & hXc+) or
   (<verb-and-pl-> & ((<vc-finish>) or ())) or
   (((<vc-finish>) or [()]) & <verb-and-pl+>));
@@ -6253,6 +6341,7 @@ finished.v-d practiced.v-d resisted.v-d quitted.v-d:
 quit.v-d:
   
   ((<verb-pl,i> & (<vc-finish>)) or
+  ({@E-} & dWi- & (<vc-finish>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-finish>) & hXc+) or
   (<verb-and-pl-> & ((<vc-finish>) or ())) or
   (((<vc-finish>) or [()]) & <verb-and-pl+>)) or
@@ -6286,6 +6375,7 @@ over_with: <verb-pv-b>;
 
 turn.v: 
   ((<verb-pl,i> & (<vc-turn>)) or
+  ({@E-} & dWi- & (<vc-turn>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-turn>) & hXc+) or
   (<verb-and-pl-> & ((<vc-turn>) or ())) or
   (((<vc-turn>) or [()]) & <verb-and-pl+>));
@@ -6337,6 +6427,7 @@ becoming.v: <verb-pg> & <vc-become>;
     or [Pv+]} & <mv-coord>);
 remain.v: 
   ((<verb-pl,i> & (<vc-remain>)) or
+  ({@E-} & dWi- & (<vc-remain>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-remain>) & hXc+) or
   (<verb-and-pl-> & ((<vc-remain>) or ())) or
   (((<vc-remain>) or [()]) & <verb-and-pl+>));
@@ -6363,6 +6454,7 @@ remaining.v: <verb-pg> & <vc-remain>;
 % <verb-i> & QI+: "The crime rate began to grow when?"
 grow.v: 
   ((<verb-pl,i> & (<vc-grow>)) or
+  ({@E-} & dWi- & (<vc-grow>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-grow>) & hXc+) or
   (<verb-and-pl-> & ((<vc-grow>) or ())) or
   (((<vc-grow>) or [()]) & <verb-and-pl+>)) or <verb-sip> or (<verb-i> & QI+);
@@ -6391,6 +6483,7 @@ growing.v: <verb-pg> & <vc-grow>;
 <vc-approve>: {O+ or <b-minus> or [[@MV+ & O*n+]] or ({@MV+} & OF+)} & <mv-coord>;
 approve.v: 
   ((<verb-pl,i> & (<vc-approve>)) or
+  ({@E-} & dWi- & (<vc-approve>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-approve>) & hXc+) or
   (<verb-and-pl-> & ((<vc-approve>) or ())) or
   (((<vc-approve>) or [()]) & <verb-and-pl+>));
@@ -6412,6 +6505,7 @@ approving.v: <verb-pg> & <vc-approve>;
 <vc-dispose>: (O+ or <b-minus> or [[@MV+ & O*n+]] or ({@MV+} & OF+)) & <mv-coord>;
 dispose.v conceive.v: 
   ((<verb-pl,i> & (<vc-dispose>)) or
+  ({@E-} & dWi- & (<vc-dispose>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-dispose>) & hXc+) or
   (<verb-and-pl-> & ((<vc-dispose>) or ())) or
   (((<vc-dispose>) or [()]) & <verb-and-pl+>));
@@ -6437,6 +6531,7 @@ disposing.v conceiving.v: <verb-ge> & <vc-dispose>;
     or OF+) & <mv-coord>;
 speak.v: 
   ((<verb-pl,i> & (<vc-speak>)) or
+  ({@E-} & dWi- & (<vc-speak>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-speak>) & hXc+) or
   (<verb-and-pl-> & ((<vc-speak>) or ())) or
   (((<vc-speak>) or [()]) & <verb-and-pl+>));
@@ -6469,6 +6564,7 @@ speaking.g: (<vc-speak> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
   or @MV+;
 taste.v: 
   ((<verb-pl,i> & (<vc-taste>)) or
+  ({@E-} & dWi- & (<vc-taste>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-taste>) & hXc+) or
   (<verb-and-pl-> & ((<vc-taste>) or ())) or
   (((<vc-taste>) or [()]) & <verb-and-pl+>));
@@ -6491,6 +6587,7 @@ tasting.v: <verb-pg> & <vc-taste>;
   or @MV+;
 reek.v smell.v: 
   ((<verb-pl,i> & (<vc-smell>)) or
+  ({@E-} & dWi- & (<vc-smell>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-smell>) & hXc+) or
   (<verb-and-pl-> & ((<vc-smell>) or ())) or
   (((<vc-smell>) or [()]) & <verb-and-pl+>));
@@ -6612,6 +6709,7 @@ costing.g: (<vc-cost> & <verb-ge>) or <verb-ge-d>;
 
 find.v: 
   ((<verb-pl,i> & (<vc-find>)) or
+  ({@E-} & dWi- & (<vc-find>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-find>) & hXc+) or
   (<verb-and-pl-> & ((<vc-find>) or ())) or
   (((<vc-find>) or [()]) & <verb-and-pl+>));
@@ -6642,6 +6740,7 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 
 get.v: 
   ((<verb-pl,i> & (<vc-get>)) or
+  ({@E-} & dWi- & (<vc-get>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-get>) & hXc+) or
   (<verb-and-pl-> & ((<vc-get>) or ())) or
   (((<vc-get>) or [()]) & <verb-and-pl+>));
@@ -6683,6 +6782,7 @@ getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 
 leave.v: 
   ((<verb-pl,i> & (<vc-leave>)) or
+  ({@E-} & dWi- & (<vc-leave>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-leave>) & hXc+) or
   (<verb-and-pl-> & ((<vc-leave>) or ())) or
   (((<vc-leave>) or [()]) & <verb-and-pl+>));
@@ -6708,6 +6808,7 @@ leaving.g leavin'.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
 
 keep.v: 
   ((<verb-pl,i> & (<vc-keep>)) or
+  ({@E-} & dWi- & (<vc-keep>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-keep>) & hXc+) or
   (<verb-and-pl-> & ((<vc-keep>) or ())) or
   (((<vc-keep>) or [()]) & <verb-and-pl+>));
@@ -6762,6 +6863,7 @@ free.i straight.i loose.i: Vs- & {MV+};
 
 hold.v: 
   ((<verb-pl,i> & (<vc-hold>)) or
+  ({@E-} & dWi- & (<vc-hold>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-hold>) & hXc+) or
   (<verb-and-pl-> & ((<vc-hold>) or ())) or
   (((<vc-hold>) or [()]) & <verb-and-pl+>));
@@ -6790,6 +6892,7 @@ hostage.i captive.i: Vh- or Vth-;
 
 expect.v claim.v: 
   ((<verb-pl,i> & (<vc-expect>)) or
+  ({@E-} & dWi- & (<vc-expect>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-expect>) & hXc+) or
   (<verb-and-pl-> & ((<vc-expect>) or ())) or
   (((<vc-expect>) or [()]) & <verb-and-pl+>));
@@ -6815,6 +6918,7 @@ expecting.v claiming.v: <verb-pg> & <vc-expect>;
   ((O+ or <b-minus> or OX+) & {@MV+} & <too-verb>);
 intend.v: 
   ((<verb-pl,i> & (<vc-intend>)) or
+  ({@E-} & dWi- & (<vc-intend>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-intend>) & hXc+) or
   (<verb-and-pl-> & ((<vc-intend>) or ())) or
   (((<vc-intend>) or [()]) & <verb-and-pl+>));
@@ -6849,6 +6953,7 @@ intending.v: <verb-pg> & <vc-intend>;
 dare.v:
   
   ((<verb-pl,i> & (<vc-dare>)) or
+  ({@E-} & dWi- & (<vc-dare>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-dare>) & hXc+) or
   (<verb-and-pl-> & ((<vc-dare>) or ())) or
   (((<vc-dare>) or [()]) & <verb-and-pl+>))
@@ -6878,6 +6983,7 @@ daring.v: <verb-pg> & <vc-dare>;
 
 like.v: 
   ((<verb-pl,i> & (<vc-like>)) or
+  ({@E-} & dWi- & (<vc-like>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-like>) & hXc+) or
   (<verb-and-pl-> & ((<vc-like>) or ())) or
   (((<vc-like>) or [()]) & <verb-and-pl+>));
@@ -6903,6 +7009,7 @@ liking.v: <verb-pg> & <vc-like>;
 
 offer.v: 
   ((<verb-pl,i> & (<vc-offer>)) or
+  ({@E-} & dWi- & (<vc-offer>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-offer>) & hXc+) or
   (<verb-and-pl-> & ((<vc-offer>) or ())) or
   (((<vc-offer>) or [()]) & <verb-and-pl+>));
@@ -6930,6 +7037,7 @@ offering.v: <verb-pg> & <vc-offer>;
 
 refuse.v: 
   ((<verb-pl,i> & (<vc-refuse>)) or
+  ({@E-} & dWi- & (<vc-refuse>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-refuse>) & hXc+) or
   (<verb-and-pl-> & ((<vc-refuse>) or ())) or
   (((<vc-refuse>) or [()]) & <verb-and-pl+>));
@@ -6958,6 +7066,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
 
 want.v need.v: 
   ((<verb-pl,i> & (<vc-want>)) or
+  ({@E-} & dWi- & (<vc-want>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-want>) & hXc+) or
   (<verb-and-pl-> & ((<vc-want>) or ())) or
   (((<vc-want>) or [()]) & <verb-and-pl+>));
@@ -6987,6 +7096,7 @@ wanting.v needing.v: <verb-pg> & <vc-want>;
 
 choose.v: 
   ((<verb-pl,i> & (<vc-choose>)) or
+  ({@E-} & dWi- & (<vc-choose>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-choose>) & hXc+) or
   (<verb-and-pl-> & ((<vc-choose>) or ())) or
   (((<vc-choose>) or [()]) & <verb-and-pl+>));
@@ -7019,6 +7129,7 @@ choosing.v: <verb-pg> & <vc-choose>;
 
 prepare.v press.v: 
   ((<verb-pl,i> & (<vc-prepare>)) or
+  ({@E-} & dWi- & (<vc-prepare>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-prepare>) & hXc+) or
   (<verb-and-pl-> & ((<vc-prepare>) or ())) or
   (((<vc-prepare>) or [()]) & <verb-and-pl+>));
@@ -7047,6 +7158,7 @@ preparing.v pressing.v: <verb-pg> & <vc-prepare>;
 
 require.v: 
   ((<verb-pl,i> & (<vc-require>)) or
+  ({@E-} & dWi- & (<vc-require>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-require>) & hXc+) or
   (<verb-and-pl-> & ((<vc-require>) or ())) or
   (((<vc-require>) or [()]) & <verb-and-pl+>));
@@ -7074,6 +7186,7 @@ requiring.v: <verb-pg> & <vc-require>;
 
 command.v order.v urge.v: 
   ((<verb-pl,i> & (<vc-command>)) or
+  ({@E-} & dWi- & (<vc-command>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-command>) & hXc+) or
   (<verb-and-pl-> & ((<vc-command>) or ())) or
   (((<vc-command>) or [()]) & <verb-and-pl+>));
@@ -7101,6 +7214,7 @@ commanding.v ordering.v urging.v: <verb-pg> & <vc-command>;
   (((O+ & (B- or ({[[@MV+]]} & O*n+))) or ([[@MV+ & O*n+]])) & <mv-coord>);
 consider.v: 
   ((<verb-pl,i> & (<vc-consider>)) or
+  ({@E-} & dWi- & (<vc-consider>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-consider>) & hXc+) or
   (<verb-and-pl-> & ((<vc-consider>) or ())) or
   (((<vc-consider>) or [()]) & <verb-and-pl+>));
@@ -7127,6 +7241,7 @@ considering.v: <verb-pg> & <vc-consider>;
 
 perceive.v: 
   ((<verb-pl,i> & (<vc-perceive>)) or
+  ({@E-} & dWi- & (<vc-perceive>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-perceive>) & hXc+) or
   (<verb-and-pl-> & ((<vc-perceive>) or ())) or
   (((<vc-perceive>) or [()]) & <verb-and-pl+>));
@@ -7151,6 +7266,7 @@ perceiving.v: <verb-pg> & <vc-perceive>;
 
 report.v: 
   ((<verb-pl,i> & (<vc-report>)) or
+  ({@E-} & dWi- & (<vc-report>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-report>) & hXc+) or
   (<verb-and-pl-> & ((<vc-report>) or ())) or
   (((<vc-report>) or [()]) & <verb-and-pl+>));
@@ -7178,6 +7294,7 @@ reporting.v: <verb-pg> & <vc-report>;
 
 caution.v: 
   ((<verb-pl,i> & (<vc-caution>)) or
+  ({@E-} & dWi- & (<vc-caution>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-caution>) & hXc+) or
   (<verb-and-pl-> & ((<vc-caution>) or ())) or
   (((<vc-caution>) or [()]) & <verb-and-pl+>));
@@ -7205,6 +7322,7 @@ cautioning.v: <verb-pg> & <vc-caution>;
 
 warn.v advise.v: 
   ((<verb-pl,i> & (<vc-warn>)) or
+  ({@E-} & dWi- & (<vc-warn>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-warn>) & hXc+) or
   (<verb-and-pl-> & ((<vc-warn>) or ())) or
   (((<vc-warn>) or [()]) & <verb-and-pl+>));
@@ -7231,6 +7349,7 @@ warning.v advising.v: <verb-pg> & <vc-warn>;
 
 hear.v: 
   ((<verb-pl,i> & (<vc-hear>)) or
+  ({@E-} & dWi- & (<vc-hear>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-hear>) & hXc+) or
   (<verb-and-pl-> & ((<vc-hear>) or ())) or
   (((<vc-hear>) or [()]) & <verb-and-pl+>));
@@ -7261,6 +7380,7 @@ hearing.v: <verb-pg> & <vc-hear>;
 
 see.v spot.v: 
   ((<verb-pl,i> & (<vc-see>)) or
+  ({@E-} & dWi- & (<vc-see>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-see>) & hXc+) or
   (<verb-and-pl-> & ((<vc-see>) or ())) or
   (((<vc-see>) or [()]) & <verb-and-pl+>));
@@ -7296,6 +7416,7 @@ owe.v deliver.v accord.v award.v term.v grant.v begrudge.v
 assign.v rename.v repay.v dub.v entitle.v fine.v:
   
   ((<verb-pl,i> & (<vc-owe>)) or
+  ({@E-} & dWi- & (<vc-owe>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-owe>) & hXc+) or
   (<verb-and-pl-> & ((<vc-owe>) or ())) or
   (((<vc-owe>) or [()]) & <verb-and-pl+>));
@@ -7341,6 +7462,7 @@ termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
 deliver.w:
   
   ((<verb-pl,i> & (<vc-intrans>)) or
+  ({@E-} & dWi- & (<vc-intrans>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-intrans>) & hXc+) or
   (<verb-and-pl-> & ((<vc-intrans>) or ())) or
   (((<vc-intrans>) or [()]) & <verb-and-pl+>));
@@ -7371,11 +7493,12 @@ delivered.w-d:
     or (O+ & K+)
     or (K+ & {[[@MV+]]} & O*n+)
     or ([[@MV+ & O*n+]])
-  } & <mv-coord> & {Xc+ & SI*i+};
+  } & <mv-coord>;
 
 give.v send.v bring.v lend.v issue.v hand.v pour.v:
   
   ((<verb-pl,i> & (<vc-give>)) or
+  ({@E-} & dWi- & (<vc-give>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-give>) & hXc+) or
   (<verb-and-pl-> & ((<vc-give>) or ())) or
   (((<vc-give>) or [()]) & <verb-and-pl+>));
@@ -7441,6 +7564,7 @@ lending.v issuing.v handing.v pouring.v:
 
 pass.v buy.v pay.v sell.v deal.v telegraph.v wire.v: 
   ((<verb-pl,i> & (<vc-pass>)) or
+  ({@E-} & dWi- & (<vc-pass>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-pass>) & hXc+) or
   (<verb-and-pl-> & ((<vc-pass>) or ())) or
   (((<vc-pass>) or [()]) & <verb-and-pl+>));
@@ -7488,6 +7612,7 @@ passing.v buying.v paying.v selling.v dealing.v telegraphing.v wiring.v:
 % "she called him" but "*she shouted him"
 call.v shout.v: 
   ((<verb-pl,i> & (<vc-call>)) or
+  ({@E-} & dWi- & (<vc-call>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-call>) & hXc+) or
   (<verb-and-pl-> & ((<vc-call>) or ())) or
   (((<vc-call>) or [()]) & <verb-and-pl+>));
@@ -7519,6 +7644,7 @@ calling.v shouting.v: <verb-pg> & <vc-call>;
 % Pa+: "The house was painted yellow"
 color.v colour.v paint.v: 
   ((<verb-pl,i> & (<vc-color>)) or
+  ({@E-} & dWi- & (<vc-color>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-color>) & hXc+) or
   (<verb-and-pl-> & ((<vc-color>) or ())) or
   (((<vc-color>) or [()]) & <verb-and-pl+>));
@@ -7561,6 +7687,7 @@ coloring.g colouring.g painting.g:
 
 write.v charge.v draw.v: 
   ((<verb-pl,i> & (<vc-write>)) or
+  ({@E-} & dWi- & (<vc-write>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-write>) & hXc+) or
   (<verb-and-pl-> & ((<vc-write>) or ())) or
   (((<vc-write>) or [()]) & <verb-and-pl+>));
@@ -7619,6 +7746,7 @@ writing.g reading.g charging.g drawing.g:
     ([[@MV+ & O*n+]])} & <mv-coord>);
 sing.v dance.v cry.v: 
   ((<verb-pl,i> & (<vc-sing>)) or
+  ({@E-} & dWi- & (<vc-sing>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-sing>) & hXc+) or
   (<verb-and-pl-> & ((<vc-sing>) or ())) or
   (((<vc-sing>) or [()]) & <verb-and-pl+>));
@@ -7655,6 +7783,7 @@ singing.v dancing.v crying.v: <verb-pg> & <vc-sing>;
 
 allow.v: 
   ((<verb-pl,i> & (<vc-allow>)) or
+  ({@E-} & dWi- & (<vc-allow>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-allow>) & hXc+) or
   (<verb-and-pl-> & ((<vc-allow>) or ())) or
   (((<vc-allow>) or [()]) & <verb-and-pl+>));
@@ -7681,6 +7810,7 @@ allowing.v: <verb-pg> & <vc-allow>;
 
 promise.v: 
   ((<verb-pl,i> & (<vc-promise>)) or
+  ({@E-} & dWi- & (<vc-promise>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-promise>) & hXc+) or
   (<verb-and-pl-> & ((<vc-promise>) or ())) or
   (((<vc-promise>) or [()]) & <verb-and-pl+>));
@@ -7713,6 +7843,7 @@ promising.v: <verb-pg> & <vc-promise>;
 
 show.v: 
   ((<verb-pl,i> & (<vc-show>)) or
+  ({@E-} & dWi- & (<vc-show>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-show>) & hXc+) or
   (<verb-and-pl-> & ((<vc-show>) or ())) or
   (((<vc-show>) or [()]) & <verb-and-pl+>)) or <verb-manner>;
@@ -7749,6 +7880,7 @@ showing.v: <verb-pg> & <vc-show>;
 
 teach.v: 
   ((<verb-pl,i> & (<vc-teach>)) or
+  ({@E-} & dWi- & (<vc-teach>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-teach>) & hXc+) or
   (<verb-and-pl-> & ((<vc-teach>) or ())) or
   (((<vc-teach>) or [()]) & <verb-and-pl+>));
@@ -7777,6 +7909,7 @@ teaching.v: <verb-pg> & <vc-teach>;
 
 compel.v: 
   ((<verb-pl,i> & (<vc-compel>)) or
+  ({@E-} & dWi- & (<vc-compel>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-compel>) & hXc+) or
   (<verb-and-pl-> & ((<vc-compel>) or ())) or
   (((<vc-compel>) or [()]) & <verb-and-pl+>));
@@ -7801,6 +7934,7 @@ compelling.g: (<vc-compel> & <verb-ge>) or <verb-ge-d>;
 
 force.v: 
   ((<verb-pl,i> & (<vc-force>)) or
+  ({@E-} & dWi- & (<vc-force>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-force>) & hXc+) or
   (<verb-and-pl-> & ((<vc-force>) or ())) or
   (((<vc-force>) or [()]) & <verb-and-pl+>));
@@ -7838,6 +7972,7 @@ license.v incite.v nominate.v destine.v provoke.v challenge.v exhort.v
 implore.v motivate.v impel.v:
   
   ((<verb-pl,i> & (<vc-design>)) or
+  ({@E-} & dWi- & (<vc-design>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-design>) & hXc+) or
   (<verb-and-pl-> & ((<vc-design>) or ())) or
   (((<vc-design>) or [()]) & <verb-and-pl+>))
@@ -7933,6 +8068,7 @@ using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
 
 elect.v appoint.v: 
   ((<verb-pl,i> & (<vc-elect>)) or
+  ({@E-} & dWi- & (<vc-elect>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-elect>) & hXc+) or
   (<verb-and-pl-> & ((<vc-elect>) or ())) or
   (((<vc-elect>) or [()]) & <verb-and-pl+>));
@@ -7965,6 +8101,7 @@ electing.v appointing.v: <verb-pg> & <vc-elect>;
 
 name.v designate.v label.v: 
   ((<verb-pl,i> & (<vc-name>)) or
+  ({@E-} & dWi- & (<vc-name>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-name>) & hXc+) or
   (<verb-and-pl-> & ((<vc-name>) or ())) or
   (((<vc-name>) or [()]) & <verb-and-pl+>));
@@ -7989,6 +8126,7 @@ naming.v designating.v labelling.v labeling.v: <verb-pg> & <vc-name>;
 <vc-tag>: <vc-name> or <vc-intrans>;
 tag.v: 
   ((<verb-pl,i> & (<vc-tag>)) or
+  ({@E-} & dWi- & (<vc-tag>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-tag>) & hXc+) or
   (<verb-and-pl-> & ((<vc-tag>) or ())) or
   (((<vc-tag>) or [()]) & <verb-and-pl+>));
@@ -8019,6 +8157,7 @@ tagging.v: <verb-pg> & <vc-tag>;
 
 program.v oblige.v: 
   ((<verb-pl,i> & (<vc-program>)) or
+  ({@E-} & dWi- & (<vc-program>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-program>) & hXc+) or
   (<verb-and-pl-> & ((<vc-program>) or ())) or
   (((<vc-program>) or [()]) & <verb-and-pl+>));
@@ -8044,6 +8183,7 @@ programing.v programming.v obliging.v: <verb-pg> & <vc-program>;
   ([[@MV+ & O*n+ & <mv-coord>]]);
 convince.v persuade.v: 
   ((<verb-pl,i> & (<vc-convince>)) or
+  ({@E-} & dWi- & (<vc-convince>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-convince>) & hXc+) or
   (<verb-and-pl-> & ((<vc-convince>) or ())) or
   (((<vc-convince>) or [()]) & <verb-and-pl+>));
@@ -8085,6 +8225,7 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 
 tell.v: 
   ((<verb-pl,i> & (<vc-tell>)) or
+  ({@E-} & dWi- & (<vc-tell>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-tell>) & hXc+) or
   (<verb-and-pl-> & ((<vc-tell>) or ())) or
   (((<vc-tell>) or [()]) & <verb-and-pl+>));
@@ -8121,6 +8262,7 @@ tellin': <verb-pg> & <vc-tell>;
 
 ask.v: 
   ((<verb-pl,i> & (<vc-ask>)) or
+  ({@E-} & dWi- & (<vc-ask>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-ask>) & hXc+) or
   (<verb-and-pl-> & ((<vc-ask>) or ())) or
   (((<vc-ask>) or [()]) & <verb-and-pl+>));
@@ -8149,6 +8291,7 @@ asking.v: <verb-pg> & <vc-ask>;
 
 help.v: 
   ((<verb-pl,i> & (<vc-help>)) or
+  ({@E-} & dWi- & (<vc-help>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-help>) & hXc+) or
   (<verb-and-pl-> & ((<vc-help>) or ())) or
   (((<vc-help>) or [()]) & <verb-and-pl+>));
@@ -8175,6 +8318,7 @@ helping.v: <verb-pg> & <vc-help>;
 
 remind.v: 
   ((<verb-pl,i> & (<vc-remind>)) or
+  ({@E-} & dWi- & (<vc-remind>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-remind>) & hXc+) or
   (<verb-and-pl-> & ((<vc-remind>) or ())) or
   (((<vc-remind>) or [()]) & <verb-and-pl+>));
@@ -8205,6 +8349,7 @@ reminding.v: <verb-pg> & <vc-remind>;
 inform.v reassure.v alert.v guarantee.v notify.v forewarn.v:
   
   ((<verb-pl,i> & (<vc-inform>)) or
+  ({@E-} & dWi- & (<vc-inform>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-inform>) & hXc+) or
   (<verb-and-pl-> & ((<vc-inform>) or ())) or
   (((<vc-inform>) or [()]) & <verb-and-pl+>));
@@ -8240,6 +8385,7 @@ informing.v reassuring.v alerting.v guaranteeing.v notifying.v forewarning.v:
 
 assure.v: 
   ((<verb-pl,i> & (<vc-assure>)) or
+  ({@E-} & dWi- & (<vc-assure>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-assure>) & hXc+) or
   (<verb-and-pl-> & ((<vc-assure>) or ())) or
   (((<vc-assure>) or [()]) & <verb-and-pl+>));
@@ -8294,6 +8440,7 @@ let's let’s: <verb-co> & {N+} & {I+};
 
 watch.v: 
   ((<verb-pl,i> & (<vc-watch>)) or
+  ({@E-} & dWi- & (<vc-watch>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-watch>) & hXc+) or
   (<verb-and-pl-> & ((<vc-watch>) or ())) or
   (((<vc-watch>) or [()]) & <verb-and-pl+>));
@@ -8320,6 +8467,7 @@ watching.v: <verb-pg> & <vc-watch>;
 
 appreciate.v spend.v: 
   ((<verb-pl,i> & (<vc-appreciate>)) or
+  ({@E-} & dWi- & (<vc-appreciate>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-appreciate>) & hXc+) or
   (<verb-and-pl-> & ((<vc-appreciate>) or ())) or
   (((<vc-appreciate>) or [()]) & <verb-and-pl+>));
@@ -8356,6 +8504,7 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 
 make.v: 
   ((<verb-pl,i> & (<vc-make>)) or
+  ({@E-} & dWi- & (<vc-make>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-make>) & hXc+) or
   (<verb-and-pl-> & ((<vc-make>) or ())) or
   (((<vc-make>) or [()]) & <verb-and-pl+>));
@@ -8386,6 +8535,7 @@ making.v: <verb-pg> & <vc-make>;
 
 render.v deem.v: 
   ((<verb-pl,i> & (<vc-render>)) or
+  ({@E-} & dWi- & (<vc-render>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-render>) & hXc+) or
   (<verb-and-pl-> & ((<vc-render>) or ())) or
   (((<vc-render>) or [()]) & <verb-and-pl+>));
@@ -8410,6 +8560,7 @@ rendering.v deeming.v: <verb-pg> & <vc-render>;
 deprive.v accuse.v acquit.v purge.v disabuse.v exonerate.v absolve.v rob.v
 convict.v: 
   ((<verb-pl,i> & (<vc-deprive>)) or
+  ({@E-} & dWi- & (<vc-deprive>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-deprive>) & hXc+) or
   (<verb-and-pl-> & ((<vc-deprive>) or ())) or
   (((<vc-deprive>) or [()]) & <verb-and-pl+>));
@@ -8443,6 +8594,7 @@ exonerating.v absolving.v robbing.v convicting.v: <verb-pg> & <vc-deprive>;
 
 clear.v: 
   ((<verb-pl,i> & (<vc-clear>)) or
+  ({@E-} & dWi- & (<vc-clear>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-clear>) & hXc+) or
   (<verb-and-pl-> & ((<vc-clear>) or ())) or
   (((<vc-clear>) or [()]) & <verb-and-pl+>));
@@ -8592,6 +8744,7 @@ proving.v: <verb-x-pg> &  <vc-prove>;
 
 suggest.v anticipate.v recommend.v: 
   ((<verb-pl,i> & (<vc-suggest>)) or
+  ({@E-} & dWi- & (<vc-suggest>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-suggest>) & hXc+) or
   (<verb-and-pl-> & ((<vc-suggest>) or ())) or
   (((<vc-suggest>) or [()]) & <verb-and-pl+>));
@@ -8621,6 +8774,7 @@ suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
 
 deny.v: 
   ((<verb-pl,i> & (<vc-deny>)) or
+  ({@E-} & dWi- & (<vc-deny>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-deny>) & hXc+) or
   (<verb-and-pl-> & ((<vc-deny>) or ())) or
   (((<vc-deny>) or [()]) & <verb-and-pl+>));
@@ -8647,6 +8801,7 @@ denying.v: <verb-pg> & <vc-deny>;
 
 describe.v: 
   ((<verb-pl,i> & (<vc-describe>)) or
+  ({@E-} & dWi- & (<vc-describe>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-describe>) & hXc+) or
   (<verb-and-pl-> & ((<vc-describe>) or ())) or
   (((<vc-describe>) or [()]) & <verb-and-pl+>));
@@ -8673,6 +8828,7 @@ describing.v: <verb-pg> & <vc-describe>;
 
 portray.v depict.v regard.v view.v characterize.v: 
   ((<verb-pl,i> & (<vc-portray>)) or
+  ({@E-} & dWi- & (<vc-portray>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-portray>) & hXc+) or
   (<verb-and-pl-> & ((<vc-portray>) or ())) or
   (((<vc-portray>) or [()]) & <verb-and-pl+>));
@@ -8703,6 +8859,7 @@ take_part catch_up catch_on file_suit pick_up take_off break_free
 take_over jump_ship see_fit take_note:
   
   ((<verb-pl,i> & (<vc-intrans>)) or
+  ({@E-} & dWi- & (<vc-intrans>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-intrans>) & hXc+) or
   (<verb-and-pl-> & ((<vc-intrans>) or ())) or
   (((<vc-intrans>) or [()]) & <verb-and-pl+>));
@@ -8756,6 +8913,7 @@ taken_part taken_off broken_free taken_over seen_fit taken_note:
 come_true come_clean come_of_age:
   
   ((<verb-pl,i> & (<vc-intrans>)) or
+  ({@E-} & dWi- & (<vc-intrans>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-intrans>) & hXc+) or
   (<verb-and-pl-> & ((<vc-intrans>) or ())) or
   (((<vc-intrans>) or [()]) & <verb-and-pl+>)) or
@@ -8775,6 +8933,7 @@ seeing_fit letting_go taking_note coming_true coming_clean coming_of_age:
 allow_for bring_about get_rid_of let_go_of take_note_of:
   
   ((<verb-pl,i> & (<vc-trans>)) or
+  ({@E-} & dWi- & (<vc-trans>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-trans>) & hXc+) or
   (<verb-and-pl-> & ((<vc-trans>) or ())) or
   (((<vc-trans>) or [()]) & <verb-and-pl+>));
@@ -8808,6 +8967,7 @@ taking_note_of:
 <vc-take-it>: {[@MV+]} & TH+;
 take_it make_out point_out give_notice serve_notice: 
   ((<verb-pl,i> & (<vc-take-it>)) or
+  ({@E-} & dWi- & (<vc-take-it>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-take-it>) & hXc+) or
   (<verb-and-pl-> & ((<vc-take-it>) or ())) or
   (((<vc-take-it>) or [()]) & <verb-and-pl+>));
@@ -8853,6 +9013,7 @@ turning_out: <verb-s-pg> & <vc-turn-out>;
 <vc-find-out>: {[@MV+]} & (TH+ or (QI+ & {MV+}) or <embed-verb>);
 find_out figure_out: 
   ((<verb-pl,i> & (<vc-find-out>)) or
+  ({@E-} & dWi- & (<vc-find-out>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-find-out>) & hXc+) or
   (<verb-and-pl-> & ((<vc-find-out>) or ())) or
   (((<vc-find-out>) or [()]) & <verb-and-pl+>));
@@ -9082,6 +9243,7 @@ asking.q:
 <vc-vote>: {Xc+} & Vv+ & <mv-coord>;
 answer.w reply.w say.w vote.w: 
   ((<verb-pl,i> & (<vc-vote>)) or
+  ({@E-} & dWi- & (<vc-vote>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-vote>) & hXc+) or
   (<verb-and-pl-> & ((<vc-vote>) or ())) or
   (((<vc-vote>) or [()]) & <verb-and-pl+>));
@@ -9125,6 +9287,7 @@ yes.vote no.vote maybe.vote:
 double.v triple.v quadruple.v quintuple.v:
   {EN-} & 
   ((<verb-pl,i> & (<vc-fill>)) or
+  ({@E-} & dWi- & (<vc-fill>) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & (<vc-fill>) & hXc+) or
   (<verb-and-pl-> & ((<vc-fill>) or ())) or
   (((<vc-fill>) or [()]) & <verb-and-pl+>));

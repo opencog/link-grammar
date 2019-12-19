@@ -2412,6 +2412,8 @@ per "/.per": Us+ & Mp-;
 % <verb-sp,pp>: to singular or plural subject or past-participles
 % <verb-pg>   : to gerunds
 % <verb-si>   : subject inversion
+% <verb-co>   : optional subjects to imperatives (commands)
+% <verb-sic>  : imperative-subject inversion
 
 % <verb-wall>: these connect to the head verb:
 % WV connects the wall to the head-verb,
@@ -2509,8 +2511,11 @@ per "/.per": Us+ & Mp-;
 %       which uses subject inversion and "did see" for the infinitive.
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
 <verb-co>:   {@E-} & {EI- or S**i-} & Wi-;
-<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]))
-                      or ({EI- or S**i- or [hCO-]} & Wi- & {NM+})) & {@E-};
+<verb-sic>:  {@E-} & Wi- & Xc+ & SI*i+ & {Xc+};
+<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
+                      ({EI- or S**i- or [hCO-]} & Wi- & {NM+}) or
+                      (Wi- & Xc+ & SI*i+ & {Xc+})
+                     ) & {@E-};
 <verb-pl,i>:  <verb-pl> or <verb-ico>;
 
 <verb-si>:   {@E-} & hPF- & {<verb-wall>} & hSI+;
@@ -2699,10 +2704,12 @@ per "/.per": Us+ & Mp-;
 %    The first verb is expecting an object, but there isn't one.
 % ({@E-} & hXd- & dWi- & ($1) & hXc+):
 %    Parenthetical phrases: "(please refer to the list below)"
-%    Getting the parenthesis cannot be come by hacking <verb-ico>
+%    Getting the parenthesis cannot be acheived by hacking <verb-ico>
 %    or <verb-pl,i> and must be done here.
+% (dWi- & ($1) & Xc+ & SI*i+ & {Xc+}): "Bring out the Ring, Frodo!"
 define(`VERB_PLI',`'
   ((<verb-pl,i> & ($1)) or
+  ({@E-} & dWi- & ($1) & Xc+ & SI*i+ & {Xc+}) or
   ({@E-} & hXd- & dWi- & ($1) & hXc+) or
   (<verb-and-pl-> & (($1) or ())) or
   ((($1) or [()]) & <verb-and-pl+>)))
@@ -2802,7 +2809,7 @@ do.v:
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
-  or (<verb-co> & {I*d+} & Xc+ & SI*i+)
+  or (<verb-co> & {I*d+} & Xc+ & SI*i+ & {Xc+})
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
     ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) &
@@ -3738,7 +3745,6 @@ running.g beating.g catching.g driving.g striking.g:
 % unfortunately:
 %    *This is the man we love him
 <vc-trans>:
-  {Xc+ & SI*i+ & {Xc+}} &
   (O+
    or <b-minus>
    or [[@MV+ & O*n+]]
@@ -5763,7 +5769,7 @@ delivered.w-d:
     or (O+ & K+)
     or (K+ & {[[@MV+]]} & O*n+)
     or ([[@MV+ & O*n+]])
-  } & <mv-coord> & {Xc+ & SI*i+};
+  } & <mv-coord>;
 
 give.v send.v bring.v lend.v issue.v hand.v pour.v:
   VERB_PLI(<vc-give>);
