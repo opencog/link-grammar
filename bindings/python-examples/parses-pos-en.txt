@@ -51,6 +51,6 @@ P
 % the word position of these combined splits correctly.
 
 IAs no linkage
-PLEFT-WALL(0, 0) [as](0, 2) no.ij(3, 5) linkage.n-u(6, 13) RIGHT-WALL(13, 13)
-PLEFT-WALL(0, 0) [as](0, 2) no.ij(3, 5) linkage.n-u(6, 13) RIGHT-WALL(13, 13)
+PLEFT-WALL(0, 0) [as](0, 2) no.misc-d(3, 5) linkage.n-u(6, 13) RIGHT-WALL(13, 13)
+PLEFT-WALL(0, 0) [as](0, 2) no.misc-d(3, 5) linkage.n-u(6, 13) RIGHT-WALL(13, 13)
 P
