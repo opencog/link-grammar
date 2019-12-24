@@ -831,7 +831,7 @@ static Exp * make_zeroary_node(Pool_desc *mp)
  * This creates a node with one child (namely e).  Initializes
  * the cost to zero.
  */
-static Exp *make_unary_node(Pool_desc *mp, Exp * e)
+Exp *make_unary_node(Pool_desc *mp, Exp * e)
 {
 	Exp * n;
 	n = Exp_create(mp);

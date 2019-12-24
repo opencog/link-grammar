@@ -144,6 +144,7 @@ struct Dictionary_s
 bool dict_has_word(const Dictionary dict, const char *);
 Exp *Exp_create(Pool_desc *);
 Exp *Exp_create_dup(Pool_desc *, Exp *);
+Exp *make_unary_node(Pool_desc *, Exp *);
 void add_empty_word(Sentence, X_node *);
 
 #endif /* _LG_DICT_COMMON_H_ */
