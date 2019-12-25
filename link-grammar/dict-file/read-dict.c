@@ -792,9 +792,9 @@ static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 /**
  * Allocate a new Exp node.
  */
-Exp *Exp_create(Dictionary dict)
+Exp *Exp_create(Pool_desc *mp)
 {
-	Exp *e = pool_alloc(dict->Exp_pool);
+	Exp *e = pool_alloc(mp);
 	e->tag = NULL;
 	return e;
 }
@@ -804,9 +804,9 @@ Exp *Exp_create(Dictionary dict)
  * This is needed in case it is to be participate more than once in a
  * single expression.
  */
-static Exp *Exp_create_dup(Dictionary dict, Exp *old_e)
+Exp *Exp_create_dup(Pool_desc *mp, Exp *old_e)
 {
-	Exp *new_e = Exp_create(dict);
+	Exp *new_e = Exp_create(mp);
 
 	*new_e = *old_e;
 
@@ -817,9 +817,9 @@ static Exp *Exp_create_dup(Dictionary dict, Exp *old_e)
  * This creates a node with zero children.  Initializes
  * the cost to zero.
  */
-static Exp * make_zeroary_node(Dictionary dict)
+static Exp * make_zeroary_node(Pool_desc *mp)
 {
-	Exp * n = Exp_create(dict);
+	Exp * n = Exp_create(mp);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
 	n->operand_first = NULL;
@@ -831,10 +831,10 @@ static Exp * make_zeroary_node(Dictionary dict)
  * This creates a node with one child (namely e).  Initializes
  * the cost to zero.
  */
-static Exp * make_unary_node(Dictionary dict, Exp * e)
+Exp *make_unary_node(Pool_desc *mp, Exp * e)
 {
 	Exp * n;
-	n = Exp_create(dict);
+	n = Exp_create(mp);
 	n->type = AND_type;  /* these must be AND types */
 	n->operand_next = NULL;
 	n->cost = 0.0;
@@ -846,11 +846,11 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
  * Create an AND_type expression. The expressions nl, nr will be
  * AND-ed together.
  */
-static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
+static Exp * make_and_node(Pool_desc *mp, Exp* nl, Exp* nr)
 {
 	Exp* n;
 
-	n = Exp_create(dict);
+	n = Exp_create(mp);
 	n->type = AND_type;
 	n->operand_next = NULL;
 	n->cost = 0.0;
@@ -862,9 +862,9 @@ static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
 	return n;
 }
 
-static Exp *make_op_Exp(Dictionary dict, Exp_type t)
+static Exp *make_op_Exp(Pool_desc *mp, Exp_type t)
 {
-	Exp * n = Exp_create(dict);
+	Exp * n = Exp_create(mp);
 	n->type = t;
 	n->operand_next = NULL;
 	n->cost = 0.0;
@@ -877,11 +877,11 @@ static Exp *make_op_Exp(Dictionary dict, Exp_type t)
  * Create an OR_type expression. The expressions nl, nr will be
  * OR-ed together.
  */
-static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
+static Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr)
 {
 	Exp* n;
 
-	n = Exp_create(dict);
+	n = Exp_create(mp);
 	n->type = OR_type;
 	n->operand_next = NULL;
 	n->cost = 0.0;
@@ -898,9 +898,9 @@ static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
  * and the other as zeroary node.  This has the effect of creating
  * what used to be called an optional node.
  */
-static Exp *make_optional_node(Dictionary dict, Exp *e)
+static Exp *make_optional_node(Pool_desc *mp, Exp *e)
 {
-	return make_or_node(dict, make_zeroary_node(dict), e);
+	return make_or_node(mp, make_zeroary_node(mp), e);
 }
 
 /**
@@ -911,7 +911,7 @@ static Exp *make_optional_node(Dictionary dict, Exp *e)
  */
 static Exp * make_dir_connector(Dictionary dict, int i)
 {
-	Exp* n = Exp_create(dict);
+	Exp* n = Exp_create(dict->Exp_pool);
 	char *constring;
 
 	n->dir = dict->token[i];
@@ -971,7 +971,7 @@ static Exp * make_connector(Dictionary dict)
 		}
 
 		/* Wrap it in a unary node as a placeholder for a cost if needed. */
-		n = make_unary_node(dict, dn->exp);
+		n = make_unary_node(dict->Exp_pool, dn->exp);
 
 		file_free_lookup(dn_head);
 	}
@@ -1000,7 +1000,7 @@ static Exp * make_connector(Dictionary dict)
 			min = make_dir_connector(dict, i);
 			if (NULL == min) return NULL;
 
-			n = make_or_node(dict, plu, min);
+			n = make_or_node(dict->Exp_pool, plu, min);
 		}
 		else
 		{
@@ -1019,42 +1019,6 @@ static Exp * make_connector(Dictionary dict)
 
 /* ======================================================================== */
 /* Empty-word handling. */
-
-/** Expression-creating function versions that use the Sentence
- *  expression memory pools.
- *  (FIXME: Unify with the similar functions above.)
- */
-static Exp *make_or_node_from_pool(Sentence sent, Exp *nl, Exp *nr)
-{
-	Exp* n;
-
-	n = pool_alloc(sent->Exp_pool);
-	n->type = OR_type;
-	n->operand_next = NULL;
-	n->cost = 0.0;
-
-	n->operand_first = nl;
-	nl->operand_next = nr;
-	nr->operand_next = NULL;
-
-	return n;
-}
-
-static Exp *make_zeroary_node_from_pool(Sentence sent)
-{
-	Exp * n = pool_alloc(sent->Exp_pool);
-	n->type = AND_type;  /* these must be AND types */
-	n->operand_next = NULL;
-	n->cost = 0.0;
-	n->operand_first = NULL;
-
-	return n;
-}
-
-static Exp *make_optional_node_from_pool(Sentence sent, Exp *e)
-{
-	return make_or_node_from_pool(sent, make_zeroary_node_from_pool(sent), e);
-}
 
 /** Insert ZZZ+ connectors.
  *  This function was mainly used to support using empty-words, a concept
@@ -1079,17 +1043,17 @@ void add_empty_word(Sentence sent, X_node *x)
 		//lgdebug(+0, "Processing '%s'\n", x->string);
 
 		/* zn points at {ZZZ+} */
-		zn = pool_alloc(sent->Exp_pool);
+		zn = Exp_create(sent->Exp_pool);
 		zn->dir = '+';
 		zn->condesc = condesc_add(&sent->dict->contable, ZZZ);
 		zn->multi = false;
 		zn->type = CONNECTOR_type;
 		zn->operand_next = NULL; /* unused, but to be on the safe side */
 		zn->cost = 0.0;
-		zn = make_optional_node_from_pool(sent, zn);
+		zn = make_optional_node(sent->Exp_pool, zn);
 
 		/* an will be {ZZZ+} & (plain-word-exp) */
-		an = pool_alloc(sent->Exp_pool);
+		an = Exp_create(sent->Exp_pool);
 		an->type = AND_type;
 		an->operand_next = NULL;
 		an->cost = 0.0;
@@ -1163,7 +1127,7 @@ static Exp *make_expression(Dictionary dict)
 			if (!link_advance(dict)) {
 				return NULL;
 			}
-			nl = make_optional_node(dict, nl);
+			nl = make_optional_node(dict->Exp_pool, nl);
 		}
 		else if (is_equal(dict, '['))
 		{
@@ -1219,7 +1183,7 @@ static Exp *make_expression(Dictionary dict)
 				}
 				if (nl->tag != NULL)
 				{
-					nl = make_unary_node(dict, nl);
+					nl = make_unary_node(dict->Exp_pool, nl);
 				}
 				nl->tag = exptag_add(dict, dict->token);
 				if (!link_advance(dict)) {
@@ -1241,7 +1205,7 @@ static Exp *make_expression(Dictionary dict)
 		else if (is_equal(dict, ')') || is_equal(dict, ']'))
 		{
 			/* allows "()" or "[]" */
-			nl = make_zeroary_node(dict);
+			nl = make_zeroary_node(dict->Exp_pool);
 		}
 		else
 		{
@@ -1254,13 +1218,13 @@ static Exp *make_expression(Dictionary dict)
 			/* Part 2/2 of SYM_AND processing. */
 
 			/* Expand A ^ B into the expr ((A & B) or (B & A)). */
-			Exp *na = make_and_node(dict,
-			                   Exp_create_dup(dict, e_tail),
-			                   Exp_create_dup(dict, nl));
-			Exp *nb = make_and_node(dict,
-			                   Exp_create_dup(dict, nl),
-			                   Exp_create_dup(dict, e_tail));
-			Exp *or = make_or_node(dict, na, nb);
+			Exp *na = make_and_node(dict->Exp_pool,
+			                   Exp_create_dup(dict->Exp_pool, e_tail),
+			                   Exp_create_dup(dict->Exp_pool, nl));
+			Exp *nb = make_and_node(dict->Exp_pool,
+			                   Exp_create_dup(dict->Exp_pool, nl),
+			                   Exp_create_dup(dict->Exp_pool, e_tail));
+			Exp *or = make_or_node(dict->Exp_pool, na, nb);
 
 			*e_tail = *or; /* SYM_AND result */
 			is_sym_and = false;
@@ -1305,7 +1269,7 @@ static Exp *make_expression(Dictionary dict)
 		 * expression level. */
 		if (e_head == NULL)
 		{
-			e_head = make_op_Exp(dict, op);
+			e_head = make_op_Exp(dict->Exp_pool, op);
 			e_head->operand_first = nl;
 		}
 		else

@@ -75,7 +75,7 @@ static const char * make_expression(Dictionary dict,
 				"Missing direction character in connector string: %s", con_start);
 
 		/* Create an expression to hold the connector */
-		Exp* e = Exp_create(dict);
+		Exp* e = Exp_create(dict->Exp_pool);
 		e->dir = *p;
 		e->type = CONNECTOR_type;
 		e->operand_next = NULL;
@@ -124,7 +124,7 @@ static const char * make_expression(Dictionary dict,
 	assert(NULL != rest, "Badly formed expression %s", exp_str);
 
 	/* Join it all together. */
-	Exp* join = Exp_create(dict);
+	Exp* join = Exp_create(dict->Exp_pool);
 	join->type = etype;
 	join->operand_next = NULL;
 	join->cost = 0.0;
@@ -191,7 +191,7 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	/* If the second expression, OR-it with the existing expression. */
 	if (OR_type != bs->exp->type)
 	{
-		Exp* orn = Exp_create(dict);
+		Exp* orn = Exp_create(dict->Exp_pool);
 		orn->type = OR_type;
 		orn->cost = 0.0;
 

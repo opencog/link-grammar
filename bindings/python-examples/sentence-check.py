@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-""" Note: This only runs with Python3! """
-
 """
+Note: This only runs with Python3!
+
 Demo: Find unlinked or unknown words.
 These demo is extremely simplified.
 It can only work with link-grammar library version >= 5.3.10.
@@ -166,8 +166,6 @@ while True:
                 words_char = []
                 words_byte = []
                 for wi, w in enumerate(words):
-                    if is_python2():
-                        w = w.decode('utf-8')
                     words_char.append(w + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
                     words_byte.append(w + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
 
