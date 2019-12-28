@@ -14,7 +14,6 @@
 
 #include "api-structures.h"             // Sentence
 #include "connectors.h"
-#include "dict-common/dict-structures.h"
 #include "disjunct-utils.h"
 #include "memory-pool.h"
 #include "print/print-util.h"
