@@ -359,7 +359,6 @@ build_linkage_postscript_string(const Linkage linkage,
 	for (link=0; link<N_links; link++) {
 		if (!print_word_0 && (ppla[link].lw == 0)) continue;
 		if (!print_word_N && (ppla[link].rw == linkage->num_words-1)) continue;
-		// if (ppla[link]->lw == SIZE_MAX) continue;
 		assert (ppla[link].lw != SIZE_MAX);
 		if ((j%7 == 0) && (j>0)) dyn_strcat(string,"\n");
 		j++;
@@ -588,7 +587,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			}
 
 			/* Add direction indicator */
-			// if (DEPT_CHR == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
 			if (DEPT_CHR == connector_string(ppla[j].lc)[0] &&
 			    (t > &picture[row][cl])) { picture[row][cl+1] = '<'; }
 			if (HEAD_CHR == connector_string(ppla[j].lc)[0]) { *(t-1) = '>'; }
@@ -597,7 +595,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 			while ((*s != '\0') && (*t == '-')) *t++ = *s++;
 
 			/* Add direction indicator */
-			// if (DEPT_CHR == ppla[j]->rc->string[0]) { *t = '>'; }
 			if (DEPT_CHR == connector_string(ppla[j].rc)[0]) { picture[row][cr-1] = '>'; }
 			if (HEAD_CHR == connector_string(ppla[j].rc)[0]) { *t = '<'; }
 
