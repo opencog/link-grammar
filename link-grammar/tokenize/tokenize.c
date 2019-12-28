@@ -1076,7 +1076,7 @@ void altappend(Sentence sent, const char ***altp, const char *w)
 	used in a sentence.
 */
 
-#ifdef DEBUG
+#ifdef DEBUG_WORDGRAPH
 /**
  * Split special synthetic words, for Wordgraph handling debug.
  * Word syntax (recursively): LABEL(WORD+WORD+...|WORD+...)
@@ -1186,7 +1186,7 @@ error:
 	free(alts);
 	return can_split;
 }
-#endif
+#endif /* DEBUG_WORDGRAPH */
 
 /**
  * Add the given prefix, word and suffix as an alternative.
@@ -2862,10 +2862,10 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 	/* Reset the multibyte shift state to the initial state */
 	memset(&mbs, 0, sizeof(mbs));
 
-#ifdef DEBUG
+#ifdef DEBUG_WORDGRAPH
 	/* Skip a synthetic sentence mark, if any. See synthetic_split(). */
 	if (SYNTHETIC_SENTENCE_MARK == sent->orig_sentence[0]) word_start++;
-#endif
+#endif /* DEBUG_WORDGRAPH */
 
 	for(;;)
 	{
@@ -2916,13 +2916,13 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		}
 
 		/* Perform prefix, suffix splitting, if needed */
-#ifdef DEBUG
+#ifdef DEBUG_WORDGRAPH
 		if (SYNTHETIC_SENTENCE_MARK == sent->orig_sentence[0])
 			synthetic_split(sent, word);
 #else
 		if (0)
 			;
-#endif
+#endif /* DEBUG_WORDGRAPH */
 		else
 			separate_word(sent, word, opts);
 
