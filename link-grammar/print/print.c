@@ -298,7 +298,7 @@ build_linkage_postscript_string(const Linkage linkage,
 {
 	int link, i,j;
 	int d;
-	bool print_word_0, print_word_N;
+	bool print_word_0 = true, print_word_N = true;
 	int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
 	dyn_str * string;
@@ -306,38 +306,42 @@ build_linkage_postscript_string(const Linkage linkage,
 
 	string = dyn_str_new();
 
-	if (!display_walls) {
+	/* Do we want to print the left and right walls? */
+	if (!display_walls)
+	{
 		int N_wall_connectors = 0;
-		bool suppressor_used = false;
-		for (j=0; j<N_links; j++) {
-			if (ppla[j].lw == 0) {
+		for (j=0; j<N_links; j++)
+		{
+			if (0 == ppla[j].lw)
+			{
 				if (ppla[j].rw == linkage->num_words-1) continue;
-				N_wall_connectors ++;
-				if (easy_match(connector_string(ppla[j].lc), LEFT_WALL_SUPPRESS)) {
-					suppressor_used = true;
-				}
-			}
-		}
-		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors != 1));
-	}
-	else print_word_0 = true;
+				if (easy_match(connector_string(ppla[j].lc), LEFT_WALL_SUPPRESS))
+					print_word_0 = false;
 
-	if (!display_walls) {
-		int N_wall_connectors = 0;
-		bool suppressor_used = false;
-		for (j=0; j<N_links; j++) {
-			if (ppla[j].rw == linkage->num_words-1) {
-				N_wall_connectors ++;
-				if (easy_match(connector_string(ppla[j].lc), RIGHT_WALL_SUPPRESS)) {
-					suppressor_used = true;
+				if (++N_wall_connectors > 1)
+				{
+					print_word_0 = true;
+					break;
 				}
 			}
 		}
-		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors != 1));
+
+		N_wall_connectors = 0;
+		for (j=0; j<N_links; j++)
+		{
+			if (ppla[j].rw == linkage->num_words-1)
+			{
+				if (easy_match(connector_string(ppla[j].lc), RIGHT_WALL_SUPPRESS))
+					print_word_N = false;
+
+				if (++N_wall_connectors > 1)
+				{
+					print_word_N = true;
+					break;
+				}
+			}
+		}
 	}
-	else print_word_N = true;
 
 	if (print_word_0) d=0; else d=1;
 
@@ -446,7 +450,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	unsigned int i, j, k, cl, cr, inc, row, top_row, top_row_p1;
 	const char *s;
 	char *t;
-	bool print_word_0 , print_word_N;
+	bool print_word_0 = true, print_word_N = true;
 	int *center = alloca((linkage->num_words+1)*sizeof(int));
 	int *word_offset = alloca((linkage->num_words+1) * sizeof(*word_offset));
 	unsigned int link_length;
@@ -460,48 +464,42 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 	string = dyn_str_new();
 
-	/* Do we want to print the left wall? */
+	/* Do we want to print the left and right walls? */
 	if (!display_walls)
 	{
 		int N_wall_connectors = 0;
-		bool suppressor_used = false;
 		for (j=0; j<N_links; j++)
 		{
 			if (0 == ppla[j].lw)
 			{
 				if (ppla[j].rw == linkage->num_words-1) continue;
-				N_wall_connectors ++;
 				if (easy_match(connector_string(ppla[j].lc), LEFT_WALL_SUPPRESS))
+					print_word_0 = false;
+
+				if (++N_wall_connectors > 1)
 				{
-					suppressor_used = true;
+					print_word_0 = true;
+					break;
 				}
 			}
 		}
-		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1));
-	}
-	else print_word_0 = true;
 
-	/* Do we want to print the right wall? */
-	if (!display_walls)
-	{
-		int N_wall_connectors = 0;
-		bool suppressor_used = false;
+		N_wall_connectors = 0;
 		for (j=0; j<N_links; j++)
 		{
 			if (ppla[j].rw == linkage->num_words-1)
 			{
-				N_wall_connectors ++;
 				if (easy_match(connector_string(ppla[j].lc), RIGHT_WALL_SUPPRESS))
+					print_word_N = false;
+
+				if (++N_wall_connectors > 1)
 				{
-					suppressor_used = true;
+					print_word_N = true;
+					break;
 				}
 			}
 		}
-		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1));
 	}
-	else print_word_N = true;
 
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
