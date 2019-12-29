@@ -65,7 +65,7 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 	{
 		Link *l = &linkage->link_array[n];
 
-		if ((l->lw + 1 == l->rw) && (NULL != l->link_name))
+		if (l->lw + 1 == l->rw)
 		{
 			link_len[l->rw] = strlen(l->link_name) +
 				(DEPT_CHR == connector_string(l->rc)[0]) +
@@ -533,7 +533,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		for (j=0; j<N_links; j++)
 		{
 			assert (ppla[j].lw != SIZE_MAX);
-			if (NULL == ppla[j].link_name) continue;
 			if (((unsigned int) (ppla[j].rw - ppla[j].lw)) != link_length)
 			  continue;
 			if (!print_word_0 && (ppla[j].lw == 0)) continue;
