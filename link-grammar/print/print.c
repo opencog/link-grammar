@@ -412,6 +412,45 @@ static void diagram_alloc_tmpmem(size_t **start, char ***pic, char ***xpic,
 	*cur_height = max_height;
 }
 
+typedef struct
+{
+	Link *lnk;
+	unsigned int len;          /* Length of this link */
+} link_by_length;
+
+static int by_link_len(const void *a, const void *b)
+{
+	const link_by_length * const *la = a;
+	const link_by_length * const *lb = b;
+
+	return (*la)->len - (*lb)->len;
+}
+
+static void sort_link_lengths(Link *ppla, link_by_length *ll,
+                              unsigned int N_links)
+{
+	link_by_length *ll_tmp = alloca(N_links * sizeof(*ll_tmp));
+	link_by_length **lla = alloca(N_links * sizeof(*lla));
+
+	for (unsigned int j = 0; j < N_links; j++)
+	{
+		Link *lnk = &ppla[j];
+
+		assert(lnk->lw != SIZE_MAX);
+		assert(lnk->link_name != NULL);
+
+		lla[j] = &ll_tmp[j];
+		ll_tmp[j].lnk = lnk;
+		ll_tmp[j].len = (unsigned int)(lnk->rw - lnk->lw);
+	}
+
+	qsort(lla, N_links, sizeof(*lla), by_link_len);
+
+	/* Return the sort result through the ll parameter. */
+	for (unsigned int j = 0; j < N_links; j++)
+		ll[j] = *lla[j];
+}
+
 static void diagram_free_tmpmem(size_t *start, char **pic, char **xpic,
                                 size_t cur_height)
 {
@@ -453,7 +492,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	bool print_word_0 = true, print_word_N = true;
 	int *center = alloca((linkage->num_words+1)*sizeof(int));
 	int *word_offset = alloca((linkage->num_words+1) * sizeof(*word_offset));
-	unsigned int link_length;
 	unsigned int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
 	dyn_str * string;
@@ -461,6 +499,9 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 
 	// Avoid pathological case and the resulting crash.
 	if (0 == linkage->num_words) return strdup("");
+
+	link_by_length *ll = alloca(N_links * sizeof(*ll));
+	sort_link_lengths(ppla, ll, N_links);
 
 	string = dyn_str_new();
 
@@ -528,85 +569,81 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	top_row = 0;
 
 	// Longer links are printed above the lower links.
-	for (link_length = 1; link_length < N_words_to_print; link_length++)
+	for (j=0; j<N_links; j++)
 	{
-		for (j=0; j<N_links; j++)
+		Link *lnk = ll[j].lnk;
+
+		if (!print_word_0 && (lnk->lw == 0)) continue;
+		/* Gets rid of the irrelevant link to the left wall */
+		if (!print_word_N && (lnk->rw == linkage->num_words-1)) continue;
+
+		/* Put it into the lowest position */
+		/* Keep in mind that cl, cr are "columns" not "bytes" */
+		cl = center[lnk->lw];
+		cr = center[lnk->rw];
+		for (row=0; row < max_height; row++)
 		{
-			assert (ppla[j].lw != SIZE_MAX);
-			if (((unsigned int) (ppla[j].rw - ppla[j].lw)) != link_length)
-			  continue;
-			if (!print_word_0 && (ppla[j].lw == 0)) continue;
-			/* Gets rid of the irrelevant link to the left wall */
-			if (!print_word_N && (ppla[j].rw == linkage->num_words-1)) continue;
-
-			/* Put it into the lowest position */
-			/* Keep in mind that cl, cr are "columns" not "bytes" */
-			cl = center[ppla[j].lw];
-			cr = center[ppla[j].rw];
-			for (row=0; row < max_height; row++)
+			for (k=cl+1; k<cr; k++)
 			{
-				for (k=cl+1; k<cr; k++)
-				{
-					if (picture[row][k] != ' ') break;
-				}
-				if (k == cr) break;
+				if (picture[row][k] != ' ') break;
 			}
+			if (k == cr) break;
+		}
 
-			if (NULL != pctx) /* PS junk */
-			{
-				/* We know it fits, so put it in this row */
-				pctx->link_heights[j] = row;
+		if (NULL != pctx) /* PS junk */
+		{
+			/* We know it fits, so put it in this row */
+			pctx->link_heights[j] = row;
+		}
+
+		if (2*row+2 > max_height-1) {
+			lgdebug(+9, "Extending rows up to %u.\n", (2*row+2)+HEIGHT_INC);
+			diagram_alloc_tmpmem(&start, &picture, &xpicture,
+			                     &max_height, (2*row+2)+HEIGHT_INC,
+			                     max_bytes, num_cols);
+		}
+		if (row > top_row) top_row = row;
+
+		picture[row][cl] = '+';
+		picture[row][cr] = '+';
+		for (k=cl+1; k<cr; k++) {
+			picture[row][k] = '-';
+		}
+
+		s = lnk->link_name;
+		k = strlen(s);
+		inc = cl + cr + 2;
+		if (inc < k) inc = 0;
+		else inc = (inc-k)/2;
+		if (inc <= cl) {
+			t = picture[row] + cl + 1;
+		} else {
+			t = picture[row] + inc;
+		}
+
+		/* Add direction indicator */
+		if (DEPT_CHR == connector_string(lnk->lc)[0] &&
+		    (t > &picture[row][cl])) { picture[row][cl+1] = '<'; }
+		if (HEAD_CHR == connector_string(lnk->lc)[0]) { *(t-1) = '>'; }
+
+		/* Copy connector name; stop short if no room */
+		while ((*s != '\0') && (*t == '-')) *t++ = *s++;
+
+		/* Add direction indicator */
+		if (DEPT_CHR == connector_string(lnk->rc)[0]) { picture[row][cr-1] = '>'; }
+		if (HEAD_CHR == connector_string(lnk->rc)[0]) { *t = '<'; }
+
+		/* The direction indicators may have clobbered these. */
+		picture[row][cl] = '+';
+		picture[row][cr] = '+';
+
+		/* Now put in the | below this one, where needed */
+		for (k=0; k<row; k++) {
+			if (picture[k][cl] == ' ') {
+				picture[k][cl] = '|';
 			}
-
-			if (2*row+2 > max_height-1) {
-				lgdebug(+9, "Extending rows up to %u.\n", (2*row+2)+HEIGHT_INC);
-				diagram_alloc_tmpmem(&start, &picture, &xpicture,
-				                     &max_height, (2*row+2)+HEIGHT_INC,
-				                     max_bytes, num_cols);
-			}
-			if (row > top_row) top_row = row;
-
-			picture[row][cl] = '+';
-			picture[row][cr] = '+';
-			for (k=cl+1; k<cr; k++) {
-				picture[row][k] = '-';
-			}
-
-			s = ppla[j].link_name;
-			k = strlen(s);
-			inc = cl + cr + 2;
-			if (inc < k) inc = 0;
-			else inc = (inc-k)/2;
-			if (inc <= cl) {
-				t = picture[row] + cl + 1;
-			} else {
-				t = picture[row] + inc;
-			}
-
-			/* Add direction indicator */
-			if (DEPT_CHR == connector_string(ppla[j].lc)[0] &&
-			    (t > &picture[row][cl])) { picture[row][cl+1] = '<'; }
-			if (HEAD_CHR == connector_string(ppla[j].lc)[0]) { *(t-1) = '>'; }
-
-			/* Copy connector name; stop short if no room */
-			while ((*s != '\0') && (*t == '-')) *t++ = *s++;
-
-			/* Add direction indicator */
-			if (DEPT_CHR == connector_string(ppla[j].rc)[0]) { picture[row][cr-1] = '>'; }
-			if (HEAD_CHR == connector_string(ppla[j].rc)[0]) { *t = '<'; }
-
-			/* The direction indicators may have clobbered these. */
-			picture[row][cl] = '+';
-			picture[row][cr] = '+';
-
-			/* Now put in the | below this one, where needed */
-			for (k=0; k<row; k++) {
-				if (picture[k][cl] == ' ') {
-					picture[k][cl] = '|';
-				}
-				if (picture[k][cr] == ' ') {
-					picture[k][cr] = '|';
-				}
+			if (picture[k][cr] == ' ') {
+				picture[k][cr] = '|';
 			}
 		}
 	}
