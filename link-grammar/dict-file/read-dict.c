@@ -1739,6 +1739,12 @@ static bool read_entry(Dictionary dict)
 		goto syntax_error;
 	}
 
+	if (dn == NULL)
+	{
+		dict_error(dict, "Expecting a token before \":\".");
+		goto syntax_error;
+	}
+
 	/* At this point, dn points to a list of Dict_nodes connected by
 	 * their left pointers. These are to be inserted into the dictionary */
 	i = 0;
