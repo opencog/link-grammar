@@ -13,8 +13,10 @@ It is to be converted to Berkley DB files by running:
 ```
   time ./make-hash-db.pl
 ```
-This will create the files `rule.db`, `root.db` and `tail.db`.  It should
-take about 45 seconds or less to run.  These are then used to create
+This will create the files `para.db`, `root.db`, `rule.db` and
+`tail.db`, as well as several text files: `paradigm-not-used.txt`,
+`morph-examp.txt` and `ancode-not-defined.txt`.  It should take
+about 45 seconds or less to run.  These are then used to create
 the link-grammar dictionaries:
 ```
   time ./mkdict.pl
