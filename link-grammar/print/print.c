@@ -604,8 +604,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		}
 		if (row > top_row) top_row = row;
 
-		picture[row][cl] = '+';
-		picture[row][cr] = '+';
 		for (k=cl+1; k<cr; k++) {
 			picture[row][k] = '-';
 		}
@@ -633,7 +631,6 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 		if (DEPT_CHR == connector_string(lnk->rc)[0]) { picture[row][cr-1] = '>'; }
 		if (HEAD_CHR == connector_string(lnk->rc)[0]) { *t = '<'; }
 
-		/* The direction indicators may have clobbered these. */
 		picture[row][cl] = '+';
 		picture[row][cr] = '+';
 
