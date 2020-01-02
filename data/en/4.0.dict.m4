@@ -10364,7 +10364,7 @@ later_on for_now more_often_than_not
 on_second_thought
 again_and_again time_and_again over_and_over
 day_by_day day_after_day step_by_step one_by_one
-even_so all_of_a_sudden:
+even_so all_of_a_sudden on_occasion upon_occasion:
   <directive-opener>
   or <directive-adverb>
   or ({Xd- & Xc+} & (<adv-as> or E+));
