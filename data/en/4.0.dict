@@ -11123,6 +11123,11 @@ n't n’t: N- or EB-;
 just_not: <COMP-OPENER>;
 
 % ---------------------------------------------------
+% Question patterns.
+% EAh- & Qe+: "How long did you say it was?" and it uses "S-V inversion required7"
+<how-q>: (EAh- & Qe+);
+
+% ---------------------------------------------------
 % ADJECTIVES
 % Common disjuncts shared by virtually all adjectives.
 %
@@ -11162,7 +11167,7 @@ just_not: <COMP-OPENER>;
   or ({EF+} & <adj-conjoined>)
   or [[DD- & <noun-main-p>]]
   or [[{DD-} & <noun-and-p>]]
-  or (EAh- & Qe+);
+  or <how-q>;
 
 % Macro, for all the common parts of an A+ connection, with
 % the phonetic attachement as a variable.
@@ -11233,6 +11238,7 @@ tawny.a ultramarine.a umber.a yellow.a:
 % Wx-: single-word opinion expression
 <adj-stuff>:
   <marker-common-entity> or
+  <how-q> or
   ({EA- or EF+} & (
     ((AF+ or Ma- or dMJra-) & {@MV+}) or
     ({@MV+} & dMJla+) or
