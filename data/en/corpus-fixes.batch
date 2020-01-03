@@ -502,53 +502,6 @@ how the fuck do I know?
 whyever for?
 what for?
 
-% "how" is broken and hard to fix without breaking basic corpus.
-How come?
-How many are there?
-How many more?
-How many?
-How much is that?
-how much?
-How?
-
-How quickly?
-
-How big?
-How small?
-How high?
-How big did he talk?
-How big is it?
-How big did you say it was?
-*How slickly did you say it was?
-How high did you say it was?
-How tall did you say he was?
-
-How ridiculous
-How perfectly ridiculous
-How strange
-How odd!
-
-% Arghhh this is a mess. Some of these want to use AF+,
-% others seem to be more comfortable with Qe+ and its not clear
-% how to be consistent.
-How common did you say it was?
-How common?
-How often?
-How often does it happen?
-How shocking?
-How shocking was it?
-How shocking did you say it was?
-
-
-Who?
-who else?
-who else not?
-
-When?
-
-Which way?
-
-
 % We should distinguish between "who" and "whom" but who fucking cares?
 Who fucking cares?
 Bring him and whomever else
@@ -2224,6 +2177,57 @@ How much of a dog is wanted?
 How much of a man is he?
 How much of a lie was it?
 How big a lie was it?
+
+% "how" is broken and hard to fix without breaking basic corpus.
+How come?
+How many are there?
+How many more?
+How many?
+How much is that?
+how much?
+How?
+
+How quickly?
+
+How big?
+How small?
+How high?
+How big did he talk?
+How big is it?
+How big did you say it was?
+*How slickly did you say it was?
+How high did you say it was?
+How tall did you say he was?
+
+How ridiculous
+How perfectly ridiculous
+How strange
+How odd!
+
+% Arghhh this is a mess. Some of these want to use AF+,
+% others seem to be more comfortable with Qe+ and its not clear
+% how to be consistent.
+How common did you say it was?
+How common?
+How often?
+How often does it happen?
+How shocking?
+How shocking was it?
+How shocking did you say it was?
+How bad did you say it was?
+How common did you say it was?
+How hard did you say it was?
+How long did you say it was?
+
+
+Who?
+who else?
+who else not?
+
+When?
+
+Which way?
+
 
 % These cannot take WV links anywhere:
 Are you insane?
