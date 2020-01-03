@@ -126,7 +126,8 @@ nonCAP.zzz: ZZZ-;
 %   "*I still remember the room I kissed him"
 % "room" is the object, and the "I" should not be relative. But then
 %   "I still remember the girl I  kissed"
-% ... But the correct fix is confusing. Even relative-with- can be OK:
+% ... The correct fix would be to disallow (B- & Ox+) on "kissed".
+% Even relative-with- can be OK:
 %   "there are men with ties that sparkle" -- this has a J link.
 % Is the man sparkling, or is the tie sparkling?
 %
