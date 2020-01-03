@@ -126,7 +126,11 @@ nonCAP.zzz: ZZZ-;
 %   "*I still remember the room I kissed him"
 % "room" is the object, and the "I" should not be relative. But then
 %   "I still remember the girl I  kissed"
-% ... The correct fix would be to disallow (B- & Ox+) on "kissed".
+% ... The correct fix would be to disallow (B- & O+) on "kissed".
+% ... but how? It was introduced by "What are the chances..." sentences
+%     which place a (B- & O+) into vc-trans. A complicated fix might be
+%     to provide some subscript on R that propagates to and blocks B+ ...
+%
 % Even relative-with- can be OK:
 %   "there are men with ties that sparkle" -- this has a J link.
 % Is the man sparkling, or is the tie sparkling?
@@ -3924,6 +3928,7 @@ running.g beating.g catching.g driving.g striking.g:
 %    "What are the chances that Sherlock could really solve a crime?"
 % unfortunately:
 %    *This is the man we love him
+%    *I still remember the room I kissed him
 <vc-trans>:
   (O+
    or <b-minus>
