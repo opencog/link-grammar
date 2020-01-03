@@ -1194,7 +1194,7 @@ responsibilities.n chances.n campaigns.n offers.n pressures.n
 obligations orders.n temptations.n vows.n permits.n impetuses.n
 proclivities.n propensities.n moves.n votes.n bills.n incentives.n:
   (<noun-modifiers> &
-    (({{Jd-} & Dmc-} & {@M+} & {(<ton-verb> or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {(<ton-verb> or TH+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main-p> or
       <rel-clause-p>)) or
     ({Dmc-} & <noun-and-p>) or
@@ -2820,6 +2820,7 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 %    *how many years did you do it
 % but, I dunno, both seem like valid sentences to me...
 % Hey, wait: using R & B here is wrong, should have Qe maybe?
+% For example, "How long did you do it?" has Qe.
 %
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co>) & <vc-do>)
