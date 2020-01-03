@@ -8130,6 +8130,7 @@ whether_or_not:
 % QI- & (): "I do not know how"
 % EL+: "How else would you say that?"
 % (EAh+ or EEh+) & Wq-: "How big?" "How quickly?"
+%    Unfortunately, this is blocked by "S-V inversion required7"
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
@@ -8139,7 +8140,6 @@ how:
   or ({EW-} & (QJ- or QJ+))
   or [dSJl+ or dSJr-]0.5
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
-%%%  or ((EAh+ or EEh+) & Ww-);
 
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
@@ -8748,8 +8748,10 @@ just_not: <COMP-OPENER>;
 % Lots and lots, but not all ordinary adjs can take <tot-verb>:
 % Pa- & <tot-verb>: "... is too abrasive to talk to."
 % {Xd-} & Pa-: "she stood there, naked"
-% [EAh- & {Qe+}]: "How big?"  "How tall?" -- large cost, as it otherwise
-%     causes bizarre parses for "a decidedly jolly good player"
+% EAh-: "How big?"  "How tall?" --  blocked by "S-V inversion required7"
+%     and if it was not blocked, the EAh would create bad parses for stuff
+%     like "He is a decidedly jolly good player"
+% EAh- & Qe+: "How big is it?"  "How tall is it?"
 <ordinary-adj>:
   ({EA- or EF+} & (
     ({Xd-} & (Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {<tot-verb>})
@@ -8759,7 +8761,7 @@ just_not: <COMP-OPENER>;
   or ({EF+} & <adj-conjoined>)
   or [[DD- & <noun-main-p>]]
   or [[{DD-} & <noun-and-p>]]
-  or [EAh- & {Qe+}];
+  or (EAh- & Qe+);
 
 % Macro, for all the common parts of an A+ connection, with
 % the phonetic attachement as a variable.
