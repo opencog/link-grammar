@@ -2777,15 +2777,23 @@ per "/.per": Us+ & Mp-;
     or ({N+} & (CX- or [[()]]))) & <mv-coord>)
   or ({N+} & I*d+);
 
-% I used verb-and-sp-i but maybe verb-and-pl is better?
+% Below uses <verb-and-sp-i> but maybe <verb-and-pl> is better?
 % I- & CV-: "What did John say you should do?"
-% XXX todo : is the option {<verb-wall>} below even needed????
 % Naked I*d-: "How do you do?", "what is there to do?"
 % I*t- & O+: forces use of object in to-do expressions.
 %            "Are you really going to do it to them?"
-% {<verb-wall> or VJrpi-}: "I aim to help and also to do something"
+% VJrpi-: "I aim to help and also to do something"
 % SIp+ & N+: "Do you not want to know?"
 % Wi- & I*d+ & Xc+ & SI*i+: "please do tell, John"; comma is required!
+%
+% Things we'd like to have, but can't:
+% <b-minus> & O+: "what are the chances that Sherlock could do it?"
+% Unfortunately, adding this breaks corpus-basic.batch:
+%    *how many more times did you do it
+%    *how many years did you do it
+% but, I dunno, both seem like valid sentences to me...
+% Hey, wait: using R & B here is wrong, should have Qe maybe?
+%
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co>) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
