@@ -2786,15 +2786,6 @@ per "/.per": Us+ & Mp-;
 % SIp+ & N+: "Do you not want to know?"
 % Wi- & I*d+ & Xc+ & SI*i+: "please do tell, John"; comma is required!
 %
-% Things we'd like to have, but can't:
-% <b-minus> & O+: "what are the chances that Sherlock could do it?"
-% Unfortunately, adding this breaks corpus-basic.batch:
-%    *how many more times did you do it
-%    *how many years did you do it
-% but, I dunno, both seem like valid sentences to me...
-% Hey, wait: using R & B here is wrong, should have Qe maybe?
-% For example, "How long did you do it?" has Qe.
-%
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co>) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
@@ -3699,15 +3690,6 @@ rising.v falling.v:
 % average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v
 % The [[@MV+ & O*n+]] term allows some bad parses, e.g. allows:
 %   "she walked out of the room two minutes"
-%
-% ({@E-} & B- & O+):
-%   "What are the chances that Sherlock could really CATCH the criminal?"
-%   "What are the chances that Sherlock PLAYED tennis?"
-%    but
-%   "*The man whom I play tennis is here"  ... arghh
-%
-% ({@E-} & B- & O+ & K+):
-%   "What are the chances she will DRIVE him up to the farm?"
 %
 % No Pa links here: *they're building a skyscraper tall
 %                   *ours works more elegant than yours
