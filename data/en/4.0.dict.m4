@@ -1186,6 +1186,7 @@ incentive.n panache.n balls.n-u cojones.n-u:
 /en/words/words.n.3.y: <noun-to>;
 
 % {Jd-}: "tons of offers"
+% TH+: What are the CHANCES that this could happen?
 excuses.n decisions.n proposals.n failures.n efforts.n attempts.n
 refusals.n pledges.n urges.n missions.n rights.n desires.n needs.n
 ambitions.n capacities.n mandates.n promises.n abilities.n options.n
@@ -1194,7 +1195,7 @@ responsibilities.n chances.n campaigns.n offers.n pressures.n
 obligations orders.n temptations.n vows.n permits.n impetuses.n
 proclivities.n propensities.n moves.n votes.n bills.n incentives.n:
   (<noun-modifiers> &
-    (({{Jd-} & Dmc-} & {@M+} & {(<ton-verb> or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {(<ton-verb> or TH+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main-p> or
       <rel-clause-p>)) or
     ({Dmc-} & <noun-and-p>) or
