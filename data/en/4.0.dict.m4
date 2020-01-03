@@ -3759,16 +3759,10 @@ running.g beating.g catching.g driving.g striking.g:
 % common transitive verbs
 % abandon.v abase.v abbreviate.v abduct.v abet.v abhor.v abolish.v
 %
-% ({@E-} & B- & O+):
-%    "What are the chances that Sherlock could really solve a crime?"
-% unfortunately:
-%    *This is the man we love him
-%    *I still remember the room I kissed him
 <vc-trans>:
   (O+
    or <b-minus>
    or [[@MV+ & O*n+]]
-   or ({@E-} & <b-minus> & O+)
   ) & <mv-coord>;
 
 /en/words/words.v.4.1 : VERB_PLI(<vc-trans>);
