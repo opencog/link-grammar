@@ -2152,7 +2152,7 @@ I wonder why you said that?
 
 % Problems with questions:  modifiers in query.
 % The below parses, but incorrectly. "a dog" should modify
-% "big".  Fixing this will probably render the HA and the A links
+% "big".  Fixing this will probably render the HA and the AA links
 % obsolete, completely.
 % Pied-piping: How-big is a pied-piper, pulling the subordinate
 % "a dog" over to the right: "*It is a how big dog?".
@@ -2166,8 +2166,9 @@ I wonder why you said that?
 % "Sign-Based Construction Grammar."
 % http://lingo.stanford.edu/sag/papers/kay-sag-final.pdf
 
-% "How big a dog is it?" should parse .. and it does, but the
-% parse is incorrect, so we put a * in front, for now.
+% The current parse of "How big a dog is it?" is incorrect. It's exactly
+% as documented in section-AA.html, but really the AA link is just wrong.
+% Since the current parse is incorrect, we put a * in front, for now.
 *How big a dog is it?
 How big of a dog can you imagine?
 How big is it?
@@ -2177,10 +2178,8 @@ It was too big a dog to fit through the hole in the fence.
 It was that big a dog.
 It was so big a dog that it filled the cage
 How big a dog did he buy?
-*How big did he buy?
-% Actually, the above is allowed, e.g. while talking about
-% house prices, the conclusion might be: "So, how big did he buy?"
-
+% While talking about house prices, one could ask: "So, how big did he buy?"
+How big did he buy?
 
 % The documentation for EAh discusses the below.
 % post-processing "Incorrect use of 'how'17" blocks some of these.
