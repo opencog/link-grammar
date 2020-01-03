@@ -2146,20 +2146,6 @@ Our neighbours have too big a dog to keep in the house
 Our neighbours have a dog too big to keep in the house
 Our neighbours have dogs too big to keep in the house
 
-% Prepositional questions with null verbs
-By what means?
-In what way?
-To what end?
-For what reason?
-By what means ...?
-In what way ...?
-To what end ...?
-For what reason ...?
-By what means...?
-In what way...?
-To what end...?
-For what reason...?
-
 How much should I use?
 How much sugar should I use?
 With whom does he live?
@@ -2227,6 +2213,20 @@ who else not?
 When?
 
 Which way?
+
+% Prepositional questions with null verbs
+By what means?
+In what way?
+To what end?
+For what reason?
+By what means ...?
+In what way ...?
+To what end ...?
+For what reason ...?
+By what means...?
+In what way...?
+To what end...?
+For what reason...?
 
 
 % These cannot take WV links anywhere:
