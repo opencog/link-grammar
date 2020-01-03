@@ -2821,7 +2821,8 @@ do.v:
   or (<verb-co> & {I*d+} & Xc+ & SI*i+ & {Xc+})
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
-    ((<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) & <mv-coord>) &
+    (<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) &
+    <mv-coord> &
     (<verb-wall> or VJrpi-))
   or ({@E-} & I*d- & <verb-wall>);
 
