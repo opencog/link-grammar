@@ -125,11 +125,14 @@ nonCAP.zzz: ZZZ-;
 % be used with the J- and sometimes not with the O-.  So, for example,
 %   "*I still remember the room I kissed him"
 % "room" is the object, and the "I" should not be relative. But then
-%   "I still remember the girl I  kissed"
+%   "I still remember the girl I kissed"
 % ... The correct fix would be to disallow (B- & O+) on "kissed".
 % ... but how? It was introduced by "What are the chances..." sentences
-%     which place a (B- & O+) into vc-trans. A complicated fix might be
+%     which place a (B- & O+) into <vc-trans>. A complicated fix might be
 %     to provide some subscript on R that propagates to and blocks B+ ...
+% ... More generally, the valid constructions are those with a zero-that
+%     in them: "I still remember the girl [that] I kissed" and the invalid
+%     one's would not have a zero-that. Which requires fixing that.j-r...
 %
 % Even relative-with- can be OK:
 %   "there are men with ties that sparkle" -- this has a J link.
@@ -1177,6 +1180,7 @@ incentive.n panache.n balls.n-u cojones.n-u:
 /en/words/words.n.3.y: <noun-to>;
 
 % {Jd-}: "tons of offers"
+% TH+: What are the CHANCES that this could happen?
 excuses.n decisions.n proposals.n failures.n efforts.n attempts.n
 refusals.n pledges.n urges.n missions.n rights.n desires.n needs.n
 ambitions.n capacities.n mandates.n promises.n abilities.n options.n
@@ -1185,7 +1189,7 @@ responsibilities.n chances.n campaigns.n offers.n pressures.n
 obligations orders.n temptations.n vows.n permits.n impetuses.n
 proclivities.n propensities.n moves.n votes.n bills.n incentives.n:
   (<noun-modifiers> &
-    (({{Jd-} & Dmc-} & {@M+} & {(<ton-verb> or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
+    (({{Jd-} & Dmc-} & {@M+} & {(<ton-verb> or TH+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main-p> or
       <rel-clause-p>)) or
     ({Dmc-} & <noun-and-p>) or
@@ -2787,7 +2791,7 @@ per "/.per": Us+ & Mp-;
 % Wi- & I*d+ & Xc+ & SI*i+: "please do tell, John"; comma is required!
 %
 % Things we'd like to have, but can't:
-% <b-minus> & O+: "what are the chances that Sherlock could do it?"
+% <b-minus> & O+: "what are the chances Sherlock could do it?"
 % Unfortunately, adding this breaks corpus-basic.batch:
 %    *how many more times did you do it
 %    *how many years did you do it
@@ -3700,8 +3704,7 @@ rising.v falling.v:
 %   "she walked out of the room two minutes"
 %
 % ({@E-} & B- & O+):
-%   "What are the chances that Sherlock could really CATCH the criminal?"
-%   "What are the chances that Sherlock PLAYED tennis?"
+%   "What are the chances Sherlock PLAYED tennis?"
 %    but
 %   "*The man whom I play tennis is here"  ... arghh
 %
@@ -3838,6 +3841,8 @@ and.v-fill:
 % Pa**j link: "The thugs beat him senseless" "You are driving me crazy"
 %     "Make it nice and soft"
 %
+% ({@E-} & B- & O+):
+%   "What are the chances Sherlock could really CATCH the criminal?"
 % ({@E-} & B- & O+ & Pa**j+):
 %   "What are the chances she will really DRIVE him crazy?"
 % ({@E-} & B- & O+ & K+):
@@ -3934,7 +3939,7 @@ running.g beating.g catching.g driving.g striking.g:
 % abandon.v abase.v abbreviate.v abduct.v abet.v abhor.v abolish.v
 %
 % ({@E-} & B- & O+):
-%    "What are the chances that Sherlock could really solve a crime?"
+%    "What are the chances Sherlock could really solve a crime?"
 % unfortunately:
 %    *This is the man we love him
 %    *I still remember the room I kissed him
