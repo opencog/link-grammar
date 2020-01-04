@@ -9356,12 +9356,14 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 % Omm-: "I want more" -- the second m blocks O*t+ on <vc-be>
 % Non-zero cost on Omm- so that EA+ is preferred.
 % Cost of >1.0 on Omm- so that MVm- is preferred for "He runs more".
+% naked EC-: "How much more?"
 more:
   ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or <advcl-verb> or dAJrc- or dAJlc+))
   or ({OF+} & (
     ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
     or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+))
     or ({ECn- or ECx- or ND-} & ([Omm-]1.1 or Jm- or (Xd- & MVt+ & Xc+ & MX*m-)))))
+  or EC-
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 more_of_a:  Ds*mc+ or (<PHc> & Ds*mx+);
