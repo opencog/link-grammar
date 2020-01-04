@@ -1595,9 +1595,10 @@ half:
 
 % "How many years" -- prefer TQ+ over Dmc+
 % OFd+ & Dmc+: "I drank many of the beers"
-% Naked H+: "How many?"
+% Naked H-: "How many?"
+% H- & EC+: "How many more?"
 many:
-  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+ or [[()]]))
+  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+ or EC+ or [()]))
   or (AM- & (Dmcy+ or Oy- or Jy-))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
@@ -10533,6 +10534,7 @@ whether_or_not:
 % QI- & (): "I do not know how"
 % EL+: "How else would you say that?"
 % (EAh+ or EEh+) & Wq-: "How big?" "How quickly?"
+%    Unfortunately, this is blocked by "S-V inversion required7"
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
@@ -10542,7 +10544,6 @@ how:
   or ({EW-} & (QJ- or QJ+))
   or [dSJl+ or dSJr-]0.5
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
-%%%  or ((EAh+ or EEh+) & Ww-);
 
 % ----------------------------------------------------
 % CONJUNCTIONS  & ADVERBS
@@ -11123,6 +11124,12 @@ n't n’t: N- or EB-;
 just_not: <COMP-OPENER>;
 
 % ---------------------------------------------------
+% Question patterns.
+% EAh- & Qe+: "How long did you say it was?"
+% EAh-: "How long?" but this is blocked by "S-V inversion required7"
+<how-q>: (EAh- & Qe+);
+
+% ---------------------------------------------------
 % ADJECTIVES
 % Common disjuncts shared by virtually all adjectives.
 %
@@ -11149,8 +11156,10 @@ just_not: <COMP-OPENER>;
 % Lots and lots, but not all ordinary adjs can take <tot-verb>:
 % Pa- & <tot-verb>: "... is too abrasive to talk to."
 % {Xd-} & Pa-: "she stood there, naked"
-% [EAh- & {Qe+}]: "How big?"  "How tall?" -- large cost, as it otherwise
-%     causes bizarre parses for "a decidedly jolly good player"
+% EAh-: "How big?"  "How tall?" --  blocked by "S-V inversion required7"
+%     and if it was not blocked, the EAh would create bad parses for stuff
+%     like "He is a decidedly jolly good player"
+% EAh- & Qe+: "How big is it?"  "How tall is it?"
 <ordinary-adj>:
   ({EA- or EF+} & (
     ({Xd-} & (Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {<tot-verb>})
@@ -11160,7 +11169,7 @@ just_not: <COMP-OPENER>;
   or ({EF+} & <adj-conjoined>)
   or [[DD- & <noun-main-p>]]
   or [[{DD-} & <noun-and-p>]]
-  or [EAh- & {Qe+}];
+  or <how-q>;
 
 % Macro, for all the common parts of an A+ connection, with
 % the phonetic attachement as a variable.
@@ -11231,6 +11240,7 @@ tawny.a ultramarine.a umber.a yellow.a:
 % Wx-: single-word opinion expression
 <adj-stuff>:
   <marker-common-entity> or
+  <how-q> or
   ({EA- or EF+} & (
     ((AF+ or Ma- or dMJra-) & {@MV+}) or
     ({@MV+} & dMJla+) or
@@ -11750,12 +11760,14 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 % Omm-: "I want more" -- the second m blocks O*t+ on <vc-be>
 % Non-zero cost on Omm- so that EA+ is preferred.
 % Cost of >1.0 on Omm- so that MVm- is preferred for "He runs more".
+% naked EC-: "How much more?"
 more:
   ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or <advcl-verb> or dAJrc- or dAJlc+))
   or ({OF+} & (
     ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
     or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+))
     or ({ECn- or ECx- or ND-} & ([Omm-]1.1 or Jm- or (Xd- & MVt+ & Xc+ & MX*m-)))))
+  or EC-
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 more_of_a:  Ds*mc+ or (<PHc> & Ds*mx+);
@@ -11896,12 +11908,15 @@ than.e:
 % ({OFd+} & Dmu+): "I drank much of the beer"
 % cost on [[<noun-main-s>]] so that the above is preferred to an O- link
 % EZ+: "Much as I expected!"
+% H-: "How much?"
 much:
   ({EE-} & ([[MVa-]] or (<wantPHc> & ECa+) or <advcl-verb> or Qe+))
   or ({EEx- or H-} & (
     ECn+
     or ({OFd+} & Dmu+)
-    or (<noun-rel-s> & ([[<noun-main-s>]] or Bsm+))))
+    or (<noun-rel-s> & ([[<noun-main-s>]] or Bsm+))
+    or [()]
+  ))
   or (AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-))
   or EZ+;
 

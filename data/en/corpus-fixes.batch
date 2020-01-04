@@ -502,53 +502,6 @@ how the fuck do I know?
 whyever for?
 what for?
 
-% "how" is broken and hard to fix without breaking basic corpus.
-How come?
-How many are there?
-How many more?
-How many?
-How much is that?
-how much?
-How?
-
-How quickly?
-
-How big?
-How small?
-How high?
-How big did he talk?
-How big is it?
-How big did you say it was?
-*How slickly did you say it was?
-How high did you say it was?
-How tall did you say he was?
-
-How ridiculous
-How perfectly ridiculous
-How strange
-How odd!
-
-% Arghhh this is a mess. Some of these want to use AF+,
-% others seem to be more comfortable with Qe+ and its not clear
-% how to be consistent.
-How common did you say it was?
-How common?
-How often?
-How often does it happen?
-How shocking?
-How shocking was it?
-How shocking did you say it was?
-
-
-Who?
-who else?
-who else not?
-
-When?
-
-Which way?
-
-
 % We should distinguish between "who" and "whom" but who fucking cares?
 Who fucking cares?
 Bring him and whomever else
@@ -2152,8 +2105,8 @@ I wonder why you said that?
 
 % Problems with questions:  modifiers in query.
 % The below parses, but incorrectly. "a dog" should modify
-% "big".  Fixing this will probably render the HA and the A links
-% obsolete, completely.
+% "big".  Fixing this will might render the HA and the AA links
+% obsolete, maybe.
 % Pied-piping: How-big is a pied-piper, pulling the subordinate
 % "a dog" over to the right: "*It is a how big dog?".
 % Basically, in "How big [a dog] is it?" the phrase "a dog" is
@@ -2166,8 +2119,9 @@ I wonder why you said that?
 % "Sign-Based Construction Grammar."
 % http://lingo.stanford.edu/sag/papers/kay-sag-final.pdf
 
-% "How big a dog is it?" should parse .. and it does, but the
-% parse is incorrect, so we put a * in front, for now.
+% The current parse of "How big a dog is it?" is incorrect. It's exactly
+% as documented in section-AA.html, but really the AA link is just wrong.
+% Since the current parse is incorrect, we put a * in front, for now.
 *How big a dog is it?
 How big of a dog can you imagine?
 How big is it?
@@ -2177,10 +2131,8 @@ It was too big a dog to fit through the hole in the fence.
 It was that big a dog.
 It was so big a dog that it filled the cage
 How big a dog did he buy?
-*How big did he buy?
-% Actually, the above is allowed, e.g. while talking about
-% house prices, the conclusion might be: "So, how big did he buy?"
-
+% While talking about house prices, one could ask: "So, how big did he buy?"
+How big did he buy?
 
 % The documentation for EAh discusses the below.
 % post-processing "Incorrect use of 'how'17" blocks some of these.
@@ -2193,20 +2145,6 @@ he is that stupid.
 Our neighbours have too big a dog to keep in the house
 Our neighbours have a dog too big to keep in the house
 Our neighbours have dogs too big to keep in the house
-
-% Prepositional questions with null verbs
-By what means?
-In what way?
-To what end?
-For what reason?
-By what means ...?
-In what way ...?
-To what end ...?
-For what reason ...?
-By what means...?
-In what way...?
-To what end...?
-For what reason...?
 
 How much should I use?
 How much sugar should I use?
@@ -2225,6 +2163,81 @@ How much of a dog is wanted?
 How much of a man is he?
 How much of a lie was it?
 How big a lie was it?
+
+% "how" is broken and hard to fix without breaking basic corpus.
+How come?
+How many are there?
+How many more?
+How many?
+How much is that?
+how much?
+how much more?
+How?
+
+How quickly?
+
+How big?
+How small?
+How high?
+How big did he talk?
+How big is it?
+How big did you say it was?
+*How slickly did you say it was?
+How high did you say it was?
+How tall did you say he was?
+
+How ridiculous
+How perfectly ridiculous
+How strange
+How odd!
+
+% Arghhh this is a mess. Some of these want to use AF+,
+% others seem to be more comfortable with Qe+ and its not clear
+% how to be consistent.
+How common did you say it was?
+How common?
+How often?
+How often does it happen?
+How shocking?
+How shocking was it?
+How shocking did you say it was?
+How bad did you say it was?
+How common did you say it was?
+How hard did you say it was?
+How long did you say it was?
+
+How expensive did you say it was?
+How difficult did you say it was?
+How safe did you say it was?
+How good did you say it was?
+How important might you say it was?
+How necessary might you say it was?
+How practical might you say this is?
+
+
+
+Who?
+who else?
+who else not?
+
+When?
+
+Which way?
+
+% Prepositional questions with null verbs
+By what means?
+In what way?
+To what end?
+For what reason?
+By what means ...?
+In what way ...?
+To what end ...?
+For what reason ...?
+By what means...?
+In what way...?
+To what end...?
+For what reason...?
+
 
 % These cannot take WV links anywhere:
 Are you insane?
