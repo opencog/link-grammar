@@ -1595,9 +1595,10 @@ half:
 
 % "How many years" -- prefer TQ+ over Dmc+
 % OFd+ & Dmc+: "I drank many of the beers"
-% Naked H+: "How many?"
+% Naked H-: "How many?"
+% H- & EC+: "How many more?"
 many:
-  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+ or [[()]]))
+  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+ or EC+ or [()]))
   or (AM- & (Dmcy+ or Oy- or Jy-))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
@@ -11759,6 +11760,7 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 % Omm-: "I want more" -- the second m blocks O*t+ on <vc-be>
 % Non-zero cost on Omm- so that EA+ is preferred.
 % Cost of >1.0 on Omm- so that MVm- is preferred for "He runs more".
+% naked EC-: "How much more?"
 more:
   ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or Qe+ or <advcl-verb> or dAJrc- or dAJlc+))
   or ({OF+} & (

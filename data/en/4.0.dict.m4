@@ -1604,9 +1604,10 @@ half:
 
 % "How many years" -- prefer TQ+ over Dmc+
 % OFd+ & Dmc+: "I drank many of the beers"
-% Naked H+: "How many?"
+% Naked H-: "How many?"
+% H- & EC+: "How many more?"
 many:
-  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+ or [[()]]))
+  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+ or EC+ or [()]))
   or (AM- & (Dmcy+ or Oy- or Jy-))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
