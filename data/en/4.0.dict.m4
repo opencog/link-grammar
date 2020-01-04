@@ -9502,12 +9502,15 @@ than.e:
 % ({OFd+} & Dmu+): "I drank much of the beer"
 % cost on [[<noun-main-s>]] so that the above is preferred to an O- link
 % EZ+: "Much as I expected!"
+% H-: "How much?"
 much:
   ({EE-} & ([[MVa-]] or (<wantPHc> & ECa+) or <advcl-verb> or Qe+))
   or ({EEx- or H-} & (
     ECn+
     or ({OFd+} & Dmu+)
-    or (<noun-rel-s> & ([[<noun-main-s>]] or Bsm+))))
+    or (<noun-rel-s> & ([[<noun-main-s>]] or Bsm+))
+    or [()]
+  ))
   or (AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-))
   or EZ+;
 
