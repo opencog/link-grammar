@@ -8723,7 +8723,8 @@ just_not: <COMP-OPENER>;
 
 % ---------------------------------------------------
 % Question patterns.
-% EAh- & Qe+: "How long did you say it was?" and it uses "S-V inversion required7"
+% EAh- & Qe+: "How long did you say it was?"
+% EAh-: "How long?" but this is blocked by "S-V inversion required7"
 <how-q>: (EAh- & Qe+);
 
 % ---------------------------------------------------

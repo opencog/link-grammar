@@ -2105,8 +2105,8 @@ I wonder why you said that?
 
 % Problems with questions:  modifiers in query.
 % The below parses, but incorrectly. "a dog" should modify
-% "big".  Fixing this will probably render the HA and the AA links
-% obsolete, completely.
+% "big".  Fixing this will might render the HA and the AA links
+% obsolete, maybe.
 % Pied-piping: How-big is a pied-piper, pulling the subordinate
 % "a dog" over to the right: "*It is a how big dog?".
 % Basically, in "How big [a dog] is it?" the phrase "a dog" is
