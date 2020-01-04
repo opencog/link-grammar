@@ -69,7 +69,7 @@ typedef struct dialect_option_s dialect_info;
 
 Dialect *dialect_alloc(void);
 void free_dialect(Dialect *);
-Exptag *exptag_add(Dictionary, const char *);
+Exptag *exptag_dialect_add(Dictionary, const char *);
 bool setup_dialect(Dictionary, Parse_Options);
 void free_cost_table(Parse_Options opts);
 bool apply_dialect(Dictionary, Dialect *, unsigned int, Dialect *, dialect_info *);

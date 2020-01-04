@@ -46,7 +46,7 @@ Dialect *dialect_alloc(void)
 	return di;
 }
 
-Exptag *exptag_add(Dictionary dict, const char *tag)
+Exptag *exptag_dialect_add(Dictionary dict, const char *tag)
 {
 	expression_tag *et = &dict->tag;
 	unsigned int tag_index = string_id_lookup(tag, et->set);

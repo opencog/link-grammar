@@ -1185,7 +1185,7 @@ static Exp *make_expression(Dictionary dict)
 				{
 					nl = make_unary_node(dict->Exp_pool, nl);
 				}
-				nl->tag = exptag_add(dict, dict->token);
+				nl->tag = exptag_dialect_add(dict, dict->token);
 				if (!link_advance(dict)) {
 					return NULL;
 				}
