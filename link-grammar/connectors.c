@@ -183,7 +183,7 @@ static void condesc_length_limit_def_delete(ConTable *ct)
 	ct->length_limit_def = NULL;
 }
 
-void set_all_condesc_length_limit(Dictionary dict)
+static void set_all_condesc_length_limit(Dictionary dict)
 {
 	ConTable *ct = &dict->contable;
 	bool unlimited_len_found = false;
