@@ -372,7 +372,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	/* The count we previously computed; it's non-zero. */
 	xt->set.count = hist_total(count);
 
-#define NUM_PARSES 4
+	//#define NUM_PARSES 4
 	// xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
 	// xt->set.cut_count = hist_cut_total(count, NUM_PARSES);
 
