@@ -18,6 +18,8 @@
 #include "dict-defines.h"
 #include "dict-file/word-file.h"
 #include "dict-file/read-dict.h"
+#include "dict-utils.h"             // copy_Exp
+#include "disjunct-utils.h"
 #include "print/print.h"
 #include "print/print-util.h"
 #include "regex-morph.h"
@@ -223,8 +225,9 @@ const char *lg_exp_stringify(const Exp *n)
 	return lg_exp_stringify_with_tags(NULL, n);
 }
 
+/* ================ Display word expressions / disjuncts ================= */
 
-/* ======================================================================= */
+const char do_display_expr; /* a sentinel to request an expression display */
 
 /**
  * Display the information about the given word.
@@ -236,9 +239,9 @@ const char *lg_exp_stringify(const Exp *n)
  * In this case no split is done.
  */
 static char *display_word_split(Dictionary dict,
-                               const char * word,
-                               Parse_Options opts,
-                               char * (*display)(Dictionary, const char *))
+               const char * word, Parse_Options opts,
+               char * (*display)(Dictionary, const char *, const void **),
+               const char **arg)
 {
 	Sentence sent;
 
@@ -259,9 +262,45 @@ static char *display_word_split(Dictionary dict,
 	if (0 == sentence_split(sent, opts))
 	{
 		/* List the splits */
-		print_sentence_word_alternatives(s, sent, false, NULL, NULL);
-		/* List the disjuncts information. */
-		print_sentence_word_alternatives(s, sent, false, display, NULL);
+		print_sentence_word_alternatives(s, sent, false, NULL, NULL, NULL);
+		/* List the expression / disjunct information */
+
+		/* Initialize the callback arguments */
+		const void *carg[3] = { /*regex*/NULL, /*flags*/NULL, opts };
+
+		Regex_node *rn = NULL;
+		if (arg != NULL)
+		{
+			if (arg[0] == &do_display_expr)
+			{
+				carg[0] = &do_display_expr;
+			}
+			else if (arg[0] != NULL)
+			{
+				/* A regex is specified, which means displaying disjuncts. */
+				carg[1] = arg[1]; /* flags */
+
+				if (arg[0][0] != '\0')
+				{
+					rn = malloc(sizeof(Regex_node));
+					rn->name = strdup("Disjunct regex");
+					rn->pattern = strdup(arg[0]);
+					rn->re = NULL;
+					rn->neg = false;
+					rn->next = NULL;
+
+					if (compile_regexs(rn, NULL) != 0)
+					{
+						prt_error("Error: Failed to compile regex \"%s\".\n", arg[0]);
+						return strdup(""); /* not NULL (NULL means no dict entry) */
+					}
+
+					carg[0] = rn;
+				}
+			}
+		}
+		print_sentence_word_alternatives(s, sent, false, display, carg, NULL);
+		if (rn != NULL) free_regexs(rn);
 	}
 	sentence_delete(sent);
 	parse_options_set_spell_guess(opts, spell_option);
@@ -328,7 +367,7 @@ static char *display_counts(const char *word, Dict_node *dn)
 {
 	dyn_str *s = dyn_str_new();
 
-	append_string(s, "matches:\n");
+	dyn_strcat(s, "matches:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
 		append_string(s, "    %-*s %8u  disjuncts",
@@ -339,32 +378,51 @@ static char *display_counts(const char *word, Dict_node *dn)
 		{
 			append_string(s, " <%s>", dn->file->file);
 		}
-		append_string(s, "\n\n");
+		dyn_strcat(s, "\n\n");
 	}
 	return dyn_str_take(s);
 }
 
 /**
- * Display the number of disjuncts associated with this dict node
+ * Display the expressions associated with this dict node.
  */
-static char *display_expr(Dictionary dict, const char *word, Dict_node *dn)
+static char *display_expr(Dictionary dict, const char *word, Dict_node *dn,
+								  const void **arg)
 {
-	dyn_str *s = dyn_str_new();
+	const Parse_Options opts = (Parse_Options)arg[2];
 
-	append_string(s, "expressions:\n");
+	/* copy_Exp() needs an Exp memory pool. */
+	Pool_desc *Exp_pool = pool_new(__func__, "Exp", /*num_elements*/256,
+	                               sizeof(Exp), /*zero_out*/false,
+	                               /*align*/false, /*exact*/false);
+
+	dyn_str *s = dyn_str_new();
+	dyn_strcat(s, "expressions:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
-		const char *expstr = lg_exp_stringify_with_tags(dict, dn->exp);
+		Exp *e = copy_Exp(dn->exp, Exp_pool, opts); /* assign dialect costs */
+		pool_reuse(Exp_pool);
+
+		const char *expstr = lg_exp_stringify_with_tags(dict, e);
 
 		append_string(s, "    %-*s %s",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
 		              expstr);
-		append_string(s, "\n\n");
+		dyn_strcat(s, "\n\n");
 	}
+
+	if (Exp_pool != NULL) pool_delete(Exp_pool);
 	return dyn_str_take(s);
 }
 
-static char *display_word_info(Dictionary dict, const char * word)
+/**
+ * A callback function to display \p word number of disjuncts and file name.
+ *
+ * @arg Callback args (unused).
+ * @return String to display. Must be freed by the caller.
+ */
+static char *display_word_info(Dictionary dict, const char *word,
+                               const void **arg)
 {
 	const char * regex_name;
 	Dict_node *dn_head;
@@ -381,21 +439,38 @@ static char *display_word_info(Dictionary dict, const char * word)
 	regex_name = match_regex(dict->regex_root, word);
 	if (regex_name)
 	{
-		return display_word_info(dict, regex_name);
+		return display_word_info(dict, regex_name, arg);
 	}
 
 	return NULL;
 }
 
-static char *display_word_expr(Dictionary dict, const char * word)
+/**
+ * A callback function to display \p word expressions or disjuncts.
+ * @param arg Callback data as follows:
+ *    arg[0]: &do_display_expr or disjunct selection regex.
+ *    arg[1]: flags
+ *    argv[2]: Parse_Options
+ * @return String to display. Must be freed by the caller.
+ */
+static char *display_word_expr(Dictionary dict, const char *word,
+                               const void **arg)
 {
 	const char * regex_name;
 	Dict_node *dn_head;
+	char *out = NULL;
 
 	dn_head = dictionary_lookup_wild(dict, word);
 	if (dn_head)
 	{
-		char *out = display_expr(dict, word, dn_head);
+		if (arg[0] == &do_display_expr)
+		{
+			out = display_expr(dict, word, dn_head, arg);
+		}
+		else
+		{
+			out = display_disjuncts(dict, dn_head, arg);
+		}
 		free_lookup_list(dict, dn_head);
 		return out;
 	}
@@ -404,19 +479,53 @@ static char *display_word_expr(Dictionary dict, const char * word)
 	regex_name = match_regex(dict->regex_root, word);
 	if (regex_name)
 	{
-		return display_word_expr(dict, regex_name);
+		return display_word_expr(dict, regex_name, arg);
 	}
 
 	return NULL;
 }
 
 /**
+ * Break word/re/flags into components.
+ * /regex/ and flags are optional.
+ * \p re and \p flags can be both NULL;
+ * @param re[out] the regex component, unless \c NULL.
+ * @param flags[out] the flags component, unless \c NULL.
+ * @return The word component.
+ */
+static const char *display_word_extract(char *word, const char **re,
+                                        const char **flags)
+{
+	if (re != NULL) *re = NULL;
+	if (flags != NULL) *flags = NULL;
+
+	char *r = strchr(word, '/');
+	if (r == NULL) return word;
+	*r = '\0';
+
+	if (re != NULL)
+	{
+		*re = r + 1;
+		char *f = strchr(*re, '/');
+		if (f != NULL)
+		{
+			*f = '\0';
+			*flags = f + 1;
+		}
+	}
+	return word;
+}
+
+/**
  *  dict_display_word_info() - display the information about the given word.
  */
-char *dict_display_word_info(Dictionary dict, const char * word,
+char *dict_display_word_info(Dictionary dict, const char *word,
 		Parse_Options opts)
 {
-	return display_word_split(dict, word, opts, display_word_info);
+	char *wordbuf = strdupa(word);
+	word = display_word_extract(wordbuf, NULL, NULL);
+
+	return display_word_split(dict, word, opts, display_word_info, NULL);
 }
 
 /**
@@ -424,5 +533,12 @@ char *dict_display_word_info(Dictionary dict, const char * word,
  */
 char *dict_display_word_expr(Dictionary dict, const char * word, Parse_Options opts)
 {
-	return display_word_split(dict, word, opts, display_word_expr);
+	const char *arg[2];
+	char *wordbuf = strdupa(word);
+	word = display_word_extract(wordbuf, &arg[0], &arg[1]);
+
+	/* If no regex component, then it's a request to display expressions. */
+	if (arg[0] == NULL) arg[0] = &do_display_expr;
+
+	return display_word_split(dict, word, opts, display_word_expr, arg);
 }

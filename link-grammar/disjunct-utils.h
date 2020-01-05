@@ -79,6 +79,7 @@ void dyn_print_connector_list(dyn_str *s, Connector *, uint32_t);
 void print_disjunct_list(Disjunct *, uint32_t);
 void dyn_print_disjunct_list(dyn_str *s, Disjunct *, uint32_t);
 void print_all_disjuncts(Sentence);
+char *display_disjuncts(Dictionary, const Dict_node *, const void **);
 
 /* Save and restore sentence disjuncts */
 typedef struct

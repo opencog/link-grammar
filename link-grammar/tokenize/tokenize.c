@@ -3395,7 +3395,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	if (verbosity_level(D_SW))
 	{
 		dyn_str *s = dyn_str_new();
-		print_sentence_word_alternatives(s, sent, true, NULL, NULL);
+		print_sentence_word_alternatives(s, sent, true, NULL, NULL, NULL);
 		char *out = dyn_str_take(s);
 		prt_error("Debug: Sentence words and alternatives:\n%s", out);
 		free(out);
