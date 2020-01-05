@@ -261,37 +261,35 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 	for (; cl != NULL; cl = cl->next)
 	{
 		if (NULL == cl->c) continue; /* no connectors */
+		if (cl->maxcost > cost_cutoff) continue;
 
-		if (cl->maxcost <= cost_cutoff)
+		if (NULL == sent) /* For the SAT-parser, until fixed. */
 		{
-			if (NULL == sent) /* For the SAT-parser, until fixed. */
-			{
-				ndis = xalloc(sizeof(Disjunct));
-			}
-			else
-			{
-				ndis = pool_alloc(sent->Disjunct_pool);
-				connector_pool = sent->Connector_pool;
-			}
-			ndis->left = ndis->right = NULL;
-
-			/* Build a list of connectors from the Tconnectors. */
-			for (Tconnector *t = cl->c; t != NULL; t = t->next)
-			{
-				Connector *n = connector_new(connector_pool, t->e->condesc, opts);
-				Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
-
-				n->multi = t->e->multi;
-				n->next = *loc;   /* prepend the connector to the current list */
-				*loc = n;         /* update the connector list */
-			}
-
-			ndis->word_string = string;
-			ndis->cost = cl->cost;
-			ndis->originating_gword = (gword_set*)gs; /* XXX remove constness */
-			ndis->next = dis;
-			dis = ndis;
+			ndis = xalloc(sizeof(Disjunct));
 		}
+		else
+		{
+			ndis = pool_alloc(sent->Disjunct_pool);
+			connector_pool = sent->Connector_pool;
+		}
+		ndis->left = ndis->right = NULL;
+
+		/* Build a list of connectors from the Tconnectors. */
+		for (Tconnector *t = cl->c; t != NULL; t = t->next)
+		{
+			Connector *n = connector_new(connector_pool, t->e->condesc, opts);
+			Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
+
+			n->multi = t->e->multi;
+			n->next = *loc;   /* prepend the connector to the current list */
+			*loc = n;         /* update the connector list */
+		}
+
+		ndis->word_string = string;
+		ndis->cost = cl->cost;
+		ndis->originating_gword = (gword_set*)gs; /* XXX remove constness */
+		ndis->next = dis;
+		dis = ndis;
 	}
 	return dis;
 }
