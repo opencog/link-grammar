@@ -670,8 +670,37 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		free(dupline);
 	}
 
-	clean_up_string(line);
 	s = line;
+	if (s[0] == '!')
+	{
+		Parse_Options opts = copts->popts;
+		char *out;
+
+		out = dict_display_word_info(dict, s+1, opts);
+		if (NULL != out)
+		{
+			printf("%s\n", out);
+		   free(out);
+			out = dict_display_word_expr(dict, s+1, opts);
+			if (NULL != out)
+			{
+				printf("%s", out);
+				free(out);
+			}
+			else
+			{
+				prt_error("Error: '%s': Internal Error: Missing expression.\n", s+1);
+			}
+		}
+		else
+		{
+			printf("Token \"%s\" matches nothing in the dictionary.\n", s+1);
+		}
+
+		return 'c';
+	}
+
+	clean_up_string(line);
 	j = -1;
 	count = 0;
 
@@ -708,35 +737,6 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		/* Found an abbreviated, but it wasn't a Boolean.
 		 * It means it is a user command, to be handled below. */
 		return ((int (*)(const Switch*, int)) (as[j].ptr))(as, j);
-	}
-
-	if (s[0] == '!')
-	{
-		Parse_Options opts = copts->popts;
-		char *out;
-
-		out = dict_display_word_info(dict, s+1, opts);
-		if (NULL != out)
-		{
-			printf("%s\n", out);
-		   free(out);
-			out = dict_display_word_expr(dict, s+1, opts);
-			if (NULL != out)
-			{
-				printf("%s", out);
-				free(out);
-			}
-			else
-			{
-				prt_error("Error: '%s': Internal Error: Missing expression.\n", s+1);
-			}
-		}
-		else
-		{
-			printf("Token \"%s\" matches nothing in the dictionary.\n", s+1);
-		}
-
-		return 'c';
 	}
 
 	/* Test here for an equation i.e. does the command line hold an equals sign? */
