@@ -629,8 +629,9 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	/* Handle a request for a particular command help. */
 	if (NULL != dict)
 	{
+		char *dupline = strdup(line);
 		/* If we are here, it is not a command-line parameter. */
-		s = strtok(line, WHITESPACE);
+		s = strtok(dupline, WHITESPACE);
 		if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
 		{
 			s = strtok(NULL, WHITESPACE);
@@ -652,6 +653,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 				if (count == 1)
 				{
+					free(dupline);
 					display_help(&as[j], copts);
 					return 'c';
 				}
@@ -661,9 +663,11 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 				else
 					prt_error("Undefined command: \"%s\".  %s\n", s, helpmsg);
 
+				free(dupline);
 				return -1;
 			}
 		}
+		free(dupline);
 	}
 
 	clean_up_string(line);
