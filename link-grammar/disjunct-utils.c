@@ -413,41 +413,74 @@ void count_disjuncts_and_connectors(Sentence sent, unsigned int *dca,
 }
 
 /* ================ Print disjuncts and connectors ============== */
+static bool is_flag(uint32_t flags, char flag)
+{
+	return (flags>>(flag-'a')) & 1;
+}
+
+static uint32_t make_flag(char flag)
+{
+	return 1<<(flag-'a');
+}
+
 /* Print one connector with all the details.
- * mCnameD<tracon_id>(nearest_word, length_limit)x
- * optional m: "@" for multi (else nothing)
- * Cname: Connector name
- * Optional D: "-" / "+" (if dir != -1)
- * Optional <tracon_id>: tracon_id (if not 0)
- * Optional (nearest_word, length_limit): if both are not 0
+ * mCnameD<tracon_id>{refcount}(nearest_word, length_limit)x
+ * Optional m: "@" for multi (else nothing).
+ * Cname: Connector name.
+ * Optional D: "-" / "+" (if dir != -1).
+ * Optional <tracon_id>: (flag 't').
+ * Optional [nearest_word, length_limit or farthest_word]: (flag 'l').
  * x: Shallow/deep indication as "s" / "d" (if shallow != -1)
  */
-void print_one_connector(Connector * e, int dir, int shallow)
+void dyn_print_one_connector(dyn_str *s, Connector *e, int dir, int shallow,
+                             uint32_t flags)
 {
-	printf("%s%s", e->multi ? "@" : "", connector_string(e));
-	if (-1 != dir) printf("%c", "-+"[dir]);
-	if (e->tracon_id)
-	{
-		if ((-1 != shallow) && e->refcount)
-			printf("<%d,%d>", e->tracon_id, e->refcount);
-		else
-			printf("<%d>", e->tracon_id);
-	}
-	printf("(%d,%d)", e->nearest_word, e->length_limit);
+	if (e->multi)
+		dyn_strcat(s, "@");
+	dyn_strcat(s, connector_string(e));
+	if (-1 != dir) dyn_strcat(s, &"-+"[dir]);
+	if (is_flag(flags, 't') && e->tracon_id)
+		append_string(s, "<%d>", e->tracon_id);
+	if (is_flag(flags, 'r') && e->refcount)
+		append_string(s, "{%d}",e->refcount);
+	if (is_flag(flags, 'l'))
+		append_string(s, "(%d,%d)", e->nearest_word, e->length_limit);
 	if (-1 != shallow)
-		printf("%c", (0 == shallow) ? 'd' : 's');
+		dyn_strcat(s, (0 == shallow) ? "d" : "s");
 }
 
-void print_connector_list(Connector * e)
+void print_one_connector(Connector *e, int dir, int shallow, uint32_t flags)
 {
-	for (;e != NULL; e=e->next)
+	dyn_str *s = dyn_str_new();
+
+	dyn_print_one_connector(s, e, dir, shallow, flags);
+
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
+}
+
+void dyn_print_connector_list(dyn_str *s, Connector *e, uint32_t flags)
+{
+	for (;e != NULL; e = e->next)
 	{
-		print_one_connector(e, /*dir*/-1, /*shallow*/-1);
-		if (e->next != NULL) printf(" ");
+		dyn_print_one_connector(s, e, /*dir*/-1, /*shallow*/-1, flags);
+		if (e->next != NULL) dyn_strcat(s, " ");
 	}
 }
 
-void print_disjunct_list(Disjunct * dj)
+void print_connector_list(Connector *e, uint32_t flags)
+{
+	dyn_str *s = dyn_str_new();
+
+	dyn_print_connector_list(s, e, flags);
+
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
+}
+
+void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags)
 {
 	int i = 0;
 	char word[MAX_WORD + 32];
@@ -458,26 +491,34 @@ void print_disjunct_list(Disjunct * dj)
 		lg_strlcpy(word, dj->word_string, sizeof(word));
 		patch_subscript_mark(word);
 
-		printf("%16s", word);
-		if (print_disjunct_address) printf("(%p)", dj);
-		printf(": ");
+		append_string(s, "%16s", word);
+		if (print_disjunct_address) append_string(s, "(%p)", dj);
+		dyn_strcat(s, ": ");
 
-		printf("[%d](%s) ", i++, cost_stringify(dj->cost));
+		append_string(s, "[%d]%s= ", i++, cost_stringify(dj->cost));
 
-		print_connector_list(dj->left);
-		printf(" <--> ");
-		print_connector_list(dj->right);
-		printf("\n");
+		dyn_print_connector_list(s, dj->left, flags);
+		dyn_strcat(s, " <--> ");
+		dyn_print_connector_list(s, dj->right, flags);
+		dyn_strcat(s, "\n");
 	}
 }
 
 void print_all_disjuncts(Sentence sent)
 {
-		for (WordIdx w = 0; w < sent->length; w++)
-		{
-			printf("Word %zu:\n", w);
-			print_disjunct_list(sent->word[w].d);
-		}
+	dyn_str *s = dyn_str_new();
+	uint32_t flags = make_flag('l') | make_flag('t');
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		append_string(s, "Word %zu:\n", w);
+		dyn_print_disjunct_list(s, sent->word[w].d, flags);
+
+	}
+
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
 }
 
 /* ============= Connector encoding, sharing and packing ============= */
