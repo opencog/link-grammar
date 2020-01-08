@@ -236,6 +236,14 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 	if (dinfo->cost_table != NULL)
 	{
 		/* Cached table. */
+		if (dinfo->dict != dict)
+		{
+			/* XXX In principle this may still be another dictionary if it got
+			 * the same address. Can be fixed by adding dictionary_create()
+			 * ordinal number. */
+			prt_error("Error: Dialect setup belongs to a different dictionary.\n");
+			return false;
+		}
 		lgdebug(D_DIALECT, "Debug: Cached cost table found\n");
 
 		if (verbosity_level(+D_DIALECT+1))
@@ -243,6 +251,8 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 
 		return true;
 	}
+
+	dinfo->dict = dict;
 
 	if (et->num != 0)
 	{
