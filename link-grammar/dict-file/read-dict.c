@@ -795,7 +795,7 @@ static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 Exp *Exp_create(Pool_desc *mp)
 {
 	Exp *e = pool_alloc(mp);
-	e->tag = NULL;
+	e->tag_type = Exptag_none;
 	return e;
 }
 
@@ -1181,11 +1181,12 @@ static Exp *make_expression(Dictionary dict)
 					           badchar);
 					return NULL;
 				}
-				if (nl->tag != NULL)
+				if (nl->tag_id != Exptag_none)
 				{
 					nl = make_unary_node(dict->Exp_pool, nl);
 				}
-				nl->tag = exptag_dialect_add(dict, dict->token);
+				nl->tag_id = exptag_dialect_add(dict, dict->token);
+				nl->tag_type = Exptag_dialect;
 				if (!link_advance(dict)) {
 					return NULL;
 				}

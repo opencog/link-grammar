@@ -301,8 +301,8 @@ void dictionary_delete(Dictionary dict)
 	string_set_delete(dict->string_set);
 
 	free_dialect(dict->dialect);
-	free(dict->tag.array);
-	string_id_delete(dict->tag.set);
+	free(dict->dialect_tag.name);
+	string_id_delete(dict->dialect_tag.set);
 
 	free((void *)dict->suppress_warning);
 	free_regexs(dict->regex_root);

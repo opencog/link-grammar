@@ -1,5 +1,5 @@
 /*************************************************************************/
-/* Copyright (C) 2019 Amir Plivatsky                                     */
+/* Copyright (C) 2019-2020 Amir Plivatsky                                     */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -46,29 +46,29 @@ Dialect *dialect_alloc(void)
 	return di;
 }
 
-Exptag *exptag_dialect_add(Dictionary dict, const char *tag)
+unsigned int exptag_dialect_add(Dictionary dict, const char *tag)
 {
-	expression_tag *et = &dict->tag;
-	unsigned int tag_index = string_id_lookup(tag, et->set);
+	expression_tag *dt = &dict->dialect_tag;
+	unsigned int tag_index = string_id_lookup(tag, dt->set);
 
-	if (tag_index != SI_NOTFOUND) return &et->array[tag_index];
-	tag_index = string_id_add(tag, et->set);
+	if (tag_index != SI_NOTFOUND) return tag_index;
+	tag_index = string_id_add(tag, dt->set);
 	tag = string_set_add(tag, dict->string_set); /* FIXME: Refer to string-id */
 
-	if (et->num == et->size)
+	if (dt->num == dt->size)
 	{
-		if (et->num == 0)
-			et->size = EXPTAG_SZ;
+		if (dt->num == 0)
+			dt->size = EXPTAG_SZ;
 		else
-			et->size *= 2;
+			dt->size *= 2;
 
-		et->array = realloc(et->array, et->size * sizeof(*et->array));
+		dt->name = realloc(dt->name, dt->size * sizeof(*dt->name));
 	}
-	et->array[tag_index] = (Exptag){ .name = tag, .index = tag_index };
-	et->num++;
-	assert(et->num == tag_index);
+	dt->name[tag_index] = tag;
+	dt->num++;
+	assert(dt->num == tag_index);
 
-	return &et->array[tag_index];
+	return tag_index;
 }
 
 /**
@@ -78,9 +78,9 @@ Exptag *exptag_dialect_add(Dictionary dict, const char *tag)
 static bool apply_component(Dictionary dict, Dialect *di,
                             unsigned int table_index, float *cost_table)
 {
-	expression_tag *et = &dict->tag;
+	expression_tag *dt = &dict->dialect_tag;
 	unsigned int cost_index =
-		string_id_lookup(di->table[table_index].name, et->set);
+		string_id_lookup(di->table[table_index].name, dt->set);
 
 	if (cost_index == SI_NOTFOUND)
 	{
@@ -171,9 +171,9 @@ bool apply_dialect(Dictionary dict, Dialect *from, unsigned int table_index,
 
 static void print_cost_table(Dictionary dict, Dialect *di, dialect_info *dinfo)
 {
-	expression_tag *et = &dict->tag;
+	expression_tag *dt = &dict->dialect_tag;
 
-	if (et->num == 0)
+	if (dt->num == 0)
 	{
 		assert(dinfo->cost_table == NULL, "Unexpected cost table.");
 		prt_error("Debug: No dialect cost table (no tags in the dict).\n");
@@ -187,13 +187,13 @@ static void print_cost_table(Dictionary dict, Dialect *di, dialect_info *dinfo)
 	}
 
 	prt_error("Dialect cost table (%u components%s):\n\\",
-	          et->num, et->num == 1 ? "" : "s");
+	          dt->num, dt->num == 1 ? "" : "s");
 	prt_error("%-15s %s\n", "component", "cost");
 
-	for (unsigned int i = 1; i  <= et->num; i++)
+	for (unsigned int i = 1; i  <= dt->num; i++)
 	{
 		prt_error("%-15s %s\n\\",
-		          et->array[i].name, cost_stringify(dinfo->cost_table[i]));
+		          dt->name[i], cost_stringify(dinfo->cost_table[i]));
 	}
 	lg_error_flush();
 }
@@ -223,9 +223,9 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 {
 	Dialect *di = dict->dialect;
 	dialect_info *dinfo = &opts->dialect;
-	expression_tag *et = &dict->tag;
+	expression_tag *dt = &dict->dialect_tag;
 
-	if (et->num == 0)
+	if (dt->num == 0)
 	{
 		if (!dialect_conf_exists(dinfo)) return true;
 		prt_error("Error: Dialect setup failed: No dialects in the \"%s\" "
@@ -254,11 +254,11 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 
 	dinfo->dict = dict;
 
-	if (et->num != 0)
+	if (dt->num != 0)
 	{
-		dinfo->cost_table = malloc((et->num + 1) * sizeof(*dinfo->cost_table));
+		dinfo->cost_table = malloc((dt->num + 1) * sizeof(*dinfo->cost_table));
 
-		for (unsigned int i = 1; i <= et->num; i++)
+		for (unsigned int i = 1; i <= dt->num; i++)
 			dinfo->cost_table[i] = DIALECT_COST_DISABLE;
 	}
 

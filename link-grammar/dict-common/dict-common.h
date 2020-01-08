@@ -70,7 +70,7 @@ struct Afdict_class_struct
 typedef struct
 {
 	String_id *set;                    /* Expression tag names */
-	Exptag *array;                     /* Exp. tag array (indexed by their id) */
+	const char **name;                 /* Tag name (indexed by tag id) */
 	unsigned int num;                  /* Number of tags */
 	unsigned int size;                 /* Allocated tag array size */
 } expression_tag;
@@ -93,7 +93,7 @@ struct Dictionary_s
 	bool         shuffle_linkages;
 
 	Dialect *dialect;                  /* "4.0.dialect" info */
-	expression_tag tag;                /* Expression tag info */
+	expression_tag dialect_tag;        /* Expression dialect tag info */
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;

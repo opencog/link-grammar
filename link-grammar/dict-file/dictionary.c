@@ -138,7 +138,7 @@ dictionary_six_str(const char * lang,
 		dict->lookup_wild = file_lookup_wild;
 		dict->free_lookup = free_llist;
 		dict->lookup = file_boolean_lookup;
-		dict->tag.set = string_id_create();
+		dict->dialect_tag.set = string_id_create();
 		condesc_init(dict, 1<<13);
 		Exp_pool_size = 1<<13;
 	}
@@ -181,10 +181,10 @@ dictionary_six_str(const char * lang,
 		return dict;
 	}
 
-	if (dict->tag.num == 0)
+	if (dict->dialect_tag.num == 0)
 	{
-		string_id_delete(dict->tag.set);
-		dict->tag.set = NULL;
+		string_id_delete(dict->dialect_tag.set);
+		dict->dialect_tag.set = NULL;
 	}
 
 	dictionary_setup_locale(dict);

@@ -16,7 +16,6 @@
 #include "api-structures.h"         // Parse_Options_s  (seems hacky to me)
 #include "dict-common.h"
 #include "dict-defines.h"
-#include "dict-structures.h"        // Exptag, for dialect print
 #include "dict-file/word-file.h"
 #include "dict-file/read-dict.h"
 #include "print/print.h"
@@ -43,19 +42,18 @@ const char *cost_stringify(double cost)
 	return buf;
 }
 
-static void print_expression_tag(dyn_str *e, const Exp *n)
+static void print_expression_tag(Dictionary dict, dyn_str *e, const Exp *n)
 {
-	if (NULL != n->tag)
-	{
-		dyn_strcat(e, "]");
-		dyn_strcat(e, n->tag->name);
-	}
+	if ((NULL == dict) || (Exptag_none == n->tag_type)) return;
+
+	dyn_strcat(e, "]");
+	dyn_strcat(e, dict->dialect_tag.name[n->tag_id]);
 }
 
 /**
  * print the expression, in infix-style
  */
-static dyn_str *print_expression_parens(dyn_str *e,
+static dyn_str *print_expression_parens(Dictionary dict, dyn_str *e,
                                         const Exp * n, int need_parens)
 {
 	Exp *operand;
@@ -103,7 +101,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		}
 	}
 
-	if (NULL != n->tag) dyn_strcat(e, "[");
+	if (Exptag_none != n->tag_type) dyn_strcat(e, "[");
 
 	/* print the connector only */
 	if (n->type == CONNECTOR_type)
@@ -113,7 +111,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		append_string(e, "%s%c", n->condesc?n->condesc->string:"(null)", n->dir);
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
-		print_expression_tag(e, n);
+		print_expression_tag(dict, e, n);
 		return e;
 	}
 
@@ -124,7 +122,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		dyn_strcat(e, "()");
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
-		print_expression_tag(e, n);
+		print_expression_tag(dict, e, n);
 		return e;
 	}
 
@@ -136,18 +134,18 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	{
 		dyn_strcat(e, "{");
 		if (NULL == operand->operand_next) dyn_strcat(e, "error-no-next");
-		 else print_expression_parens(e, operand->operand_next, false);
+		else print_expression_parens(dict, e, operand->operand_next, false);
 		dyn_strcat(e, "}");
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
-		print_expression_tag(e, n);
+		print_expression_tag(dict, e, n);
 		return e;
 	}
 
 	if ((icost == 0) && need_parens) dyn_strcat(e, "(");
 
 	/* print left side of binary expr */
-	print_expression_parens(e, operand, true);
+	print_expression_parens(dict, e, operand, true);
 
 	/* get a funny "and optional" when it's a named expression thing. */
 	if ((n->type == AND_type) && (operand->operand_next == NULL))
@@ -155,7 +153,7 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		for (i=0; i<icost; i++) dyn_strcat(e, "]");
 		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
 		if ((icost == 0) && need_parens) dyn_strcat(e, ")");
-		print_expression_tag(e, n);
+		print_expression_tag(dict, e, n);
 		return e;
 	}
 
@@ -177,11 +175,11 @@ static dyn_str *print_expression_parens(dyn_str *e,
 		{
 			if (operand->type == n->type)
 				{
-					print_expression_parens(e, operand, false);
+					print_expression_parens(dict, e, operand, false);
 			}
 			else
 			{
-				print_expression_parens(e, operand, true);
+				print_expression_parens(dict, e, operand, true);
 			}
 
 			operand = operand->operand_next;
@@ -197,11 +195,11 @@ static dyn_str *print_expression_parens(dyn_str *e,
 	if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
 	if ((icost == 0) && need_parens) dyn_strcat(e, ")");
 
-	print_expression_tag(e, n);
+	print_expression_tag(dict, e, n);
 	return e;
 }
 
-const char *lg_exp_stringify(const Exp *n)
+static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n)
 {
 	static TLS char *e_str;
 
@@ -213,9 +211,18 @@ const char *lg_exp_stringify(const Exp *n)
 	}
 
 	dyn_str *e = dyn_str_new();
-	e_str = dyn_str_take(print_expression_parens(e, n, false));
+	e_str = dyn_str_take(print_expression_parens(dict, e, n, false));
 	return e_str;
 }
+
+/**
+ * Stringify the given expression, ignoring tags.
+ */
+const char *lg_exp_stringify(const Exp *n)
+{
+	return lg_exp_stringify_with_tags(NULL, n);
+}
+
 
 /* ======================================================================= */
 
@@ -340,14 +347,14 @@ static char *display_counts(const char *word, Dict_node *dn)
 /**
  * Display the number of disjuncts associated with this dict node
  */
-static char *display_expr(const char *word, Dict_node *dn)
+static char *display_expr(Dictionary dict, const char *word, Dict_node *dn)
 {
 	dyn_str *s = dyn_str_new();
 
 	append_string(s, "expressions:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
-		const char *expstr = lg_exp_stringify(dn->exp);
+		const char *expstr = lg_exp_stringify_with_tags(dict, dn->exp);
 
 		append_string(s, "    %-*s %s",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
@@ -388,7 +395,7 @@ static char *display_word_expr(Dictionary dict, const char * word)
 	dn_head = dictionary_lookup_wild(dict, word);
 	if (dn_head)
 	{
-		char *out = display_expr(word, dn_head);
+		char *out = display_expr(dict, word, dn_head);
 		free_lookup_list(dict, dn_head);
 		return out;
 	}

@@ -68,8 +68,8 @@ Exp *copy_Exp(Exp *e, Pool_desc *Exp_pool, Parse_Options opts)
 	Exp *new_e = pool_alloc(Exp_pool);
 
 	*new_e = *e;
-	if (NULL != e->tag)
-		new_e->cost += opts->dialect.cost_table[new_e->tag->index];
+	if (Exptag_dialect == e->tag_type)
+		new_e->cost += opts->dialect.cost_table[new_e->tag_id];
 
 #if 0 /* Not used - left here for documentation. */
 	new_e->operand_next = copy_Exp(e->operand_next, Exp_pool);

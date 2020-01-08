@@ -38,12 +38,7 @@ static const int cost_max_dec_places = 3;
 static const double cost_epsilon = 1E-5;
 
 #define EXPTAG_SZ 100 /* Initial size for the Exptag array. */
-typedef struct Exptag_s Exptag;
-struct Exptag_s
-{
-	const char *name;
-	unsigned int index;
-};
+typedef enum { Exptag_none=0, Exptag_dialect } Exptag_type;
 
 /**
  * The Exp structure defined below comprises the expression trees that are
@@ -55,17 +50,18 @@ struct Exptag_s
  */
 struct Exp_struct
 {
-	Exp *operand_next; /* Next same-level operand. */
-	Exp_type type:8;   /* One of three types: AND, OR, or connector. */
+	Exp *operand_next;    /* Next same-level operand. */
+	Exp_type type:8;      /* One of three types: AND, OR, or connector. */
+	Exptag_type tag_type:8;
 	char dir;      /* The connector connects to the left ('-') or right ('+'). */
-	bool multi;        /* TRUE if a multi-connector (for connector). */
-	float cost;        /* The cost of using this expression. */
+	bool multi;           /* TRUE if a multi-connector (for connector). */
+	unsigned int tag_id;  /* Index in tag_type namespace. */
+	float cost;           /* The cost of using this expression. */
 	union
 	{
 		Exp *operand_first; /* First operand (for non-terminals). */
 		condesc_t *condesc; /* Only needed if it's a connector. */
 	};
-	Exptag *tag;       /* Used for dialect cost. */
 };
 
 bool cost_eq(double cost1, double cost2);
