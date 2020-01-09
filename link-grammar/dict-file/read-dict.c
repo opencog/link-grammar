@@ -332,6 +332,11 @@ static bool link_advance(Dictionary dict)
 			nr = 0;
 			while (c[nr]) {dict->token[i] = c[nr]; i++; nr++; }
 		} else {
+			if (c[0] == 0x0) {
+				if (i != 0) dict->already_got_it = '\0';
+				dict->token[0] = '\0';
+				return true;
+			}
 			if ('\0' == c[1] && char_is_special(c[0]))
 			{
 				if (i == 0)
@@ -343,11 +348,6 @@ static bool link_advance(Dictionary dict)
 				}
 				dict->token[i] = '\0';
 				dict->already_got_it = c[0];
-				return true;
-			}
-			if (c[0] == 0x0) {
-				if (i != 0) dict->already_got_it = '\0';
-				dict->token[0] = '\0';
 				return true;
 			}
 			if (lg_isspace(c[0])) {
