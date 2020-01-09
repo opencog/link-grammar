@@ -1072,6 +1072,7 @@ void add_empty_word(Sentence sent, X_node *x)
  */
 static bool is_number(const char * str)
 {
+	if (str[0] == '\0') return false; /* End of file. */
 	if ('+' == str[0] || '-' == str[0]) str++;
 	size_t numlen = strspn(str, "0123456789.");
 
