@@ -512,10 +512,36 @@ static bool find_no_xlink_disjunct(prune_context *pc, int w,
 }
 #endif
 
+static bool
+left_table_search(prune_context *pc, int w, Connector *c,
+                  bool shallow, int word_c);
+static bool
+right_table_search(prune_context *pc, int w, Connector *c,
+                   bool shallow, int word_c);
+
+static bool is_match(prune_context *pc,
+            bool (*table_search)(prune_context *, int, Connector *, bool, int),
+            int word_c, Connector *c, int w)
+{
+	if (c->next == NULL)
+	{
+	    if (!c->multi) return false;
+	}
+	else
+	{
+		c = connector_deepest(c);
+	}
+
+	/* c may only connect to a shallow connector on w. */
+	return table_search(pc, w, c, false, word_c);
+}
+
 static bool is_cross_mlink(prune_context *pc,
                            Connector *lc, Connector *rc,
                            int lword, int rword)
 {
+	if (rword - lword == 1) return false;
+
 	if (pc->ml == NULL) return false;
 
 	Sentence sent = pc->sent;
@@ -534,6 +560,30 @@ static bool is_cross_mlink(prune_context *pc,
 	{
 		if (sent->word[w].optional) continue;
 		if (pc->is_null_word[w]) continue;
+
+		if ((w == lword+1) && (pc->ml[lword+1].nw_unidir[1] > rword) &&
+			 !is_match(pc, left_table_search, lword, lc, lword+1))
+		{
+			PR(L);
+			goto null_word_found;
+		}
+		if ((w == rword-1) && (pc->ml[rword-1].nw_unidir[0] < lword) &&
+		    !is_match(pc, right_table_search, rword, rc, rword-1))
+		{
+			PR(R);
+			goto null_word_found;
+		}
+
+		if ((pc->ml[w].nw_perjet[0] < lword) && (pc->ml[w].nw_unidir[1] > rword))
+		{
+			PR(L);
+			goto null_word_found;
+		}
+		if ((pc->ml[w].nw_unidir[0] < lword) && (pc->ml[w].nw_perjet[1] > rword))
+		{
+			PR(R);
+			goto null_word_found;
+		}
 
 #if 1
 		/* Links of word w are not allowed to cross the edge words. */
