@@ -52,6 +52,7 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 /* Per-word minimum/maximum link distance descriptor.
  * The dimension of the 2-element arrays below is used as follows:
  * [0] - left side; [1] - right side.
+ *
  * nw is the minimum nearest_word of the shallow connectors.
  * fw is the maximum farthest_word of the shallow connectors.
  *
@@ -60,6 +61,19 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * (nw) this is signified by value w for word w. For farthest word (fw)
  * this is signified by 0 for fw[0] and UNLIMITED_LEN for fw[1].
  *
+ * nw_perjet is similar to nw, but its computation ignores the
+ * abovementioned case in which a jet is missing in the relevant
+ * direction. Moreover, if there are no jets at all at the given
+ * direction, nw_perjet[0] is 0 and nw_perjet[1] is UNLIMITED_LEN (as if
+ * the nearest word a missing jet can connect to is beyond the sentence
+ * boundary, i.e. no connection is possible). NOTE: The use of 0 here
+ * (instead of -1) is not optimal as word 0 is still inside the sentence,
+ * so the checks in is_cross_mlink() when rword==0 are not optimal.
+ *
+ * nw_unidir is also similar to nw, but its computation ignores jets that
+ * have an opposite jet in the other directions. Naturally, there are no
+ * missing jets in the relevant direction.
+ *
  * The connection of the shallow connector is to a greater distance than
  * the connections from the deeper ones. For word w, words in the ranges
  * (nw[0], w) or (w, nw[1]) cannot connect to words to the left or to the
@@ -67,12 +81,16 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * connector of w. In addition, words in (nw[0], w) cannot connect to
  * words before fw[0] (and similarly after fw[1] for the other direction).
  *
+ * The values for words which don't have disjuncts are undefined.
+ *
  * These values are computed by build_mlink_table() after the first
  * power_prune() call, before invoking an additional power_prune(). */
 typedef struct
 {
-	WordIdx_m nw[2];   /* minimum link distance */
-	WordIdx_m fw[2];   /* maximum link distance */
+	WordIdx_m nw[2];         /* minimum link distance */
+	WordIdx_m nw_perjet[2];  /* the same, ignoring missing jets */
+	WordIdx_m nw_unidir[2];  /* the same, but only for unidirectional jets */
+	WordIdx_m fw[2];         /* maximum link distance */
 } mlink_table;
 
 typedef struct c_list_s C_list;
