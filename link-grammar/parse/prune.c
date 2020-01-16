@@ -523,8 +523,9 @@ static bool is_cross_mlink(prune_context *pc,
 		if ((pc->ml[w].nw[1] > rword) && PR(R)) goto null_word_found;
 #endif
 
+		/* If w has a link to an edge word, links from the deepest
+		 * connectors of this word is not allowed to cross a link to w. */
 #if 1
-		/* Links from the deepest edge connectors cannot cross a link to w. */
 		if (lword == pc->ml[w].nw[0])
 		{
 			/* w has a link to lword, or it's a null word. */
