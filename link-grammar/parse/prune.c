@@ -58,7 +58,7 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * In case at least one jet is missing in a particular direction, there
  * are no link distance constraints in that direction. For nearest_word
  * (nw) this is signified by value w for word w. For farthest word (fw)
- * this is signified by unlimited length limit.
+ * this is signified by 0 for fw[0] and UNLIMITED_LEN for fw[1].
  *
  * The connection of the shallow connector is to a greater distance than
  * the connections from the deeper ones. For word w, words in the ranges
