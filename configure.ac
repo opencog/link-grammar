@@ -563,20 +563,6 @@ else
 fi
 
 # ====================================================================
-
-# Tokenizing by RegEx
-#AC_ARG_ENABLE( regex_tokenizer,
-#  [  --enable-regex-tokenizer enable use of regex word splitter (experimental)],
-#  [],
-#  [enable_regex_tokenizer=no]
-#)
-#if test "x$enable_regex_tokenizer" = "xyes"
-#then
-#	AC_DEFINE(USE_REGEX_TOKENIZER, 1, [Define for compilation])
-#	AX_PATH_LIB_PCRE
-#fi
-
-# ====================================================================
 # Configure a regex library that supports UTF-8 and a POSIX interface.
 dnl AC_CHECK_HEADERS defines HAVE_FILENAME_H if found.
 

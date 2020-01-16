@@ -66,9 +66,6 @@
     <ClCompile Include="..\link-grammar\tokenize\anysplit.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\link-grammar\tokenize\regex-tokenizer.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\link-grammar\tokenize\spellcheck-aspell.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -237,9 +234,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\tokenize\anysplit.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\link-grammar\tokenize\regex-tokenizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\tokenize\spellcheck.h">

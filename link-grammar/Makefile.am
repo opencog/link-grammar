@@ -130,7 +130,6 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/anysplit.c              \
 	tokenize/spellcheck-aspell.c     \
 	tokenize/spellcheck-hun.c        \
-	tokenize/regex-tokenizer.c       \
 	tokenize/tokenize.c              \
 	tokenize/wg-display.c            \
 	tokenize/wordgraph.c             \
@@ -190,7 +189,6 @@ liblink_grammar_la_SOURCES =        \
 	string-id.h                      \
 	tokenize/anysplit.h              \
 	tokenize/spellcheck.h            \
-	tokenize/regex-tokenizer.h       \
 	tokenize/tok-structures.h        \
 	tokenize/tokenize.h              \
 	tokenize/word-structures.h       \
