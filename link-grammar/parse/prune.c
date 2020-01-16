@@ -62,10 +62,10 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  *
  * The connection of the shallow connector is to a greater distance than
  * the connections from the deeper ones. For word w, words in the ranges
- * (nw[0], w) or (w, nw[1]) cannot connect to words outside its
- * corresponding range without crossing a link to a shallow connector of
- * w. In addition, words in (nw[0], w) cannot connect to words before
- * fw[0] (and similarly for the other range).
+ * (nw[0], w) or (w, nw[1]) cannot connect to words to the left or to the
+ * right of w (correspondingly) without crossing a link to a shallow
+ * connector of w. In addition, words in (nw[0], w) cannot connect to
+ * words before fw[0] (and similarly after fw[1] for the other direction).
  *
  * These values are computed by build_mlink_table() after the first
  * power_prune() call, before invoking an additional power_prune(). */
