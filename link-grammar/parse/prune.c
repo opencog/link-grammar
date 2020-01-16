@@ -1757,6 +1757,8 @@ static void mlink_table_init(Sentence sent, mlink_table *ml)
 		ml[w] = (mlink_table)
 		{
 			.nw[0] = 0, .nw[1] = UNLIMITED_LEN,
+			.nw_perjet[0] = 0, .nw_perjet[1] = UNLIMITED_LEN,
+			.nw_unidir[0] = 0, .nw_unidir[1] = UNLIMITED_LEN,
 			.fw[0] = UNLIMITED_LEN, .fw[1] = 0,
 		};
 	}
@@ -1779,12 +1781,13 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 	for (unsigned int w = 0; w < sent->length; w++)
 	{
 		if (sent->word[w].optional) continue;
+		bool nojet[2] = { false, false };
 
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
 			if (NULL == d->left)
 			{
-				ml[w].nw[0] = w;
+				nojet[0] = true;
 				ml[w].fw[0] = 0;
 			}
 			else
@@ -1792,13 +1795,17 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 				if (d->left->nearest_word > ml[w].nw[0])
 					ml[w].nw[0] = d->left->nearest_word;
 
+				if (NULL == d->right)
+					if (d->left->nearest_word > ml[w].nw_unidir[0])
+						ml[w].nw_unidir[0] = d->left->nearest_word;
+
 				if (d->left->farthest_word < ml[w].fw[0])
 					ml[w].fw[0] = d->left->farthest_word;
 			}
 
 			if (NULL == d->right)
 			{
-				ml[w].nw[1] = w;
+				nojet[1] = true;;
 				ml[w].fw[1] = UNLIMITED_LEN;
 			}
 			else
@@ -1806,12 +1813,22 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 				if (d->right->nearest_word < ml[w].nw[1])
 					ml[w].nw[1] = d->right->nearest_word;
 
+				if (NULL == d->left)
+					if (d->right->nearest_word < ml[w].nw_unidir[1])
+						ml[w].nw_unidir[1] = d->right->nearest_word;
+
 				if (d->right->farthest_word > ml[w].fw[1])
 					ml[w].fw[1] = d->right->farthest_word;
 			}
 		}
 
-		ml_exists |= (ml[w].nw[0] != ml[w].nw[1]);
+		for (int dir = 0; dir < 2; dir++)
+		{
+			ml[w].nw_perjet[dir] = ml[w].nw[dir];
+			if (nojet[dir])
+				ml[w].nw[dir] = w;
+		}
+		ml_exists |= (!nojet[0] || !nojet[1]);
 	}
 
 	if (verbosity_level(+D_PRUNE) && ml_exists)
