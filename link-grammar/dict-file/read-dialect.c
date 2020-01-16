@@ -1,5 +1,5 @@
 /*************************************************************************/
-/* Copyright (C) 2019 Amir Plivatsky                                     */
+/* Copyright (C) 2019-2020 Amir Plivatsky                                     */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -53,18 +53,18 @@ static void print_dialect_table(Dialect *di)
 
 static void print_dialect_components(Dictionary dict)
 {
-	expression_tag *et = &dict->tag;
+	expression_tag *dt = &dict->dialect_tag;
 	Dialect *di = dict->dialect;
 
 	prt_error("Debug: Dictionary dialect components:\n\\");
 	prt_error("%3s  %-15s %s\n\\", "", "Component", "Dialect");
 
-	for (unsigned int i = 1; i <= et->num; i++)
+	for (unsigned int i = 1; i <= dt->num; i++)
 	{
 		const char *dialect_name = "#Internal error";
 		bool comma_needed = false;
 
-		prt_error("%3u: %-15s ", i, et->array[i].name);
+		prt_error("%3u: %-15s ", i, dt->name[i]);
 		for (unsigned int t = 0; t < di->num_table_tags; t++)
 		{
 			if (cost_eq(di->table[t].cost, DIALECT_SECTION))
@@ -222,7 +222,7 @@ static void skip_space(dialect_file_status *dfile)
 static bool dialect_read_from_str(Dictionary dict, Dialect *di,
                                   dialect_file_status *dfile)
 {
-	expression_tag *et = &dict->tag;
+	expression_tag *dt = &dict->dialect_tag;
 	const char *token;
 	char *end;
 	unsigned int table_size = 0;
@@ -282,7 +282,7 @@ static bool dialect_read_from_str(Dictionary dict, Dialect *di,
 					          dfile->fname, suppress_0(dfile->line_number, buf));
 					return false;
 				}
-				if (string_id_lookup(token, et->set) == SI_NOTFOUND)
+				if (string_id_lookup(token, dt->set) == SI_NOTFOUND)
 				{
 					prt_error("Error: %s:%s Expression tag \"%s\" not in "
 					          "dict file.\n", dfile->fname,
@@ -387,7 +387,7 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	char *input = get_file_contents(fname);
 	if (input == NULL)
 	{
-		if (dict->tag.num != 0)
+		if (dict->dialect_tag.num != 0)
 			prt_error("warning: No dialect file\n");
 		return true; /* Not an error for now. */
 	}
@@ -453,7 +453,7 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	if (verbosity_level(+D_DICT+1))
 	{
 		print_dialect_table(di);
-		if (dict->tag.num == 0)
+		if (dict->dialect_tag.num == 0)
 		{
 			prt_error("Debug: No expression tags in the dict.\n");
 		}
@@ -465,7 +465,8 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 
 	/* Validate that there are no loops in the dialect table. */
 	dialect_info dinfo = { 0 };
-	dinfo.cost_table = malloc((dict->tag.num + 1) * sizeof(*dinfo.cost_table));
+	dinfo.cost_table =
+		malloc((dict->dialect_tag.num + 1) * sizeof(*dinfo.cost_table));
 
 	for (unsigned int i = 0; i < di->num_table_tags; i++)
 	{

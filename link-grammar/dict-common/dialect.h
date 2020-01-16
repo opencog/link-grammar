@@ -1,5 +1,5 @@
 /*************************************************************************/
-/* Copyright (C) 2019 Amir Plivatsky                                     */
+/* Copyright (C) 2019-2020 Amir Plivatsky                                     */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -61,7 +61,8 @@ struct Dialect_s
 /* Dialect object for parse_options_*_dialect(). */
 struct dialect_option_s
 {
-	char *conf;
+	Dictionary dict;
+	char *conf;                    /* User dialect setup */
 	float *cost_table;             /* Indexed by Exptag index field */
 };
 
@@ -69,7 +70,7 @@ typedef struct dialect_option_s dialect_info;
 
 Dialect *dialect_alloc(void);
 void free_dialect(Dialect *);
-Exptag *exptag_add(Dictionary, const char *);
+unsigned int exptag_dialect_add(Dictionary, const char *);
 bool setup_dialect(Dictionary, Parse_Options);
 void free_cost_table(Parse_Options opts);
 bool apply_dialect(Dictionary, Dialect *, unsigned int, Dialect *, dialect_info *);
