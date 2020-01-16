@@ -14,7 +14,6 @@
 
 #include "api-structures.h"             // Sentence
 #include "connectors.h"
-#include "dict-common/dict-structures.h"
 #include "disjunct-utils.h"
 #include "memory-pool.h"
 #include "print/print-util.h"
@@ -413,7 +412,7 @@ void count_disjuncts_and_connectors(Sentence sent, unsigned int *dca,
 	*dca = dcnt;
 }
 
-/* ================ Pack disjuncts and connectors ============== */
+/* ================ Print disjuncts and connectors ============== */
 /* Print one connector with all the details.
  * mCnameD<tracon_id>(nearest_word, length_limit)x
  * optional m: "@" for multi (else nothing)

@@ -1747,7 +1747,7 @@ static bool read_entry(Dictionary dict)
 	}
 
 	/* At this point, dn points to a list of Dict_nodes connected by
-	 * their left pointers. These are to be inserted into the dictionary */
+	 * their left pointers. These are to be inserted into the dictionary. */
 	i = 0;
 	for (dnx = dn; dnx != NULL; dnx = dnx->left)
 	{

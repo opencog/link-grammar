@@ -43,7 +43,7 @@
  * FIXME Long link names between more distant words may still not
  * fit the space between these words.
  *
- * Return the number of bytes needed for the all the words, including
+ * Return the number of bytes needed for all the words, including
  * the space needed for the link names as described above.  Note that
  * this byte length might be less than the glyph width! e.g. the
  * ASCII chars in the range 01 to 1F usually print in two columns,
@@ -1344,7 +1344,7 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 				}
 			}
 		}
-		/* "String", because it can be a word, morpheme, or (TODO) idiom */
+		/* "String", because it can be a word, morpheme, or idiom */
 		if (word_split && (NULL == display)) dyn_strcat(s, "String splits to:\n");
 		/* We used to print the alternatives of the word here, one per line.
 		 * In the current (Wordgraph) version, the alternatives may look

@@ -206,8 +206,6 @@ static inline Connector *connector_deepest(const Connector *c)
 /* Length-limits for how far connectors can reach out. */
 #define UNLIMITED_LEN 255
 
-void set_all_condesc_length_limit(Dictionary);
-
 /**
  * Returns TRUE if s and t match according to the connector matching
  * rules.  The connector strings must be properly formed, starting with

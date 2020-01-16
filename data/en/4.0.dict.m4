@@ -1477,7 +1477,7 @@ we:
   or SIp- or dSJlp+ or dSJrp-;
 
 % XXX why is this marked plural (Sp, SIp) ?? a cheap hack to make "I've" work?
-% We use <marker-entity> here to prevent lower-case magnling by
+% We use <marker-entity> here to prevent lower-case mangling by
 % the tokenizer.
 % SJrp-: allows only "...and I", disallows "I and ..."
 % MXs+: "I, Joseph, rang the bell"
@@ -1710,7 +1710,7 @@ such_an: Ds*kv+ or (<PHv> & Ds*kx+);
 <adv-of>: (MVw- & OFw+) or (OFw+ & Xc+ & dCO+);
 
 % Form-a-cycle with "as". The cost is arranged so that the cycle is
-% prefered, if it is possible to make one. So:
+% preferred, if it is possible to make one. So:
 % (MVa- & EZ-): "... worked first as a teacher"
 <adv-as>: MVa- or [MVa- & EZ+]-0.1;
 
@@ -2181,7 +2181,7 @@ thirty-first.ti <DAY-ORDINALS>.ti: TM-;
   or NSn+;
 %%%%% or [[G- & (({MXs+} & <noun-main-s>) or G+ or AN+ or YS+)]]
 
-% TODO: no numers or related expressions below this point take the new NM
+% TODO: no numbers or related expressions below this point take the new NM
 % connector, although e.g. "point 1/2" would appear reasonable. Go through
 % these and add NM- analogously to other numbers as applicable.
 
@@ -2681,7 +2681,7 @@ per "/.per": Us+ & Mp-;
 <verb-and-pl+>: {@E-} & dVJlp+;
 <verb-and-sp->: {@E-} & dVJr-;
 <verb-and-sp+>: {@E-} & dVJl+;
-% <verb-and-sp-i-> is use only with auxilliaries, and thus it needs the
+% <verb-and-sp-i-> is use only with auxiliaries, and thus it needs the
 % Ift- connector for predicative adjectives:
 % "he is known to get frustrated and to become miserable"
 <verb-and-sp-i->: {@E-} & {Ift-} & dVJr*i-;
@@ -2715,7 +2715,7 @@ per "/.per": Us+ & Mp-;
 %    The first verb is expecting an object, but there isn't one.
 % ({@E-} & hXd- & dWi- & ($1) & hXc+):
 %    Parenthetical phrases: "(please refer to the list below)"
-%    Getting the parenthesis cannot be acheived by hacking <verb-ico>
+%    Getting the parenthesis cannot be achieved by hacking <verb-ico>
 %    or <verb-pl,i> and must be done here.
 % (dWi- & ($1) & Xc+ & SI*i+ & {Xc+}): "Bring out the Ring, Frodo!"
 % Sp- & SI*i+: "you hold my beer, John"
@@ -2903,7 +2903,7 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
   ({{EI-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]]));
 
-% Cost on {[[MV+]]}: perfer to have prep modifiers modify something else:
+% Cost on {[[MV+]]}: prefer to have prep modifiers modify something else:
 % e.g. "I have a report on sitcoms": "on" modifies "report", not "have"
 % However, "I have a date with Bob": we want "with" to MVp modify have,
 % and not Mp modify "date"... XXX this is all very broken ATM...
@@ -3827,7 +3827,7 @@ beset.v mistaken.v underwritten.v:
   <verb-phrase-opener>;
 
 % Unlikely transitive verb. Here, we single out 'frank', as that is a
-% rare verb, and it causes conflicts witht the given name 'Frank.b'.
+% rare verb, and it causes conflicts with the given name 'Frank.b'.
 % For example: "Frank felt vindicated".
 <vc-trans-unlikely>:
   ([O+]1.5
@@ -4030,7 +4030,7 @@ happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
   {E-} & (S- or PP- or Pv-) & <verb-wall> & {Xd-} & [dCPu-]-0.05 &
     ({O+ & <mv-coord>} or {@MV+ & Xc+});
 
-% ditransitve
+% ditransitive
 <vc-wish>:
   ({@MV+} & {TH+ or <embed-verb> or RSe+ or <to-verb>}) or
   <vc-ditrans>;
@@ -4330,7 +4330,7 @@ sounding.v: (<vc-sound> & <verb-pg,ge>) or <verb-ge-d>;
 <vc-act>: {({@MV+} & (LI+ or Pa+)) or ({K+ or AF-} & <mv-coord>)};
 act.v: VERB_PLI(<vc-act>);
 acts.v: VERB_S_I(<vc-act>);
-% "be acted upon quikly"
+% "be acted upon quickly"
 acted.v-d: VERB_SPPP_I(<vc-act>) or (<verb-pv-b> & {K+} & <mv-coord>);
 acting.v: (<vc-act> & <verb-pg,ge>) or <verb-ge-d>;
 
@@ -6372,7 +6372,7 @@ letting.g: (<vc-let> & <verb-ge>) or <verb-ge-d>;
 letting.v: <verb-pg> & <vc-let>;
 
 % Abbreviation for "let us"
-% This seems to never be used, becuase 's.#us below expands
+% This seems to never be used, because 's.#us below expands
 % EI- & Wi-: "Oh, let's!"
 % S**i- & Wi-: "Oh Sue, let's!"
 let's let’s: <verb-co> & {N+} & {I+};
@@ -7234,7 +7234,7 @@ unlike:
      or [({Xc+ & {Xd-}} & dCO+)]
      or (Xd- & Xc+ & (E+ or MVx-)));
 
-% o': silent, un-pronouned f.
+% o': silent, un-pronounced f.
 % (OFd- & Jd+): "I have a lot of cookies", forces "lot" to be determiner;
 %      The Jd+ forces a link to the object as well.
 % Wj- & JQ+ & J+ & Qd+: "Of which person were you speaking?"
@@ -8629,7 +8629,7 @@ but.j-v:
   ((({Xd-} & hVJlp-) & hVJrp+) & ((Sp- & <verb-wall>) or ({Xd-} & dVJrp-))) or
   ((hVJl- & hVJr+) & ((I- & <verb-wall>) or <verb-ico>));
 
-% The XJb- guarentees that but.j-b is used with not_only
+% The XJb- guarantees that but.j-b is used with not_only
 % "We not only X'ed but also Y'ed".
 % This is the same pattern as the neither... nor... pattern above.
 not_only: XJb+;
@@ -8771,7 +8771,7 @@ just_not: <COMP-OPENER>;
   or <how-q>;
 
 % Macro, for all the common parts of an A+ connection, with
-% the phonetic attachement as a variable.
+% the phonetic attachment as a variable.
 define(`ADJ_PH',`'
   ({EA- or ({($1)} & {EF+ or MX*ta+})} & {[[@Ec-]]} & {Xc+} & A+))
 
@@ -9844,7 +9844,7 @@ notably:
 
 % Mp- & Ju+: "She was a girl nearly John's age"
 % MVp- & Ju+: "She was a girl of nearly John's age"
-% [EBm- & EA+]-0.1: proiritize above naked EA+
+% [EBm- & EA+]-0.1: prioritize above naked EA+
 %
 almost:
   <adv-adj-vowel>
@@ -10951,7 +10951,7 @@ as.#that: [[that.j-c]0.05]colloquial;
 'Nother.#another ’Nother.#another 'nother.#another ’nother.#another nother.#another: [another]colloquial;
 'Twixt.#betwixt ’Twixt.#betwixt 'twixt.#betwixt ’twixt.#betwixt twixt.#betwixt: [betwixt]colloquial;
 
-% Poetic contractions; Shakesperian contractions
+% Poetic contractions; Shakespearean contractions
 % The 's abbreviations are given a heavy cost to avoid conflict with possessives
 % The 't abbreviations are given a heavy cost to evade bad contractions like "don't".
 'r.#our ’r.#our: [[our]0.5]colloquial;
@@ -10992,7 +10992,7 @@ wi'.#with: [with]colloquial;
 ’twill ’Twill:
   Wd- & I+;
 
-% Shakesperean
+% Shakespearean
 ample.#amply: [[amply]0.5]colloquial;
 
 % Scottish, English alternate spellings
