@@ -1312,11 +1312,12 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 	{
 		/* For analyzing words we need to ignore the left/right walls */
 		if (dict->left_wall_defined &&
-		    (0 == strcmp(sent->word[0].unsplit_word, LEFT_WALL_WORD)))
+		    ((NULL != sent->word[0].alternatives[0])) &&
+		    (0 == strcmp(sent->word[0].alternatives[0], LEFT_WALL_WORD)))
 			first_sentence_word = 1;
 		if (dict->right_wall_defined &&
-		    ((NULL != sent->word[sentlen-1].unsplit_word)) &&
-		    (0 == strcmp(sent->word[sentlen-1].unsplit_word, RIGHT_WALL_WORD)))
+		    ((NULL != sent->word[sentlen-1].alternatives[0])) &&
+		    (0 == strcmp(sent->word[sentlen-1].alternatives[0], RIGHT_WALL_WORD)))
 			sentlen--;
 
 		/* Find if a word got split. This is indicated by:
