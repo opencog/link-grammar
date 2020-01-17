@@ -1769,35 +1769,45 @@ static void mlink_table_init(Sentence sent, mlink_table *ml)
  * Optional words are ignored because they cannot constrain link crossing.
  * The table is meaningful only if at least one entry has a link constraint.
  *
+ * The computation of ml[w].nw[] is done in 2 steps for efficiency.
+ *
  * @param ml[out] The table (indexed by word, w/fields indexed by direction).
  * @return \c true iff the table is meaningful.
  */
 static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 {
 	bool ml_exists = false;
+	bool *nojet[2];
+
+	nojet[0] = alloca(2 * sent->length * sizeof(bool));
+	nojet[1] = nojet[0] + sent->length;
+	memset(nojet[0], false, 2 * sent->length * sizeof(bool));
 
 	mlink_table_init(sent, ml);
 
-	for (unsigned int w = 0; w < sent->length; w++)
+	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		if (sent->word[w].optional) continue;
-		bool nojet[2] = { false, false };
 
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
 			if (NULL == d->left)
 			{
-				nojet[0] = true;
+				nojet[0][w] = true;
 				ml[w].fw[0] = 0;
 			}
 			else
 			{
-				if (d->left->nearest_word > ml[w].nw[0])
-					ml[w].nw[0] = d->left->nearest_word;
-
 				if (NULL == d->right)
+				{
 					if (d->left->nearest_word > ml[w].nw_unidir[0])
 						ml[w].nw_unidir[0] = d->left->nearest_word;
+				}
+				else
+				{
+					if (d->left->nearest_word > ml[w].nw[0])
+						ml[w].nw[0] = d->left->nearest_word;
+				}
 
 				if (d->left->farthest_word < ml[w].fw[0])
 					ml[w].fw[0] = d->left->farthest_word;
@@ -1805,43 +1815,57 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 
 			if (NULL == d->right)
 			{
-				nojet[1] = true;;
+				nojet[1][w] = true;;
 				ml[w].fw[1] = UNLIMITED_LEN;
 			}
 			else
 			{
-				if (d->right->nearest_word < ml[w].nw[1])
-					ml[w].nw[1] = d->right->nearest_word;
-
 				if (NULL == d->left)
+				{
 					if (d->right->nearest_word < ml[w].nw_unidir[1])
 						ml[w].nw_unidir[1] = d->right->nearest_word;
+				}
+				else
+				{
+					if (d->right->nearest_word < ml[w].nw[1])
+						ml[w].nw[1] = d->right->nearest_word;
+				}
 
 				if (d->right->farthest_word > ml[w].fw[1])
 					ml[w].fw[1] = d->right->farthest_word;
 			}
 		}
 
+		ml_exists |= (!nojet[0][w] || !nojet[1][w]);
+	}
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		if (ml[w].nw_unidir[0] > ml[w].nw[0])
+			ml[w].nw[0] = ml[w].nw_unidir[0];
+
+		if (ml[w].nw_unidir[1] < ml[w].nw[1])
+			ml[w].nw[1] = ml[w].nw_unidir[1];
+
 		for (int dir = 0; dir < 2; dir++)
 		{
 			ml[w].nw_perjet[dir] = ml[w].nw[dir];
-			if (nojet[dir])
+			if (nojet[dir][w])
 				ml[w].nw[dir] = w;
 		}
-		ml_exists |= (!nojet[0] || !nojet[1]);
 	}
 
 	if (verbosity_level(+D_PRUNE) && ml_exists)
 	{
 		prt_error("\n");
-		for (unsigned int w = 0; w < sent->length; w++)
+		for (WordIdx w = 0; w < sent->length; w++)
 		{
 			if (sent->word[w].optional) continue;
 
 			if (ml[w].nw[0] != ml[w].nw[1])
 			{
 				/* -1 means at least one missing jet at that direction. */
-				prt_error("%3u: nearest_word (%3d %3d)", w,
+				prt_error("%3zu: nearest_word (%3d %3d)", w,
 				       w==ml[w].nw[0]?-1:ml[w].nw[0],
 				       w==ml[w].nw[1]?-1:ml[w].nw[1]);
 				prt_error("     farthest_word (%3d %3d)\n\\",
