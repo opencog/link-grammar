@@ -52,154 +52,116 @@ static void print_expression_tag(Dictionary dict, dyn_str *e, const Exp *n)
 	dyn_strcat(e, dict->dialect_tag.name[n->tag_id]);
 }
 
-/**
- * print the expression, in infix-style
- */
-static dyn_str *print_expression_parens(Dictionary dict, dyn_str *e,
-                                        const Exp * n, int need_parens)
+static void get_expression_cost(const Exp *e, unsigned int *icost, double *dcost)
 {
-	Exp *operand;
-	int i, icost;
-	double dcost;
-
-	if (n == NULL)
+	if (e->cost < -cost_epsilon)
 	{
-		dyn_strcat(e, "NULL expression");
-		return e;
+		*icost = 1;
+		*dcost = e->cost;
 	}
-
-	if (n->cost < -cost_epsilon)
-	{
-		icost = 1;
-		dcost = n->cost;
-	}
-	else if (cost_eq(n->cost, 0.0))
+	else if (cost_eq(e->cost, 0.0))
 	{
 		/* avoid [X+]-0.00 */
-		icost = 0;
-		dcost = 0;
+		*icost = 0;
+		*dcost = 0;
 	}
 	else
 	{
-		icost = (int) (n->cost);
-		dcost = n->cost - icost;
-		if (dcost > cost_epsilon)
+		*icost = (int) (e->cost);
+		*dcost = e->cost - *icost;
+		if (*dcost > cost_epsilon)
 		{
-			dcost = n->cost;
-			icost = 1;
+			*dcost = e->cost;
+			*icost = 1;
 		}
 		else
 		{
-			if (icost > 4)
+			if (*icost > 4)
 			{
 				/* don't print too many [] levels */
-				dcost = icost;
-				icost = 1;
+				*dcost = *icost;
+				*icost = 1;
 			}
 			else
 			{
-				dcost = 0;
+				*dcost = 0;
 			}
 		}
 	}
+}
 
+static bool is_expression_optional(const Exp *e)
+{
+	Exp *o = e->operand_first;
+
+	return (e->type == OR_type) && (o != NULL) && (o->type == AND_type) &&
+	    (NULL == o->operand_first) && (o->cost == 0) &&
+	    (o->tag_type = Exptag_none);
+}
+
+static void print_expression_parens(Dictionary dict, dyn_str *e,
+                                        const Exp *n, bool need_parens)
+{
+	unsigned int icost;
+	double dcost;
+	get_expression_cost(n, &icost, &dcost);
+	for (unsigned int i = 0; i < icost; i++) dyn_strcat(e, "[");
 	if (Exptag_none != n->tag_type) dyn_strcat(e, "[");
 
-	/* print the connector only */
+	const char *opr = NULL;
+	Exp *opd = n->operand_first;
+
 	if (n->type == CONNECTOR_type)
 	{
-		for (i=0; i<icost; i++) dyn_strcat(e, "[");
 		if (n->multi) dyn_strcat(e, "@");
-		append_string(e, "%s%c", n->condesc?n->condesc->string:"(null)", n->dir);
-		for (i=0; i<icost; i++) dyn_strcat(e, "]");
-		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
-		print_expression_tag(dict, e, n);
-		return e;
+		dyn_strcat(e, n->condesc ? n->condesc->string : "error-null-connector");
+		dyn_strcat(e, (const char []){ n->dir, '\0' });
 	}
-
-	operand = n->operand_first;
-	if (operand == NULL)
-	{
-		for (i=0; i<icost; i++) dyn_strcat(e, "[");
-		dyn_strcat(e, "()");
-		for (i=0; i<icost; i++) dyn_strcat(e, "]");
-		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
-		print_expression_tag(dict, e, n);
-		return e;
-	}
-
-	for (i=0; i<icost; i++) dyn_strcat(e, "[");
-
-	/* look for optional, and print only that */
-	if ((n->type == OR_type) && operand && (operand->type == AND_type) &&
-	    operand->cost == 0 && (NULL == operand->operand_first))
+	else if (is_expression_optional(n))
 	{
 		dyn_strcat(e, "{");
-		if (NULL == operand->operand_next) dyn_strcat(e, "error-no-next");
-		else print_expression_parens(dict, e, operand->operand_next, false);
-		dyn_strcat(e, "}");
-		for (i=0; i<icost; i++) dyn_strcat(e, "]");
-		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
-		print_expression_tag(dict, e, n);
-		return e;
-	}
-
-	if ((icost == 0) && need_parens) dyn_strcat(e, "(");
-
-	/* print left side of binary expr */
-	print_expression_parens(dict, e, operand, true);
-
-	/* get a funny "and optional" when it's a named expression thing. */
-	if ((n->type == AND_type) && (operand->operand_next == NULL))
-	{
-		for (i=0; i<icost; i++) dyn_strcat(e, "]");
-		if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
-		if ((icost == 0) && need_parens) dyn_strcat(e, ")");
-		print_expression_tag(dict, e, n);
-		return e;
-	}
-
-	if (n->type == AND_type) dyn_strcat(e, " & ");
-	if (n->type == OR_type) dyn_strcat(e, " or ");
-
-	/* print right side of binary expr */
-	operand = operand->operand_next;
-	if (operand == NULL)
-	{
-		if (n->type == OR_type)
-			dyn_strcat(e, "error-no-next");
+		if (NULL == opd->operand_next)
+			dyn_strcat(e, "error-no-next"); /* unary OR */
 		else
-			dyn_strcat(e, "()");
+			print_expression_parens(dict, e, opd->operand_next, false);
+		dyn_strcat(e, "}");
 	}
 	else
 	{
-		do
+		if (n->type == AND_type)
+			opr = " & ";
+		else if (n->type == OR_type)
+			opr = " or ";
+		else
+			append_string(e, "error-exp-type-%d", (int)n->type);
+
+		if (opr != NULL)
 		{
-			if (operand->type == n->type)
-				{
-					print_expression_parens(dict, e, operand, false);
-			}
-			else
+			/* (opd == NULL) means this is a null expression. */
+			if (((icost == 0) && need_parens) || (opd == NULL)) dyn_strcat(e, "(");
+
+			if ((opd == NULL) && (n->type == OR_type))
+				dyn_strcat(e, "error-zeroary-or");
+
+			for (Exp *l = opd; l != NULL; l = l->operand_next)
 			{
-				print_expression_parens(dict, e, operand, true);
+				print_expression_parens(dict, e, l, true);
+
+				if (l->operand_next != NULL)
+					dyn_strcat(e, opr);
+				else if ((n->type == OR_type) && (l == n->operand_first))
+					dyn_strcat(e, " or error-no-next"); /* unary OR */
 			}
 
-			operand = operand->operand_next;
-			if (operand != NULL)
-			{
-				if (n->type == AND_type) dyn_strcat(e, " & ");
-				if (n->type == OR_type) dyn_strcat(e, " or ");
-			}
-		} while (operand != NULL);
+			if (((icost == 0) && need_parens) || (opd == NULL)) dyn_strcat(e, ")");
+		}
 	}
 
-	for (i=0; i<icost; i++) dyn_strcat(e, "]");
-	if (0 != dcost) dyn_strcat(e, cost_stringify(dcost));
-	if ((icost == 0) && need_parens) dyn_strcat(e, ")");
-
+	for (unsigned int i = 0; i < icost; i++) dyn_strcat(e, "]");
+	if (dcost != 0) dyn_strcat(e, cost_stringify(dcost));
 	print_expression_tag(dict, e, n);
-	return e;
 }
+
 
 static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n)
 {
@@ -213,7 +175,8 @@ static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n)
 	}
 
 	dyn_str *e = dyn_str_new();
-	e_str = dyn_str_take(print_expression_parens(dict, e, n, false));
+	print_expression_parens(dict, e, n, false);
+	e_str = dyn_str_take(e);
 	return e_str;
 }
 
