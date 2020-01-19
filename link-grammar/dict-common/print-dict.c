@@ -23,6 +23,7 @@
 #include "print/print.h"
 #include "print/print-util.h"
 #include "regex-morph.h"
+#include "tokenize/tokenize.h"      // word_add
 #include "utilities.h"              // GNU_UNUSED
 
 /* ======================================================================== */
@@ -417,48 +418,58 @@ static char *display_word_split(Dictionary dict,
 	int spell_option = parse_options_get_spell_guess(opts);
 	parse_options_set_spell_guess(opts, 0);
 	sent = sentence_create(pword, dict);
-	if (0 == sentence_split(sent, opts))
+
+	if (pword[0] == '<' && pword[strlen(pword)-1] == '>')
 	{
-		/* List the splits */
-		print_sentence_word_alternatives(s, sent, false, NULL, NULL, NULL);
-		/* List the expression / disjunct information */
+		/* Dictionary macro - don't split. */
+		if (!word0_set(sent, pword, opts)) goto display_word_split_error;
+	}
+	else
+	{
+		if (0 != sentence_split(sent, opts)) goto display_word_split_error;
+	}
 
-		/* Initialize the callback arguments */
-		const void *carg[3] = { /*regex*/NULL, /*flags*/NULL, opts };
+	/* List the splits */
+	print_sentence_word_alternatives(s, sent, false, NULL, NULL, NULL);
+	/* List the expression / disjunct information */
 
-		Regex_node *rn = NULL;
-		if (arg != NULL)
+	/* Initialize the callback arguments */
+	const void *carg[3] = { /*regex*/NULL, /*flags*/NULL, opts };
+
+	Regex_node *rn = NULL;
+	if (arg != NULL)
+	{
+		carg[1] = arg[1]; /* flags */
+		if (arg[0] == &do_display_expr)
 		{
-			carg[1] = arg[1]; /* flags */
-			if (arg[0] == &do_display_expr)
+			carg[0] = &do_display_expr;
+		}
+		else if (arg[0] != NULL)
+		{
+			/* A regex is specified, which means displaying disjuncts. */
+			if (arg[0][0] != '\0')
 			{
-				carg[0] = &do_display_expr;
-			}
-			else if (arg[0] != NULL)
-			{
-				/* A regex is specified, which means displaying disjuncts. */
-				if (arg[0][0] != '\0')
+				rn = malloc(sizeof(Regex_node));
+				rn->name = strdup("Disjunct regex");
+				rn->pattern = strdup(arg[0]);
+				rn->re = NULL;
+				rn->neg = false;
+				rn->next = NULL;
+
+				if (compile_regexs(rn, NULL) != 0)
 				{
-					rn = malloc(sizeof(Regex_node));
-					rn->name = strdup("Disjunct regex");
-					rn->pattern = strdup(arg[0]);
-					rn->re = NULL;
-					rn->neg = false;
-					rn->next = NULL;
-
-					if (compile_regexs(rn, NULL) != 0)
-					{
-						prt_error("Error: Failed to compile regex \"%s\".\n", arg[0]);
-						return strdup(""); /* not NULL (NULL means no dict entry) */
-					}
-
-					carg[0] = rn;
+					prt_error("Error: Failed to compile regex \"%s\".\n", arg[0]);
+					return strdup(""); /* not NULL (NULL means no dict entry) */
 				}
+
+				carg[0] = rn;
 			}
 		}
-		print_sentence_word_alternatives(s, sent, false, display, carg, NULL);
-		if (rn != NULL) free_regexs(rn);
 	}
+	print_sentence_word_alternatives(s, sent, false, display, carg, NULL);
+	if (rn != NULL) free_regexs(rn);
+
+display_word_split_error:
 	sentence_delete(sent);
 	parse_options_set_spell_guess(opts, spell_option);
 

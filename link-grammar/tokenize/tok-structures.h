@@ -183,5 +183,4 @@ struct Wordgraph_pathpos_s
 	/* Only for sane_morphism(). */
 	const Gword **path; /* Linkage candidate wordgraph path */
 };
-
 #endif

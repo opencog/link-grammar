@@ -2971,6 +2971,14 @@ static Word *word_new(Sentence sent)
 		return &sent->word[len];
 }
 
+/* Used only by display_word_split() for words that shouldn't get split. */
+bool word0_set(Sentence sent, char *w, Parse_Options opts)
+{
+	word_new(sent);
+	altappend(sent, &sent->word[0].alternatives, w);
+	return setup_dialect(sent->dict, opts);
+}
+
 /**
  * build_word_expressions() -- build list of expressions for a word.
  *
