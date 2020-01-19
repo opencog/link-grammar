@@ -62,6 +62,7 @@ static int variables_cmd(const Switch*, int);
 static int file_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
 static int exit_cmd(const Switch*, int);
+static int info_cmd(const Switch*, int);
 
 Switch default_switches[] =
 {
@@ -103,6 +104,7 @@ Switch default_switches[] =
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"quit",       Cmd,  UNDOC "Exit the program",                 exit_cmd},
 	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
+	{"!",          Cmd,  UNDOC "Print information on dictionary words", info_cmd},
 	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
@@ -579,6 +581,7 @@ static int help_cmd(const Switch *uc, int n)
 	printf("\n");
 	printf(" !!<string>      Print all the dictionary words that match <string>.\n");
 	printf("                 A wildcard * may be used to find multiple matches.\n");
+	printf("                 Issue \"!help !\" for more details.\n");
 	printf("\n");
 	printf(" !<var>          Toggle the specified Boolean variable.\n");
 	printf(" !<var>=<val>    Assign that value to that variable.\n");
@@ -617,6 +620,13 @@ static int exit_cmd(const Switch *uc, int n)
 static int file_cmd(const Switch *uc, int n)
 {
 	return 'f';
+}
+
+static int info_cmd(const Switch *uc, int n)
+{
+	/* Dummy definition - the work is done done in
+	 * x_issue_special_command() (see '!' there). */
+	return 'c';
 }
 
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
