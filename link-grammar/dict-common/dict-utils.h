@@ -15,13 +15,14 @@
 #define _DICT_UTILS_H_
 
 #include "dict-common.h"
+#include "utilities.h"                  // dyn_str
 
 /* Exp utilities ... */
 void free_Exp(Exp *);
 int  size_of_expression(Exp *);
 Exp * copy_Exp(Exp *, Pool_desc *, Parse_Options);
 bool is_exp_like_empty_word(Dictionary dict, Exp *);
-void prt_exp_all(Exp *, int, Dictionary);
+void prt_exp_all(dyn_str *,Exp *, int, Dictionary);
 #ifdef DEBUG
 void prt_exp(Exp *, int);
 #endif /* DEBUG */

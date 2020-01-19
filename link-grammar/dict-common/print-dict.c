@@ -325,22 +325,22 @@ static bool is_ASAN_uninitialized(uintptr_t a)
 	return (a == asan_uninitialized);
 }
 
-void prt_exp_all(Exp *e, int i, Dictionary dict)
+void prt_exp_all(dyn_str *s, Exp *e, int i, Dictionary dict)
 {
 	if (is_ASAN_uninitialized((uintptr_t)e))
 	{
-		printf ("e=UNINITIALIZED\n");
+		dyn_strcat(s, "e=UNINITIALIZED\n");
 		return;
 	}
 	if (e == NULL) return;
 
-	for(int j =0; j<i; j++) printf(" ");
-	printf ("e=%p: %s", e, stringify_Exp_type(e->type));
+	for(int j =0; j<i; j++) dyn_strcat(s, " ");
+	append_string(s, "e=%p: %s", e, stringify_Exp_type(e->type));
 
 	if (is_ASAN_uninitialized((uintptr_t)e->operand_first))
-		printf(" (UNINITIALIZED operand_first)");
+		dyn_strcat(s, " (UNINITIALIZED operand_first)");
 	if (is_ASAN_uninitialized((uintptr_t)e->operand_next))
-		printf(" (UNINITIALIZED operand_next)");
+		dyn_strcat(s, " (UNINITIALIZED operand_next)");
 
 	if (e->type != CONNECTOR_type)
 	{
@@ -350,30 +350,37 @@ void prt_exp_all(Exp *e, int i, Dictionary dict)
 			operand_count++;
 			if (is_ASAN_uninitialized((uintptr_t)opd->operand_next))
 			{
-				printf(" (operand %d: UNINITIALIZED operand_next)\n", operand_count);
+				append_string(s, " (operand %d: UNINITIALIZED operand_next)\n",
+				              operand_count);
 				return;
 			}
 		}
-		printf(" (%d operand%s) cost=%s%s\n", operand_count,
+		append_string(s, " (%d operand%s) cost=%s%s\n", operand_count,
 		       operand_count == 1 ? "" : "s", cost_stringify(e->cost),
 		       stringify_Exp_tag(e, dict));
 		for (Exp *opd = e->operand_first; NULL != opd; opd = opd->operand_next)
 		{
-			prt_exp_all(opd, i+2, dict);
+			prt_exp_all(s, opd, i+2, dict);
 		}
 	}
 	else
 	{
-		printf(" %s%s%c cost=%s%s\n",
-		       e->multi ? "@" : "",
-		       e->condesc ? e->condesc->string : "(condesc=(null))",
-		       e->dir, cost_stringify(e->cost), stringify_Exp_tag(e, dict));
+		append_string(s, " %s%s%c cost=%s%s\n",
+		              e->multi ? "@" : "",
+		              e->condesc ? e->condesc->string : "(condesc=(null))",
+		              e->dir, cost_stringify(e->cost),
+		              stringify_Exp_tag(e, dict));
 	}
 }
 
 GNUC_UNUSED static void prt_exp_mem(Exp *e)
 {
-	prt_exp_all(e, 0, NULL);
+	dyn_str *s = dyn_str_new();
+
+	prt_exp_all(s, e, 0, NULL);
+	char *e_str = dyn_str_take(s);
+	printf("%s", e_str);
+	free(e_str);
 }
 
 /* ================ Display word expressions / disjuncts ================= */
