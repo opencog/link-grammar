@@ -20,10 +20,4 @@
 Disjunct *build_disjuncts_for_exp(Sentence sent, Exp *, const char *,
                                   const gword_set *, double cost_cutoff,
                                   Parse_Options opts);
-
-#ifdef DEBUG
-void prt_exp(Exp *, int);
-void prt_exp_all(Exp *, int, Dictionary);
-#endif /* DEBUG */
-
 #endif /* _LINKGRAMMAR_BUILD_DISJUNCTS_H */

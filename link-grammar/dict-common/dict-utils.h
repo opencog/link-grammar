@@ -21,6 +21,10 @@ void free_Exp(Exp *);
 int  size_of_expression(Exp *);
 Exp * copy_Exp(Exp *, Pool_desc *, Parse_Options);
 bool is_exp_like_empty_word(Dictionary dict, Exp *);
+void prt_exp_all(Exp *, int, Dictionary);
+#ifdef DEBUG
+void prt_exp(Exp *, int);
+#endif /* DEBUG */
 
 /* X_node utilities ... */
 X_node *    catenate_X_nodes(X_node *, X_node *);
