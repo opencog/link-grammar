@@ -549,6 +549,7 @@ static char *display_expr(Dictionary dict, const char *word, Dict_node *dn,
 	const char *flags = arg[1];
 	const Parse_Options opts = (Parse_Options)arg[2];
 	bool show_macros = ((flags != NULL) && (strchr(flags, 'm') != NULL));
+	bool low_level = ((flags != NULL) && (strchr(flags, 'l') != NULL));
 
 	/* copy_Exp() needs an Exp memory pool. */
 	Pool_desc *Exp_pool = pool_new(__func__, "Exp", /*num_elements*/256,
@@ -561,6 +562,13 @@ static char *display_expr(Dictionary dict, const char *word, Dict_node *dn,
 	{
 		Exp *e = copy_Exp(dn->exp, Exp_pool, opts); /* assign dialect costs */
 		pool_reuse(Exp_pool);
+
+		if (low_level)
+		{
+			append_string(s, "    %s\n", dn->string);
+			prt_exp_all(s, e, 0, dict);
+			dyn_strcat(s, "\n\n");
+		}
 
 		const char *expstr = lg_exp_stringify_with_tags(dict, e, show_macros);
 
