@@ -57,6 +57,7 @@ static void print_expression_tag_start(Dictionary dict, dyn_str *e, const Exp *n
 			dyn_strcat(e, "[");
 			break;
 		case Exptag_macro:
+			if (*indent < 0) break;
 			dyn_strcat(e, "\n");
 			for(int i = 0; i < *indent; i++) dyn_strcat(e, " ");
 			dyn_strcat(e, dict->macro_tag->name[n->tag_id]);
@@ -84,6 +85,7 @@ static void print_expression_tag_end(Dictionary dict, dyn_str *e, const Exp *n,
 			dyn_strcat(e, dict->dialect_tag.name[n->tag_id]);
 			break;
 		case Exptag_macro:
+			if (*indent < 0) break;
 			dyn_strcat(e, "\n");
 			for(int i = 0; i < *indent - MACRO_INDENTATION/2; i++)
 				dyn_strcat(e, " ");
@@ -207,10 +209,11 @@ static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
 }
 
 
-static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n)
+static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n,
+                                              bool show_macros)
 {
 	static TLS char *e_str;
-	int indent = 0;
+	int indent = show_macros ? 0 : -1;
 
 	if (e_str != NULL) free(e_str);
 	if (n == NULL)
@@ -230,7 +233,7 @@ static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n)
  */
 const char *lg_exp_stringify(const Exp *n)
 {
-	return lg_exp_stringify_with_tags(NULL, n);
+	return lg_exp_stringify_with_tags(NULL, n, false);
 }
 
 /* ================ Display word expressions / disjuncts ================= */
@@ -279,6 +282,7 @@ static char *display_word_split(Dictionary dict,
 		Regex_node *rn = NULL;
 		if (arg != NULL)
 		{
+			carg[1] = arg[1]; /* flags */
 			if (arg[0] == &do_display_expr)
 			{
 				carg[0] = &do_display_expr;
@@ -286,8 +290,6 @@ static char *display_word_split(Dictionary dict,
 			else if (arg[0] != NULL)
 			{
 				/* A regex is specified, which means displaying disjuncts. */
-				carg[1] = arg[1]; /* flags */
-
 				if (arg[0][0] != '\0')
 				{
 					rn = malloc(sizeof(Regex_node));
@@ -397,7 +399,9 @@ static char *display_counts(const char *word, Dict_node *dn)
 static char *display_expr(Dictionary dict, const char *word, Dict_node *dn,
 								  const void **arg)
 {
+	const char *flags = arg[1];
 	const Parse_Options opts = (Parse_Options)arg[2];
+	bool show_macros = ((flags != NULL) && (strchr(flags, 'm') != NULL));
 
 	/* copy_Exp() needs an Exp memory pool. */
 	Pool_desc *Exp_pool = pool_new(__func__, "Exp", /*num_elements*/256,
@@ -411,7 +415,7 @@ static char *display_expr(Dictionary dict, const char *word, Dict_node *dn,
 		Exp *e = copy_Exp(dn->exp, Exp_pool, opts); /* assign dialect costs */
 		pool_reuse(Exp_pool);
 
-		const char *expstr = lg_exp_stringify_with_tags(dict, e);
+		const char *expstr = lg_exp_stringify_with_tags(dict, e, show_macros);
 
 		append_string(s, "    %-*s %s",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
@@ -494,9 +498,9 @@ static char *display_word_expr(Dictionary dict, const char *word,
 }
 
 /**
- * Break word/re/flags into components.
- * /regex/ and flags are optional.
- * \p re and \p flags can be both NULL;
+ * Break "word", "word/flags" or "word/regex/flags" into components.
+ * "regex" and "flags" are optional.  "word/" means an empty regex.
+ * \p re and \p flags can be both NULL.
  * @param re[out] the regex component, unless \c NULL.
  * @param flags[out] the flags component, unless \c NULL.
  * @return The word component.
@@ -513,12 +517,16 @@ static const char *display_word_extract(char *word, const char **re,
 
 	if (re != NULL)
 	{
-		*re = r + 1;
-		char *f = strchr(*re, '/');
+		char *f = strchr(r + 1, '/');
 		if (f != NULL)
 		{
+			*re = r + 1;
 			*f = '\0';
-			*flags = f + 1;
+			*flags = f + 1;  /* disjunct display flags */
+		}
+		else
+		{
+			*flags = r + 1;  /* expression display flags */
 		}
 	}
 	return word;

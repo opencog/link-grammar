@@ -142,7 +142,7 @@ dictionary_six_str(const char * lang,
 		condesc_init(dict, 1<<13);
 		Exp_pool_size = 1<<13;
 
-		if (test_enabled("macro-tag"))
+		if (!test_enabled("no-macro-tag"))
 		{
 			dict->macro_tag = malloc(sizeof(*dict->macro_tag));
 			memset(dict->macro_tag, 0, sizeof(*dict->macro_tag));
