@@ -44,12 +44,55 @@ const char *cost_stringify(double cost)
 	return buf;
 }
 
-static void print_expression_tag(Dictionary dict, dyn_str *e, const Exp *n)
-{
-	if ((NULL == dict) || (Exptag_none == n->tag_type)) return;
+#define MACRO_INDENTATION 4
 
-	dyn_strcat(e, "]");
-	dyn_strcat(e, dict->dialect_tag.name[n->tag_id]);
+static void print_expression_tag_start(Dictionary dict, dyn_str *e, const Exp *n,
+                                 int *indent)
+{
+	switch (n->tag_type)
+	{
+		case Exptag_none:
+			break;
+		case Exptag_dialect:
+			dyn_strcat(e, "[");
+			break;
+		case Exptag_macro:
+			dyn_strcat(e, "\n");
+			for(int i = 0; i < *indent; i++) dyn_strcat(e, " ");
+			dyn_strcat(e, dict->macro_tag->name[n->tag_id]);
+			dyn_strcat(e, ": ");
+			*(indent) += MACRO_INDENTATION;
+			break;
+		default:
+			for(int i = 0; i < *indent; i++) dyn_strcat(e, " ");
+			append_string(e, "Unknown tag type %d: ", (int)n->tag_type);
+			*(indent) += MACRO_INDENTATION;
+	}
+}
+
+static void print_expression_tag_end(Dictionary dict, dyn_str *e, const Exp *n,
+                                 int *indent)
+{
+	if (NULL == dict) return;
+
+	switch (n->tag_type)
+	{
+		case Exptag_none:
+			break;
+		case Exptag_dialect:
+			dyn_strcat(e, "]");
+			dyn_strcat(e, dict->dialect_tag.name[n->tag_id]);
+			break;
+		case Exptag_macro:
+			dyn_strcat(e, "\n");
+			for(int i = 0; i < *indent - MACRO_INDENTATION/2; i++)
+				dyn_strcat(e, " ");
+			(*indent) -= MACRO_INDENTATION;
+			break;
+		default:
+			/* Handled in print_expression_tag_start(). */
+			;
+	}
 }
 
 static void get_expression_cost(const Exp *e, unsigned int *icost, double *dcost)
@@ -99,14 +142,15 @@ static bool is_expression_optional(const Exp *e)
 	    (o->tag_type = Exptag_none);
 }
 
-static void print_expression_parens(Dictionary dict, dyn_str *e,
-                                        const Exp *n, bool need_parens)
+static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
+                                    bool need_parens, int *indent)
+
 {
 	unsigned int icost;
 	double dcost;
 	get_expression_cost(n, &icost, &dcost);
 	for (unsigned int i = 0; i < icost; i++) dyn_strcat(e, "[");
-	if (Exptag_none != n->tag_type) dyn_strcat(e, "[");
+	print_expression_tag_start(dict, e, n, indent);
 
 	const char *opr = NULL;
 	Exp *opd = n->operand_first;
@@ -123,7 +167,7 @@ static void print_expression_parens(Dictionary dict, dyn_str *e,
 		if (NULL == opd->operand_next)
 			dyn_strcat(e, "error-no-next"); /* unary OR */
 		else
-			print_expression_parens(dict, e, opd->operand_next, false);
+			print_expression_parens(dict, e, opd->operand_next, false, indent);
 		dyn_strcat(e, "}");
 	}
 	else
@@ -145,7 +189,7 @@ static void print_expression_parens(Dictionary dict, dyn_str *e,
 
 			for (Exp *l = opd; l != NULL; l = l->operand_next)
 			{
-				print_expression_parens(dict, e, l, true);
+				print_expression_parens(dict, e, l, true, indent);
 
 				if (l->operand_next != NULL)
 					dyn_strcat(e, opr);
@@ -159,13 +203,14 @@ static void print_expression_parens(Dictionary dict, dyn_str *e,
 
 	for (unsigned int i = 0; i < icost; i++) dyn_strcat(e, "]");
 	if (dcost != 0) dyn_strcat(e, cost_stringify(dcost));
-	print_expression_tag(dict, e, n);
+	print_expression_tag_end(dict, e, n, indent);
 }
 
 
 static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n)
 {
 	static TLS char *e_str;
+	int indent = 0;
 
 	if (e_str != NULL) free(e_str);
 	if (n == NULL)
@@ -175,7 +220,7 @@ static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n)
 	}
 
 	dyn_str *e = dyn_str_new();
-	print_expression_parens(dict, e, n, false);
+	print_expression_parens(dict, e, n, false, &indent);
 	e_str = dyn_str_take(e);
 	return e_str;
 }

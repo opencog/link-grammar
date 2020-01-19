@@ -16,6 +16,7 @@
 #include "build-disjuncts.h"
 #include "connectors.h"
 #include "dict-common/dict-structures.h"  // Exp_struct, lg_exp_stringify
+#include "dict-common/dict-common.h"      // Dictionary
 #include "disjunct-utils.h"
 #include "utilities.h"
 
@@ -375,12 +376,52 @@ static const char *stringify_Exp_type(Exp_type type)
 	}
 	else
 	{
-		snprintf(unknown_type, sizeof(unknown_type)-1, "unknown_type-%d",
+		snprintf(unknown_type, sizeof(unknown_type), "unknown_type-%d",
 		         (int)(type));
 		type_str = unknown_type;
 	}
 
 	return type_str;
+}
+
+static const char *stringify_Exp_tag(Exp *e, Dictionary dict)
+{
+	static TLS char tag_info[64];
+
+		switch (e->tag_type)
+		{
+			case Exptag_none:
+				return "";
+			case Exptag_dialect:
+				if (dict == NULL)
+				{
+					snprintf(tag_info, sizeof(tag_info), " dialect_tag=%u",
+					         e->tag_id);
+				}
+				else
+				{
+					snprintf(tag_info, sizeof(tag_info), " dialect_tag=%s",
+					       dict->dialect_tag.name[e->tag_id]);
+				}
+				break;
+			case Exptag_macro:
+				if (dict == NULL)
+				{
+					snprintf(tag_info, sizeof(tag_info), " macro_tag");
+				}
+				else
+				{
+					snprintf(tag_info, sizeof(tag_info), " macro_tag=%s",
+					       dict->macro_tag->name[e->tag_id]);
+				}
+				break;
+			default:
+				snprintf(tag_info, sizeof(tag_info), " unknown_tag_type-%d",
+				         (int)(e->tag_type));
+				;
+		}
+
+	return tag_info;
 }
 
 static bool is_ASAN_uninitialized(uintptr_t a)
@@ -390,7 +431,7 @@ static bool is_ASAN_uninitialized(uintptr_t a)
 	return (a == asan_uninitialized);
 }
 
-GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
+GNUC_UNUSED void prt_exp_all(Exp *e, int i, Dictionary dict)
 {
 	if (is_ASAN_uninitialized((uintptr_t)e))
 	{
@@ -419,20 +460,25 @@ GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
 				return;
 			}
 		}
-		printf(" (%d operand%s) cost=%s\n", operand_count,
-		       operand_count == 1 ? "" : "s", cost_stringify(e->cost));
-
+		printf(" (%d operand%s) cost=%s%s\n", operand_count,
+		       operand_count == 1 ? "" : "s", cost_stringify(e->cost),
+		       stringify_Exp_tag(e, dict));
 		for (Exp *opd = e->operand_first; NULL != opd; opd = opd->operand_next)
 		{
-			prt_exp_mem(opd, i+2);
+			prt_exp_all(opd, i+2, dict);
 		}
 	}
 	else
 	{
-		printf(" %s%s%c cost=%s\n",
+		printf(" %s%s%c cost=%s%s\n",
 		       e->multi ? "@" : "",
 		       e->condesc ? e->condesc->string : "(condesc=(null))",
-		       e->dir, cost_stringify(e->cost));
+		       e->dir, cost_stringify(e->cost), stringify_Exp_tag(e, dict));
 	}
+}
+
+GNUC_UNUSED static void prt_exp_mem(Exp *e)
+{
+	prt_exp_all(e, 0, NULL);
 }
 #endif /* DEBUG */

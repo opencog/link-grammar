@@ -141,6 +141,12 @@ dictionary_six_str(const char * lang,
 		dict->dialect_tag.set = string_id_create();
 		condesc_init(dict, 1<<13);
 		Exp_pool_size = 1<<13;
+
+		if (test_enabled("macro-tag"))
+		{
+			dict->macro_tag = malloc(sizeof(*dict->macro_tag));
+			memset(dict->macro_tag, 0, sizeof(*dict->macro_tag));
+		}
 	}
 	else
 	{

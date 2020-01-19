@@ -938,6 +938,29 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 
 /* ======================================================================== */
 /**
+ * Add an optional macro/word tag, for expression debugging.
+ * Enabled by !test="macro-tag". This tag is used only in expression printing.
+ */
+static unsigned int exptag_macro_add(Dictionary dict, const char *tag)
+{
+	expression_tag *mt = dict->macro_tag;
+	if (mt == NULL) return 0;
+
+	if (mt->num == mt->size)
+	{
+		if (mt->num == 0)
+			mt->size = 128;
+		else
+			mt->size *= 2;
+
+		mt->name = realloc(mt->name, mt->size * sizeof(*mt->name));
+	}
+	mt->name[mt->num] = tag;
+
+	return mt->num++;
+}
+
+/**
  * make_connector() -- make a node for a connector or dictionary word.
  *
  * Assumes the current token is a connector or dictionary word.
@@ -970,8 +993,10 @@ static Exp * make_connector(Dictionary dict)
 			return NULL;
 		}
 
-		/* Wrap it in a unary node as a placeholder for a cost if needed. */
+		/* Wrap it in a unary node as a placeholder for a macro tag and cost. */
 		n = make_unary_node(dict->Exp_pool, dn->exp);
+		n->tag_id = exptag_macro_add(dict, dn->string);
+		if (n->tag_id != 0) n->tag_type = Exptag_macro;
 
 		file_free_lookup(dn_head);
 	}

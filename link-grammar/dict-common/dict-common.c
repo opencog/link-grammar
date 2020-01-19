@@ -303,6 +303,8 @@ void dictionary_delete(Dictionary dict)
 	free_dialect(dict->dialect);
 	free(dict->dialect_tag.name);
 	string_id_delete(dict->dialect_tag.set);
+	if (dict->macro_tag != NULL) free(dict->macro_tag->name);
+	free(dict->macro_tag);
 
 	free((void *)dict->suppress_warning);
 	free_regexs(dict->regex_root);
