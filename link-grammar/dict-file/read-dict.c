@@ -1182,7 +1182,7 @@ static Exp *make_expression(Dictionary dict)
 					           badchar);
 					return NULL;
 				}
-				if (nl->tag_id != Exptag_none)
+				if (nl->tag_type != Exptag_none)
 				{
 					nl = make_unary_node(dict->Exp_pool, nl);
 				}
