@@ -62,6 +62,7 @@ static int variables_cmd(const Switch*, int);
 static int file_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
 static int exit_cmd(const Switch*, int);
+static int info_cmd(const Switch*, int);
 
 Switch default_switches[] =
 {
@@ -103,6 +104,7 @@ Switch default_switches[] =
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"quit",       Cmd,  UNDOC "Exit the program",                 exit_cmd},
 	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
+	{"!",          Cmd,  UNDOC "Print information on dictionary words", info_cmd},
 	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
@@ -579,6 +581,7 @@ static int help_cmd(const Switch *uc, int n)
 	printf("\n");
 	printf(" !!<string>      Print all the dictionary words that match <string>.\n");
 	printf("                 A wildcard * may be used to find multiple matches.\n");
+	printf("                 Issue \"!help !\" for more details.\n");
 	printf("\n");
 	printf(" !<var>          Toggle the specified Boolean variable.\n");
 	printf(" !<var>=<val>    Assign that value to that variable.\n");
@@ -619,6 +622,13 @@ static int file_cmd(const Switch *uc, int n)
 	return 'f';
 }
 
+static int info_cmd(const Switch *uc, int n)
+{
+	/* Dummy definition - the work is done done in
+	 * x_issue_special_command() (see '!' there). */
+	return 'c';
+}
+
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
 {
 	char *s, *x, *y;
@@ -629,8 +639,9 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	/* Handle a request for a particular command help. */
 	if (NULL != dict)
 	{
+		char *dupline = strdup(line);
 		/* If we are here, it is not a command-line parameter. */
-		s = strtok(line, WHITESPACE);
+		s = strtok(dupline, WHITESPACE);
 		if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
 		{
 			s = strtok(NULL, WHITESPACE);
@@ -652,6 +663,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 				if (count == 1)
 				{
+					free(dupline);
 					display_help(&as[j], copts);
 					return 'c';
 				}
@@ -661,13 +673,44 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 				else
 					prt_error("Undefined command: \"%s\".  %s\n", s, helpmsg);
 
+				free(dupline);
 				return -1;
 			}
 		}
+		free(dupline);
+	}
+
+	s = line;
+	if (s[0] == '!')
+	{
+		Parse_Options opts = copts->popts;
+		char *out;
+
+		out = dict_display_word_info(dict, s+1, opts);
+		if (NULL != out)
+		{
+			printf("%s\n", out);
+		   free(out);
+			out = dict_display_word_expr(dict, s+1, opts);
+			if (NULL != out)
+			{
+				printf("%s", out);
+				free(out);
+			}
+			else
+			{
+				prt_error("Error: '%s': Internal Error: Missing expression.\n", s+1);
+			}
+		}
+		else
+		{
+			printf("Token \"%s\" matches nothing in the dictionary.\n", s+1);
+		}
+
+		return 'c';
 	}
 
 	clean_up_string(line);
-	s = line;
 	j = -1;
 	count = 0;
 
@@ -704,35 +747,6 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		/* Found an abbreviated, but it wasn't a Boolean.
 		 * It means it is a user command, to be handled below. */
 		return ((int (*)(const Switch*, int)) (as[j].ptr))(as, j);
-	}
-
-	if (s[0] == '!')
-	{
-		Parse_Options opts = copts->popts;
-		char *out;
-
-		out = dict_display_word_info(dict, s+1, opts);
-		if (NULL != out)
-		{
-			printf("%s\n", out);
-		   free(out);
-			out = dict_display_word_expr(dict, s+1, opts);
-			if (NULL != out)
-			{
-				printf("%s", out);
-				free(out);
-			}
-			else
-			{
-				prt_error("Error: '%s': Internal Error: Missing expression.\n", s+1);
-			}
-		}
-		else
-		{
-			printf("Token \"%s\" matches nothing in the dictionary.\n", s+1);
-		}
-
-		return 'c';
 	}
 
 	/* Test here for an equation i.e. does the command line hold an equals sign? */

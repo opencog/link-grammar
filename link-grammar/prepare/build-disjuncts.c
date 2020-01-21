@@ -16,6 +16,7 @@
 #include "build-disjuncts.h"
 #include "connectors.h"
 #include "dict-common/dict-structures.h"  // Exp_struct, lg_exp_stringify
+#include "dict-common/dict-common.h"      // Dictionary
 #include "disjunct-utils.h"
 #include "utilities.h"
 
@@ -261,37 +262,35 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 	for (; cl != NULL; cl = cl->next)
 	{
 		if (NULL == cl->c) continue; /* no connectors */
+		if (cl->maxcost > cost_cutoff) continue;
 
-		if (cl->maxcost <= cost_cutoff)
+		if (NULL == sent) /* For the SAT-parser, until fixed. */
 		{
-			if (NULL == sent) /* For the SAT-parser, until fixed. */
-			{
-				ndis = xalloc(sizeof(Disjunct));
-			}
-			else
-			{
-				ndis = pool_alloc(sent->Disjunct_pool);
-				connector_pool = sent->Connector_pool;
-			}
-			ndis->left = ndis->right = NULL;
-
-			/* Build a list of connectors from the Tconnectors. */
-			for (Tconnector *t = cl->c; t != NULL; t = t->next)
-			{
-				Connector *n = connector_new(connector_pool, t->e->condesc, opts);
-				Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
-
-				n->multi = t->e->multi;
-				n->next = *loc;   /* prepend the connector to the current list */
-				*loc = n;         /* update the connector list */
-			}
-
-			ndis->word_string = string;
-			ndis->cost = cl->cost;
-			ndis->originating_gword = (gword_set*)gs; /* XXX remove constness */
-			ndis->next = dis;
-			dis = ndis;
+			ndis = xalloc(sizeof(Disjunct));
 		}
+		else
+		{
+			ndis = pool_alloc(sent->Disjunct_pool);
+			connector_pool = sent->Connector_pool;
+		}
+		ndis->left = ndis->right = NULL;
+
+		/* Build a list of connectors from the Tconnectors. */
+		for (Tconnector *t = cl->c; t != NULL; t = t->next)
+		{
+			Connector *n = connector_new(connector_pool, t->e->condesc, opts);
+			Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
+
+			n->multi = t->e->multi;
+			n->next = *loc;   /* prepend the connector to the current list */
+			*loc = n;         /* update the connector list */
+		}
+
+		ndis->word_string = string;
+		ndis->cost = cl->cost;
+		ndis->originating_gword = (gword_set*)gs; /* XXX remove constness */
+		ndis->next = dis;
+		dis = ndis;
 	}
 	return dis;
 }
@@ -343,98 +342,6 @@ GNUC_UNUSED static void print_clause_list(Clause * c)
 		printf("(%4.2f, %4.2f) ", c->cost, c->maxcost);
 		print_Tconnector_list(c->c);
 		printf("\n");
-	}
-}
-
-/* There is a much better lg_exp_stringify() elsewhere
- * This one is for low-level debug. */
-GNUC_UNUSED void prt_exp(Exp *e, int i)
-{
-	if (e == NULL) return;
-
-	for(int j =0; j<i; j++) printf(" ");
-	printf ("type=%d dir=%c multi=%d cost=%s\n",
-	        e->type, e->dir, e->multi, cost_stringify(e->cost));
-	if (e->type != CONNECTOR_type)
-	{
-		for (e = e->operand_next; e != NULL; e = e->operand_next) prt_exp(e, i+2);
-	}
-	else
-	{
-		for(int j =0; j<i; j++) printf(" ");
-		printf("con=%s\n", e->condesc->string);
-	}
-}
-
-static const char *stringify_Exp_type(Exp_type type)
-{
-	static TLS char unknown_type[32] = "";
-	const char *type_str;
-
-	if (type > 0 && type <= 3)
-	{
-		type_str = ((const char *[]) {"OR", "AND", "CONNECTOR"}) [type-1];
-	}
-	else
-	{
-		snprintf(unknown_type, sizeof(unknown_type)-1, "unknown_type-%d",
-		         (int)(type));
-		type_str = unknown_type;
-	}
-
-	return type_str;
-}
-
-static bool is_ASAN_uninitialized(uintptr_t a)
-{
-	static const uintptr_t asan_uninitialized = (uintptr_t)0xbebebebebebebebeULL;
-
-	return (a == asan_uninitialized);
-}
-
-GNUC_UNUSED void prt_exp_mem(Exp *e, int i)
-{
-	if (is_ASAN_uninitialized((uintptr_t)e))
-	{
-		printf ("e=UNINITIALIZED\n");
-		return;
-	}
-	if (e == NULL) return;
-
-	for(int j =0; j<i; j++) printf(" ");
-	printf ("e=%p: %s", e, stringify_Exp_type(e->type));
-
-	if (is_ASAN_uninitialized((uintptr_t)e->operand_first))
-		printf(" (UNINITIALIZED operand_first)");
-	if (is_ASAN_uninitialized((uintptr_t)e->operand_next))
-		printf(" (UNINITIALIZED operand_next)");
-
-	if (e->type != CONNECTOR_type)
-	{
-		int operand_count = 0;
-		for (Exp *opd = e->operand_first; NULL != opd; opd = opd->operand_next)
-		{
-			operand_count++;
-			if (is_ASAN_uninitialized((uintptr_t)opd->operand_next))
-			{
-				printf(" (operand %d: UNINITIALIZED operand_next)\n", operand_count);
-				return;
-			}
-		}
-		printf(" (%d operand%s) cost=%s\n", operand_count,
-		       operand_count == 1 ? "" : "s", cost_stringify(e->cost));
-
-		for (Exp *opd = e->operand_first; NULL != opd; opd = opd->operand_next)
-		{
-			prt_exp_mem(opd, i+2);
-		}
-	}
-	else
-	{
-		printf(" %s%s%c cost=%s\n",
-		       e->multi ? "@" : "",
-		       e->condesc ? e->condesc->string : "(condesc=(null))",
-		       e->dir, cost_stringify(e->cost));
 	}
 }
 #endif /* DEBUG */

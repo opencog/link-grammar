@@ -72,10 +72,14 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence);
 void free_tracon_sharing(Tracon_sharing *);
 void count_disjuncts_and_connectors(Sentence, unsigned int *, unsigned int *);
 
-void print_one_connector(Connector *, int, int);
-void print_connector_list(Connector *);
-void print_disjunct_list(Disjunct *);
+void print_one_connector(Connector *, int, int, uint32_t);
+void dyn_print_one_connector(dyn_str *s, Connector *, int, int, uint32_t);
+void print_connector_list(Connector *, uint32_t);
+void dyn_print_connector_list(dyn_str *s, Connector *, uint32_t);
+void print_disjunct_list(Disjunct *, uint32_t);
+void dyn_print_disjunct_list(dyn_str *s, Disjunct *, uint32_t);
 void print_all_disjuncts(Sentence);
+char *display_disjuncts(Dictionary, const Dict_node *, const void **);
 
 /* Save and restore sentence disjuncts */
 typedef struct

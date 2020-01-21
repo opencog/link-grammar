@@ -1258,24 +1258,24 @@ static const char * header(bool print_ps_header)
 /**
  * Print elements of the 2D-word-array produced for the parsers.
  *
- * - print_sentence_word_alternatives(s, sent, false, NULL, tokenpos)
+ * - print_sentence_word_alternatives(s, sent, false, NULL, NULL, tokenpos)
  * If a pointer to struct "tokenpos" is given, return through it the index of
  * the first occurrence in the sentence of the given token. This is used to
  * prevent duplicate information display for repeated morphemes (if there are
  * multiples splits, each of several morphemes, otherwise some of them may
  * repeat).
  *
- * - print_sentence_word_alternatives(s, sent, true, NULL, NULL)
+ * - print_sentence_word_alternatives(s, sent, true, NULL, NULL, NULL)
  * If debugprint is "true", this is a debug printout of the sentence.  (The
  * debug printouts are with level 0 because this function is invoked for debug
  * on certain positive level.)
  *
  *
- * - print_sentence_word_alternatives(s, sent, false, display_func, NULL)
+ * - print_sentence_word_alternatives(s, sent, false, display_func, arg, NULL)
  * Iterate over the sentence words and their alternatives.  Handle each
- * alternative using the display_func function if it is supplied, or else (if it
- * is NULL) just print them. It is used to display disjunct information when
- * command !!word is used.
+ * alternative using display_func(..., arg) if it is supplied, or else (if
+ * display_func is NULL) just print them. It is used to display disjunct
+ * information when command !!word is used.
  * FIXME In the current version (using Wordgraph) the "alternatives" in the
  * word-array don't necessarily consist of real word alternatives.
  *
@@ -1288,8 +1288,10 @@ struct tokenpos /* First position of the given token - to prevent duplicates */
 	size_t ai;
 };
 
-void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint,
-     char * (*display)(Dictionary, const char *), struct tokenpos * tokenpos)
+void print_sentence_word_alternatives(dyn_str *s, Sentence sent,
+        bool debugprint,
+        char * (*display)(Dictionary, const char *, const void **),
+        const void **arg, struct tokenpos *tokenpos)
 {
 	size_t wi;   /* Internal sentence word index */
 	size_t ai;   /* Index of a word alternative */
@@ -1312,11 +1314,12 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 	{
 		/* For analyzing words we need to ignore the left/right walls */
 		if (dict->left_wall_defined &&
-		    (0 == strcmp(sent->word[0].unsplit_word, LEFT_WALL_WORD)))
+		    ((NULL != sent->word[0].alternatives[0])) &&
+		    (0 == strcmp(sent->word[0].alternatives[0], LEFT_WALL_WORD)))
 			first_sentence_word = 1;
 		if (dict->right_wall_defined &&
-		    ((NULL != sent->word[sentlen-1].unsplit_word)) &&
-		    (0 == strcmp(sent->word[sentlen-1].unsplit_word, RIGHT_WALL_WORD)))
+		    ((NULL != sent->word[sentlen-1].alternatives[0])) &&
+		    (0 == strcmp(sent->word[sentlen-1].alternatives[0], RIGHT_WALL_WORD)))
 			sentlen--;
 
 		/* Find if a word got split. This is indicated by:
@@ -1431,7 +1434,7 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 				{
 					struct tokenpos firstpos = { wt };
 
-					print_sentence_word_alternatives(s, sent, false, NULL, &firstpos);
+					print_sentence_word_alternatives(s, sent, false, NULL, NULL, &firstpos);
 					if (((firstpos.wi != wi) || (firstpos.ai != ai)) &&
 					  firstpos.wi >= first_sentence_word) // allow !!LEFT_WORD
 					{
@@ -1462,7 +1465,7 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 				 * Display the features of the token. */
 				if ((NULL == tokenpos) && (NULL != display))
 				{
-					char *info = display(sent->dict, wt);
+					char *info = display(sent->dict, wt, arg);
 
 					if (NULL == info) return;
 					append_string(s, "Token \"%s\" ", wt);

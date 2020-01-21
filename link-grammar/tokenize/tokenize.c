@@ -2971,6 +2971,14 @@ static Word *word_new(Sentence sent)
 		return &sent->word[len];
 }
 
+/* Used only by display_word_split() for words that shouldn't get split. */
+bool word0_set(Sentence sent, char *w, Parse_Options opts)
+{
+	word_new(sent);
+	altappend(sent, &sent->word[0].alternatives, w);
+	return setup_dialect(sent->dict, opts);
+}
+
 /**
  * build_word_expressions() -- build list of expressions for a word.
  *
@@ -3395,7 +3403,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	if (verbosity_level(D_SW))
 	{
 		dyn_str *s = dyn_str_new();
-		print_sentence_word_alternatives(s, sent, true, NULL, NULL);
+		print_sentence_word_alternatives(s, sent, true, NULL, NULL, NULL);
 		char *out = dyn_str_take(s);
 		prt_error("Debug: Sentence words and alternatives:\n%s", out);
 		free(out);

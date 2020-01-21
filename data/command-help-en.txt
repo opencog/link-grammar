@@ -305,3 +305,61 @@ Examples:
   !dialect=irish
   !dialect=irish,headline
   !dialect=instructions,bad-spelling:2.2
+
+[!]
+This command is for debugging the dictionary or the library.
+It gets as an argument a word, and optionally a regex and flags.
+It splits the given word to tokens according to the current language,
+and for each token it prints its matching dictionary words along with its
+expression or disjunct list. The word may include a wildcard * to find
+multiple matches, and a subscript can be used to limit the matches to this
+subscript only.
+
+Examples ("test.n" is an example word):
+
+Show the expression:
+  !!test.n
+
+Show the expression using macro tags:
+  !!test.n/m
+Each macro tag is followed by its content on the same line.
+The other lines are direct expression components (before and after a macro).
+
+Show also low-level memory details of the expression:
+  !!test.n/l
+
+Show the disjuncts (without duplicates):
+  !!test.n//
+
+Show selected disjuncts according to the supplied regex:
+  !!test.n/ Wd .*<-->.*@M\b/
+
+Display all the words that start with "test":
+  !!test*
+
+Display all the words that start with "test" and have subscript ".q":
+  !!test*.q
+
+A sample output of a disjunct-list display:
+  Token "test.n" matches:
+    test.n                        8509  disjuncts <en/words/words.n.1-const>
+
+  Token "test.n" disjuncts:
+    test.n 4273/4501 disjuncts
+
+    ...
+    test.n: [4070]1.500= Wd @hCO Ds**c <--> Ss*s @M NM
+    ...
+
+In the this sample output:
+   8509     Number of disjuncts in the dictionary expression.
+   4501     Number of disjuncts after applying cost-max.
+   4273     Number of disjuncts w/o duplicates.
+   4070     Disjunct ordinal number.
+   1.500    Disjunct cost.
+   =        A separator to enable regex anchoring.
+   <-->     A separator of the "-" (LHS) and "+" (RHS) connector lists.
+
+These variables affect the output:
+Disjuncts, expressions: !dialect
+Disjuncts only:         !cost-max

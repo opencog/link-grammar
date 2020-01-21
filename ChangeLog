@@ -9,6 +9,7 @@ Version 5.8.0 (XXX 2020)
  * English dict: support for archaic/poetic abbreviations
  * English dict: introduce OH link for vocatives/invocations.
  * English dict: improved parsing of imperatives.
+ * Add !!word/ link-parser command for displaying extended word dict info.
 
 Version 5.7.0 (13 Sept 2019)
  * Minor efficiency improvements to the SQL-backed dictionary.

@@ -38,7 +38,7 @@ static const int cost_max_dec_places = 3;
 static const double cost_epsilon = 1E-5;
 
 #define EXPTAG_SZ 100 /* Initial size for the Exptag array. */
-typedef enum { Exptag_none=0, Exptag_dialect } Exptag_type;
+typedef enum { Exptag_none=0, Exptag_dialect, Exptag_macro } Exptag_type;
 
 /**
  * The Exp structure defined below comprises the expression trees that are
