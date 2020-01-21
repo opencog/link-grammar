@@ -143,7 +143,7 @@ static bool is_expression_optional(const Exp *e)
 
 	return (e->type == OR_type) && (o != NULL) && (o->type == AND_type) &&
 	    (NULL == o->operand_first) && (o->cost == 0) &&
-	    (o->tag_type = Exptag_none);
+	    (o->tag_type == Exptag_none);
 }
 
 static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
