@@ -79,7 +79,10 @@ void dyn_print_connector_list(dyn_str *s, Connector *, int, uint32_t);
 void print_disjunct_list(Disjunct *, uint32_t);
 void dyn_print_disjunct_list(dyn_str *s, Disjunct *, uint32_t);
 void print_all_disjuncts(Sentence);
-char *display_disjuncts(Dictionary, const Dict_node *, const void **);
+
+/* FIXME: Move to general utilities file. */
+bool is_flag(uint32_t, char);
+uint32_t make_flag(char);
 
 /* Save and restore sentence disjuncts */
 typedef struct

@@ -20,6 +20,7 @@
 #include "dict-file/read-dict.h"
 #include "dict-utils.h"             // copy_Exp
 #include "disjunct-utils.h"
+#include "prepare/build-disjuncts.h" // build_disjuncts_for_exp
 #include "print/print.h"
 #include "print/print-util.h"
 #include "regex-morph.h"
@@ -385,6 +386,109 @@ GNUC_UNUSED static void prt_exp_mem(Exp *e)
 }
 
 /* ================ Display word expressions / disjuncts ================= */
+/**
+ * Display the disjuncts of expressions in \p dn.
+ */
+static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
+                               const void **arg)
+{
+	const void *rn = arg[0];
+	const char *flags = arg[1];
+	const Parse_Options opts = (Parse_Options)arg[2];
+	double max_cost = opts->disjunct_cost;
+
+	uint32_t int_flags = 0;
+	if (flags != NULL)
+	{
+		for (const char *f = flags; *f != '\0'; f++)
+			int_flags |= make_flag(*f);
+	}
+
+	/* build_disjuncts_for_exp() needs memory pools for efficiency. */
+	Sentence dummy_sent = sentence_create("", dict); /* For memory pools. */
+	dummy_sent->Disjunct_pool = pool_new(__func__, "Disjunct",
+	                               /*num_elements*/8192, sizeof(Disjunct),
+	                               /*zero_out*/false, /*align*/false, false);
+	dummy_sent->Connector_pool = pool_new(__func__, "Connector",
+	                              /*num_elements*/65536, sizeof(Connector),
+	                              /*zero_out*/true, /*align*/false, false);
+
+	/* copy_Exp() needs an Exp memory pool. */
+	Pool_desc *Exp_pool = pool_new(__func__, "Exp", /*num_elements*/256,
+	                               sizeof(Exp), /*zero_out*/false,
+	                               /*align*/false, /*exact*/false);
+
+	dyn_str *s = dyn_str_new();
+	dyn_strcat(s, "disjuncts:\n");
+	for (; dn != NULL; dn = dn->right)
+	{
+		/* Use copy_Exp() to assign dialect cost. */
+		Exp *e = copy_Exp(dn->exp, Exp_pool, opts);
+		Disjunct *d = build_disjuncts_for_exp(dummy_sent, e, dn->string, NULL,
+		                                      max_cost, NULL);
+		unsigned int dnum0 = count_disjuncts(d);
+		d = eliminate_duplicate_disjuncts(d);
+		unsigned int dnum1 = count_disjuncts(d);
+
+		dyn_str *dyn_pdl = dyn_str_new();
+		dyn_print_disjunct_list(dyn_pdl, d, int_flags);
+		char *dliststr = dyn_str_take(dyn_pdl);
+
+		pool_reuse(Exp_pool);
+		pool_reuse(dummy_sent->Disjunct_pool);
+		pool_reuse(dummy_sent->Connector_pool);
+
+		/* Count number of disjuncts with tunnel connectors. */
+		unsigned int tnum = 0;
+		for (const char *p = dliststr; *p != '\0'; p++)
+			if ((p[0] == ' ') && (p[1] == 'x')) tnum++;
+
+		unsigned int dnum_selected = 0;
+		dyn_str *selected = NULL;
+		char *dstr = dliststr;
+		char *end;
+		if (rn != NULL)
+		{
+			selected = dyn_str_new();
+
+			do
+			{
+				end = strchr(dstr, '\n');
+				*end = '\0';
+				if (match_regex(rn , dstr) != NULL)
+				{
+					dyn_strcat(selected, dstr);
+					dyn_strcat(selected, "\n");
+					dnum_selected++;
+				}
+
+				dstr = end + 1;
+			} while (*dstr != '\0');
+
+			free(dliststr);
+			dliststr = dyn_str_take(selected);
+		}
+
+		append_string(s, "    %s %u/%u disjuncts", dn->string, dnum1, dnum0);
+		if (tnum != 0) append_string(s, " (%u tunnels)", tnum);
+		dyn_strcat(s, "\n");
+		dyn_strcat(s, dliststr);
+		dyn_strcat(s, "\n");
+		free(dliststr);
+
+		if (rn != NULL)
+		{
+			if (dnum_selected == dnum1)
+				dyn_strcat(s, "(all the disjuncts matched)\n\n");
+			else
+				append_string(s, "(%u disjuncts matched)\n\n", dnum_selected);
+		}
+	}
+	pool_delete(Exp_pool);
+	sentence_delete(dummy_sent);
+
+	return dyn_str_take(s);
+}
 
 const char do_display_expr; /* a sentinel to request an expression display */
 
