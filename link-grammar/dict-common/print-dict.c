@@ -388,6 +388,18 @@ GNUC_UNUSED static void prt_exp_mem(Exp *e)
 
 const char do_display_expr; /* a sentinel to request an expression display */
 
+static size_t unknown_flag(const char *display_type, const char *flags)
+{
+	const char *known_flags;
+
+	if (&do_display_expr == display_type)
+		known_flags = "lm";
+	else
+		known_flags = "";
+
+	return strspn(flags, known_flags);
+}
+
 /**
  * Display the information about the given word.
  * If the word can split, display the information about each part.
@@ -439,7 +451,20 @@ static char *display_word_split(Dictionary dict,
 	Regex_node *rn = NULL;
 	if (arg != NULL)
 	{
+		if (NULL != arg[1])
+		{
+			size_t unknown_flag_pos = unknown_flag(arg[0], arg[1]);
+			if (arg[1][unknown_flag_pos] != '\0')
+			{
+				prt_error("Error: Token display: Unknown flag \"%c\".\n",
+				              arg[1][unknown_flag_pos]);
+				dyn_strcat(s, " "); /* avoid a no-match error */
+				goto display_word_split_error;
+			}
+		}
+
 		carg[1] = arg[1]; /* flags */
+
 		if (arg[0] == &do_display_expr)
 		{
 			carg[0] = &do_display_expr;
