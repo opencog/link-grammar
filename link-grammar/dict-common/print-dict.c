@@ -20,13 +20,13 @@
 #include "dict-file/read-dict.h"
 #include "dict-utils.h"             // copy_Exp
 #include "disjunct-utils.h"
-#include "prepare/build-disjuncts.h" // build_disjuncts_for_exp
+#include "prepare/build-disjuncts.h"    // build_disjuncts_for_exp
 #include "print/print.h"
 #include "print/print-util.h"
 #include "regex-morph.h"
 #include "tokenize/tokenize.h"      // word_add
+#include "tokenize/word-structures.h"   // Word_struct
 #include "utilities.h"              // GNU_UNUSED
-
 /* ======================================================================== */
 
 bool cost_eq(double cost1, double cost2)
@@ -383,6 +383,116 @@ GNUC_UNUSED static void prt_exp_mem(Exp *e)
 	char *e_str = dyn_str_take(s);
 	printf("%s", e_str);
 	free(e_str);
+}
+
+/* ================ Print disjuncts and connectors ============== */
+static bool is_flag(uint32_t flags, char flag)
+{
+	return (flags>>(flag-'a')) & 1;
+}
+
+static uint32_t make_flag(char flag)
+{
+	return 1<<(flag-'a');
+}
+
+/* Print one connector with all the details.
+ * mCnameD<tracon_id>{refcount}(nearest_word, length_limit)x
+ * Optional m: "@" for multi (else nothing).
+ * Cname: Connector name.
+ * Optional D: "-" / "+" (if dir != -1).
+ * Optional <tracon_id>: (flag 't').
+ * Optional [nearest_word, length_limit or farthest_word]: (flag 'l').
+ * x: Shallow/deep indication as "s" / "d" (if shallow != -1)
+ */
+static void dyn_print_one_connector(dyn_str *s, Connector *e, int dir,
+                                    int shallow, uint32_t flags)
+{
+	if (e->multi)
+		dyn_strcat(s, "@");
+	dyn_strcat(s, connector_string(e));
+	if (-1 != dir) dyn_strcat(s, (dir == 0) ? "-" : "+");
+	if (is_flag(flags, 't') && e->tracon_id)
+		append_string(s, "<%d>", e->tracon_id);
+	if (is_flag(flags, 'r') && e->refcount)
+		append_string(s, "{%d}",e->refcount);
+	if (is_flag(flags, 'l'))
+		append_string(s, "(%d,%d)", e->nearest_word, e->length_limit);
+	if (-1 != shallow)
+		dyn_strcat(s, (0 == shallow) ? "d" : "s");
+}
+
+GNUC_UNUSED static void print_one_connector(Connector *e, int dir, int shallow,
+                                            uint32_t flags)
+{
+	dyn_str *s = dyn_str_new();
+
+	dyn_print_one_connector(s, e, dir, shallow, flags);
+
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
+}
+
+static void dyn_print_connector_list(dyn_str *s, Connector *e, int dir, uint32_t flags)
+{
+
+	if (e == NULL) return;
+	dyn_print_connector_list(s, e->next, dir, flags);
+	if (e->next != NULL) dyn_strcat(s, " ");
+	dyn_print_one_connector(s, e, dir, /*shallow*/-1, flags);
+}
+
+void print_connector_list(Connector *e, uint32_t flags)
+{
+	dyn_str *s = dyn_str_new();
+
+	dyn_print_connector_list(s, e, /*dir*/-1, flags);
+
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
+}
+
+static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags)
+{
+	int i = 0;
+	char word[MAX_WORD + 32];
+	bool print_disjunct_address = test_enabled("disjunct-address");
+
+	for (;dj != NULL; dj=dj->next)
+	{
+		lg_strlcpy(word, dj->word_string, sizeof(word));
+		patch_subscript_mark(word);
+
+		append_string(s, "%16s", word);
+		if (print_disjunct_address) append_string(s, "(%p)", dj);
+		dyn_strcat(s, ": ");
+
+		append_string(s, "[%d]%s= ", i++, cost_stringify(dj->cost));
+
+		dyn_print_connector_list(s, dj->left, /*dir*/0, flags);
+		dyn_strcat(s, " <--> ");
+		dyn_print_connector_list(s, dj->right, /*dir*/1, flags);
+		dyn_strcat(s, "\n");
+	}
+}
+
+void print_all_disjuncts(Sentence sent)
+{
+	dyn_str *s = dyn_str_new();
+	uint32_t flags = make_flag('l') | make_flag('t');
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		append_string(s, "Word %zu:\n", w);
+		dyn_print_disjunct_list(s, sent->word[w].d, flags);
+
+	}
+
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
 }
 
 /* ================ Display word expressions / disjuncts ================= */
