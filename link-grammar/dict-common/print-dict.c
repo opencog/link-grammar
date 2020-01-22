@@ -690,10 +690,21 @@ static char *display_word_split(Dictionary dict,
 			{
 				rn = malloc(sizeof(Regex_node));
 				rn->name = strdup("Disjunct regex");
-				rn->pattern = strdup(arg[0]);
 				rn->re = NULL;
 				rn->neg = false;
 				rn->next = NULL;
+
+				if (arg[0][strspn(arg[0], "0123456789")] != '\0')
+				{
+					rn->pattern = strdup(arg[0]);
+				}
+				else
+				{
+					rn->pattern = malloc(strlen(arg[0]) + 4); /* \ [ ] \0 */
+					strcpy(rn->pattern, "\\[");
+					strcat(rn->pattern, arg[0]);
+					strcat(rn->pattern, "]");
+				}
 
 				if (compile_regexs(rn, NULL) != 0)
 				{
