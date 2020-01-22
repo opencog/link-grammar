@@ -454,7 +454,16 @@ void print_connector_list(Connector *e, uint32_t flags)
 	free(t);
 }
 
-static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags)
+typedef struct
+{
+	const void *regex;
+	unsigned int num_selected;
+	unsigned int num_tunnels;
+} select_data;
+
+static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
+              bool (* select)(const char *dj_str, select_data *criterion),
+              select_data *criterion)
 {
 	int i = 0;
 	char word[MAX_WORD + 32];
@@ -464,17 +473,24 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags)
 	{
 		lg_strlcpy(word, dj->word_string, sizeof(word));
 		patch_subscript_mark(word);
+		dyn_str *l = dyn_str_new();
 
-		append_string(s, "%16s", word);
+		append_string(l, "%16s", word);
 		if (print_disjunct_address) append_string(s, "(%p)", dj);
-		dyn_strcat(s, ": ");
+		dyn_strcat(l, ": ");
 
-		append_string(s, "[%d]%s= ", i++, cost_stringify(dj->cost));
+		append_string(l, "[%d]%s= ", i++, cost_stringify(dj->cost));
+		dyn_print_connector_list(l, dj->left, /*dir*/0, flags);
+		dyn_strcat(l, " <--> ");
+		dyn_print_connector_list(l, dj->right, /*dir*/1, flags);
 
-		dyn_print_connector_list(s, dj->left, /*dir*/0, flags);
-		dyn_strcat(s, " <--> ");
-		dyn_print_connector_list(s, dj->right, /*dir*/1, flags);
-		dyn_strcat(s, "\n");
+		char *ls = dyn_str_take(l);
+		if ((NULL == select) || select(ls, criterion))
+		{
+			dyn_strcat(s, ls);
+			dyn_strcat(s, "\n");
+		}
+		free(ls);
 	}
 }
 
@@ -486,7 +502,7 @@ void print_all_disjuncts(Sentence sent)
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		append_string(s, "Word %zu:\n", w);
-		dyn_print_disjunct_list(s, sent->word[w].d, flags);
+		dyn_print_disjunct_list(s, sent->word[w].d, flags, NULL, NULL);
 
 	}
 
@@ -497,6 +513,24 @@ void print_all_disjuncts(Sentence sent)
 
 /* ================ Display word expressions / disjuncts ================= */
 #define DJ_COL_WIDTH sizeof("                         ")
+
+static bool select_disjunct(const char *dj_str, select_data *criterion)
+{
+	/* Count number of disjuncts with tunnel connectors. */
+	for (const char *p = dj_str; *p != '\0'; p++)
+	{
+		if ((p[0] == ' ') && (p[1] == 'x'))
+		{
+			criterion->num_tunnels++;
+			break;
+		}
+	}
+
+	/* Select desired disjuncts. */
+	if (match_regex(criterion->regex , dj_str) == NULL) return false;
+	criterion->num_selected++;
+	return true;
+}
 
 /**
  * Display the disjuncts of expressions in \p dn.
@@ -530,6 +564,9 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 	                               sizeof(Exp), /*zero_out*/false,
 	                               /*align*/false, /*exact*/false);
 
+	select_data criterion = { .regex = rn };
+	void *select = (rn == NULL) ? NULL : select_disjunct;
+
 	dyn_str *s = dyn_str_new();
 	dyn_strcat(s, "disjuncts:\n");
 	for (; dn != NULL; dn = dn->right)
@@ -538,55 +575,25 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 		Exp *e = copy_Exp(dn->exp, Exp_pool, opts);
 		Disjunct *d = build_disjuncts_for_exp(dummy_sent, e, dn->string, NULL,
 		                                      max_cost, NULL);
+
 		unsigned int dnum0 = count_disjuncts(d);
 		d = eliminate_duplicate_disjuncts(d);
 		unsigned int dnum1 = count_disjuncts(d);
 
+		criterion.num_selected = 0;
 		dyn_str *dyn_pdl = dyn_str_new();
-		dyn_print_disjunct_list(dyn_pdl, d, int_flags);
+		dyn_print_disjunct_list(dyn_pdl, d, int_flags, select, &criterion);
 		char *dliststr = dyn_str_take(dyn_pdl);
 
 		pool_reuse(Exp_pool);
 		pool_reuse(dummy_sent->Disjunct_pool);
 		pool_reuse(dummy_sent->Connector_pool);
 
-		/* Count number of disjuncts with tunnel connectors. */
-		unsigned int tnum = 0;
-		for (const char *p = dliststr; *p != '\0'; p++)
-			if ((p[0] == ' ') && (p[1] == 'x')) tnum++;
-
-		unsigned int dnum_selected = 0;
-		dyn_str *selected = NULL;
-		char *dstr = dliststr;
-		char *end;
-		if (rn != NULL)
-		{
-			selected = dyn_str_new();
-
-			do
-			{
-				end = strchr(dstr, '\n');
-				*end = '\0';
-				if (match_regex(rn , dstr) != NULL)
-				{
-					dyn_strcat(selected, dstr);
-					dyn_strcat(selected, "\n");
-					dnum_selected++;
-				}
-
-				dstr = end + 1;
-			} while (*dstr != '\0');
-
-			free(dliststr);
-			dliststr = dyn_str_take(selected);
-		}
-
-		append_string(s, "    %s %u/%u disjuncts", dn->string, dnum1, dnum0);
-		if (tnum != 0) append_string(s, " (%u tunnels)", tnum);
-		dyn_strcat(s, "\n");
 		append_string(s, "    %-*s %8u/%u disjuncts",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
 		              dnum1, dnum0);
+		if (criterion.num_tunnels != 0)
+			append_string(s, " (%u tunnels)", criterion.num_tunnels);
 		dyn_strcat(s, "\n\n");
 		dyn_strcat(s, dliststr);
 		dyn_strcat(s, "\n");
@@ -594,12 +601,12 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 
 		if (rn != NULL)
 		{
-			if (dnum_selected == dnum1)
+			if (criterion.num_selected == dnum1)
 				dyn_strcat(s, "(all the disjuncts matched)\n\n");
 			else
-				append_string(s, "(%u disjunct%s matched)\n\n", dnum_selected,
-				              dnum_selected == 1 ? "" : "s");
-
+				append_string(s, "(%u disjunct%s matched)\n\n",
+				              criterion.num_selected,
+				              criterion.num_selected == 1 ? "" : "s");
 		}
 	}
 	pool_delete(Exp_pool);
