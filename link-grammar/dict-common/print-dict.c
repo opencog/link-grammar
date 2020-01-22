@@ -496,6 +496,8 @@ void print_all_disjuncts(Sentence sent)
 }
 
 /* ================ Display word expressions / disjuncts ================= */
+#define DJ_COL_WIDTH sizeof("                         ")
+
 /**
  * Display the disjuncts of expressions in \p dn.
  */
@@ -582,6 +584,10 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 		append_string(s, "    %s %u/%u disjuncts", dn->string, dnum1, dnum0);
 		if (tnum != 0) append_string(s, " (%u tunnels)", tnum);
 		dyn_strcat(s, "\n");
+		append_string(s, "    %-*s %8u/%u disjuncts",
+		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
+		              dnum1, dnum0);
+		dyn_strcat(s, "\n\n");
 		dyn_strcat(s, dliststr);
 		dyn_strcat(s, "\n");
 		free(dliststr);
@@ -775,8 +781,6 @@ static unsigned int count_disjunct_for_dict_node(Dict_node *dn)
 {
 	return (NULL == dn) ? 0 : count_clause(dn->exp);
 }
-
-#define DJ_COL_WIDTH sizeof("                         ")
 
 /**
  * Display the number of disjuncts associated with this dict node
