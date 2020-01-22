@@ -75,7 +75,7 @@ void count_disjuncts_and_connectors(Sentence, unsigned int *, unsigned int *);
 void print_one_connector(Connector *, int, int, uint32_t);
 void dyn_print_one_connector(dyn_str *s, Connector *, int, int, uint32_t);
 void print_connector_list(Connector *, uint32_t);
-void dyn_print_connector_list(dyn_str *s, Connector *, uint32_t);
+void dyn_print_connector_list(dyn_str *s, Connector *, int, uint32_t);
 void print_disjunct_list(Disjunct *, uint32_t);
 void dyn_print_disjunct_list(dyn_str *s, Disjunct *, uint32_t);
 void print_all_disjuncts(Sentence);

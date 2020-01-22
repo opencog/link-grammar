@@ -442,7 +442,7 @@ void dyn_print_one_connector(dyn_str *s, Connector *e, int dir, int shallow,
 	if (e->multi)
 		dyn_strcat(s, "@");
 	dyn_strcat(s, connector_string(e));
-	if (-1 != dir) dyn_strcat(s, &"-+"[dir]);
+	if (-1 != dir) dyn_strcat(s, (dir == 0) ? "-" : "+");
 	if (is_flag(flags, 't') && e->tracon_id)
 		append_string(s, "<%d>", e->tracon_id);
 	if (is_flag(flags, 'r') && e->refcount)
@@ -464,20 +464,20 @@ void print_one_connector(Connector *e, int dir, int shallow, uint32_t flags)
 	free(t);
 }
 
-void dyn_print_connector_list(dyn_str *s, Connector *e, uint32_t flags)
+void dyn_print_connector_list(dyn_str *s, Connector *e, int dir, uint32_t flags)
 {
 
 	if (e == NULL) return;
-	dyn_print_connector_list(s, e->next, flags);
+	dyn_print_connector_list(s, e->next, dir, flags);
 	if (e->next != NULL) dyn_strcat(s, " ");
-	dyn_print_one_connector(s, e, /*dir*/-1, /*shallow*/-1, flags);
+	dyn_print_one_connector(s, e, dir, /*shallow*/-1, flags);
 }
 
 void print_connector_list(Connector *e, uint32_t flags)
 {
 	dyn_str *s = dyn_str_new();
 
-	dyn_print_connector_list(s, e, flags);
+	dyn_print_connector_list(s, e, /*dir*/-1, flags);
 
 	char *t = dyn_str_take(s);
 	puts(t);
@@ -501,9 +501,9 @@ void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags)
 
 		append_string(s, "[%d]%s= ", i++, cost_stringify(dj->cost));
 
-		dyn_print_connector_list(s, dj->left, flags);
+		dyn_print_connector_list(s, dj->left, /*dir*/0, flags);
 		dyn_strcat(s, " <--> ");
-		dyn_print_connector_list(s, dj->right, flags);
+		dyn_print_connector_list(s, dj->right, /*dir*/1, flags);
 		dyn_strcat(s, "\n");
 	}
 }
