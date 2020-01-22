@@ -148,7 +148,7 @@ static Tconnector * build_terminal(Exp *e, clause_context *ct)
 	Tconnector *c = pool_alloc(ct->Tconnector_pool);
 	c->e = e;
 	c->next = NULL;
-	ct->exp_pos++;
+	c->exp_pos = ct->exp_pos++;
 	return c;
 }
 

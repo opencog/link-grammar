@@ -212,6 +212,100 @@ static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
 }
 
 
+/**
+ * Find if the given connector is in the given expression.
+ * @param e Expression.
+ * @param find_pos Connector position to search in \p e.
+ * @param pos Temporary connector position while the search advances.
+ * Return \c true iff the connector is found.
+ */
+static bool exp_contains_connector(const Exp *e, int *pos, int find_pos)
+{
+	if (NULL == e) return false;
+
+	if (CONNECTOR_type == e->type)
+	{
+#if 0
+		printf("exp_contains_connector: pos=%d C=%s%s%c %s\n",
+		       *pos,e->multi?"@":"",e->condesc->string,e->dir,
+		       (find_pos == *pos) ? "FOUND" : "");
+#endif
+		return (find_pos == (*pos)++);
+	}
+
+	for(Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+	{
+		if (exp_contains_connector(opd, pos, find_pos))
+			return true;
+	}
+
+	return false;
+}
+
+typedef struct
+{
+	Dictionary dict;
+	dyn_str *e;
+	int indent;
+	int pos;                 /* current connector position in expression */
+	int *find_pos;           /* disjunct expression connectors positions */
+	bool is_after_connector; /* an indicators for printing '&' */
+} cmacro_context;
+
+/**
+ * Print nested macros for each desired connector.
+ * The desired connector positions are in find_pos[] (ascending sorted,
+ * -1 terminated). Its first element holds the next position of the next
+ *  connector to print, and is chopped after the connector is printed.
+ */
+static void print_connector_macros(cmacro_context *cmc, const Exp *n)
+{
+	if ((cmc->find_pos)[0] == -1)
+		return; /* fast termination when nothing more to do */
+
+	bool macro_started = false;
+	int current_pos = cmc->pos;
+	if ((Exptag_macro == n->tag_type) &&
+	    exp_contains_connector(n, &current_pos, (cmc->find_pos)[0]))
+	{
+		if (cmc->is_after_connector)
+		{
+			dyn_strcat(cmc->e, " & ");
+			cmc->is_after_connector = false;
+		}
+		print_expression_tag_start(cmc->dict, cmc->e, n, &cmc->indent);
+		macro_started = true;
+	}
+
+	Exp *opd = n->operand_first;
+
+	if (n->type == CONNECTOR_type)
+	{
+		if ((cmc->find_pos)[0] == cmc->pos)
+		{
+			if (cmc->is_after_connector) dyn_strcat(cmc->e, " & ");
+			cmc->is_after_connector = true;
+			if (n->multi) dyn_strcat(cmc->e, "@");
+			dyn_strcat(cmc->e,
+			           n->condesc ? n->condesc->string : "error-null-connector");
+			dyn_strcat(cmc->e, (const char []){ n->dir, '\0' });
+			cmc->find_pos++; /* each expression position is used only once */
+		}
+		cmc->pos++;
+	}
+	else
+	{
+		for (Exp *l = opd; l != NULL; l = l->operand_next)
+		{
+			print_connector_macros(cmc, l);
+		}
+	}
+
+	/* The -1 check is to suppress unneeded newlines at the end. */
+	if (macro_started && ((cmc->find_pos)[0] != -1))
+		print_expression_tag_end(cmc->dict, cmc->e, n, &cmc->indent);
+}
+
 static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n,
                                               bool show_macros)
 {
@@ -418,6 +512,9 @@ static void dyn_print_one_connector(dyn_str *s, Connector *e, int dir,
 		append_string(s, "{%d}",e->refcount);
 	if (is_flag(flags, 'l'))
 		append_string(s, "(%d,%d)", e->nearest_word, e->length_limit);
+#if 0
+	append_string(s, "<<%d>>", e->exp_pos);
+#endif
 	if (-1 != shallow)
 		dyn_strcat(s, (0 == shallow) ? "d" : "s");
 }
@@ -454,9 +551,22 @@ void print_connector_list(Connector *e, uint32_t flags)
 	free(t);
 }
 
+/* Ascending sort of connector positions. */
+static int ascending_int(const void *a, const void *b)
+{
+	const int a1 = *(const int *)a;
+	const int b1 = *(const int *)b;
+
+	if (a1 <  b1) return -1;
+	if (a1 == b1) return 0;
+	return 1;
+}
+
 typedef struct
 {
 	const void *regex;
+	Exp *exp;
+	Dictionary dict;
 	unsigned int num_selected;
 	unsigned int num_tunnels;
 } select_data;
@@ -465,7 +575,7 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
               bool (* select)(const char *dj_str, select_data *criterion),
               select_data *criterion)
 {
-	int i = 0;
+	int djn = 0;
 	char word[MAX_WORD + 32];
 	bool print_disjunct_address = test_enabled("disjunct-address");
 
@@ -479,7 +589,7 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
 		if (print_disjunct_address) append_string(s, "(%p)", dj);
 		dyn_strcat(l, ": ");
 
-		append_string(l, "[%d]%s= ", i++, cost_stringify(dj->cost));
+		append_string(l, "[%d]%s= ", djn++, cost_stringify(dj->cost));
 		dyn_print_connector_list(l, dj->left, /*dir*/0, flags);
 		dyn_strcat(l, " <--> ");
 		dyn_print_connector_list(l, dj->right, /*dir*/1, flags);
@@ -489,6 +599,33 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
 		{
 			dyn_strcat(s, ls);
 			dyn_strcat(s, "\n");
+
+			if (criterion->exp != NULL)
+			{
+				int ccnt = 1;
+				for (Connector *c = dj->left; c != NULL; c = c->next)
+					ccnt++;
+				for (Connector *c = dj->right; c != NULL; c = c->next)
+					ccnt++;
+
+				int *exp_pos = alloca(ccnt * sizeof(int));
+				int *i = exp_pos;
+				for (Connector *c = dj->left; c != NULL; c = c->next)
+					*i++ = c->exp_pos;
+				for (Connector *c = dj->right; c != NULL; c = c->next)
+					*i++ = c->exp_pos;
+				*i = -1;
+
+				qsort(exp_pos, ccnt-1, sizeof(int), ascending_int);
+
+				cmacro_context cmc = {
+					.dict = criterion->dict,
+					.e = s,
+					.find_pos = exp_pos,
+				};
+				print_connector_macros(&cmc, criterion->exp);
+				dyn_strcat(s, "\n\n");
+			}
 		}
 		free(ls);
 	}
@@ -580,6 +717,11 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 		d = eliminate_duplicate_disjuncts(d);
 		unsigned int dnum1 = count_disjuncts(d);
 
+		if ((flags != NULL) && (strchr(flags, 'm') != NULL))
+		{
+			criterion.exp = e;
+			criterion.dict = dict;
+		}
 		criterion.num_selected = 0;
 		dyn_str *dyn_pdl = dyn_str_new();
 		dyn_print_disjunct_list(dyn_pdl, d, int_flags, select, &criterion);
@@ -624,7 +766,7 @@ static size_t unknown_flag(const char *display_type, const char *flags)
 	if (&do_display_expr == display_type)
 		known_flags = "lm";
 	else
-		known_flags = "";
+		known_flags = "m";
 
 	return strspn(flags, known_flags);
 }
