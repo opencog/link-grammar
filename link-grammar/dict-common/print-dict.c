@@ -597,7 +597,9 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 			if (dnum_selected == dnum1)
 				dyn_strcat(s, "(all the disjuncts matched)\n\n");
 			else
-				append_string(s, "(%u disjuncts matched)\n\n", dnum_selected);
+				append_string(s, "(%u disjunct%s matched)\n\n", dnum_selected,
+				              dnum_selected == 1 ? "" : "s");
+
 		}
 	}
 	pool_delete(Exp_pool);
