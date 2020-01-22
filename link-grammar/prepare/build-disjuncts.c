@@ -26,6 +26,7 @@ struct Tconnector_struct
 {
 	Tconnector * next;
 	const Exp *e; /* a CONNECTOR_type element from which to get the connector  */
+	int exp_pos;  /* the position in the originating expression */
 };
 
 typedef struct clause_struct Clause;
@@ -42,6 +43,7 @@ typedef struct
 	double cost_cutoff;
 	Pool_desc *Tconnector_pool;
 	Pool_desc *Clause_pool;
+	int exp_pos;
 } clause_context;
 
 #ifdef DEBUG
@@ -141,11 +143,12 @@ static Tconnector * catenate(Tconnector * e1, Tconnector * e2, Pool_desc *tp)
 /**
  * build the connector for the terminal node n
  */
-static Tconnector * build_terminal(Exp *e, Pool_desc *tp)
+static Tconnector * build_terminal(Exp *e, clause_context *ct)
 {
-	Tconnector *c = pool_alloc(tp);
+	Tconnector *c = pool_alloc(ct->Tconnector_pool);
 	c->e = e;
 	c->next = NULL;
+	ct->exp_pos++;
 	return c;
 }
 
@@ -219,7 +222,7 @@ static Clause * build_clause(Exp *e, clause_context *ct)
 	else if (e->type == CONNECTOR_type)
 	{
 		c = pool_alloc(ct->Clause_pool);
-		c->c = build_terminal(e, ct->Tconnector_pool);
+		c->c = build_terminal(e, ct);
 		c->cost = 0.0;
 		c->maxcost = 0.0;
 		c->next = NULL;
@@ -281,6 +284,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			Connector *n = connector_new(connector_pool, t->e->condesc, opts);
 			Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
 
+			n->exp_pos = t->exp_pos;
 			n->multi = t->e->multi;
 			n->next = *loc;   /* prepend the connector to the current list */
 			*loc = n;         /* update the connector list */
