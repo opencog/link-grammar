@@ -466,11 +466,11 @@ void print_one_connector(Connector *e, int dir, int shallow, uint32_t flags)
 
 void dyn_print_connector_list(dyn_str *s, Connector *e, uint32_t flags)
 {
-	for (;e != NULL; e = e->next)
-	{
-		dyn_print_one_connector(s, e, /*dir*/-1, /*shallow*/-1, flags);
-		if (e->next != NULL) dyn_strcat(s, " ");
-	}
+
+	if (e == NULL) return;
+	dyn_print_connector_list(s, e->next, flags);
+	if (e->next != NULL) dyn_strcat(s, " ");
+	dyn_print_one_connector(s, e, /*dir*/-1, /*shallow*/-1, flags);
 }
 
 void print_connector_list(Connector *e, uint32_t flags)
