@@ -20,12 +20,13 @@
 #include "dict-file/read-dict.h"
 #include "dict-utils.h"             // copy_Exp
 #include "disjunct-utils.h"
+#include "prepare/build-disjuncts.h"    // build_disjuncts_for_exp
 #include "print/print.h"
 #include "print/print-util.h"
 #include "regex-morph.h"
 #include "tokenize/tokenize.h"      // word_add
+#include "tokenize/word-structures.h"   // Word_struct
 #include "utilities.h"              // GNU_UNUSED
-
 /* ======================================================================== */
 
 bool cost_eq(double cost1, double cost2)
@@ -88,7 +89,15 @@ static void print_expression_tag_end(Dictionary dict, dyn_str *e, const Exp *n,
 			break;
 		case Exptag_macro:
 			if (*indent < 0) break;
-			dyn_strcat(e, "\n");
+			/* The sole purpose of the checks before issuing "\n" is to prevent
+			 * empty lines when printing connector macros w/o introducing a
+			 * separate version of this function for connector macro printing. */
+			if (dyn_strlen(e) > 0)
+			{
+				dyn_trimback(e);
+				if ((dyn_str_value(e)[dyn_strlen(e)-1]) != '\n')
+					dyn_strcat(e, "\n");
+			}
 			for(int i = 0; i < *indent - MACRO_INDENTATION/2; i++)
 				dyn_strcat(e, " ");
 			(*indent) -= MACRO_INDENTATION;
@@ -210,6 +219,100 @@ static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
 	print_expression_tag_end(dict, e, n, indent);
 }
 
+
+/**
+ * Find if the given connector is in the given expression.
+ * @param e Expression.
+ * @param find_pos Connector position to search in \p e.
+ * @param pos Temporary connector position while the search advances.
+ * Return \c true iff the connector is found.
+ */
+static bool exp_contains_connector(const Exp *e, int *pos, int find_pos)
+{
+	if (NULL == e) return false;
+
+	if (CONNECTOR_type == e->type)
+	{
+#if 0
+		printf("exp_contains_connector: pos=%d C=%s%s%c %s\n",
+		       *pos,e->multi?"@":"",e->condesc->string,e->dir,
+		       (find_pos == *pos) ? "FOUND" : "");
+#endif
+		return (find_pos == (*pos)++);
+	}
+
+	for(Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+	{
+		if (exp_contains_connector(opd, pos, find_pos))
+			return true;
+	}
+
+	return false;
+}
+
+typedef struct
+{
+	Dictionary dict;
+	dyn_str *e;
+	int indent;
+	int pos;                 /* current connector position in expression */
+	int *find_pos;           /* disjunct expression connectors positions */
+	bool is_after_connector; /* an indicators for printing '&' */
+} cmacro_context;
+
+/**
+ * Print nested macros for each desired connector.
+ * The desired connector positions are in find_pos[] (ascending sorted,
+ * -1 terminated). Its first element holds the next position of the next
+ *  connector to print, and is chopped after the connector is printed.
+ */
+static void print_connector_macros(cmacro_context *cmc, const Exp *n)
+{
+	if ((cmc->find_pos)[0] == -1)
+		return; /* fast termination when nothing more to do */
+
+	bool macro_started = false;
+	int current_pos = cmc->pos;
+	if ((Exptag_macro == n->tag_type) &&
+	    exp_contains_connector(n, &current_pos, (cmc->find_pos)[0]))
+	{
+		if (cmc->is_after_connector)
+		{
+			dyn_strcat(cmc->e, " & ");
+			cmc->is_after_connector = false;
+		}
+		print_expression_tag_start(cmc->dict, cmc->e, n, &cmc->indent);
+		macro_started = true;
+	}
+
+	Exp *opd = n->operand_first;
+
+	if (n->type == CONNECTOR_type)
+	{
+		if ((cmc->find_pos)[0] == cmc->pos)
+		{
+			if (cmc->is_after_connector) dyn_strcat(cmc->e, " & ");
+			cmc->is_after_connector = true;
+			if (n->multi) dyn_strcat(cmc->e, "@");
+			dyn_strcat(cmc->e,
+			           n->condesc ? n->condesc->string : "error-null-connector");
+			dyn_strcat(cmc->e, (const char []){ n->dir, '\0' });
+			cmc->find_pos++; /* each expression position is used only once */
+		}
+		cmc->pos++;
+	}
+	else
+	{
+		for (Exp *l = opd; l != NULL; l = l->operand_next)
+		{
+			print_connector_macros(cmc, l);
+		}
+	}
+
+	/* The -1 check is to suppress unneeded newlines at the end. */
+	if (macro_started && ((cmc->find_pos)[0] != -1))
+		print_expression_tag_end(cmc->dict, cmc->e, n, &cmc->indent);
+}
 
 static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n,
                                               bool show_macros)
@@ -384,9 +487,297 @@ GNUC_UNUSED static void prt_exp_mem(Exp *e)
 	free(e_str);
 }
 
+/* ================ Print disjuncts and connectors ============== */
+static bool is_flag(uint32_t flags, char flag)
+{
+	return (flags>>(flag-'a')) & 1;
+}
+
+static uint32_t make_flag(char flag)
+{
+	return 1<<(flag-'a');
+}
+
+/* Print one connector with all the details.
+ * mCnameD<tracon_id>{refcount}(nearest_word, length_limit)x
+ * Optional m: "@" for multi (else nothing).
+ * Cname: Connector name.
+ * Optional D: "-" / "+" (if dir != -1).
+ * Optional <tracon_id>: (flag 't').
+ * Optional [nearest_word, length_limit or farthest_word]: (flag 'l').
+ * x: Shallow/deep indication as "s" / "d" (if shallow != -1)
+ */
+static void dyn_print_one_connector(dyn_str *s, Connector *e, int dir,
+                                    int shallow, uint32_t flags)
+{
+	if (e->multi)
+		dyn_strcat(s, "@");
+	dyn_strcat(s, connector_string(e));
+	if (-1 != dir) dyn_strcat(s, (dir == 0) ? "-" : "+");
+	if (is_flag(flags, 't') && e->tracon_id)
+		append_string(s, "<%d>", e->tracon_id);
+	if (is_flag(flags, 'r') && e->refcount)
+		append_string(s, "{%d}",e->refcount);
+	if (is_flag(flags, 'l'))
+		append_string(s, "(%d,%d)", e->nearest_word, e->length_limit);
+#if 0
+	append_string(s, "<<%d>>", e->exp_pos);
+#endif
+	if (-1 != shallow)
+		dyn_strcat(s, (0 == shallow) ? "d" : "s");
+}
+
+GNUC_UNUSED static void print_one_connector(Connector *e, int dir, int shallow,
+                                            uint32_t flags)
+{
+	dyn_str *s = dyn_str_new();
+
+	dyn_print_one_connector(s, e, dir, shallow, flags);
+
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
+}
+
+static void dyn_print_connector_list(dyn_str *s, Connector *e, int dir, uint32_t flags)
+{
+
+	if (e == NULL) return;
+	dyn_print_connector_list(s, e->next, dir, flags);
+	if (e->next != NULL) dyn_strcat(s, " ");
+	dyn_print_one_connector(s, e, dir, /*shallow*/-1, flags);
+}
+
+void print_connector_list(Connector *e, uint32_t flags)
+{
+	dyn_str *s = dyn_str_new();
+
+	dyn_print_connector_list(s, e, /*dir*/-1, flags);
+
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
+}
+
+/* Ascending sort of connector positions. */
+static int ascending_int(const void *a, const void *b)
+{
+	const int a1 = *(const int *)a;
+	const int b1 = *(const int *)b;
+
+	if (a1 <  b1) return -1;
+	if (a1 == b1) return 0;
+	return 1;
+}
+
+typedef struct
+{
+	const void *regex;
+	Exp *exp;
+	Dictionary dict;
+	unsigned int num_selected;
+	unsigned int num_tunnels;
+} select_data;
+
+static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
+              bool (* select)(const char *dj_str, select_data *criterion),
+              select_data *criterion)
+{
+	int djn = 0;
+	char word[MAX_WORD + 32];
+	bool print_disjunct_address = test_enabled("disjunct-address");
+
+	for (;dj != NULL; dj=dj->next)
+	{
+		lg_strlcpy(word, dj->word_string, sizeof(word));
+		patch_subscript_mark(word);
+		dyn_str *l = dyn_str_new();
+
+		append_string(l, "%16s", word);
+		if (print_disjunct_address) append_string(s, "(%p)", dj);
+		dyn_strcat(l, ": ");
+
+		append_string(l, "[%d]%s= ", djn++, cost_stringify(dj->cost));
+		dyn_print_connector_list(l, dj->left, /*dir*/0, flags);
+		dyn_strcat(l, " <--> ");
+		dyn_print_connector_list(l, dj->right, /*dir*/1, flags);
+
+		char *ls = dyn_str_take(l);
+		if ((NULL == select) || select(ls, criterion))
+		{
+			dyn_strcat(s, ls);
+			dyn_strcat(s, "\n");
+
+			if (criterion->exp != NULL)
+			{
+				int ccnt = 1;
+				for (Connector *c = dj->left; c != NULL; c = c->next)
+					ccnt++;
+				for (Connector *c = dj->right; c != NULL; c = c->next)
+					ccnt++;
+
+				int *exp_pos = alloca(ccnt * sizeof(int));
+				int *i = exp_pos;
+				for (Connector *c = dj->left; c != NULL; c = c->next)
+					*i++ = c->exp_pos;
+				for (Connector *c = dj->right; c != NULL; c = c->next)
+					*i++ = c->exp_pos;
+				*i = -1;
+
+				qsort(exp_pos, ccnt-1, sizeof(int), ascending_int);
+
+				cmacro_context cmc = {
+					.dict = criterion->dict,
+					.e = s,
+					.find_pos = exp_pos,
+				};
+				print_connector_macros(&cmc, criterion->exp);
+				dyn_strcat(s, "\n\n");
+			}
+		}
+		free(ls);
+	}
+}
+
+void print_all_disjuncts(Sentence sent)
+{
+	dyn_str *s = dyn_str_new();
+	uint32_t flags = make_flag('l') | make_flag('t');
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		append_string(s, "Word %zu:\n", w);
+		dyn_print_disjunct_list(s, sent->word[w].d, flags, NULL, NULL);
+
+	}
+
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
+}
+
 /* ================ Display word expressions / disjuncts ================= */
+#define DJ_COL_WIDTH sizeof("                         ")
+
+static bool select_disjunct(const char *dj_str, select_data *criterion)
+{
+	/* Count number of disjuncts with tunnel connectors. */
+	for (const char *p = dj_str; *p != '\0'; p++)
+	{
+		if ((p[0] == ' ') && (p[1] == 'x'))
+		{
+			criterion->num_tunnels++;
+			break;
+		}
+	}
+
+	/* Select desired disjuncts. */
+	if (match_regex(criterion->regex , dj_str) == NULL) return false;
+	criterion->num_selected++;
+	return true;
+}
+
+/**
+ * Display the disjuncts of expressions in \p dn.
+ */
+static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
+                               const void **arg)
+{
+	const void *rn = arg[0];
+	const char *flags = arg[1];
+	const Parse_Options opts = (Parse_Options)arg[2];
+	double max_cost = opts->disjunct_cost;
+
+	uint32_t int_flags = 0;
+	if (flags != NULL)
+	{
+		for (const char *f = flags; *f != '\0'; f++)
+			int_flags |= make_flag(*f);
+	}
+
+	/* build_disjuncts_for_exp() needs memory pools for efficiency. */
+	Sentence dummy_sent = sentence_create("", dict); /* For memory pools. */
+	dummy_sent->Disjunct_pool = pool_new(__func__, "Disjunct",
+	                               /*num_elements*/8192, sizeof(Disjunct),
+	                               /*zero_out*/false, /*align*/false, false);
+	dummy_sent->Connector_pool = pool_new(__func__, "Connector",
+	                              /*num_elements*/65536, sizeof(Connector),
+	                              /*zero_out*/true, /*align*/false, false);
+
+	/* copy_Exp() needs an Exp memory pool. */
+	Pool_desc *Exp_pool = pool_new(__func__, "Exp", /*num_elements*/256,
+	                               sizeof(Exp), /*zero_out*/false,
+	                               /*align*/false, /*exact*/false);
+
+	select_data criterion = { .regex = rn };
+	void *select = (rn == NULL) ? NULL : select_disjunct;
+
+	dyn_str *s = dyn_str_new();
+	dyn_strcat(s, "disjuncts:\n");
+	for (; dn != NULL; dn = dn->right)
+	{
+		/* Use copy_Exp() to assign dialect cost. */
+		Exp *e = copy_Exp(dn->exp, Exp_pool, opts);
+		Disjunct *d = build_disjuncts_for_exp(dummy_sent, e, dn->string, NULL,
+		                                      max_cost, NULL);
+
+		unsigned int dnum0 = count_disjuncts(d);
+		d = eliminate_duplicate_disjuncts(d);
+		unsigned int dnum1 = count_disjuncts(d);
+
+		if ((flags != NULL) && (strchr(flags, 'm') != NULL))
+		{
+			criterion.exp = e;
+			criterion.dict = dict;
+		}
+		criterion.num_selected = 0;
+		dyn_str *dyn_pdl = dyn_str_new();
+		dyn_print_disjunct_list(dyn_pdl, d, int_flags, select, &criterion);
+		char *dliststr = dyn_str_take(dyn_pdl);
+
+		pool_reuse(Exp_pool);
+		pool_reuse(dummy_sent->Disjunct_pool);
+		pool_reuse(dummy_sent->Connector_pool);
+
+		append_string(s, "    %-*s %8u/%u disjuncts",
+		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
+		              dnum1, dnum0);
+		if (criterion.num_tunnels != 0)
+			append_string(s, " (%u tunnels)", criterion.num_tunnels);
+		dyn_strcat(s, "\n\n");
+		dyn_strcat(s, dliststr);
+		dyn_strcat(s, "\n");
+		free(dliststr);
+
+		if (rn != NULL)
+		{
+			if (criterion.num_selected == dnum1)
+				dyn_strcat(s, "(all the disjuncts matched)\n\n");
+			else
+				append_string(s, "(%u disjunct%s matched)\n\n",
+				              criterion.num_selected,
+				              criterion.num_selected == 1 ? "" : "s");
+		}
+	}
+	pool_delete(Exp_pool);
+	sentence_delete(dummy_sent);
+
+	return dyn_str_take(s);
+}
 
 const char do_display_expr; /* a sentinel to request an expression display */
+
+static size_t unknown_flag(const char *display_type, const char *flags)
+{
+	const char *known_flags;
+
+	if (&do_display_expr == display_type)
+		known_flags = "lm";
+	else
+		known_flags = "m";
+
+	return strspn(flags, known_flags);
+}
 
 /**
  * Display the information about the given word.
@@ -439,7 +830,20 @@ static char *display_word_split(Dictionary dict,
 	Regex_node *rn = NULL;
 	if (arg != NULL)
 	{
+		if (NULL != arg[1])
+		{
+			size_t unknown_flag_pos = unknown_flag(arg[0], arg[1]);
+			if (arg[1][unknown_flag_pos] != '\0')
+			{
+				prt_error("Error: Token display: Unknown flag \"%c\".\n",
+				              arg[1][unknown_flag_pos]);
+				dyn_strcat(s, " "); /* avoid a no-match error */
+				goto display_word_split_error;
+			}
+		}
+
 		carg[1] = arg[1]; /* flags */
+
 		if (arg[0] == &do_display_expr)
 		{
 			carg[0] = &do_display_expr;
@@ -451,10 +855,21 @@ static char *display_word_split(Dictionary dict,
 			{
 				rn = malloc(sizeof(Regex_node));
 				rn->name = strdup("Disjunct regex");
-				rn->pattern = strdup(arg[0]);
 				rn->re = NULL;
 				rn->neg = false;
 				rn->next = NULL;
+
+				if (arg[0][strspn(arg[0], "0123456789")] != '\0')
+				{
+					rn->pattern = strdup(arg[0]);
+				}
+				else
+				{
+					rn->pattern = malloc(strlen(arg[0]) + 4); /* \ [ ] \0 */
+					strcpy(rn->pattern, "\\[");
+					strcat(rn->pattern, arg[0]);
+					strcat(rn->pattern, "]");
+				}
 
 				if (compile_regexs(rn, NULL) != 0)
 				{
@@ -525,8 +940,6 @@ static unsigned int count_disjunct_for_dict_node(Dict_node *dn)
 {
 	return (NULL == dn) ? 0 : count_clause(dn->exp);
 }
-
-#define DJ_COL_WIDTH sizeof("                         ")
 
 /**
  * Display the number of disjuncts associated with this dict node

@@ -308,7 +308,7 @@ Examples:
 
 [!]
 This command is for debugging the dictionary or the library.
-It gets as an argument a word, and optionally a regex and flags.
+It gets as an argument a word, and optionally a regex and/or flags.
 It splits the given word to tokens according to the current language,
 and for each token it prints its matching dictionary words along with its
 expression or disjunct list. The word may include a wildcard * to find
@@ -331,14 +331,27 @@ Show also low-level memory details of the expression:
 Show the disjuncts (without duplicates):
   !!test.n//
 
+Show disjunct connector expression source macros:
+  !!test.n//m
+
+The above command is more useful for a single disjunct (1234 is an example
+for a disjunct number, see below for disjunct print format):
+  !!test.n/1234/m
+
 Show selected disjuncts according to the supplied regex:
-  !!test.n/ Wd .*<-->.*@M\b/
+  !!test.n/ Wd-.*<-->.*@M\+/
+  !!test.n/ J[sk]- D[\w*]+c\-/
+
+Show selected disjuncts according to the supplied string (supposing the regex
+engine is PCRE, which supports "\Q"):
+  !!test.n/\Q Ds**x+/
 
 Display all the words that start with "test":
   !!test*
 
 Display all the words that start with "test" and have subscript ".q":
   !!test*.q
+
 
 A sample output of a disjunct-list display:
   Token "test.n" matches:
@@ -348,15 +361,15 @@ A sample output of a disjunct-list display:
     test.n 4273/4501 disjuncts
 
     ...
-    test.n: [4070]1.500= Wd @hCO Ds**c <--> Ss*s @M NM
+          test.n: [3493]2.600= @AN- @A- Ds**x- <--> NM+ R+ Bs+ Bsm+
     ...
 
 In the this sample output:
    8509     Number of disjuncts in the dictionary expression.
    4501     Number of disjuncts after applying cost-max.
    4273     Number of disjuncts w/o duplicates.
-   4070     Disjunct ordinal number.
-   1.500    Disjunct cost.
+   3493     Disjunct ordinal number.
+   2.600    Disjunct cost.
    =        A separator to enable regex anchoring.
    <-->     A separator of the "-" (LHS) and "+" (RHS) connector lists.
 

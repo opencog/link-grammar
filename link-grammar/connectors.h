@@ -120,16 +120,17 @@ struct Connector_struct
 	                         the power pruning. */
 	uint8_t prune_pass;   /* Prune pass number (one bit could be enough) */
 	bool multi;           /* TRUE if this is a multi-connector */
-	int tracon_id;        /* Tracon identifier (see disjunct-utils.c) */
+	int32_t tracon_id;    /* Tracon identifier (see disjunct-utils.c) */
 	const condesc_t *desc;
 	Connector *next;
 	union
 	{
 		const gword_set *originating_gword; /* Used while and after parsing */
-		/* For pruning use only */
 		struct
 		{
-			int refcount;   /* Memory-sharing reference count */
+			int32_t refcount;/* Memory-sharing reference count - for pruning. */
+			uint16_t exp_pos; /* The position in the originating expression,
+			                   currently used only for debugging dict macros. */
 			bool shallow;   /* TRUE if this is a shallow connector.
 			                 * A connectors is shallow if it is the first in
 			                 * its list on its disjunct. (It is deep if it is
