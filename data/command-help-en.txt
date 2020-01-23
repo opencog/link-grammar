@@ -331,10 +331,16 @@ Show also low-level memory details of the expression:
 Show the disjuncts (without duplicates):
   !!test.n//
 
+Show disjunct connector expression source macros:
+  !!test.n//m
+
+The above command is more useful for a single disjunct (1234 is an example
+for a disjunct number, see below for disjunct print format):
+  !!test.n/1234/m
+
 Show selected disjuncts according to the supplied regex:
   !!test.n/ Wd-.*<-->.*@M\+/
   !!test.n/ J[sk]- D[\w*]+c\-/
-
 
 Show selected disjuncts according to the supplied string (supposing the regex
 engine is PCRE, which supports "\Q"):
@@ -345,6 +351,7 @@ Display all the words that start with "test":
 
 Display all the words that start with "test" and have subscript ".q":
   !!test*.q
+
 
 A sample output of a disjunct-list display:
   Token "test.n" matches:
