@@ -89,7 +89,15 @@ static void print_expression_tag_end(Dictionary dict, dyn_str *e, const Exp *n,
 			break;
 		case Exptag_macro:
 			if (*indent < 0) break;
-			dyn_strcat(e, "\n");
+			/* The sole purpose of the checks before issuing "\n" is to prevent
+			 * empty lines when printing connector macros w/o introducing a
+			 * separate version of this function for connector macro printing. */
+			if (dyn_strlen(e) > 0)
+			{
+				dyn_trimback(e);
+				if ((dyn_str_value(e)[dyn_strlen(e)-1]) != '\n')
+					dyn_strcat(e, "\n");
+			}
 			for(int i = 0; i < *indent - MACRO_INDENTATION/2; i++)
 				dyn_strcat(e, " ");
 			(*indent) -= MACRO_INDENTATION;
