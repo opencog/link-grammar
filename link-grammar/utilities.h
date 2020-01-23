@@ -480,6 +480,7 @@ void dyn_strcat(dyn_str*, const char*);
 void dyn_trimback(dyn_str*);
 char * dyn_str_take(dyn_str*);
 const char * dyn_str_value(dyn_str*);
+size_t dyn_strlen(dyn_str*);
 
 size_t altlen(const char **);
 

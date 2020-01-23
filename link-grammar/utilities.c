@@ -561,6 +561,11 @@ const char * dyn_str_value(dyn_str* s)
 	return s->str;
 }
 
+size_t dyn_strlen(dyn_str* s)
+{
+	return s->end;
+}
+
 /* ======================================================== */
 /* Locale routines */
 
