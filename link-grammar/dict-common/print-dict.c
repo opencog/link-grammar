@@ -599,7 +599,7 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
 
 		append_string(l, "[%d]%s= ", djn++, cost_stringify(dj->cost));
 		dyn_print_connector_list(l, dj->left, /*dir*/0, flags);
-		dyn_strcat(l, " <--> ");
+		dyn_strcat(l, " <> ");
 		dyn_print_connector_list(l, dj->right, /*dir*/1, flags);
 
 		char *ls = dyn_str_take(l);
