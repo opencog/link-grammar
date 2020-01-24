@@ -787,6 +787,10 @@ static size_t unknown_flag(const char *display_type, const char *flags)
  * Wild-card search is supported; the command-line user can type in !!word* or
  * !!word*.sub and get a list of all words that match up to the wild-card.
  * In this case no split is done.
+ *
+ * @arg arg[0] specifies the display type. If it is equal to &do_display_expr
+ * than this is request to display expressions. Else it is a request to
+ * display disjuncts. arg[2] specifies the request flags.
  */
 static char *display_word_split(Dictionary dict,
                const char * word, Parse_Options opts,
