@@ -774,7 +774,7 @@ static size_t unknown_flag(const char *display_type, const char *flags)
 	if (&do_display_expr == display_type)
 		known_flags = "lm";
 	else
-		known_flags = "m";
+		known_flags = "mr";
 
 	return strspn(flags, known_flags);
 }
@@ -854,7 +854,7 @@ static char *display_word_split(Dictionary dict,
 		}
 		else if (arg[0] != NULL)
 		{
-			/* A regex is specified, which means displaying disjuncts. */
+			/* A pattern is specified, which means displaying disjuncts. */
 			if (arg[0][0] != '\0')
 			{
 				rn = malloc(sizeof(Regex_node));
