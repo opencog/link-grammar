@@ -48,6 +48,20 @@ const char *cost_stringify(double cost)
 	return buf;
 }
 
+/* Check for an existing newline before issuing "\n" in order to prevent
+ * empty lines when printing connector macros. This allow to use the
+ * same print_expression_tag_*() function for printing expressions
+ * with macros and also disjunct connectors with macros. */
+static void dyn_ensure_empty_line(dyn_str *e)
+{
+	if (dyn_strlen(e) > 0)
+	{
+		dyn_trimback(e);
+		if ((dyn_str_value(e)[dyn_strlen(e)-1]) != '\n')
+			dyn_strcat(e, "\n");
+	}
+}
+
 #define MACRO_INDENTATION 4
 
 static void print_expression_tag_start(Dictionary dict, dyn_str *e, const Exp *n,
@@ -62,7 +76,7 @@ static void print_expression_tag_start(Dictionary dict, dyn_str *e, const Exp *n
 			break;
 		case Exptag_macro:
 			if (*indent < 0) break;
-			dyn_strcat(e, "\n");
+			dyn_ensure_empty_line(e);
 			for(int i = 0; i < *indent; i++) dyn_strcat(e, " ");
 			dyn_strcat(e, dict->macro_tag->name[n->tag_id]);
 			dyn_strcat(e, ": ");
@@ -90,15 +104,7 @@ static void print_expression_tag_end(Dictionary dict, dyn_str *e, const Exp *n,
 			break;
 		case Exptag_macro:
 			if (*indent < 0) break;
-			/* The sole purpose of the checks before issuing "\n" is to prevent
-			 * empty lines when printing connector macros w/o introducing a
-			 * separate version of this function for connector macro printing. */
-			if (dyn_strlen(e) > 0)
-			{
-				dyn_trimback(e);
-				if ((dyn_str_value(e)[dyn_strlen(e)-1]) != '\n')
-					dyn_strcat(e, "\n");
-			}
+			dyn_ensure_empty_line(e);
 			for(int i = 0; i < *indent - MACRO_INDENTATION/2; i++)
 				dyn_strcat(e, " ");
 			(*indent) -= MACRO_INDENTATION;
