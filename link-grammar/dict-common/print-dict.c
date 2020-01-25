@@ -672,8 +672,22 @@ static bool select_disjunct(const char *dj_str, select_data *criterion)
 		}
 	}
 
-	/* Select desired disjuncts. */
-	if (match_regex(criterion->regex , dj_str) == NULL) return false;
+	/* Select desired disjuncts. If several connectors need to match in any
+	 * order, the Regex_node list contains more than one component, and all
+	 * of them must match. A horrible hack is done below to achieve that. */
+	for (Regex_node *rn = (Regex_node *)criterion->regex; rn != NULL;
+	     rn = rn->next)
+	{
+		Regex_node *savenext = rn->next;
+		rn->next = NULL;
+		if (match_regex(rn , dj_str) == NULL)
+		{
+			rn->next = savenext;
+			return false;
+		}
+		rn->next = savenext;
+	}
+
 	criterion->num_selected++;
 	return true;
 }
@@ -813,14 +827,17 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 	if (NULL == flags) flags = "";
 	const char *is_full = strchr(flags, 'f');
 	const char *is_regex = strchr(flags, 'r');
+	const char *is_anyorder = strchr(flags, 'a');
 
 	char *regpat; /* constructed regex pattern */
 	size_t pat_len = strlen(pattern);
+	Regex_node *rn = NULL;
 
 	if ('\0' == pattern[strspn(pattern, "0123456789")])
 	{
 		notify_ignoring_flag(is_regex);
 		notify_ignoring_flag(is_full);
+		notify_ignoring_flag(is_anyorder);
 
 		const char added_chars[] = "\\[]";
 		regpat = malloc(pat_len + sizeof(added_chars));
@@ -831,6 +848,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 	else if (is_full != NULL)
 	{
 		notify_ignoring_flag(is_regex);
+		notify_ignoring_flag(is_anyorder);
 		/* Assume this is the complete specification of the disjunct, e.g.
 		 * as copied from the !disjuncts output. Insert "<>" after the LHS
 		 * connectors and build a search regex. Extra spaces are not
@@ -877,6 +895,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 		if ((is_regex != NULL) || pattern[strcspn(pattern, "({[.?$\\")] != '\0')
 		{
 			regpat = strdup(pattern);
+			is_regex = "r";
 		}
 		else
 		{
@@ -885,15 +904,35 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 			size_t ncopied = copy_quoted("*+", regpat, pattern, pat_len);
 			regpat[ncopied] = '\0';
 		}
+
+		if (is_anyorder != NULL)
+		{
+			/* Assume this is an unordered list of blank-separated connectors. */
+			char *ulist = strdupa(regpat);
+			free(regpat);
+
+			char *constring;
+			while ((constring = strtok_r(ulist, " ", &ulist)))
+			{
+				if (is_regex == NULL)
+				{
+					/* Arrange for matching only whole connectors. */
+					const char added_chars[] = " ( |$)";
+					char *word_boundary_constring =
+						alloca(strlen(constring) + sizeof(added_chars));
+					word_boundary_constring[0] = ' ';
+					strcpy(word_boundary_constring+1, constring);
+					strcat(word_boundary_constring+1, "( |$)");
+					constring = word_boundary_constring;
+
+				}
+				rn = new_disjunct_regex_node(rn, strdup(constring));
+			}
+		}
 	}
 
-	Regex_node *rn = new_disjunct_regex_node(NULL, regpat);
-
-	rn->name = strdup("Disjunct regex");
-	rn->pattern = regpat;
-	rn->re = NULL;
-	rn->neg = false;
-	rn->next = NULL;
+	if (NULL == rn)
+		rn = new_disjunct_regex_node(NULL, regpat);
 
 	if (compile_regexs(rn, NULL) != 0)
 		return NULL; /* compile_regexs() issues the error message */
@@ -910,7 +949,7 @@ static size_t unknown_flag(const char *display_type, const char *flags)
 	if (&do_display_expr == display_type)
 		known_flags = "lm";
 	else
-		known_flags = "fmr";
+		known_flags = "afmr";
 
 	return strspn(flags, known_flags);
 }
