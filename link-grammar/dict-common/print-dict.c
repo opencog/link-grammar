@@ -1259,6 +1259,23 @@ static char *display_word_expr(Dictionary dict, const char *word,
 	return NULL;
 }
 
+static char *find_unescaped_slash(char *word)
+{
+	size_t len = strlen(word);
+	for (char *src = word, *dst = word; *src != '\0'; src++, dst++)
+	{
+		if (('\\' == *src) && (('\\' == src[1]) || ('/' == src[1])))
+		{
+			memmove(dst, src+1, len - (src - word));
+		}
+		else
+		{
+			if ('/' == *src) return dst;
+		}
+	}
+	return NULL;
+}
+
 /**
  * Break "word", "word/flags" or "word/regex/flags" into components.
  * "regex" and "flags" are optional.  "word/" means an empty regex.
@@ -1273,13 +1290,14 @@ static const char *display_word_extract(char *word, const char **re,
 	if (re != NULL) *re = NULL;
 	if (flags != NULL) *flags = NULL;
 
-	char *r = strchr(word, '/');
+	char *r = find_unescaped_slash(word);
+
 	if (r == NULL) return word;
 	*r = '\0';
 
 	if (re != NULL)
 	{
-		char *f = strchr(r + 1, '/');
+		char *f = find_unescaped_slash(r + 1);
 		if (f != NULL)
 		{
 			*re = r + 1;
