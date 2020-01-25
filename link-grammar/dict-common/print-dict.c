@@ -765,6 +765,32 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 	return dyn_str_take(s);
 }
 
+static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
+{
+	Regex_node *rn = malloc(sizeof(Regex_node));
+	rn->name = strdup("Disjunct regex");
+	rn->re = NULL;
+	rn->neg = false;
+	rn->next = NULL;
+
+	if (pattern[strspn(pattern, "0123456789")] != '\0')
+	{
+		rn->pattern = strdup(pattern);
+	}
+	else
+	{
+		rn->pattern = malloc(strlen(pattern) + 4); /* \ [ ] \0 */
+		strcpy(rn->pattern, "\\[");
+		strcat(rn->pattern, pattern);
+		strcat(rn->pattern, "]");
+	}
+
+	if (compile_regexs(rn, NULL) != 0)
+		return NULL; /* compile_regexs() issues the error message */
+
+	return rn;
+}
+
 const char do_display_expr; /* a sentinel to request an expression display */
 
 static size_t unknown_flag(const char *display_type, const char *flags)
@@ -857,30 +883,12 @@ static char *display_word_split(Dictionary dict,
 			/* A pattern is specified, which means displaying disjuncts. */
 			if (arg[0][0] != '\0')
 			{
-				rn = malloc(sizeof(Regex_node));
-				rn->name = strdup("Disjunct regex");
-				rn->re = NULL;
-				rn->neg = false;
-				rn->next = NULL;
-
-				if (arg[0][strspn(arg[0], "0123456789")] != '\0')
+				rn = make_disjunct_pattern(arg[0], arg[1]);
+				if (NULL == rn)
 				{
-					rn->pattern = strdup(arg[0]);
+					dyn_strcat(s, " "); /* avoid a no-match error */
+					goto display_word_split_error;
 				}
-				else
-				{
-					rn->pattern = malloc(strlen(arg[0]) + 4); /* \ [ ] \0 */
-					strcpy(rn->pattern, "\\[");
-					strcat(rn->pattern, arg[0]);
-					strcat(rn->pattern, "]");
-				}
-
-				if (compile_regexs(rn, NULL) != 0)
-				{
-					prt_error("Error: Failed to compile regex \"%s\".\n", arg[0]);
-					return strdup(""); /* not NULL (NULL means no dict entry) */
-				}
-
 				carg[0] = rn;
 			}
 		}
