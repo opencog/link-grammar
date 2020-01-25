@@ -572,7 +572,7 @@ static int ascending_int(const void *a, const void *b)
 
 typedef struct
 {
-	const void *regex;
+	const Regex_node *regex;
 	Exp *exp;
 	Dictionary dict;
 	unsigned int num_selected;
@@ -683,7 +683,7 @@ static bool select_disjunct(const char *dj_str, select_data *criterion)
 static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
                                const void **arg)
 {
-	const void *rn = arg[0];
+	const Regex_node *rn = arg[0];
 	const char *flags = arg[1];
 	const Parse_Options opts = (Parse_Options)arg[2];
 	double max_cost = opts->disjunct_cost;
