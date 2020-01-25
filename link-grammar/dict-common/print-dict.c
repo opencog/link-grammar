@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <ctype.h>
 #include <math.h>                   // fabs
 
 #include "api-structures.h"         // Parse_Options_s  (seems hacky to me)
@@ -765,25 +766,134 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 	return dyn_str_take(s);
 }
 
-static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
+static void notify_ignoring_flag(const char *flag)
+{
+	if (flag != NULL) prt_error("Warning: Ignoring flag \"%s\".\n", flag);
+}
+
+/**
+ * Copy \p characters from \p src to \p dst, while quoting with \c '\\'
+ * the characters in \p q.
+ * Note: This is not a general-purpose function, since:
+ * - It assumes \p dst has enough space.
+ * - \p src is not checked for NUL.
+ * - No NUL termination is done.
+ *
+ * @param src Source buffer.
+ * @param dst[out] Destination buffer.
+ * @return Number of characters add to \p dst.
+ */
+static size_t copy_quoted(const char *q, char *dst, const char *src, size_t len)
+{
+	const char *orig_dst = dst;
+	for (; len-- > 0; src++, dst++)
+	{
+		if (strchr(q, *src) != NULL) *dst++ = '\\';
+		*dst = *src;
+	}
+
+	return (size_t)(dst - orig_dst);
+}
+
+static Regex_node *new_disjunct_regex_node(Regex_node *current, char *regpat)
 {
 	Regex_node *rn = malloc(sizeof(Regex_node));
+
 	rn->name = strdup("Disjunct regex");
+	rn->pattern = regpat;
 	rn->re = NULL;
 	rn->neg = false;
-	rn->next = NULL;
+	rn->next = current;
 
-	if (pattern[strspn(pattern, "0123456789")] != '\0')
+	return rn;
+}
+
+static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
+{
+	if (NULL == flags) flags = "";
+	const char *is_full = strchr(flags, 'f');
+	const char *is_regex = strchr(flags, 'r');
+
+	char *regpat; /* constructed regex pattern */
+	size_t pat_len = strlen(pattern);
+
+	if ('\0' == pattern[strspn(pattern, "0123456789")])
 	{
-		rn->pattern = strdup(pattern);
+		notify_ignoring_flag(is_regex);
+		notify_ignoring_flag(is_full);
+
+		const char added_chars[] = "\\[]";
+		regpat = malloc(pat_len + sizeof(added_chars));
+		strcpy(regpat, "\\[");
+		strcat(regpat, pattern);
+		strcat(regpat, "]");
+	}
+	else if (is_full != NULL)
+	{
+		notify_ignoring_flag(is_regex);
+		/* Assume this is the complete specification of the disjunct, e.g.
+		 * as copied from the !disjuncts output. Insert "<>" after the LHS
+		 * connectors and build a search regex. Extra spaces are not
+		 * supported (and are not checked). */
+		for (size_t i = 0; i < pat_len; i++)
+		{
+			const char *c =  &pattern[i];
+			if (!isalnum(*c) && (strchr("*+- ", *c) == NULL))
+			{
+				prt_error("Warning: Invalid character \"%.*s\" in full "
+				          "disjunct specification.\n",
+				          (utf8_charlen(c) < 0) ? 0 : utf8_charlen(c), c);
+			}
+		}
+
+		size_t rhs_pos = strcspn(pattern, "+");
+
+		if ('\0' != pattern[rhs_pos])
+		{
+			for (rhs_pos--; rhs_pos != 0; rhs_pos--)
+				if (' ' == pattern[rhs_pos]) break;
+			if (' ' == pattern[rhs_pos]) rhs_pos++;
+		}
+
+		/* Note: This section is sensitive to the disjunct print format. */
+		const char added_chars[] = "= <> $";
+		const size_t regpat_size = 2 * (pat_len + sizeof(added_chars));
+		regpat = malloc(regpat_size);
+
+		size_t dst_pos = lg_strlcpy(regpat, "= ", regpat_size);
+		if (rhs_pos == 0)
+			regpat[dst_pos++] = ' '; /* when no LHS, we need "=  " */
+		else
+			dst_pos += copy_quoted("*+", regpat+dst_pos, pattern, rhs_pos);
+		if (regpat[dst_pos-1] != ' ') regpat[dst_pos++] = ' ';
+		dst_pos += lg_strlcpy(regpat + dst_pos, "<> ", regpat_size - dst_pos);
+		dst_pos += copy_quoted("*+", regpat+dst_pos, pattern+rhs_pos,
+		                       pat_len-rhs_pos);
+		regpat[dst_pos++] = '$';
+		regpat[dst_pos++] = '\0';
 	}
 	else
 	{
-		rn->pattern = malloc(strlen(pattern) + 4); /* \ [ ] \0 */
-		strcpy(rn->pattern, "\\[");
-		strcat(rn->pattern, pattern);
-		strcat(rn->pattern, "]");
+		if ((is_regex != NULL) || pattern[strcspn(pattern, "({[.?$\\")] != '\0')
+		{
+			regpat = strdup(pattern);
+		}
+		else
+		{
+			/* No regex flag and no regex characters (* and + are ignored). */
+			regpat = alloca(2 * pat_len + 1);
+			size_t ncopied = copy_quoted("*+", regpat, pattern, pat_len);
+			regpat[ncopied] = '\0';
+		}
 	}
+
+	Regex_node *rn = new_disjunct_regex_node(NULL, regpat);
+
+	rn->name = strdup("Disjunct regex");
+	rn->pattern = regpat;
+	rn->re = NULL;
+	rn->neg = false;
+	rn->next = NULL;
 
 	if (compile_regexs(rn, NULL) != 0)
 		return NULL; /* compile_regexs() issues the error message */
@@ -800,7 +910,7 @@ static size_t unknown_flag(const char *display_type, const char *flags)
 	if (&do_display_expr == display_type)
 		known_flags = "lm";
 	else
-		known_flags = "mr";
+		known_flags = "fmr";
 
 	return strspn(flags, known_flags);
 }
