@@ -1320,6 +1320,11 @@ char *dict_display_word_info(Dictionary dict, const char *word,
 {
 	char *wordbuf = strdupa(word);
 	word = display_word_extract(wordbuf, NULL, NULL);
+	if ('\0' == *word)
+	{
+		prt_error("Error: Missing word argument.\n");
+		return strdup(" ");
+	}
 
 	return display_word_split(dict, word, opts, display_word_info, NULL);
 }
@@ -1332,6 +1337,7 @@ char *dict_display_word_expr(Dictionary dict, const char * word, Parse_Options o
 	const char *arg[2];
 	char *wordbuf = strdupa(word);
 	word = display_word_extract(wordbuf, &arg[0], &arg[1]);
+	if ('\0' == *word) return strdup(" ");
 
 	/* If no regex component, then it's a request to display expressions. */
 	if (arg[0] == NULL) arg[0] = &do_display_expr;
