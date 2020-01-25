@@ -338,13 +338,26 @@ The above command is more useful for a single disjunct (1234 is an example
 for a disjunct number, see below for disjunct print format):
   !!test.n/1234/m
 
+
+Show selected disjuncts according to the supplied string (* and +
+are automatically escaped if no other regex meta characters in the string):
+  !!test.n/Ds**x+/
+
 Show selected disjuncts according to the supplied regex:
   !!test.n/ Wd-.*<-->.*@M\+/
   !!test.n/ J[sk]- D[\w*]+c\-/
+Regexes are automatically detected. The r flag forces a regex interpretation
+but it is not needed on normal use.
 
-Show selected disjuncts according to the supplied string (supposing the regex
-engine is PCRE, which supports "\Q"):
-  !!test.n/\Q Ds**x+/
+Show a particular disjunct from the output of !disjuncts:
+  !!test.n/Ds**c- Os-/f
+The f flag means a full specification of a disjunct. It is most useful
+along with the m flag:
+  !!test.n/Ds**c- Os-/fm
+
+Search for connectors in any order:
+  !!test.n/Os- Ds**c-/a
+Regretfully, adding the f flag is not supported yet.
 
 Display all the words that start with "test":
   !!test*
