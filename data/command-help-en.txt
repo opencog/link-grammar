@@ -60,9 +60,9 @@ Some useful values:
 When False, whole words are displayed, without indicating any
 morphological analysis that might have been performed. When True,
 morphemes are shown as separate tokens, together with the link types
-between them.  See "!help graphics" for additonal info on morpheme
+between them.  See "!help graphics" for additional info on morpheme
 markup. The English dictionaries do not do morphological markup,
-so this flag has amost no effect on English sentences.
+so this flag has almost no effect on English sentences.
 
 This flag has one side-effect: if set to true, and a word is matched
 by a RegEx, then matching dictionary entry is shown.
@@ -131,10 +131,10 @@ quickly.
 
 [use-sat]
 Use the Boolean-SAT parser instead of the traditional parser. The SAT
-parser was an experimental alternative to the tradiational parser.
+parser was an experimental alternative to the traditional parser.
 
 This parser has several limitations, and offers no real advantages over
-the traditional parser. Problems includ that it is not able to find
+the traditional parser. Problems include that it is not able to find
 linkages with null-links.  It does not honor the `!timeout` option.
 
 [walls]
