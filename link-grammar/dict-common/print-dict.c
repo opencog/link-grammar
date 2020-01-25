@@ -942,7 +942,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 
 const char do_display_expr; /* a sentinel to request an expression display */
 
-static size_t unknown_flag(const char *display_type, const char *flags)
+static bool validate_flags(const char *display_type, const char *flags)
 {
 	const char *known_flags;
 
@@ -951,7 +951,32 @@ static size_t unknown_flag(const char *display_type, const char *flags)
 	else
 		known_flags = "afmr";
 
-	return strspn(flags, known_flags);
+	size_t unknown_flag_pos = strspn(flags, known_flags);
+	if (flags[unknown_flag_pos] != '\0')
+	{
+		prt_error("Error: Token display: Unknown flag \"%c\".\n",
+		          flags[unknown_flag_pos]);
+		if (&do_display_expr == display_type)
+		{
+			prt_error("Valid flags for the \"!!word/\" command "
+			          "(show expression):\n"
+			          "l - low level expression details.\n"
+			          "m - macro context.\n");
+		}
+		else
+		{
+			prt_error("Valid flags for the \"!!word//\" command "
+			          "(show disjuncts):\n"
+			          "a - any connector order.\n"
+			          "f - full disjunct specification.\n"
+			          "m - macro context for connectors.\n"
+			          "r - regex pattern (automatically detected usually).\n");
+		}
+
+		return false;
+	}
+
+	return true;
 }
 
 /**
@@ -1011,12 +1036,9 @@ static char *display_word_split(Dictionary dict,
 	{
 		if (NULL != arg[1])
 		{
-			size_t unknown_flag_pos = unknown_flag(arg[0], arg[1]);
-			if (arg[1][unknown_flag_pos] != '\0')
+			if (!validate_flags(arg[0], arg[1]))
 			{
-				prt_error("Error: Token display: Unknown flag \"%c\".\n",
-				              arg[1][unknown_flag_pos]);
-				dyn_strcat(s, " "); /* avoid a no-match error */
+				dyn_strcat(s, " "); /* avoid no-expression error */
 				goto display_word_split_error;
 			}
 		}
