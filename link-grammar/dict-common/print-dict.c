@@ -820,7 +820,7 @@ static Regex_node *new_disjunct_regex_node(Regex_node *current, char *regpat)
 	Regex_node *rn = malloc(sizeof(Regex_node));
 
 	rn->name = strdup("Disjunct regex");
-	rn->pattern = regpat;
+	rn->pattern = strdup(regpat);
 	rn->re = NULL;
 	rn->neg = false;
 	rn->next = current;
@@ -846,7 +846,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 		notify_ignoring_flag(is_anyorder);
 
 		const char added_chars[] = "\\[]";
-		regpat = malloc(pat_len + sizeof(added_chars));
+		regpat = alloca(pat_len + sizeof(added_chars));
 		strcpy(regpat, "\\[");
 		strcat(regpat, pattern);
 		strcat(regpat, "]");
@@ -882,7 +882,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 		/* Note: This section is sensitive to the disjunct print format. */
 		const char added_chars[] = "= <> $";
 		const size_t regpat_size = 2 * (pat_len + sizeof(added_chars));
-		regpat = malloc(regpat_size);
+		regpat = alloca(regpat_size);
 
 		size_t dst_pos = lg_strlcpy(regpat, "= ", regpat_size);
 		if (rhs_pos == 0)
@@ -900,7 +900,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 	{
 		if ((is_regex != NULL) || pattern[strcspn(pattern, "({[.?$\\")] != '\0')
 		{
-			regpat = strdup(pattern);
+			regpat = strdupa(pattern);
 			is_regex = "r";
 		}
 		else
@@ -914,11 +914,8 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 		if (is_anyorder != NULL)
 		{
 			/* Assume this is an unordered list of blank-separated connectors. */
-			char *ulist = strdupa(regpat);
-			free(regpat);
-
 			char *constring;
-			while ((constring = strtok_r(ulist, " ", &ulist)))
+			while ((constring = strtok_r(regpat, " ", &regpat)))
 			{
 				if (is_regex == NULL)
 				{
@@ -932,7 +929,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 					constring = word_boundary_constring;
 
 				}
-				rn = new_disjunct_regex_node(rn, strdup(constring));
+				rn = new_disjunct_regex_node(rn, constring);
 			}
 		}
 	}
