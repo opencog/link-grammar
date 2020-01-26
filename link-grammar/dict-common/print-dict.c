@@ -615,7 +615,7 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
 			dyn_strcat(s, ls);
 			dyn_strcat(s, "\n");
 
-			if (criterion->exp != NULL)
+			if ((criterion != NULL) && (criterion->exp != NULL))
 			{
 				int ccnt = 1;
 				for (Connector *c = dj->left; c != NULL; c = c->next)
