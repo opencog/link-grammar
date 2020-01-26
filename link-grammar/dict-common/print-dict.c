@@ -788,7 +788,7 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 
 static void notify_ignoring_flag(const char *flag)
 {
-	if (flag != NULL) prt_error("Warning: Ignoring flag \"%s\".\n", flag);
+	if (flag != NULL) prt_error("Warning: Ignoring flag \"%c\".\n", *flag);
 }
 
 /**
