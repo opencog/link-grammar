@@ -11,6 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <ctype.h>
 #include <math.h>                   // fabs
 
 #include "api-structures.h"         // Parse_Options_s  (seems hacky to me)
@@ -47,6 +48,20 @@ const char *cost_stringify(double cost)
 	return buf;
 }
 
+/* Check for an existing newline before issuing "\n" in order to prevent
+ * empty lines when printing connector macros. This allow to use the
+ * same print_expression_tag_*() function for printing expressions
+ * with macros and also disjunct connectors with macros. */
+static void dyn_ensure_empty_line(dyn_str *e)
+{
+	if (dyn_strlen(e) > 0)
+	{
+		dyn_trimback(e);
+		if ((dyn_str_value(e)[dyn_strlen(e)-1]) != '\n')
+			dyn_strcat(e, "\n");
+	}
+}
+
 #define MACRO_INDENTATION 4
 
 static void print_expression_tag_start(Dictionary dict, dyn_str *e, const Exp *n,
@@ -61,7 +76,7 @@ static void print_expression_tag_start(Dictionary dict, dyn_str *e, const Exp *n
 			break;
 		case Exptag_macro:
 			if (*indent < 0) break;
-			dyn_strcat(e, "\n");
+			dyn_ensure_empty_line(e);
 			for(int i = 0; i < *indent; i++) dyn_strcat(e, " ");
 			dyn_strcat(e, dict->macro_tag->name[n->tag_id]);
 			dyn_strcat(e, ": ");
@@ -89,15 +104,7 @@ static void print_expression_tag_end(Dictionary dict, dyn_str *e, const Exp *n,
 			break;
 		case Exptag_macro:
 			if (*indent < 0) break;
-			/* The sole purpose of the checks before issuing "\n" is to prevent
-			 * empty lines when printing connector macros w/o introducing a
-			 * separate version of this function for connector macro printing. */
-			if (dyn_strlen(e) > 0)
-			{
-				dyn_trimback(e);
-				if ((dyn_str_value(e)[dyn_strlen(e)-1]) != '\n')
-					dyn_strcat(e, "\n");
-			}
+			dyn_ensure_empty_line(e);
 			for(int i = 0; i < *indent - MACRO_INDENTATION/2; i++)
 				dyn_strcat(e, " ");
 			(*indent) -= MACRO_INDENTATION;
@@ -572,7 +579,7 @@ static int ascending_int(const void *a, const void *b)
 
 typedef struct
 {
-	const void *regex;
+	const Regex_node *regex;
 	Exp *exp;
 	Dictionary dict;
 	unsigned int num_selected;
@@ -599,7 +606,7 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
 
 		append_string(l, "[%d]%s= ", djn++, cost_stringify(dj->cost));
 		dyn_print_connector_list(l, dj->left, /*dir*/0, flags);
-		dyn_strcat(l, " <--> ");
+		dyn_strcat(l, " <> ");
 		dyn_print_connector_list(l, dj->right, /*dir*/1, flags);
 
 		char *ls = dyn_str_take(l);
@@ -608,7 +615,7 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
 			dyn_strcat(s, ls);
 			dyn_strcat(s, "\n");
 
-			if (criterion->exp != NULL)
+			if ((criterion != NULL) && (criterion->exp != NULL))
 			{
 				int ccnt = 1;
 				for (Connector *c = dj->left; c != NULL; c = c->next)
@@ -671,8 +678,22 @@ static bool select_disjunct(const char *dj_str, select_data *criterion)
 		}
 	}
 
-	/* Select desired disjuncts. */
-	if (match_regex(criterion->regex , dj_str) == NULL) return false;
+	/* Select desired disjuncts. If several connectors need to match in any
+	 * order, the Regex_node list contains more than one component, and all
+	 * of them must match. A horrible hack is done below to achieve that. */
+	for (Regex_node *rn = (Regex_node *)criterion->regex; rn != NULL;
+	     rn = rn->next)
+	{
+		Regex_node *savenext = rn->next;
+		rn->next = NULL;
+		if (match_regex(rn , dj_str) == NULL)
+		{
+			rn->next = savenext;
+			return false;
+		}
+		rn->next = savenext;
+	}
+
 	criterion->num_selected++;
 	return true;
 }
@@ -683,7 +704,7 @@ static bool select_disjunct(const char *dj_str, select_data *criterion)
 static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
                                const void **arg)
 {
-	const void *rn = arg[0];
+	const Regex_node *rn = arg[0];
 	const char *flags = arg[1];
 	const Parse_Options opts = (Parse_Options)arg[2];
 	double max_cost = opts->disjunct_cost;
@@ -765,18 +786,200 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 	return dyn_str_take(s);
 }
 
+static void notify_ignoring_flag(const char *flag)
+{
+	if (flag != NULL) prt_error("Warning: Ignoring flag \"%c\".\n", *flag);
+}
+
+/**
+ * Copy \p characters from \p src to \p dst, while quoting with \c '\\'
+ * the characters in \p q.
+ * Note: This is not a general-purpose function, since:
+ * - It assumes \p dst has enough space.
+ * - \p src is not checked for NUL.
+ * - No NUL termination is done.
+ *
+ * @param src Source buffer.
+ * @param dst[out] Destination buffer.
+ * @return Number of characters add to \p dst.
+ */
+static size_t copy_quoted(const char *q, char *dst, const char *src, size_t len)
+{
+	const char *orig_dst = dst;
+	for (; len-- > 0; src++, dst++)
+	{
+		if (strchr(q, *src) != NULL) *dst++ = '\\';
+		*dst = *src;
+	}
+
+	return (size_t)(dst - orig_dst);
+}
+
+static Regex_node *new_disjunct_regex_node(Regex_node *current, char *regpat)
+{
+	Regex_node *rn = malloc(sizeof(Regex_node));
+
+	rn->name = strdup("Disjunct regex");
+	rn->pattern = strdup(regpat);
+	rn->re = NULL;
+	rn->neg = false;
+	rn->next = current;
+
+	return rn;
+}
+
+static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
+{
+	if (NULL == flags) flags = "";
+	const char *is_full = strchr(flags, 'f');
+	const char *is_regex = strchr(flags, 'r');
+	const char *is_anyorder = strchr(flags, 'a');
+
+	char *regpat; /* constructed regex pattern */
+	size_t pat_len = strlen(pattern);
+	Regex_node *rn = NULL;
+
+	if ('\0' == pattern[strspn(pattern, "0123456789")])
+	{
+		notify_ignoring_flag(is_regex);
+		notify_ignoring_flag(is_full);
+		notify_ignoring_flag(is_anyorder);
+
+		const char added_chars[] = "\\[]";
+		regpat = alloca(pat_len + sizeof(added_chars));
+		strcpy(regpat, "\\[");
+		strcat(regpat, pattern);
+		strcat(regpat, "]");
+	}
+	else if (is_full != NULL)
+	{
+		notify_ignoring_flag(is_regex);
+		notify_ignoring_flag(is_anyorder);
+		/* Assume this is the complete specification of the disjunct, e.g.
+		 * as copied from the !disjuncts output. Insert "<>" after the LHS
+		 * connectors and build a search regex. Extra spaces are not
+		 * supported (and are not checked). */
+		for (size_t i = 0; i < pat_len; i++)
+		{
+			const char *c =  &pattern[i];
+			if (!isalnum(*c) && (strchr("*+- ", *c) == NULL))
+			{
+				prt_error("Warning: Invalid character \"%.*s\" in full "
+				          "disjunct specification.\n",
+				          (utf8_charlen(c) < 0) ? 0 : utf8_charlen(c), c);
+			}
+		}
+
+		size_t rhs_pos = strcspn(pattern, "+");
+
+		if ('\0' != pattern[rhs_pos])
+		{
+			for (rhs_pos--; rhs_pos != 0; rhs_pos--)
+				if (' ' == pattern[rhs_pos]) break;
+			if (' ' == pattern[rhs_pos]) rhs_pos++;
+		}
+
+		/* Note: This section is sensitive to the disjunct print format. */
+		const char added_chars[] = "= <> $";
+		const size_t regpat_size = 2 * (pat_len + sizeof(added_chars));
+		regpat = alloca(regpat_size);
+
+		size_t dst_pos = lg_strlcpy(regpat, "= ", regpat_size);
+		if (rhs_pos == 0)
+			regpat[dst_pos++] = ' '; /* when no LHS, we need "=  " */
+		else
+			dst_pos += copy_quoted("*+", regpat+dst_pos, pattern, rhs_pos);
+		if (regpat[dst_pos-1] != ' ') regpat[dst_pos++] = ' ';
+		dst_pos += lg_strlcpy(regpat + dst_pos, "<> ", regpat_size - dst_pos);
+		dst_pos += copy_quoted("*+", regpat+dst_pos, pattern+rhs_pos,
+		                       pat_len-rhs_pos);
+		regpat[dst_pos++] = '$';
+		regpat[dst_pos++] = '\0';
+	}
+	else
+	{
+		if ((is_regex != NULL) || pattern[strcspn(pattern, "({[.?$\\")] != '\0')
+		{
+			regpat = strdupa(pattern);
+			is_regex = "r";
+		}
+		else
+		{
+			/* No regex flag and no regex characters (* and + are ignored). */
+			regpat = alloca(2 * pat_len + 1);
+			size_t ncopied = copy_quoted("*+", regpat, pattern, pat_len);
+			regpat[ncopied] = '\0';
+		}
+
+		if (is_anyorder != NULL)
+		{
+			/* Assume this is an unordered list of blank-separated connectors. */
+			char *constring;
+			while ((constring = strtok_r(regpat, " ", &regpat)))
+			{
+				if (is_regex == NULL)
+				{
+					/* Arrange for matching only whole connectors. */
+					const char added_chars[] = " ( |$)";
+					char *word_boundary_constring =
+						alloca(strlen(constring) + sizeof(added_chars));
+					word_boundary_constring[0] = ' ';
+					strcpy(word_boundary_constring+1, constring);
+					strcat(word_boundary_constring+1, "( |$)");
+					constring = word_boundary_constring;
+
+				}
+				rn = new_disjunct_regex_node(rn, constring);
+			}
+		}
+	}
+
+	if (NULL == rn)
+		rn = new_disjunct_regex_node(NULL, regpat);
+
+	if (compile_regexs(rn, NULL) != 0)
+		return NULL; /* compile_regexs() issues the error message */
+
+	return rn;
+}
+
 const char do_display_expr; /* a sentinel to request an expression display */
 
-static size_t unknown_flag(const char *display_type, const char *flags)
+static bool validate_flags(const char *display_type, const char *flags)
 {
 	const char *known_flags;
 
 	if (&do_display_expr == display_type)
 		known_flags = "lm";
 	else
-		known_flags = "m";
+		known_flags = "afmr";
 
-	return strspn(flags, known_flags);
+	size_t unknown_flag_pos = strspn(flags, known_flags);
+	if (flags[unknown_flag_pos] != '\0')
+	{
+		prt_error("Error: Token display: Unknown flag \"%c\".\n",
+		          flags[unknown_flag_pos]);
+		if (&do_display_expr == display_type)
+		{
+			prt_error("Valid flags for the \"!!word/\" command "
+			          "(show expression):\n"
+			          "l - low level expression details.\n"
+			          "m - macro context.\n");
+		}
+		else
+		{
+			prt_error("Valid flags for the \"!!word//\" command "
+			          "(show disjuncts):\n"
+			          "a - any connector order.\n"
+			          "f - full disjunct specification.\n"
+			          "m - macro context for connectors.\n"
+			          "r - regex pattern (automatically detected usually).\n");
+		}
+
+		return false;
+	}
+
+	return true;
 }
 
 /**
@@ -787,6 +990,10 @@ static size_t unknown_flag(const char *display_type, const char *flags)
  * Wild-card search is supported; the command-line user can type in !!word* or
  * !!word*.sub and get a list of all words that match up to the wild-card.
  * In this case no split is done.
+ *
+ * @arg arg[0] specifies the display type. If it is equal to &do_display_expr
+ * than this is request to display expressions. Else it is a request to
+ * display disjuncts. arg[2] specifies the request flags.
  */
 static char *display_word_split(Dictionary dict,
                const char * word, Parse_Options opts,
@@ -832,12 +1039,9 @@ static char *display_word_split(Dictionary dict,
 	{
 		if (NULL != arg[1])
 		{
-			size_t unknown_flag_pos = unknown_flag(arg[0], arg[1]);
-			if (arg[1][unknown_flag_pos] != '\0')
+			if (!validate_flags(arg[0], arg[1]))
 			{
-				prt_error("Error: Token display: Unknown flag \"%c\".\n",
-				              arg[1][unknown_flag_pos]);
-				dyn_strcat(s, " "); /* avoid a no-match error */
+				dyn_strcat(s, " "); /* avoid no-expression error */
 				goto display_word_split_error;
 			}
 		}
@@ -850,33 +1054,15 @@ static char *display_word_split(Dictionary dict,
 		}
 		else if (arg[0] != NULL)
 		{
-			/* A regex is specified, which means displaying disjuncts. */
+			/* A pattern is specified, which means displaying disjuncts. */
 			if (arg[0][0] != '\0')
 			{
-				rn = malloc(sizeof(Regex_node));
-				rn->name = strdup("Disjunct regex");
-				rn->re = NULL;
-				rn->neg = false;
-				rn->next = NULL;
-
-				if (arg[0][strspn(arg[0], "0123456789")] != '\0')
+				rn = make_disjunct_pattern(arg[0], arg[1]);
+				if (NULL == rn)
 				{
-					rn->pattern = strdup(arg[0]);
+					dyn_strcat(s, " "); /* avoid a no-match error */
+					goto display_word_split_error;
 				}
-				else
-				{
-					rn->pattern = malloc(strlen(arg[0]) + 4); /* \ [ ] \0 */
-					strcpy(rn->pattern, "\\[");
-					strcat(rn->pattern, arg[0]);
-					strcat(rn->pattern, "]");
-				}
-
-				if (compile_regexs(rn, NULL) != 0)
-				{
-					prt_error("Error: Failed to compile regex \"%s\".\n", arg[0]);
-					return strdup(""); /* not NULL (NULL means no dict entry) */
-				}
-
 				carg[0] = rn;
 			}
 		}
@@ -1076,6 +1262,23 @@ static char *display_word_expr(Dictionary dict, const char *word,
 	return NULL;
 }
 
+static char *find_unescaped_slash(char *word)
+{
+	size_t len = strlen(word);
+	for (char *src = word, *dst = word; *src != '\0'; src++, dst++)
+	{
+		if (('\\' == *src) && (('\\' == src[1]) || ('/' == src[1])))
+		{
+			memmove(dst, src+1, len - (src - word));
+		}
+		else
+		{
+			if ('/' == *src) return dst;
+		}
+	}
+	return NULL;
+}
+
 /**
  * Break "word", "word/flags" or "word/regex/flags" into components.
  * "regex" and "flags" are optional.  "word/" means an empty regex.
@@ -1090,13 +1293,14 @@ static const char *display_word_extract(char *word, const char **re,
 	if (re != NULL) *re = NULL;
 	if (flags != NULL) *flags = NULL;
 
-	char *r = strchr(word, '/');
+	char *r = find_unescaped_slash(word);
+
 	if (r == NULL) return word;
 	*r = '\0';
 
 	if (re != NULL)
 	{
-		char *f = strchr(r + 1, '/');
+		char *f = find_unescaped_slash(r + 1);
 		if (f != NULL)
 		{
 			*re = r + 1;
@@ -1119,6 +1323,11 @@ char *dict_display_word_info(Dictionary dict, const char *word,
 {
 	char *wordbuf = strdupa(word);
 	word = display_word_extract(wordbuf, NULL, NULL);
+	if ('\0' == *word)
+	{
+		prt_error("Error: Missing word argument.\n");
+		return strdup(" ");
+	}
 
 	return display_word_split(dict, word, opts, display_word_info, NULL);
 }
@@ -1131,6 +1340,7 @@ char *dict_display_word_expr(Dictionary dict, const char * word, Parse_Options o
 	const char *arg[2];
 	char *wordbuf = strdupa(word);
 	word = display_word_extract(wordbuf, &arg[0], &arg[1]);
+	if ('\0' == *word) return strdup(" ");
 
 	/* If no regex component, then it's a request to display expressions. */
 	if (arg[0] == NULL) arg[0] = &do_display_expr;

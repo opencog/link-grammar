@@ -60,9 +60,9 @@ Some useful values:
 When False, whole words are displayed, without indicating any
 morphological analysis that might have been performed. When True,
 morphemes are shown as separate tokens, together with the link types
-between them.  See "!help graphics" for additonal info on morpheme
+between them.  See "!help graphics" for additional info on morpheme
 markup. The English dictionaries do not do morphological markup,
-so this flag has amost no effect on English sentences.
+so this flag has almost no effect on English sentences.
 
 This flag has one side-effect: if set to true, and a word is matched
 by a RegEx, then matching dictionary entry is shown.
@@ -131,10 +131,10 @@ quickly.
 
 [use-sat]
 Use the Boolean-SAT parser instead of the traditional parser. The SAT
-parser was an experimental alternative to the tradiational parser.
+parser was an experimental alternative to the traditional parser.
 
 This parser has several limitations, and offers no real advantages over
-the traditional parser. Problems includ that it is not able to find
+the traditional parser. Problems include that it is not able to find
 linkages with null-links.  It does not honor the `!timeout` option.
 
 [walls]
@@ -338,13 +338,26 @@ The above command is more useful for a single disjunct (1234 is an example
 for a disjunct number, see below for disjunct print format):
   !!test.n/1234/m
 
+
+Show selected disjuncts according to the supplied string (* and +
+are automatically escaped if no other regex meta characters in the string):
+  !!test.n/Ds**x+/
+
 Show selected disjuncts according to the supplied regex:
   !!test.n/ Wd-.*<-->.*@M\+/
   !!test.n/ J[sk]- D[\w*]+c\-/
+Regexes are automatically detected. The r flag forces a regex interpretation
+but it is not needed on normal use.
 
-Show selected disjuncts according to the supplied string (supposing the regex
-engine is PCRE, which supports "\Q"):
-  !!test.n/\Q Ds**x+/
+Show a particular disjunct from the output of !disjuncts:
+  !!test.n/Ds**c- Os-/f
+The f flag means a full specification of a disjunct. It is most useful
+along with the m flag:
+  !!test.n/Ds**c- Os-/fm
+
+Search for connectors in any order:
+  !!test.n/Os- Ds**c-/a
+Regretfully, adding the f flag is not supported yet.
 
 Display all the words that start with "test":
   !!test*
