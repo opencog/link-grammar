@@ -1889,19 +1889,24 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 		ml_exists |= (!nojet[0][w] || !nojet[1][w]);
 	}
 
-	for (WordIdx w = 0; w < sent->length; w++)
+	if (ml_exists)
 	{
-		if (ml[w].nw_unidir[0] > ml[w].nw[0])
-			ml[w].nw[0] = ml[w].nw_unidir[0];
-
-		if (ml[w].nw_unidir[1] < ml[w].nw[1])
-			ml[w].nw[1] = ml[w].nw_unidir[1];
-
-		for (int dir = 0; dir < 2; dir++)
+		for (WordIdx w = 0; w < sent->length; w++)
 		{
-			ml[w].nw_perjet[dir] = ml[w].nw[dir];
-			if (nojet[dir][w])
-				ml[w].nw[dir] = w;
+			if (sent->word[w].optional) continue;
+
+			if (ml[w].nw_unidir[0] > ml[w].nw[0])
+				ml[w].nw[0] = ml[w].nw_unidir[0];
+
+			if (ml[w].nw_unidir[1] < ml[w].nw[1])
+				ml[w].nw[1] = ml[w].nw_unidir[1];
+
+			for (int dir = 0; dir < 2; dir++)
+			{
+				ml[w].nw_perjet[dir] = ml[w].nw[dir];
+				if (nojet[dir][w])
+					ml[w].nw[dir] = w;
+			}
 		}
 	}
 
