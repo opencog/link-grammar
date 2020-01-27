@@ -846,7 +846,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 	lb = c->farthest_word;
 
 	/* n is now the rightmost word we need to check */
-	for (; n >= lb ; n--)
+	for (; n >= lb; n--)
 	{
 		pc->power_cost++;
 		if (right_table_search(pc, n, c, shallow, w))
@@ -912,7 +912,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	ub = c->farthest_word;
 
 	/* n is now the leftmost word we need to check */
-	for (; n <= ub ; n++)
+	for (; n <= ub; n++)
 	{
 		pc->power_cost++;
 		if (left_table_search(pc, n, c, shallow, w))
@@ -929,7 +929,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	if (n <= ub)
 	{
 		int farthest_word = n;
-		for (int l = ub; l > n ; l--)
+		for (int l = ub; l > n; l--)
 		{
 			pc->power_cost++;
 			if (left_table_search(pc, l, c, shallow, w))

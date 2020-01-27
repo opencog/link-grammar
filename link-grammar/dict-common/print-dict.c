@@ -12,22 +12,22 @@
 /*************************************************************************/
 
 #include <ctype.h>
-#include <math.h>                   // fabs
+#include <math.h>                       // fabs
 
-#include "api-structures.h"         // Parse_Options_s  (seems hacky to me)
+#include "api-structures.h"             // Parse_Options_s  (seems hacky to me)
 #include "dict-common.h"
 #include "dict-defines.h"
 #include "dict-file/word-file.h"
 #include "dict-file/read-dict.h"
-#include "dict-utils.h"             // copy_Exp
+#include "dict-utils.h"                 // copy_Exp
 #include "disjunct-utils.h"
 #include "prepare/build-disjuncts.h"    // build_disjuncts_for_exp
 #include "print/print.h"
 #include "print/print-util.h"
 #include "regex-morph.h"
-#include "tokenize/tokenize.h"      // word_add
+#include "tokenize/tokenize.h"          // word_add
 #include "tokenize/word-structures.h"   // Word_struct
-#include "utilities.h"              // GNU_UNUSED
+#include "utilities.h"                  // GNU_UNUSED
 /* ======================================================================== */
 
 bool cost_eq(double cost1, double cost2)
@@ -164,7 +164,6 @@ static bool is_expression_optional(const Exp *e)
 
 static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
                                     bool need_parens, int *indent)
-
 {
 	unsigned int icost;
 	double dcost;
@@ -225,7 +224,6 @@ static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
 	if (dcost != 0) dyn_strcat(e, cost_stringify(dcost));
 	print_expression_tag_end(dict, e, n, indent);
 }
-
 
 /**
  * Find if the given connector is in the given expression.
@@ -655,7 +653,6 @@ void print_all_disjuncts(Sentence sent)
 	{
 		append_string(s, "Word %zu:\n", w);
 		dyn_print_disjunct_list(s, sent->word[w].d, flags, NULL, NULL);
-
 	}
 
 	char *t = dyn_str_take(s);

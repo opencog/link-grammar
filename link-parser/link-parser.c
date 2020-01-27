@@ -809,7 +809,7 @@ int main(int argc, char * argv[])
 
 		/* Discard whitespace characters from end of string. */
 		for (char *p = &input_string[strlen(input_string)-1];
-		     (p > input_string) && strchr(WHITESPACE, *p) ; p--)
+		     (p > input_string) && strchr(WHITESPACE, *p); p--)
 		{
 			*p = '\0';
 		}

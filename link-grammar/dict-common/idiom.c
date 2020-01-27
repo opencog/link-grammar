@@ -197,7 +197,7 @@ static const char * generate_id_connector(Dictionary dict)
 	*t++ = 'D';
 	for (; i < IDIOM_LINK_SZ; i++)
 	{
-		*t++ = dict->current_idiom[i] ;
+		*t++ = dict->current_idiom[i];
 	}
 	*t++ = '\0';
 	return string_set_add(buff, dict->string_set);
@@ -328,5 +328,5 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
  */
 bool is_idiom_word(const char * s)
 {
-	return (numberfy(s) != -1) ;
+	return (numberfy(s) != -1);
 }

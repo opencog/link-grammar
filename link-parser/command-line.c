@@ -750,8 +750,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	}
 
 	/* Test here for an equation i.e. does the command line hold an equals sign? */
-	for (x=s; (*x != '=') && (*x != '\0') ; x++)
-	  ;
+	for (x=s; (*x != '=') && (*x != '\0'); x++)
+		;
 	if (*x == '=')
 	{
 		*x = '\0';

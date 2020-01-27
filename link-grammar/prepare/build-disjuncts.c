@@ -303,7 +303,7 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
                                   const gword_set *gs, double cost_cutoff,
                                   Parse_Options opts)
 {
-	Clause *c ;
+	Clause *c;
 	Disjunct * dis;
 	clause_context ct = { 0 };
 

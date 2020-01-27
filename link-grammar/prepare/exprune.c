@@ -646,11 +646,11 @@ static int hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
 	int i;
 	Connector *e;
 	i = 0;
-	for (e = d->left ; e != NULL; e = e->next)
+	for (e = d->left; e != NULL; e = e->next)
 	{
 		i = pconnector_hash(dt, e, i);
 	}
-	for (e = d->right ; e != NULL; e = e->next)
+	for (e = d->right; e != NULL; e = e->next)
 	{
 		i = pconnector_hash(dt, e, i);
 	}
