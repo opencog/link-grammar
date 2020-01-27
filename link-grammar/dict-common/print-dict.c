@@ -1017,7 +1017,9 @@ static char *display_word_split(Dictionary dict,
 	parse_options_set_spell_guess(opts, 0);
 	sent = sentence_create(pword, dict);
 
-	if (pword[0] == '<' && pword[strlen(pword)-1] == '>')
+	if (pword[0] == '<' && (strchr(pword, '>') != NULL) &&
+	    ((strchr(pword, '>')[1] == '\0') ||
+	     (strchr(pword, '>')[1] == SUBSCRIPT_MARK)))
 	{
 		/* Dictionary macro - don't split. */
 		if (!word0_set(sent, pword, opts)) goto display_word_split_error;
