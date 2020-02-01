@@ -743,15 +743,16 @@ static bool possible_connection(prune_context *pc,
 	 * gap between them contains W non-optional words. We also know
 	 * that we are going to parse with N null-links (which involves
 	 * sub-parsing with the range of [0, N] null-links).
-	 * If there is not at least one intervening connector (i.e. both
-	 * of lc->next and rc->next are NULL) then:
+	 * If there is not at least one intervening connector that can
+	 * connect to an intermediate word, then:
 	 * islands_ok=false:
 	 * There will be W null-linked words, and W must be <= N.
 	 * islands_ok=true:
 	 * There will be at least one island.
 	 */
 	if ((lc->next == NULL) && (rc->next == NULL) &&
-	    (!lc->multi) && (!rc->multi) &&
+	    (!lc->multi || (lc->nearest_word >= rword)) &&
+	    (!rc->multi || (rc->nearest_word <= lword)) &&
 	    more_nulls_than_allowed(pc, lword, rword))
 	{
 		return false;
