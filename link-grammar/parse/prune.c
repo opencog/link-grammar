@@ -743,15 +743,16 @@ static bool possible_connection(prune_context *pc,
 	 * gap between them contains W non-optional words. We also know
 	 * that we are going to parse with N null-links (which involves
 	 * sub-parsing with the range of [0, N] null-links).
-	 * If there is not at least one intervening connector (i.e. both
-	 * of lc->next and rc->next are NULL) then:
+	 * If there is not at least one intervening connector that can
+	 * connect to an intermediate word, then:
 	 * islands_ok=false:
 	 * There will be W null-linked words, and W must be <= N.
 	 * islands_ok=true:
 	 * There will be at least one island.
 	 */
 	if ((lc->next == NULL) && (rc->next == NULL) &&
-	    (!lc->multi) && (!rc->multi) &&
+	    (!lc->multi || (lc->nearest_word >= rword)) &&
+	    (!rc->multi || (rc->nearest_word <= lword)) &&
 	    more_nulls_than_allowed(pc, lword, rword))
 	{
 		return false;
@@ -1889,19 +1890,24 @@ static mlink_table *build_mlink_table(Sentence sent, mlink_table *ml)
 		ml_exists |= (!nojet[0][w] || !nojet[1][w]);
 	}
 
-	for (WordIdx w = 0; w < sent->length; w++)
+	if (ml_exists)
 	{
-		if (ml[w].nw_unidir[0] > ml[w].nw[0])
-			ml[w].nw[0] = ml[w].nw_unidir[0];
-
-		if (ml[w].nw_unidir[1] < ml[w].nw[1])
-			ml[w].nw[1] = ml[w].nw_unidir[1];
-
-		for (int dir = 0; dir < 2; dir++)
+		for (WordIdx w = 0; w < sent->length; w++)
 		{
-			ml[w].nw_perjet[dir] = ml[w].nw[dir];
-			if (nojet[dir][w])
-				ml[w].nw[dir] = w;
+			if (sent->word[w].optional) continue;
+
+			if (ml[w].nw_unidir[0] > ml[w].nw[0])
+				ml[w].nw[0] = ml[w].nw_unidir[0];
+
+			if (ml[w].nw_unidir[1] < ml[w].nw[1])
+				ml[w].nw[1] = ml[w].nw_unidir[1];
+
+			for (int dir = 0; dir < 2; dir++)
+			{
+				ml[w].nw_perjet[dir] = ml[w].nw[dir];
+				if (nojet[dir][w])
+					ml[w].nw[dir] = w;
+			}
 		}
 	}
 
