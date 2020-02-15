@@ -88,14 +88,8 @@ typedef struct
  * benefit of the pruning and parsing stages. To that end, unique tracons
  * are identified. For the parsing stage, a unique tracon_id is assigned
  * to the Connector's tracon_id field. For the pruning stage, this field
- * remains 0 (later used for pruning pass_count - see below) and instead
- * the Connector's refcount field reflects the number of connectors which
- * are memory-shared.
- * In the pruning stage, on each pass the tracon_id of "good"
- * connectors is assigned the pass number so they will not be checked
- * again on the same pass. The pruning stage also uses the connector
- * refcount field as a reference count - the number of times this
- * connector is memory-shared.
+ * is unused and the Connector's refcount field reflects the number of
+ * connectors which are memory-shared.
  * The details of what considered a unique tracon is slightly different
  * for the pruning stage and the parsing stage - see the comment block
  * "Connector encoding, sharing and packing" in disjunct-utils.c.
