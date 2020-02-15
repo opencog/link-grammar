@@ -247,7 +247,7 @@ static bool dialect_read_from_str(Dictionary dict, Dialect *di,
 			}
 
 			unsigned int section_num = string_id_lookup(token, di->section_set);
-			if (section_num != SI_NOTFOUND)
+			if (section_num != SID_NOTFOUND)
 			{
 				prt_error("Error: %s:%s Duplicate section \"%s\".\n",
 				          dfile->fname, suppress_0(dfile->line_number, buf), token);
@@ -282,7 +282,7 @@ static bool dialect_read_from_str(Dictionary dict, Dialect *di,
 					          dfile->fname, suppress_0(dfile->line_number, buf));
 					return false;
 				}
-				if (string_id_lookup(token, dt->set) == SI_NOTFOUND)
+				if (string_id_lookup(token, dt->set) == SID_NOTFOUND)
 				{
 					prt_error("Error: %s:%s Expression tag \"%s\" not in "
 					          "dict file.\n", dfile->fname,
@@ -427,7 +427,7 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	for (unsigned int i = 0; i < di->num_table_tags; i++)
 	{
 		if (cost_eq(di->table[i].cost, DIALECT_SUB) &&
-		    (string_id_lookup(di->table[i].name, di->section_set) == SI_NOTFOUND))
+		    (string_id_lookup(di->table[i].name, di->section_set) == SID_NOTFOUND))
 		{
 			prt_error("Error: Dialect file: sub-dialect \"%s\" doesn't "
 			          "have a section.\n", di->table[i].name);
