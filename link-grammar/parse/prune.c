@@ -751,8 +751,8 @@ static bool possible_connection(prune_context *pc,
 	 * There will be at least one island.
 	 */
 	if ((lc->next == NULL) && (rc->next == NULL) &&
-	    (!lc->multi || (lc->nearest_word >= rword)) &&
-	    (!rc->multi || (rc->nearest_word <= lword)) &&
+	    (!lc->multi || (lc->nearest_word == rword)) &&
+	    (!rc->multi || (rc->nearest_word == lword)) &&
 	    more_nulls_than_allowed(pc, lword, rword))
 	{
 		return false;
