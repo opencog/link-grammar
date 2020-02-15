@@ -166,7 +166,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 	if (verbosity_level(D_PREP))
 	{
-		prt_error("Debug: After expression pruning and duplicate elimination:\n");
+		prt_error("Debug: After duplicate elimination:\n");
 		print_disjunct_counts(sent);
 	}
 
