@@ -801,7 +801,7 @@ Exp *Exp_create(Pool_desc *mp)
 
 /**
  * Duplicate the given Exp node.
- * This is needed in case it is to be participate more than once in a
+ * This is needed in case it participates more than once in a
  * single expression.
  */
 Exp *Exp_create_dup(Pool_desc *mp, Exp *old_e)

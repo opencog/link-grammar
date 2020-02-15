@@ -49,7 +49,7 @@ const char *cost_stringify(double cost)
 }
 
 /* Check for an existing newline before issuing "\n" in order to prevent
- * empty lines when printing connector macros. This allow to use the
+ * empty lines when printing connector macros. This allows to use the
  * same print_expression_tag_*() function for printing expressions
  * with macros and also disjunct connectors with macros. */
 static void dyn_ensure_empty_line(dyn_str *e)

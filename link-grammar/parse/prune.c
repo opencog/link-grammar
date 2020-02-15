@@ -30,7 +30,7 @@
 #define D_PRUNE 5      /* Debug level for this file. */
 
 /* To debug pp_prune(), touch this file, run "make CPPFLAGS=-DDEBUG_PP_PRUNE",
- * and the run: link-parser -v=5 -debug=prune.c . */
+ * and then run: link-parser -v=5 -debug=prune.c . */
 #ifdef DEBUG
 #define DEBUG_PP_PRUNE
 #endif

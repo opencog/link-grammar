@@ -89,7 +89,7 @@ typedef struct
  * are identified. For the parsing stage, a unique tracon_id is assigned
  * to the Connector's tracon_id field. For the pruning stage, this field
  * remains 0 (later used for pruning pass_count - see below) and instead
- * the Connector's refcount filed reflects the number of connectors which
+ * the Connector's refcount field reflects the number of connectors which
  * are memory-shared.
  * In the pruning stage, on each pass the tracon_id of "good"
  * connectors is assigned the pass number so they will not be checked

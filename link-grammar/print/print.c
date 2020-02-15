@@ -497,7 +497,7 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	dyn_str * string;
 	unsigned int N_words_to_print;
 
-	// Avoid pathological case and the resulting crash.
+	// Avoid a pathological case and the resulting crash.
 	if (0 == linkage->num_words) return strdup("");
 
 	link_by_length *ll = alloca(N_links * sizeof(*ll));
