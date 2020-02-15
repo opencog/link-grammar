@@ -561,14 +561,14 @@ static bool is_cross_mlink(prune_context *pc,
 		if (sent->word[w].optional) continue;
 		if (pc->is_null_word[w]) continue;
 
-		if ((w == lword+1) && (pc->ml[lword+1].nw_unidir[1] > rword) &&
-			 !is_match(pc, left_table_search, lword, lc, lword+1))
+		if ((w == lword+1) && (pc->ml[w].nw_unidir[1] > rword) &&
+			 !is_match(pc, left_table_search, lword, lc, w))
 		{
 			PR(L);
 			goto null_word_found;
 		}
-		if ((w == rword-1) && (pc->ml[rword-1].nw_unidir[0] < lword) &&
-		    !is_match(pc, right_table_search, rword, rc, rword-1))
+		if ((w == rword-1) && (pc->ml[w].nw_unidir[0] < lword) &&
+		    !is_match(pc, right_table_search, rword, rc, w))
 		{
 			PR(R);
 			goto null_word_found;
