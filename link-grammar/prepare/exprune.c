@@ -348,9 +348,7 @@ static void insert_connector(exprune_context *ctxt, int farthest_word, condesc_t
 	{
 		if (c == e->condesc)
 		{
-			{
-				if (e->farthest_word < farthest_word) e->farthest_word = farthest_word;
-			}
+			if (e->farthest_word < farthest_word) e->farthest_word = farthest_word;
 			return;
 		}
 	}
