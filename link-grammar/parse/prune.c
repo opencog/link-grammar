@@ -2148,7 +2148,7 @@ static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 		}
 	}
 
-	lgdebug(D_PRUNE, "Debug: cross_links_prune [nw] detected %d (%d+%d)\n",
+	lgdebug(+D_PRUNE, "Debug: [nw] detected %d (%d+%d)\n",
 	        N_deleted[0] + N_deleted[1], N_deleted[0], N_deleted[1]);
 	return N_deleted[0] + N_deleted[1];
 }
