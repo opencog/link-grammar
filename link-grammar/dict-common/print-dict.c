@@ -498,9 +498,15 @@ static bool is_flag(uint32_t flags, char flag)
 	return (flags>>(flag-'a')) & 1;
 }
 
-static uint32_t make_flag(char flag)
+static uint32_t make_flags(const char *flags)
 {
-	return 1<<(flag-'a');
+	if (flags == NULL) return 0;
+	uint32_t r  = 0;
+
+	for (const char *f = flags; *f != '\0'; f++)
+		r |= (1<<(*f-'a'));
+
+	return r;
 }
 
 /* Print one connector with all the details.
@@ -647,12 +653,12 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
 void print_all_disjuncts(Sentence sent)
 {
 	dyn_str *s = dyn_str_new();
-	uint32_t flags = make_flag('l') | make_flag('t');
+	uint32_t int_flags = make_flags("lt");
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		append_string(s, "Word %zu:\n", w);
-		dyn_print_disjunct_list(s, sent->word[w].d, flags, NULL, NULL);
+		dyn_print_disjunct_list(s, sent->word[w].d, int_flags, NULL, NULL);
 	}
 
 	char *t = dyn_str_take(s);
@@ -705,13 +711,7 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 	const char *flags = arg[1];
 	const Parse_Options opts = (Parse_Options)arg[2];
 	double max_cost = opts->disjunct_cost;
-
-	uint32_t int_flags = 0;
-	if (flags != NULL)
-	{
-		for (const char *f = flags; *f != '\0'; f++)
-			int_flags |= make_flag(*f);
-	}
+	uint32_t int_flags = make_flags(flags);;
 
 	/* build_disjuncts_for_exp() needs memory pools for efficiency. */
 	Sentence dummy_sent = sentence_create("", dict); /* For memory pools. */
