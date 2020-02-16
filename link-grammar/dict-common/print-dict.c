@@ -517,7 +517,7 @@ static void dyn_print_one_connector(dyn_str *s, Connector *e, int dir,
 {
 	if (e->multi)
 		dyn_strcat(s, "@");
-	dyn_strcat(s, connector_string(e));
+	dyn_strcat(s, (e->desc != NULL) ? connector_string(e) : "NULLDESC");
 	if (-1 != dir) dyn_strcat(s, (dir == 0) ? "-" : "+");
 	if (is_flag(flags, 't') && e->tracon_id)
 		append_string(s, "<%d>", e->tracon_id);
