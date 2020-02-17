@@ -241,15 +241,19 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 			/* XXX In principle this may still be another dictionary if it got
 			 * the same address. Can be fixed by adding dictionary_create()
 			 * ordinal number. */
-			prt_error("Error: Dialect setup belongs to a different dictionary.\n");
-			return false;
+			lgdebug(+D_DIALECT,
+			        "Debug: Resetting dialect cache of a different dictionary.\n");
+			free_cost_table(opts);
 		}
-		lgdebug(D_DIALECT, "Debug: Cached cost table found\n");
+		else
+		{
+			lgdebug(+D_DIALECT, "Debug: Cached cost table found\n");
 
-		if (verbosity_level(+D_DIALECT+1))
-			print_cost_table(dict, di, dinfo);
+			if (verbosity_level(+D_DIALECT+1))
+				print_cost_table(dict, di, dinfo);
 
-		return true;
+			return true;
+		}
 	}
 
 	dinfo->dict = dict;
