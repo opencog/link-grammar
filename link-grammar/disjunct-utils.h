@@ -72,8 +72,8 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence);
 void free_tracon_sharing(Tracon_sharing *);
 void count_disjuncts_and_connectors(Sentence, unsigned int *, unsigned int *);
 
-void print_connector_list(Connector *, uint32_t);
-void print_disjunct_list(Disjunct *, uint32_t);
+void print_connector_list(Connector *, const char *);
+void print_disjunct_list(Disjunct *, const char *);
 void print_all_disjuncts(Sentence);
 
 /* Save and restore sentence disjuncts */

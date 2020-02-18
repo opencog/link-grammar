@@ -550,7 +550,8 @@ GNUC_UNUSED static void print_one_connector(Connector *e, int dir, int shallow,
 	free(t);
 }
 
-static void dyn_print_connector_list(dyn_str *s, Connector *e, int dir, uint32_t flags)
+static void dyn_print_connector_list(dyn_str *s, Connector *e, int dir,
+                                     uint32_t flags)
 {
 
 	if (e == NULL) return;
@@ -559,11 +560,14 @@ static void dyn_print_connector_list(dyn_str *s, Connector *e, int dir, uint32_t
 	dyn_print_one_connector(s, e, dir, /*shallow*/-1, flags);
 }
 
-void print_connector_list(Connector *e, uint32_t flags)
+void print_connector_list(Connector *e, const char *flags)
 {
 	dyn_str *s = dyn_str_new();
 
-	dyn_print_connector_list(s, e, /*dir*/-1, flags);
+	if (flags == NULL) flags = "lt";
+	uint32_t int_flags = make_flags(flags);
+
+	dyn_print_connector_list(s, e, /*dir*/-1, int_flags);
 
 	char *t = dyn_str_take(s);
 	puts(t);
@@ -648,6 +652,19 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
 		}
 		free(ls);
 	}
+}
+
+void print_disjunct_list(Disjunct *d, const char *flags)
+{
+	dyn_str *s = dyn_str_new();
+
+	if (flags == NULL) flags = "lt";
+	uint32_t int_flags = make_flags(flags);
+
+	dyn_print_disjunct_list(s, d, int_flags, NULL, NULL);
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
 }
 
 void print_all_disjuncts(Sentence sent)
