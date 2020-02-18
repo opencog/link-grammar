@@ -30,7 +30,7 @@
 #define D_PRUNE 5      /* Debug level for this file. */
 
 /* To debug pp_prune(), touch this file, run "make CPPFLAGS=-DDEBUG_PP_PRUNE",
- * and the run: link-parser -v=5 -debug=prune.c . */
+ * and then run: link-parser -v=5 -debug=prune.c . */
 #ifdef DEBUG
 #define DEBUG_PP_PRUNE
 #endif
@@ -561,14 +561,14 @@ static bool is_cross_mlink(prune_context *pc,
 		if (sent->word[w].optional) continue;
 		if (pc->is_null_word[w]) continue;
 
-		if ((w == lword+1) && (pc->ml[lword+1].nw_unidir[1] > rword) &&
-			 !is_match(pc, left_table_search, lword, lc, lword+1))
+		if ((w == lword+1) && (pc->ml[w].nw_unidir[1] > rword) &&
+			 !is_match(pc, left_table_search, lword, lc, w))
 		{
 			PR(L);
 			goto null_word_found;
 		}
-		if ((w == rword-1) && (pc->ml[rword-1].nw_unidir[0] < lword) &&
-		    !is_match(pc, right_table_search, rword, rc, rword-1))
+		if ((w == rword-1) && (pc->ml[w].nw_unidir[0] < lword) &&
+		    !is_match(pc, right_table_search, rword, rc, w))
 		{
 			PR(R);
 			goto null_word_found;
@@ -751,8 +751,8 @@ static bool possible_connection(prune_context *pc,
 	 * There will be at least one island.
 	 */
 	if ((lc->next == NULL) && (rc->next == NULL) &&
-	    (!lc->multi || (lc->nearest_word >= rword)) &&
-	    (!rc->multi || (rc->nearest_word <= lword)) &&
+	    (!lc->multi || (lc->nearest_word == rword)) &&
+	    (!rc->multi || (rc->nearest_word == lword)) &&
 	    more_nulls_than_allowed(pc, lword, rword))
 	{
 		return false;
@@ -846,7 +846,7 @@ left_connector_list_update(prune_context *pc, Connector *c,
 	lb = c->farthest_word;
 
 	/* n is now the rightmost word we need to check */
-	for (; n >= lb ; n--)
+	for (; n >= lb; n--)
 	{
 		pc->power_cost++;
 		if (right_table_search(pc, n, c, shallow, w))
@@ -912,7 +912,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	ub = c->farthest_word;
 
 	/* n is now the leftmost word we need to check */
-	for (; n <= ub ; n++)
+	for (; n <= ub; n++)
 	{
 		pc->power_cost++;
 		if (left_table_search(pc, n, c, shallow, w))
@@ -929,7 +929,7 @@ right_connector_list_update(prune_context *pc, Connector *c,
 	if (n <= ub)
 	{
 		int farthest_word = n;
-		for (int l = ub; l > n ; l--)
+		for (int l = ub; l > n; l--)
 		{
 			pc->power_cost++;
 			if (left_table_search(pc, l, c, shallow, w))
@@ -2148,7 +2148,7 @@ static unsigned int cross_mlink_prune(Sentence sent, mlink_table *ml)
 		}
 	}
 
-	lgdebug(D_PRUNE, "Debug: cross_links_prune [nw] detected %d (%d+%d)\n",
+	lgdebug(+D_PRUNE, "Debug: [nw] detected %d (%d+%d)\n",
 	        N_deleted[0] + N_deleted[1], N_deleted[0], N_deleted[1]);
 	return N_deleted[0] + N_deleted[1];
 }

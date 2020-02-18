@@ -12,22 +12,22 @@
 /*************************************************************************/
 
 #include <ctype.h>
-#include <math.h>                   // fabs
+#include <math.h>                       // fabs
 
-#include "api-structures.h"         // Parse_Options_s  (seems hacky to me)
+#include "api-structures.h"             // Parse_Options_s  (seems hacky to me)
 #include "dict-common.h"
 #include "dict-defines.h"
 #include "dict-file/word-file.h"
 #include "dict-file/read-dict.h"
-#include "dict-utils.h"             // copy_Exp
+#include "dict-utils.h"                 // copy_Exp
 #include "disjunct-utils.h"
 #include "prepare/build-disjuncts.h"    // build_disjuncts_for_exp
 #include "print/print.h"
 #include "print/print-util.h"
 #include "regex-morph.h"
-#include "tokenize/tokenize.h"      // word_add
+#include "tokenize/tokenize.h"          // word_add
 #include "tokenize/word-structures.h"   // Word_struct
-#include "utilities.h"              // GNU_UNUSED
+#include "utilities.h"                  // GNU_UNUSED
 /* ======================================================================== */
 
 bool cost_eq(double cost1, double cost2)
@@ -49,7 +49,7 @@ const char *cost_stringify(double cost)
 }
 
 /* Check for an existing newline before issuing "\n" in order to prevent
- * empty lines when printing connector macros. This allow to use the
+ * empty lines when printing connector macros. This allows to use the
  * same print_expression_tag_*() function for printing expressions
  * with macros and also disjunct connectors with macros. */
 static void dyn_ensure_empty_line(dyn_str *e)
@@ -164,7 +164,6 @@ static bool is_expression_optional(const Exp *e)
 
 static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
                                     bool need_parens, int *indent)
-
 {
 	unsigned int icost;
 	double dcost;
@@ -225,7 +224,6 @@ static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
 	if (dcost != 0) dyn_strcat(e, cost_stringify(dcost));
 	print_expression_tag_end(dict, e, n, indent);
 }
-
 
 /**
  * Find if the given connector is in the given expression.
@@ -500,9 +498,15 @@ static bool is_flag(uint32_t flags, char flag)
 	return (flags>>(flag-'a')) & 1;
 }
 
-static uint32_t make_flag(char flag)
+static uint32_t make_flags(const char *flags)
 {
-	return 1<<(flag-'a');
+	if (flags == NULL) return 0;
+	uint32_t r  = 0;
+
+	for (const char *f = flags; *f != '\0'; f++)
+		r |= (1<<(*f-'a'));
+
+	return r;
 }
 
 /* Print one connector with all the details.
@@ -519,7 +523,7 @@ static void dyn_print_one_connector(dyn_str *s, Connector *e, int dir,
 {
 	if (e->multi)
 		dyn_strcat(s, "@");
-	dyn_strcat(s, connector_string(e));
+	dyn_strcat(s, (e->desc != NULL) ? connector_string(e) : "NULLDESC");
 	if (-1 != dir) dyn_strcat(s, (dir == 0) ? "-" : "+");
 	if (is_flag(flags, 't') && e->tracon_id)
 		append_string(s, "<%d>", e->tracon_id);
@@ -546,7 +550,8 @@ GNUC_UNUSED static void print_one_connector(Connector *e, int dir, int shallow,
 	free(t);
 }
 
-static void dyn_print_connector_list(dyn_str *s, Connector *e, int dir, uint32_t flags)
+static void dyn_print_connector_list(dyn_str *s, Connector *e, int dir,
+                                     uint32_t flags)
 {
 
 	if (e == NULL) return;
@@ -555,11 +560,14 @@ static void dyn_print_connector_list(dyn_str *s, Connector *e, int dir, uint32_t
 	dyn_print_one_connector(s, e, dir, /*shallow*/-1, flags);
 }
 
-void print_connector_list(Connector *e, uint32_t flags)
+void print_connector_list(Connector *e, const char *flags)
 {
 	dyn_str *s = dyn_str_new();
 
-	dyn_print_connector_list(s, e, /*dir*/-1, flags);
+	if (flags == NULL) flags = "lt";
+	uint32_t int_flags = make_flags(flags);
+
+	dyn_print_connector_list(s, e, /*dir*/-1, int_flags);
 
 	char *t = dyn_str_take(s);
 	puts(t);
@@ -646,16 +654,28 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
 	}
 }
 
+void print_disjunct_list(Disjunct *d, const char *flags)
+{
+	dyn_str *s = dyn_str_new();
+
+	if (flags == NULL) flags = "lt";
+	uint32_t int_flags = make_flags(flags);
+
+	dyn_print_disjunct_list(s, d, int_flags, NULL, NULL);
+	char *t = dyn_str_take(s);
+	puts(t);
+	free(t);
+}
+
 void print_all_disjuncts(Sentence sent)
 {
 	dyn_str *s = dyn_str_new();
-	uint32_t flags = make_flag('l') | make_flag('t');
+	uint32_t int_flags = make_flags("lt");
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		append_string(s, "Word %zu:\n", w);
-		dyn_print_disjunct_list(s, sent->word[w].d, flags, NULL, NULL);
-
+		dyn_print_disjunct_list(s, sent->word[w].d, int_flags, NULL, NULL);
 	}
 
 	char *t = dyn_str_take(s);
@@ -708,13 +728,7 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 	const char *flags = arg[1];
 	const Parse_Options opts = (Parse_Options)arg[2];
 	double max_cost = opts->disjunct_cost;
-
-	uint32_t int_flags = 0;
-	if (flags != NULL)
-	{
-		for (const char *f = flags; *f != '\0'; f++)
-			int_flags |= make_flag(*f);
-	}
+	uint32_t int_flags = make_flags(flags);;
 
 	/* build_disjuncts_for_exp() needs memory pools for efficiency. */
 	Sentence dummy_sent = sentence_create("", dict); /* For memory pools. */
@@ -1017,7 +1031,9 @@ static char *display_word_split(Dictionary dict,
 	parse_options_set_spell_guess(opts, 0);
 	sent = sentence_create(pword, dict);
 
-	if (pword[0] == '<' && pword[strlen(pword)-1] == '>')
+	if (pword[0] == '<' && (strchr(pword, '>') != NULL) &&
+	    ((strchr(pword, '>')[1] == '\0') ||
+	     (strchr(pword, '>')[1] == SUBSCRIPT_MARK)))
 	{
 		/* Dictionary macro - don't split. */
 		if (!word0_set(sent, pword, opts)) goto display_word_split_error;

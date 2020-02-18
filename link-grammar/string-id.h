@@ -24,7 +24,7 @@
 #include "utilities.h"                  // ssize_t
 #endif
 
-#define SI_NOTFOUND 0 /* return this for strings that are not in the table */
+#define SID_NOTFOUND 0 /* return this for strings that are not in the table */
 
 typedef struct
 {

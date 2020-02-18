@@ -101,7 +101,7 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	unsigned int shift;
 	if (sent_len >= 10)
 	{
-		shift = 12 + (sent_len) / 4 ;
+		shift = 12 + (sent_len) / 4;
 	}
 	else
 	{
@@ -356,7 +356,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 }
 #else
 #define DEBUG_TABLE_STAT(x)
-#endif /* DEBUG */
+#endif /* DEBUG  */
 
 /**
  * Stores the value in the table.  Assumes it's not already there.
@@ -388,7 +388,6 @@ find_table_pointer(count_context_t *ctxt,
                    const Connector *le, const Connector *re,
                    unsigned int null_count)
 {
-
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
 

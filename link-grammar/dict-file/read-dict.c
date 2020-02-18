@@ -133,7 +133,7 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	int save_line_number    = dict->line_number;
 
 	tokens[0] = '\0';
-	for (i=0; i<5 && dict->token[0] != '\0' ; i++)
+	for (i=0; i<5 && dict->token[0] != '\0'; i++)
 	{
 		pos += snprintf(t, ERRBUFLEN, "\"%s\" ", dict->token);
 		strncat(tokens, t, ERRBUFLEN-1-pos);
@@ -801,7 +801,7 @@ Exp *Exp_create(Pool_desc *mp)
 
 /**
  * Duplicate the given Exp node.
- * This is needed in case it is to be participate more than once in a
+ * This is needed in case it participates more than once in a
  * single expression.
  */
 Exp *Exp_create_dup(Pool_desc *mp, Exp *old_e)
@@ -1406,7 +1406,7 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
 	vine_head.right = root;
 
 	dsw_compression(&vine_head, size - full_count);
-	for (size = full_count ; size > 1 ; size /= 2)
+	for (size = full_count; size > 1; size /= 2)
 	{
 		dsw_compression(&vine_head, size / 2);
 	}

@@ -348,9 +348,7 @@ static void insert_connector(exprune_context *ctxt, int farthest_word, condesc_t
 	{
 		if (c == e->condesc)
 		{
-			{
-				if (e->farthest_word < farthest_word) e->farthest_word = farthest_word;
-			}
+			if (e->farthest_word < farthest_word) e->farthest_word = farthest_word;
 			return;
 		}
 	}
@@ -646,11 +644,11 @@ static int hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
 	int i;
 	Connector *e;
 	i = 0;
-	for (e = d->left ; e != NULL; e = e->next)
+	for (e = d->left; e != NULL; e = e->next)
 	{
 		i = pconnector_hash(dt, e, i);
 	}
-	for (e = d->right ; e != NULL; e = e->next)
+	for (e = d->right; e != NULL; e = e->next)
 	{
 		i = pconnector_hash(dt, e, i);
 	}

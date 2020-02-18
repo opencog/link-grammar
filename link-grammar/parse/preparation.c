@@ -151,7 +151,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 #if 0
 		/* eliminate_duplicate_disjuncts() is now very efficient and doesn't
-		 * take significant time even for millions of disjuncts. If a very
+		 * take a significant time even for millions of disjuncts. If a very
 		 * large number of disjuncts per word or very large number of words
 		 * per sentence will ever be a problem, then a "checktimer" TLS
 		 * counter can be used there. Old comment and code are retained
@@ -166,7 +166,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 	if (verbosity_level(D_PREP))
 	{
-		prt_error("Debug: After expression pruning and duplicate elimination:\n");
+		prt_error("Debug: After duplicate elimination:\n");
 		print_disjunct_counts(sent);
 	}
 

@@ -122,10 +122,10 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 {
 	unsigned int i;
 	i = 0;
-	for (Connector *e = d->left ; e != NULL; e = e->next) {
+	for (Connector *e = d->left; e != NULL; e = e->next) {
 		i = (41 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
-	for (Connector *e = d->right ; e != NULL; e = e->next) {
+	for (Connector *e = d->right; e != NULL; e = e->next) {
 		i = (41 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
 #if 0 /* Redundant - the connector hashing has enough entropy. */
@@ -438,12 +438,9 @@ void count_disjuncts_and_connectors(Sentence sent, unsigned int *dca,
  * comparison.
  *
  * For the parsing step, identical tracons are assigned a unique tracon
- * ID, which is kept in their first connector. The rest of their
- * connectors also have tracon IDs, which belong to tracons starting
- * with that connectors.
- *
- * For the pruning step, all the tracon IDs are set to 0 (see below for
- * how tracon_id is used during the power pruning).
+ * ID, which is kept in their first connector tracon_id field. The rest of
+ * their connectors also have tracon IDs, which belong to tracons starting
+ * with that connectors. The tracon_id is not used for pruning.
  *
  * For the pruning step, more things are done:
  * Additional data structure - a tracon list - is constructed, which
@@ -462,17 +459,17 @@ void count_disjuncts_and_connectors(Sentence sent, unsigned int *dca,
  * The first connector of each tracon is inserted into the power table,
  * along with its reference count. When a connector cannot be matched,
  * this means that all the disjuncts that contain its tracon also cannot
- * be matched. When it is marked as bad (cannot match) or good (match
- * found), due to the tracon memory sharing all the connectors that
- * share the same memory are marked simultaneously, and thus are
- * detected when the next disjuncts are examined without a need to
- * further process them. This saves much processing and also drastically
- * reduces the "power_cost". Setting the nearest_word field is hence
- * done only once per tracon on each pass. The tracon IDs are used to
- * detect already-processed tracons - they are assigned the pass number
- * so each tracon is processed only once per pass. The connector
- * refcount field is used to discard connectors from the power table
- * when all the disjuncts that contain them are discarded.
+ * be matched. It is then marked as bad (by nearest_word=BAD_WORD) and
+ * due to the tracon memory sharing all the connectors that share the same
+ * memory are marked simultaneously, and thus are detected when the next
+ * disjuncts are examined without a need to further process them.
+ * This drastically reduces the "power_cost" and saves much processing.
+ * Setting the nearest_word field is hence done only once per tracon on
+ * each pass. The pass_number field is used to detect already-processed
+ * good tracons - they are assigned the pass number so each tracon is
+ * processed only once per pass. The connector refcount field is used to
+ * discard connectors from the power table when all the disjuncts that
+ * contain them are discarded.
  *
  * PP pruning:
  * Here too only the first connector in each tracon needs to be

@@ -162,7 +162,7 @@ static void resources_print_total_time(int verbosity_opt, Resources r)
 {
 	double now;
 	now = current_usage_time();
-	r->cumulative_time += (now - r->time_when_parse_started) ;
+	r->cumulative_time += (now - r->time_when_parse_started);
 	if (verbosity_opt >= D_USER_BASIC)
 	{
 		prt_error("++++ %-*s %7.2f seconds (%.2f total)\n", RES_COL_WIDTH, "Time",

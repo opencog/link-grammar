@@ -193,7 +193,7 @@ unsigned int string_id_lookup(const char * source_string, String_id * ss)
 	unsigned int h = hash_string(source_string, ss);
 	unsigned int p = find_place(source_string, h, ss);
 
-	return (ss->table[p].str == NULL) ? SI_NOTFOUND : ss->table[p].id;
+	return (ss->table[p].str == NULL) ? SID_NOTFOUND : ss->table[p].id;
 }
 
 void string_id_delete(String_id *ss)

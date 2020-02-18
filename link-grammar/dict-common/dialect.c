@@ -51,7 +51,7 @@ unsigned int exptag_dialect_add(Dictionary dict, const char *tag)
 	expression_tag *dt = &dict->dialect_tag;
 	unsigned int tag_index = string_id_lookup(tag, dt->set);
 
-	if (tag_index != SI_NOTFOUND) return tag_index;
+	if (tag_index != SID_NOTFOUND) return tag_index;
 	tag_index = string_id_add(tag, dt->set);
 	tag = string_set_add(tag, dict->string_set); /* FIXME: Refer to string-id */
 
@@ -82,7 +82,7 @@ static bool apply_component(Dictionary dict, Dialect *di,
 	unsigned int cost_index =
 		string_id_lookup(di->table[table_index].name, dt->set);
 
-	if (cost_index == SI_NOTFOUND)
+	if (cost_index == SID_NOTFOUND)
 	{
 		prt_error("Error: Dialect component \"%s\" is not in the dictionary.\n",
 			di->table[table_index].name);
@@ -123,10 +123,10 @@ static bool apply_table_entry(Dictionary dict, Dialect *from,
 		}
 		else
 		{
-			unsigned int sub_index = SI_NOTFOUND;
+			unsigned int sub_index = SID_NOTFOUND;
 			if (to != NULL)
 				sub_index = string_id_lookup(from->table[i].name, to->section_set);
-			if (sub_index == SI_NOTFOUND)
+			if (sub_index == SID_NOTFOUND)
 			{
 				prt_error("Error: Undefined dialect \"%s\"\n", from->table[i].name);
 				return false;
