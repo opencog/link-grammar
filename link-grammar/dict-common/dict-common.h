@@ -94,7 +94,8 @@ struct Dictionary_s
 
 	Dialect *dialect;                  /* "4.0.dialect" info */
 	expression_tag dialect_tag;        /* Expression dialect tag info */
-	expression_tag *macro_tag;          /* Macro tags for expression debug */
+	expression_tag *macro_tag;         /* Macro tags for expression debug */
+	void *cached_dialect;              /* Only for dialect cache validation */
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;

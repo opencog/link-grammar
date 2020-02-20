@@ -236,11 +236,14 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 	if (dinfo->cost_table != NULL)
 	{
 		/* Cached table. */
-		if (dinfo->dict != dict)
+		if ((dinfo->dict != dict) || (dict->cached_dialect != dinfo))
 		{
-			/* XXX In principle this may still be another dictionary if it got
-			 * the same address. Can be fixed by adding dictionary_create()
-			 * ordinal number. */
+			/* XXX It may still be a stale cache if the dictionary got the
+			 * same address as a previously-closed one and also "opts" got the
+			 * same address as a previously-deleted "opts" (very unlikely).
+			 * Can be fixed by adding dictionary_create() ordinal number +
+			 * stack address at the time of grabbing the ordinal number:
+			 * dict_id = ++static_id; dict_stack_address_stamp = &auto_var; */
 			lgdebug(+D_DIALECT,
 			        "Debug: Resetting dialect cache of a different dictionary.\n");
 			free_cost_table(opts);
@@ -257,6 +260,7 @@ bool setup_dialect(Dictionary dict, Parse_Options opts)
 	}
 
 	dinfo->dict = dict;
+	dict->cached_dialect = dinfo;
 
 	if (dt->num != 0)
 	{
