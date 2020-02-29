@@ -24,7 +24,7 @@ SUBDIRS += python-examples
 endif
 
 EXTRA_DIST =                              \
-   README                                 \
+   README.md                              \
    autoit/_LGTest.au3                     \
    autoit/_LinkGrammar.au3                \
    autoit/README                          \
