@@ -15,22 +15,23 @@ TEST_EXTENSIONS = .py
 PY_LOG_COMPILER = $(PYTHON)
 #AM_PY_LOG_FLAGS = -v
 
-EXTRA_DIST =         \
-   AUTHORS           \
-   LICENSE           \
-   README.md         \
-   example.py        \
-   sentence-check.py \
-   parses-demo-sql.txt \
-   parses-en.txt     \
-   parses-lt.txt     \
-   parses-pos-en.txt \
-   parses-pos-he.txt \
-   parses-pos-ru.txt \
+EXTRA_DIST =               \
+   AUTHORS                 \
+   LICENSE                 \
+   README.md               \
+   example.py              \
+   sentence-check.py       \
+   parses-demo-sql.txt     \
+   parses-dialect-en.txt   \
+   parses-en.txt           \
+   parses-lt.txt           \
+   parses-pos-en.txt       \
+   parses-pos-he.txt       \
+   parses-pos-ru.txt       \
    parses-pos-spell-en.txt \
-   parses-quotes-en.txt \
-   parses-sat-en.txt \
-   lg_testutils.py   \
+   parses-quotes-en.txt    \
+   parses-sat-en.txt       \
+   lg_testutils.py         \
    tests.py
 
 
