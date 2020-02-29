@@ -3,6 +3,7 @@ SUBDIRS=words
 DICTS=                        \
 	4.0.affix                  \
 	4.0.constituent-knowledge  \
+	4.0.dialect                \
 	4.0.dict                   \
 	4.0.dict.m4                \
 	4.0.knowledge              \
