@@ -1,4 +1,4 @@
-Version 5.8.0 (XXX 2020)
+Version 5.8.0 (28 February 2020)
  * Java bindings: Remove the obsolete senses API.
  * swig-4.0 compatibility bug fix.
  * English dict: Fixes to support questions ending in WH-words.

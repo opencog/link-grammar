@@ -19,7 +19,7 @@ dnl     4a) Increment when removing or changing interfaces.
 LINK_MAJOR_VERSION=5
 dnl     4a) 5) Increment when adding interfaces.
 dnl     6) Set to zero when removing or changing interfaces.
-LINK_MINOR_VERSION=7
+LINK_MINOR_VERSION=8
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
