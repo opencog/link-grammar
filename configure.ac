@@ -4,7 +4,7 @@
 # accordingly.
 # Don't end the URLs with a slash even if it appears in the official address,
 # because we may append a component. Also, they cannot include "!".
-AC_INIT([link-grammar],[5.7.0],[https://github.com/opencog/link-grammar],,
+AC_INIT([link-grammar],[5.8.0],[https://github.com/opencog/link-grammar],,
 		  [https://www.abisource.com/projects/link-grammar])
 
 DISCUSSION_GROUP=https://groups.google.com/d/forum/link-grammar
