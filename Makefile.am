@@ -33,7 +33,6 @@ EXTRA_DIST =                            \
 	docker/docker-parser/Dockerfile      \
 	docker/docker-python/Dockerfile      \
 	docker/docker-server/Dockerfile      \
-	m4/varcheckpoint.m4                  \
 	man/link-parser.1                    \
 	mingw/README-Cygwin.md               \
 	mingw/README-MinGW64.md              \
