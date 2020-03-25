@@ -17,17 +17,7 @@ jobs:
       run: sudo apt-get install autoconf-archive flex
     - name: autoconf
       run: ./autogen.sh
-    - name: configure
-      run: ./configure --disable-python-bindings
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: sudo make install
-      run: sudo make install
-    - name: sudo ldconfig
-      run: sudo ldconfig
-    - name: make installcheck
-      run: make installcheck
-    - name: try it out
-      run: /usr/local/bin/link-parser --version
+    - name: install emsdk
+      run: sudo ./js/install_emsdk.sh
+    - name: build packaes
+      run: sudo ./js/build_packages.sh
