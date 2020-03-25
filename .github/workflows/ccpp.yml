@@ -30,4 +30,4 @@ jobs:
     - name: make installcheck
       run: make installcheck
     - name: try it out
-      run: echo "The needs of the many outweigh the needs of the few." | /usr/local/bin/link-parser
+      run: echo The needs of the many outweigh the needs of the few. | /usr/local/bin/link-parser
