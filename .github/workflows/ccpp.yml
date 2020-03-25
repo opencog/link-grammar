@@ -13,6 +13,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: install packages
+      run: sudo apt-get install autoconf-archive
     - name: autoconf
       run: ./autogen.sh
     - name: configure
