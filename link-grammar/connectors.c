@@ -14,14 +14,15 @@
  * Miscellaneous utilities for dealing with word types.
  */
 
-#include <limits.h>                 // for CHAR_BIT
+#include <limits.h>                     // CHAR_BIT
 
-#include "dict-common/dict-utils.h" // for size_of_expression()
-#include "api-structures.h"         // for Parse_Options_s
+#include "dict-common/dict-utils.h"     // size_of_expression
+#include "api-structures.h"             // Parse_Options_s
 #include "connectors.h"
-#include "link-includes.h"          // for Parse_Options
+#include "link-includes.h"              // Parse_Options
 
 #define WILD_TYPE '*'
+#define LENGTH_LINIT_WILD_TYPE WILD_TYPE
 
 /**
  * free_connectors() -- free the list of connectors pointed to by e
@@ -33,7 +34,7 @@ void free_connectors(Connector *e)
 	for (; e != NULL; e = n)
 	{
 		n = e->next;
-		xfree((char *)e, sizeof(Connector));
+		free(e);
 	}
 }
 
@@ -62,15 +63,14 @@ Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc,
 	Connector *c;
 
 	if (NULL == connector_pool) /* For the SAT-parser, until fixed. */
-		c = xalloc(sizeof(Connector));
+	{
+		c = malloc(sizeof(Connector));
+		memset(c, 0, sizeof(Connector));
+	}
 	else
-		c = pool_alloc(connector_pool);
+		c = pool_alloc(connector_pool); /* Memory-pool has zero_out attribute.*/
 
 	c->desc = desc;
-	c->nearest_word = 0;
-	c->multi = false;
-	c->tracon_id = 0;
-	c->originating_gword = NULL;
 	set_connector_length_limit(c, opts);
 	//assert(0 != c->length_limit, "Connector_new(): Zero length_limit");
 
@@ -109,8 +109,6 @@ static int condesc_by_uc_num(const void *a, const void *b)
 	return 0;
 }
 
-#define LENGTH_LINIT_WILD_TYPE WILD_TYPE
-
 /**
  * Set the length limit of all the connectors that match those in e.
  * XXX A connector in e that doesn't match any other connector cannot
@@ -135,7 +133,7 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 	/* Scan the expression connector list and set length_limit.
 	 * restart_cn is needed because several connectors in this list
 	 * may match a given uppercase part. */
-	size_t restart_cn = 0, cn = 0, en;
+	size_t restart_cn = 0, cn, en;
 	for (en = 0; en < exp_num_con; en++)
 	{
 		for (cn = restart_cn; cn < ct->num_con; cn++)
@@ -146,7 +144,7 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 		if (en == exp_num_con) break;
 
 		if (econlist[en]->uc_num != sdesc[cn]->uc_num) continue;
-		restart_cn = cn+1;
+		restart_cn = cn;
 
 		const char *wc_str = econlist[en]->string;
 		char *uc_wildcard = strchr(wc_str, LENGTH_LINIT_WILD_TYPE);
@@ -185,7 +183,7 @@ static void condesc_length_limit_def_delete(ConTable *ct)
 	ct->length_limit_def = NULL;
 }
 
-void set_all_condesc_length_limit(Dictionary dict)
+static void set_all_condesc_length_limit(Dictionary dict)
 {
 	ConTable *ct = &dict->contable;
 	bool unlimited_len_found = false;
@@ -216,7 +214,7 @@ void set_all_condesc_length_limit(Dictionary dict)
 		prt_error("Debug:\n%5s %-6s %3s\n\\", "num", "uc_num", "ll");
 		for (size_t n = 0; n < ct->num_con; n++)
 		{
-			prt_error("%5zu %6d %3d %s\n\\", n, ct->sdesc[n]->uc_num,
+			prt_error("%5zu %6u %3d %s\n\\", n, ct->sdesc[n]->uc_num,
 			       ct->sdesc[n]->length_limit, ct->sdesc[n]->string);
 		}
 		prt_error("\n");
@@ -236,7 +234,7 @@ void set_all_condesc_length_limit(Dictionary dict)
  * (total 36) so a 6-bit packing is possible (by abs(value-60) on each
  * character value).
  */
-static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
+static void connector_encode_lc(const char *lc_string, condesc_t *desc)
 {
 	lc_enc_t lc_mask = 0;
 	lc_enc_t lc_value = 0;
@@ -245,22 +243,23 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
 
 	for (s = lc_string; '\0' != *s; s++)
 	{
-		lc_value |= (lc_enc_t)(*s & LC_MASK) << ((s-lc_string)*LC_BITS);
-		if (*s != WILD_TYPE) lc_mask |= wildcard;
+		if (*s != WILD_TYPE)
+		{
+			lc_value |= (lc_enc_t)(*s & LC_MASK) << ((s-lc_string)*LC_BITS);
+			lc_mask |= wildcard;
+		}
 		wildcard <<= LC_BITS;
 	};
 
-	if ((unsigned long)(s-lc_string) > (CHAR_BIT*sizeof(lc_value)/LC_BITS))
+	/* FIXME: Check on dict read. */
+	if ((size_t)(s-lc_string) > (sizeof(lc_value)/LC_BITS)*CHAR_BIT)
 	{
-		prt_error("Error: Lower-case part '%s' is too long (%d)\n",
-					 lc_string, (int)(s-lc_string));
-		return false;
+		prt_error("Warning: Lower-case part '%s' is too long (%d>%d)\n",
+					 lc_string, (int)(s-lc_string), MAX_CONNECTOR_LC_LENGTH);
 	}
 
 	desc->lc_mask = (lc_mask << 1) + !!(desc->flags & CD_HEAD_DEPENDENT);
 	desc->lc_letters = (lc_value << 1) + !!(desc->flags & CD_HEAD);
-
-	return true;
 }
 
 /**
@@ -268,29 +267,37 @@ static bool connector_encode_lc(const char *lc_string, condesc_t *desc)
  * This information is used to speed up the parsing stage. It is
  * calculated during the directory creation and doesn't change afterward.
  */
-static bool calculate_connector_info(condesc_t * c)
+static void calculate_connector_info(condesc_t * c)
 {
 	const char *s;
 
 	s = c->string;
-	if (islower(*s)) s++; /* ignore head-dependent indicator */
+	if (islower(*s)) s++; /* Ignore head-dependent indicator. */
 	if ((c->string[0] == 'h') || (c->string[0] == 'd'))
 		c->flags |= CD_HEAD_DEPENDENT;
-	if ((c->flags & CD_HEAD_DEPENDENT) && (c->string[0] == 'h'))
+	if (c->string[0] == 'h')
 		c->flags |= CD_HEAD;
 
-#if 0
-	/* For most situations, all three hashes are very nearly equal;
-	 * as to which is faster depends on the parsed text.
+	c->uc_start = (uint8_t)(s - c->string);
+	while (isupper(*++s)) {} /* Skip the uppercase part. */
+	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
+
+	connector_encode_lc(s, c);
+}
+
+/* ================= Connector descriptor table. ====================== */
+
+static uint32_t connector_str_hash(const char *s)
+{
+	/* From an old-code comment:
+	 * For most situations, all three hashes are very nearly equal.
 	 * For both English and Russian, there are about 100 pre-defined
 	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
-	 * connectors, and the LLxxx suffix connectors for Russian).
-	 * Turns out the cost of setting up the hash table dominates the
-	 * cost of collisions. */
+	 * connectors, and the LLxxx suffix connectors for Russian). */
 #ifdef USE_DJB2
-	/* djb2 hash */
+	/* djb2 hash. */
 	uint32_t i = 5381;
-	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
+	while (isupper(*s)) /* Connector tables cannot contain UTF8. */
 	{
 		i = ((i << 5) + i) + *s;
 		s++;
@@ -300,10 +307,9 @@ static bool calculate_connector_info(condesc_t * c)
 
 #define USE_JENKINS
 #ifdef USE_JENKINS
-	/* Jenkins one-at-a-time hash */
+	/* Jenkins one-at-a-time hash. */
 	uint32_t i = 0;
-	c->uc_start = s - c->string;
-	while (isupper((int) *s)) /* connector tables cannot contain UTF8, yet */
+	while (isupper(*s)) /* Connector tables cannot contain UTF8. */
 	{
 		i += *s;
 		i += (i<<10);
@@ -316,68 +322,15 @@ static bool calculate_connector_info(condesc_t * c)
 #endif /* USE_JENKINS */
 
 #ifdef USE_SDBM
-	/* sdbm hash */
+	/* sdbm hash. */
 	uint32_t i = 0;
 	c->uc_start = s - c->string;
-	while (isupper((int) *s))
+	while (isupper(*s))
 	{
 		i = *s + (i << 6) + (i << 16) - i;
 		s++;
 	}
 #endif /* USE_SDBM */
-
-	//c->uc_hash = i;
-#else
-
-
-	c->uc_start = (uint8_t)(s - c->string);
-	while (isupper(*++s)) /* The first letter must be an uppercase one. */
-		;
-#endif
-	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
-
-	return connector_encode_lc(s, c);
-}
-
-/* ================= Connector descriptor table. ====================== */
-
-static uint32_t connector_str_hash(const char *s)
-{
-	uint32_t i;
-
-	/* For most situations, all three hashes are very nearly equal;
-	 * as to which is faster depends on the parsed text.
-	 * For both English and Russian, there are about 100 pre-defined
-	 * connectors, and another 2K-4K autogen'ed ones (the IDxxx idiom
-	 * connectors, and the LLxxx suffix connectors for Russian).
-	 * Turns out the cost of setting up the hash table dominates the
-	 * cost of collisions. */
-#ifdef USE_DJB2
-	/* djb2 hash */
-	i = 5381;
-	while (*s)
-	{
-		i = ((i << 5) + i) + *s;
-		s++;
-	}
-	i += i>>14;
-#endif /* USE_DJB2 */
-
-#define USE_JENKINS
-#ifdef USE_JENKINS
-	/* Jenkins one-at-a-time hash */
-	i = 0;
-	while (*s)
-	{
-		i += *s;
-		i += (i<<10);
-		i ^= (i>>6);
-		s++;
-	}
-	i += (i << 3);
-	i ^= (i >> 11);
-	i += (i << 15);
-#endif /* USE_JENKINS */
 
 	return i;
 }
@@ -445,8 +398,7 @@ bool sort_condesc_by_uc_constring(Dictionary dict)
 		condesc_t *condesc = dict->contable.hdesc[n].desc;
 
 		if (NULL == condesc) continue;
-		if (!calculate_connector_info(condesc))
-			return false;
+		calculate_connector_info(condesc);
 		sdesc[i++] = dict->contable.hdesc[n].desc;
 	}
 
@@ -532,7 +484,7 @@ static void condesc_table_alloc(ConTable *ct, size_t size)
 	ct->size = size;
 }
 
-#define CONDESC_TABLE_GROW_FACTOR 2
+#define CONDESC_TABLE_GROWTH_FACTOR 2
 
 static bool condesc_grow(ConTable *ct)
 {
@@ -540,7 +492,7 @@ static bool condesc_grow(ConTable *ct)
 	hdesc_t *old_hdesc = ct->hdesc;
 
 	lgdebug(+11, "Growing ConTable from %zu\n", old_size);
-	condesc_table_alloc(ct, ct->size * CONDESC_TABLE_GROW_FACTOR);
+	condesc_table_alloc(ct, ct->size * CONDESC_TABLE_GROWTH_FACTOR);
 
 	for (size_t i = 0; i < old_size; i++)
 	{

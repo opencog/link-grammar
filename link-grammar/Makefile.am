@@ -84,6 +84,7 @@ liblink_grammar_la_LIBADD  += -lm
 liblink_grammar_la_SOURCES =        \
 	api.c                            \
 	connectors.c                     \
+	dict-common/dialect.c            \
 	dict-common/dict-common.c        \
 	dict-common/dict-impl.c          \
 	dict-common/dict-utils.c         \
@@ -91,6 +92,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-common/idiom.c              \
 	dict-common/print-dict.c         \
 	dict-common/regex-morph.c        \
+	dict-file/read-dialect.c         \
 	dict-file/dictionary.c           \
 	dict-file/read-dict.c            \
 	dict-file/read-regex.c           \
@@ -128,7 +130,6 @@ liblink_grammar_la_SOURCES =        \
 	tokenize/anysplit.c              \
 	tokenize/spellcheck-aspell.c     \
 	tokenize/spellcheck-hun.c        \
-	tokenize/regex-tokenizer.c       \
 	tokenize/tokenize.c              \
 	tokenize/wg-display.c            \
 	tokenize/wordgraph.c             \
@@ -139,6 +140,7 @@ liblink_grammar_la_SOURCES =        \
 	api-types.h                      \
 	connectors.h                     \
 	const-prime.h                    \
+	dict-common/dialect.h            \
 	dict-common/dict-affix.h         \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
@@ -149,6 +151,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-common/file-utils.h         \
 	dict-common/idiom.h              \
 	dict-common/regex-morph.h        \
+	dict-file/read-dialect.h         \
 	dict-file/read-dict.h            \
 	dict-file/read-regex.h           \
 	dict-file/word-file.h            \
@@ -186,7 +189,6 @@ liblink_grammar_la_SOURCES =        \
 	string-id.h                      \
 	tokenize/anysplit.h              \
 	tokenize/spellcheck.h            \
-	tokenize/regex-tokenizer.h       \
 	tokenize/tok-structures.h        \
 	tokenize/tokenize.h              \
 	tokenize/word-structures.h       \

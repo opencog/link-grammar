@@ -11,6 +11,10 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifdef DEBUG
+#include <inttypes.h>                   // format macros
+#endif
+
 #include "const-prime.h"
 #include "connectors.h"
 #include "tracon-set.h"
@@ -61,7 +65,7 @@ static unsigned int find_prime_for(size_t count)
 {
 	size_t i;
 	for (i = 0; i < MAX_S_PRIMES; i ++)
-		if ((8 * count) < (3 * s_prime[i])) return i;
+	   if (count < MAX_TRACON_SET_TABLE_SIZE(s_prime[i])) return i;
 
 	assert(0, "find_prime_for(%zu): Absurdly big count", count);
 	return 0;
@@ -71,6 +75,9 @@ void tracon_set_reset(Tracon_set *ss)
 {
 	size_t ncount = MAX(ss->count, ss->ocount);
 
+	/* Table sizing heuristic: The number of tracons as a function of
+	 * word number is usually first increasing and then decreasing.
+	 * Continue the trend of the last 2 words. */
 	if (ss->count > ss->ocount)
 		ncount = ncount * 3 / 4;
 	else
@@ -80,9 +87,10 @@ void tracon_set_reset(Tracon_set *ss)
 
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
-	memset(ss->table, 0, ss->size*sizeof(clist_slot));
+	memset(ss->table, 0, ss->size * sizeof(clist_slot));
 	ss->ocount = ss->count;
 	ss->count = 0;
+	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
 }
 
 Tracon_set *tracon_set_create(void)
@@ -93,9 +101,11 @@ Tracon_set *tracon_set_create(void)
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
 	ss->table = (clist_slot *) malloc(ss->size * sizeof(clist_slot));
-	memset(ss->table, 0, ss->size*sizeof(clist_slot));
+	memset(ss->table, 0, ss->size * sizeof(clist_slot));
 	ss->count = ss->ocount = 0;
 	ss->shallow = false;
+	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
+
 	return ss;
 }
 
@@ -104,7 +114,7 @@ Tracon_set *tracon_set_create(void)
  */
 static bool connector_equal(const Connector *c1, const Connector *c2)
 {
-	return c1->desc == c2->desc && (c1->multi == c2->multi);
+	return (c1->desc == c2->desc) && (c1->multi == c2->multi);
 }
 
 /** Return TRUE iff the tracon is exactly the same. */
@@ -123,7 +133,7 @@ uint64_t fp_count;
 uint64_t coll_count;
 static void prt_stat(void)
 {
-	lgdebug(+5, "%ld accesses, chain %.4f\n",
+	lgdebug(+5, "%"PRIu64" accesses, chain %.4f\n",
 	        fp_count, 1.*(fp_count+coll_count)/fp_count);
 }
 #define PRT_STAT(...) __VA_ARGS__
@@ -131,8 +141,8 @@ static void prt_stat(void)
 #define PRT_STAT(...)
 #endif
 
-static bool place_found(const Connector *c, const clist_slot *slot, unsigned int hash,
-                         Tracon_set *ss)
+static bool place_found(const Connector *c, const clist_slot *slot,
+                        unsigned int hash, Tracon_set *ss)
 {
 	if (slot->clist == NULL) return true;
 	if (hash != slot->hash) return false;
@@ -145,7 +155,8 @@ static bool place_found(const Connector *c, const clist_slot *slot, unsigned int
  * lookup the given string in the table.  Return an index
  * to the place it is, or the place where it should be.
  */
-static unsigned int find_place(const Connector *c, unsigned int h, Tracon_set *ss)
+static unsigned int find_place(const Connector *c, unsigned int h,
+                               Tracon_set *ss)
 {
 	PRT_STAT(if (fp_count == 0) atexit(prt_stat); fp_count++;)
 	unsigned int coll_num = 0;
@@ -180,6 +191,8 @@ static void grow_table(Tracon_set *ss)
 			ss->table[p] = old.table[i];
 		}
 	}
+	ss->available_count = MAX_STRING_SET_TABLE_SIZE(ss->size);
+
 	/* printf("growing from %zu to %zu\n", old.size, ss->size); */
 	PRT_STAT(fp_count = fp_count_save);
 	free(old.table);
@@ -194,10 +207,9 @@ Connector **tracon_set_add(Connector *clist, Tracon_set *ss)
 {
 	assert(clist != NULL, "Connector-ID: Can't insert a null list");
 
-	/* We may need to add it to the table.  If the table got too big, first
-	 * we grow it.  Too big is defined as being more than 3/8 full.
-	 * There's a huge boost from keeping this sparse. */
-	if ((8 * ss->count) > (3 * ss->size)) grow_table(ss);
+	/* We may need to add it to the table. If the table got too big,
+	 * first we grow it. */
+	if (ss->available_count == 0) grow_table(ss);
 
 	unsigned int h = hash_connectors(clist, ss->shallow);
 	unsigned int p = find_place(clist, h, ss);
@@ -207,6 +219,7 @@ Connector **tracon_set_add(Connector *clist, Tracon_set *ss)
 
 	ss->table[p].hash = h;
 	ss->count++;
+	ss->available_count--;
 
 	return &ss->table[p].clist;
 }

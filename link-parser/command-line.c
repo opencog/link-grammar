@@ -25,6 +25,7 @@ static struct
 	int verbosity;
 	char * debug;
 	char * test;
+	char * dialect;
 	int timeout;
 	int memory;
 	int linkage_limit;
@@ -61,6 +62,7 @@ static int variables_cmd(const Switch*, int);
 static int file_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
 static int exit_cmd(const Switch*, int);
+static int info_cmd(const Switch*, int);
 
 Switch default_switches[] =
 {
@@ -69,6 +71,8 @@ Switch default_switches[] =
 	{"constituents", Int,  "Generate constituent output",   &local.display_constituents},
 	{"cost-model", Int,  UNDOC "Cost model used for ranking", &local.cost_model},
 	{"cost-max",   Float, "Largest cost to be considered",  &local.max_cost},
+	{"debug",      String, "Comma-separated function names to debug", &local.debug},
+	{"dialect",    String, "Comma-separated dialects",      &local.dialect},
 	{"disjuncts",  Bool, "Display of disjuncts used",       &local.display_disjuncts},
 	{"echo",       Bool, "Echoing of input sentence",       &local.echo_on},
 	{"graphics",   Bool, "Graphical display of linkage",    &local.display_on},
@@ -85,22 +89,22 @@ Switch default_switches[] =
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	{"spell",      Int, "Up to this many spell-guesses per unknown word", &local.spell_guess},
+	{"test",       String, "Comma-separated test features", &local.test},
 #endif /* HAVE_HUNSPELL */
 	{"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
 #ifdef USE_SAT_SOLVER
 	{"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
 #endif /* USE_SAT_SOLVER */
 	{"verbosity",  Int,  "Level of detail in output",       &local.verbosity},
-	{"debug",      String, "Comma-separated function names to debug", &local.debug},
-	{"test",       String, "Comma-separated test features", &local.test},
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
 	{"wordgraph",  Int,  "Display sentence word-graph",     &local.display_wordgraph},
-	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
-	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
-	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
 	{"exit",       Cmd,  "Exit the program",                       exit_cmd},
+	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
+	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
 	{"quit",       Cmd,  UNDOC "Exit the program",                 exit_cmd},
+	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
+	{"!",          Cmd,  UNDOC "Print information on dictionary words", info_cmd},
 	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
@@ -242,7 +246,7 @@ static const char *switch_value_string(const Switch *as)
 			break;
 		default:
 			/* Internal error. */
-			snprintf(buf, sizeof(buf), "Unknown type %d\n", as->param_type);
+			snprintf(buf, sizeof(buf), "Unknown type %d\n", (int)as->param_type);
 	}
 
 	return buf;
@@ -405,7 +409,7 @@ static FILE *open_help_file(int verbosity)
 
 /**
  * Print basic info: name, description, current value and type.
- * Iff is_completion is true, display also the variable value, and use
+ * If `is_completion` is true, also display the variable value, and use
  * fixed fields for the value related info and the description.
  * This is intended for use from the command completion code.
  *
@@ -577,6 +581,7 @@ static int help_cmd(const Switch *uc, int n)
 	printf("\n");
 	printf(" !!<string>      Print all the dictionary words that match <string>.\n");
 	printf("                 A wildcard * may be used to find multiple matches.\n");
+	printf("                 Issue \"!help !\" for more details.\n");
 	printf("\n");
 	printf(" !<var>          Toggle the specified Boolean variable.\n");
 	printf(" !<var>=<val>    Assign that value to that variable.\n");
@@ -601,9 +606,9 @@ static int variables_cmd(const Switch *uc, int n)
 	}
 
 	printf("\n");
-	printf("Toggle a Boolean variable as in \"!batch\"; ");
-	printf("Set a variable as in \"!width=100\".\n");
-	printf("Get a more detailed help on a variable as in \"!help var\".\n");
+	printf("Toggle a Boolean variable as so: \"!batch\"; ");
+	printf("Set a variable as so: \"!width=100\".\n");
+	printf("Get detailed help on a variable with: \"!help var\".\n");
 	return 'c';
 }
 
@@ -617,17 +622,26 @@ static int file_cmd(const Switch *uc, int n)
 	return 'f';
 }
 
+static int info_cmd(const Switch *uc, int n)
+{
+	/* Dummy definition - the work is done done in
+	 * x_issue_special_command() (see '!' there). */
+	return 'c';
+}
+
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
 {
 	char *s, *x, *y;
 	int count, j;
 	const Switch *as = default_switches;
+	const char helpmsg[] = "Type \"!help\" or \"!variables\".";
 
 	/* Handle a request for a particular command help. */
 	if (NULL != dict)
 	{
+		char *dupline = strdup(line);
 		/* If we are here, it is not a command-line parameter. */
-		s = strtok(line, WHITESPACE);
+		s = strtok(dupline, WHITESPACE);
 		if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
 		{
 			s = strtok(NULL, WHITESPACE);
@@ -649,61 +663,24 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 				if (count == 1)
 				{
+					free(dupline);
 					display_help(&as[j], copts);
 					return 'c';
 				}
 
 				if (count > 1)
-					prt_error("Ambiguous command: \"%s\".  ", s);
+					prt_error("Ambiguous command: \"%s\".  %s\n", s, helpmsg);
 				else
-					prt_error("Undefined command: \"%s\".  ", s);
+					prt_error("Undefined command: \"%s\".  %s\n", s, helpmsg);
 
-				prt_error("Type \"!help\" or \"!variables\"\n");
+				free(dupline);
 				return -1;
 			}
 		}
+		free(dupline);
 	}
 
-	clean_up_string(line);
 	s = line;
-	j = -1;
-	count = 0;
-
-	/* Look for Boolean flippers or command abbreviations. */
-	for (int i = 0; as[i].string != NULL; i++)
-	{
-		if (((Bool == as[i].param_type) || (Cmd == as[i].param_type)) &&
-		    strncasecmp(s, as[i].string, strlen(s)) == 0)
-		{
-			if ((UNDOC[0] == as[i].description[0]) &&
-			    (strlen(as[i].string) != strlen(s))) continue;
-			count++;
-			j = i;
-		}
-	}
-
-	if (count > 1)
-	{
-		prt_error("Ambiguous command \"%s\".  Type \"!help\" or \"!variables\"\n", s);
-		return -1;
-	}
-	else if (count == 1)
-	{
-		/* Flip Boolean value. */
-		if (Bool == as[j].param_type)
-		{
-			setival(as[j], (0 == ival(as[j])));
-			int undoc = !!(UNDOC[0] == as[j].description[0]);
-			printf("%s turned %s.\n",
-			       as[j].description+undoc, (ival(as[j]))? "on" : "off");
-			return 'c';
-		}
-
-		/* Found an abbreviated, but it wasn't a Boolean.
-		 * It means it is a user command, to be handled below. */
-		return ((int (*)(const Switch*, int)) (as[j].ptr))(as, j);
-	}
-
 	if (s[0] == '!')
 	{
 		Parse_Options opts = copts->popts;
@@ -732,20 +709,49 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		return 'c';
 	}
-#ifdef USE_REGEX_TOKENIZER
-	if (s[0] == '/')
+
+	clean_up_string(line);
+	j = -1;
+	count = 0;
+
+	/* Look for Boolean flippers or command abbreviations. */
+	for (int i = 0; as[i].string != NULL; i++)
 	{
-		/* experimental code -- ignore nested extern warning for now */
-		extern int regex_tokenizer_test(Dictionary, const char *);
-		int rc = regex_tokenizer_test(dict, s+1);
-		if (0 != rc) printf("regex_tokenizer_test: rc %d\n", rc);
-		return 'c';
+		if (((Bool == as[i].param_type) || (Cmd == as[i].param_type)) &&
+		    strncasecmp(s, as[i].string, strlen(s)) == 0)
+		{
+			if ((UNDOC[0] == as[i].description[0]) &&
+			    (strlen(as[i].string) != strlen(s))) continue;
+			count++;
+			j = i;
+		}
 	}
-#endif
+
+	if (count > 1)
+	{
+		prt_error("Ambiguous command \"%s\".  %s\n", s, helpmsg);
+		return -1;
+	}
+	else if (count == 1)
+	{
+		/* Flip Boolean value. */
+		if (Bool == as[j].param_type)
+		{
+			setival(as[j], (0 == ival(as[j])));
+			int undoc = !!(UNDOC[0] == as[j].description[0]);
+			printf("%s turned %s.\n",
+			       as[j].description+undoc, (ival(as[j]))? "on" : "off");
+			return 'c';
+		}
+
+		/* Found an abbreviated, but it wasn't a Boolean.
+		 * It means it is a user command, to be handled below. */
+		return ((int (*)(const Switch*, int)) (as[j].ptr))(as, j);
+	}
 
 	/* Test here for an equation i.e. does the command line hold an equals sign? */
-	for (x=s; (*x != '=') && (*x != '\0') ; x++)
-	  ;
+	for (x=s; (*x != '=') && (*x != '\0'); x++)
+		;
 	if (*x == '=')
 	{
 		*x = '\0';
@@ -775,7 +781,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		if (count > 1)
 		{
-			prt_error("Error: Ambiguous variable \"%s\".  Type \"!help\" or \"!variables\"\n", x);
+			prt_error("Error: Ambiguous variable \"%s\".  %s\n", x, helpmsg);
 			return -1;
 		}
 
@@ -787,9 +793,11 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			if ((0 == strcasecmp(y, "true")) || (0 == strcasecmp(y, "t"))) val = 1;
 			if ((0 == strcasecmp(y, "false")) || (0 == strcasecmp(y, "f"))) val = 0;
 
-			if (val < 0)
+			if ((val < 0) ||
+			    ((as[j].param_type == Bool) && (val != 0) && (val != 1)))
 			{
-				prt_error("Error: Invalid value %s for variable \"%s\". Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				prt_error("Error: Invalid value %s for variable \"%s\". %s\n",
+				          y, as[j].string, helpmsg);
 				return -1;
 			}
 
@@ -804,7 +812,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			double val = strtod(y, &err);
 			if (('\0' == *y) || ('\0' != *err))
 			{
-				prt_error("Error: Invalid value %s for variable \"%s\". Type \"!help\" or \"!variables\"\n", y, as[j].string);
+				prt_error("Error: Invalid value %s for variable \"%s\". %s\n",
+				          y, as[j].string, helpmsg);
 				return -1;
 			}
 
@@ -822,7 +831,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		else
 		{
 			prt_error("Error: Internal error: Unknown variable type %d\n",
-			          as[j].param_type);
+			          (int)as[j].param_type);
 			return -1;
 		}
 	}
@@ -858,6 +867,7 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	Parse_Options opts = copts->popts;
 	local.verbosity = parse_options_get_verbosity(opts);
 	local.debug = parse_options_get_debug(opts);
+	local.dialect = parse_options_get_dialect(opts);
 	local.test = parse_options_get_test(opts);
 	local.timeout = parse_options_get_max_parse_time(opts);;
 	local.memory = parse_options_get_max_memory(opts);;
@@ -895,6 +905,7 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_verbosity(opts, local.verbosity);
 	parse_options_set_debug(opts, local.debug);
 	parse_options_set_test(opts, local.test);
+	parse_options_set_dialect(opts, local.dialect);
 	parse_options_set_max_parse_time(opts, local.timeout);
 	parse_options_set_max_memory(opts, local.memory);
 	parse_options_set_linkage_limit(opts, local.linkage_limit);

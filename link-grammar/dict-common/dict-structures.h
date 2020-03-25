@@ -14,7 +14,6 @@
 #ifndef _LG_DICT_STRUCTURES_H_
 #define _LG_DICT_STRUCTURES_H_
 
-#include "link-grammar/link-features.h"
 #include "link-includes.h"
 
 LINK_BEGIN_DECLS
@@ -38,6 +37,9 @@ typedef enum
 static const int cost_max_dec_places = 3;
 static const double cost_epsilon = 1E-5;
 
+#define EXPTAG_SZ 100 /* Initial size for the Exptag array. */
+typedef enum { Exptag_none=0, Exptag_dialect, Exptag_macro } Exptag_type;
+
 /**
  * The Exp structure defined below comprises the expression trees that are
  * stored in the dictionary. The expression has a type (OR_type, AND_type
@@ -48,16 +50,18 @@ static const double cost_epsilon = 1E-5;
  */
 struct Exp_struct
 {
-	Exp *operand_next; /* Next same-level operand. */
-	Exp_type type; /* One of three types: AND, OR, or connector. */
+	Exp *operand_next;    /* Next same-level operand. */
+	Exp_type type:8;      /* One of three types: AND, OR, or connector. */
+	Exptag_type tag_type:8;
 	char dir;      /* The connector connects to the left ('-') or right ('+'). */
-	bool multi;    /* TRUE if a multi-connector (for connector). */
+	bool multi;           /* TRUE if a multi-connector (for connector). */
+	unsigned int tag_id;  /* Index in tag_type namespace. */
+	float cost;           /* The cost of using this expression. */
 	union
 	{
 		Exp *operand_first; /* First operand (for non-terminals). */
 		condesc_t *condesc; /* Only needed if it's a connector. */
 	};
-	double cost;   /* The cost of using this expression. */
 };
 
 bool cost_eq(double cost1, double cost2);

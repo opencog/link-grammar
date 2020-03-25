@@ -1,0 +1,46 @@
+{
+  "name": "link-grammar",
+  "version": "0.0.9",
+  "description": "Link grammar library node interface",
+  "main": "./build/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rompetoto/link-grammar.git"
+  },
+  "author": "Richard van der Dys",
+  "keywords": [
+    "link",
+    "grammar",
+    "word",
+    "sentence",
+    "parse"
+  ],
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://raw.github.com/rompetoto/wiki/master/LICENSE"
+    }
+  ],
+  "engines": {
+    "node": ">=0.6.0"
+  },
+  "dependencies": {
+    "ffi": "latest",
+    "ref": "latest",
+    "ref-struct": "latest",
+    "underscore": "latest"
+  },
+  "devDependencies": {
+    "coffee-script": "latest",
+    "mocha": "latest",
+    "should": "latest"
+  },
+  "homepage": "https://github.com/rompetoto/link-grammar",
+  "bugs": "https://github.com/rompetoto/link-grammar/issues",
+  "scripts": {
+    "clean": "rm -f -R build",
+    "compile": "node node_modules/coffee-script/bin/coffee -l -o build src",
+    "test": "node node_modules/mocha/bin/mocha -R spec -b build/test/",
+    "make": "npm run clean && npm run compile && npm run test"
+  }
+}

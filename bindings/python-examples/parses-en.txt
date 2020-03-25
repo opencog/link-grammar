@@ -45,3 +45,14 @@ O    +-->Wd---+--Sp*i--+--I*t--+Osm+    +-Dsu-+
 O    |        |        |       |   |    |     |
 OLEFT-WALL y'.#you gotta.v-d do.v it this.d way.n
 O
+
+% Check that the default dialect setting doesn't enable "headline"
+-max_null_count=1
+
+IThieves rob bank
+O
+O    +---------->WV---------->+
+O    +--->Wd---+------Sp------+
+O    |         |              |
+OLEFT-WALL thieves.n [rob] bank.v
+O

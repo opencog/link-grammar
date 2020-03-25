@@ -29,16 +29,22 @@
 
 /**
  * Set c->nearest_word to the nearest word that this connector could
- * possibly connect to.  The connector *might*, in the end,
- * connect to something more distant, but this is the nearest
- * one that could be connected.
+ * possibly connect to.
+ * The connector *might*, in the end, connect to something more distant,
+ * but this is the nearest one that could be connected.
+ * Also recalculate length_limit to be the farthest word number that could
+ * be connected.
  */
-static int set_dist_fields(Connector * c, size_t w, int delta)
+static int set_dist_fields(Connector * c, size_t w, int delta, int w_clamp)
 {
 	int i;
 	if (c == NULL) return (int) w;
-	i = set_dist_fields(c->next, w, delta) + delta;
+	i = set_dist_fields(c->next, w, delta, w_clamp) + delta;
 	c->nearest_word = i;
+	int farthest_word = w + (delta * c->length_limit);
+	/* Clamp it to the range [0, sent_length). */
+	if (delta * farthest_word > w_clamp) farthest_word = w_clamp;
+	c->farthest_word = farthest_word;
 	return i;
 }
 
@@ -58,8 +64,9 @@ static void setup_connectors(Sentence sent)
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = xd)
 		{
 			xd = d->next;
-			if ((set_dist_fields(d->left, w, -1) < 0) ||
-			    (set_dist_fields(d->right, w, 1) >= (int) sent->length))
+			if ((set_dist_fields(d->left, w, -1, 0) < 0) ||
+			    (set_dist_fields(d->right, w, 1, (int)(sent->length-1)) >=
+			     (int) sent->length))
 			{
 				; /* Skip this disjunct. */
 			}
@@ -82,15 +89,13 @@ static void setup_connectors(Sentence sent)
  */
 void gword_record_in_connector(Sentence sent)
 {
-	for (size_t w = 0; w < sent->length; w++)
+	for (Disjunct *d = sent->dc_memblock;
+	     d < &((Disjunct *)sent->dc_memblock)[sent->num_disjuncts]; d++)
 	{
-		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
-		{
-			for (Connector *c = d->right; NULL != c; c = c->next)
-				c->originating_gword = d->originating_gword;
-			for (Connector *c = d->left; NULL != c; c = c->next)
-				c->originating_gword = d->originating_gword;
-		}
+		for (Connector *c = d->right; NULL != c; c = c->next)
+			c->originating_gword = d->originating_gword;
+		for (Connector *c = d->left; NULL != c; c = c->next)
+			c->originating_gword = d->originating_gword;
 	}
 }
 
@@ -110,15 +115,15 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
 	                   /*zero_out*/false, /*align*/false, /*exact*/false);
 	sent->Connector_pool = pool_new(__func__, "Connector",
 	                   /*num_elements*/8192, sizeof(Connector),
-	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	                   /*zero_out*/true, /*align*/false, /*exact*/false);
 
 	for (w = 0; w < sent->length; w++)
 	{
 		d = NULL;
 		for (x = sent->word[w].x; x != NULL; x = x->next)
 		{
-			Disjunct *dx = build_disjuncts_for_exp(sent, x->exp, x->string, cost_cutoff, opts);
-			word_record_in_disjunct(x->word, dx);
+			Disjunct *dx = build_disjuncts_for_exp(sent, x->exp, x->string,
+				&x->word->gword_set_head, cost_cutoff, opts);
 			d = catenate_disjuncts(dx, d);
 		}
 		sent->word[w].d = d;
@@ -144,19 +149,32 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	{
 		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d);
 
+#if 0
+		/* eliminate_duplicate_disjuncts() is now very efficient and doesn't
+		 * take a significant time even for millions of disjuncts. If a very
+		 * large number of disjuncts per word or very large number of words
+		 * per sentence will ever be a problem, then a "checktimer" TLS
+		 * counter can be used there. Old comment and code are retained
+		 * below for documentation. */
+
 		/* Some long Russian sentences can really blow up, here. */
 		if (resources_exhausted(opts->resources))
 			return;
+#endif
 	}
 	print_time(opts, "Eliminated duplicate disjuncts");
 
 	if (verbosity_level(D_PREP))
 	{
-		prt_error("Debug: After expression pruning and duplicate elimination:\n");
+		prt_error("Debug: After duplicate elimination:\n");
 		print_disjunct_counts(sent);
 	}
 
 	setup_connectors(sent);
 
-	if (verbosity_level(D_SPEC+2)) print_all_disjuncts(sent);
+	if (verbosity_level(D_SPEC+2))
+	{
+		printf("prepare_to_parse:\n");
+		print_all_disjuncts(sent);
+	}
 }

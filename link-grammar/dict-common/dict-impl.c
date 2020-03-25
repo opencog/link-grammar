@@ -1,4 +1,3 @@
-
 /*************************************************************************/
 /* Copyright 2013, 2014 Linas Vepstas                                    */
 /* Copyright 2014, 2015 Amir Plivatsky                                   */
@@ -34,7 +33,7 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 
 	// Normal call
 	int (WINAPI * pfnGetLocaleInfoEx)(LPCWSTR, LCTYPE, LPWSTR, int);
-	*(FARPROC*)&pfnGetLocaleInfoEx = GetProcAddress(GetModuleHandleA("Kernel32" ), "GetLocaleInfoEx" );
+	*(FARPROC*)&pfnGetLocaleInfoEx = GetProcAddress(GetModuleHandleA("Kernel32"), "GetLocaleInfoEx");
 	if (pfnGetLocaleInfoEx)
 	{
 		rc = pfnGetLocaleInfoEx(lpLocaleName, LCType, lpLCData, cchData);
@@ -44,10 +43,10 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 		// Workaround for missing GetLocaleInfoEx
 		HMODULE module = LoadLibraryA("Mlang");
 		HRESULT (WINAPI * pfnRfc1766ToLcidW)(LCID*, LPCWSTR);
-		*(FARPROC*)&pfnRfc1766ToLcidW = GetProcAddress(module, "Rfc1766ToLcidW" );
+		*(FARPROC*)&pfnRfc1766ToLcidW = GetProcAddress(module, "Rfc1766ToLcidW");
 		if (pfnRfc1766ToLcidW)
 		{
-			 LCID lcidlink-parser/parser-utilities.c;
+			 LCID lcid;
 			 if (SUCCEEDED(pfnRfc1766ToLcidW(&lcid, lpLocaleName)))
 			 {
 				rc = GetLocaleInfoW(lcid, LCType, lpLCData, cchData);
@@ -448,7 +447,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 	w_len = (NULL == w_sm) ? strlen(w) : (size_t)(w_sm - w);
 	if (w_len > MAX_WORD)
 	{
-		prt_error("Error: word '%s' too long (%zd), program may malfunction\n",
+		prt_error("Error: word '%s' too long (%zu), program may malfunction\n",
 		          w, w_len);
 		w_len = MAX_WORD;
 	}
@@ -675,7 +674,7 @@ bool afdict_init(Dictionary dict)
 		     ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
 		{
 				if (0 == ac->length) continue;
-				lgdebug(+0, "Class %s, %zd items:",
+				lgdebug(+0, "Class %s, %zu items:",
 				        afdict_classname[ac-afdict->afdict_class], ac->length);
 				for (l = 0; l < ac->length; l++)
 					lgdebug(0, " '%s'", ac->string[l]);

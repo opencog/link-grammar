@@ -25,7 +25,29 @@
 
 /**
  * Here is expression pruning.  This is done even before the expressions
- * are turned into lists of disjuncts.
+ * are turned into lists of disjuncts. The idea is to make the work of the
+ * next steps (building the disjuncts, removing duplicate disjuncts,
+ * disjunct pruning) lighter by first removing irrelevant connectors.
+ *
+ * The algorithm prunes connectors that can be eliminated by simple checks.
+ *
+ * A series of passes are made through the sentence, alternating
+ * left-to-right and right-to-left.  Consider the left-to-right pass (the
+ * other is symmetric).  A set S of connectors is maintained (initialized
+ * to be empty).  Now the expressions of the current word are processed.
+ * If a given left pointing connector has no connector in S to which it
+ * can be matched, then that connector is deleted. The expression is then
+ * simplified by deleting AND sub-expression with a deleted component
+ * (which may be a connector or a sub-expression), and removing deleted
+ * components from OR sub-expressions (deleting the OR sub-expression upon
+ * deleting of its last component).  Now the set S is augmented by the
+ * right connectors of the remaining disjuncts of that word.  This
+ * completes one word.  The process continues through the words from left
+ * to right.
+ * Alternate passes are made until no connector is deleted.
+ *
+ * FIXME: Mark shallow connectors on dictionary read and enhance the
+ * pruning accordingly.
  */
 
 #define D_EXPRUNE 9
@@ -326,9 +348,7 @@ static void insert_connector(exprune_context *ctxt, int farthest_word, condesc_t
 	{
 		if (c == e->condesc)
 		{
-			{
-				if (e->farthest_word < farthest_word) e->farthest_word = farthest_word;
-			}
+			if (e->farthest_word < farthest_word) e->farthest_word = farthest_word;
 			return;
 		}
 	}
@@ -624,11 +644,11 @@ static int hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
 	int i;
 	Connector *e;
 	i = 0;
-	for (e = d->left ; e != NULL; e = e->next)
+	for (e = d->left; e != NULL; e = e->next)
 	{
 		i = pconnector_hash(dt, e, i);
 	}
-	for (e = d->right ; e != NULL; e = e->next)
+	for (e = d->right; e != NULL; e = e->next)
 	{
 		i = pconnector_hash(dt, e, i);
 	}

@@ -14,6 +14,7 @@
  * Miscellaneous utilities for dealing with word types.
  */
 
+#include "api-structures.h"             // Parse_Options
 #include "connectors.h"
 #include "dict-api.h"
 #include "string-set.h"
@@ -28,16 +29,25 @@ const char * lg_exp_get_string(const Exp* exp)
 }
 
 /* ======================================================== */
+
+#if 0
 void free_Exp(Exp *e)
 {
 	if (NULL == e) return; /* Exp might be null if the user has a bad dict. */
+	Exp *operand_next;
+
 	if (e->type != CONNECTOR_type)
 	{
-		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+		for (Exp *opd = e->operand_first; opd != NULL; opd = operand_next)
+		{
+			operand_next = opd->operand_next;
 			free_Exp(opd);
+		}
 	}
 	free(e);
 }
+#endif
+
 /* Exp utilities ... */
 
 /* Returns the number of connectors in the expression e */
@@ -52,12 +62,14 @@ int size_of_expression(Exp * e)
 	return size;
 }
 
-Exp *copy_Exp(Exp *e, Pool_desc *Exp_pool)
+Exp *copy_Exp(Exp *e, Pool_desc *Exp_pool, Parse_Options opts)
 {
 	if (e == NULL) return NULL;
 	Exp *new_e = pool_alloc(Exp_pool);
 
 	*new_e = *e;
+	if (Exptag_dialect == e->tag_type)
+		new_e->cost += opts->dialect.cost_table[new_e->tag_id];
 
 #if 0 /* Not used - left here for documentation. */
 	new_e->operand_next = copy_Exp(e->operand_next, Exp_pool);
@@ -70,7 +82,7 @@ Exp *copy_Exp(Exp *e, Pool_desc *Exp_pool)
 	Exp **tmp_e_a = &new_e->operand_first;
 	for(Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 	{
-		*tmp_e_a = copy_Exp(opd, Exp_pool);
+		*tmp_e_a = copy_Exp(opd, Exp_pool, opts);
 		tmp_e_a = &(*tmp_e_a)->operand_next;
 	}
 	*tmp_e_a = NULL;
@@ -104,12 +116,13 @@ static bool exp_compare(Exp *e1, Exp *e2)
 	{
 		/* Iterate operands to avoid a deep recursion due to a lot of operands. */
 		for (e1 = e1->operand_first, e2 = e2->operand_first;
-		     e1 != NULL || e2 != NULL;
+		     (e1 != NULL) && (e2 != NULL);
 		     e1 = e1->operand_next, e2 = e2->operand_next)
 		{
 			if (!exp_compare(e1, e2))
 				return false;
 		}
+		return ((e1 == NULL) && (e2 == NULL));
 	}
 	return true;
 }

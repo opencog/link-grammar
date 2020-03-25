@@ -17,6 +17,7 @@
 #include "count.h"
 #include "disjunct-utils.h"             // Disjunct
 #include "extract-links.h"
+#include "fast-match.h"
 #include "utilities.h"                  // Windows rand_r()
 #include "linkage/linkage.h"
 #include "tokenize/word-structures.h"   // Word_Struct
@@ -179,7 +180,7 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	} else if (nwords >= 10) {
 		log2_table_size = 14 + nwords / 24;
 	} else if (nwords >= 4) {
-		log2_table_size = 1 + 1.5 * nwords;
+		log2_table_size = 1 + nwords + nwords / 2;
 	} else {
 		log2_table_size = 5;
 	}
@@ -188,7 +189,7 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->x_table_size = (1 << log2_table_size);
 
 	DEBUG_X_TABLE(
-		printf("Allocating x_table of size %d (nwords %d)\n",
+		printf("Allocating x_table of size %u (nwords %d)\n",
 		       pex->x_table_size, nwords);
 	)
 	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
@@ -227,7 +228,7 @@ void free_extractor(extractor_t * pex)
 		)
 	}
 	DEBUG_X_TABLE(
-		printf("Used x_table %d/%d %.2f%%\n",
+		printf("Used x_table %u/%u %.2f%%\n",
 				 pex->x_table_size-N, pex->x_table_size,
 				 100.0f*(pex->x_table_size-N)/pex->x_table_size);
 	)
@@ -371,7 +372,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	/* The count we previously computed; it's non-zero. */
 	xt->set.count = hist_total(count);
 
-#define NUM_PARSES 4
+	//#define NUM_PARSES 4
 	// xt->set.cost_cutoff = hist_cost_cutoff(count, NUM_PARSES);
 	// xt->set.cut_count = hist_cut_total(count, NUM_PARSES);
 
@@ -395,7 +396,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 		RECOUNT({xt->set.recount = 0;})
 
 		w = lw + 1;
-		for (int opt = 0; opt <= !!pex->words[w].optional; opt++)
+		for (int opt = 0; opt <= (int)pex->words[w].optional; opt++)
 		{
 			null_count += opt;
 			for (dis = pex->words[w].d; dis != NULL; dis = dis->next)
@@ -430,7 +431,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 	if (le == NULL)
 	{
-		start_word = lw + 1;
+		start_word = MAX(lw+1, re->farthest_word);
 	}
 	else
 	{
@@ -439,11 +440,14 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 	if (re == NULL)
 	{
-		end_word = rw;
+		end_word = MIN(rw, le->farthest_word+1);
 	}
 	else
 	{
-		end_word = re->nearest_word + 1;
+		if ((le != NULL) && (re->nearest_word > le->farthest_word))
+			end_word = le->farthest_word + 1;
+		else
+			end_word = re->nearest_word + 1;
 	}
 
 	/* This condition can never be true here. It is included so GCC

@@ -1,7 +1,28 @@
-Version 5.7.0 (XXX 2019)
+Version 5.8.1 (XXX 2020)
+ * (nothing yet...)
+
+Version 5.8.0 (28 February 2020)
+ * Java bindings: Remove the obsolete senses API.
+ * swig-4.0 compatibility bug fix.
+ * English dict: Fixes to support questions ending in WH-words.
+ * Copy (merge) Richard van der Dys `node.js` bindings.
+ * English dict: Provide head and tail markers for all conjunctions.
+ * Remove the Python 2 bindings.
+ * Add dialect support to the library.
+ * English dict: support for archaic/poetic abbreviations
+ * English dict: introduce OH link for vocatives/invocations.
+ * English dict: improved parsing of imperatives.
+ * Add !!word/ link-parser command for displaying extended word dict info.
+
+Version 5.7.0 (13 Sept 2019)
  * Minor efficiency improvements to the SQL-backed dictionary.
  * Incompatible change to the Exp traversal API.
  * Remove the obsolete and unsupported "corpus statistics" code.
+ * Major performance improvement (3x-4x) for long sentences. #996
+ * Fix broken build on Windows.
+ * Convert Windows build to Visual Studio 2019.
+ * Fix a bug that causes random results on 32-bit systems. #1000
+ * Fix a bug that could cause missing linkages on some systems. #1007
 
 Version 5.6.2 (24 June 2019)
  * Bug-fix the SQL-backed dictionary.

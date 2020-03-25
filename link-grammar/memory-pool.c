@@ -13,7 +13,7 @@
 
 #include "error.h"
 #include "memory-pool.h"
-#include "utilities.h"                  // MIN/MAX, aligned alloc, lg_strerror_r
+#include "utilities.h"                  // MIN/MAX, aligned alloc, lg_strerror
 
 /* TODO: Add valgrind descriptions. See:
  * http://valgrind.org/docs/manual/mc-manual.html#mc-manual.mempools */
@@ -46,7 +46,7 @@ static size_t align_size(size_t element_size)
  * 2. Save the given parameters in the pool descriptor, to be used by
  *    pool_alloc();
  * 3. Chain the pool descriptor to the given pool_list, so it can be
- *    automatically freed.
+ *    automatically freed. [ Not implemented. ]
  */
 Pool_desc *pool_new(const char *func, const char *name,
                     size_t num_elements, size_t element_size,
@@ -183,9 +183,10 @@ void *pool_alloc(Pool_desc *mp)
 			{
 				/* aligned_alloc() has strict requirements. */
 				char errbuf[64];
-				lg_strerror_r(errno, errbuf, sizeof(errbuf));
-				assert(NULL != mp->ring, "Block/element sizes %zu/%zu: %s",
-				       mp->block_size, mp->element_size, errbuf);
+				lg_strerror(errno, errbuf, sizeof(errbuf));
+				prt_error("Fatal error: aligned_alloc(%zu, %zu): %s",
+				          mp->block_size, mp->element_size, errbuf);
+				exit(1);
 			}
 			if (NULL == mp->alloc_next)
 				mp->chain = mp->ring; /* This is the start of the chain. */

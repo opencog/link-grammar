@@ -14,14 +14,15 @@
 #include <string.h>
 
 #include "api-structures.h"             // Sentence_s (add_empty_word)
+#include "dict-common/dialect.h"
 #include "dict-common/dict-affix.h"     // is_stem
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h"   // SUBSCRIPT_MARK
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
 #include "error.h"
-#include "print/print.h"
 #include "externs.h"
+#include "print/print.h"
 #include "read-dict.h"
 #include "string-set.h"
 #include "tokenize/tok-structures.h"    // MT_WALL
@@ -132,7 +133,7 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	int save_line_number    = dict->line_number;
 
 	tokens[0] = '\0';
-	for (i=0; i<5 && dict->token[0] != '\0' ; i++)
+	for (i=0; i<5 && dict->token[0] != '\0'; i++)
 	{
 		pos += snprintf(t, ERRBUFLEN, "\"%s\" ", dict->token);
 		strncat(tokens, t, ERRBUFLEN-1-pos);
@@ -791,20 +792,21 @@ static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 /**
  * Allocate a new Exp node.
  */
-Exp *Exp_create(Dictionary dict)
+Exp *Exp_create(Pool_desc *mp)
 {
-	Exp *e = pool_alloc(dict->Exp_pool);
+	Exp *e = pool_alloc(mp);
+	e->tag_type = Exptag_none;
 	return e;
 }
 
 /**
  * Duplicate the given Exp node.
- * This is needed in case it is to be participate more than once in a
+ * This is needed in case it participates more than once in a
  * single expression.
  */
-static Exp *Exp_create_dup(Dictionary dict, Exp *old_e)
+Exp *Exp_create_dup(Pool_desc *mp, Exp *old_e)
 {
-	Exp *new_e = Exp_create(dict);
+	Exp *new_e = Exp_create(mp);
 
 	*new_e = *old_e;
 
@@ -815,9 +817,9 @@ static Exp *Exp_create_dup(Dictionary dict, Exp *old_e)
  * This creates a node with zero children.  Initializes
  * the cost to zero.
  */
-static Exp * make_zeroary_node(Dictionary dict)
+static Exp * make_zeroary_node(Pool_desc *mp)
 {
-	Exp * n = Exp_create(dict);
+	Exp * n = Exp_create(mp);
 	n->type = AND_type;  /* these must be AND types */
 	n->cost = 0.0;
 	n->operand_first = NULL;
@@ -829,10 +831,10 @@ static Exp * make_zeroary_node(Dictionary dict)
  * This creates a node with one child (namely e).  Initializes
  * the cost to zero.
  */
-static Exp * make_unary_node(Dictionary dict, Exp * e)
+Exp *make_unary_node(Pool_desc *mp, Exp * e)
 {
 	Exp * n;
-	n = Exp_create(dict);
+	n = Exp_create(mp);
 	n->type = AND_type;  /* these must be AND types */
 	n->operand_next = NULL;
 	n->cost = 0.0;
@@ -844,11 +846,11 @@ static Exp * make_unary_node(Dictionary dict, Exp * e)
  * Create an AND_type expression. The expressions nl, nr will be
  * AND-ed together.
  */
-static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
+static Exp * make_and_node(Pool_desc *mp, Exp* nl, Exp* nr)
 {
 	Exp* n;
 
-	n = Exp_create(dict);
+	n = Exp_create(mp);
 	n->type = AND_type;
 	n->operand_next = NULL;
 	n->cost = 0.0;
@@ -860,9 +862,9 @@ static Exp * make_and_node(Dictionary dict, Exp* nl, Exp* nr)
 	return n;
 }
 
-static Exp *make_op_Exp(Dictionary dict, Exp_type t)
+static Exp *make_op_Exp(Pool_desc *mp, Exp_type t)
 {
-	Exp * n = Exp_create(dict);
+	Exp * n = Exp_create(mp);
 	n->type = t;
 	n->operand_next = NULL;
 	n->cost = 0.0;
@@ -875,11 +877,11 @@ static Exp *make_op_Exp(Dictionary dict, Exp_type t)
  * Create an OR_type expression. The expressions nl, nr will be
  * OR-ed together.
  */
-static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
+static Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr)
 {
 	Exp* n;
 
-	n = Exp_create(dict);
+	n = Exp_create(mp);
 	n->type = OR_type;
 	n->operand_next = NULL;
 	n->cost = 0.0;
@@ -896,9 +898,9 @@ static Exp * make_or_node(Dictionary dict, Exp* nl, Exp* nr)
  * and the other as zeroary node.  This has the effect of creating
  * what used to be called an optional node.
  */
-static Exp *make_optional_node(Dictionary dict, Exp *e)
+static Exp *make_optional_node(Pool_desc *mp, Exp *e)
 {
-	return make_or_node(dict, make_zeroary_node(dict), e);
+	return make_or_node(mp, make_zeroary_node(mp), e);
 }
 
 /**
@@ -909,7 +911,7 @@ static Exp *make_optional_node(Dictionary dict, Exp *e)
  */
 static Exp * make_dir_connector(Dictionary dict, int i)
 {
-	Exp* n = Exp_create(dict);
+	Exp* n = Exp_create(dict->Exp_pool);
 	char *constring;
 
 	n->dir = dict->token[i];
@@ -935,6 +937,29 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 }
 
 /* ======================================================================== */
+/**
+ * Add an optional macro/word tag, for expression debugging.
+ * Enabled by !test="macro-tag". This tag is used only in expression printing.
+ */
+static unsigned int exptag_macro_add(Dictionary dict, const char *tag)
+{
+	expression_tag *mt = dict->macro_tag;
+	if (mt == NULL) return 0;
+
+	if (mt->num == mt->size)
+	{
+		if (mt->num == 0)
+			mt->size = 128;
+		else
+			mt->size *= 2;
+
+		mt->name = realloc(mt->name, mt->size * sizeof(*mt->name));
+	}
+	mt->name[mt->num] = tag;
+
+	return mt->num++;
+}
+
 /**
  * make_connector() -- make a node for a connector or dictionary word.
  *
@@ -968,8 +993,10 @@ static Exp * make_connector(Dictionary dict)
 			return NULL;
 		}
 
-		/* Wrap it in a unary node as a placeholder for a cost if needed. */
-		n = make_unary_node(dict, dn->exp);
+		/* Wrap it in a unary node as a placeholder for a macro tag and cost. */
+		n = make_unary_node(dict->Exp_pool, dn->exp);
+		n->tag_id = exptag_macro_add(dict, dn->string);
+		if (n->tag_id != 0) n->tag_type = Exptag_macro;
 
 		file_free_lookup(dn_head);
 	}
@@ -998,7 +1025,7 @@ static Exp * make_connector(Dictionary dict)
 			min = make_dir_connector(dict, i);
 			if (NULL == min) return NULL;
 
-			n = make_or_node(dict, plu, min);
+			n = make_or_node(dict->Exp_pool, plu, min);
 		}
 		else
 		{
@@ -1017,42 +1044,6 @@ static Exp * make_connector(Dictionary dict)
 
 /* ======================================================================== */
 /* Empty-word handling. */
-
-/** Expression-creating function versions that use the Sentence
- *  expression memory pools.
- *  (FIXME: Unify with the similar functions above.)
- */
-static Exp *make_or_node_from_pool(Sentence sent, Exp *nl, Exp *nr)
-{
-	Exp* n;
-
-	n = pool_alloc(sent->Exp_pool);
-	n->type = OR_type;
-	n->operand_next = NULL;
-	n->cost = 0.0;
-
-	n->operand_first = nl;
-	nl->operand_next = nr;
-	nr->operand_next = NULL;
-
-	return n;
-}
-
-static Exp *make_zeroary_node_from_pool(Sentence sent)
-{
-	Exp * n = pool_alloc(sent->Exp_pool);
-	n->type = AND_type;  /* these must be AND types */
-	n->operand_next = NULL;
-	n->cost = 0.0;
-	n->operand_first = NULL;
-
-	return n;
-}
-
-static Exp *make_optional_node_from_pool(Sentence sent, Exp *e)
-{
-	return make_or_node_from_pool(sent, make_zeroary_node_from_pool(sent), e);
-}
 
 /** Insert ZZZ+ connectors.
  *  This function was mainly used to support using empty-words, a concept
@@ -1077,17 +1068,17 @@ void add_empty_word(Sentence sent, X_node *x)
 		//lgdebug(+0, "Processing '%s'\n", x->string);
 
 		/* zn points at {ZZZ+} */
-		zn = pool_alloc(sent->Exp_pool);
+		zn = Exp_create(sent->Exp_pool);
 		zn->dir = '+';
 		zn->condesc = condesc_add(&sent->dict->contable, ZZZ);
 		zn->multi = false;
 		zn->type = CONNECTOR_type;
 		zn->operand_next = NULL; /* unused, but to be on the safe side */
 		zn->cost = 0.0;
-		zn = make_optional_node_from_pool(sent, zn);
+		zn = make_optional_node(sent->Exp_pool, zn);
 
 		/* an will be {ZZZ+} & (plain-word-exp) */
-		an = pool_alloc(sent->Exp_pool);
+		an = Exp_create(sent->Exp_pool);
 		an->type = AND_type;
 		an->operand_next = NULL;
 		an->cost = 0.0;
@@ -1106,6 +1097,7 @@ void add_empty_word(Sentence sent, X_node *x)
  */
 static bool is_number(const char * str)
 {
+	if (str[0] == '\0') return false; /* End of file. */
 	if ('+' == str[0] || '-' == str[0]) str++;
 	size_t numlen = strspn(str, "0123456789.");
 
@@ -1161,7 +1153,7 @@ static Exp *make_expression(Dictionary dict)
 			if (!link_advance(dict)) {
 				return NULL;
 			}
-			nl = make_optional_node(dict, nl);
+			nl = make_optional_node(dict->Exp_pool, nl);
 		}
 		else if (is_equal(dict, '['))
 		{
@@ -1180,14 +1172,15 @@ static Exp *make_expression(Dictionary dict)
 				return NULL;
 			}
 
-			/* A square bracket can have a number after it.
-			 * If it is present, then that number is interpreted
-			 * as the cost of the bracket. Else, the cost of a
+			/* A square bracket can have a number or a name after it.
+			 * If a number is present, then that it is interpreted
+			 * as the cost of the bracket. If a name is present, it
+			 * is used as an expression tag. Else, the cost of a
 			 * square bracket is 1.0.
 			 */
 			if (is_number(dict->token))
 			{
-				double cost;
+				float cost;
 
 				if (strtodC(dict->token, &cost))
 				{
@@ -1198,6 +1191,28 @@ static Exp *make_expression(Dictionary dict)
 					warning(dict, "Invalid cost (using 1.0)\n");
 					nl->cost += 1.0;
 				}
+				if (!link_advance(dict)) {
+					return NULL;
+				}
+			}
+			else if ((strcmp(dict->token, "or") != 0) &&
+			         (strcmp(dict->token, "and") != 0) &&
+			         isalpha(dict->token[0]))
+			{
+				const char *bad = valid_dialect_name(dict->token);
+				if (bad != NULL)
+				{
+					char badchar[] = { *bad, '\0' };
+					dict_error2(dict, "Invalid character in dialect tag name:",
+					           badchar);
+					return NULL;
+				}
+				if (nl->tag_type != Exptag_none)
+				{
+					nl = make_unary_node(dict->Exp_pool, nl);
+				}
+				nl->tag_id = exptag_dialect_add(dict, dict->token);
+				nl->tag_type = Exptag_dialect;
 				if (!link_advance(dict)) {
 					return NULL;
 				}
@@ -1217,7 +1232,7 @@ static Exp *make_expression(Dictionary dict)
 		else if (is_equal(dict, ')') || is_equal(dict, ']'))
 		{
 			/* allows "()" or "[]" */
-			nl = make_zeroary_node(dict);
+			nl = make_zeroary_node(dict->Exp_pool);
 		}
 		else
 		{
@@ -1230,13 +1245,13 @@ static Exp *make_expression(Dictionary dict)
 			/* Part 2/2 of SYM_AND processing. */
 
 			/* Expand A ^ B into the expr ((A & B) or (B & A)). */
-			Exp *na = make_and_node(dict,
-			                   Exp_create_dup(dict, e_tail),
-			                   Exp_create_dup(dict, nl));
-			Exp *nb = make_and_node(dict,
-			                   Exp_create_dup(dict, nl),
-			                   Exp_create_dup(dict, e_tail));
-			Exp *or = make_or_node(dict, na, nb);
+			Exp *na = make_and_node(dict->Exp_pool,
+			                   Exp_create_dup(dict->Exp_pool, e_tail),
+			                   Exp_create_dup(dict->Exp_pool, nl));
+			Exp *nb = make_and_node(dict->Exp_pool,
+			                   Exp_create_dup(dict->Exp_pool, nl),
+			                   Exp_create_dup(dict->Exp_pool, e_tail));
+			Exp *or = make_or_node(dict->Exp_pool, na, nb);
 
 			*e_tail = *or; /* SYM_AND result */
 			is_sym_and = false;
@@ -1281,7 +1296,7 @@ static Exp *make_expression(Dictionary dict)
 		 * expression level. */
 		if (e_head == NULL)
 		{
-			e_head = make_op_Exp(dict, op);
+			e_head = make_op_Exp(dict->Exp_pool, op);
 			e_head->operand_first = nl;
 		}
 		else
@@ -1391,7 +1406,7 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
 	vine_head.right = root;
 
 	dsw_compression(&vine_head, size - full_count);
-	for (size = full_count ; size > 1 ; size /= 2)
+	for (size = full_count; size > 1; size /= 2)
 	{
 		dsw_compression(&vine_head, size / 2);
 	}
@@ -1751,8 +1766,14 @@ static bool read_entry(Dictionary dict)
 		goto syntax_error;
 	}
 
+	if (dn == NULL)
+	{
+		dict_error(dict, "Expecting a token before \":\".");
+		goto syntax_error;
+	}
+
 	/* At this point, dn points to a list of Dict_nodes connected by
-	 * their left pointers. These are to be inserted into the dictionary */
+	 * their left pointers. These are to be inserted into the dictionary. */
 	i = 0;
 	for (dnx = dn; dnx != NULL; dnx = dnx->left)
 	{

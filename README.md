@@ -1,6 +1,6 @@
 Link Grammar Parser
 ===================
-***Version 5.6.2***
+***Version 5.8.0***
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -115,8 +115,8 @@ There are many more papers and references listed on the
 
 See also the
 [C/C++ API documentation](https://www.abisource.com/projects/link-grammar/api/index.html).
-Bindings for other programming languages, including python, python3 and
-java, can be found in the [bindings directory](bindings).
+Bindings for other programming languages, including python3, java
+and node.js, can be found in the [bindings directory](bindings).
 
 
 Contents
@@ -133,8 +133,7 @@ Contents
 | bindings/java/ | Optional Java language bindings. |
 | bindings/lisp/ | Optional Common Lisp language bindings. |
 | bindings/ocaml/ | Optional OCaML language bindings. |
-| bindings/python/  | Optional Python2 language bindings. |
-| bindings/python3/ | Optional Python3 language bindings. |
+| bindings/python/  | Optional Python3 language bindings. |
 | bindings/python-examples/ | Link-grammar test suite and Python language binding usage example. |
 | bindings/swig/ | SWIG interface file, for other FFI interfaces. |
 |  |  |
@@ -184,7 +183,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.6.2.tar.gz.asc`
+`gpg --verify link-grammar-5.8.0.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
@@ -199,7 +198,7 @@ verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 Tags in `git` can be verified by performing the following:
 ```
 gpg --recv-keys --keyserver keyserver.ubuntu.com EB6AA534E0C0651C
-git tag -v link-grammar-5.6.2
+git tag -v link-grammar-5.8.0
 ```
 
 
@@ -241,8 +240,9 @@ be without it altogether. The library names may be without the prefix `lib`.
 
 `libsqlite3-dev` (for SQLite-backed dictionary)<br>
 `minisat2` (for the SAT solver)<br>
+`libz1g-dev` or `libz-devel` (currently needed for the bundled `minisat2`)<br>
 `libedit-dev` (see [Editline](#Editline))<br>
-`hunspell-devel` or `aspell-devel` (and the corresponding English dictionary).<br>
+`libhunspell-dev` or `libaspell-dev` (and the corresponding English dictionary).<br>
 `libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
 implementation, but needed for correctness on FreeBSD and Cygwin)
 
@@ -271,6 +271,55 @@ Use of editline in the link-parser can be disabled by saying:
 ```
 ./configure --disable-editline
 ```
+
+Node.js Bindings
+----------------
+These are built using `npm`. First, you must build the core C library.
+Then do the following:
+```
+   cd bindings/node.js
+   npm install
+   npm run make
+```
+This will create the bindings and also run a small unit test (which
+should pass). An example can be found in
+`bindings/node.js/examples/simple.js`.
+
+Python3 Bindings
+----------------
+The Python3 bindings are built by default, providing that
+the corresponding Python development packages are installed.
+(Python2 bindings are not supported.)
+
+These packages are:
+- Linux:
+ * Systems using 'rpm' packages: python3-devel
+ * Systems using 'deb' packages: python3-dev
+- Windows:
+ * Install Python3 from https://www.python.org/downloads/windows/ .
+   You also have to install SWIG from http://www.swig.org/download.html .
+- macOS:
+ * Install python3 using [HomeBrew](http://brew.sh/).
+	Note: With recent Anaconda Python versions, the build process succeeds, but
+	loading the resulted module causes a crash.  Help is needed to resolve that.
+	See the relevant issues in the GitHub repository (search there for
+	"anaconda").<br>
+	[Anaconda](https://conda.io/docs/user-guide/install/download.html).
+
+NOTE: Before issuing `configure` (see below) you have to validate that
+the required python versions can be invoked using your `PATH`.
+
+The use of the Python bindings is *OPTIONAL*; you do not need these if you
+do not plan to use link-grammar with Python.  If you like to disable
+Python bindings, use:
+
+```
+./configure --disable-python-bindings
+```
+
+The linkgrammar.py module provides a high-level interface in Python.
+The example.py and sentence-check.py scripts provide a demo,
+and tests.py runs unit tests.
 
 Java Bindings
 -------------
@@ -302,40 +351,6 @@ export CPPFLAGS="-I/c/java/jdk1.6.0/include/ -I/c/java/jdk1.6.0/include/win32/"
 ```
 Please note that the use of `/opt` is non-standard, and most system
 tools will fail to find packages installed there.
-
-Python2 and Python3 Bindings
-----------------------------
-The Python2 and Python3 bindings are built by default, providing that
-the corresponding Python development packages are installed.
-
-These packages are:
-- Linux:
- * Systems using 'rpm' packages: Python2: python-devel; Python3: python3-devel
- * Systems using 'deb' packages: Python2: python-dev; Python3: python3-dev
-- Windows:
- * Install Python2 and Python3 from https://www.python.org/downloads/windows/ .
-   You also have to install SWIG from http://www.swig.org/download.html .
-- macOS:
- * Install the python and python3 packages using [HomeBrew](http://brew.sh/).
-   Alternatively, install
-[Anaconda](https://conda.io/docs/user-guide/install/download.html).
-
-NOTE: Before issuing `configure` (see below) you have to validate that
-the required python versions can be invoked using your `PATH`.
-
-The use of the Python bindings is *OPTIONAL*; you do not need these if
-you do not plan to use link-grammar with python.  If you like
-to disable these bindings, use one of:
-
-```
-./configure --disable-python-bindings
-./configure --enable-python-bindings=2
-./configure --enable-python-bindings=3
-```
-
-The linkgrammar.py module provides a high-level interface in Python.
-The example.py and sentence-check.py scripts provide a demo,
-and tests.py runs unit tests.
 
 Install location
 ----------------
@@ -386,8 +401,10 @@ Tools that may need installation before you can build link-grammar:
 `gcc` or `clang`<br>
 `gcc-c++` or `clang++` (for the SAT solver)<br>
 `autoconf`<br>
+`libtool`<br>
 `autoconf-archive`<br>
 `pkg-config`<br>
+`pip` and/or `pip3` (for the Python bindings)<br>
 
 Optional:<br>
 `swig` (for language bindings)<br>
@@ -632,7 +649,7 @@ en/corpus-fixes.batch:     404 errors
 lt/corpus-basic.batch:      15 errors
 ru/corpus-basic.batch:      47 errors
 ```
-The bindings/python directory contains a unit test for the python
+The bindings/python directory contains a unit test for the Python
 bindings. It also performs several basic checks that stress the
 link-grammar libraries.
 
@@ -1048,6 +1065,12 @@ when the individual sentences "I was in hell yesterday" and
 "I was in heaven on Tuesday" are parsed.  Using a conjunction should
 not wreck the relations that get used; but this requires link-crossing.
 
+```text
+"Sophy wondered up to whose favorite number she should count"
+```
+Here, "up_to" must modify "number", and not "whose". There's no way to
+do this without link-crossing.
+
 
 Type Theory
 -----------
@@ -1166,7 +1189,7 @@ When a sentence fails to parse, look for:
 Poor agreement might be handled by giving a cost to mismatched
 lower-case connector letters.
 
-### Ellipsis/zero/phantom words:
+### Elision/ellipsis/zero/phantom words:
 An common phenomenon in English is that some words that one might
 expect to "properly" be present can disappear under various conditions.
 Below is a sampling of these. Some possible solutions are given below.
@@ -1184,9 +1207,22 @@ phantom word in parenthesis, include:
  * It stopped me (from) flying off the cliff.
  * (It) looks good.
  * (You) go home!
+ * (You) do tell (me).
+ * (That is) enough!
+ * (I) heard that he's giving a test.
  * (Are) you all right?
  * He opened the door and (he) went in.
  * Emma was the younger (daughter) of two daughters.
+
+This can extend to elided/unvoiced syllables:
+ * (I'm a)'fraid so.
+
+Elided punctuation:
+ * God (,) give me strength.
+
+Normally, the subjects of imperatives must always be offset by a comma:
+"John, give me the hammer", but here, in muttering an oath, the comma
+is swallowed (unvoiced).
 
 Some complex phantom constructions:
  * They play billiards but (they do) not (play) snooker.
@@ -1196,6 +1232,15 @@ Some complex phantom constructions:
  * Perhaps he will (do it), if he sees enough of her.
 
 See also [github issue #224](https://github.com/opencog/link-grammar/issues/224).
+
+#### Elision of syllables
+Many (unstressed) sylables can be elided; in modern English, this occurs
+most commonly in the initial unstressed syllable:
+* (a)'ccount (a)'fraid (a)'gainst (a)'greed (a)'midst (a)'mongst
+* (a)'noint (a)'nother (a)'rrest (at)'tend
+* (be)'fore (be)'gin (be)'havior (be)'long (be)'twixt
+* (con)'cern (e)'scape (e)'stablish
+And so on.
 
 #### Punctuation, zero-copula, zero-that:
 Poorly punctuated sentences cause problems:  for example:

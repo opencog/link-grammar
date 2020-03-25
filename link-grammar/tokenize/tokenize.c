@@ -451,7 +451,7 @@ static PER_GWORD_FUNC(gword_by_ordinal_position)
  */
 static PER_GWORD_FUNC(set_word_status)//(Sentence sent, Gword *w, int *arg)
 {
-	int status = *arg;
+	unsigned int status = *arg;
 	switch (status)
 	{
 		case WS_INDICT|WS_REGEX:
@@ -497,7 +497,7 @@ static PER_GWORD_FUNC(set_tokenization_step)
 	w->tokenizing_step = *arg;
 
 	lgdebug(+D_SW, "Word %s: status=%s tokenizing_step=%d\n",
-			  w->subword, gword_status(sent, w), w->tokenizing_step);
+			  w->subword, gword_status(sent, w), (int)w->tokenizing_step);
 
 	return NULL;
 }
@@ -985,7 +985,7 @@ static void remqueue_gword(const Sentence sent)
 
 	lgdebug(+D_RWW, "Word '%s'%s%s\n", w->subword,
 	        w->issued_unsplit ? " issued_unsplit" : "",
-	        w->status & WS_HASALT ? " WS_HASALT" : "");
+	        (w->status & WS_HASALT) ? " WS_HASALT" : "");
 
 	/* If the word should have an alternative which includes itself, add it as an
 	 * additional alternative (unless it has already been added, as indicated by
@@ -1076,7 +1076,7 @@ void altappend(Sentence sent, const char ***altp, const char *w)
 	used in a sentence.
 */
 
-#ifdef DEBUG
+#ifdef DEBUG_WORDGRAPH
 /**
  * Split special synthetic words, for Wordgraph handling debug.
  * Word syntax (recursively): LABEL(WORD+WORD+...|WORD+...)
@@ -1186,7 +1186,7 @@ error:
 	free(alts);
 	return can_split;
 }
-#endif
+#endif /* DEBUG_WORDGRAPH */
 
 /**
  * Add the given prefix, word and suffix as an alternative.
@@ -1573,7 +1573,7 @@ static bool is_capitalizable(const Dictionary dict, const Gword *word)
 		 strcmp("?", word->prev[0]->subword) == 0 ||
 		 strcmp("!", word->prev[0]->subword) == 0 ||
 		 strcmp("？", word->prev[0]->subword) == 0 ||
-		 strcmp("！", word->prev[0]->subword) == 0 )
+		 strcmp("！", word->prev[0]->subword) == 0)
 		return true;
 	if (in_afdict_class(dict, AFDICT_BULLETS, word->prev[0]->subword))
 		return true;
@@ -2862,10 +2862,10 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 	/* Reset the multibyte shift state to the initial state */
 	memset(&mbs, 0, sizeof(mbs));
 
-#ifdef DEBUG
+#ifdef DEBUG_WORDGRAPH
 	/* Skip a synthetic sentence mark, if any. See synthetic_split(). */
 	if (SYNTHETIC_SENTENCE_MARK == sent->orig_sentence[0]) word_start++;
-#endif
+#endif /* DEBUG_WORDGRAPH */
 
 	for(;;)
 	{
@@ -2916,13 +2916,13 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		}
 
 		/* Perform prefix, suffix splitting, if needed */
-#ifdef DEBUG
+#ifdef DEBUG_WORDGRAPH
 		if (SYNTHETIC_SENTENCE_MARK == sent->orig_sentence[0])
 			synthetic_split(sent, word);
 #else
 		if (0)
 			;
-#endif
+#endif /* DEBUG_WORDGRAPH */
 		else
 			separate_word(sent, word, opts);
 
@@ -2971,6 +2971,14 @@ static Word *word_new(Sentence sent)
 		return &sent->word[len];
 }
 
+/* Used only by display_word_split() for words that shouldn't get split. */
+bool word0_set(Sentence sent, char *w, Parse_Options opts)
+{
+	word_new(sent);
+	altappend(sent, &sent->word[0].alternatives, w);
+	return setup_dialect(sent->dict, opts);
+}
+
 /**
  * build_word_expressions() -- build list of expressions for a word.
  *
@@ -2982,7 +2990,8 @@ static Word *word_new(Sentence sent)
  * the base word for each expression, and its subscript is the one from the
  * dictionary word of the expression.
  */
-static X_node * build_word_expressions(Sentence sent, const Gword *w, const char *s)
+static X_node * build_word_expressions(Sentence sent, const Gword *w,
+                                       const char *s, Parse_Options opts)
 {
 	Dict_node * dn, *dn_head;
 	X_node * x, * y;
@@ -2996,7 +3005,7 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w, const char
 		y = (X_node *) pool_alloc(sent->X_node_pool);
 		y->next = x;
 		x = y;
-		x->exp = copy_Exp(dn->exp, sent->Exp_pool);
+		x->exp = copy_Exp(dn->exp, sent->Exp_pool, opts);
 		if (NULL == s)
 		{
 			x->string = dn->string;
@@ -3037,7 +3046,8 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w, const char
 #define D_X_NODE 9
 #define D_DWE 8
 static bool determine_word_expressions(Sentence sent, Gword *w,
-                                       unsigned int *ZZZ_added)
+                                       unsigned int *ZZZ_added,
+                                       Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
 	const size_t wordpos = sent->length - 1;
@@ -3056,11 +3066,11 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 
 	if (w->status & WS_INDICT)
 	{
-		we = build_word_expressions(sent, w, NULL);
+		we = build_word_expressions(sent, w, NULL, opts);
 	}
 	else if (w->status & WS_REGEX)
 	{
-		we = build_word_expressions(sent, w, w->regex_name);
+		we = build_word_expressions(sent, w, w->regex_name, opts);
 	}
 	else
 	{
@@ -3073,7 +3083,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 #endif /* DEBUG */
 		if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-			we = build_word_expressions(sent, w, UNKNOWN_WORD);
+			we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
 			assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
 			w->status |= WS_UNKNOWN;
 		}
@@ -3256,7 +3266,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				/* This is a new wordgraph word.
 				 */
 				assert(!right_wall_encountered, "Extra word");
-				if (!determine_word_expressions(sent, wg_word, &ZZZ_added))
+				if (!determine_word_expressions(sent, wg_word, &ZZZ_added, opts))
 					error_encountered = true;
 				if ((MT_WALL == wg_word->morpheme_type) &&
 				    (0 == strcmp(wg_word->subword, RIGHT_WALL_WORD)))
@@ -3383,6 +3393,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		}
 
 		free(wp_old);
+		assert(wp_new != NULL, "No new wordgraph path");
 	} while ((NULL != wp_new[1].word) ||
 	         (wp_new[0].word->morpheme_type != MT_INFRASTRUCTURE));
 
@@ -3392,7 +3403,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	if (verbosity_level(D_SW))
 	{
 		dyn_str *s = dyn_str_new();
-		print_sentence_word_alternatives(s, sent, true, NULL, NULL);
+		print_sentence_word_alternatives(s, sent, true, NULL, NULL, NULL);
 		char *out = dyn_str_take(s);
 		prt_error("Debug: Sentence words and alternatives:\n%s", out);
 		free(out);

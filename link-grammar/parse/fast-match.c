@@ -225,6 +225,8 @@ static void sort_by_nearest_word(Match_node *m, sortbin *sbin, int nearest_word)
 
 fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 {
+	assert(sent->length > 0);
+
 	fast_matcher_t *ctxt;
 
 	ctxt = (fast_matcher_t *) xalloc(sizeof(fast_matcher_t));
@@ -469,12 +471,10 @@ typedef struct
  * (The first wordgraph word is used for cache validity indication,
  * but there is only one most of the times anyway.)
  */
-#define ALT_CONNECTION_POSSIBLE
 #define OPTIMIZE_EN
 static bool alt_connection_possible(Connector *c1, Connector *c2,
                                     gword_cache *c_con)
 {
-#ifdef ALT_CONNECTION_POSSIBLE
 	bool same_alternative = false;
 
 #ifdef OPTIMIZE_EN
@@ -507,9 +507,6 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
 	c_con->gword = c1->originating_gword->o_gword;
 
 	return same_alternative;
-#else
-	return true;
-#endif /* ALT_CONNECTION_POSSIBLE */
 }
 
 /**
@@ -559,22 +556,21 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	size_t front = get_match_list_position(ctxt);
 	Match_node *ml = NULL, *mr = NULL; /* Initialize in case of NULL lc or rc. */
 	match_cache mc;
-	gword_cache gc;
-
-	gc.same_alternative = false;
+	gword_cache gc = { .same_alternative = false };
 
 	/* Get the lists of candidate matching disjuncts of word w for lc and
-	 * rc.  Consider each of these lists only if the length_limit of lc
-	 * rc and also w, is not greater then the distance between their word
-	 * and the word w. */
-	if ((lc != NULL) && ((w - lw) <= lc->length_limit))
+	 * rc. Consider each of these lists only if the farthest_word of lc/rc
+	 * reaches at least the word w.
+	 * Note: The commented out (w <= lc->farthest_word) is checked at the
+	 * callers and is left here for documentation. */
+	if ((lc != NULL) /* && (w <= lc->farthest_word) */)
 	{
 		ml = *get_match_table_entry(ctxt->l_table_size[w], ctxt->l_table[w], lc, 0);
 	}
 	if ((lc != NULL) && (ml == NULL)) /* lc optimization */
 		return terminate_match_list(ctxt, -1, front, w, lc, lw, rc, rw);
 
-	if ((rc != NULL) && ((rw - w) <= rc->length_limit))
+	if ((rc != NULL) && (w >= rc->farthest_word))
 	{
 		mr = *get_match_table_entry(ctxt->r_table_size[w], ctxt->r_table[w], rc, 1);
 	}
@@ -602,7 +598,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	for (mx = ml; mx != NULL; mx = mx->next)
 	{
 		if (mx->d->left->nearest_word < lw) break;
-		if ((w - lw) > mx->d->left->length_limit) continue;
+		if (lw < mx->d->left->farthest_word) continue;
 
 		mx->d->match_left = do_match_with_cache(mx->d->left, lc, &mc) &&
 		                    alt_connection_possible(mx->d->left, lc, &gc);
@@ -627,7 +623,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	gc.gword = NULL;
 	for (mx = mr; mx != mr_end; mx = mx->next)
 	{
-		if ((rw - w) > mx->d->right->length_limit) continue;
+		if (rw > mx->d->right->farthest_word) continue;
 
 		if ((lc != NULL) && !mx->d->match_left) continue; /* lc optimization */
 		mx->d->match_right = do_match_with_cache(mx->d->right, rc, &mc) &&

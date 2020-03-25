@@ -472,7 +472,7 @@ static void batch_process_some_linkages(Label label,
  * If input_string is !command, try to issue it.
  */
 
-static char special_command(char *input_string, Command_Options* copts, Dictionary dict)
+static int special_command(char *input_string, Command_Options* copts, Dictionary dict)
 {
 	if (input_string[0] == COMMENT_CHAR) return 'c';
 	if (input_string[0] == '!')
@@ -698,6 +698,8 @@ int main(int argc, char * argv[])
 		language = argv[1];
 	}
 
+	/* Process options used by GNU programs. */
+	int quiet_start = 0; /* Iff > 0, inhibit the initial messages */
 	for (int i = 1; i < argc; i++)
 	{
 		if (strcmp("--help", argv[i]) == 0)
@@ -711,11 +713,19 @@ int main(int argc, char * argv[])
 			printf("%s\n", linkgrammar_get_configuration());
 			exit(0);
 		}
+
+		if ((strcmp("--quiet", argv[i]) == 0) ||
+		    (strcmp("--silent", argv[i]) == 0))
+		{
+			quiet_start = i;
+		}
 	}
 
 	/* Process command line variable-setting commands (only). */
 	for (int i = 1; i < argc; i++)
 	{
+		if (i == quiet_start) continue;
+
 		if (argv[i][0] == '-')
 		{
 			const char *var = argv[i] + ((argv[i][1] != '-') ? 1 : 2);
@@ -760,11 +770,14 @@ int main(int argc, char * argv[])
 
 	check_winsize(copts);
 
-	prt_error("Info: Dictionary version %s, locale %s\n",
-		linkgrammar_get_dict_version(dict),
-		linkgrammar_get_dict_locale(dict));
-	prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
-		linkgrammar_get_version());
+	if ((parse_options_get_verbosity(opts)) > 0 && (quiet_start == 0))
+	{
+		prt_error("Info: Dictionary version %s, locale %s\n",
+			linkgrammar_get_dict_version(dict),
+			linkgrammar_get_dict_locale(dict));
+		prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
+			linkgrammar_get_version());
+	}
 
 	/* Main input loop */
 	while (true)
@@ -796,7 +809,7 @@ int main(int argc, char * argv[])
 
 		/* Discard whitespace characters from end of string. */
 		for (char *p = &input_string[strlen(input_string)-1];
-		     (p > input_string) && strchr(WHITESPACE, *p) ; p--)
+		     (p > input_string) && strchr(WHITESPACE, *p); p--)
 		{
 			*p = '\0';
 		}
@@ -805,7 +818,7 @@ int main(int argc, char * argv[])
 		if (strspn(input_string, WHITESPACE) == strlen(input_string))
 			continue;
 
-		char command = special_command(input_string, copts, dict);
+		int command = special_command(input_string, copts, dict);
 		if ('e' == command) break;    /* It was an exit command */
 		if ('c' == command) continue; /* It was another command */
 		if (-1 == command) continue;  /* It was a bad command */
@@ -814,39 +827,42 @@ int main(int argc, char * argv[])
 		 * otherwise ... */
 		if ('f' == command)
 		{
-			char * filename = &input_string[strcspn(input_string, WHITESPACE)] + 1;
-			int fnlen = strlen(filename);
-
-			if (0 == fnlen)
+			char *command_end = &input_string[strcspn(input_string, WHITESPACE)];
+			char *filename = &command_end[strspn(command_end, WHITESPACE)];
+			if (filename[0] == '\0')
 			{
 				prt_error("Error: Missing file name argument\n");
 				continue;
 			}
 
-			if ('\n' == filename[fnlen-1]) filename[fnlen-1] = '\0';
+			char *eh_filename = expand_homedir(filename);
 
 			struct stat statbuf;
-			if ((0 == stat(filename, &statbuf)) && statbuf.st_mode & S_IFDIR)
+			if ((0 == stat(eh_filename, &statbuf)) && statbuf.st_mode & S_IFDIR)
 			{
-				prt_error("Error: Cannot open %s: %s\n",
-				        filename, strerror(EISDIR));
-				continue;
+				errno = EISDIR;
+				goto open_error;
 			}
 
-			input_fh = fopen(filename, "r");
+			input_fh = fopen(eh_filename, "r");
 
 			if (NULL == input_fh)
 			{
-				prt_error("Error: Cannot open %s: %s\n", filename, strerror(errno));
 				input_fh = stdin;
-				continue;
+				goto open_error;
 			}
+
+			free(eh_filename);
+			continue;
+
+open_error:
+			prt_error("Error: Cannot open %s: %s\n", eh_filename, strerror(errno));
+			free(eh_filename);
 			continue;
 		}
 
-
 		if (!copts->batch_mode) batch_in_progress = false;
-		if ('\0' != test[0])
+		if ('\0' != test[0] && !test_enabled(test, "@"))
 		{
 			/* In batch mode warn only once.
 			 * In auto-next-linkage mode don't warn at all. */

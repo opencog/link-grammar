@@ -45,7 +45,6 @@ import java.util.concurrent.TimeUnit;
  * <li><b>storeConstituentString</b> - whether to return the constituent
  *      string for each Linkage as part of the result.</li>
  * <li><b>storeDiagramString</b> - return ASCII-art diagram.</li>
- * <li><b>storeSense</b> - return word-sense tags.</li>
  * <li><b>text</b> - The text to parse. Note that it must be stripped
  *      from newlines.</li>
  * </ul>

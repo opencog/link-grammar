@@ -1,5 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
+Note: This only runs with Python3!
+
 Demo: Find unlinked or unknown words.
 These demo is extremely simplified.
 It can only work with link-grammar library version >= 5.3.10.
@@ -28,11 +30,6 @@ import readline
 
 from linkgrammar import (Sentence, ParseOptions, Dictionary,
                          LG_Error, LG_TimerExhausted, Clinkgrammar as clg)
-
-def is_python2():
-    return sys.version_info[:1] == (2,)
-
-get_input = raw_input if is_python2() else input
 
 def nsuffix(q):
     return '' if q == 1 else 's'
@@ -85,7 +82,7 @@ po.display_morphology = arg.morphology
 
 while True:
     try:
-        sentence_text = get_input(PROMPT)
+        sentence_text = input(PROMPT)
     except EOFError:
         print("EOF")
         exit(0)
@@ -169,8 +166,6 @@ while True:
                 words_char = []
                 words_byte = []
                 for wi, w in enumerate(words):
-                    if is_python2():
-                        w = w.decode('utf-8')
                     words_char.append(w + str((linkage.word_char_start(wi), linkage.word_char_end(wi))))
                     words_byte.append(w + str((linkage.word_byte_start(wi), linkage.word_byte_end(wi))))
 

@@ -908,7 +908,7 @@ static void prune_irrelevant_rules(Postprocessor *pp)
 
 	if (verbosity_level(5))
 	{
-		err_msg(lg_Debug, "PP: Saw %zd unique link names in all linkages.\n\\",
+		err_msg(lg_Debug, "PP: Saw %zu unique link names in all linkages.\n\\",
 		       pp_linkset_population(pp->set_of_links_of_sentence));
 		err_msg(lg_Debug, "PP: Using %i 'contains one' rules "
 		                  "and %i 'contains none' rules\n",
@@ -1069,7 +1069,7 @@ static void report_pp_stats(Postprocessor *pp)
 	unused_cnt += report_unused_rule(kno->contains_none_rules);
 	unused_cnt += report_unused_rule(kno->bounded_rules);
 
-	err_msg(lg_Debug, "\nPP stats: %zd of %zd rules unused\n", unused_cnt, rule_cnt);
+	err_msg(lg_Debug, "\nPP stats: %zu of %zu rules unused\n", unused_cnt, rule_cnt);
 }
 
 /**
@@ -1156,6 +1156,8 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		return;
 	}
 
+#define TCD 512 /* timer checking divisor */
+
 	/* (optional) First pass: just visit the linkages */
 	/* The purpose of the first pass is to make the post-processing
 	 * more efficient.  Because (hopefully) by the time the real work
@@ -1173,7 +1175,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 			post_process_scan_linkage(pp, lkg);
 
-			if ((63 == in%64) && resources_exhausted(opts->resources)) break;
+			if (((TCD-1) == in%TCD) && resources_exhausted(opts->resources)) break;
 		}
 	}
 
@@ -1200,7 +1202,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		N_linkages_post_processed++;
 
 		linkage_score(lkg, opts);
-		if ((15 == in%16) && resources_exhausted(opts->resources)) break;
+		if (((TCD-1) == in%TCD) && resources_exhausted(opts->resources)) break;
 	}
 
 	/* If the timer expired, then we never finished post-processing.

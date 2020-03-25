@@ -58,19 +58,6 @@ void *alloca (size_t);
 #endif /* _MSC_VER */
 #endif /* !TLS */
 
-/* Windows, POSIX and GNU have different ideas about thread-safe strerror(). */
-#ifdef _WIN32
-#define lg_strerror_r(errno, buf, len) strerror_s(buf, len, errno)
-#else
-#if STRERROR_R_CHAR_P /* Set by "configure". */
-/* Emulate the POSIX version; assuming len>0 and a successful call. */
-#define lg_strerror_r(errno, buf, len) \
-	abs((strncpy(buf, strerror_r(errno, buf, len), len), buf[len-1] = '\0', 0))
-#else
-#define lg_strerror_r strerror_r
-#endif /* STRERROR_R_CHAR_P */
-#endif /* _WIN32 */
-
 #ifdef _MSC_VER
 /* These definitions are incorrect, as these functions are different(!)
  * (non-standard functionality).
@@ -97,6 +84,12 @@ void *alloca (size_t);
 #if defined(HAVE_LOCALE_T_IN_LOCALE_H) || defined(HAVE_LOCALE_T_IN_XLOCALE_H)
 #define HAVE_LOCALE_T 1
 #endif /* HAVE_LOCALE_T_IN_LOCALE_H || HAVE_LOCALE_T_IN_XLOCALE_H) */
+
+#if defined _MSC_VER || defined __cplusplus
+/* "restrict" is not a part of ISO C++.
+ * C++ compilers usually know it as __restrict. */
+#define restrict __restrict
+#endif
 
 #ifdef _WIN32
 #include <windows.h>
@@ -157,6 +150,8 @@ size_t lg_mbrtowc(wchar_t *, const char *, size_t n, mbstate_t *ps);
  * Since it is defined to return TRUE only on 6 characters, all of which
  * are in the range [0..127], just limit its arguments to 7 bits. */
 #define lg_isspace(c) ((0 < c) && (c < 127) && isspace(c))
+
+void lg_strerror(int err_no, char *buf, size_t len);
 
 #if defined(__sun__)
 int strncasecmp(const char *s1, const char *s2, size_t n);
@@ -467,7 +462,7 @@ void downcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
 void upcase_utf8_str(char *to, const char * from, size_t usize, locale_t);
 #endif
 
-size_t lg_strlcpy(char * dest, const char *src, size_t size);
+size_t lg_strlcpy(char * restrict dst, const char * restrict src, size_t dsize);
 void safe_strcat(char *u, const char *v, size_t usize);
 char *safe_strdup(const char *u);
 
@@ -485,6 +480,7 @@ void dyn_strcat(dyn_str*, const char*);
 void dyn_trimback(dyn_str*);
 char * dyn_str_take(dyn_str*);
 const char * dyn_str_value(dyn_str*);
+size_t dyn_strlen(dyn_str*);
 
 size_t altlen(const char **);
 
@@ -509,7 +505,7 @@ size_t get_max_space_used(void);
 char * get_default_locale(void);
 void set_utf8_program_locale(void);
 bool try_locale(const char *);
-bool strtodC(const char *, double *);
+bool strtodC(const char *, float *);
 
 /**
  * Returns the smallest power of two that is at least i and at least 1

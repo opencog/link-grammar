@@ -268,29 +268,33 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	void *saved_memblock = NULL;
 	int current_prune_level = -1; /* -1: No pruning has been done yet. */
 	int needed_prune_level = opts->min_null_count;
-	bool share_count_context = false;
 	bool more_pruning_possible = false;
 
 	unsigned int max_null_count = opts->max_null_count;
 	max_null_count = (unsigned int)MIN(max_null_count, sent->length);
 	bool one_step_parse = (unsigned int)opts->min_null_count != max_null_count;
 	int max_prune_level = (int)max_null_count;
+	bool optimize_pruning = true; /* Perform pruning null count optimization. */
 
 	unsigned int *ncu[2];
 	ncu[0] = alloca(sent->length * sizeof(*ncu[0]));
 	ncu[1] = alloca(sent->length * sizeof(*ncu[1]));
 
-	if (opts->islands_ok) max_prune_level = 0; /* Cannot optimize for > 0. */
+	/* Null-count optimization not implemented for islands_ok==true. */
+	if (opts->islands_ok)
+		optimize_pruning = false;
 
-	/* The special pruning per null-count is costly for sentences whose
-	 * parsing takes tens of milliseconds or so. To solve that problem, the
-	 * check below starts to do that from a certain sentence length only. */
+	/* Pruning per null-count and one-step-parse are costly for sentences
+	 * whose parsing takes tens of milliseconds or so. Disable them for
+	 * short-enough sentences. */
 	if (sent->length < sent->min_len_multi_pruning)
+		optimize_pruning = false;
+
+	if (!optimize_pruning)
 	{
+		/* Turn-off null-count optimization. */
 		if (opts->min_null_count == 0)
-		{
 			max_prune_level = 0;
-		}
 		else
 		{
 			needed_prune_level = MAX_SENTENCE;
@@ -302,11 +306,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	prepare_to_parse(sent, opts);
 	if (resources_exhausted(opts->resources)) return;
 
-	unsigned int dcnt = 0, ccnt = 0; /* Allocated number (for memory block). */
-	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
-
-	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent, dcnt, ccnt,
-																			 one_step_parse);
+	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent);
 	free_sentence_disjuncts(sent);
 
 	if (one_step_parse)
@@ -315,15 +315,12 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		saved_memblock = save_disjuncts(sent, ts_pruning);
 	}
 
-	print_time(opts, "Encode for pruning%s%s",
+	print_time(opts, "Encoded for pruning%s%s",
 	           (NULL == ts_pruning->tracon_list) ? " (skipped)" : "",
 	           (one_step_parse) ? " (one-step)" : "");
 
 	for (unsigned int nl = opts->min_null_count; nl <= max_null_count; nl++)
 	{
-		Count_bin hist;
-		s64 total;
-
 		sent->null_count = nl;
 
 		if (needed_prune_level > current_prune_level)
@@ -334,14 +331,37 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			else
 				needed_prune_level = MAX_SENTENCE;
 
-			pp_and_power_prune(sent, ts_pruning, current_prune_level, opts, ncu);
+			if (more_pruning_possible)
+				restore_disjuncts(sent, saved_memblock, ts_pruning);
 
 			more_pruning_possible =
 				one_step_parse && (current_prune_level != MAX_SENTENCE);
-			ts_parsing = pack_sentence_for_parsing(sent, dcnt, ccnt, ts_parsing,
-			                                       more_pruning_possible);
-			print_time(opts, "Encode for parsing%s",
-							  share_count_context ? " (incr)" : "");
+
+			unsigned int expexted_null_count =
+				pp_and_power_prune(sent, ts_pruning, current_prune_level, opts,
+				                   ncu);
+			if (expexted_null_count > nl)
+			{
+				if (opts->verbosity >= D_USER_TIMES)
+				{
+					prt_error("#### Skip parsing (w/%u ", nl);
+					if (expexted_null_count-1 > nl)
+						prt_error("to %u nulls)\n", expexted_null_count-1);
+					else
+						prt_error("null%s)\n", (nl != 1) ? "s" : "");
+				}
+				nl = expexted_null_count-1;
+				/* To get a result, parse w/null count which is at most one less
+				 * than the number of tokens (w/all nulls there is no linkage). */
+				if (nl == sent->length-1) nl--;
+				continue;
+			}
+		}
+
+		if (NULL != ts_pruning)
+		{
+			ts_parsing = pack_sentence_for_parsing(sent);
+			print_time(opts, "Encoded for parsing");
 
 			if (!more_pruning_possible)
 			{
@@ -363,11 +383,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			gword_record_in_connector(sent);
 			if (resources_exhausted(opts->resources)) break;
 
-			if (!share_count_context)
-			{
-				free_count_context(ctxt, sent);
-				ctxt = alloc_count_context(sent);
-			}
+			free_count_context(ctxt, sent);
+			ctxt = alloc_count_context(sent);
 
 			free_fast_matcher(sent, mchxt);
 			mchxt = alloc_fast_matcher(sent, ncu);
@@ -377,22 +394,11 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		if (resources_exhausted(opts->resources)) break;
 		free_linkages(sent);
 
-		hist = do_parse(sent, mchxt, ctxt, sent->null_count, opts);
-		total = hist_total(&hist);
+		sent->num_linkages_found = do_parse(sent, mchxt, ctxt, opts);
 
-		/* total is 64-bit, num_linkages_found is 32-bit. Clamp */
-		total = (total > INT_MAX) ? INT_MAX : total;
-		total = (total < 0) ? INT_MAX : total;
-
-		sent->num_linkages_found = (int) total;
-		print_time(opts, "Counted parses (%lld w/%zu null%s)", hist_total(&hist),
-		           sent->null_count, (sent->null_count != 1) ? "s" : "");
-
-		if (verbosity >= D_USER_INFO)
-		{
-			prt_error("Info: Total count with %zu null links: %lld\n",
-			        sent->null_count, total);
-		}
+		print_time(opts, "Counted parses (%d w/%u null%s)",
+		           sent->num_linkages_found, sent->null_count,
+		           (sent->null_count != 1) ? "s" : "");
 
 		extractor_t * pex = extractor_new(sent->length, sent->rand_state);
 		bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
@@ -406,32 +412,19 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		if (verbosity >= D_USER_INFO)
 		{
 			if ((sent->num_valid_linkages == 0) &&
-				 (sent->num_linkages_post_processed > 0) &&
-				 ((int)opts->linkage_limit < sent->num_linkages_found))
+			    (sent->num_linkages_post_processed > 0) &&
+			    ((int)opts->linkage_limit < sent->num_linkages_found))
 				prt_error("Info: All examined linkages (%zu) had P.P. violations.\n"
-						  "Consider increasing the linkage limit.\n"
-						  "At the command line, use !limit\n",
-						  sent->num_linkages_post_processed);
+				          "Consider increasing the linkage limit.\n"
+				          "At the command line, use !limit\n",
+				          sent->num_linkages_post_processed);
 		}
 
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
 
-		if (more_pruning_possible)
-		{
-			/* We need to prune *again*. Restore the original disjuncts. */
-			restore_disjuncts(sent, saved_memblock, ts_pruning);
-			/* The following test may be used to check if the results
-			 * are the same with and w/o count table sharing. */
-			share_count_context = !test_enabled("no-count-sharing");
-
-			if (!share_count_context)
-			{
-				/* Must be freed here. */
-				free_tracon_sharing(ts_parsing);
-				ts_parsing = NULL;
-			}
-		}
+		free_tracon_sharing(ts_parsing);
+		ts_parsing = NULL;
 	}
 	sort_linkages(sent, opts);
 

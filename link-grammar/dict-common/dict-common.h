@@ -67,6 +67,14 @@ struct Afdict_class_struct
 #define IS_DB_DICT(dict) false
 #endif /* HAVE_SQLITE */
 
+typedef struct
+{
+	String_id *set;                    /* Expression tag names */
+	const char **name;                 /* Tag name (indexed by tag id) */
+	unsigned int num;                  /* Number of tags */
+	unsigned int size;                 /* Allocated tag array size */
+} expression_tag;
+
 struct Dictionary_s
 {
 	Dict_node *  root;
@@ -83,6 +91,11 @@ struct Dictionary_s
 	bool         left_wall_defined;
 	bool         right_wall_defined;
 	bool         shuffle_linkages;
+
+	Dialect *dialect;                  /* "4.0.dialect" info */
+	expression_tag dialect_tag;        /* Expression dialect tag info */
+	expression_tag *macro_tag;         /* Macro tags for expression debug */
+	void *cached_dialect;              /* Only for dialect cache validation */
 
 	/* Affixes are used during the tokenization stage. */
 	Dictionary      affix_table;
@@ -107,7 +120,6 @@ struct Dictionary_s
 
 	pp_knowledge  * base_knowledge;    /* Core post-processing rules */
 	pp_knowledge  * hpsg_knowledge;    /* Head-Phrase Structure rules */
-	Connector_set * unlimited_connector_set; /* NULL=everything is unlimited */
 	String_set *    string_set;        /* Set of link names in the dictionary */
 	Word_file *     word_file_header;
 	ConTable        contable;
@@ -132,7 +144,9 @@ struct Dictionary_s
  * probably don't need these. */
 
 bool dict_has_word(const Dictionary dict, const char *);
-Exp * Exp_create(Dictionary);
+Exp *Exp_create(Pool_desc *);
+Exp *Exp_create_dup(Pool_desc *, Exp *);
+Exp *make_unary_node(Pool_desc *, Exp *);
 void add_empty_word(Sentence, X_node *);
 
 #endif /* _LG_DICT_COMMON_H_ */

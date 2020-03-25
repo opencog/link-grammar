@@ -39,13 +39,19 @@ _ ‐ ‑ ‒ – — ― ～ – ━ ー -- - ‧
 -- ‒ – — ― "(" ")" "[" "]" ... ";" ±: MPUNC+;
 
 % Suffixes
-'s 're 've 'd 'll 'm ’s ’re ’ve ’d ’ll ’m: SUF+;
+% 't and ’t show up as Shakesperean contractions of "it", but collide
+% with ordinary contractions like "don't".
+'s 're 've 'em 'd 'll 'm 'd've 'r
+’s ’re ’ve ’em ’d ’ll ’m ’d’ve ’r: SUF+;
 
 % Prefixes
 % "real" English prefix: y' w/
 % Y'gotta Y'gonna
 % coffee w/milk
-y' w/: PRE+;
+% i'faith
+% th'door
+i' o' t' th' wi' y' w/
+i’ o’ t’ th’ wi’ y’: PRE+;
 
 % The below is a quoted list, used during tokenization. Do NOT put
 % spaces in between the various quotation marks!!

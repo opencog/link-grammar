@@ -4,7 +4,7 @@ Note: See also [BUILDING on Windows](/README.md#building-on-windows)
 in the main README.
 
 This directory contains project files for building Link Grammar with the
-Microsoft Visual Studio 2017 IDE (MSVC15). They were created and tested with
+Microsoft Visual Studio 2019 IDE (MSVC 16). They were created and tested with
 the Community Edition of that product.
 
 **!!!WARNING!!!**<br>
@@ -31,7 +31,7 @@ For Python bindings, install the desired Python distributions from
 [Python Releases for Windows](https://www.python.org/downloads/windows/).
 You also have to install [SWIG](http://www.swig.org/download.html).
 
-The bindings were testes using swigwin-3.0.10 with Python 2.7.12 and 3.4.4.
+The bindings were testes using swigwin-3.0.10 with Python 3.4.4.
 
 Setup
 -----
@@ -78,10 +78,6 @@ dlltool -l regex.lib -d libtre/win32/tre.def -D regex.dll libtre/win32/bin/x64_r
 
  Macro | Default value |
 ---|---|
-PYTHON2         | C:\Python27 |
-PYTHON2_INCLUDE | $(PYTHON2)\include |
-PYTHON2_LIB     | $(PYTHON2)\lib |
-PYTHON2_EXE     | $(PYTHON2)\python.exe |
 PYTHON3         | C:\Python34 |
 PYTHON3_INCLUDE | $(PYTHON3)\include |
 PYTHON3_LIB     | $(PYTHON3)\lib |
@@ -142,10 +138,10 @@ BTW, when running an MSVC-compiled binary under Cygwin, don't exit
 link-parser by using `^Z` - the shell may get stuck because the program
 somehow may continue to run in the background.  Instead, exit using `!exit` .
 
-NOTE: The created DLLs need the MSVC15 runtime environment to run. This is
+NOTE: The created DLLs need the MSVC 16 runtime environment to run. This is
 normally already installed in your machine with the installation of the IDE.
 But to be able to run Link Grammar on other computer you need to install
-[Visual C++ Redistributable for Visual Studio 2017](https://visualstudio.microsoft.com/downloads/).
+[Visual C++ Redistributable for Visual Studio 2019](https://support.microsoft.com/en-us/help/2977003/the-latest-supported-visual-c-downloads).
 This redistributable does not contain debug version of the MSVC runtime, so
 only "Release" Link Grammar will work with it.
 
@@ -153,14 +149,14 @@ Running Python programs
 -----------------------
 Since the Link Grammar library has no installation script yet,
 running Python programs that use the bindings needs a careful setup
-of PYTHONPATH and PATH. A program named make-check.py (named after
-"make check" that runs tests.py in POSIX systems) is provided to
+of PYTHONPATH and PATH. A program named `make-check.py` (named after
+"make check" that runs `tests.py` in POSIX systems) is provided to
 set them automatically.
 
 Also see "Permanent installation".
 
 ### Using make-check.py
-The **make-check.py** program is designed to reside in the MSVC
+The `make-check.py` program is designed to reside in the MSVC
 configuration directory.  However, it can run from any directory
 using a full or a relative path to invoke it.
 
@@ -179,10 +175,10 @@ For example, `x64\Release\Python3`.
 its default location you can leave it empty.
 - ARGUMENTS: Optional script arguments, for example `-v` for `tests.py`.
 
-So in order to run `tests.py` with Python2 for a Debug compilation on x64
+So in order to run `tests.py` with Python3 for a Debug compilation on x64
 platform, enter:
 ```
-console-prompt>make-check x64\Debug\Python2
+console-prompt>make-check x64\Debug\Python3
 ```
 To debug a Python3 script "mylgtest.py" that resides in
 `bindings\python-examples`:
@@ -196,7 +192,7 @@ console-prompt>make-check x64\Debug\Python3 \Users\username\mylgtest.py
 The following starts an interactive Python with the correct PYTHONPATH
 and PATH:
 ```
-console-prompt>make-check.py x64\Debug\Python2 ""
+console-prompt>make-check.py x64\Debug\Python3 ""
 ```
 Locale and code page settings
 -----------------------------

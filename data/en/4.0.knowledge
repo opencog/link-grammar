@@ -204,8 +204,8 @@ FORM_A_CYCLE_RULES:
 
 ; XXX fixme -- Qd should be replaced by Qw in first four.
 CONTAINS_ONE_RULES:
- SI#*  ,  Wq    Qd  Qw CQ  PFc   Wp   Wb    , "Bad use of s-v inversion1" ,
- SI#x  ,  Wq    Qd     CQ  PFc   Wp   Wb    , "Bad use of s-v inversion2" ,
+ SI#*  ,  Wq Qp Qd Qw  CQ  PFc   Wp   Wb Xc , "Bad use of s-v inversion1" ,
+ SI#x  ,  Wq Qp Qd     CQ  PFc   Wp   Wb    , "Bad use of s-v inversion2" ,
  SFI##* , Wq    Qd     CQ  PFc              , "Bad use of s-v inversion3" ,
  SXI   ,  Wq    Qd     CQ  PFc              , "Bad use of s-v inversion4" ,
  Ws    ,  D##w  S##w   H                    , "S-V inversion required5" ,
@@ -217,7 +217,7 @@ CONTAINS_ONE_RULES:
  Mj    ,  Jw    JQ                          , "Incorrect relative10" ,
  MX#j  ,  Jw    JQ                          , "Incorrect relative11" ,
  Wj    ,  Jw    JQ                          , "Misuse of preposition12" ,
- JQ    ,  Mj    Wj    MX#j                  , "Misuse of preposition13" ,
+ JQ    ,  Mj    Wj    MX#j  MVp             , "Misuse of preposition13" ,
  Jw    ,  Mj    Wj    MX#j                  , "Misuse of preposition14" ,
  B#j   ,  Jr                                , "Incorrect relative15"    ,
  Jr    ,  B#j                               , "Incorrect relative16"    ,

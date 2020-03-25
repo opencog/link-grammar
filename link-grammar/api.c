@@ -14,21 +14,20 @@
 #include <string.h>
 
 #include "api-structures.h"
+#include "dict-common/dialect.h"
 #include "dict-common/dict-utils.h"
-#include "dict-common/dict-api.h"      // for expression_strigify()
-#include "disjunct-utils.h"   // for free_sentence_disjuncts()
+#include "disjunct-utils.h"             // free_sentence_disjuncts
 #include "linkage/linkage.h"
 #include "memory-pool.h"
-#include "parse/histogram.h"  // for PARSE_NUM_OVERFLOW
+#include "parse/histogram.h"            // PARSE_NUM_OVERFLOW
 #include "parse/parse.h"
-#include "post-process/post-process.h" // for post_process_new()
+#include "post-process/post-process.h"  // post_process_new
 #include "prepare/exprune.h"
 #include "string-set.h"
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"
-#include "tokenize/spellcheck.h"
 #include "tokenize/tokenize.h"
-#include "tokenize/word-structures.h" // Needed for Word_struct
+#include "tokenize/word-structures.h"   // Word_struct
 #include "utilities.h"
 
 /* Its OK if this is racey across threads.  Any mild shuffling is enough. */
@@ -114,13 +113,16 @@ Parse_Options parse_options_create(void)
 	po->repeatable_rand = true;
 	po->resources = resources_create();
 	po->display_morphology = true;
+	po->dialect = (dialect_info){ .conf = strdup("") };
 
 	return po;
 }
 
+static void free_dialect_info(dialect_info *);
 int parse_options_delete(Parse_Options opts)
 {
 	resources_delete(opts->resources);
+	free_dialect_info(&opts->dialect);
 	free(opts);
 	return 0;
 }
@@ -133,7 +135,7 @@ void parse_options_set_cost_model_type(Parse_Options opts, Cost_Model_type cm)
 		opts->cost_model.compare_fn = &VDAL_compare_parse;
 		break;
 	default:
-		prt_error("Error: Illegal cost model: %d\n", cm);
+		prt_error("Error: Illegal cost model: %d\n", (int)cm);
 	}
 }
 
@@ -379,6 +381,28 @@ void parse_options_reset_resources(Parse_Options opts) {
 	resources_reset(opts->resources);
 }
 
+/* Dialect. */
+
+static void free_dialect_info(dialect_info *dinfo)
+{
+	if (dinfo == NULL) return;
+
+	free(dinfo->cost_table);
+	dinfo->cost_table = NULL;
+	free((void *)dinfo->conf);
+}
+
+char * parse_options_get_dialect(Parse_Options opts)
+{
+	return opts->dialect.conf;
+}
+
+void parse_options_set_dialect(Parse_Options opts, const char *dconf)
+{
+	if (0 == strcmp(dconf, opts->dialect.conf)) return;
+	free_dialect_info(&opts->dialect);
+	opts->dialect.conf = strdup(dconf);
+}
 /***************************************************************
 *
 * Routines for creating destroying and processing Sentences
@@ -411,7 +435,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	 * In that case a tracon list is produced for the pruning step,
 	 * and disjunct/connector packing is done too. */
 	sent->min_len_encoding = SENTENCE_MIN_LENGTH_TRAILING_HASH;
-	const char *min_len_encoding = test_enabled("len-trailing-hash");
+	const char *min_len_encoding = test_enabled("min-len-encoding");
 	if (NULL != min_len_encoding)
 		sent->min_len_encoding = atoi(min_len_encoding+1);
 
@@ -444,6 +468,9 @@ int sentence_split(Sentence sent, Parse_Options opts)
 		return -1;
 	}
 
+	if (!setup_dialect(dict, opts))
+		return -4;
+
 	/* Flatten the word graph created by separate_sentence() to a 2D-word-array
 	 * which is compatible to the current parsers.
 	 * This may fail if UNKNOWN_WORD is needed but
@@ -467,6 +494,8 @@ int sentence_split(Sentence sent, Parse_Options opts)
 		return -3;
 	}
 
+	if (verbosity >= D_USER_TIMES)
+		prt_error("#### Finished tokenizing (%zu tokens)\n", sent->length);
 	return 0;
 }
 
@@ -516,7 +545,7 @@ int sentence_length(Sentence sent)
 int sentence_null_count(Sentence sent)
 {
 	if (!sent) return 0;
-	return sent->null_count;
+	return (int)sent->null_count;
 }
 
 int sentence_num_linkages_found(Sentence sent)
@@ -621,7 +650,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	if ((verbosity > 0) &&
 	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
 	{
-		prt_error("Warning: Combinatorial explosion! nulls=%zu cnt=%d\n"
+		prt_error("Warning: Combinatorial explosion! nulls=%u cnt=%d\n"
 			"Consider retrying the parse with the max allowed disjunct cost set lower.\n"
 			"At the command line, use !cost-max\n",
 			sent->null_count, sent->num_linkages_found);

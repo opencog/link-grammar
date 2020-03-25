@@ -190,7 +190,7 @@ error:
 		/* Some error has occurred */
 		const char msg[] = "[vappend_string(): ";
 		strcpy(temp_buffer, msg);
-		strerror_r(errno, temp_buffer+sizeof(msg)-1, TMPLEN-sizeof(msg));
+		lg_strerror(errno, temp_buffer+sizeof(msg)-1, TMPLEN-sizeof(msg));
 		strcat(temp_buffer, "]");
 		dyn_strcat(string, temp_buffer);
 		va_end(args);
@@ -237,7 +237,7 @@ size_t append_utf8_char(dyn_str * string, const char * mbs)
 	assert((size_t)n<sizeof(buf), "Multi-byte character is too long!");
 	memcpy(buf, mbs, n);
 
-	// Whitepsace pad if its a bad value
+	// Whitespace pad if its a bad value
 	if (nb < 0) { buf[n] = ' '; n++; }
 
 	// Whitespace pad if not a known UTF-8 glyph.

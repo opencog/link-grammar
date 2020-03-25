@@ -1,5 +1,4 @@
 !batch
-!verbosity=1
 !echo
 !limit=1000
 !short=20
@@ -118,6 +117,10 @@ only an experienced eye can spot which to pick and which to leave behind.
 
 Off with his head!
 They're gonna off him at midnight
+
+They sheltered in huts
+They shelter in huts, woods and rocks.
+They shelter in huts, woods and rocks upon occasion.
 
 % paraphrasing verbs
 he stammered that he did not mean it
@@ -326,6 +329,10 @@ There was wind and rain.
 It adjusts for errors
 It corrects for errors
 
+% watch: take "out" as a particle
+Watch out!
+I watch out for you.
+
 % verb: come was missing B-
 Which way did you come?
 
@@ -392,6 +399,8 @@ What are the chances that Sherlock could really catch the criminal?
 What are the chances that Sherlock could really solve a crime?
 What are the chances that Sherlock could be a genius?
 What are the chances that Sherlock could be high?
+What are the chances that Sherlock could do it?
+What are the chances that this could happen?
 It reduced chances that profits could be high
 ... chances that ... could be ...
 
@@ -399,6 +408,12 @@ What are the chances that Sherlock caught the criminal?
 What are the chances that Sherlock captured the criminal?
 What are the chances that Sherlock will track him down?
 what are the chances she will drive him up to the farm?
+
+% elided "that" (phantom that, zero-that)
+What are the chances Sherlock caught the criminal?
+What are the chances Sherlock could be high?
+What are the chances Sherlock could do it?
+What is the possibility this could happen?
 
 The motor ran flat out
 She flat out said so
@@ -486,53 +501,6 @@ how the fuck do I know?
 
 whyever for?
 what for?
-
-% "how" is broken and hard to fix without breaking basic corpus.
-How come?
-How many are there?
-How many more?
-How many?
-How much is that?
-how much?
-How?
-
-How quickly?
-
-How big?
-How small?
-How high?
-How big did he talk?
-How big is it?
-How big did you say it was?
-*How slickly did you say it was?
-How high did you say it was?
-How tall did you say he was?
-
-How ridiculous
-How perfectly ridiculous
-How strange
-How odd!
-
-% Arghhh this is a mess. Some of these want to use AF+,
-% others seem to be more comfortable with Qe+ and its not clear
-% how to be consistent.
-How common did you say it was?
-How common?
-How often?
-How often does it happen?
-How shocking?
-How shocking was it?
-How shocking did you say it was?
-
-
-Who?
-who else?
-who else not?
-
-When?
-
-Which way?
-
 
 % We should distinguish between "who" and "whom" but who fucking cares?
 Who fucking cares?
@@ -1088,6 +1056,7 @@ For who were you mistaken?
 % verb-negation with subject-verb inversion
 Do you not wish to know?
 "Do you not want to know who has taken it?" cried his wife impatiently.
+How long will you not have mercy on Jerusalem?
 
 % Archaic fairy-tale / children's book registers (inverted subject/object)
 far out in the sea lived a fish.
@@ -1095,6 +1064,33 @@ A fish lived far out in the sea.
 
 % fronted copular inversion
 coming to the party are a horse and two chickens
+
+% Directive subject-verb inversion
+Tell me, John.
+Please tell me, John.
+Tell me of those dragons, John
+Tell me again of those dragons, John
+John, tell me again of those dragons, John.
+You tell me, John
+do tell, John.
+please do tell, John.
+please do, John!
+talk to me, John
+spank me, John
+watch me, kids
+hold my beer, John
+you hold my beer, John.
+you slay me, John
+you slay me, John, with your jokes.
+
+"Tell me about it" demanded Susan.
+"Tell me about it, John" demanded Susan.
+
+Bring out the Ring, Frodo!
+"Bring out the Ring, Frodo!" said Gandalf solemnly.
+
+Hey, thank you, sir!
+Hey, watch out, John!
 
 % Locative subject-object inversion
 under the tree sat Jim
@@ -1292,8 +1288,6 @@ Sure enough, there it was, as I had guessed.
 There it was, just as I had said.
 then last week, I changed my mind
 
-O that he had sprained his ankle in the first place!
-
 % zero-subject/phantom-subject in sentence opener
 As mentioned before, we are creating a business service.
 
@@ -1358,7 +1352,13 @@ He OK'd the orders.
 He OK'ed the orders.
 
 It gelled up into a nice pudding.
+
+% "gell" as Scottish alternate spelling for "gale."
 As we set sail, a full gell blew up.
+
+% "gell" as English alternate for "girl"
+You're a naughty little gell, that's what you are
+"You're a naughty little gell, that's what you are," said the fireman.
 
 % Some of the verbs classified as "intranstive" see rare usage as
 % transtivies; these should just have a high cost, that's all.
@@ -2105,8 +2105,8 @@ I wonder why you said that?
 
 % Problems with questions:  modifiers in query.
 % The below parses, but incorrectly. "a dog" should modify
-% "big".  Fixing this will probably render the HA and the A links
-% obsolete, completely.
+% "big".  Fixing this will might render the HA and the AA links
+% obsolete, maybe.
 % Pied-piping: How-big is a pied-piper, pulling the subordinate
 % "a dog" over to the right: "*It is a how big dog?".
 % Basically, in "How big [a dog] is it?" the phrase "a dog" is
@@ -2119,8 +2119,9 @@ I wonder why you said that?
 % "Sign-Based Construction Grammar."
 % http://lingo.stanford.edu/sag/papers/kay-sag-final.pdf
 
-% "How big a dog is it?" should parse .. and it does, but the
-% parse is incorrect, so we put a * in front, for now.
+% The current parse of "How big a dog is it?" is incorrect. It's exactly
+% as documented in section-AA.html, but really the AA link is just wrong.
+% Since the current parse is incorrect, we put a * in front, for now.
 *How big a dog is it?
 How big of a dog can you imagine?
 How big is it?
@@ -2130,10 +2131,8 @@ It was too big a dog to fit through the hole in the fence.
 It was that big a dog.
 It was so big a dog that it filled the cage
 How big a dog did he buy?
-*How big did he buy?
-% Actually, the above is allowed, e.g. while talking about
-% house prices, the conclusion might be: "So, how big did he buy?"
-
+% While talking about house prices, one could ask: "So, how big did he buy?"
+How big did he buy?
 
 % The documentation for EAh discusses the below.
 % post-processing "Incorrect use of 'how'17" blocks some of these.
@@ -2146,19 +2145,6 @@ he is that stupid.
 Our neighbours have too big a dog to keep in the house
 Our neighbours have a dog too big to keep in the house
 Our neighbours have dogs too big to keep in the house
-
-% Prepositional questions with null verbs
-By what means?
-In what way?
-To what end?
-For what reason?
-% Elipsis doesn't work, because the Qd- link can't be used without
-% the SI link, due to post-processing. Arghhh.
-By what means ...?
-In what way ...?
-To what end ...?
-For what reason ...?
-
 
 How much should I use?
 How much sugar should I use?
@@ -2178,6 +2164,81 @@ How much of a man is he?
 How much of a lie was it?
 How big a lie was it?
 
+% "how" is broken and hard to fix without breaking basic corpus.
+How come?
+How many are there?
+How many more?
+How many?
+How much is that?
+how much?
+how much more?
+How?
+
+How quickly?
+
+How big?
+How small?
+How high?
+How big did he talk?
+How big is it?
+How big did you say it was?
+*How slickly did you say it was?
+How high did you say it was?
+How tall did you say he was?
+
+How ridiculous
+How perfectly ridiculous
+How strange
+How odd!
+
+% Arghhh this is a mess. Some of these want to use AF+,
+% others seem to be more comfortable with Qe+ and its not clear
+% how to be consistent.
+How common did you say it was?
+How common?
+How often?
+How often does it happen?
+How shocking?
+How shocking was it?
+How shocking did you say it was?
+How bad did you say it was?
+How common did you say it was?
+How hard did you say it was?
+How long did you say it was?
+
+How expensive did you say it was?
+How difficult did you say it was?
+How safe did you say it was?
+How good did you say it was?
+How important might you say it was?
+How necessary might you say it was?
+How practical might you say this is?
+
+
+
+Who?
+who else?
+who else not?
+
+When?
+
+Which way?
+
+% Prepositional questions with null verbs
+By what means?
+In what way?
+To what end?
+For what reason?
+By what means ...?
+In what way ...?
+To what end ...?
+For what reason ...?
+By what means...?
+In what way...?
+To what end...?
+For what reason...?
+
+
 % These cannot take WV links anywhere:
 Are you insane?
 Are you the one?
@@ -2187,30 +2248,117 @@ Are we off?
 Is it in place?
 Is that when the meeting is?
 
-
-% This is blocked by post-processing....
 How long before you got home?
 Approximately how long before you got home?
 Approximately how long was it before you got home?
 
-% Some awkward sentences ...
+% Some awkward sentences ... a proper fix requires link-crossing.
+% This is best illustrated by pondering the sentence:
+% "Sophy wondered [up to] whose favorite number she should count to"
+% and then realizing that [up to] needs to modify "number" not "whose".
+% unfortunately, this is not possible without link-crossing.
 Sophy wondered up to what number she should count
 Sophy wondered up to what number to count
 Sophy wondered up to what number to count to
 Sophy wondered up to whose favorite number she should count
+Sophy wondered whose favorite number she should count to
 Sophy wondered up to whose favorite number to count
 Sophy wondered up to whose favorite number to count to
+Sophy wondered exactly whose favorite number to count to
+*Sophy wondered exactly to whose favorite number to count to
+*Sophy wondered nearly to whose favorite number to count to
+*Sophy wondered nearly whose favorite number to count to
+*Sophy wondered nearly what number to count to
+*Sophy wondered right to which one she should stand on the stage
 
 Sophy wondered what number to count to
 Sophy wondered what number to count up to
 Sophy wondered whose favorite number to count up to
 
+How high did it go?
+Up to what mark did it reach?
+Exactly what mark did it reach?
+up to where did it go?
+Up to how many gallons were lost?
+down to which floor did it drop?
+down to what depravities did he sink?
+
+%
+bird flu was observed in which countries?
+You saw her in which room?
+do you know in which room the procedure was performed?
+did you see in which room the procedure was performed?
+did you see in which room it was done?
+Yes, but did you see in which room?
+*I saw in which room
+
+% Inverted questions, fixed with Pvf- & QI+ on participles
+bird flu was observed where?
+bird flu was observed how?
+bird flu was observed when?
+Anesthesiology is studied where?
+It was discussed where?
+The crime rate began to grow when?
+You taught there when?
+You told her when?
+You asked her when?
+You helped her when?
+
+You will come when?
+You will go when?
+
+% Statements of the same form.
+I am not certain where
+
+% Inverted questions, fixed with QI+
+You proposed to her when?
+You proposed when?
+It happened when?
+
+% Inverted questions w/prepositional target
+you reminded him of this when?
+you were reminded of this when?
+
+You first heard of this when?
+You were informed of this when?
+You were warned of this when?
+
+It became commonplace at what time?
+It became commonplace when?
+It really became commonplace when?
+It remains commonplace now?
+Would you say it remains commonplace even now?
+
+% this, that as topics (that.j-t)
+you decided that when?
+you decided that, when?
+you decided this when?
+you decided on this when?
+you learned of this when?
+you started to wonder this, when?
+you started to wonder about this, when?
+you started this when?
+You proposed this to her when?
+you said this to her where?
+You say this why?
+You say this, why?
+You demanded this why?
+You demanded this, why?
+You demanded this of him why?
+You demanded this of him, why?
+You requested these favors why?
+
+you decided to do this when?
+you decided such a thing when?
+you decided on this course of action when?
+
+you did what?
+You did that when?
 
 You put it where?
-It happened when?
-you did what?
 It happened how?
 You slept with who?
+You slept with John?
 
 Ma'am, where did it happen?
 where did it happen, ma'am?
@@ -4089,8 +4237,8 @@ Step 4. Hit it hard.
 Step 5. Hit it hard.
 Step 6. Hit it hard.
 
-% The below fails because a determiner is desired. But determiners
-% are optional for imperatives and commands.
+% The below parses badly or not at all, because a determiner is desired.
+% But determiners are optional for imperatives and commands.
 A: Open cover gently.
 B: Press button firmly.
 B: Press the button firmly.
@@ -4121,7 +4269,6 @@ VII. Egypt
 2. Impact point and reason of selection
 
 % Bulleted lists
-* This is an item
 • This is a bullet
 ⁂ This is a bullet
 ❧ This is a bullet
@@ -4135,6 +4282,8 @@ VII. Egypt
 □ This is a bullet
 ◇ This is a bullet
 ◎ This is a bullet
+% Avoid interpreting '*' as an ungrammatical mark
+ * This is an item
 
 % Quoted words and phrases:
 We should distinguish between "who" and "whom" but who fucking cares?
@@ -4225,6 +4374,19 @@ Not all is lost.
 I'll introduce you to her, but you're on your own from there on.
 % "such that"
 They were assigned separate seats such that they had enough space.
+
+% "on occasion"
+They shelter in huts upon occasion
+They walk home on occasion
+They walk home occasionally
+Occasionally they walk home
+They walked home later on
+They sit easy on occasion
+They sit on their laurels on occasion
+They talk on occasion
+on occasion, they talk
+on second thought, let's go
+
 
 % Dick Hudson points out:
 % Verb must link to left wall, not the noun, else the links would cross.
@@ -4376,6 +4538,26 @@ Praise the Lord God, amen!
 
 Rock 'n' roll, dude!
 
+Oh God, what now?
+Oh God, now what?
+Oh God, then what?
+Oh God, what is it?
+Oh Lordy!
+
+What now?
+Now what?
+Then what?
+Then what did he say?
+And then what did he say?
+What is it?
+
+Oh yes, how is he?
+Oh dear!
+Oh well, see you next week then.
+Oh, has she?
+Oh, how wonderful!
+How wonderful!
+
 % Opinion-exclamations
 Sad!
 very sad!
@@ -4394,6 +4576,7 @@ Mary, should I do this?
 Mary, would you do this for me?
 Mary, won't you do it?
 Mary, mightn't you be right?
+Oh Mary, you know I love you!
 John, do you think so, too?
 John, do you think it, too?
 John, do you believe it, too?
@@ -4401,6 +4584,7 @@ John, do you believe so, too?
 John, doesn't that strike you as odd?
 John, have you thought about it?
 John, is it true?
+Oh John, can it be true?
 On arrival, can you do it?
 For now, can you do it?
 On second thought, can you do it?
@@ -4421,6 +4605,10 @@ John, this is it!
 First, unbutton the button.
 Next, pour wine on your shirt.
 Finally, button the button.
+
+% Hmm, simply having then.r: CO+ seems very wrong to me;
+% something more sophisticated is needed ...
+first he grunted and then he opened the door
 
 % and, or opening coordinating conjunctions.
 % Currently these take Wc- to the left wall, since they "coordinate"
@@ -4640,6 +4828,30 @@ Do not do that!
 Do not open!
 Do not fail!
 
+% Fronted imperatives
+Clearly, don't!
+Obviously, don't
+in sum, don't do it!
+So, don't do it!
+furthermore, never ask me again!
+And furthermore, never ask me again!
+
+Bob, shut the door!
+Robert, be there at 5:00
+Grandma, please be there at 5:00
+John, tell me
+John, please tell me
+John, please!
+John, do tell
+Oh Sue, let's!
+Oh Sue, let's go!
+Sue, over here!
+Hey, over here!
+Hey, thank you!
+
+John, enough!
+John, that's enough!
+
 % "To be" constructions
 To be continued
 Soon to be continued
@@ -4853,8 +5065,65 @@ Christmas Day, well, everybody be so choked up over gifts and everything, they d
 He does be singing.
 He does be always drinkin layarge bohhels down be de park boy
 
-% Archaic, poetic British
+% Misc urban, colloquial
+gimme dat!
+open th'door, dammit!
+give'em to me
+give'm to me
+'Fraid so.
+'Nother drink?
+I s'pose so.
+'S not funny.
+
+% Abbreviations
+she'd've said so if it was important
+
+% Archaic, poetic British; poetic contractions; Shakespearean
 oh, 'tis love, 'tis love that makes the world go round!
+'Tis the season to be jolly!
+Tis the season to be jolly!
+'Twas the night before Christmas
+The difference is so great 'twixt heav'n and hell
+Hovering 'twixt Heav'n and dark Hell's regions nether
+O'er the hills and through the woods
+God gi' me the strength
+I ne’er saw true beauty
+as I have oft said, you need to look before you leap
+Through wood, o'er hill, o'er dale his roam
+with tears thou keep’st me blind
+Unlock heav’n’s golden gates, and issue forth
+Will you ha’ the truth on’t?
+I do not lie in’t
+thou’s hear our counsel
+'Twill soon strike twelve
+each pinch more stinging than bees that made’em
+As th’art a man
+You see ... how ample y’are beloved
+one did laugh in’s sleep
+By’r lady
+Th’imperial jointress to this warlike state
+A piece of ordnance ’gainst it I have placed
+’midst the sentence so her accent breaks
+’Cause the musicians play me that sad note
+keep that count’nance still
+Well, go thy ways, old lad, for thou shalt ha’t
+
+% vocative O
+O Rose, thou art sick!
+O holy virgin!
+O cunning Love!
+O lovely Marie!
+O lovely Rose Marie!
+O Jesu, this is excellent sport, i'faith.
+O Mary, what have I done?
+O mother of flames
+Tell me, O Muse, of that ingenious hero
+Reveal, O Muse, that man of wisdom
+O Yahweh of Armies, how long will you not have mercy on Jerusalem?
+O that he had sprained his ankle in the first place!
+
+% Contractions that cause trouble during guessing.
+we are going out for Hallowe'en
 
 % WH-words
 I do not know why

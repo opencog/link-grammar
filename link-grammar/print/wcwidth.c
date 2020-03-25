@@ -71,7 +71,11 @@ struct interval {
 };
 
 /* auxiliary function for binary search in interval table */
-static bool bisearch(wchar_t ucs, const struct interval *table, int max)
+/* NOTE: The actual parameter is wchar_t, which may be unsigned on
+ * some architectures (e.g. ARM). An (int) formal parameter is used to
+ * prevent a compiler warning in that case (((unsigned int)wchar_t) is
+ * always < INT_MAX) so its value is preserved). */
+static bool bisearch(int ucs, const struct interval *table, int max)
 {
   int min = 0;
   int mid;
@@ -559,7 +563,7 @@ int mk_wcwidth(wchar_t ucs)
   return 1;
 }
 
-
+#if 0 // Unused
 int mk_wcswidth(const wchar_t *pwcs, size_t n)
 {
   int w, width = 0;
@@ -572,3 +576,4 @@ int mk_wcswidth(const wchar_t *pwcs, size_t n)
 
   return width;
 }
+#endif

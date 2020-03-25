@@ -495,7 +495,7 @@ void SATEncoder::generate_satisfaction_for_expression(int w, int& dfs_position, 
  */
 Exp* SATEncoder::join_alternatives(int w)
 {
-  Exp* exp = Exp_create(_sent);
+  Exp* exp = Exp_create(_sent->Exp_pool);
   exp->type = OR_type;
   exp->cost = 0.0;
 
@@ -503,7 +503,7 @@ Exp* SATEncoder::join_alternatives(int w)
 
   for (X_node* x = _sent->word[w].x; x != NULL; x = x->next)
   {
-    *opdp = Exp_create_dup(_sent, x->exp);
+    *opdp = Exp_create_dup(_sent->Exp_pool, x->exp);
     opdp = &(*opdp)->operand_next;
   }
   *opdp = NULL;
@@ -1779,7 +1779,7 @@ void SATEncoderConjunctionFreeSentences::generate_linked_definitions()
 
 Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionConnector* pc)
 {
-    Exp* e = Exp_create(_sent);
+    Exp* e = Exp_create(_sent->Exp_pool);
     e->type = CONNECTOR_type;
     e->dir = pc->dir;
     e->multi = pc->connector.multi;
@@ -1889,7 +1889,9 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 #else
     cost_cutoff = 1000.0;
 #endif // LIMIT_TOTAL_LINKAGE_COST
-    d = build_disjuncts_for_exp(NULL, de, xnode_word[wi]->string, cost_cutoff, _opts);
+    d = build_disjuncts_for_exp(NULL, de, xnode_word[wi]->string,
+                                &xnode_word[wi]->word->gword_set_head,
+                                cost_cutoff, _opts);
 
     if (d == NULL)
     {
@@ -1900,8 +1902,6 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 #endif
       return false;
     }
-
-    word_record_in_disjunct(xnode_word[wi]->word, d);
 
     /* Recover cost of costly-nulls. */
     const vector<EmptyConnector>& ec = _word_tags[wi].get_empty_connectors();

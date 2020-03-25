@@ -31,8 +31,14 @@
 
 #ifdef HAVE_WIDECHAR_EDITLINE
 #include <stdbool.h>
+#include <fcntl.h>                     // open flags
+#if defined O_DIRECTORY && defined O_PATH
+#include <unistd.h>                    // fchdir
+#include <errno.h>
+#endif
 
 #include "command-line.h"
+#include "parser-utilities.h"
 
 extern Switch default_switches[];
 static const Switch **sorted_names; /* sorted command names */
@@ -208,10 +214,6 @@ static void build_command_list(const Switch ds[])
  * abbreviated up to one character and its argument position also
  * needs a command completion (which is slightly different - no '=' is
  * appended to variables).
- *
- * FIXME: The file completion knows about ~ and ~user. However, I
- * don't know how to force their expanding, so they are not useful
- * for now.
  */
 static unsigned char lg_complete(EditLine *el, int ch)
 {
@@ -280,7 +282,68 @@ static unsigned char lg_complete(EditLine *el, int ch)
 
 	if (is_file_command)
 	{
+		/* The code before _el_fn_complete() supports printing the
+		 * completion possibilities without a directory name prefix, as
+		 * normally displayed by most programs. The code after
+		 * _el_fn_complete() restores its temporary changes. */
+#if defined O_DIRECTORY && defined O_PATH
+		wchar_t *dn_end = wcsrchr(word_start, L'/');
+		int cwdfd = -1;
+
+		if (dn_end != NULL)
+		{
+			cwdfd = open(".", O_DIRECTORY|O_PATH);
+			if (cwdfd == -1)
+			{
+				printf("Error: Open current directory: %s\n", strerror(errno));
+			}
+			else
+			{
+				wchar_t *wdirname = wcsdup(word_start);
+				wdirname[dn_end - word_start] = L'\0';
+
+				/* Original buffer is const, but never mind. Restored below. */
+				*dn_end = L' '; /* Not saved - supposing it was L'/' */
+
+				size_t byte_len = wcstombs(NULL, wdirname, 0);
+				if (byte_len == (size_t)-1)
+				{
+					printf("Error: Unable to process non-ASCII in directory name.\n");
+					free(wdirname);
+					return CC_ERROR;
+				}
+				char *dirname = malloc(byte_len + 1);
+				wcstombs(dirname, wdirname, byte_len + 1);
+				free(wdirname);
+				char *eh_dirname = expand_homedir(dirname);
+				free(dirname);
+				int chdir_status = chdir(eh_dirname);
+				free(eh_dirname);
+				if (chdir_status == -1)
+				{
+					*dn_end = L'/';
+				}
+			}
+		}
+#endif
+
 		rc = _el_fn_complete(el, ch);
+
+#if defined O_DIRECTORY && defined O_PATH
+		if (cwdfd != -1)
+		{
+			if (fchdir(cwdfd) < 0)
+			{
+				/* This shouldn't happen, unless maybe the directory to which
+				 * cwdfd reveres becomes unreadable after cwdfd is created. */
+				printf("\nfchdir(): Cannot change directory back: %s\n",
+				       strerror(errno));
+			}
+			close(cwdfd);
+			*dn_end = L'/';
+		}
+#endif
+
 		/* CC_NORM is returned if there is no possible completion. */
 		return (rc == CC_NORM) ? CC_ERROR : rc;
 	}
@@ -307,7 +370,6 @@ char *lg_readline(const char *mb_prompt)
 	static EditLine *el = NULL;
 	static char *mb_line;
 
-	int numc;
 	size_t byte_len;
 	const wchar_t *wc_line;
 	char *nl;
@@ -345,6 +407,7 @@ char *lg_readline(const char *mb_prompt)
 		el_source(el, NULL); /* Source the user's defaults file. */
 	}
 
+	int numc = 1; /*  Uninitialized at libedit. */
 	wc_line = el_wgets(el, &numc);
 
 	/* Received end-of-file */
@@ -369,6 +432,12 @@ char *lg_readline(const char *mb_prompt)
 
 	byte_len = wcstombs(NULL, wc_line, 0) + 4;
 	free(mb_line);
+	if (byte_len == (size_t)-1)
+	{
+		printf("Error: Unable to process UTF8 in input string.\n");
+		mb_line = strdup(""); /* Just ignore it. */
+		return mb_line;
+	}
 	mb_line = malloc(byte_len);
 	wcstombs(mb_line, wc_line, byte_len);
 
@@ -393,9 +462,7 @@ char *lg_readline(const char *prompt)
 
 	/* Save non-blank lines */
 	if (pline && *pline)
-	{
-		if (*pline) add_history(pline);
-	}
+		add_history(pline);
 
 	return pline;
 }

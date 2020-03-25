@@ -15,6 +15,8 @@
 
 #include "../link-grammar/link-includes.h"
 
+char *expand_homedir(const char *fn);
+
 #define MAX_INPUT 2048
 
 #ifdef _WIN32

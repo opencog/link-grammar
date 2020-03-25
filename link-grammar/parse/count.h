@@ -13,13 +13,13 @@
 #ifndef _COUNT_H
 #define _COUNT_H
 
-#include "fast-match.h"
-#include "histogram.h" /* for s64 */
+#include "fast-match.h"                 // fast_matcher_t
+#include "histogram.h"                  // Count_bin
 
 typedef struct count_context_s count_context_t;
 
 Count_bin* table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigned int);
-Count_bin do_parse(Sentence, fast_matcher_t*, count_context_t*, int null_count, Parse_Options);
+int do_parse(Sentence, fast_matcher_t*, count_context_t*, Parse_Options);
 
 count_context_t* alloc_count_context(Sentence);
 void free_count_context(count_context_t*, Sentence);

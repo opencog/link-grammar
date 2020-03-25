@@ -43,7 +43,7 @@
  * FIXME Long link names between more distant words may still not
  * fit the space between these words.
  *
- * Return the number of bytes needed for the all the words, including
+ * Return the number of bytes needed for all the words, including
  * the space needed for the link names as described above.  Note that
  * this byte length might be less than the glyph width! e.g. the
  * ASCII chars in the range 01 to 1F usually print in two columns,
@@ -65,7 +65,7 @@ set_centers(const Linkage linkage, int center[], int word_offset[],
 	{
 		Link *l = &linkage->link_array[n];
 
-		if ((l->lw + 1 == l->rw) && (NULL != l->link_name))
+		if (l->lw + 1 == l->rw)
 		{
 			link_len[l->rw] = strlen(l->link_name) +
 				(DEPT_CHR == connector_string(l->rc)[0]) +
@@ -273,7 +273,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 		if (NULL == dj) dj = "";
 		cost = linkage_get_disjunct_cost(linkage, w);
 
-		append_string(s, "%*s    %5.3f  %s\n", pad, infword, cost, dj);
+		append_string(s, "%*s    % 4.3f  %s\n", pad, infword, cost, dj);
 	}
 	return dyn_str_take(s);
 }
@@ -298,7 +298,7 @@ build_linkage_postscript_string(const Linkage linkage,
 {
 	int link, i,j;
 	int d;
-	bool print_word_0, print_word_N;
+	bool print_word_0 = true, print_word_N = true;
 	int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
 	dyn_str * string;
@@ -306,38 +306,42 @@ build_linkage_postscript_string(const Linkage linkage,
 
 	string = dyn_str_new();
 
-	if (!display_walls) {
+	/* Do we want to print the left and right walls? */
+	if (!display_walls)
+	{
 		int N_wall_connectors = 0;
-		bool suppressor_used = false;
-		for (j=0; j<N_links; j++) {
-			if (ppla[j].lw == 0) {
+		for (j=0; j<N_links; j++)
+		{
+			if (0 == ppla[j].lw)
+			{
 				if (ppla[j].rw == linkage->num_words-1) continue;
-				N_wall_connectors ++;
-				if (easy_match(connector_string(ppla[j].lc), LEFT_WALL_SUPPRESS)) {
-					suppressor_used = true;
-				}
-			}
-		}
-		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors != 1));
-	}
-	else print_word_0 = true;
+				if (easy_match(connector_string(ppla[j].lc), LEFT_WALL_SUPPRESS))
+					print_word_0 = false;
 
-	if (!display_walls) {
-		int N_wall_connectors = 0;
-		bool suppressor_used = false;
-		for (j=0; j<N_links; j++) {
-			if (ppla[j].rw == linkage->num_words-1) {
-				N_wall_connectors ++;
-				if (easy_match(connector_string(ppla[j].lc), RIGHT_WALL_SUPPRESS)) {
-					suppressor_used = true;
+				if (++N_wall_connectors > 1)
+				{
+					print_word_0 = true;
+					break;
 				}
 			}
 		}
-		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-						|| (N_wall_connectors != 1));
+
+		N_wall_connectors = 0;
+		for (j=0; j<N_links; j++)
+		{
+			if (ppla[j].rw == linkage->num_words-1)
+			{
+				if (easy_match(connector_string(ppla[j].lc), RIGHT_WALL_SUPPRESS))
+					print_word_N = false;
+
+				if (++N_wall_connectors > 1)
+				{
+					print_word_N = true;
+					break;
+				}
+			}
+		}
 	}
-	else print_word_N = true;
 
 	if (print_word_0) d=0; else d=1;
 
@@ -359,7 +363,6 @@ build_linkage_postscript_string(const Linkage linkage,
 	for (link=0; link<N_links; link++) {
 		if (!print_word_0 && (ppla[link].lw == 0)) continue;
 		if (!print_word_N && (ppla[link].rw == linkage->num_words-1)) continue;
-		// if (ppla[link]->lw == SIZE_MAX) continue;
 		assert (ppla[link].lw != SIZE_MAX);
 		if ((j%7 == 0) && (j>0)) dyn_strcat(string,"\n");
 		j++;
@@ -371,7 +374,7 @@ build_linkage_postscript_string(const Linkage linkage,
 	dyn_strcat(string,"]");
 	dyn_strcat(string,"\n");
 	dyn_strcat(string,"[");
-	for (j=0; j < pctx->N_rows; j++ )
+	for (j=0; j < pctx->N_rows; j++)
 	{
 		if (j>0) append_string(string, " %d", pctx->row_starts[j]);
 		else append_string(string,"%d", pctx->row_starts[j]);
@@ -407,6 +410,45 @@ static void diagram_alloc_tmpmem(size_t **start, char ***pic, char ***xpic,
 	}
 
 	*cur_height = max_height;
+}
+
+typedef struct
+{
+	Link *lnk;
+	unsigned int len;          /* Length of this link */
+} link_by_length;
+
+static int by_link_len(const void *a, const void *b)
+{
+	const link_by_length * const *la = a;
+	const link_by_length * const *lb = b;
+
+	return (*la)->len - (*lb)->len;
+}
+
+static void sort_link_lengths(Link *ppla, link_by_length *ll,
+                              unsigned int N_links)
+{
+	link_by_length *ll_tmp = alloca(N_links * sizeof(*ll_tmp));
+	link_by_length **lla = alloca(N_links * sizeof(*lla));
+
+	for (unsigned int j = 0; j < N_links; j++)
+	{
+		Link *lnk = &ppla[j];
+
+		assert(lnk->lw != SIZE_MAX);
+		assert(lnk->link_name != NULL);
+
+		lla[j] = &ll_tmp[j];
+		ll_tmp[j].lnk = lnk;
+		ll_tmp[j].len = (unsigned int)(lnk->rw - lnk->lw);
+	}
+
+	qsort(lla, N_links, sizeof(*lla), by_link_len);
+
+	/* Return the sort result through the ll parameter. */
+	for (unsigned int j = 0; j < N_links; j++)
+		ll[j] = *lla[j];
 }
 
 static void diagram_free_tmpmem(size_t *start, char **pic, char **xpic,
@@ -447,62 +489,58 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	unsigned int i, j, k, cl, cr, inc, row, top_row, top_row_p1;
 	const char *s;
 	char *t;
-	bool print_word_0 , print_word_N;
+	bool print_word_0 = true, print_word_N = true;
 	int *center = alloca((linkage->num_words+1)*sizeof(int));
 	int *word_offset = alloca((linkage->num_words+1) * sizeof(*word_offset));
-	unsigned int link_length;
 	unsigned int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
 	dyn_str * string;
 	unsigned int N_words_to_print;
 
-	// Avoid pathological case and the resulting crash.
+	// Avoid a pathological case and the resulting crash.
 	if (0 == linkage->num_words) return strdup("");
+
+	link_by_length *ll = alloca(N_links * sizeof(*ll));
+	sort_link_lengths(ppla, ll, N_links);
 
 	string = dyn_str_new();
 
-	/* Do we want to print the left wall? */
+	/* Do we want to print the left and right walls? */
 	if (!display_walls)
 	{
 		int N_wall_connectors = 0;
-		bool suppressor_used = false;
 		for (j=0; j<N_links; j++)
 		{
 			if (0 == ppla[j].lw)
 			{
 				if (ppla[j].rw == linkage->num_words-1) continue;
-				N_wall_connectors ++;
 				if (easy_match(connector_string(ppla[j].lc), LEFT_WALL_SUPPRESS))
+					print_word_0 = false;
+
+				if (++N_wall_connectors > 1)
 				{
-					suppressor_used = true;
+					print_word_0 = true;
+					break;
 				}
 			}
 		}
-		print_word_0 = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1));
-	}
-	else print_word_0 = true;
 
-	/* Do we want to print the right wall? */
-	if (!display_walls)
-	{
-		int N_wall_connectors = 0;
-		bool suppressor_used = false;
+		N_wall_connectors = 0;
 		for (j=0; j<N_links; j++)
 		{
 			if (ppla[j].rw == linkage->num_words-1)
 			{
-				N_wall_connectors ++;
 				if (easy_match(connector_string(ppla[j].lc), RIGHT_WALL_SUPPRESS))
+					print_word_N = false;
+
+				if (++N_wall_connectors > 1)
 				{
-					suppressor_used = true;
+					print_word_N = true;
+					break;
 				}
 			}
 		}
-		print_word_N = (((!suppressor_used) && (N_wall_connectors != 0))
-					|| (N_wall_connectors != 1));
 	}
-	else print_word_N = true;
 
 	N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
@@ -531,88 +569,78 @@ linkage_print_diagram_ctxt(const Linkage linkage,
 	top_row = 0;
 
 	// Longer links are printed above the lower links.
-	for (link_length = 1; link_length < N_words_to_print; link_length++)
+	for (j=0; j<N_links; j++)
 	{
-		for (j=0; j<N_links; j++)
+		Link *lnk = ll[j].lnk;
+
+		if (!print_word_0 && (lnk->lw == 0)) continue;
+		/* Gets rid of the irrelevant link to the left wall */
+		if (!print_word_N && (lnk->rw == linkage->num_words-1)) continue;
+
+		/* Put it into the lowest position */
+		/* Keep in mind that cl, cr are "columns" not "bytes" */
+		cl = center[lnk->lw];
+		cr = center[lnk->rw];
+		for (row=0; row < max_height; row++)
 		{
-			assert (ppla[j].lw != SIZE_MAX);
-			if (NULL == ppla[j].link_name) continue;
-			if (((unsigned int) (ppla[j].rw - ppla[j].lw)) != link_length)
-			  continue;
-			if (!print_word_0 && (ppla[j].lw == 0)) continue;
-			/* Gets rid of the irrelevant link to the left wall */
-			if (!print_word_N && (ppla[j].rw == linkage->num_words-1)) continue;
-
-			/* Put it into the lowest position */
-			/* Keep in mind that cl, cr are "columns" not "bytes" */
-			cl = center[ppla[j].lw];
-			cr = center[ppla[j].rw];
-			for (row=0; row < max_height; row++)
+			for (k=cl+1; k<cr; k++)
 			{
-				for (k=cl+1; k<cr; k++)
-				{
-					if (picture[row][k] != ' ') break;
-				}
-				if (k == cr) break;
+				if (picture[row][k] != ' ') break;
 			}
+			if (k == cr) break;
+		}
 
-			if (NULL != pctx) /* PS junk */
-			{
-				/* We know it fits, so put it in this row */
-				pctx->link_heights[j] = row;
+		if (NULL != pctx) /* PS junk */
+		{
+			/* We know it fits, so put it in this row */
+			pctx->link_heights[j] = row;
+		}
+
+		if (2*row+2 > max_height-1) {
+			lgdebug(+9, "Extending rows up to %u.\n", (2*row+2)+HEIGHT_INC);
+			diagram_alloc_tmpmem(&start, &picture, &xpicture,
+			                     &max_height, (2*row+2)+HEIGHT_INC,
+			                     max_bytes, num_cols);
+		}
+		if (row > top_row) top_row = row;
+
+		for (k=cl+1; k<cr; k++) {
+			picture[row][k] = '-';
+		}
+
+		s = lnk->link_name;
+		k = strlen(s);
+		inc = cl + cr + 2;
+		if (inc < k) inc = 0;
+		else inc = (inc-k)/2;
+		if (inc <= cl) {
+			t = picture[row] + cl + 1;
+		} else {
+			t = picture[row] + inc;
+		}
+
+		/* Add direction indicator */
+		if (DEPT_CHR == connector_string(lnk->lc)[0] &&
+		    (t > &picture[row][cl])) { picture[row][cl+1] = '<'; }
+		if (HEAD_CHR == connector_string(lnk->lc)[0]) { *(t-1) = '>'; }
+
+		/* Copy connector name; stop short if no room */
+		while ((*s != '\0') && (*t == '-')) *t++ = *s++;
+
+		/* Add direction indicator */
+		if (DEPT_CHR == connector_string(lnk->rc)[0]) { picture[row][cr-1] = '>'; }
+		if (HEAD_CHR == connector_string(lnk->rc)[0]) { *t = '<'; }
+
+		picture[row][cl] = '+';
+		picture[row][cr] = '+';
+
+		/* Now put in the | below this one, where needed */
+		for (k=0; k<row; k++) {
+			if (picture[k][cl] == ' ') {
+				picture[k][cl] = '|';
 			}
-
-			if (2*row+2 > max_height-1) {
-				lgdebug(+9, "Extending rows up to %d.\n", (2*row+2)+HEIGHT_INC);
-				diagram_alloc_tmpmem(&start, &picture, &xpicture,
-				                     &max_height, (2*row+2)+HEIGHT_INC,
-				                     max_bytes, num_cols);
-			}
-			if (row > top_row) top_row = row;
-
-			picture[row][cl] = '+';
-			picture[row][cr] = '+';
-			for (k=cl+1; k<cr; k++) {
-				picture[row][k] = '-';
-			}
-
-			s = ppla[j].link_name;
-			k = strlen(s);
-			inc = cl + cr + 2;
-			if (inc < k) inc = 0;
-			else inc = (inc-k)/2;
-			if (inc <= cl) {
-				t = picture[row] + cl + 1;
-			} else {
-				t = picture[row] + inc;
-			}
-
-			/* Add direction indicator */
-			// if (DEPT_CHR == ppla[j]->lc->string[0]) { *(t-1) = '<'; }
-			if (DEPT_CHR == connector_string(ppla[j].lc)[0] &&
-			    (t > &picture[row][cl])) { picture[row][cl+1] = '<'; }
-			if (HEAD_CHR == connector_string(ppla[j].lc)[0]) { *(t-1) = '>'; }
-
-			/* Copy connector name; stop short if no room */
-			while ((*s != '\0') && (*t == '-')) *t++ = *s++;
-
-			/* Add direction indicator */
-			// if (DEPT_CHR == ppla[j]->rc->string[0]) { *t = '>'; }
-			if (DEPT_CHR == connector_string(ppla[j].rc)[0]) { picture[row][cr-1] = '>'; }
-			if (HEAD_CHR == connector_string(ppla[j].rc)[0]) { *t = '<'; }
-
-			/* The direction indicators may have clobbered these. */
-			picture[row][cl] = '+';
-			picture[row][cr] = '+';
-
-			/* Now put in the | below this one, where needed */
-			for (k=0; k<row; k++) {
-				if (picture[k][cl] == ' ') {
-					picture[k][cl] = '|';
-				}
-				if (picture[k][cr] == ' ') {
-					picture[k][cr] = '|';
-				}
+			if (picture[k][cr] == ' ') {
+				picture[k][cr] = '|';
 			}
 		}
 	}
@@ -1230,24 +1258,24 @@ static const char * header(bool print_ps_header)
 /**
  * Print elements of the 2D-word-array produced for the parsers.
  *
- * - print_sentence_word_alternatives(s, sent, false, NULL, tokenpos)
+ * - print_sentence_word_alternatives(s, sent, false, NULL, NULL, tokenpos)
  * If a pointer to struct "tokenpos" is given, return through it the index of
  * the first occurrence in the sentence of the given token. This is used to
  * prevent duplicate information display for repeated morphemes (if there are
  * multiples splits, each of several morphemes, otherwise some of them may
  * repeat).
  *
- * - print_sentence_word_alternatives(s, sent, true, NULL, NULL)
+ * - print_sentence_word_alternatives(s, sent, true, NULL, NULL, NULL)
  * If debugprint is "true", this is a debug printout of the sentence.  (The
  * debug printouts are with level 0 because this function is invoked for debug
  * on certain positive level.)
  *
  *
- * - print_sentence_word_alternatives(s, sent, false, display_func, NULL)
+ * - print_sentence_word_alternatives(s, sent, false, display_func, arg, NULL)
  * Iterate over the sentence words and their alternatives.  Handle each
- * alternative using the display_func function if it is supplied, or else (if it
- * is NULL) just print them. It is used to display disjunct information when
- * command !!word is used.
+ * alternative using display_func(..., arg) if it is supplied, or else (if
+ * display_func is NULL) just print them. It is used to display disjunct
+ * information when command !!word is used.
  * FIXME In the current version (using Wordgraph) the "alternatives" in the
  * word-array don't necessarily consist of real word alternatives.
  *
@@ -1260,8 +1288,10 @@ struct tokenpos /* First position of the given token - to prevent duplicates */
 	size_t ai;
 };
 
-void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint,
-     char * (*display)(Dictionary, const char *), struct tokenpos * tokenpos)
+void print_sentence_word_alternatives(dyn_str *s, Sentence sent,
+        bool debugprint,
+        char * (*display)(Dictionary, const char *, const void **),
+        const void **arg, struct tokenpos *tokenpos)
 {
 	size_t wi;   /* Internal sentence word index */
 	size_t ai;   /* Index of a word alternative */
@@ -1284,11 +1314,12 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 	{
 		/* For analyzing words we need to ignore the left/right walls */
 		if (dict->left_wall_defined &&
-		    (0 == strcmp(sent->word[0].unsplit_word, LEFT_WALL_WORD)))
+		    ((NULL != sent->word[0].alternatives[0])) &&
+		    (0 == strcmp(sent->word[0].alternatives[0], LEFT_WALL_WORD)))
 			first_sentence_word = 1;
 		if (dict->right_wall_defined &&
-		    ((NULL != sent->word[sentlen-1].unsplit_word)) &&
-		    (0 == strcmp(sent->word[sentlen-1].unsplit_word, RIGHT_WALL_WORD)))
+		    ((NULL != sent->word[sentlen-1].alternatives[0])) &&
+		    (0 == strcmp(sent->word[sentlen-1].alternatives[0], RIGHT_WALL_WORD)))
 			sentlen--;
 
 		/* Find if a word got split. This is indicated by:
@@ -1316,7 +1347,7 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 				}
 			}
 		}
-		/* "String", because it can be a word, morpheme, or (TODO) idiom */
+		/* "String", because it can be a word, morpheme, or idiom */
 		if (word_split && (NULL == display)) dyn_strcat(s, "String splits to:\n");
 		/* We used to print the alternatives of the word here, one per line.
 		 * In the current (Wordgraph) version, the alternatives may look
@@ -1403,7 +1434,7 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 				{
 					struct tokenpos firstpos = { wt };
 
-					print_sentence_word_alternatives(s, sent, false, NULL, &firstpos);
+					print_sentence_word_alternatives(s, sent, false, NULL, NULL, &firstpos);
 					if (((firstpos.wi != wi) || (firstpos.ai != ai)) &&
 					  firstpos.wi >= first_sentence_word) // allow !!LEFT_WORD
 					{
@@ -1434,7 +1465,7 @@ void print_sentence_word_alternatives(dyn_str *s, Sentence sent, bool debugprint
 				 * Display the features of the token. */
 				if ((NULL == tokenpos) && (NULL != display))
 				{
-					char *info = display(sent->dict, wt);
+					char *info = display(sent->dict, wt, arg);
 
 					if (NULL == info) return;
 					append_string(s, "Token \"%s\" ", wt);

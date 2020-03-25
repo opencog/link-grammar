@@ -11,11 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include "link-grammar/link-includes.h"
-/* If you compile your own program out of the LG source-code tree,
- * include this file as follows in order to pick it up from the
- * LG-package system installation. */
-/* #include <link-grammar/link-includes.h> */
+#include <link-grammar/link-includes.h>
 
 #define COMMENT_CHAR '%'       /* input lines beginning with this are ignored */
 #define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here */

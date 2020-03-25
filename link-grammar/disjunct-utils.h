@@ -34,18 +34,18 @@ struct Disjunct_struct
 	gword_set *originating_gword; /* Set of originating gwords */
 	const char *word_string;      /* Subscripted dictionary word */
 
-	/* Shared by different steps. | For what and when. */
+	/* Shared by different steps. For what | when. */
 	union
 	{
-		Disjunct *dup_table_next; /* Duplicate elimination - before pruning */
-		Disjunct *old;            /* Old disjuncts - before parsing */
+		Disjunct *dup_table_next; /* Duplicate elimination | before pruning */
+		Disjunct *unused1;        /* Unused now | before parsing */
 	}; /* 8 bytes */
 
-	/* Shared by different steps. | For what and when. */
+	/* Shared by different steps. For what | when. */
 	union
 	{
-		uint32_t dup_hash;        /* Duplicate elimination - before pruning */
-		uint32_t ordinal;         /* Old disjuncts - before and during parsing */
+		uint32_t dup_hash;        /* Duplicate elimination | before pruning */
+		uint32_t unused2;         /* Unused now | before and during parsing */
 	}; /* 4 bytes */
 
 	struct
@@ -64,20 +64,16 @@ unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct *);
 char * print_one_disjunct(Disjunct *);
-void word_record_in_disjunct(const Gword *, Disjunct *);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 
-Tracon_sharing *pack_sentence_for_pruning(Sentence, unsigned int, unsigned int,
-                                          bool);
-Tracon_sharing *pack_sentence_for_parsing(Sentence, unsigned int, unsigned int,
-                                          Tracon_sharing *, bool);
+Tracon_sharing *pack_sentence_for_pruning(Sentence);
+Tracon_sharing *pack_sentence_for_parsing(Sentence);
 void free_tracon_sharing(Tracon_sharing *);
 void count_disjuncts_and_connectors(Sentence, unsigned int *, unsigned int *);
 
-void print_one_connector(Connector *, int, int);
-void print_connector_list(Connector *);
-void print_disjunct_list(Disjunct *);
+void print_connector_list(Connector *, const char *);
+void print_disjunct_list(Disjunct *, const char *);
 void print_all_disjuncts(Sentence);
 
 /* Save and restore sentence disjuncts */
@@ -92,14 +88,8 @@ typedef struct
  * benefit of the pruning and parsing stages. To that end, unique tracons
  * are identified. For the parsing stage, a unique tracon_id is assigned
  * to the Connector's tracon_id field. For the pruning stage, this field
- * remains 0 (later used for pruning pass_count - see below) and instead
- * the Connector's refcount filed reflects the number of connectors which
- * are memory-shared.
- * In the pruning stage, on each pass the tracon_id of "good"
- * connectors is assigned the pass number so they will not be checked
- * again on the same pass. The pruning stage also uses the connector
- * refcount field as a reference count - the number of times this
- * connector is memory-shared.
+ * is unused and the Connector's refcount field reflects the number of
+ * connectors which are memory-shared.
  * The details of what considered a unique tracon is slightly different
  * for the pruning stage and the parsing stage - see the comment block
  * "Connector encoding, sharing and packing" in disjunct-utils.c.
@@ -142,6 +132,7 @@ struct tracon_sharing_s
 	int next_id[2];             /* Next unique tracon ID */
 	uintptr_t last_token;       /* Tracons are the same only per this token */
 	int word_offset;            /* Start number for connector tracon_id */
+	bool is_pruning;            /* false: Parsing step, true: Pruning step */
 	Tracon_list *tracon_list;   /* Used only for pruning */
 };
 

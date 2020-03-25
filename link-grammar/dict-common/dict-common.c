@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include "connectors.h"  // for connector_set_delete
+#include "dialect.h"
 #include "dict-affix.h"
 #include "dict-api.h"
 #include "dict-common.h"
@@ -63,14 +64,14 @@ Dictionary dictionary_create_default_lang(void)
 		lang[strcspn(lang, "_-")] = '\0';
 		dictionary = dictionary_create_lang(lang);
 	}
-	free(lang);
 
 	/* Fall back to English if no default locale or no matching dict. */
-	if (NULL == dictionary)
+	if ((NULL == dictionary) && ((lang == NULL) || (0 != strcmp(lang, "en"))))
 	{
 		dictionary = dictionary_create_lang("en");
 	}
 
+	free(lang);
 	return dictionary;
 }
 
@@ -298,6 +299,13 @@ void dictionary_delete(Dictionary dict)
 	pp_knowledge_close(dict->base_knowledge);
 	pp_knowledge_close(dict->hpsg_knowledge);
 	string_set_delete(dict->string_set);
+
+	free_dialect(dict->dialect);
+	free(dict->dialect_tag.name);
+	string_id_delete(dict->dialect_tag.set);
+	if (dict->macro_tag != NULL) free(dict->macro_tag->name);
+	free(dict->macro_tag);
+
 	free((void *)dict->suppress_warning);
 	free_regexs(dict->regex_root);
 	free_anysplit(dict);

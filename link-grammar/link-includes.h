@@ -210,6 +210,10 @@ link_public_api(bool)
 link_public_api(void)
      parse_options_reset_resources(Parse_Options opts);
 
+link_public_api(char *)
+	  parse_options_get_dialect(Parse_Options opts);
+link_public_api(void)
+	  parse_options_set_dialect(Parse_Options opts, const char *dialect);
 
 /**********************************************************************
  *
@@ -360,7 +364,6 @@ link_public_api(WordIdx)
      linkage_get_word_char_start(const Linkage linkage, WordIdx w);
 link_public_api(WordIdx)
      linkage_get_word_char_end(const Linkage linkage, WordIdx w);
-
 
 /**********************************************************************
  *

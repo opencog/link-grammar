@@ -23,6 +23,7 @@ void wordgraph_delete(Sentence);
 void tokenization_done(Sentence, Gword *);
 
 void altappend(Sentence, const char ***, const char *);
+bool word0_set(Sentence, char *, Parse_Options);
 
 Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
                      const char *label,

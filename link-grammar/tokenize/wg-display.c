@@ -24,8 +24,8 @@
 #endif
 #include <signal.h>    /* SIG* */
 
-#include <print/print-util.h> /* for append_string */
-#include <utilities.h> /* for dyn_str functions and UNREACHABLE */
+#include "print/print-util.h" /* for append_string */
+#include "utilities.h" /* for dyn_str functions and UNREACHABLE */
 #endif /* USE_WORDGRAPH_DISPLAY */
 
 #include "api-structures.h"
@@ -93,7 +93,7 @@ GNUC_UNUSED const char *gword_morpheme(Sentence sent, const Gword *w)
 			break;
 		default:
 			/* No truncation is expected. */
-			snprintf(buff, sizeof(buff), "MT_%d", w->morpheme_type);
+			snprintf(buff, sizeof(buff), "MT_%d", (int)w->morpheme_type);
 			mt = string_set_add(buff, sent->string_set);
 	}
 
@@ -455,7 +455,7 @@ static bool x_popen(const char *cmd, const char *wgds)
 	return rc;
 }
 #else
-static bool x_forkexec(const char *const argv[], pid_t *vpid)
+static bool x_forkexec(const char *const argv[], pid_t *vpid, const char err[])
 {
 	/* Fork/exec a graph viewer, and leave it in the background until we exit.
 	 * On exit, send SIGHUP. If prctl() is not available and the program
@@ -489,7 +489,8 @@ static bool x_forkexec(const char *const argv[], pid_t *vpid)
 #endif
 			/* Not closing fd 0/1/2, to allow interaction with the program */
 			execvp(argv[0], (char **)argv);
-			prt_error("Error: execlp of %s: %s\n", argv[0], strerror(errno));
+			prt_error("Error: execlp of %s: %s%s\n",
+			          argv[0], strerror(errno), (ENOENT == errno) ? err : "");
 			_exit(1);
 		default:
 #ifndef HAVE_PRCTL
@@ -632,7 +633,9 @@ bool sentence_display_wordgraph(Sentence sent, const char *modestr)
 	{
 		assert(NULL != gvf_name, "DOT filename not initialized (#define mess?)");
 		const char *const args[] = { DOT_COMMAND, DOT_DRIVER, gvf_name, NULL };
-		rc = x_forkexec(args, &pid);
+		const char notfound[] =
+			" (command not in PATH; \"graphviz\" package not installed?).";
+		rc = x_forkexec(args, &pid, notfound);
 	}
 #endif
 

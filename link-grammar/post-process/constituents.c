@@ -616,7 +616,7 @@ static int add_constituent(con_context_t *ctxt, int c, const Linkage linkage,
 	if (l < 1) l=1;
 	if (r > nwords) r = nwords;
 	if (l > nwords) l = nwords;
-	assert(l <= r, "negative constituent length!" );
+	assert(l <= r, "negative constituent length!");
 
 	ctxt->constituent[c].type = string_set_add(name, ctxt->phrase_ss);
 	ctxt->constituent[c].left = l;
@@ -1325,7 +1325,7 @@ char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle m
 	{
 		return print_flat_constituents(linkage);
 	}
-	prt_error("Warning: Illegal mode %d for printing constituents\n"
+	prt_error("Warning: Illegal mode %u for printing constituents\n"
 	          "Allowed values: %d to %d\n", mode, NO_DISPLAY, MAX_STYLES);
 	return NULL;
 }

@@ -36,6 +36,10 @@
  * is possible to encode up to 9 letters in an uint64_t. */
 #define LC_BITS 7
 #define LC_MASK ((1<<LC_BITS)-1)
+#define MAX_CONNECTOR_LC_LENGTH 9
+
+#define MAX_LINK_NAME_LENGTH 12
+
 typedef uint64_t lc_enc_t;
 
 typedef uint32_t connector_hash_t;
@@ -101,24 +105,37 @@ typedef struct
  * Lets try to keep it that way. */
 struct Connector_struct
 {
-	uint8_t length_limit; /* Can be different than in the descriptor */
-	uint8_t nearest_word;
-	                      /* The nearest word to my left (or right) that
+	union
+	{
+		uint8_t farthest_word;/* The farthest word to my left (or right)
+		                         that this could ever connect to. Computed
+		                         from length_limit by setup_connectors(). */
+		uint8_t length_limit; /* Same purpose as above but relative to the
+		                         current word. This is how it is initially
+		                         set. */
+	};
+	uint8_t nearest_word; /* The nearest word to my left (or right) that
 	                         this could ever connect to.  Initialized by
 	                         setup_connectors(). Final value is found in
 	                         the power pruning. */
+	uint8_t prune_pass;   /* Prune pass number (one bit could be enough) */
 	bool multi;           /* TRUE if this is a multi-connector */
-	int tracon_id;        /* Tracon identifier (see disjunct-utils.c) */
+	int32_t tracon_id;    /* Tracon identifier (see disjunct-utils.c) */
 	const condesc_t *desc;
 	Connector *next;
 	union
 	{
 		const gword_set *originating_gword; /* Used while and after parsing */
-		/* For pruning use only */
 		struct
 		{
-			int refcount;      /* Memory-sharing reference count */
-			bool shallow;      /* TRUE if this is a shallow connector */
+			int32_t refcount;/* Memory-sharing reference count - for pruning. */
+			uint16_t exp_pos; /* The position in the originating expression,
+			                   currently used only for debugging dict macros. */
+			bool shallow;   /* TRUE if this is a shallow connector.
+			                 * A connectors is shallow if it is the first in
+			                 * its list on its disjunct. (It is deep if it is
+			                 * not the first in its list; it is deepest if it
+			                 * is the last on its list.) */
 		};
 	};
 };
@@ -175,10 +192,20 @@ static inline bool connector_uc_eq(const Connector *c1, const Connector *c2)
 	return (connector_uc_num(c1) == connector_uc_num(c2));
 }
 
+/*
+ * Return the deepest connector in the connector chain starting with \p c.
+ * @param c Any connector
+ * @return The deepest connector (can be modified if needed).
+ */
+static inline Connector *connector_deepest(const Connector *c)
+{
+	for (; c->next != NULL; c = c->next)
+		;
+	return (Connector *)c; /* Note: Constness removed. */
+}
+
 /* Length-limits for how far connectors can reach out. */
 #define UNLIMITED_LEN 255
-
-void set_all_condesc_length_limit(Dictionary);
 
 /**
  * Returns TRUE if s and t match according to the connector matching
@@ -311,8 +338,7 @@ static inline unsigned int pair_hash(unsigned int table_size,
  */
 static inline int get_tracon_word_number(Connector *c, int dir)
 {
-	for (; NULL != c->next; c = c->next)
-		;
+	c = connector_deepest(c);
 	return c->nearest_word + ((dir == 0) ? 1 : -1);
 }
 #endif /* _LINK_GRAMMAR_CONNECTORS_H_ */

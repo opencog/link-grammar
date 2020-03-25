@@ -1,7 +1,7 @@
 /*************************************************************************/
 /* Copyright (c) 2004                                                    */
 /* Daniel Sleator, David Temperley, and John Lafferty                    */
-/* Copyright 2018, 2019, Amir Plivatsky                                  */
+/* Copyright 2018-2020, Amir Plivatsky                                  */
 /* All rights reserved                                                   */
 /*                                                                       */
 /* Use of the link grammar parsing system is subject to the terms of the */
@@ -15,8 +15,11 @@
 #include "api-structures.h"             // Sentence
 #include "connectors.h"
 #include "dict-common/dict-structures.h"
+#include "dict-common/dict-utils.h"     // copy_Exp
+#include "dict-common/regex-morph.h"    // match_regex
 #include "disjunct-utils.h"
 #include "memory-pool.h"
+#include "prepare/build-disjuncts.h"
 #include "print/print-util.h"
 #include "tokenize/tok-structures.h"    // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h"
@@ -119,10 +122,10 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 {
 	unsigned int i;
 	i = 0;
-	for (Connector *e = d->left ; e != NULL; e = e->next) {
+	for (Connector *e = d->left; e != NULL; e = e->next) {
 		i = (41 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
-	for (Connector *e = d->right ; e != NULL; e = e->next) {
+	for (Connector *e = d->right; e != NULL; e = e->next) {
 		i = (41 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
 #if 0 /* Redundant - the connector hashing has enough entropy. */
@@ -189,58 +192,6 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 	if (!rc) de_fp++;
 
 	return rc;
-}
-#endif
-
-#if 0
-/**
- * Duplicate the given connector chain.
- * If the argument is NULL, return NULL.
- */
-static Connector *connectors_dup(Pool_desc *connector_pool, Connector *origc)
-{
-	Connector head;
-	Connector *prevc = &head;
-	Connector *newc = &head;
-
-	for (Connector *t = origc; t != NULL;  t = t->next)
-	{
-		newc = connector_new(connector_pool, NULL, NULL);
-		*newc = *t;
-
-		prevc->next = newc;
-		prevc = newc;
-	}
-	newc->next = NULL;
-
-	return head.next;
-}
-
-/**
- * Duplicate the given disjunct chain.
- * If the argument is NULL, return NULL.
- */
-static Disjunct *disjuncts_dup(Pool_desc *Disjunct_pool, Pool_desc *Connector_pool,
-                        Disjunct *origd)
-{
-	Disjunct head;
-	Disjunct *prevd = &head;
-	Disjunct *newd = &head;
-
-	for (Disjunct *t = origd; t != NULL; t = t->next)
-	{
-		newd = pool_alloc(Disjunct_pool);
-		newd->word_string = t->word_string;
-		newd->cost = t->cost;
-		newd->left = connectors_dup(Connector_pool, t->left);
-		newd->right = connectors_dup(Connector_pool, t->right);
-		newd->originating_gword = t->originating_gword;
-		prevd->next = newd;
-		prevd = newd;
-	}
-	newd->next = NULL;
-
-	return head.next;
 }
 #endif
 
@@ -347,7 +298,11 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 {
 	unsigned int count = 0;
 	disjunct_dup_table *dt;
-	Disjunct *prev = NULL; /* The first disjunct is never eliminated. */
+	/* This initialization is unneeded because the first disjunct is never
+	 * eliminated. However, omitting it generates "uninitialized" compiler
+	 * warning. Setting it to NULL generates clang-analyzer error on
+	 * possible NULL dereference. */
+	Disjunct *prev = dw;
 
 	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(dw)));
 
@@ -460,91 +415,6 @@ void count_disjuncts_and_connectors(Sentence sent, unsigned int *dca,
 	*cca = ccnt;
 	*dca = dcnt;
 }
-/* ============================================================= */
-
-/**
- * Record the wordgraph word to which the X-node belongs, in each of its
- * disjuncts.
- */
-void word_record_in_disjunct(const Gword * gw, Disjunct * d)
-{
-	for (;d != NULL; d=d->next) {
-		d->originating_gword = (gword_set *)&gw->gword_set_head;
-	}
-}
-
-
-/* ================ Pack disjuncts and connectors ============== */
-/* Print one connector with all the details.
- * mCnameD<tracon_id>(nearest_word, length_limit)x
- * optional m: "@" for multi (else nothing)
- * Cname: Connector name
- * Optional D: "-" / "+" (if dir != -1)
- * Optional <tracon_id>: tracon_id (if not 0)
- * Optional (nearest_word, length_limit): if both are not 0
- * x: Shallow/deep indication as "s" / "d" (if shallow != -1)
- */
-void print_one_connector(Connector * e, int dir, int shallow)
-{
-	printf("%s%s", e->multi ? "@" : "", connector_string(e));
-	if (-1 != dir) printf("%c", "-+"[dir]);
-	if (e->tracon_id)
-	{
-		if ((-1 != shallow) && e->refcount)
-			printf("<%d,%d>", e->tracon_id, e->refcount);
-		else
-			printf("<%d>", e->tracon_id);
-	}
-	if ((0 != e->nearest_word) || (0 != e->length_limit))
-		printf("(%d,%d)", e->nearest_word, e->length_limit);
-	if (-1 != shallow)
-		printf("%c", (0 == shallow) ? 'd' : 's');
-}
-
-void print_connector_list(Connector * e)
-{
-	for (;e != NULL; e=e->next)
-	{
-		print_one_connector(e, /*dir*/-1, /*shallow*/-1);
-		if (e->next != NULL) printf(" ");
-	}
-}
-
-void print_disjunct_list(Disjunct * dj)
-{
-	int i = 0;
-	char word[MAX_WORD + 32];
-	bool print_disjunct_address = test_enabled("disjunct-address");
-	bool print_disjunct_ordinal = test_enabled("disjunct-ordinal");
-
-	for (;dj != NULL; dj=dj->next)
-	{
-		lg_strlcpy(word, dj->word_string, sizeof(word));
-		patch_subscript_mark(word);
-
-		printf("%16s", word);
-		if (print_disjunct_address) printf("(%p)", dj);
-		printf(": ");
-
-		if (print_disjunct_ordinal) printf("<%d>", dj->ordinal);
-		printf("[%d](%s) ", i++, cost_stringify(dj->cost));
-
-		print_connector_list(dj->left);
-		printf(" <--> ");
-		print_connector_list(dj->right);
-		printf("\n");
-	}
-}
-
-void print_all_disjuncts(Sentence sent)
-{
-		for (WordIdx w = 0; w < sent->length; w++)
-		{
-			printf("Word %zu:\n", w);
-			print_disjunct_list(sent->word[w].d);
-		}
-}
-
 
 /* ============= Connector encoding, sharing and packing ============= */
 
@@ -568,12 +438,9 @@ void print_all_disjuncts(Sentence sent)
  * comparison.
  *
  * For the parsing step, identical tracons are assigned a unique tracon
- * ID, which is kept in their first connector. The rest of their
- * connectors also have tracon IDs, which belong to tracons starting
- * with that connectors.
- *
- * For the pruning step, all the tracon IDs are set to 0 (see below for
- * how tracon_id is used during the power pruning).
+ * ID, which is kept in their first connector tracon_id field. The rest of
+ * their connectors also have tracon IDs, which belong to tracons starting
+ * with that connectors. The tracon_id is not used for pruning.
  *
  * For the pruning step, more things are done:
  * Additional data structure - a tracon list - is constructed, which
@@ -592,17 +459,17 @@ void print_all_disjuncts(Sentence sent)
  * The first connector of each tracon is inserted into the power table,
  * along with its reference count. When a connector cannot be matched,
  * this means that all the disjuncts that contain its tracon also cannot
- * be matched. When it is marked as bad (cannot match) or good (match
- * found), due to the tracon memory sharing all the connectors that
- * share the same memory are marked simultaneously, and thus are
- * detected when the next disjuncts are examined without a need to
- * further process them. This saves much processing and also drastically
- * reduces the "power_cost". Setting the nearest_word field is hence
- * done only once per tracon on each pass. The tracon IDs are used to
- * detect already-processed tracons - they are assigned the pass number
- * so each tracon is processed only once per pass. The connector
- * refcount field is used to discard connectors from the power table
- * when all the disjuncts that contain them are discarded.
+ * be matched. It is then marked as bad (by nearest_word=BAD_WORD) and
+ * due to the tracon memory sharing all the connectors that share the same
+ * memory are marked simultaneously, and thus are detected when the next
+ * disjuncts are examined without a need to further process them.
+ * This drastically reduces the "power_cost" and saves much processing.
+ * Setting the nearest_word field is hence done only once per tracon on
+ * each pass. The pass_number field is used to detect already-processed
+ * good tracons - they are assigned the pass number so each tracon is
+ * processed only once per pass. The connector refcount field is used to
+ * discard connectors from the power table when all the disjuncts that
+ * contain them are discarded.
  *
  * PP pruning:
  * Here too only the first connector in each tracon needs to be
@@ -728,9 +595,10 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			else
 			{
 				newc = *tracon;
-				if (NULL == tl)
+				if (!ts->is_pruning)
 				{
-					if (o->nearest_word != newc->nearest_word)
+					if ((o->nearest_word != newc->nearest_word) ||
+					    (o->farthest_word != newc->farthest_word))
 					{
 						/* This is a rare case in which a shallow and deep
 						 * connectors don't have the same nearest_word, because
@@ -738,11 +606,12 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 						 * earlier. Because the nearest word is different, we
 						 * cannot share it. (Such shallow and deep tracons could
 						 * be shared separately, but because this is a rare
-						 * event there is no need to do that.)
+						 * event there is no benefit to do that.)
 						 * Note:
 						 * In case the parsing ever depends on other Connector
 						 * fields, their will be a need to add a check for them
-						 * here. */
+						 * here.
+						 * Update: farthest_word added. */
 						newc = NULL; /* Don't share it. */
 					}
 				}
@@ -755,11 +624,10 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			newc = lcblock++;
 			*newc = *o;
 
-			if (NULL != tl)
+			if (ts->is_pruning)
 			{
 				/* Initialize for the pruning step when no sharing is done yet. */
 				newc->refcount = 1;  /* No sharing yet. */
-				newc->tracon_id = 0; /* Used in power_prune() for pass number. */
 				if (NULL != tl)
 					tl->num_cnctrs_per_word[dir][w]++;
 			}
@@ -767,9 +635,6 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 			{
 				/* For the parsing step we need a unique ID. */
 				newc->tracon_id = ts->next_id[dir]++;
-#ifdef DEBUG
-				newc->refcount = 0;  /* Not used; zero for debug consistency. */
-#endif
 			}
 		}
 		else
@@ -796,31 +661,6 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 }
 
 /**
- * Set dummy tracon_id's.
- * To be used for short sentences (for which a full encoding is too
- * costly) or for library tests that actually bypass the use of tracon IDs
- * (to validate that the tracon_id implementation didn't introduce bugs).
- */
-static int enumerate_connectors_sequentially(Tracon_sharing *ts)
-{
-	int id = ts->word_offset;
-
-	for (size_t i = 0; i < ts->num_disjuncts; i++)
-	{
-		Disjunct *d = &ts->dblock_base[i];
-
-		for (Connector *c = d->left; NULL != c; c = c->next)
-			c->tracon_id = id++;
-
-		for (Connector *c = d->right; NULL != c; c = c->next)
-			c->tracon_id = id++;
-
-	}
-
-	return id + 1;
-}
-
-/**
  * Pack the given disjunct chain in a contiguous memory block.
  * If the disjunct is NULL, return NULL.
  */
@@ -830,7 +670,6 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	uintptr_t token = (uintptr_t)w;
 
 	newd = (ts->dblock)++;
-	newd->ordinal = d->ordinal;
 	newd->word_string = d->word_string;
 	newd->cost = d->cost;
 	newd->originating_gword = d->originating_gword;
@@ -851,7 +690,7 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	return newd;
 }
 
-static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts, bool is_incr,
+static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts,
                                 Disjunct *origd, int w)
 {
 	Disjunct head;
@@ -859,9 +698,7 @@ static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts, bool is_incr,
 
 	for (Disjunct *d = origd; NULL != d; d = d->next)
 	{
-		prevd->next = (is_incr & (NULL != d->old)) ?
-			d->old :
-			pack_disjunct(ts, d, w);
+		prevd->next = pack_disjunct(ts, d, w);
 		prevd = prevd->next;
 	}
 	prevd->next = NULL;
@@ -897,48 +734,58 @@ static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts, bool is_incr,
  *   starting with a shallow connector will be considered different than
  *   similar ones starting with a deep connector.
  *
+ * Note:
+ * In order to save overhead, sentences shorter than
+ * sent->min_len_encoding don't undergo encoding - only packing.
+ * This can also be used for library tests that totally bypass the use of
+ * connector encoding (to validate that the tracon_id/sharing/refcount
+ * implementation didn't introduce bugs in the pruning and parsing steps).
+ * E.g. when using link-parser:
+ * - To entirely disable connector encoding:
+ * link-parser -test=min-len-encoding:254
+ * - To use connector encoding even for short sentences:
+ * link-parser -test=min-len-encoding:0
+ * Any different result (e.g. number of discarded disjuncts in the pruning
+ * step or different parsing results) indicates a bug.
+ *
  * @param is_pruning TRUE if invoked for pruning, FALSE if invoked for parsing.
  * @return The said context descriptor.
  */
-static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt, Tracon_sharing *ts,
-                                          bool is_pruning, bool do_encoding)
+static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 {
-	if (NULL == ts)
-	{
-		size_t dsize = dcnt * sizeof(Disjunct);
-		if (sizeof(Disjunct) != 64)
-			dsize = ALIGN(dsize, sizeof(Connector));
-		size_t csize = ccnt * sizeof(Connector);
-		size_t memblock_sz = dsize + csize;
-		void *memblock = malloc(memblock_sz);
-		Disjunct *dblock = memblock;
-		Connector *cblock = (Connector *)((char *)memblock + dsize);
+	unsigned int dcnt = 0, ccnt = 0;
+	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
 
-		ts = malloc(sizeof(Tracon_sharing));
-		memset(ts, 0, sizeof(Tracon_sharing));
+	size_t dsize = dcnt * sizeof(Disjunct);
+	if (sizeof(Disjunct) != 64)
+		dsize = ALIGN(dsize, sizeof(Connector));
+	size_t csize = ccnt * sizeof(Connector);
+	size_t memblock_sz = dsize + csize;
+	void *memblock = malloc(memblock_sz);
+	Disjunct *dblock = memblock;
+	Connector *cblock = (Connector *)((char *)memblock + dsize);
 
-		ts->memblock = memblock;
-		ts->memblock_sz = memblock_sz;
-		ts->cblock_base = cblock;
-		ts->cblock = cblock;
-		ts->dblock = dblock;
-		ts->num_connectors = ccnt;
-		ts->num_disjuncts = dcnt;
-		ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
-		ts->next_id[0] = ts->next_id[1] = ts->word_offset;
+	Tracon_sharing *ts = malloc(sizeof(Tracon_sharing));
+	memset(ts, 0, sizeof(Tracon_sharing));
 
-		if (do_encoding)
-		{
-			ts->csid[0] = tracon_set_create();
-			ts->csid[1] = tracon_set_create();
-		}
-	}
-
+	ts->memblock = memblock;
+	ts->memblock_sz = memblock_sz;
+	ts->cblock_base = cblock;
+	ts->cblock = cblock;
+	ts->dblock = dblock;
+	ts->num_connectors = ccnt;
+	ts->num_disjuncts = dcnt;
+	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
+	ts->is_pruning = is_pruning;
+	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 	ts->last_token = (uintptr_t)-1;
 
-	if (do_encoding)
+	/* Encode connectors only for long-enough sentences. */
+	if (sent->length >= sent->min_len_encoding)
 	{
+		ts->csid[0] = tracon_set_create();
+		ts->csid[1] = tracon_set_create();
+
 		if (is_pruning)
 		{
 			ts->tracon_list = malloc(sizeof(Tracon_list));
@@ -955,13 +802,13 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, unsigned int dcnt,
 		}
 	}
 
-	if (!is_pruning && (NULL != ts) &&
-	    (ts->memblock != sent->dc_memblock))
+	if (!is_pruning && (ts->memblock != sent->dc_memblock))
 	{
 		/* The disjunct & connector content is stored in dc_memblock.
 		 * It will be freed at sentence_delete(). */
 		if (sent->dc_memblock) free(sent->dc_memblock);
 		sent->dc_memblock = ts->memblock;
+		sent->num_disjuncts = ts->num_disjuncts;
 	}
 
 	return ts;
@@ -992,107 +839,6 @@ void free_tracon_sharing(Tracon_sharing *ts)
 	free(ts);
 }
 
-#define lad_printf(...) //printf(__VA_ARGS__)
-
-/**
- * Locate the sentence disjuncts that are not in old_disjuncts.
- * For each, set its "old" field to point to the corresponding old
- * disjunct. This is needed in order to share the previous count table
- * (whose keys are the tracon IDs). The idea is to preserve the old
- * tracons, including their tracon IDs.
- *
- * Note that every previous disjunct should appear in the current sentence
- * (because succeeding prunings are for an increased null_count) but it
- * normally contains new disjuncts.
- */
-static void locate_added_disjuncts(Sentence sent, Tracon_sharing *old_ts)
-{
-	int missing = 0; /* Missing disjuncts - should not happen. */
-
-	if (NULL == old_ts) return;
-
-	if (verbosity_level(D_SPEC+2))
-	{
-		printf("Current disjuncts\n");
-		for (WordIdx w = 0; w < sent->length; w++)
-		{
-			printf("Word %zu:\n", w);
-			print_disjunct_list(sent->word[w].d);
-		}
-		printf("\nOld disjuncts\n");
-		for (WordIdx w = 0; w < sent->length; w++)
-		{
-			printf("Word %zu:\n", w);
-			print_disjunct_list(old_ts->d[w]);
-		}
-	}
-
-	for (WordIdx w = 0; w < sent->length; w++)
-	{
-		Disjunct *od = old_ts->d[w];
-
-		for (Disjunct *d = sent->word[w].d; NULL != d; d = d->next)
-		{
-			lad_printf("locate_added_disjuncts: check current %p<%d>\n", d, d->ordinal);
-			for (; NULL != od; od = od->next)
-			{
-				lad_printf("locate_added_disjuncts: check old <%d>\n", od->ordinal);
-				assert(od->ordinal != 0);
-				assert(d->ordinal != 0);
-
-				if (d->ordinal <= od->ordinal) break;
-
-				if (d->ordinal > od->ordinal)
-				{
-					lad_printf("locate_added_disjuncts: ERR %d > %d\n", d->ordinal, od->ordinal);
-					od = od->next;
-					missing++;
-				}
-			}
-
-			if ((NULL == od) || (d->ordinal < od->ordinal))
-			{
-				lad_printf("locate_added_disjuncts: found new %p<%d>\n", d, d->ordinal);
-				d->old = NULL;
-			}
-			else
-			{
-				lad_printf("locate_added_disjuncts: found old %p<%d>\n", d, d->ordinal);
-
-				for (int dir = 0; dir < 2; dir++)
-				{
-					Connector *c = (dir) ? (d->left) : (d->right);
-					Connector *oc = (dir) ? (od->left) : (od->right);
-
-					/* Use the nearest_word of the new pruning.
-					 * NOTE: In the future other fields (like length_limit) may
-					 * need to be copied here if they are set by the pruning (a
-					 * WIP sets it too and adds a nearest_deepword field). */
-					for (; NULL != c; c = c->next)
-					{
-						oc->nearest_word = c->nearest_word;
-						oc = oc->next;
-					}
-#ifdef DEBUG
-					assert((NULL == c) && (NULL == oc));
-#endif
-
-				}
-
-				d->old = od;
-				od = od->next;
-			}
-		}
-	}
-	if (0 != missing)
-	{
-		/* If we are here, there is a bug in power_prune(), because pruning
-		 * for null_count==m should retain all the disjuncts that existed after
-		 * pruning for null_count==n if m > n. */
-		prt_error("Warning: Missing %d disjunct(s) in pruning.\n", missing);
-	}
-}
-
 /**
  * Pack all disjunct and connectors into a one big memory block, share
  * tracon memory and generate tracon IDs (for parsing) or tracon lists
@@ -1100,55 +846,21 @@ static void locate_added_disjuncts(Sentence sent, Tracon_sharing *old_ts)
  *
  * The disjunct and connectors packing in a contiguous memory facilitate a
  * better memory caching for long sentences (a performance gain of a few
- * percents).
+ * percents in the initial implementation, in which this was the sole
+ * purpose of this packing.) In addition, tracon memory sharing
+ * drastically reduces the memory used for connectors.
  *
  * The tracon IDs (if invoked for the parsing step) or tracon lists (if
  * invoked for pruning step) allow for a huge performance boost at these
  * steps.
- *
- * Note:
- * In order to save overhead, sentences shorter than
- * sent->min_len_encoding don't undergo encoding - only packing.
- * This can also be used for library tests that totally bypass the use of
- * connector encoding (to validate that the
- * tracon_id/packing/sharing/refcount implementation didn't introduce bugs
- * in the pruning and parsing steps).
- * E.g. when using link-parser:
- * - To entirely disable connector encoding:
- * link-parser -test=len-trailing-hash:254
- * - To use connector encoding even for short sentences:
- * link-parser -test=len-trailing-hash:0
- * Any different result (e.g. number of discarded disjuncts in the pruning
- * step or different parsing results) indicates a bug.
  */
-static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
-                                     unsigned int ccnt, bool is_pruning,
-                                     Tracon_sharing *old_ts,
-                                     bool keep_disjuncts)
+static Tracon_sharing *pack_sentence(Sentence sent, bool is_pruning)
 {
-	bool do_encoding = sent->length >= sent->min_len_encoding;
-	Tracon_sharing *ts;
-
-	ts = pack_sentence_init(sent, dcnt, ccnt, old_ts, is_pruning, do_encoding);
+	Tracon_sharing *ts = pack_sentence_init(sent, is_pruning);
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		sent->word[w].d =
-			pack_disjuncts(sent, ts, NULL != old_ts, sent->word[w].d, w);
-	}
-
-	if (is_pruning && !do_encoding)
-	{
-		lgdebug(D_DISJ, "enumerate_connectors_sequentially\n");
-		enumerate_connectors_sequentially(ts);
-	}
-
-	if (keep_disjuncts)
-	{
-		if (NULL == ts->d)
-			ts->d = malloc(sent->length * sizeof(Disjunct *));
-		for (WordIdx w = 0; w < sent->length; w++)
-			ts->d[w] = sent->word[w].d;
+		sent->word[w].d = pack_disjuncts(sent, ts, sent->word[w].d, w);
 	}
 
 	return ts;
@@ -1158,15 +870,12 @@ static Tracon_sharing *pack_sentence(Sentence sent, unsigned int dcnt,
  * Pack the sentence for pruning.
  * @return New tracon sharing descriptor.
  */
-Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt,
-                                          bool keep_disjuncts)
+Tracon_sharing *pack_sentence_for_pruning(Sentence sent)
 {
 	unsigned int ccnt_before = 0;
 	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
 
-	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, true, NULL,
-	                                   keep_disjuncts);
+	Tracon_sharing *ts = pack_sentence(sent, true);
 
 	if (NULL == ts->csid[0])
 	{
@@ -1176,11 +885,11 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
 	else
 	{
 		lgdebug(D_DISJ, "Debug: Encode for pruning (len %zu): "
-		        "tracon_id %zu (%zu+,%zu-), shared connectors %ld\n",
+		        "tracon_id %zu (%zu+,%zu-), shared connectors %d\n",
 		        sent->length,
 		        ts->tracon_list->entries[0]+ts->tracon_list->entries[1],
 		        ts->tracon_list->entries[0], ts->tracon_list->entries[1],
-				  &ts->cblock_base[ccnt_before] - ts->cblock);
+				  (int)(&ts->cblock_base[ccnt_before] - ts->cblock));
 	}
 
 	return ts;
@@ -1188,25 +897,20 @@ Tracon_sharing *pack_sentence_for_pruning(Sentence sent, unsigned int dcnt,
 
 /**
  * Pack the sentence for parsing.
- * @param old_ts Previous tracon sharing descriptor (if incremental encoding).
- * @param keep_disjuncts Keep for possible parsing w/ increased null count.
- * @return New tracon sharing descriptor or NULL no packing done.
+ * @return New tracon sharing descriptor.
  */
-Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
-                                          unsigned int ccnt,
-                                          Tracon_sharing *old_ts,
-                                          bool keep_disjuncts)
+Tracon_sharing *pack_sentence_for_parsing(Sentence sent)
 {
 	unsigned int ccnt_before = 0;
 	if (verbosity_level(D_DISJ)) ccnt_before = count_connectors(sent);
 
-	/* If old_ts is non-NULL, we need to do incremental encoding relative
-	 * to old_ts. If so, locate_added_disjuncts() sets the "old" field of
-	 * the disjuncts to the corresponding ones in the previous pruning. */
-	locate_added_disjuncts(sent, old_ts);
+	Tracon_sharing *ts = pack_sentence(sent, false);
 
-	Tracon_sharing *ts = pack_sentence(sent, dcnt, ccnt, false, old_ts,
-	                                   keep_disjuncts);
+	if (verbosity_level(D_SPEC+2))
+	{
+		printf("pack_sentence_for_parsing (null_count %u):\n", sent->null_count);
+		print_all_disjuncts(sent);
+	}
 
 	if (NULL == ts->csid[0])
 	{
@@ -1216,36 +920,26 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence sent, unsigned int dcnt,
 	else
 	{
 		lgdebug(D_DISJ, "Debug: Encode for parsing (len %zu): "
-		        "tracon_id %d (%d+,%d-), shared connectors %ld\n",
+		        "tracon_id %d (%d+,%d-), shared connectors %d\n",
 		        sent->length,
 		        (ts->next_id[0]-ts->word_offset)+(ts->next_id[1]-ts->word_offset),
 		        ts->next_id[0]-ts->word_offset, ts->next_id[1]-ts->word_offset,
-		        &ts->cblock_base[ccnt_before] - ts->cblock);
+		        (int)(&ts->cblock_base[ccnt_before] - ts->cblock));
 	}
 
 	return ts;
 }
 
-/**
- * Enumerate the disjuncts for incremental connector encoding.
- * */
-static void enumerate_disjuncts(Sentence sent)
-{
-	int i = 1; /* 0 is invalid disjunct ordinal - for debug verification. */
-	for (WordIdx w = 0; w < sent->length; w++)
-	{
-		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
-			d->ordinal = i++;
-	}
-}
-
 /* ============ Save and restore sentence disjuncts ============ */
 void *save_disjuncts(Sentence sent, Tracon_sharing *ts)
 {
-	enumerate_disjuncts(sent);
-
 	void *saved_memblock = malloc(ts->memblock_sz);
 	memcpy(saved_memblock, ts->memblock, ts->memblock_sz);
+
+	if (NULL == ts->d)
+		ts->d = malloc(sent->length * sizeof(Disjunct *));
+	for (WordIdx w = 0; w < sent->length; w++)
+		ts->d[w] = sent->word[w].d;
 
 	return saved_memblock;
 }

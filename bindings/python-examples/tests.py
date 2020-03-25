@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf8
-"""Python link-grammar test script"""
+"""Python3 link-grammar test script"""
 
 from __future__ import print_function
 import sys, os, re
@@ -373,10 +373,7 @@ class DBasicParsingTestCase(unittest.TestCase):
         self.assertTrue(isinstance(result[1], Linkage))
 
         # def test_unicode_encoded_string(self):
-        if is_python2():
-            result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.".encode('utf8'))
-        else:
-            result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
+        result = self.parse_sent(u"I love going to the caf\N{LATIN SMALL LETTER E WITH ACUTE}.")
         self.assertTrue(len(result) > 1)
         self.assertTrue(isinstance(result[0], Linkage))
         self.assertTrue(isinstance(result[1], Linkage))
@@ -414,9 +411,10 @@ class DBasicParsingTestCase(unittest.TestCase):
 
     def test_timer_exhausted_exception(self):
         self.assertRaises(LG_TimerExhausted,
-                          self.parse_sent,
-                          "This should take more than one second to parse! " * 20,
-                          ParseOptions(max_parse_time=1))
+                self.parse_sent,
+                "This sentence parses without null words, "
+                "and should take more than one second to parse!" * 14,
+                ParseOptions(max_parse_time=1,short_length=255,disjunct_cost=10.0,linkage_limit=10000))
 
 # The tests here are numbered since their order is important.
 # They depend on the result and state of the previous ones as follows:
@@ -674,7 +672,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
     # -- word is/isn't split by suffix splitter
     # -- the one that is in the dict is not the grammatically appropriate word.
     #
-    # Let's is NOT split into two! Its in the dict as one word, lower-case only.
+    # Let's is NOT split into two! It's in the dict as one word, lower-case only.
     def test_f_captilization(self):
         self.assertEqual(list(self.parse_sent('Let\'s eat.')[0].words()),
              ['LEFT-WALL', 'let\'s', 'eat.v', '.', 'RIGHT-WALL'])
@@ -763,13 +761,13 @@ class HEnglishLinkageTestCase(unittest.TestCase):
         sent = 'Scientists sometimes may repeat experiments or use groups.'
         linkage = self.parse_sent(sent)[0]
         self.assertEqual(linkage.diagram(),
-"\n    +---------------------------------------Xp--------------------------------------+"
-"\n    +---------------------------->WV---------------------------->+                  |"
-"\n    |           +-----------------------Sp-----------------------+                  |"
-"\n    |           |                  +------------VJlpi------------+                  |"
-"\n    +---->Wd----+          +---E---+---I---+----Op----+          +VJrpi+---Op--+    |"
-"\n    |           |          |       |       |          |          |     |       |    |"
-"\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v use.v groups.n ."
+"\n    +----------------------------------------Xp---------------------------------------+"
+"\n    +---------------------------->WV---------------------------->+                    |"
+"\n    |                              +--------------I--------------+                    |"
+"\n    |           +--------Sp--------+       +<-------VJlpi<-------+                    |"
+"\n    +---->Wd----+          +---E---+       +----Op----+          +>VJrpi>+---Op--+    |"
+"\n    |           |          |       |       |          |          |       |       |    |"
+"\nLEFT-WALL scientists.n sometimes may.v repeat.v experiments.n or.j-v   use.v groups.n ."
 "\n\n")
         sent = 'I enjoy eating bass.'
         linkage = self.parse_sent(sent)[0]
@@ -920,9 +918,6 @@ class ZENLangTestCase(unittest.TestCase):
 class JADictionaryLocaleTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if is_python2(): # Locale stuff seems to be broken
-            raise unittest.SkipTest("Test not supported with Python2")
-
         # python2: Gets system locale (getlocale() is not better)
         cls.oldlocale = locale.setlocale(locale.LC_CTYPE, None)
         #print('Current locale:', oldlocale)
@@ -955,9 +950,6 @@ class JADictionaryLocaleTestCase(unittest.TestCase):
 class JBDictCostReadingTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if is_python2(): # Locale stuff seems to be broken
-            raise unittest.SkipTest("Test not supported with Python2")
-
         cls.oldlocale = locale.setlocale(locale.LC_CTYPE, None)
         ru_locale = 'ru_RU.UTF-8' if os.name != 'nt' else 'Russian'
         try:
@@ -1096,7 +1088,13 @@ class ZRULangTestCase(unittest.TestCase):
              'облачк.=', '=а.ndnpi',
              '.', 'RIGHT-WALL'])
 
-def linkage_testfile(self, lgdict, popt, desc = ''):
+class ZXDictDialectTestCase(unittest.TestCase):
+    def test_dialect(self):
+        linkage_testfile(self, Dictionary(lang='en'), ParseOptions(dialect='headline'), 'dialect')
+
+#############################################################################
+
+def linkage_testfile(self, lgdict, popt, desc=''):
     """
     Reads sentences and their corresponding
     linkage diagrams / constituent printings.
@@ -1134,8 +1132,7 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
 
     for line in parses:
         lineno += 1
-        if not is_python2():
-            line = line.decode('utf-8')
+        line = line.decode('utf-8')
 
         validate_opcode(ord(line[0])) # Use ord() for python2/3 compatibility
         if line[0] in 'INOCP':
@@ -1147,6 +1144,8 @@ def linkage_testfile(self, lgdict, popt, desc = ''):
             diagram = ""
             constituents = ""
             wordpos = ""
+            if popt.verbosity > 1:
+                print('Sentence:', sent)
             linkages = Sentence(sent, lgdict, popt).parse()
             linkage = next(linkages, None)
 
@@ -1206,10 +1205,6 @@ def warning(*msg):
     progname = os.path.basename(sys.argv[0])
     print("{}: Warning:".format(progname), *msg, file=sys.stderr)
 
-def is_python2():
-    return sys.version_info[:1] == (2,)
-
-
 import tempfile
 
 class divert_start(object):
@@ -1243,7 +1238,7 @@ class divert_start(object):
 lg_testutils.add_eqcost_linkage_order(Sentence)
 
 # For testing development branches, it may be sometimes useful to use the
-# "test", "debug" and "verbosity" options. The following allows specify them
+# "test", "debug" and "verbosity" options. The following allows to specify them
 # as "tests.py" arguments, interleaved with standard "unittest" arguments.
 
 for i,arg in enumerate(sys.argv):

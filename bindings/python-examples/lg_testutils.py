@@ -82,9 +82,9 @@ def add_test_option(original_class, test='', debug='', verbosity=0):
         def __init__(self, *args, **kwargs):
             super(ParseOptions_testing, self).__init__(*args, **kwargs)
             if test:
-                self.test=test
+                self.test = test
             if debug:
-                self.debug=debug
+                self.debug = debug
             if verbosity:
-                self.verbosity=verbosity
+                self.verbosity = verbosity
     return ParseOptions_testing

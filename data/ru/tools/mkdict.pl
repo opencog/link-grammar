@@ -413,18 +413,20 @@ foreach my $stems ( sort keys %fwd ) {
     # write inline if less than 40 words, else dump to a file
     foreach my $key (keys %emptysuflinks ) {
         my $cnt = 0;
+        my $tot = 0;
         foreach my $w ( @words ) {
              my $wkey = $w.".".parse($key);
              next if ( defined $skipwords{$wkey} );
              next if ( defined $skipwords{$w} );
              print RTS eu($wkey)." ";
              $cnt++;
+             $tot++;
              if (5 < $cnt) {
                  print RTS "\n";
                  $cnt = 0;
              }
         }
-        print RTS ":  ".eu("<morph-$key>").";\n\n";
+        print RTS ":  ".eu("<morph-$key>").";\n\n" if $tot > 0;
     }
 }
 # print "% duude revers=$revcnt\n";

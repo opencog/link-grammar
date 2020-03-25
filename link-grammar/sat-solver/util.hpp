@@ -14,7 +14,4 @@ void sat_free_linkages(Sentence, LinkageIdx);
 void sat_free_linkages(Sentence);
 Exp* null_exp();
 void add_anded_exp(Sentence, Exp*&, Exp*);
-Exp* Exp_create(Sentence);
-Exp *Exp_create_dup(Sentence, Exp *old);
-
 #endif

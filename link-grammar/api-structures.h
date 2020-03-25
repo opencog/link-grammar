@@ -44,6 +44,7 @@
 #endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
 
 #include "api-types.h"
+#include "dict-common/dialect.h"
 #include "tracon-set.h"
 #include "memory-pool.h"
 #include "string-set.h"
@@ -112,6 +113,9 @@ struct Parse_Options_s
 	/* Options governing the generation of linkages. */
 	size_t linkage_limit;  /* The maximum number of linkages processed 100 */
 	bool display_morphology;/* If true, print morpho analysis of words TRUE */
+
+	/* Options governing the dictionary interpretation. */
+	dialect_info dialect;
 };
 
 typedef struct word_queue_s word_queue_t;
@@ -138,6 +142,7 @@ struct Sentence_s
 	/* Connector encoding, packing & sharing. */
 	size_t min_len_encoding;     /* Encode from this sentence length. */
 	void *dc_memblock;           /* For packed disjuncts & connectors. */
+	unsigned int num_disjuncts;  /* Number of disjuncts in dc_memblock. */
 
 	/* Wordgraph stuff. FIXME: create stand-alone struct for these. */
 	Gword *wordgraph;            /* Tokenization wordgraph */
@@ -161,7 +166,7 @@ struct Sentence_s
 	                               This is not the same as num alloced
 	                               because some may be non-canonical. */
 	size_t num_valid_linkages;  /* Number with no pp violations */
-	size_t null_count;          /* Number of null links in linkages */
+	unsigned int null_count;    /* Number of null links in linkages */
 	Linkage        lnkages;     /* Sorted array of valid & invalid linkages */
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;
