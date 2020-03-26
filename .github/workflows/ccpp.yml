@@ -15,8 +15,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: install packages
       run: sudo apt-get install autoconf-archive flex
-    - name: autoconf
-      run: ./autogen.sh
     - name: set files as executable
       run: chmod +x js/install_emsdk.sh js/build_packages.sh js/link-parser/build.sh
     - name: install emsdk
