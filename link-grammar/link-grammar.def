@@ -118,5 +118,4 @@ lg_error_clearall
 lg_error_flush
 lg_exp_stringify
 prt_error
-regex_tokenizer_test
 utf8_strwidth
