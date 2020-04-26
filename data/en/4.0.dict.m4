@@ -11085,27 +11085,30 @@ ample.#amply: [[amply]0.5]colloquial;
 % latin (postposed) adjectives considered as mass nouns
 % in the current version (is this right???)
 <LATIN-ADJ-WORDS>.a:
-  [<noun-mass-count>]0.1;
+  [<ordinary-adj>]0.1 or
+  [<noun-mass-count>]0.2;
 
 % latin (postposed) adjectives or latin plural noun
 % always considered as nouns in the current version
 % XXX maybe should be same as words.n.2.x instead of <generic-plural-id> ???
 % e.g. blahblahgenesis is not plural.
 <LATIN-ADJ-P-NOUN-WORDS>:
-  [<noun-mass-count>]0.1 or
-  [<generic-plural-id>]0.1;
+  [<ordinary-adj>]0.1 or
+  [<noun-mass-count>]0.2 or
+  [<generic-plural-id>]0.2;
 
 % latin (postposed) adjectives or latin singular noun
 % always considered as nouns in the current version
 % XXX this is <common-noun> with weird plural-like stuff ?? is this right?
 <LATIN-ADJ-S-NOUN-WORDS>:
+  [<ordinary-adj>]0.1 or
   [<noun-modifiers> &
    (AN+
    or ({NM+ or D*u-} & <noun-rel-s> & (<noun-main-m> or <rel-clause-s>))
    or ({NM+ or D*u-} & <noun-and-p,u>)
    or (YS+ & {D*u-})
    or (GN+ & (DD- or [()]))
-   or Us-)]0.1;
+   or Us-)]0.2;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
