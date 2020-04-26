@@ -11082,11 +11082,12 @@ ample.#amply: [[amply]0.5]colloquial;
 <FOLD-WORDS>:
   [({EN-} & (MVp- or EC+ or A+)) or Em+]0.1;
 
-% latin (postposed) adjectives considered as mass nouns
-% in the current version (is this right???)
+% latin (postposed) adjectives. Mostly, we want these to take Pa-
+% so that they actually work like post-posed adjectives. But also
+% Pa+ so that they can act as nouns taking post-poed modifiers.
 <LATIN-ADJ-WORDS>.a:
   [<ordinary-adj>]0.1 or
-  [<noun-mass-count>]0.2;
+  [<noun-mass-count> & {Pa+}]0.2;
 
 % latin (postposed) adjectives or latin plural noun
 % always considered as nouns in the current version
@@ -11094,7 +11095,7 @@ ample.#amply: [[amply]0.5]colloquial;
 % e.g. blahblahgenesis is not plural.
 <LATIN-ADJ-P-NOUN-WORDS>:
   [<ordinary-adj>]0.1 or
-  [<noun-mass-count>]0.2 or
+  [<noun-mass-count> & {Pa+}]0.2 or
   [<generic-plural-id>]0.2;
 
 % latin (postposed) adjectives or latin singular noun
@@ -11104,7 +11105,8 @@ ample.#amply: [[amply]0.5]colloquial;
   [<ordinary-adj>]0.1 or
   [<noun-modifiers> &
    (AN+
-   or ({NM+ or D*u-} & <noun-rel-s> & (<noun-main-m> or <rel-clause-s>))
+   or ({NM+ or D*u-} & <noun-rel-s> &
+      ((<noun-main-m> & {Pa+}) or <rel-clause-s>))
    or ({NM+ or D*u-} & <noun-and-p,u>)
    or (YS+ & {D*u-})
    or (GN+ & (DD- or [()]))
