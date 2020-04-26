@@ -865,7 +865,6 @@ reason_of_selection carte_blanche:
 % Almost identical to below.
 % Ds- & {NM+} & <noun-rel-x> &..: "the number 12 is a lucky number"
 %    above has cost to give "a number of" priority.
-% NM+ & AN+ : "Please use a number 2 pencil"
 number.n:
   (<nn-modifiers> & (
     [Ds**x- & {NM+} & <noun-rel-x> & (<noun-main-x> or B*x+)]
@@ -875,7 +874,7 @@ number.n:
     [Ds**c- & {NM+} & <noun-rel-x> & (<noun-main-x> or B*x+)]
     or ({Ds**c-} & {NM+} & <noun-and-x>)
   )
-  or ({NM+} & AN+);
+  or AN+;
 
 % Almost identical to above.
 % Differing in strange ways from <common-noun>
@@ -889,6 +888,12 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
     or ({Ds**c-} & <noun-and-x>)
   )
   or AN+;
+
+% Numerical identifiers
+% NM+ & AN+ : "Please use a number 2 pencil"
+%             "He has type 2 diabetes"
+number.i batch.i group.i type.i:
+  NM+ & AN+;
 
 % Identical to <common-noun>, except that D- costs extra
 <costly-common-noun>:
