@@ -1,5 +1,6 @@
 Version 5.8.1 (XXX 2020)
  * Fix macOS/SunOS build break.
+ * English dict: fix numerical identifiers used as adjectives.
 
 Version 5.8.0 (28 February 2020)
  * Java bindings: Remove the obsolete senses API.
