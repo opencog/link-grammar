@@ -513,13 +513,14 @@ Hallowe'en:
     or ({Dmc-} & Wa-));
 
 % Number abbreviations: no.x No.x
-% pp. paragraph, page   art article
-% RR rural route
-No.x No..x no.x no..x Nos.x Nos..x nos.x nos..x
-Nr.x Nr..x Nrs.x Nrs..x nr.x nr..x nrs.x nrs..x
-Num.x Num..x num.x num..x pp.x pp..x
-Art..x art..x RR..x RR.x rr..x :
-  (Xi+ or [[()]]) & AN+;
+% pp. paragraph, page -- art: article
+% RR: rural route
+% NM+ & AN+: "Please use a No. 2 pencil"
+No.x no.x Nos.x nos.x
+Nr.x Nrs.x nr.x nrs.x
+Num.x num.x pp.x
+Art.x art.x RR.x rr.x :
+  (Xi+ or [[()]]) & {NM+} & AN+;
 
 % Explicitly include the period at the end of the abbreviation.
 Adj..x Adm..x Adv..x Asst..x Atty..x Bart..x Bldg..x Brig..x Bros..x Capt..x Cie..x
@@ -614,6 +615,7 @@ USMC.y USN.y:
 % constructions ("the hammer and sickle")
 %
 % ({NMa+} & AN+): He takes vitamin D supplements.
+%         ..... but most common nouns can't do this, so this is weird.
 %
 % XXX TODO FIXME: there are many gerund-like nouns in here (e.g. "reading")
 % which screw things up when linking to "be" (e.g. "I have to be reading now")
@@ -862,8 +864,8 @@ reason_of_selection carte_blanche:
     & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or Ou- or TI-);
 
 % Almost identical to below.
-% Ds- & {NM+} & <noun-rel-x> &.. "the number 12 is a lucky number"
-% above has cost to give "a number of" priority.
+% Ds- & {NM+} & <noun-rel-x> &..: "the number 12 is a lucky number"
+%    above has cost to give "a number of" priority.
 number.n:
   (<nn-modifiers> & (
     [Ds**x- & {NM+} & <noun-rel-x> & (<noun-main-x> or B*x+)]
@@ -887,6 +889,12 @@ majority.n minority.n bunch.n batch.n bulk.n handful.n group.n:
     or ({Ds**c-} & <noun-and-x>)
   )
   or AN+;
+
+% Numerical identifiers
+% NM+ & AN+ : "Please use a number 2 pencil"
+%             "He has type 2 diabetes"
+number.i batch.i group.i type.i:
+  NM+ & AN+;
 
 % Identical to <common-noun>, except that D- costs extra
 <costly-common-noun>:
