@@ -4,6 +4,7 @@
 !short=20
 !spell=0
 
+
 % Assorted hand-curated examples of things that don't work.
 the girl, unhappy, looked down
 
@@ -36,3 +37,10 @@ I want as much as he gets
 he really delivers, doesn't he?
 he really smells, doesn't he?
 Questionable as it may be, we will proceed.
+
+% Nasty clause-and construction. two subject-verb complexes taking a
+% common object. Alternately, two subject-verb complexes as a relative
+% clause.  Fixing this is nasty and invasive :-(
+everybody knew and everybody liked him
+Carter Hallam was a fellow whom everybody knew and everybody liked.
+Carter Hallam was a jolly, easy-going fellow whom everybody knew and everybody liked.
