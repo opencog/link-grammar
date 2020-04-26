@@ -758,6 +758,11 @@ USMC.y USN.y:
 /en/words/words.n.3-const /en/words/words.lang.3-const:
   <marker-common-entity> or <mass-const-noun>;
 
+% Argh. Special case: allow a post-posed Latin modifier.
+% "He has diabetes mellitus".
+diabetes.n:
+	<mass-const-noun> & Pa+;
+
 % Gonna treat these as mass nouns, not sure if this is correct.
 % "She wished me goodnight" "She wishes you well"
 adieu.n-u bye.n-u farewell.n-u fare-thee-well good-bye.n-u goodbye.n-u
