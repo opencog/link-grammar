@@ -504,13 +504,14 @@ Hallowe'en:
     or ({Dmc-} & Wa-));
 
 % Number abbreviations: no.x No.x
-% pp. paragraph, page   art article
-% RR rural route
-No.x No..x no.x no..x Nos.x Nos..x nos.x nos..x
-Nr.x Nr..x Nrs.x Nrs..x nr.x nr..x nrs.x nrs..x
-Num.x Num..x num.x num..x pp.x pp..x
-Art..x art..x RR..x RR.x rr..x :
-  (Xi+ or [[()]]) & AN+;
+% pp. paragraph, page -- art: article
+% RR: rural route
+% NM+ & AN+: "Please use a No. 2 pencil"
+No.x no.x Nos.x nos.x
+Nr.x Nrs.x nr.x nrs.x
+Num.x num.x pp.x
+Art.x art.x RR.x rr.x :
+  (Xi+ or [[()]]) & {NM+} & AN+;
 
 % Explicitly include the period at the end of the abbreviation.
 Adj..x Adm..x Adv..x Asst..x Atty..x Bart..x Bldg..x Brig..x Bros..x Capt..x Cie..x
