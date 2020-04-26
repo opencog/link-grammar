@@ -853,8 +853,9 @@ reason_of_selection carte_blanche:
     & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or Ou- or TI-);
 
 % Almost identical to below.
-% Ds- & {NM+} & <noun-rel-x> &.. "the number 12 is a lucky number"
-% above has cost to give "a number of" priority.
+% Ds- & {NM+} & <noun-rel-x> &..: "the number 12 is a lucky number"
+%    above has cost to give "a number of" priority.
+% NM+ & AN+ : "Please use a number 2 pencil"
 number.n:
   (<nn-modifiers> & (
     [Ds**x- & {NM+} & <noun-rel-x> & (<noun-main-x> or B*x+)]
@@ -864,7 +865,7 @@ number.n:
     [Ds**c- & {NM+} & <noun-rel-x> & (<noun-main-x> or B*x+)]
     or ({Ds**c-} & {NM+} & <noun-and-x>)
   )
-  or AN+;
+  or ({NM+} & AN+);
 
 % Almost identical to above.
 % Differing in strange ways from <common-noun>
