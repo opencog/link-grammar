@@ -760,7 +760,8 @@ USMC.y USN.y:
 
 % Argh. Special case: allow a post-posed Latin modifier.
 % "He has diabetes mellitus".
-diabetes.n:
+% "Sarah's office was ransacked by persons unknown."
+diabetes.n persons.n-u:
 	<mass-const-noun> & Pa+;
 
 % Gonna treat these as mass nouns, not sure if this is correct.
