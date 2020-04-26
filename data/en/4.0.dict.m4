@@ -615,6 +615,7 @@ USMC.y USN.y:
 % constructions ("the hammer and sickle")
 %
 % ({NMa+} & AN+): He takes vitamin D supplements.
+%         ..... but most common nouns can't do this, so this is weird.
 %
 % XXX TODO FIXME: there are many gerund-like nouns in here (e.g. "reading")
 % which screw things up when linking to "be" (e.g. "I have to be reading now")
