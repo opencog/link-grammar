@@ -22,10 +22,8 @@ Sentence has 1 unlinked word:
 """
 
 import sys
-from sys import stdin
 import re
 import argparse
-import readline
 
 from linkgrammar import (Sentence, ParseOptions, Dictionary,
                          LG_Error, LG_TimerExhausted, Clinkgrammar as clg)
