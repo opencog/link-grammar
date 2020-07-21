@@ -45,7 +45,7 @@ PROMPT = "sentence-check: " if is_stdin_atty else ""
 DISPLAY_GUESSES = True   # Display regex and POS guesses
 BATCH_LABELS = '*: '
 
-print ("Version:", clg.linkgrammar_get_version())
+print("Version:", clg.linkgrammar_get_version())
 
 args = argparse.ArgumentParser(formatter_class=Formatter)
 args.add_argument('lang', nargs='?', default='en',
