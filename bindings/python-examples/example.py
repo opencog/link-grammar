@@ -24,7 +24,7 @@ def linkage_stat(psent, lang, lkgs, sent_po):
              format(clg.sentence_num_linkages_post_processed((psent._obj))) \
              if clg.sentence_num_linkages_found(psent._obj) > sent_po.linkage_limit else ''
 
-    print('{}: Found {} linkage{} ({}{} had no P.P. violations)'. \
+    print('{}: Found {} linkage{} ({}{} had no P.P. violations)'.
           format(lang, clg.sentence_num_linkages_found(psent._obj),
                  s(clg.sentence_num_linkages_found(psent._obj)), len(lkgs), random))
 

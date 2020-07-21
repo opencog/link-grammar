@@ -70,7 +70,7 @@ def get_prop(prop, default=NODEFAULT):
         if prop_repval is None:
             prop_repval = os.getenv(prop_rep)
             if prop_repval is None:
-                error('Property "{}" not found in "{}" and also not in the environment'. \
+                error('Property "{}" not found in "{}" and also not in the environment'.
                       format(prop_rep, local_prop_file))
         prop_val = str.replace(prop_val, '$('+prop_rep+')', prop_repval)
 
