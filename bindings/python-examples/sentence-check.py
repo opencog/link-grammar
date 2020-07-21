@@ -21,7 +21,6 @@ Sentence has 1 unlinked word:
 4: LEFT-WALL this.p is.v a [the] test.n of bfgiuing[!].g and.j-n xxxvfrg[?].a RIGHT-WALL
 """
 
-from __future__ import print_function
 import sys
 from sys import stdin
 import re

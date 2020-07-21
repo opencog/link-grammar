@@ -2,7 +2,6 @@
 # coding: utf8
 """Python3 link-grammar test script"""
 
-from __future__ import print_function
 import sys, os, re
 import locale
 import unittest

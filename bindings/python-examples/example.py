@@ -2,8 +2,6 @@
 # -*- coding: utf8 -*-
 """Link Grammar example usage"""
 
-from __future__ import print_function, division  # We require Python 2.6 or later
-
 from linkgrammar import Sentence, ParseOptions, Dictionary, Clinkgrammar as clg
 
 print ("Version:", clg.linkgrammar_get_version())

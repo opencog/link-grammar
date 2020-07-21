@@ -17,7 +17,6 @@ console-prompt>make-check.py x64\Debug\Python2 example.py
 The following starts an interactive python program:
 console-prompt>make-check.py x64\Debug\Python2 ""
 """
-from __future__ import print_function
 import os
 import sys
 import re
