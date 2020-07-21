@@ -89,7 +89,7 @@ typedef struct
 {
 	WordIdx_m nw[2];         /* minimum link distance */
 	WordIdx_m nw_perjet[2];  /* the same, ignoring missing jets */
-	WordIdx_m nw_unidir[2];  /* the same, but only for unidirectional jets */
+	WordIdx_m nw_unidir[2];  /* the same, but for unidirectional disjuncts */
 	WordIdx_m fw[2];         /* maximum link distance */
 } mlink_table;
 
