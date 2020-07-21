@@ -806,8 +806,8 @@ static void notify_ignoring_flag(const char *flag)
 }
 
 /**
- * Copy \p characters from \p src to \p dst, while quoting with \c '\\'
- * the characters in \p q.
+ * Copy bytes from \p src to \p dst, while quoting with \c '\\'
+ * the bytes in \p q.
  * Note: This is not a general-purpose function, since:
  * - It assumes \p dst has enough space.
  * - \p src is not checked for NUL.
@@ -815,7 +815,7 @@ static void notify_ignoring_flag(const char *flag)
  *
  * @param src Source buffer.
  * @param dst[out] Destination buffer.
- * @return Number of characters add to \p dst.
+ * @return Number of bytes added to \p dst.
  */
 static size_t copy_quoted(const char *q, char *dst, const char *src, size_t len)
 {
