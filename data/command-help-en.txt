@@ -344,7 +344,7 @@ are automatically escaped if no other regex meta characters in the string):
   !!test.n/Ds**x+/
 
 Show selected disjuncts according to the supplied regex:
-  !!test.n/ Wd-.*<-->.*@M\+/
+  !!test.n/ Wd-.*<>.*@M\+/
   !!test.n/ J[sk]- D[\w*]+c\-/
 Regexes are automatically detected. The r flag forces a regex interpretation
 but it is not needed on normal use.
@@ -374,7 +374,7 @@ A sample output of a disjunct-list display:
     test.n 4273/4501 disjuncts
 
     ...
-          test.n: [3493]2.600= @AN- @A- Ds**x- <--> NM+ R+ Bs+ Bsm+
+          test.n: [3493]2.600= @AN- @A- Ds**x- <> NM+ R+ Bs+ Bsm+
     ...
 
 In this sample output:
@@ -384,7 +384,7 @@ In this sample output:
    3493     Disjunct ordinal number.
    2.600    Disjunct cost.
    =        A separator to enable regex anchoring.
-   <-->     A separator of the "-" (LHS) and "+" (RHS) connector lists.
+   <>       A separator of the "-" (LHS) and "+" (RHS) connector lists.
 
 These variables affect the output:
 Disjuncts, expressions: !dialect
