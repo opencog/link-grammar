@@ -377,7 +377,7 @@ A sample output of a disjunct-list display:
           test.n: [3493]2.600= @AN- @A- Ds**x- <--> NM+ R+ Bs+ Bsm+
     ...
 
-In the this sample output:
+In this sample output:
    8509     Number of disjuncts in the dictionary expression.
    4501     Number of disjuncts after applying cost-max.
    4273     Number of disjuncts w/o duplicates.
