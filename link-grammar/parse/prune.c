@@ -1495,7 +1495,7 @@ static bool all_connectors_exist(multiset_table *cmt, const char *pp_link)
 	return true;
 }
 
-static bool connecor_has_direction(Cms *cms, int dir)
+static bool connector_has_direction(Cms *cms, int dir)
 {
 	return ((dir == 0) && cms->left) || ((dir == 1) && cms->right);
 }
@@ -1511,12 +1511,12 @@ static bool any_possible_connection(multiset_table *cmt, const char *criterion)
 		ppdebug("TRY %s%s\n", connector_string(cms1->c), connector_signs(cms1));
 		for (int dir = 0; dir < 2; dir++)
 		{
-			if (!connecor_has_direction(cms1, dir)) continue;
+			if (!connector_has_direction(cms1, dir)) continue;
 			Connector *c = cms1->c;
 
 			for (Cms *cms2 = cmt->cms_table[h]; cms2 != NULL; cms2 = cms2->next)
 			{
-				if (!connecor_has_direction(cms2, 1-dir)) continue;
+				if (!connector_has_direction(cms2, 1-dir)) continue;
 				Connector *cfl = cms2->c;
 
 				if (easy_match_desc(cfl->desc, c->desc))
