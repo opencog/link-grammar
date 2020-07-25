@@ -482,7 +482,8 @@ void prt_exp_all(dyn_str *s, Exp *e, int i, Dictionary dict)
 	}
 }
 
-GNUC_UNUSED static void prt_exp_mem(Exp *e)
+#ifdef DEBUG
+GNUC_UNUSED void prt_exp_mem(Exp *e)
 {
 	dyn_str *s = dyn_str_new();
 
@@ -491,6 +492,7 @@ GNUC_UNUSED static void prt_exp_mem(Exp *e)
 	printf("%s", e_str);
 	free(e_str);
 }
+#endif
 
 /* ================ Print disjuncts and connectors ============== */
 static bool is_flag(uint32_t flags, char flag)
