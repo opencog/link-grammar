@@ -1537,7 +1537,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 #if 0
 		else
 		{
-			/* Uneeded? */
+			/* Unneeded? */
 			w = newword;
 		}
 #endif

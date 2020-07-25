@@ -795,7 +795,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 }
 
 /**
- * This returns TRUE if the right table of word w contains
+ * This returns TRUE if the left table of word w contains
  * a connector that can match to c.  shallow tells if c is shallow
  */
 static bool
@@ -1129,8 +1129,8 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 		if (pruning_pass_end(pc, "r->l", &total_deleted)) break;
 
-		/* The verbose debug printouts revealed that the xlink counter is
-		 * never set after the first 2 passes. So neutralize the mlink table
+		/* The verbose debug printouts revealed that the xlink counter doesn't
+		 * get increased after the first 2 passes. So neutralize the mlink table
 		 * here to save a slight overhead. */
 		pc->ml = NULL;
 	}
@@ -1140,7 +1140,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 	if ((verbosity >= D_USER_TIMES) && !extra_null_word && (pc->null_words > 0))
 		snprintf(found_nulls, sizeof(found_nulls), ", found %u", pc->null_words);
 	print_time(opts, "power pruned (for %u null%s%s%s)",
-	           pc->null_links, (pc->null_links != 1) ? "s" : "",
+					  pc->null_links, (pc->null_links != 1) ? "s" : "",
 	           extra_null_word ? ", extra null" : "", found_nulls);
 	if (verbosity_level(D_PRUNE))
 	{
@@ -1495,7 +1495,7 @@ static bool all_connectors_exist(multiset_table *cmt, const char *pp_link)
 	return true;
 }
 
-static bool connecor_has_direction(Cms *cms, int dir)
+static bool connector_has_direction(Cms *cms, int dir)
 {
 	return ((dir == 0) && cms->left) || ((dir == 1) && cms->right);
 }
@@ -1511,12 +1511,12 @@ static bool any_possible_connection(multiset_table *cmt, const char *criterion)
 		ppdebug("TRY %s%s\n", connector_string(cms1->c), connector_signs(cms1));
 		for (int dir = 0; dir < 2; dir++)
 		{
-			if (!connecor_has_direction(cms1, dir)) continue;
+			if (!connector_has_direction(cms1, dir)) continue;
 			Connector *c = cms1->c;
 
 			for (Cms *cms2 = cmt->cms_table[h]; cms2 != NULL; cms2 = cms2->next)
 			{
-				if (!connecor_has_direction(cms2, 1-dir)) continue;
+				if (!connector_has_direction(cms2, 1-dir)) continue;
 				Connector *cfl = cms2->c;
 
 				if (easy_match_desc(cfl->desc, c->desc))

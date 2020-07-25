@@ -82,7 +82,7 @@ static void print_dialect_components(Dictionary dict)
 	lg_error_flush();
 }
 
-#define LINEBUF_SZ 8
+#define LINEBUF_SZ 16
 static const char *suppress_0(unsigned int line, char *buf)
 {
 	if (line == 0) return "";

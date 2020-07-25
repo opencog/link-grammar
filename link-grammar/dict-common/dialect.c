@@ -116,7 +116,7 @@ static bool apply_table_entry(Dictionary dict, Dialect *from,
 		/* Apply components and sub-dialects. */
 		lgdebug(+D_DIALECT, "Apply %s %s%s\n",
 		        from->table[i].name, cost_stringify(from->table[i].cost),
-		        (to == from) ? "" : " (user setup");
+		        (to == from) ? "" : " (user setup)");
 		if (!cost_eq(from->table[i].cost, DIALECT_SUB))
 		{
 			if (!apply_component(dict, from, i, dinfo->cost_table)) return false;

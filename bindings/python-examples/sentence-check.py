@@ -21,12 +21,9 @@ Sentence has 1 unlinked word:
 4: LEFT-WALL this.p is.v a [the] test.n of bfgiuing[!].g and.j-n xxxvfrg[?].a RIGHT-WALL
 """
 
-from __future__ import print_function
 import sys
-from sys import stdin
 import re
 import argparse
-import readline
 
 from linkgrammar import (Sentence, ParseOptions, Dictionary,
                          LG_Error, LG_TimerExhausted, Clinkgrammar as clg)
@@ -48,7 +45,7 @@ PROMPT = "sentence-check: " if is_stdin_atty else ""
 DISPLAY_GUESSES = True   # Display regex and POS guesses
 BATCH_LABELS = '*: '
 
-print ("Version:", clg.linkgrammar_get_version())
+print("Version:", clg.linkgrammar_get_version())
 
 args = argparse.ArgumentParser(formatter_class=Formatter)
 args.add_argument('lang', nargs='?', default='en',

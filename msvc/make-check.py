@@ -17,7 +17,6 @@ console-prompt>make-check.py x64\Debug\Python2 example.py
 The following starts an interactive python program:
 console-prompt>make-check.py x64\Debug\Python2 ""
 """
-from __future__ import print_function
 import os
 import sys
 import re
@@ -71,7 +70,7 @@ def get_prop(prop, default=NODEFAULT):
         if prop_repval is None:
             prop_repval = os.getenv(prop_rep)
             if prop_repval is None:
-                error('Property "{}" not found in "{}" and also not in the environment'. \
+                error('Property "{}" not found in "{}" and also not in the environment'.
                       format(prop_rep, local_prop_file))
         prop_val = str.replace(prop_val, '$('+prop_rep+')', prop_repval)
 

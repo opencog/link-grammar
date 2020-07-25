@@ -776,7 +776,7 @@ static Count_bin do_count(
 		 * speedup is expected.
 		 *
 		 * FIXME 2: Change the lrcnt_cache structure to use one cache entry
-		 * per [connector , word-vector) instead of per [connector, word).
+		 * per [connector, word-vector) instead of per [connector, word).
 		 * This will reduce the lookup complexity by O(sent_length).
 		 */
 
@@ -944,10 +944,10 @@ static Count_bin do_count(
 			TRACE_LABEL(c, do_count) : c; \
 		how_to_count; \
 	}
-			 /* If the pseudocounting above indicates one of the terms
-			 * in the count multiplication is zero,
-			 * we know that the true total is zero. So we don't
-			 * bother counting the other term at all, in that case. */
+				/* If the pseudocounting above indicates one of the terms
+				 * in the count multiplication is zero,
+				 * we know that the true total is zero. So we don't
+				 * bother counting the other term at all, in that case. */
 				Count_bin leftcount = zero;
 				Count_bin rightcount = zero;
 				if (leftpcount &&

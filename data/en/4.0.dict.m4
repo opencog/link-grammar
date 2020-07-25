@@ -3030,7 +3030,7 @@ rest.w: Ix- & Pv+;
 % MV+ & Pa+: "I was, before Friday, quite unhappy."
 % Pa+ & {<verb-wall>}: the wall is optional: "A player who is injured
 %     must leave the field" cannot take a wall.
-% [Pa+]0.05: perfer gerund over adjective.
+% [Pa+]0.05: prefer gerund over adjective.
 % [I*v+].2: the cost should maybe be evenn higher, to avoid linking
 %     past-tense 'were' to infinitives. "The rooms were let."
 % PFb- & <verb-wall> & Pa+: "cheaper than direct, slime is greener."
@@ -7950,7 +7950,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 % ======================================================================
 % QUESTION WORDS
 
-% Allow a question to be preceeded by a clause opener.
+% Allow a question to be preceded by a clause opener.
 % "By the way, how was it?"
 <clause-q>: {hCO-} & Wq-;
 
@@ -10954,7 +10954,7 @@ as.#that: [[that.j-c]0.05]colloquial;
 % (a)'ccount (a)'greed (a)'noint (a)'pothecary (a)'rray (a)'rrest (at)'tend
 % (be)'gin (be)'havior (be)'long (con)'cern (e)'scape (e)'stablish.
 %
-% Need to include capitalized versions becuase automatic
+% Need to include capitalized versions because automatic
 % downcasing does not work
 'Cause.#because ’Cause.#because 'cause.#because ’cause.#because cause.#because: [because]colloquial;
 'Fore.#before ’Fore.#before 'fore.#before ’fore.#before fore.#before: [before]colloquial;
