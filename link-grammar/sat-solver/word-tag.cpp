@@ -30,7 +30,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
     //printf("parent_exp: %s\n", lg_exp_stringify(parent_exp));
     printf("exp(%s) e=%.2f pc=%.2f %s\n",
            word_xnode->string,exp->cost, parent_cost, lg_exp_stringify(exp));
-    if (exp->cost > 0 || root) prt_exp_mem(exp, 0);
+    if (exp->cost > 0 || root) prt_exp_mem(exp);
   }
 #endif
 
@@ -124,7 +124,7 @@ void WordTag::insert_connectors(Exp* exp, int& dfs_position,
 #ifdef DEBUG
       if (0 && verbosity_level(+D_IC)) { // Extreme debug
         printf("Word%d, var %s OR_type:\n", _word, var);
-        printf("exp mem: "); prt_exp_mem(exp, 0);
+        printf("exp mem: "); prt_exp_mem(exp);
       }
 #endif
 
