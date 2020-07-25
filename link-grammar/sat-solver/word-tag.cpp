@@ -3,7 +3,7 @@
 
 extern "C" {
 #ifdef DEBUG
-#include "prepare/build-disjuncts.h"    // prt_exp_mem()
+#include "dict-common/dict-utils.h"     // prt_exp_mem()
 #endif
 #include "error.h"
 #include "tokenize/tok-structures.h"

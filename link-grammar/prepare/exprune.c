@@ -12,9 +12,6 @@
 /*************************************************************************/
 
 #include "api-structures.h"              // for Sentence_s
-#ifdef DEBUG
-#include "build-disjuncts.h"             // allow using prt_exp_mem
-#endif
 #include "connectors.h"
 #include "dict-common/dict-structures.h" // expression_stringify
 #include "dict-common/dict-utils.h"      // size_of_expression
