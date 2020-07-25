@@ -795,7 +795,7 @@ right_table_search(prune_context *pc, int w, Connector *c,
 }
 
 /**
- * This returns TRUE if the right table of word w contains
+ * This returns TRUE if the left table of word w contains
  * a connector that can match to c.  shallow tells if c is shallow
  */
 static bool
@@ -1129,8 +1129,8 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 		if (pruning_pass_end(pc, "r->l", &total_deleted)) break;
 
-		/* The verbose debug printouts revealed that the xlink counter is
-		 * never set after the first 2 passes. So neutralize the mlink table
+		/* The verbose debug printouts revealed that the xlink counter doesn't
+		 * get increased after the first 2 passes. So neutralize the mlink table
 		 * here to save a slight overhead. */
 		pc->ml = NULL;
 	}
@@ -1140,7 +1140,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 	if ((verbosity >= D_USER_TIMES) && !extra_null_word && (pc->null_words > 0))
 		snprintf(found_nulls, sizeof(found_nulls), ", found %u", pc->null_words);
 	print_time(opts, "power pruned (for %u null%s%s%s)",
-	           pc->null_links, (pc->null_links != 1) ? "s" : "",
+					  pc->null_links, (pc->null_links != 1) ? "s" : "",
 	           extra_null_word ? ", extra null" : "", found_nulls);
 	if (verbosity_level(D_PRUNE))
 	{
