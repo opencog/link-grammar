@@ -15,6 +15,7 @@
 #define _DICT_UTILS_H_
 
 #include "dict-common.h"
+#include "dict-structures.h"            // Exp
 #include "utilities.h"                  // dyn_str
 
 /* Exp utilities ... */
@@ -25,6 +26,7 @@ bool is_exp_like_empty_word(Dictionary dict, Exp *);
 void prt_exp_all(dyn_str *,Exp *, int, Dictionary);
 #ifdef DEBUG
 void prt_exp(Exp *, int);
+void prt_exp_mem(Exp *);
 #endif /* DEBUG */
 
 /* X_node utilities ... */
