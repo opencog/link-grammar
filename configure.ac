@@ -137,7 +137,8 @@ HOST_OS="$host_os"
 AC_SUBST(HOST_OS)
 # ====================================================================
 
-CXXFLAGS="${CXXFLAGS} -Wall"
+CFLAGS="${CFLAGS} -O3"
+CXXFLAGS="${CXXFLAGS} -O3 -Wall"
 
 # The std=c11 flag provides the proper float-pt math decls working,
 # e.g. fmax  However, it also undefined _BSD_SOURCE, etc. which is
