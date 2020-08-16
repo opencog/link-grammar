@@ -137,8 +137,7 @@ HOST_OS="$host_os"
 AC_SUBST(HOST_OS)
 # ====================================================================
 
-CFLAGS="${CFLAGS} -O3"
-CXXFLAGS="${CXXFLAGS} -O3 -Wall"
+CXXFLAGS="${CXXFLAGS} -Wall"
 
 # The std=c11 flag provides the proper float-pt math decls working,
 # e.g. fmax  However, it also undefined _BSD_SOURCE, etc. which is
@@ -907,10 +906,6 @@ LINK_CC_TRY_FLAG([-Wmaybe-uninitialized -Werror], [AC_DEFINE(HAVE_MAYBE_UNINITIA
 # ===================================================================
 
 AC_FUNC_STRERROR_R
-
-AC_SUBST(CFLAGS)
-AC_SUBST(CPPFLAGS)
-AC_SUBST(CXXFLAGS)
 
 dnl Save the compilation definitions for an extended version printout
 AC_OUTPUT_MAKE_DEFS()
