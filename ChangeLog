@@ -3,6 +3,7 @@ Version 5.8.1 (XXX 2020)
  * English dict: fix numerical identifiers used as adjectives.
  * English dict: fix post-posed Latin adjectival modifiers.
  * Merge upstream gentoo patches. #1102
+ * Make -O3 default for CFLAGS/CXXFLAGS, but overridable by the user.
 
 Version 5.8.0 (28 February 2020)
  * Java bindings: Remove the obsolete senses API.
