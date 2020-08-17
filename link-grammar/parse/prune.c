@@ -89,7 +89,7 @@ typedef struct
 {
 	WordIdx_m nw[2];         /* minimum link distance */
 	WordIdx_m nw_perjet[2];  /* the same, ignoring missing jets */
-	WordIdx_m nw_unidir[2];  /* the same, but only for unidirectional jets */
+	WordIdx_m nw_unidir[2];  /* the same, but for unidirectional disjuncts */
 	WordIdx_m fw[2];         /* maximum link distance */
 } mlink_table;
 
@@ -561,27 +561,22 @@ static bool is_cross_mlink(prune_context *pc,
 		if (sent->word[w].optional) continue;
 		if (pc->is_null_word[w]) continue;
 
-		if ((w == lword+1) && (pc->ml[w].nw_unidir[1] > rword) &&
+		if ((w == lword+1) && (pc->ml[w].nw_perjet[1] > rword) &&
 			 !is_match(pc, left_table_search, lword, lc, w))
 		{
 			PR(L);
 			goto null_word_found;
 		}
-		if ((w == rword-1) && (pc->ml[w].nw_unidir[0] < lword) &&
+		if ((w == rword-1) && (pc->ml[w].nw_perjet[0] < lword) &&
 		    !is_match(pc, right_table_search, rword, rc, w))
 		{
 			PR(R);
 			goto null_word_found;
 		}
 
-		if ((pc->ml[w].nw_perjet[0] < lword) && (pc->ml[w].nw_unidir[1] > rword))
+		if ((pc->ml[w].nw_perjet[0] < lword) && (pc->ml[w].nw_perjet[1] > rword))
 		{
-			PR(L);
-			goto null_word_found;
-		}
-		if ((pc->ml[w].nw_unidir[0] < lword) && (pc->ml[w].nw_perjet[1] > rword))
-		{
-			PR(R);
+			PR(P);
 			goto null_word_found;
 		}
 
