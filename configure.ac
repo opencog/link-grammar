@@ -11,13 +11,13 @@ dnl Check whether we want to set defaults for CFLAGS and CXXFLAGS
 AC_MSG_CHECKING([whether configure should try to set CFLAGS/CXXFLAGS])
 AS_IF([test "x${CFLAGS+set}" = "xset" || test "x${CXXFLAGS+set}" = "xset"], [
     enable_flags_setting=no
-    : ${CFLAGS=""}
-    : ${CXXFLAGS=""}
+    : ${CFLAGS="-g -O3"}
+    : ${CXXFLAGS="-g -O3"}
   ], [
     enable_flags_setting=yes
-    dnl Set to -O3 here so AC_PROG_CC and AC_PROG_CXX do not add -g -O2
-    CFLAGS="-O3"
-    CXXFLAGS="-O3"
+    dnl Set to -g -O3 here so AC_PROG_CC and AC_PROG_CXX do not add -g -O2
+    CFLAGS="-g -O3"
+    CXXFLAGS="-g -O3"
   ])
 AC_MSG_RESULT([${enable_flags_setting}])
 
