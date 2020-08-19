@@ -254,7 +254,6 @@
     <ClInclude Include="..\link-grammar\disjunct-utils.h" />
     <ClInclude Include="..\link-grammar\error.h" />
     <ClInclude Include="..\link-grammar\externs.h" />
-    <ClInclude Include="..\link-grammar\lg_assert.h" />
     <ClInclude Include="..\link-grammar\link-includes.h" />
     <ClInclude Include="..\link-grammar\linkage\analyze-linkage.h" />
     <ClInclude Include="..\link-grammar\linkage\linkage.h" />

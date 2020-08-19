@@ -212,9 +212,6 @@
     <ClInclude Include="..\link-grammar\utilities.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\link-grammar\lg_assert.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\link-grammar\post-process\post-process.h">
       <Filter>Header Files</Filter>
     </ClInclude>
