@@ -211,7 +211,8 @@ static void gwordqueue_add(const Sentence sent, Gword *const word)
 {
 	word_queue_t *wq_element = malloc(sizeof(word_queue_t));
 
-	assert((NULL == sent->word_queue) == (NULL == sent->word_queue_last));
+	assert((NULL == sent->word_queue) == (NULL == sent->word_queue_last),
+	   "Inconsistent word queue pointers");
 
 	if (NULL == sent->word_queue)
 		sent->word_queue = wq_element;
@@ -2740,7 +2741,7 @@ static Gword *issue_sentence_word(const Sentence sent, const char *const s)
 	Gword *new_word;
 	Gword *last_word = sent->last_word;
 
-	assert(NULL!=last_word);
+	assert(NULL!=last_word, "Start infrastructure subword is missing");
 	assert(NULL!=s, "subword must not be NULL");
 	assert('\0'!=s[0], "subword must not be an empty-string: "
 	                   "Last subword issued: '%s'", last_word->subword);

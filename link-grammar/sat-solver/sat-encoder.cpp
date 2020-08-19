@@ -242,7 +242,7 @@ void SATEncoder::build_word_tags()
     fast_sprintf(name+1, (int)w);
     // The SAT encoding word variables are set to be equal to the word numbers.
     Var var = _variables->string(name);
-    assert((Var)w == var);
+    assert((Var)w == var, "Word %zu: var %d", w, var);
   }
 
   for (size_t w = 0; w < _sent->length; w++) {

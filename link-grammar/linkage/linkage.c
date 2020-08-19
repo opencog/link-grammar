@@ -233,7 +233,8 @@ void remove_empty_words(Linkage lkg)
 		 * wg_path doesn't include them, and hence *wgp is NULL then. */
 		if ((NULL == *wgp) || ((*wgp)->sent_wordidx != i))
 		{
-			assert((NULL == cdj[i]) && lkg->sent->word[i].optional);
+			assert((NULL == cdj[i]) && lkg->sent->word[i].optional,
+			   "A matching disjunct found for a skipped optional word");
 			remap[i] = -1;
 			continue;
 		}

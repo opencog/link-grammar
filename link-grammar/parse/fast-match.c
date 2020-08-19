@@ -144,7 +144,7 @@ static void add_to_table_entry(unsigned int tsize, Match_node **table,
 	for (Match_node *m = sbin->head; NULL != m; m = m_next)
 	{
 		Connector *c = (0 == dir) ? m->d->left : m->d->right;
-		assert(NULL != c);
+		assert(NULL != c, "NULL connector");
 
 		Match_node **xl = get_match_table_entry(tsize, table, c, dir);
 		assert(&match_list_not_found != xl, "get_match_table_entry: Overflow");
@@ -225,7 +225,7 @@ static void sort_by_nearest_word(Match_node *m, sortbin *sbin, int nearest_word)
 
 fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 {
-	assert(sent->length > 0);
+	assert(sent->length > 0, "Sentence length is 0");
 
 	fast_matcher_t *ctxt;
 
@@ -340,7 +340,8 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 		}
 	}
 
-	assert(memblock_headers + num_headers == hash_table_header);
+	assert(memblock_headers + num_headers == hash_table_header,
+	   "Mismatch header sizes");
 	return ctxt;
 }
 
