@@ -417,8 +417,8 @@ const char *feature_enabled(const char * list, ...)
 #endif
 
 void (* assert_failure_trap)(void);
-void assert_failure(const char cond_str[], const char *src_location,
-                    const char *fmt, ...)
+void assert_failure(const char cond_str[], const char func[],
+                    const char *src_location, const char *fmt, ...)
 {
 	va_list args;
 	const char sevfmt[] = "Fatal error: \nAssertion (%s) failed at %s() (%s): ";
@@ -427,14 +427,14 @@ void assert_failure(const char cond_str[], const char *src_location,
 	if ((lg_error.handler == default_error_handler) ||
 	    (lg_error.handler == NULL))
 	{
-		fprintf(stderr, sevfmt, cond_str, src_location);
+		fprintf(stderr, sevfmt, cond_str, func, src_location);
 		vfprintf(stderr, fmt, args);
 		fprintf(stderr, "\n");                                                \
 		fflush(stderr);                                                       \
 	}
 	else
 	{
-		prt_error(sevfmt, cond_str, src_location);
+		prt_error(sevfmt, cond_str, func, src_location);
 		verr_msg(NULL, 0, fmt, args);
 		prt_error("\n");
 	}

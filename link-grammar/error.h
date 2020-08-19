@@ -108,11 +108,13 @@ const char *feature_enabled(const char *, ...);
 
 extern void (* assert_failure_trap)(void);
 #define FILELINE __FILE__ ":" STRINGIFY(__LINE__)
-void assert_failure(const char [], const char *, const char *, ...)
-	GNUC_PRINTF(3,4) GNUC_NORETURN;
+void assert_failure(const char[], const char[], const char *, const char *, ...)
+	GNUC_PRINTF(4,5) GNUC_NORETURN;
 
 #undef assert
 #define assert(ex, ...) \
-do { if (!(ex)) assert_failure(STRINGIFY(ex), FILELINE, __VA_ARGS__); } while(0)
+do { \
+	if (!(ex)) assert_failure(STRINGIFY(ex), __func__, FILELINE, __VA_ARGS__); }\
+while(0)
 
 #endif
