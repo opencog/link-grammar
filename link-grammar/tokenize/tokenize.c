@@ -546,7 +546,7 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 	Gword *subword;                 /* subword of the current token */
 	Gword *psubword = NULL;         /* subword of the previous token */
 	const int token_tot = prefnum + stemnum + suffnum; /* number of tokens */
-	Morpheme_type morpheme_type;
+	Morpheme_type morpheme_type = MT_INVALID;
 	Gword *alternative_id = NULL;   /* to be set to the start subword */
 	bool subword_eq_unsplit_word;
 	bool last_split = false;        /* this is a final token */

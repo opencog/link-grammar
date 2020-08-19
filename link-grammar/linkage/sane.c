@@ -288,13 +288,13 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 {
 	Wordgraph_pathpos *wp_new = NULL;
 	Wordgraph_pathpos *wp_old = NULL;
-	Wordgraph_pathpos *wpp;
+	Wordgraph_pathpos *wpp = NULL;
 	Gword **next; /* next Wordgraph words of the current word */
 	size_t i;
 	unsigned int null_count_found = 0;
 
 	bool match_found = true; /* if all the words are null - it's still a match */
-	Gword **lwg_path;
+	Gword **lwg_path = NULL;
 
 	Dictionary afdict = sent->dict->affix_table;       /* for SANEMORPHISM */
 	char *const affix_types = alloca(sent->length*2 + 1);   /* affix types */

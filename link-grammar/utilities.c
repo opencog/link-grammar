@@ -687,7 +687,7 @@ win32_getlocale (void)
 char * get_default_locale(void)
 {
 	const char *lc_vars[] = {"LC_ALL", "LC_CTYPE", "LANG", NULL};
-	char *ev;
+	char *ev = NULL;
 	const char **evname;
 	char *locale = NULL;
 
