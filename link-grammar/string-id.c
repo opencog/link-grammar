@@ -162,7 +162,7 @@ static void grow_table(String_id *ss)
 
 unsigned int string_id_add(const char *source_string, String_id *ss)
 {
-	assert(source_string != NULL, "STRING_SET: Can't insert a null string");
+	assert(source_string != NULL, "STRING_ID: Can't insert a null string");
 
 	unsigned int h = hash_string(source_string, ss);
 	unsigned int p = find_place(source_string, h, ss);
