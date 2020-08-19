@@ -28,8 +28,7 @@
 #include <xlocale.h>
 #endif /* HAVE_LOCALE_T_IN_XLOCALE_H */
 
-#include "error.h"
-#include "lg_assert.h"
+#include "link-includes.h"
 
 #ifdef HAVE_ALLOCA_H
 # include <alloca.h>

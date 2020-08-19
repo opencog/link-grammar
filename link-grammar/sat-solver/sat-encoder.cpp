@@ -16,7 +16,6 @@ extern "C" {
 #include "sat-encoder.h"
 }
 #include "minisat/core/Solver.h"
-#undef assert
 
 #include "sat-encoder.hpp"
 #include "variables.hpp"
@@ -27,6 +26,7 @@ extern "C" {
 
 extern "C" {
 #include "disjunct-utils.h"
+#include "error.h"
 #include "linkage/analyze-linkage.h" // for compute_link_names()
 #include "linkage/linkage.h"
 #include "linkage/sane.h"            // for sane_linkage_morphism()

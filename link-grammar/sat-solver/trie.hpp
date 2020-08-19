@@ -3,7 +3,9 @@
 
 #include <stdlib.h>
 
-#include "lg_assert.h"
+extern "C" {
+#include "error.h"                      // assert()
+};
 
 /*
    Trie that supports strings made out of alphabeth letters,

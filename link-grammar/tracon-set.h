@@ -19,7 +19,7 @@
 
 #include "api-types.h"
 #include "const-prime.h"
-#include "lg_assert.h"
+#include "error.h"
 
 typedef struct
 {

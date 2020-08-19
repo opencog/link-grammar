@@ -22,7 +22,9 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
+#include "link-includes.h"
 #include "dict-common/dict-defines.h" /* SUBSCRIPT_MARK, SUBSCRIPT_DOT */
+#include "error.h"
 #include "utilities.h"
 
 int append_string(dyn_str *, const char *fmt, ...) GNUC_PRINTF(2,3);

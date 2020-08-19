@@ -20,7 +20,7 @@
 #include <stdint.h>  // for uint8_t
 
 #include "api-types.h"
-#include "lg_assert.h"
+#include "error.h"
 #include "memory-pool.h"
 #include "string-set.h"
 

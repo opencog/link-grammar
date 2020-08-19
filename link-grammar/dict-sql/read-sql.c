@@ -29,8 +29,8 @@
 #include "dict-common/dict-structures.h"
 #include "dict-common/file-utils.h"
 #include "dict-file/read-dict.h"         // dictionary_six()
+#include "error.h"
 #include "externs.h"
-#include "lg_assert.h"
 #include "memory-pool.h"
 #include "string-set.h"
 #include "tokenize/spellcheck.h"

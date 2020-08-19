@@ -33,6 +33,8 @@
 	#include <windows.h>
 #endif /* _WIN32 */
 
+#include "link-includes.h"
+#include "error.h"
 #include "utilities.h"
 
 /* This file contains general utilities that fix, enhance OS-provided
