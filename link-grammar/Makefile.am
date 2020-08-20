@@ -159,7 +159,6 @@ liblink_grammar_la_SOURCES =        \
 	disjunct-utils.h                 \
 	error.h                          \
 	externs.h                        \
-	lg_assert.h                      \
 	link-includes.h                  \
 	linkage/analyze-linkage.h        \
 	linkage/linkage.h                \

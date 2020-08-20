@@ -139,7 +139,8 @@ const char *match_regex(const Regex_node *rn, const char *s)
 		regex_t *re = rn->re;
 
 		/* Make sure the regex has been compiled. */
-		assert(re);
+		assert(re != NULL, "Regex '%s' has not been compiled",
+		       rn->name ? rn->name : "(missing name)");
 
 #if HAVE_PCRE2_H
 		rc = pcre2_match(re->re_code, (PCRE2_SPTR)s,

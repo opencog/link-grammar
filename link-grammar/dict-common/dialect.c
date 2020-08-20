@@ -66,7 +66,7 @@ unsigned int exptag_dialect_add(Dictionary dict, const char *tag)
 	}
 	dt->name[tag_index] = tag;
 	dt->num++;
-	assert(dt->num == tag_index);
+	assert(dt->num == tag_index, "Tag index mismatch");
 
 	return tag_index;
 }

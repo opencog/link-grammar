@@ -113,7 +113,7 @@ static void section_add(Dialect *di, const char *token, unsigned int *size,
 	di->section[di->num_sections] =
 		(dialect_section_tag){ .name = token, .index = table_index };
 
-	assert(di->num_sections == section_num);
+	assert(di->num_sections == section_num, "Section number mismatch");
 }
 
  /**

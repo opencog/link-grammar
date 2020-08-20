@@ -139,7 +139,7 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 	Wordgraph_pathpos *wpt;
 	size_t insert_here = n;
 
-	assert(NULL != p);
+	assert(NULL != p, "No Gword to insert");
 
 #ifdef DEBUG
 	if (verbosity_level(+9)) print_hier_position(p);

@@ -3,7 +3,9 @@
 
 #include <vector>
 
-#include "lg_assert.h"
+extern "C" {
+#include "error.h"                      // assert()
+};
 
 template<class T>
 class Matrix {

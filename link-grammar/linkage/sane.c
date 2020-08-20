@@ -15,7 +15,7 @@
 #include "dict-common/regex-morph.h"    // match_regex
 #include "connectors.h"                 // MAX_SENTENCE
 #include "disjunct-utils.h"             // Disjunct_struct
-#include "lg_assert.h"
+#include "error.h"
 #include "linkage.h"
 #include "sane.h"
 #include "tokenize/tok-structures.h"    // Wordgraph_pathpos_s
@@ -209,8 +209,11 @@ static size_t num_islands(const Linkage lkg, const Gword **wg_path)
 		/* Skip null words which are optional words. */
 		if ((NULL == *wg_path) || ((*wg_path)->sent_wordidx != w))
 		{
-			assert(word[w].prev == word[w].next);
-			assert((NULL == cdj[w]) && lkg->sent->word[w].optional);
+			assert(word[w].prev == word[w].next,
+			   "A skipped optional word found in an island");
+			assert((NULL == cdj[w]) && lkg->sent->word[w].optional,
+			   "A matching disjunct found for a skipped optional word");
+
 
 			word[w].prev = NO_WORD;
 			word[w].inum = -1; /* not belonging to any island */
@@ -285,13 +288,13 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 {
 	Wordgraph_pathpos *wp_new = NULL;
 	Wordgraph_pathpos *wp_old = NULL;
-	Wordgraph_pathpos *wpp;
+	Wordgraph_pathpos *wpp = NULL;
 	Gword **next; /* next Wordgraph words of the current word */
 	size_t i;
 	unsigned int null_count_found = 0;
 
 	bool match_found = true; /* if all the words are null - it's still a match */
-	Gword **lwg_path;
+	Gword **lwg_path = NULL;
 
 	Dictionary afdict = sent->dict->affix_table;       /* for SANEMORPHISM */
 	char *const affix_types = alloca(sent->length*2 + 1);   /* affix types */

@@ -14,7 +14,8 @@
 #define _LINK_GRAMMAR_ERROR_H_
 
 #include "link-includes.h"
-#include "externs.h" // Needed for verbosity
+#include "externs.h"                    // verbosity
+#include "utilities.h"                  // GNUC_NORETURN
 
 /* User verbosity levels are 1-4, to be used for user info/debug.
  * For now hard-coded numbers are still used instead of D_USER_BASIC/TIMES. */
@@ -104,5 +105,16 @@ const char *feature_enabled(const char *, ...);
  */
 #define test_enabled(feature) \
 	(('\0' != test[0]) ? feature_enabled(test, feature, NULL) : NULL)
+
+extern void (* assert_failure_trap)(void);
+#define FILELINE __FILE__ ":" STRINGIFY(__LINE__)
+void assert_failure(const char[], const char[], const char *, const char *, ...)
+	GNUC_PRINTF(4,5) GNUC_NORETURN;
+
+#undef assert
+#define assert(ex, ...) \
+do { \
+	if (!(ex)) assert_failure(STRINGIFY(ex), __func__, FILELINE, __VA_ARGS__); }\
+while(0)
 
 #endif

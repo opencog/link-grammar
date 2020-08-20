@@ -214,15 +214,13 @@ char * linkage_print_links_and_domains(const Linkage linkage)
 	longest = 0;
 	for (link=0; link<N_links; link++)
 	{
-		// if (linkage_get_link_lword(linkage, link) == SIZE_MAX) continue;
-		assert (linkage_get_link_lword(linkage, link) < SIZE_MAX);
+		assert (linkage_get_link_lword(linkage, link) < SIZE_MAX, "Missing word in link");
 		if (linkage_get_link_num_domains(linkage, link) > longest)
 			longest = linkage_get_link_num_domains(linkage, link);
 	}
 	for (link=0; link<N_links; link++)
 	{
-		// if (linkage_get_link_lword(linkage, link) == SIZE_MAX) continue;
-		assert (linkage_get_link_lword(linkage, link) < SIZE_MAX);
+		assert (linkage_get_link_lword(linkage, link) < SIZE_MAX, "Missing word in link");
 		dname = linkage_get_link_domain_names(linkage, link);
 		for (j=0; j<linkage_get_link_num_domains(linkage, link); ++j) {
 			append_string(s, " (%s)", dname[j]);
@@ -363,7 +361,7 @@ build_linkage_postscript_string(const Linkage linkage,
 	for (link=0; link<N_links; link++) {
 		if (!print_word_0 && (ppla[link].lw == 0)) continue;
 		if (!print_word_N && (ppla[link].rw == linkage->num_words-1)) continue;
-		assert (ppla[link].lw != SIZE_MAX);
+		assert (ppla[link].lw != SIZE_MAX, "Missing word in link");
 		if ((j%7 == 0) && (j>0)) dyn_strcat(string,"\n");
 		j++;
 		append_string(string,"[%zu %zu %d",
@@ -390,8 +388,8 @@ static void diagram_alloc_tmpmem(size_t **start, char ***pic, char ***xpic,
                                  size_t *cur_height, size_t max_height,
                                  size_t max_bytes, size_t num_cols)
 {
-	assert(num_cols < max_bytes);
-	assert(max_height > *cur_height);
+	assert(num_cols <= max_bytes, "Columns overflow");
+	assert(max_height > *cur_height, "New diagram height is too small");
 
 	*start = realloc(*start, max_height * sizeof(size_t));
 	*pic = realloc(*pic, max_height * sizeof(char *));
@@ -436,8 +434,8 @@ static void sort_link_lengths(Link *ppla, link_by_length *ll,
 	{
 		Link *lnk = &ppla[j];
 
-		assert(lnk->lw != SIZE_MAX);
-		assert(lnk->link_name != NULL);
+		assert(lnk->lw != SIZE_MAX, "Missing word in link");
+		assert(lnk->link_name != NULL, "Missing link name");
 
 		lla[j] = &ll_tmp[j];
 		ll_tmp[j].lnk = lnk;

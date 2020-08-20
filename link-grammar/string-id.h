@@ -19,7 +19,7 @@
 
 #include "api-types.h"
 #include "const-prime.h"
-#include "lg_assert.h"
+#include "error.h"
 #ifdef _WIN32
 #include "utilities.h"                  // ssize_t
 #endif

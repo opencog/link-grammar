@@ -33,6 +33,8 @@
 	#include <windows.h>
 #endif /* _WIN32 */
 
+#include "link-includes.h"
+#include "error.h"
 #include "utilities.h"
 
 /* This file contains general utilities that fix, enhance OS-provided
@@ -685,7 +687,7 @@ win32_getlocale (void)
 char * get_default_locale(void)
 {
 	const char *lc_vars[] = {"LC_ALL", "LC_CTYPE", "LANG", NULL};
-	char *ev;
+	char *ev = NULL;
 	const char **evname;
 	char *locale = NULL;
 

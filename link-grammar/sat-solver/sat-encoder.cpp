@@ -16,7 +16,6 @@ extern "C" {
 #include "sat-encoder.h"
 }
 #include "minisat/core/Solver.h"
-#undef assert
 
 #include "sat-encoder.hpp"
 #include "variables.hpp"
@@ -27,6 +26,7 @@ extern "C" {
 
 extern "C" {
 #include "disjunct-utils.h"
+#include "error.h"
 #include "linkage/analyze-linkage.h" // for compute_link_names()
 #include "linkage/linkage.h"
 #include "linkage/sane.h"            // for sane_linkage_morphism()
@@ -242,7 +242,7 @@ void SATEncoder::build_word_tags()
     fast_sprintf(name+1, (int)w);
     // The SAT encoding word variables are set to be equal to the word numbers.
     Var var = _variables->string(name);
-    assert((Var)w == var);
+    assert((Var)w == var, "Word %zu: var %d", w, var);
   }
 
   for (size_t w = 0; w < _sent->length; w++) {
