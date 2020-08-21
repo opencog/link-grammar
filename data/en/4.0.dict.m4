@@ -3031,7 +3031,7 @@ rest.w: Ix- & Pv+;
 % Pa+ & {<verb-wall>}: the wall is optional: "A player who is injured
 %     must leave the field" cannot take a wall.
 % [Pa+]0.05: prefer gerund over adjective.
-% [I*v+].2: the cost should maybe be evenn higher, to avoid linking
+% [I*v+].5: the cost should maybe be even higher, to avoid linking
 %     past-tense 'were' to infinitives. "The rooms were let."
 % PFb- & <verb-wall> & Pa+: "cheaper than direct, slime is greener."
 
@@ -3050,7 +3050,7 @@ rest.w: Ix- & Pv+;
     or <to-verb>
     or (PFb- & <verb-wall> & {Pa+})
     or ({MV+} & [Pa+]0.05 & {<verb-wall>})))
-  or ({N+} & ((AF- & <verb-wall>) or ({MV+} & [Pv+].1) or [I*v+].2))
+  or ({N+} & ((AF- & <verb-wall>) or ({MV+} & [Pv+].1) or [I*v+].5))
   or (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
 % Identical to above, but no wall.  This is used only in "and.j-v"
