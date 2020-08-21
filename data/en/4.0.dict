@@ -2533,6 +2533,8 @@ per "/.per": Us+ & Mp-;
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
 <verb-co>:   {@E-} & {Xd- & (EI- or S**i-)} & Wi-;
 <verb-sic>:  {@E-} & Wi- & Xc+ & SI*i+ & {Xc+};
+
+% Sj- & I*j-: subject of bare infinitive: "you should hear him talk!"
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
                       (Sj- & I*j-) or
                       ({(Xd- & (EI- or S**i-)) or [{Xd-} & hCO-]} & Wi- & {NM+}) or
