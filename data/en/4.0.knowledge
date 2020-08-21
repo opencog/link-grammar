@@ -313,7 +313,8 @@ MX#a  ,  TO  TOf  TH  MVp  TOt  QI  OF  MVt  MVz  MVh  Ytm Ya  MJ E EA
 ; a restricted link(see above) xxx reverted .. this is needed ...
 ;
 B#m  ,   D##w   H   HA                     , "Bad use of gerund68",
-Sj   ,   I#j                               , "Bad use of bare infinitive"
+Sj   ,   I#j                               , "Bad use of bare infinitive",
+Sg   ,   Pg                                , "Bad use of present participle"
 
 CONTAINS_NONE_RULES:
  S     ,  Spxi                             , "Bad n-v agreement69" ,
