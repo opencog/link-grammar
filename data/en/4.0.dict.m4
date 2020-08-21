@@ -3477,9 +3477,10 @@ lain.v: VERB_PP(<vc-bulge>);
 <vc-listen>: {K+} & <mv-coord>;
 
 % I- & MVp+ & I*j+: "go listen to them play music"
+% Wi- & MVp+ & I*j+: "Just listen to them talk like that!"
 listen.v:
   VERB_PLI(<vc-listen>)
-  or ({@E-} & I- & {<verb-wall>} & MVp+ & I*j+);
+  or ({@E-} & (I- or Wi-) & {<verb-wall>} & MVp+ & I*j+);
 
 listens.v: VERB_S_I(<vc-listen>) or <verb-si>;
 listened.v-d:
