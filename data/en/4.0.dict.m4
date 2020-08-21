@@ -2483,6 +2483,7 @@ per "/.per": Us+ & Mp-;
 %
 % <verb-pp>: PP- & WV-: "I have seen it".
 % <verb-pg>: Pg- is naked, no verb-wall: "I like eating bass."
+% <verb-pg>: Sg- & Pg-: "I feel him breathing down my back"
 %
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
@@ -2491,7 +2492,7 @@ per "/.per": Us+ & Mp-;
 <verb-pl>:   {@E-} & ((Sp- & {hPFt-} & <verb-wall>) or (RS- & Bp-));
 <verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-));
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
-<verb-pg>:   {@E-} & (({Sg-} & Pg-) or Mg-);
+<verb-pg>:   {@E-} & (({[Sg-]-0.2} & Pg-) or Mg-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % Pv- & OFj+: "knowledge was gained of the activities"
@@ -5128,10 +5129,17 @@ requesting.v: <verb-pg> & <vc-request>;
 
 % XXX why is there a cost on Pv ??
 <vc-feel>: <vc-trans> or
-  ({@MV+} & (Pa+ or TH+ or <embed-verb> or RSe+ or AF- or Vf+ or (LI+ or <mv-coord>) or [Pv+]));
+  ({@MV+} & 
+    (Pa+ or TH+ or <embed-verb> or
+    RSe+ or AF- or Vf+ or
+    LI+ or <mv-coord> or [Pv+] or
+    (O+ & (I*j+ or Pg+))));
 feel.v: VERB_PLI(<vc-feel>);
 feels.v: VERB_S_T(<vc-feel>);
-felt.v-d: VERB_SPPP_T(<vc-feel>) or (<verb-s-pv> & {THi+}) or <verb-phrase-opener>;
+felt.v-d:
+  VERB_SPPP_T(<vc-feel>)
+  or (<verb-s-pv> & {THi+})
+  or <verb-phrase-opener>;
 feeling.g: (<vc-feel> & <verb-ge>) or <verb-ge-d>;
 feeling.v: <verb-pg> & <vc-feel>;
 
