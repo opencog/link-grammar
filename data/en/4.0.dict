@@ -1365,19 +1365,24 @@ times.n:
 she he:
   {[[R+ & Bs+]]} & (({MXs+} & Ss+ & <CLAUSE>) or SIs- or dSJls+);
 
+% subject of bare infinitive:
+% "You should hear him sing" -- sing is the bare infinitive,
+% and "him" is the "subject" of that infinitive...
+<bare-inf>: (J- or Ox-) & {Sj+};
+
 % The E- is for "It's either us or them" ... not ideal, but OK
 % See also me.p below.
 me him:
-  J- or Ox- or ({[[E-]]} & dSJl+) or dSJr- or Wa-;
+  <bare-inf> or ({[[E-]]} & dSJl+) or dSJr- or Wa-;
 
 % DD+: "... how us two should work together"
 us:
-  J- or Ox- or ({[[E-]]} & dSJl+) or dSJr- or DD+;
+  <bare-inf> or ({[[E-]]} & dSJl+) or dSJr- or DD+;
 
 % Jd- & Dmc-: "I have a lot of them" and J- is cost so that this comes first.
 % (Jd- & Dmc- & Sp+):  "Many of them could be saved"
 them:
-  [J-]
+  [<bare-inf>]
   or ({Jd- & Dmc-} & Ox-)
   or (Jd- & Dmc- & {Wd-} & Sp+)
   or ({[[E-]]} & dSJl+)
@@ -1387,9 +1392,9 @@ them:
 %    The Ox is needed for post-processing
 myself yourself himself herself itself themselves
 ourselves yourselves thyself oneself one's one’s:
-  J- or Ox- or E+ or MVa-;
+  <bare-inf> or E+ or MVa-;
 
-each_other: J- or O- or YS+;
+each_other: ((J- or O-) & {Sj+}) or YS+;
 
 his:
   DP+
@@ -1399,7 +1404,7 @@ his:
 
 % J-: "... with her"
 her:
-  J- or Ox-
+  <bare-inf>
   or DP+
   or ({AL-} & {@L+} & (D+ or DD+))
   or Wa-;
@@ -1430,7 +1435,7 @@ me.p:
 % Wa-: "You!"
 % Ds+: "you asshole!"
 you:
-  Wa-  or J- or Ox-
+  Wa- or <bare-inf>
   or (Sp+ & <CLAUSE>)
   or SIp-
   or dSJlp+
@@ -1446,7 +1451,7 @@ y'all: (Sp+ & <CLAUSE>) or SIp-;
 % youse yous yis ye: second-person plural -- Irish English --
 % https://en.wikipedia.org/wiki/Irish_English
 youse yous yis ye ya yo:
-  J- or Ox- or (Sp+ & <CLAUSE>) or SIp-
+  <bare-inf> or (Sp+ & <CLAUSE>) or SIp-
   or (<CLAUSE> & Pg+);
 
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
@@ -1459,7 +1464,7 @@ youse yous yis ye ya yo:
 % XXX FIXME: why does [J-] have a cost???
 it:
    [J-]0.5
-   or (Osm- & {@M+})
+   or (Osm- & ({@M+} or {@Sj+}))
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
    or ({MX+} & (Ss+ or SFsi+) & <CLAUSE>)
@@ -1494,7 +1499,7 @@ I.p:
   or dSJl+
   or SXI-;
 
-them_all us_all you_all: Ox- or J-;
+them_all us_all you_all: <bare-inf>;
 % it_all gets a cost when used as direct object (Ox) to avoid
 % inappropriate parse "Please paint it all white"
 it_all: [[Ox-]] or J-;
@@ -2529,6 +2534,7 @@ per "/.per": Us+ & Mp-;
 <verb-co>:   {@E-} & {Xd- & (EI- or S**i-)} & Wi-;
 <verb-sic>:  {@E-} & Wi- & Xc+ & SI*i+ & {Xc+};
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
+                      (Sj- & I*j-) or
                       ({(Xd- & (EI- or S**i-)) or [{Xd-} & hCO-]} & Wi- & {NM+}) or
                       (Wi- & Xc+ & SI*i+ & {Xc+})
                      ) & {@E-};
