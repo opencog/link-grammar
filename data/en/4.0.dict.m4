@@ -3476,7 +3476,11 @@ lain.v: VERB_PP(<vc-bulge>);
 
 <vc-listen>: {K+} & <mv-coord>;
 
-listen.v: VERB_PLI(<vc-listen>);
+% I- & MVp+ & I*j+: "go listen to them play music"
+listen.v:
+  VERB_PLI(<vc-listen>)
+  or ({@E-} & I- & {<verb-wall>} & MVp+ & I*j+);
+
 listens.v: VERB_S_I(<vc-listen>) or <verb-si>;
 listened.v-d:
   VERB_SPPP_I(<vc-listen>)

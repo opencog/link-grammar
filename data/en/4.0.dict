@@ -3500,12 +3500,16 @@ lain.v:
 
 <vc-listen>: {K+} & <mv-coord>;
 
-listen.v: 
+% I- & MVp+ & I*j+: "go listen to them play music"
+listen.v:
+  
   ((<verb-pl,i> & (<vc-listen>)) or
   ({@E-} & {([Sp-] or (Xd- & EI-))} & dWi- & (<vc-listen>) & Xc+ & SI*i+ & {Xc+} & {@MV+}) or
   ({@E-} & hXd- & dWi- & (<vc-listen>) & hXc+) or
   (<verb-and-pl-> & ((<vc-listen>) or ())) or
-  (((<vc-listen>) or [()]) & <verb-and-pl+>));
+  (((<vc-listen>) or [()]) & <verb-and-pl+>))
+  or ({@E-} & I- & {<verb-wall>} & MVp+ & I*j+);
+
 listens.v: 
   ((<verb-s> & (<vc-listen>)) or
   (<verb-and-s-> & ([<vc-listen>] or ())) or
