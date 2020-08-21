@@ -3472,8 +3472,23 @@ lain.v: VERB_PP(<vc-bulge>);
   <verb-ge-d>;
 
 % --------------------------------------------------------------
-
 % irregular
+
+<vc-listen>: {K+} & <mv-coord>;
+
+listen.v: VERB_PLI(<vc-listen>);
+listens.v: VERB_S_I(<vc-listen>) or <verb-si>;
+listened.v-d:
+  VERB_SPPP_I(<vc-listen>)
+  or <verb-adj>
+  or <verb-si>;
+
+listening.v:
+  (<vc-listen> & <verb-pg,ge>) or
+  <verb-adj> or
+  <verb-ge-d>;
+
+
 % I*g: "Come walk with me".
 <vc-come>:
   ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or I*g+ or <b-minus> or QI+} & <mv-coord>)

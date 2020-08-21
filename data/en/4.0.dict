@@ -3496,8 +3496,34 @@ lain.v:
   <verb-ge-d>;
 
 % --------------------------------------------------------------
-
 % irregular
+
+<vc-listen>: {K+} & <mv-coord>;
+
+listen.v: 
+  ((<verb-pl,i> & (<vc-listen>)) or
+  ({@E-} & {([Sp-] or (Xd- & EI-))} & dWi- & (<vc-listen>) & Xc+ & SI*i+ & {Xc+} & {@MV+}) or
+  ({@E-} & hXd- & dWi- & (<vc-listen>) & hXc+) or
+  (<verb-and-pl-> & ((<vc-listen>) or ())) or
+  (((<vc-listen>) or [()]) & <verb-and-pl+>));
+listens.v: 
+  ((<verb-s> & (<vc-listen>)) or
+  (<verb-and-s-> & ([<vc-listen>] or ())) or
+  ((<vc-listen>) & <verb-and-s+>)) or <verb-si>;
+listened.v-d:
+  
+  ((<verb-sp,pp> & (<vc-listen>)) or
+  (<verb-and-sp-i-> & ([<vc-listen>] or ())) or
+  ((<vc-listen>) & <verb-and-sp-i+>))
+  or <verb-adj>
+  or <verb-si>;
+
+listening.v:
+  (<vc-listen> & <verb-pg,ge>) or
+  <verb-adj> or
+  <verb-ge-d>;
+
+
 % I*g: "Come walk with me".
 <vc-come>:
   ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or I*g+ or <b-minus> or QI+} & <mv-coord>)
