@@ -5602,7 +5602,13 @@ refusing.v: <verb-pg> & <vc-refuse>;
   ([[@MV+ & O*n+]]) or
   [[CX- & <mv-coord>]];
 
-want.v need.v: VERB_PLI(<vc-want>);
+want.v:
+  VERB_PLI(<vc-want>);
+
+% SI+ & <verb-rq-aux> & I+: "Need you use so much flour?"
+need.v:
+  VERB_PLI(<vc-want>)
+  or ((SI+ or SFI+) & <verb-rq-aux> & I+);
 need.i need'st: {@E-} & ((S- & <verb-wall>) or (RS- & B-)) & (N+ & I+);
 wants.v needs.v: VERB_S_T(<vc-want>) or <vc-please>;
 wanted.v-d needed.v-d:

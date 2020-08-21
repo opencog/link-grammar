@@ -7147,12 +7147,23 @@ refusing.v: <verb-pg> & <vc-refuse>;
   ([[@MV+ & O*n+]]) or
   [[CX- & <mv-coord>]];
 
-want.v need.v: 
+want.v:
+  
   ((<verb-pl,i> & (<vc-want>)) or
   ({@E-} & {([Sp-] or (Xd- & EI-))} & dWi- & (<vc-want>) & Xc+ & SI*i+ & {Xc+} & {@MV+}) or
   ({@E-} & hXd- & dWi- & (<vc-want>) & hXc+) or
   (<verb-and-pl-> & ((<vc-want>) or ())) or
   (((<vc-want>) or [()]) & <verb-and-pl+>));
+
+% SI+ & <verb-rq-aux> & I+: "Need you use so much flour?"
+need.v:
+  
+  ((<verb-pl,i> & (<vc-want>)) or
+  ({@E-} & {([Sp-] or (Xd- & EI-))} & dWi- & (<vc-want>) & Xc+ & SI*i+ & {Xc+} & {@MV+}) or
+  ({@E-} & hXd- & dWi- & (<vc-want>) & hXc+) or
+  (<verb-and-pl-> & ((<vc-want>) or ())) or
+  (((<vc-want>) or [()]) & <verb-and-pl+>))
+  or ((SI+ or SFI+) & <verb-rq-aux> & I+);
 need.i need'st: {@E-} & ((S- & <verb-wall>) or (RS- & B-)) & (N+ & I+);
 wants.v needs.v: 
   ((<verb-s> & (<vc-want>)) or
