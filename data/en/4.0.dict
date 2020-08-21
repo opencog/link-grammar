@@ -3991,7 +3991,8 @@ running.g beating.g catching.g driving.g striking.g:
   <verb-and-sp-t>);
 
 % <verb-manner> is too broad for most of these, but is OK for many.
-% <verb-manner> is part of <word-adj>
+% <verb-manner> is part of <verb-adj>
+% I'm not sure I like Pa in verb-adj but there it is and widely used ...
 /en/words/words.v.4.3:
   
   ((<verb-sp,pp> & (<vc-trans>)) or

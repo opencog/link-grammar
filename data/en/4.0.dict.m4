@@ -3798,7 +3798,8 @@ running.g beating.g catching.g driving.g striking.g:
 /en/words/words-medical.v.4.2: VERB_S_T(<vc-trans>);
 
 % <verb-manner> is too broad for most of these, but is OK for many.
-% <verb-manner> is part of <word-adj>
+% <verb-manner> is part of <verb-adj>
+% I'm not sure I like Pa in verb-adj but there it is and widely used ...
 /en/words/words.v.4.3:
   VERB_SPPP_T(<vc-trans>)
   or (<verb-pv> & {{Xc+} & Pa+})
