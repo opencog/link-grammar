@@ -1392,7 +1392,7 @@ us:
 % Jd- & Dmc-: "I have a lot of them" and J- is cost so that this comes first.
 % (Jd- & Dmc- & Sp+):  "Many of them could be saved"
 them:
-  [<bare-inf>]
+  [<bare-inf>]0.5
   or ({Jd- & Dmc-} & Ox-)
   or (Jd- & Dmc- & {Wd-} & Sp+)
   or ({[[E-]]} & dSJl+)

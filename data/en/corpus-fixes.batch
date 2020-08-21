@@ -1320,6 +1320,12 @@ you should look at him smile
 come look at him try to hit the ball!
 come look at John try to hit the ball!
 
+% Like above, but simpler. Verify that
+% subect-of-bare-infinitive Sj link works.
+you should hear Mary talk
+you should hear it rain
+go watch them play music
+
 % Avoid breakages due to above, via 4.0.knowledge
 *John is that Fred died
 
