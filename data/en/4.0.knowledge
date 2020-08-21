@@ -312,7 +312,8 @@ MX#a  ,  TO  TOf  TH  MVp  TOt  QI  OF  MVt  MVz  MVh  Ytm Ya  MJ E EA
 ; The Rw link necessitated commenting out 68, because we had to make B#m
 ; a restricted link(see above) xxx reverted .. this is needed ...
 ;
-B#m  ,   D##w   H   HA                     , "Bad use of gerund68"
+B#m  ,   D##w   H   HA                     , "Bad use of gerund68",
+Sj   ,   I#j                               , "Bad use of bare infinitive"
 
 CONTAINS_NONE_RULES:
  S     ,  Spxi                             , "Bad n-v agreement69" ,

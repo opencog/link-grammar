@@ -12,7 +12,7 @@ changecom(`%')
  %                                                                           %
  %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
  %       Copyright (c) 2003  Peter Szolovits and MIT.                        %
- %       Copyright (c) 2008-2014  Linas Vepstas                              %
+ %       Copyright (c) 2008-2020  Linas Vepstas                              %
  %       Copyright (c) 2013  Lian Ruiting                                    %
  %                                                                           %
  %  See file "README" for information about commercial use of this system    %
@@ -164,8 +164,9 @@ nonCAP.zzz: ZZZ-;
 
 % noun-main-e: used for proper names (named entities)
 % Os*e- is used to allow certain adjectival uses.
+% Os*e- & Sj+: subject of bare infinitive. "You should hear John sing"
 <noun-main-e>:
-  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or Os*e-
+  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or (Os*e- & {Sj+})
   or <post-nominal-s>
   or <costly-null>;
 
