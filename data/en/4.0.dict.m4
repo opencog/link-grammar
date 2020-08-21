@@ -3476,11 +3476,15 @@ lain.v: VERB_PP(<vc-bulge>);
 
 <vc-listen>: {K+} & <mv-coord>;
 
+% <verb-focus>: commands/requests to focus attention on action.
+%               The action is a bare infinitive, thus I*j+.
 % I- & MVp+ & I*j+: "go listen to them play music"
 % Wi- & MVp+ & I*j+: "Just listen to them talk like that!"
+<verb-focus>:
+  {@E-} & (I- or Wi-) & {<verb-wall>} & MVp+ & I*j+;
 listen.v:
   VERB_PLI(<vc-listen>)
-  or ({@E-} & (I- or Wi-) & {<verb-wall>} & MVp+ & I*j+);
+  or <verb-focus>;
 
 listens.v: VERB_S_I(<vc-listen>) or <verb-si>;
 listened.v-d:
@@ -4387,11 +4391,12 @@ reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 % K+ connects to particles.
 % [Pa+]0.1: prefer MVa to Pa whenever possible: "She look right"
 % [K+]0.2: prefer Pa+ to K+ whenever possible: "She looked up"
+% <verb-focus>: "Just look at him smile!"
 <vc-look>: {({@MV+} & (LI+ or [{Xc+} & Pa+]0.1))
   or ({[K+]0.2 or AF-} & <mv-coord>)
   or (O+ & K+ & <mv-coord>)
   or (O+ & MV+ & <mv-coord>)};
-look.v: VERB_PLI(<vc-look>);
+look.v: VERB_PLI(<vc-look>) or <verb-focus>;
 looks.v: VERB_S_T(<vc-look>);
 looked.v-d: VERB_SPPP_T(<vc-look>);
 looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;

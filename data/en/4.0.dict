@@ -3500,8 +3500,12 @@ lain.v:
 
 <vc-listen>: {K+} & <mv-coord>;
 
+% <verb-focus>: commands/requests to focus attention on action.
+%               The action is a bare infinitive, thus I*j+.
 % I- & MVp+ & I*j+: "go listen to them play music"
 % Wi- & MVp+ & I*j+: "Just listen to them talk like that!"
+<verb-focus>:
+  {@E-} & (I- or Wi-) & {<verb-wall>} & MVp+ & I*j+;
 listen.v:
   
   ((<verb-pl,i> & (<vc-listen>)) or
@@ -3509,7 +3513,7 @@ listen.v:
   ({@E-} & hXd- & dWi- & (<vc-listen>) & hXc+) or
   (<verb-and-pl-> & ((<vc-listen>) or ())) or
   (((<vc-listen>) or [()]) & <verb-and-pl+>))
-  or ({@E-} & (I- or Wi-) & {<verb-wall>} & MVp+ & I*j+);
+  or <verb-focus>;
 
 listens.v: 
   ((<verb-s> & (<vc-listen>)) or
@@ -5005,6 +5009,7 @@ reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 % K+ connects to particles.
 % [Pa+]0.1: prefer MVa to Pa whenever possible: "She look right"
 % [K+]0.2: prefer Pa+ to K+ whenever possible: "She looked up"
+% <verb-focus>: "Just look at him smile!"
 <vc-look>: {({@MV+} & (LI+ or [{Xc+} & Pa+]0.1))
   or ({[K+]0.2 or AF-} & <mv-coord>)
   or (O+ & K+ & <mv-coord>)
@@ -5014,7 +5019,7 @@ look.v:
   ({@E-} & {([Sp-] or (Xd- & EI-))} & dWi- & (<vc-look>) & Xc+ & SI*i+ & {Xc+} & {@MV+}) or
   ({@E-} & hXd- & dWi- & (<vc-look>) & hXc+) or
   (<verb-and-pl-> & ((<vc-look>) or ())) or
-  (((<vc-look>) or [()]) & <verb-and-pl+>));
+  (((<vc-look>) or [()]) & <verb-and-pl+>)) or <verb-focus>;
 looks.v: 
   ((<verb-s> & (<vc-look>)) or
   (<verb-and-sp-i-> & ([<vc-look>]0.2 or ())) or

@@ -1302,6 +1302,8 @@ I'll come listen to you
 Come listen to him
 come walk with me
 
+% Look-at, listen-to to focus and pay attention to an action-verb
+% Similar to "go watch them play ball" except its LOOK_AT, LISTEN_TO
 Come listen to him talk
 Come listen to him sing
 you should go listen to him talk
@@ -1310,6 +1312,13 @@ Just listen to them talk like that about you!
 go listen to them play music
 you should really listen to him talk
 
+look at him walk!
+look at him run
+look at him smile
+Just look at him smile!
+you should look at him smile
+come look at him try to hit the ball!
+come look at John try to hit the ball!
 
 % Negations
 I have not been accustomed to such language as this
