@@ -3268,6 +3268,9 @@ should.v:
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & dCOp+))]];
 
+% idiomatic: "You had better give back that telephone!"
+had_better: S- & I+;
+
 % <verb-wall>: "I sure wish he would."
 would.v:
   ((SI+ or SFI+) & ((<verb-rq-aux> & {N+ or Vw+} & I+) or CQ-)) or
