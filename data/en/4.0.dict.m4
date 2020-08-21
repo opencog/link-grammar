@@ -3474,6 +3474,7 @@ lain.v: VERB_PP(<vc-bulge>);
 % --------------------------------------------------------------
 
 % irregular
+% I*g: "Come walk with me".
 <vc-come>:
   ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or I*g+ or <b-minus> or QI+} & <mv-coord>)
   or ({@MV+} & Pa+);
