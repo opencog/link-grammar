@@ -3475,7 +3475,7 @@ lain.v: VERB_PP(<vc-bulge>);
 
 % irregular
 <vc-come>:
-  ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or <b-minus> or QI+} & <mv-coord>)
+  ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or I*g+ or <b-minus> or QI+} & <mv-coord>)
   or ({@MV+} & Pa+);
 come.v:
   VERB_PLI(<vc-come>)
