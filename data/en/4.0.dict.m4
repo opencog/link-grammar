@@ -2548,14 +2548,16 @@ per "/.per": Us+ & Mp-;
 %       I'm confused, examples are needed... verb-pl,i is used everywhere...
 %       I want the wall, e.g. for "Did you see in which room?"
 %       which uses subject inversion and "did see" for the infinitive.
+% Qa- & <verb-wall>: Why-action questions: "why go there?"
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
 <verb-co>:   {@E-} & {Xd- & (EI- or S**i-)} & Wi-;
 <verb-sic>:  {@E-} & Wi- & Xc+ & SI*i+ & {Xc+};
+<verb-why>:  Qa- & <verb-wall>;
 
 % Sj- & I*j-: subject of bare infinitive: "you should hear him talk!"
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
                       (Sj- & I*j-) or
-                      (Qa- & <verb-wall>) or
+                      <verb-why> or
                       ({(Xd- & (EI- or S**i-)) or [{Xd-} & hCO-]} & Wi- & {NM+}) or
                       (Wi- & Xc+ & SI*i+ & {Xc+})
                      ) & {@E-};
@@ -2859,7 +2861,7 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % Hey, wait: using R & B here is wrong, should have Qe maybe?
 %
 do.v:
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co>) & <vc-do>)
+  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co> or <verb-why>) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
   or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
@@ -3230,7 +3232,7 @@ am.v:
 % Ix- & <verb-wall>: "He is as smart as I expected him to be."
 % Ix- & <vc-be>: "I'm sure he'll still be popular."
 be.v:
-  ({@E-} & ((<verb-co> & <verb-wall>) or [S*x-]) & <vc-be>)
+  ({@E-} & ((<verb-co> & <verb-wall>) or <verb-why> or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
   or ({@E-} & Ix- & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
