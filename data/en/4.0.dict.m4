@@ -3286,7 +3286,7 @@ weren't.v-d weren’t.v-d:
 % Sa*a- & Ix+: "..., as shall be proven"
 % SI+ & N+ & I+: "how long will you not have mercy?"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
-  ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & I+) or CQ-))
+  ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & (I+ or <verb-wall>)) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]]))
   or (Sa*a- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
