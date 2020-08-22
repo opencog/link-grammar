@@ -316,6 +316,7 @@ B#m  ,   D##w   H   HA                     , "Bad use of gerund68",
 Sj   ,   I#j                               , "Bad use of bare infinitive",
 Sg   ,   Pg                                , "Bad use of present participle"
 
+; Qd    ,  MX blocks "Joe doesn't matter what Ted does"
 CONTAINS_NONE_RULES:
  S     ,  Spxi                             , "Bad n-v agreement69" ,
  SI    ,  SIpxi                            , "Bad n-v agreement70" ,
@@ -331,6 +332,7 @@ CONTAINS_NONE_RULES:
  Mr    ,  B#*                              , "Bad use of 'whose'77",
  EAy   ,  MVs                              , "Bad comparative78",
  VCz   ,  EAy                              , "Bad comparative79",
+ Qd    ,  MX                               , "Bad subjuect inversion",
 
 ; I don't understand domains, this doesn't do what I expected.
 ; (It fails to block J- & Rn+ which is what I want it to do.)
