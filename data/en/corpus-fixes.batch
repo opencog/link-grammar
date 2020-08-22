@@ -5320,6 +5320,11 @@ He is going to not do it.
 *He is going to not do.
 That will do.
 
+% Short when questions
+When did Sue start using heroin?
+When did Sue start using?
+When did Joe?
+
 % Registers -- Newspaper headline declarations
 % Missing definite articles (with definite articles, these would parse)
 % Perhaps a modal parse: if the ordinary parse failed, try another
