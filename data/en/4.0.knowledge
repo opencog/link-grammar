@@ -316,10 +316,9 @@ B#m  ,   D##w   H   HA                     , "Bad use of gerund68",
 Sj   ,   I#j                               , "Bad use of bare infinitive",
 Sg   ,   Pg                                , "Bad use of present participle"
 
-; SI , MX blocks "Joe doesn't matter what Ted does"
 CONTAINS_NONE_RULES:
  S     ,  Spxi                             , "Bad n-v agreement69" ,
- SI    ,  SIpxi MX                         , "Bad n-v agreement70" ,
+ SI    ,  SIpxi                            , "Bad n-v agreement70" ,
  Ws    ,  B#m   Ca   BT                    , "Question inversion violated71" ,
  SF    ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta
                                            , "Bad use of 'filler' subject72" ,
