@@ -2858,7 +2858,7 @@ does.v:
   (<verb-and-s-> & ([<vc-do>] or ())) or
   ((<vc-do>) & <verb-and-s+>))
   or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
-  or ((SIs+ or SFIs+) & ((<verb-rq-aux> & {N+} & I*d+) or CQ-));
+  or ((SIs+ or SFIs+) & ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
 % <verb-x-sp> & <verb-wall>: "I sure wish I did"
@@ -2867,7 +2867,7 @@ did.v-d:
   or (<verb-x-sp> & <verb-wall>)
   or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
-  or ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & I*d+) or CQ-));
+  or ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-));
 %
 % XXX why not <vc-do> here ?
 % <verb-pv-b>: "I want it done." "I want the job done"
