@@ -694,6 +694,8 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 
 static int domain_compare(const Domain * d1, const Domain * d2)
 {
+	if (d1->size == d2->size)
+		return (d1 > d2);
 	return (d1->size - d2->size); /* for sorting the domains by size */
 }
 
