@@ -692,6 +692,13 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	}
 }
 
+/* domain_compare() is used to sort domains, and the code expects
+ * that a "stable sort" is used, i.e. that when two entries compare,
+ * the order is not changed. However, some OS distributions provide
+ * an unstable qsort(). To work around this, the below does an
+ * address compare to preserve order. I suppose this would break
+ * if the heap was ever upside-down (!?)
+ */
 static int domain_compare(const Domain * d1, const Domain * d2)
 {
 	if (d1->size == d2->size)
