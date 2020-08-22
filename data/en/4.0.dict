@@ -2902,12 +2902,12 @@ better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 % Wi- & I*d+: "Don't do that!"
 % SIp+: "don't you?" "why don't you?"
 don't don’t:
-  (((<verb-rq-aux> & (SIp+ or SFIp+) & (I*d+ or [()]))
+  (((<verb-rq-aux> & (SIp+ or SFIp+) & (I*d+ or <verb-wall>))
     or ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) & (I*d+ or <verb-wall> or [[()]]))
   or (<verb-co> & {I*d+});
 
 doesn't doesn’t:
-  ((<verb-rq-aux> & (SIs+ or SFIs+) & (I*d+ or [()])) or <verb-x-s>)
+  ((<verb-rq-aux> & (SIs+ or SFIs+) & (I*d+ or <verb-wall>)) or <verb-x-s>)
      & (I*d+ or <verb-wall> or [[()]]);
 
 didn't.v-d didn’t.v-d:
@@ -2916,7 +2916,7 @@ didn't.v-d didn’t.v-d:
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
-  ({{EI-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
+  ({{EI-} & Q- & <verb-wall>} & (SI+ or SFI+) & (I+ or <verb-wall>)) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]]));
 
 % Cost on {[[MV+]]}: prefer to have prep modifiers modify something else:
@@ -3286,7 +3286,7 @@ could.v-d:
 
 % <verb-wall>: "You know you should."
 should.v:
-  ((SI+ or SFI+) & ((<verb-rq-aux> & I+) or CQ-)) or
+  ((SI+ or SFI+) & ((<verb-rq-aux> & (I+ or <verb-wall>)) or CQ-)) or
   ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & dCOp+))]];
@@ -3303,23 +3303,23 @@ would.v:
 % TO+: "I ought to."
 ought.v:
   ((<verb-rq> & (SI+ or SFI+)) or <verb-x-sp> or <verb-and-sp->)
-    & (<to-verb> or (N+ & I+) or TO+)
+    & {<to-verb> or (N+ & I+) or TO+}
     & <verb-wall>;
 
 % <verb-wall>: "I know I won't."
-% SI+: "why couldn't he?"
+% SI+ & <verb-wall>: "why couldn't he?"
 won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
-  (<verb-rq-aux> & (SI+ or SFI+) & (I+ or [()])) or
+  (<verb-rq-aux> & (SI+ or SFI+) & (I+ or <verb-wall>)) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
   ({@E-} & I+ & <verb-and-sp+>) or
   Wa-;
 
 % <verb-wall>: "I know I wouldn't."
-% SI+: "why wouldn't he?"
+% SI+ & <verb-wall>: "why wouldn't he?"
 wouldn't wouldn’t:
-  (<verb-rq-aux> & (SI+ or SFI+) & {RT+} & (I+ or [()])) or
+  (<verb-rq-aux> & (SI+ or SFI+) & {RT+} & (I+ or <verb-wall>)) or
   (<verb-x-sp> & (({RT+} & I+) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
