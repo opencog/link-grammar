@@ -2555,6 +2555,7 @@ per "/.per": Us+ & Mp-;
 % Sj- & I*j-: subject of bare infinitive: "you should hear him talk!"
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
                       (Sj- & I*j-) or
+                      (Qa- & <verb-wall>) or
                       ({(Xd- & (EI- or S**i-)) or [{Xd-} & hCO-]} & Wi- & {NM+}) or
                       (Wi- & Xc+ & SI*i+ & {Xc+})
                      ) & {@E-};
@@ -5135,7 +5136,7 @@ requesting.v: <verb-pg> & <vc-request>;
 
 % XXX why is there a cost on Pv ??
 <vc-feel>: <vc-trans> or
-  ({@MV+} & 
+  ({@MV+} &
     (Pa+ or TH+ or <embed-verb> or
     RSe+ or AF- or Vf+ or
     LI+ or <mv-coord> or [Pv+] or
@@ -6810,18 +6811,21 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
 % -----------------------------------------------------------------
 % wall connectors
+% The naked Wa+: affirmative replies: "a red car"
 % The naked Wb+, without a WV+, links to topic questions: "what did you think?".
 % The naked Wi+, without a WV+, links to imperatives: "put it on the table".
+% The naked Wl+: locative expreessions: "on the table"
 % The naked Wn+, without a WV+, links to nominals: "what a shame!".
 % The naked Wx+, without a WV+, links to opinions: "ruined!".
 % The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
 %     insane?", "Are you the one?"
 % The Qd+ with a WV+, for questions: "did you do that?"
+% Wv+ with a wall: why-verb questions: "whey even go there?"
 %
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
 <wo-wall>: hWa+ or hWb+ or hWi+ or hWn+ or hWw+ or hWx+ or hQd+;
 <wi-wall>: (hWd+ or hWp+ or hWr+ or hWq+ or hWs+ or hWj+ or hWc+ or hWe+
-or hWt+ or hWo+ or hQd+) & <WALL>;
+   or hWt+ or hWo+ or hWv+ or hQd+) & <WALL>;
 
 % Paraphrasing, quotational complements:
 <paraph-null>: [()]0.1;
@@ -8172,9 +8176,11 @@ when:
 % QI- & (): "I do not know why"
 % COa+: "Why, of course it will!"
 % N+: "why not?"  "Why the hell not?"
+% Wv- & Qa+: "why go there?"
 why:
   {EL+} & (
     ({hCO-} & {EW-} & (Ww- or Wq-) & {Qw+ or N+})
+    or (Wv- & Qa+)
     or (QI- & (<subcl-verb> or <ton-verb> or [()]0.5))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or dCOa+
