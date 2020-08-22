@@ -2635,7 +2635,9 @@ per "/.per": Us+ & Mp-;
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
 
-<verb-s-pl,i>: {@E-} & (((Sp- or If-) & <verb-wall>) or (RS- & Bp-) or <verb-co>);
+<verb-s-pl,i>:
+  {@E-} & (((Sp- or If-) & <verb-wall>)
+     or (RS- & Bp-) or <verb-co> or <verb-why>);
 <verb-s-s>: {@E-} & (((Ss- or SFsi-) & <verb-wall>) or (RS- & Bs-));
 <verb-s-sp,pp>: {@E-} & (((S- or SFsi- or PPf-) & <verb-wall>) or (RS- & B-));
 <verb-s-sp>: {@E-} & (((S- or SFsi-) & <verb-wall>) or (RS- & B-));
@@ -8777,7 +8779,7 @@ bother.v:
   ((<verb-s-pl,i> & (<vc-bother>)) or
   (<verb-and-sp-i-> & ([<vc-bother>]0.2 or ())) or
   ((<vc-bother>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or <verb-why>;
 bothers.v: 
   ((<verb-s-s> & (<vc-bother>)) or
   (<verb-and-sp-i-> & ([<vc-bother>]0.2 or ())) or

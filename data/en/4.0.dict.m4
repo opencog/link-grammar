@@ -2644,7 +2644,9 @@ per "/.per": Us+ & Mp-;
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
 
-<verb-s-pl,i>: {@E-} & (((Sp- or If-) & <verb-wall>) or (RS- & Bp-) or <verb-co>);
+<verb-s-pl,i>:
+  {@E-} & (((Sp- or If-) & <verb-wall>)
+     or (RS- & Bp-) or <verb-co> or <verb-why>);
 <verb-s-s>: {@E-} & (((Ss- or SFsi-) & <verb-wall>) or (RS- & Bs-));
 <verb-s-sp,pp>: {@E-} & (((S- or SFsi- or PPf-) & <verb-wall>) or (RS- & B-));
 <verb-s-sp>: {@E-} & (((S- or SFsi-) & <verb-wall>) or (RS- & B-));
@@ -6583,7 +6585,7 @@ betting.v: <verb-pg> & <vc-bet>;
   ((O+ or <b-minus>) & <mv-coord> & {THi+}) or
   ([[@MV+ & O*n+ & <mv-coord>]]);
 
-bother.v: VERB_S_PLI(<vc-bother>);
+bother.v: VERB_S_PLI(<vc-bother>) or <verb-why>;
 bothers.v: VERB_S_S(<vc-bother>);
 bothered.v-d: VERB_S_SPPP(<vc-bother>) or <verb-pv> or <verb-phrase-opener>;
 bothering.v: <verb-s-pg> & <vc-bother>;
