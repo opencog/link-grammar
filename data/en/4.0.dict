@@ -1015,6 +1015,9 @@ indication.n inkling.n amount.n answer.n:
     or (GN+ & (DD- or [()]))
     or Us-);
 
+attestation.n:
+  (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
+
 % consonant-only form of the above.
 report.n sign.n conclusion.n complaint.n position.n restriction.n
 notion.n remark.n proclamation.n reassurance.n saying.n possibility.n
@@ -1157,6 +1160,9 @@ vote.n bill.n:
     (GN+ & (DD- or [()])) or
     ({NM+} & Ss+ & Wd-))) or
   AN+;
+
+propension.n:
+  (<noun-modifiers> & ((Ds- & {@M+} & {(<ton-verb> or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 % <noun-rel-uto>: somewhat like <noun-rel-s> but with more stuff.
 % {Jd-}: "a large amount of effort"
@@ -10160,6 +10166,12 @@ night.r semester.r term.r season.r session.r:
 the_next the_previous the_following this_past:
   DTn+;
 
+% Strange -- the JT- is a time-expression link .. .is that right here ??
+% I'm not convince any of this is correct...
+articulo_mortis intra_vitam in_articulo_mortis in_extremis
+ post_cibum post_coitum:
+ <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
+
 % Js- links "show results from today"
 <relative-date>:
   <prep-main-t> or JT- or Js- or YS+ or [[<noun-main-s>]];
@@ -12085,6 +12097,11 @@ longer.a-c:
   ))
   or (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
+longer-term.a:
+  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+)
+     or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})))
+   or (DG- & (TR+ or AF+) & {@MV+} & {<toi-verb> or THi+} & (ER- or (Wd- & Xc+ & ER+)));
+
 smarter.a-c nicer.a-c worse.a-c:
   ({ECa-} & (
     ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-)) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
@@ -12201,6 +12218,12 @@ best.a-s personal_best:
 
 % "despite best intentions"
 best.a:  A+;
+
+longest-term.a:
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-rel-x> & {<ton-verb>} & <noun-main-x>) or <adv-as>));
+
+oftenest correctliest soonest disquietingliest:
+ EA+;
 
 % ===========================================================================
 %ADVERBS
@@ -13644,35 +13667,6 @@ UNLIMITED-CONNECTORS:
 
 % The YS, YP, PH and ZZZ connectors can never be longer than one.
 LENGTH-LIMIT-1: YS+ & YP+ & PH+ & ZZZ+;
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
-% "Adding a Medical Lexicon to an English Parser.  Proc. AMIA 2003 Annual
-% Symposium, xx-yy.
-% Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
-%
-
-oftenest correctliest soonest disquietingliest:
- EA+;
-
-propension.n:
-  (<noun-modifiers> & ((Ds- & {@M+} & {(<ton-verb> or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
-
-longest-term.a:
-  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-rel-x> & {<ton-verb>} & <noun-main-x>) or <adv-as>));
-
-longer-term.a:
-  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+)
-     or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})))
-   or (DG- & (TR+ or AF+) & {@MV+} & {<toi-verb> or THi+} & (ER- or (Wd- & Xc+ & ER+)));
-
-attestation.n:
-  (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
-
-% Strange -- the JT- is a time-expression link .. .is that right here ??
-articulo_mortis intra_vitam in_articulo_mortis in_extremis
- post_cibum post_coitum:
- <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
 
 % Handy test
 % grrr: (A- & B- & C+ & D+) or [(E- & @F+ & @G+ & H+)] or [[(I- & J- & @K- & @L+)]];
