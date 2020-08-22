@@ -2852,6 +2852,7 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 %            "Are you really going to do it to them?"
 % VJrpi-: "I aim to help and also to do something"
 % SIp+ & N+: "Do you not want to know?"
+% naked SIp+: "do you?"
 % Wi- & I*d+ & Xc+ & SI*i+: "please do tell, John"; comma is required!
 %
 % Things we'd like to have, but can't:
@@ -2866,7 +2867,8 @@ do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co> or <verb-why>) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
-  or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
+  or ((SIp+ or SFIp+) & {N+} &
+     ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-))
   or (<verb-co> & {I*d+} & Xc+ & SI*i+ & {Xc+})
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
