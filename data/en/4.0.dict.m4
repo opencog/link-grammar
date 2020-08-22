@@ -2974,7 +2974,7 @@ have.v:
 
 has.v:
   VERB_X_S(<vc-have>)
-  or ((SIs+ or SFIs+) & ((<verb-rq> & PP+) or CQ-));
+  or ((SIs+ or SFIs+) & ((<verb-rq> & {PP+ or <verb-wall>}) or CQ-));
 
 % <verb-x-sp> & <verb-wall>: "I sure wish I had"
 % Sa*a- & PPf+: "as had been agreed, the work began on Monday"
