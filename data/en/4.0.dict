@@ -13249,6 +13249,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % Wc-: "But my efforts to win his heart have failed"
 % EB+: "would they have accepted this or, instead, would they have ..."
 but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
+  <directive-opener> or
   [{Xd-} & (Xx- or Wc-) & {Xc+} & {EB+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>]1.1;
 
