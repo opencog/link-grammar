@@ -622,7 +622,6 @@ static Count_bin do_count(
                           Connector *le, Connector *re,
                           unsigned int null_count)
 {
-	Count_bin zero = hist_zero();
 	Count_bin total;
 	int start_word, end_word, w;
 	Table_connector *t;
@@ -653,7 +652,7 @@ static Count_bin do_count(
 		}
 		else
 		{
-			t->count = zero;
+			t->count = hist_zero();
 		}
 		return t->count;
 	}
@@ -682,7 +681,7 @@ static Count_bin do_count(
 			}
 			else
 			{
-				t->count = zero;
+				t->count = hist_zero();
 			}
 			return t->count;
 		}
@@ -695,7 +694,7 @@ static Count_bin do_count(
 		 * rest of the sentence must contain one less null-word. Else
 		 * the rest of the sentence still contains the required number
 		 * of null words. */
-		t->count = zero;
+		t->count = hist_zero();
 		w = lw + 1;
 		for (int opt = 0; opt <= (int)ctxt->sent->word[w].optional; opt++)
 		{
@@ -775,7 +774,7 @@ static Count_bin do_count(
 			end_word = re->nearest_word + 1;
 	}
 
-	total = zero;
+	total = hist_zero();
 	fast_matcher_t *mchxt = ctxt->mchxt;
 
 	for (w = start_word; w < end_word; w++)
@@ -962,8 +961,8 @@ static Count_bin do_count(
 				 * in the count multiplication is zero,
 				 * we know that the true total is zero. So we don't
 				 * bother counting the other term at all, in that case. */
-				Count_bin leftcount = zero;
-				Count_bin rightcount = zero;
+				Count_bin leftcount = hist_zero();
+				Count_bin rightcount = hist_zero();
 				if (leftpcount &&
 				    (!lrcnt_optimize || rightpcount || (0 != hist_total(&l_bnr))))
 				{
