@@ -413,7 +413,7 @@ const char *feature_enabled(const char * list, ...)
 #elif defined __GNUC__ || defined __clang_analyzer__
 	#define DEBUG_TRAP __builtin_trap()
 #else
-	#define DEBUG_TRAP ((void(*)(void))0)()
+	#define DEBUG_TRAP abort()
 #endif
 
 void (* assert_failure_trap)(void);
