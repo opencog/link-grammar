@@ -440,9 +440,10 @@ void assert_failure(const char cond_str[], const char func[],
 	}
 	va_end(args);
 
-	if (assert_failure_trap != NULL)
+	if (assert_failure_trap == NULL)
 		DEBUG_TRAP;  /* leave stack trace in debugger */                      \
+	else
+		assert_failure_trap();
 
-	assert_failure_trap();
 	exit(1);
 }
