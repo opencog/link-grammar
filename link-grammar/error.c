@@ -410,10 +410,10 @@ const char *feature_enabled(const char * list, ...)
 
 #ifdef _WIN32
 	#define DEBUG_TRAP (*((volatile int*) 0x0) = 42)
-#elif defined GNUC || defined __clang_analyzer__
+#elif defined __GNUC__ || defined __clang_analyzer__
 	#define DEBUG_TRAP __builtin_trap()
 #else
-	#define DEBUG_TRAP ((void(*)(void))0)()
+	#define DEBUG_TRAP abort()
 #endif
 
 void (* assert_failure_trap)(void);
@@ -421,7 +421,7 @@ void assert_failure(const char cond_str[], const char func[],
                     const char *src_location, const char *fmt, ...)
 {
 	va_list args;
-	const char sevfmt[] = "Fatal error: \nAssertion (%s) failed at %s() (%s): ";
+	const char sevfmt[] = "Fatal error: \nAssertion (%s) failed in %s() (%s): ";
 
 	va_start(args, fmt);
 	if ((lg_error.handler == default_error_handler) ||
@@ -440,9 +440,10 @@ void assert_failure(const char cond_str[], const char func[],
 	}
 	va_end(args);
 
-	if (assert_failure_trap != NULL)
+	if (assert_failure_trap == NULL)
 		DEBUG_TRAP;  /* leave stack trace in debugger */                      \
+	else
+		assert_failure_trap();
 
-	assert_failure_trap();
 	exit(1);
 }
