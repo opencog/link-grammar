@@ -421,7 +421,7 @@ void assert_failure(const char cond_str[], const char func[],
                     const char *src_location, const char *fmt, ...)
 {
 	va_list args;
-	const char sevfmt[] = "Fatal error: \nAssertion (%s) failed at %s() (%s): ";
+	const char sevfmt[] = "Fatal error: \nAssertion (%s) failed in %s() (%s): ";
 
 	va_start(args, fmt);
 	if ((lg_error.handler == default_error_handler) ||
