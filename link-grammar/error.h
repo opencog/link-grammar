@@ -117,4 +117,13 @@ do { \
 	if (!(ex)) assert_failure(#ex, __func__, FILELINE, __VA_ARGS__); }\
 while(0)
 
+/* Generally, our asserts should always remain in the code, even for
+ * non-DEBUG images. However, some asserts may impose non-negligible
+ * overhead and thus used only in DEBUG mode. */
+#ifdef DEBUG
+#define dassert assert
+#else
+#define dassert(...)
+#endif
+
 #endif
