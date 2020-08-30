@@ -423,6 +423,8 @@ void assert_failure(const char cond_str[], const char func[],
 	va_list args;
 	const char sevfmt[] = "Fatal error: \nAssertion (%s) failed in %s() (%s): ";
 
+	fflush(stdout);
+
 	va_start(args, fmt);
 	if ((lg_error.handler == default_error_handler) ||
 	    (lg_error.handler == NULL))
