@@ -438,7 +438,7 @@ void assert_failure(const char cond_str[], const char func[],
 	else
 	{
 		prt_error(sevfmt, cond_str, func, src_location);
-		verr_msg(NULL, 0, fmt, args);
+		verr_msg(NULL, lg_Fatal, fmt, args);
 		prt_error("\n");
 	}
 	va_end(args);
