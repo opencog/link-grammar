@@ -114,7 +114,8 @@ void assert_failure(const char[], const char[], const char *, const char *, ...)
 #undef assert
 #define assert(ex, ...) \
 do { \
-	if (!(ex)) assert_failure(#ex, __func__, FILELINE, __VA_ARGS__); }\
+	if (!(ex)) assert_failure(#ex, __func__, FILELINE, __VA_ARGS__); \
+} \
 while(0)
 
 /* Generally, our asserts should always remain in the code, even for
