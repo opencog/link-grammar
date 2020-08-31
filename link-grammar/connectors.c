@@ -72,7 +72,7 @@ Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc,
 
 	c->desc = desc;
 	set_connector_length_limit(c, opts);
-	//assert(0 != c->length_limit, "Connector_new(): Zero length_limit");
+	dassert(0 != c->length_limit, "Connector_new(): Zero length_limit");
 
 	return c;
 }
