@@ -258,7 +258,7 @@ static const char *switch_value_string(const Switch *as)
 #define HELPFILE_LANG_TEMPLATE_SIZE (sizeof(HELPFILE_LANG_TEMPLATE)-1)
 #define HELPFILE_TEMPLATE_SIZE \
 	(sizeof(HELPFILE_BASE HELPFILE_EXT)+HELPFILE_LANG_TEMPLATE_SIZE)
-#define D_USER_FILES 3 /* Debug level for files */
+#define D_USER_FILES 4 /* Debug level for files, see error.h. */
 #define DEFAULT_HELP_LANG "en"
 
 static FILE *help_file;
