@@ -44,17 +44,34 @@ automatically adjusted when the terminal window is resized.
 
 [verbosity]
 The level of descriptive debug messages that will be printed.
-Values 1-4 are appropriate for use by the program user.  Higher
+Values 1-4 are appropriate for use by the program/library user.  Higher
 values are intended for LG dictionary authors and library developers.
+For each level, unless otherwise is noted, messages of lower verbosity
+levels are included.
 
 Some useful values:
+
  0      No prompt, minimal library messages
- 1      Normal verbosity
+ 1      Normal verbosity (its messages are included in all higher levels)
  2      Show times of the parsing steps
- 3      Display data file search and locale setup
+ 3      More info messages
+ 4      Display data file search and locale setup
+
+In the levels below, the messages of levels 2-4 are not included:
+
  5-9    Tokenizer and parser debugging
  10-19  Dictionary debugging
+The output of these levels may be restricted to particular files and/or
+functions that are listed (comma-separated) in the !debug variable.
+
+The following levels are for particular information. The messages of levels
+greater than 1 are not included in their output:
+
  101    Print all the dictionary connectors, along with their length limit
+ 102    Print all the disjuncts, before and after pruning
+ 103    Show unsubscripted dictionary words and subscripted ones which
+        share the same base word
+ 104    Memory pool statistics
 
 [morphology]
 When False, whole words are displayed, without indicating any
