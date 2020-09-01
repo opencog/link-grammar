@@ -40,20 +40,23 @@ void debug_msg(int, int, char, const char[], const char[], const char *fmt, ...)
 bool verbosity_check(int, int, char, const char[], const char[], const char *);
 
 /**
- * Print a debug message according to their level.
+ * Print a debug messages according to their level.
  * Print the messages at levels <= the specified verbosity, with the
  * following restrictions:
  * - Level numbers 2 to D_USER_MAX are not printed on verbosity>D_USER_MAX,
  *   because they are designed only for extended user information.
  * - When verbosity > D_SPEC, print messages only when level==verbosity.
  * - The !debug variable can be set to a comma-separated list of functions
- *   or source filenames in order to restrict the debug messages to these
- *   functions or filenames only.
+ *   and/or source filenames in order to restrict the debug messages to these
+ *   functions and/or filenames only.
+ *
+ * Preceding the level number by a + (+level) adds printing of the
+ * function name.
  *
  * Invoking lgdebug() with a level number preceded by a + (+level) adds
  * printing of the function name.
  * FIXME: The level is then Trace and if the message starts with a level
- * it is ignored.
+ * this level is ignored.
  */
 #define lgdebug(level, ...) \
 	do { \
@@ -65,11 +68,6 @@ bool verbosity_check(int, int, char, const char[], const char[], const char *);
 
 /**
  * Wrap-up a debug-messages block.
- * Preceding the level number by a + (+level) adds printing of the
- * function name.
- * The !debug variable can be set to a comma-separated list of functions
- * in order to restrict the debug messages to these functions only.
- *
  * Return true if the debug-messages block should be executed, else false.
  *
  * Usage example, for debug messages at verbosity V:
@@ -78,14 +76,10 @@ bool verbosity_check(int, int, char, const char[], const char[], const char *);
  *    print_disjunct(d);
  * }
  *
- * The optional printing of the function name is done here by prt_error()
- * and not err_msg(), in order to not specify the message severity.
- * Also note there is no trailing newline in that case. These things
- * ensured the message severity will be taken from a following message
- * which includes a newline. So verbosity_level(V) can be used for any
- * desired message severity.
- * The optional argument is used for additional names that can be used
- * in the "debug" option (in addition to the current function and file names).
+ * A single optional argument can be used to add names for the "debug"
+ * option (in addition to the current function and file names). (Several
+ * names may be supplied using backslash-escaped comma separators - not
+ * actually used for now.)
  */
 #define verbosity_level(level, ...) \
 	((verbosity >= (level)) && \

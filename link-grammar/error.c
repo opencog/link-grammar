@@ -454,6 +454,11 @@ void assert_failure(const char cond_str[], const char func[],
 	exit(1);
 }
 
+/*
+ * Implement lgdebug() and verbosity_level() (see these macros and their
+ * comments in error.h).
+ */
+
 bool verbosity_check(int level, int v, char print_func , const char func[],
                      const char file[], const char *filter)
 {
