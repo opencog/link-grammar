@@ -61,6 +61,9 @@ messages of the lower ones.
 
 * 104: Memory pool statistics.
 
+(These level descriptions appear also in the command-help file `command-help-en.txt`
+so if something is changed here there may be a need to change it there too.)
+
 ### 2) -debug=LOCATIONS (-de=LOCATIONS)
 Show only messages from these LOCATIONS. The LOCATIONS string is a
 comma-separated list of source file names (without specifying their
