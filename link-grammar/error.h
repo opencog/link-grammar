@@ -111,6 +111,8 @@ extern void (* assert_failure_trap)(void);
 void assert_failure(const char[], const char[], const char *, const char *, ...)
 	GNUC_PRINTF(4,5) GNUC_NORETURN;
 
+/* Define a private version of assert() with a printf-like error
+ * message. The C one is not used. */
 #undef assert
 #define assert(ex, ...) \
 do { \

@@ -416,6 +416,9 @@ const char *feature_enabled(const char * list, ...)
 	#define DEBUG_TRAP abort()
 #endif
 
+/**
+ * Issue the assert() macro (see error.h) error message.
+ */
 void (* assert_failure_trap)(void);
 void assert_failure(const char cond_str[], const char func[],
                     const char *src_location, const char *fmt, ...)
