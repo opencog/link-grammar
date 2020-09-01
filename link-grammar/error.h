@@ -35,6 +35,9 @@ typedef struct
 void err_msgc(err_ctxt *, lg_error_severity, const char *fmt, ...) GNUC_PRINTF(3,4);
 #define err_msg(...) err_msgc(NULL, __VA_ARGS__)
 const char *feature_enabled(const char *, ...);
+void debug_msg(int, int, char, const char[], const char[], const char *fmt, ...)
+	GNUC_PRINTF(6,7);
+bool verbosity_check(int, int, char, const char[], const char[], const char *);
 
 /**
  * Print a debug message according to their level.
@@ -53,18 +56,12 @@ const char *feature_enabled(const char *, ...);
  * it is ignored.
  */
 #define lgdebug(level, ...) \
-	(( \
-	(((D_SPEC>=verbosity) && (verbosity>=(level))) || (verbosity==(level))) && \
-	(((level)<=1) || !(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
-	(('\0' == debug[0]) || \
-	feature_enabled(debug, __func__, __FILE__, NULL))) ? \
-	( \
-		(STRINGIFY(level)[0] == '+' ? \
-			(void)err_msg(lg_Trace, "%s: ", __func__) : \
-			(void)0), \
-		(void)err_msg(lg_Trace,  __VA_ARGS__) \
-	) : \
-	(void)0)
+	do { \
+		if (verbosity >= (level)) \
+		    debug_msg(level, verbosity, STRINGIFY(level)[0], __func__, __FILE__, \
+		              __VA_ARGS__); \
+	} \
+	while(0)
 
 /**
  * Wrap-up a debug-messages block.
@@ -91,13 +88,9 @@ const char *feature_enabled(const char *, ...);
  * in the "debug" option (in addition to the current function and file names).
  */
 #define verbosity_level(level, ...) \
-	(( \
-	(((D_SPEC>=verbosity) && (verbosity>=(level))) || (verbosity==(level))) && \
-	(((level)<=1) || !(((level)<=D_USER_MAX) && (verbosity>D_USER_MAX))) && \
-	(('\0' == debug[0]) || \
-	feature_enabled(debug, __func__, __FILE__, (__VA_ARGS__ ""), NULL))) \
-	? ((STRINGIFY(level)[0] == '+' ? prt_error("%s: ", __func__) : 0), true) \
-	: false)
+	((verbosity >= (level)) && \
+	verbosity_check(level, verbosity, STRINGIFY(level)[0], __func__, __FILE__, \
+						 "" __VA_ARGS__))
 
 /**
  * Return TRUE if the given feature (a string) is set in the !test variable

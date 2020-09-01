@@ -453,3 +453,30 @@ void assert_failure(const char cond_str[], const char func[],
 
 	exit(1);
 }
+
+bool verbosity_check(int level, int v, char print_func , const char func[],
+                     const char file[], const char *filter)
+{
+	if ((((D_SPEC >= v) && (v >= level)) || (v == level)) &&
+	    ((level <= 1) || !((level <= D_USER_MAX) && (v > D_USER_MAX))) &&
+	    ((debug[0] == '\0') || feature_enabled(debug, func, file, filter)))
+	{
+		if (print_func == '+') err_msg(0, "%s: ", func);
+		return true;
+	}
+
+	return false;
+}
+
+void debug_msg(int level, int v, char print_func, const char func[],
+               const char file[], const char *fmt, ...)
+{
+	va_list args;
+
+	if (verbosity_check(level, v, print_func, func, file, ""))
+	{
+		va_start(args, fmt);
+		verr_msg(NULL, lg_Trace, fmt, args);
+		va_end(args);
+	}
+}
