@@ -416,12 +416,18 @@ const char *feature_enabled(const char * list, ...)
 	#define DEBUG_TRAP abort()
 #endif
 
+/**
+ * Issue the assert() macro (see error.h) error message.
+ */
 void (* assert_failure_trap)(void);
 void assert_failure(const char cond_str[], const char func[],
                     const char *src_location, const char *fmt, ...)
 {
 	va_list args;
 	const char sevfmt[] = "Fatal error: \nAssertion (%s) failed in %s() (%s): ";
+
+	fflush(stdout);
+	lg_error_flush();
 
 	va_start(args, fmt);
 	if ((lg_error.handler == default_error_handler) ||
@@ -435,7 +441,7 @@ void assert_failure(const char cond_str[], const char func[],
 	else
 	{
 		prt_error(sevfmt, cond_str, func, src_location);
-		verr_msg(NULL, 0, fmt, args);
+		verr_msg(NULL, lg_Fatal, fmt, args);
 		prt_error("\n");
 	}
 	va_end(args);

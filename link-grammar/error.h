@@ -111,10 +111,22 @@ extern void (* assert_failure_trap)(void);
 void assert_failure(const char[], const char[], const char *, const char *, ...)
 	GNUC_PRINTF(4,5) GNUC_NORETURN;
 
+/* Define a private version of assert() with a printf-like error
+ * message. The C one is not used. */
 #undef assert
 #define assert(ex, ...) \
 do { \
-	if (!(ex)) assert_failure(#ex, __func__, FILELINE, __VA_ARGS__); }\
+	if (!(ex)) assert_failure(#ex, __func__, FILELINE, __VA_ARGS__); \
+} \
 while(0)
+
+/* Generally, our asserts should always remain in the code, even for
+ * non-DEBUG images. However, some asserts may impose non-negligible
+ * overhead and thus used only in DEBUG mode. */
+#ifdef DEBUG
+#define dassert assert
+#else
+#define dassert(...)
+#endif
 
 #endif
