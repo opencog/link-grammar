@@ -464,7 +464,7 @@ bool verbosity_check(int level, int v, char print_func , const char func[],
 {
 	if ((((D_SPEC >= v) && (v >= level)) || (v == level)) &&
 	    ((level <= 1) || !((level <= D_USER_MAX) && (v > D_USER_MAX))) &&
-	    ((debug[0] == '\0') || feature_enabled(debug, func, file, filter)))
+	    ((debug[0] == '\0') || feature_enabled(debug, func, file, filter, NULL)))
 	{
 		if (print_func == '+') err_msg(0, "%s: ", func);
 		return true;
