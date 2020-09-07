@@ -72,11 +72,11 @@ void free_tracon_sharing(Tracon_sharing *);
 void count_disjuncts_and_connectors(Sentence, unsigned int *, unsigned int *);
 
 /* Print disjunct/connector */
-char *print_one_disjunct(const Disjunct *);
+char *print_one_disjunct_str(const Disjunct *);
+char *print_one_connector_str(const Connector *, const char *);
+char *print_connector_list_str(const Connector *, const char *);
 void print_one_connector(const Connector *, const char *);
-char *sprint_one_connector(const Connector *, const char *);
 void print_connector_list(const Connector *, const char *);
-char *sprint_connector_list(const Connector *, const char *);
 void print_disjunct_list(const Disjunct *, const char *);
 void print_all_disjuncts(Sentence);
 
