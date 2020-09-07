@@ -63,7 +63,6 @@ void free_sentence_disjuncts(Sentence);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct *);
-char * print_one_disjunct(Disjunct *);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 
@@ -72,8 +71,13 @@ Tracon_sharing *pack_sentence_for_parsing(Sentence);
 void free_tracon_sharing(Tracon_sharing *);
 void count_disjuncts_and_connectors(Sentence, unsigned int *, unsigned int *);
 
-void print_connector_list(Connector *, const char *);
-void print_disjunct_list(Disjunct *, const char *);
+/* Print disjunct/connector */
+char *print_one_disjunct(const Disjunct *);
+void print_one_connector(const Connector *, const char *);
+char *sprint_one_connector(const Connector *, const char *);
+void print_connector_list(const Connector *, const char *);
+char *sprint_connector_list(const Connector *, const char *);
+void print_disjunct_list(const Disjunct *, const char *);
 void print_all_disjuncts(Sentence);
 
 /* Save and restore sentence disjuncts */
