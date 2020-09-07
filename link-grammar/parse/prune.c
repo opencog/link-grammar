@@ -450,6 +450,7 @@ static void clean_table(unsigned int size, C_list **t)
 #define UC_NUM_TOMBSTONE ((connector_hash_t)-1)
 	static condesc_t desc_no_match =
 	{
+		.string = "TOMBSTONE",
 		.uc_num = UC_NUM_TOMBSTONE, /* get_power_table_entry() will skip. */
 	};
 	static Connector con_no_match =
