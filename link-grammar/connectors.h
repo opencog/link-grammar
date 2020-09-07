@@ -100,6 +100,9 @@ struct condesc_struct
 };
 typedef struct condesc_struct condesc_t;
 
+/* Length-limits for how far connectors can reach out. */
+#define UNLIMITED_LEN 255
+
 typedef struct length_limit_def
 {
 	const char *defword;
@@ -224,9 +227,6 @@ static inline Connector *connector_deepest(const Connector *c)
 		;
 	return (Connector *)c; /* Note: Constness removed. */
 }
-
-/* Length-limits for how far connectors can reach out. */
-#define UNLIMITED_LEN 255
 
 /**
  * Returns TRUE if s and t match according to the connector matching
