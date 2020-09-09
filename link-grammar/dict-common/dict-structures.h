@@ -52,9 +52,13 @@ struct Exp_struct
 {
 	Exp *operand_next;    /* Next same-level operand. */
 	Exp_type type:8;      /* One of three types: AND, OR, or connector. */
-	Exptag_type tag_type:8;
+	bool multi;         /* TRUE if a multi-connector (for connector). */
 	char dir;      /* The connector connects to the left ('-') or right ('+'). */
-	bool multi;           /* TRUE if a multi-connector (for connector). */
+	union
+	{
+		Exptag_type tag_type:8;      /* tag_id namespace (for non-terminals). */
+		unsigned char farthest_word; /* For connectors, see Connector_struct. */
+	};
 	unsigned int tag_id;  /* Index in tag_type namespace. */
 	float cost;           /* The cost of using this expression. */
 	union
@@ -63,6 +67,7 @@ struct Exp_struct
 		condesc_t *condesc; /* Only needed if it's a connector. */
 	};
 };
+
 
 bool cost_eq(double cost1, double cost2);
 const char *cost_stringify(double cost);

@@ -286,6 +286,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 
 			n->exp_pos = t->exp_pos;
 			n->multi = t->e->multi;
+			n->farthest_word = t->e->farthest_word;
 			n->next = *loc;   /* prepend the connector to the current list */
 			*loc = n;         /* update the connector list */
 		}

@@ -334,7 +334,8 @@ static void zero_connector_table(exprune_context *ctxt)
  * This function puts connector c into the connector table
  * if one like it isn't already there.
  */
-static void insert_connector(exprune_context *ctxt, int farthest_word, condesc_t * c)
+static void insert_connector(exprune_context *ctxt, int farthest_word,
+                             condesc_t *c)
 {
 	unsigned int h;
 	connector_table *e;
@@ -368,11 +369,7 @@ static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 		if (e->dir == dir)
 		{
 			assert(NULL != e->condesc, "NULL connector");
-			Connector c = { .desc = e->condesc };
-
-			set_connector_length_limit(&c, ctxt->opts);
-			int farthest_word = (dir == '-') ? -MAX(0, w-c.length_limit) :
-				                              w+c.length_limit;
+			int farthest_word = (dir == '-') ? -e->farthest_word : e->farthest_word;
 			insert_connector(ctxt, farthest_word, e->condesc);
 		}
 	}
