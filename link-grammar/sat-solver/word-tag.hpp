@@ -33,7 +33,7 @@ struct PositionConnector
     // Initialize some fields in the connector struct.
     connector.desc = e->condesc;
     connector.multi = e->multi;
-    set_connector_length_limit(&connector, opts);
+    connector.farthest_word = e->farthest_word;
     connector.originating_gword = &w_xnode->word->gword_set_head;
 
     /*
@@ -178,9 +178,8 @@ public:
 
   bool match(int w1, Connector& cntr1, char dir, int w2, Connector& cntr2)
   {
-      int dist = w2 - w1;
-      assert(0 < dist, "match() did not receive words in the natural order.");
-      if (dist > cntr1.length_limit || dist > cntr2.length_limit) return false;
+      assert(w1 < w2, "match() did not receive words in the natural order.");
+      if (cntr1.farthest_word < w2 || cntr2.farthest_word > w1) return false;
       if (!alt_connectivity_possible(cntr1, cntr2)) return false;
       return easy_match_desc(cntr1.desc, cntr2.desc);
   }
