@@ -169,14 +169,7 @@ static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
 
 	for (e = ct[hash_S(c)]; e != NULL; e = e->next)
 	{
-		if (e->farthest_word <= 0)
-		{
-			if (w < -e->farthest_word) continue;
-		}
-		else
-		{
-			if (w > e->farthest_word) continue;
-		}
+		if (w > e->farthest_word) continue;
 		if (easy_match_desc(e->condesc, c)) return true;
 	}
 	return false;
@@ -292,7 +285,7 @@ static Exp* purge_Exp(exprune_context *ctxt, int w, Exp *e, char dir)
 	{
 		if (e->dir == dir)
 		{
-			if (!matches_S(ctxt->ct, w, e->condesc))
+			if (!matches_S(ctxt->ct, (dir == '-') ? w : -w, e->condesc))
 			{
 				ctxt->N_deleted++;
 				return NULL;
