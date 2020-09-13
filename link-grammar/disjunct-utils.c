@@ -663,10 +663,6 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 	return head.next;
 }
 
-/**
- * Pack the given disjunct chain in a contiguous memory block.
- * If the disjunct is NULL, return NULL.
- */
 static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 {
 	Disjunct *newd;
@@ -693,6 +689,10 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	return newd;
 }
 
+/**
+ * Pack the given disjunct chain in a contiguous memory block.
+ * If the disjunct is NULL, return NULL.
+ */
 static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts,
                                 Disjunct *origd, int w)
 {
