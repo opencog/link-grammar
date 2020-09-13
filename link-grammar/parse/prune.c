@@ -256,9 +256,9 @@ static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list **t,
 static void power_table_alloc(Sentence sent, power_table *pt)
 {
 	pt->power_table_size = sent->length;
-	pt->table_size[0] = xalloc (2 * sent->length * sizeof(unsigned int));
+	pt->table_size[0] = malloc (2 * sent->length * sizeof(unsigned int));
 	pt->table_size[1] = pt->table_size[0] + sent->length;
-	pt->table[0] = xalloc (2 * sent->length * sizeof(C_list **));
+	pt->table[0] = malloc (2 * sent->length * sizeof(C_list **));
 	pt->table[1] = pt->table[0] + sent->length;
 }
 
