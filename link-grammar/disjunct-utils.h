@@ -105,7 +105,6 @@ typedef struct
 
 typedef struct
 {
-	unsigned int *num_cnctrs_per_word[2]; /* Indexed by word number */
 	/* Table of tracons. A 32bit index into the connector array in
 	 * memblock (instead of (Connector*)) is used for better use of the
 	 * CPU cache on 64-bit CPUs. */
@@ -134,6 +133,14 @@ struct tracon_sharing_s
 	int word_offset;            /* Start number for connector tracon_id */
 	bool is_pruning;            /* false: Parsing step, true: Pruning step */
 	Tracon_list *tracon_list;   /* Used only for pruning */
+
+	/* The number of different uppercase connector parts per side / word,
+	 * for sizing the prune power table. */
+	uint8_t *uc_seen[2];        /* The last word number in which an
+										  * uppercase connector part has been seen,
+										  * (hence doesn't need clearing between words).
+										  * Indexed by uc_num. */
+	unsigned int *num_cnctrs_per_word[2]; /* Indexed by word number */
 };
 
 void *save_disjuncts(Sentence, Tracon_sharing *);

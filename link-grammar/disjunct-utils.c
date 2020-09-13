@@ -626,14 +626,17 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 
 			if (ts->is_pruning)
 			{
-				/* Initialize for the pruning step when no sharing is done yet. */
+				/* Tracon seen for first time - initialize for the pruning stage. */
 				newc->refcount = 1;  /* No sharing yet. */
-				if (NULL != tl)
-					tl->num_cnctrs_per_word[dir][w]++;
+				if (ts->uc_seen[dir][connector_uc_num(newc)] != w)
+				{
+					ts->uc_seen[dir][connector_uc_num(newc)] = w;
+					ts->num_cnctrs_per_word[dir][w]++;
+				}
 			}
 			else
 			{
-				/* For the parsing step we need a unique ID. */
+				/* For the parsing stage we need a unique ID. */
 				newc->tracon_id = ts->next_id[dir]++;
 			}
 		}
@@ -780,6 +783,25 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 	ts->last_token = (uintptr_t)-1;
 
+	if (is_pruning)
+	{
+		/* Allocate and initialize memory for finding the number of
+		 * different uppercase connector parts per direction / word, for
+		 * sizing the pruning power table. */
+		unsigned int **ncu = ts->num_cnctrs_per_word;
+		ncu[0] = malloc(2 * sent->length * sizeof(**ncu));
+		ncu[1] = ncu[0] + sent->length;
+		memset(ncu[0], 0, 2 * sent->length * sizeof(**ncu));
+
+		size_t uc_num = sent->dict->contable.num_uc;
+		ts->uc_seen[0] = malloc(2 * uc_num * sizeof(**ts->uc_seen));
+		ts->uc_seen[1] = ts->uc_seen[0] + uc_num;
+		/* Initialize w/an invalid word number in a hopefully (**uc_seen)
+		 * size independent manner.
+		 * Note that (unsigned char)-1 is currently MAX_SENTENCE+1. */
+		memset(ts->uc_seen[0], -1, 2 * uc_num * sizeof(**ts->uc_seen));
+	}
+
 	/* Encode connectors only for long-enough sentences. */
 	if (sent->length >= sent->min_len_encoding)
 	{
@@ -788,16 +810,15 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 
 		if (is_pruning)
 		{
-			ts->tracon_list = malloc(sizeof(Tracon_list));
-			memset(ts->tracon_list, 0, sizeof(Tracon_list));
-			unsigned int **ncpw = ts->tracon_list->num_cnctrs_per_word;
+			Tracon_list *tl;
+
+			tl = ts->tracon_list = malloc(sizeof(Tracon_list));
+			memset(tl, 0, sizeof(Tracon_list));
 			for (int dir = 0; dir < 2; dir++)
 			{
-				ncpw[dir] = malloc(sent->length * sizeof(**ncpw));
-				memset(ncpw[dir], 0, sent->length * sizeof(**ncpw));
 
 				tracon_set_shallow(true, ts->csid[dir]);
-				tlsz_check(ts->tracon_list, TLSZ, dir); /* Allocate table. */
+				tlsz_check(tl, TLSZ, dir); /* Allocate table. */
 			}
 		}
 	}
@@ -821,15 +842,16 @@ void free_tracon_sharing(Tracon_sharing *ts)
 	for (int dir = 0; dir < 2; dir++)
 	{
 		if (NULL != ts->tracon_list)
-		{
-			free(ts->tracon_list->num_cnctrs_per_word[dir]);
 			free(ts->tracon_list->table[dir]);
-		}
+
 		if (NULL != ts->csid[dir])
 		{
 			tracon_set_delete(ts->csid[dir]);
 			ts->csid[dir] = NULL;
 		}
+
+		free(ts->uc_seen[dir]);
+		free(ts->num_cnctrs_per_word[dir]);
 	}
 
 	if (NULL != ts->d) free(ts->d);
