@@ -850,9 +850,10 @@ void free_tracon_sharing(Tracon_sharing *ts)
 			ts->csid[dir] = NULL;
 		}
 
-		free(ts->uc_seen[dir]);
-		free(ts->num_cnctrs_per_word[dir]);
 	}
+
+	free(ts->uc_seen[0]);
+	free(ts->num_cnctrs_per_word[0]);
 
 	if (NULL != ts->d) free(ts->d);
 	free(ts->tracon_list);
