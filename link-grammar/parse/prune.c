@@ -204,12 +204,8 @@ struct prune_context_s
 static void power_table_delete(power_table *pt)
 {
 	pool_delete(pt->memory_pool);
-	for (size_t dir = 0; dir < 2; dir++)
-	{
-		for (WordIdx w = 0; w < pt->power_table_size; w++)
-			free((char *)pt->table[dir][w]);
-	}
 	free(pt->table_size[0]);
+	free(pt->table[0][0]);
 	free(pt->table[0]);
 }
 
@@ -288,8 +284,6 @@ static void power_table_alloc(Sentence sent, power_table *pt)
 static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 {
 	Tracon_list *tl = ts->tracon_list;
-#define TOPSZ 32768
-	size_t lr_table_max_usage = MIN(sent->dict->contable.num_con, TOPSZ);
 
 	power_table_alloc(sent, pt);
 
@@ -297,76 +291,86 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 	                   /*num_elements*/2048, sizeof(C_list),
 	                   /*zero_out*/false, /*align*/false, /*exact*/false);
 
+	/* The below uses variable-sized hash tables. The sizes are provided
+	 * in num_cnctrs_per_word[][], which is the number of different
+	 * uppercase connectors, indexed by direction and word. It is computed in
+	 * pack_connectors(). */
+
+	/* Calculate the sizes of the hash tables. */
+	unsigned int num_headers = 0;
+	C_list **memblock_headers;
+	C_list **hash_table_header;
+
+	unsigned int *ncu[2];
+	ncu[0] = alloca(sent->length * sizeof(*ncu[0]));
+	ncu[1] = alloca(sent->length * sizeof(*ncu[1]));
+
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
-		size_t l_size, r_size;
-		C_list **l_t, **r_t;
-		size_t len;
-
-		/* The below uses variable-sized hash tables. This seems to
-		 * provide performance that is equal or better than the best
-		 * fixed-size performance.
-		 * The best fixed-size performance seems to come at about
-		 * a 1K table size, for both English and Russian. (Both have
-		 * about 100 fixed link-types, and many thousands of auto-genned
-		 * link types (IDxxx idioms for both, LLxxx suffix links for
-		 * Russian).  Pluses and minuses:
-		 * + small fixed tables are faster to initialize.
-		 * - small fixed tables have more collisions
-		 * - variable-size tables require counting connectors.
-		 *   (and the more complex code to go with)
-		 * CPU cache-size effects ...
-		 */
-		if (NULL != tl)
-			len = tl->num_cnctrs_per_word[0][w];
-		else
-			len = left_connector_count(sent->word[w].d);
-		len++; /* Ensure at least one empty entry for get_power_table_entry(). */
-		l_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
-		pt->l_table_size[w] = l_size;
-		l_t = pt->l_table[w] = (C_list **) xalloc(l_size * sizeof(C_list *));
-		for (i=0; i<l_size; i++) l_t[i] = NULL;
-
-		if (NULL != tl)
-			len = tl->num_cnctrs_per_word[1][w];
-		else
-			len = right_connector_count(sent->word[w].d);
-		len++;
-		r_size = next_power_of_two_up(MIN(len, lr_table_max_usage));
-		pt->r_table_size[w] = r_size;
-		r_t = pt->r_table[w] = (C_list **) xalloc(r_size * sizeof(C_list *));
-		for (i=0; i<r_size; i++) r_t[i] = NULL;
-
-		if (NULL == tl)
+		for (size_t dir = 0; dir < 2; dir++)
 		{
-			Connector *c;
+			unsigned int tsize;
+			unsigned int n = ts->num_cnctrs_per_word[dir][w];
 
-			/* Insert the deep connectors. */
-			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+			if (0 == n)
 			{
-				for (size_t dir = 0; dir < 2; dir++)
+				tsize = 1; /* Avoid parse-time table size checks. */
+			}
+			else
+			{
+				tsize = next_power_of_two_up(3 * n); /* At least 66% free. */
+			}
+
+			ncu[dir][w] = tsize;
+			num_headers += tsize;
+		}
+	}
+
+	memblock_headers = malloc(num_headers * sizeof(C_list *));
+	memset(memblock_headers, 0, num_headers * sizeof(C_list *));
+	hash_table_header = memblock_headers;
+
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (size_t dir = 0; dir < 2; dir++)
+		{
+			unsigned int tsize = ncu[dir][w];
+			C_list **t = hash_table_header;
+
+			hash_table_header += tsize;
+
+			pt->table[dir][w] = t;
+			pt->table_size[dir][w] = tsize;
+			memset(t, 0, sizeof(C_list *) * tsize);
+
+			if (NULL == tl)
+			{
+				Connector *c;
+
+				for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 				{
+					/* Insert the deep connectors. */
 					c = (dir == 0) ? d->left : d->right;
 					if (c == NULL) continue;
 
 					for (c = c->next; c != NULL; c = c->next)
-						put_into_power_table(mp, t_size[dir], t[dir], c);
+						put_into_power_table(mp, tsize, t, c);
 				}
-			}
 
-			/* Insert the shallow connectors. */
-			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
-			{
-				for (size_t dir = 0; dir < 2; dir++)
+				for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 				{
+					/* Insert the shallow connectors. */
 					c = (dir == 0) ? d->left : d->right;
 					if (c == NULL) continue;
 
-					put_into_power_table(mp, t_size[dir], t[dir], c);
+					put_into_power_table(mp, tsize, t, c);
 				}
 			}
 		}
 	}
+
+	assert(memblock_headers + num_headers == hash_table_header,
+	   "Mismatch header sizes");
 
 	if (NULL != tl)
 	{
