@@ -256,7 +256,6 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 	sortbin *sbin = alloca(sent->length * sizeof(sortbin));
 
 	/* Calculate the sizes of the hash tables. */
-	size_t max_tsize = next_power_of_two_up(sent->dict->contable.num_uc);
 	unsigned int num_headers = 0;
 	Match_node **memblock_headers;
 	Match_node **hash_table_header;
@@ -275,7 +274,6 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			else
 			{
 				tsize = next_power_of_two_up(3 * n); /* At least 66% free. */
-				tsize = MIN(max_tsize,  tsize);
 			}
 
 			ncu[dir][w] = tsize;
