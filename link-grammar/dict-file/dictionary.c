@@ -249,6 +249,7 @@ failure:
 /**
  * Use filenames of six different files to put together the dictionary.
  */
+NO_SAN_DICT
 Dictionary
 dictionary_six(const char * lang, const char * dict_name,
                const char * pp_name, const char * cons_name,
