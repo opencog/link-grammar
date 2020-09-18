@@ -285,10 +285,9 @@ static inline uint32_t string_hash(const char *s)
 /**
  * Hash function for the classic parser linkage memoization.
  */
-static inline unsigned int pair_hash(unsigned int table_size,
-                            int lw, int rw,
-                            int l_id, const int r_id,
-                            unsigned int null_count)
+static inline unsigned int pair_hash(int lw, int rw,
+                                     int l_id, const int r_id,
+                                     unsigned int null_count)
 {
 	unsigned int i;
 
@@ -313,7 +312,7 @@ static inline unsigned int pair_hash(unsigned int table_size,
 	i = r_id + (i << 6) + (i << 16) - i;
 #endif
 
-	return i & (table_size-1);
+	return i;
 }
 
 /**

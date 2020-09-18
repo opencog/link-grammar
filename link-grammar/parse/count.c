@@ -30,10 +30,11 @@
 typedef struct Table_connector_s Table_connector;
 struct Table_connector_s
 {
-	Table_connector  *next;      /* FIXME: eliminate */
+	Table_connector  *next;
 	int              l_id, r_id;
 	Count_bin        count;
-	unsigned int     null_count; /* FIXME: eliminate */
+	unsigned int     null_count;
+	unsigned int     hash;
 };
 
 typedef uint8_t null_count_m;  /* Storage representation of null_count */
@@ -401,7 +402,7 @@ find_table_pointer(count_context_t *ctxt,
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
 
-	unsigned int h = pair_hash(ctxt->table_size, lw, rw, l_id, r_id, null_count);
+	unsigned int h = pair_hash(lw, rw, l_id, r_id, null_count);
 	Table_connector *t = ctxt->table[h];
 
 	for (; t != NULL; t = t->next)
@@ -631,7 +632,7 @@ static Count_bin do_count(
 	/* TODO: static_assert() that null_count is an unsigned int. */
 	assert (null_count < INT_MAX, "Bad null count %d", (int)null_count);
 
-	unsigned int h;
+	unsigned int h = 0; /* Initialized value only needed to prevent a warning. */
 	{
 		Table_connector * const t =
 			find_table_pointer(ctxt, lw, rw, le, re, null_count, &h);
