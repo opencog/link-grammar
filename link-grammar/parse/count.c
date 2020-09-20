@@ -447,10 +447,15 @@ static Count_bin table_store(count_context_t *ctxt,
 	return c;
 }
 
-/** returns the pointer to this info, NULL if not there */
-static Table_connector *
-find_table_pointer(count_context_t *ctxt,
-                   int lw, int rw,
+/**
+ * Return the count for this quintuple if there, NULL otherwise.
+ *
+ * @param hash[out] If non-null, return the entry hash (undefined if
+ * the entry is not found).
+ * @return The count for this quintuple if there, NULL otherwise.
+ */
+Count_bin *
+table_lookup(count_context_t *ctxt, int lw, int rw,
                    const Connector *le, const Connector *re,
                    unsigned int null_count, unsigned int *hash)
 {
@@ -466,24 +471,14 @@ find_table_pointer(count_context_t *ctxt,
 		    (t->null_count == null_count))
 		{
 			DEBUG_TABLE_STAT(hit++);
-			return t;
+			return &t->count;
 		}
 	}
 	DEBUG_TABLE_STAT(miss++);
 
 	if (hash != NULL) *hash = h;
 	DEBUG_TABLE_STAT(miss++);
-	return t;
-}
-
-/** returns the count for this quintuple if there, -1 otherwise */
-Count_bin* table_lookup(count_context_t * ctxt,
-                       int lw, int rw, Connector *le, Connector *re,
-                       unsigned int null_count)
-{
-	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count, NULL);
-
-	if (t == NULL) return NULL; else return &t->count;
+	return NULL;
 }
 
 /**
@@ -588,7 +583,7 @@ static Count_bin pseudocount(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
                        unsigned int null_count)
 {
-	Count_bin * count = table_lookup(ctxt, lw, rw, le, re, null_count);
+	Count_bin *count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	if (NULL == count) return count_unknown;
 	return *count;
 }
@@ -655,17 +650,17 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 	if (!verbosity_level(D_COUNT_TRACE))
 		return do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 
-	Table_connector *t = find_table_pointer(ctxt, lw, rw, le, re, null_count, NULL);
+	Count_bin *c = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	char m_result[64] = "";
-	if (t != NULL)
-		snprintf(m_result, sizeof(m_result), "(M=%lld)", hist_total(&t->count));
+	if (c != NULL)
+		snprintf(m_result, sizeof(m_result), "(M=%lld)", hist_total(c));
 
 	level++;
 	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s(%d) re=%s(%d) null_count=%u\n\\",
 		level*2, "", m_result, lineno, lw, rw, V(le),ID(le,lw), V(re),ID(re,rw), null_count);
 	Count_bin r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
 	prt_error("%*sreturn%.*s:%d=%lld\n",
-	          LBLSZ+level*2, "", (!!t)*3, "(M)", lineno, hist_total(&r));
+	          LBLSZ+level*2, "", (!!c)*3, "(M)", lineno, hist_total(&r));
 	level--;
 
 	return r;
@@ -694,9 +689,8 @@ static Count_bin do_count(
 
 	unsigned int h = 0; /* Initialized value only needed to prevent a warning. */
 	{
-		Table_connector * const t =
-			find_table_pointer(ctxt, lw, rw, le, re, null_count, &h);
-		if (t) return t->count;
+		Count_bin* const c = table_lookup(ctxt, lw, rw, le, re, null_count, &h);
+		if (c != NULL) return *c;
 		/* The table entry is to be updated with the found linkage count
 		 * before we return. The hash h will be used to locate it. */
 	}

@@ -346,7 +346,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 	assert(null_count < 0x7fff, "mk_parse_set() called with null_count < 0.");
 
-	count = table_lookup(ctxt, lw, rw, le, re, null_count);
+	count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 
 	/* If there's no counter, then there's no way to parse. */
 	if (NULL == count) return NULL;
