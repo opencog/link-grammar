@@ -81,6 +81,17 @@ static void free_table(count_context_t *ctxt)
 }
 
 static void free_kept_table(void);
+
+/**
+ * Allocate memory for the connector-pair table and initialize table-size
+ * related fields (table_size and table_available_count). Reuse the
+ * previous table memory if the request is for a table that fits. If this is
+ * not a call to grow the table, free it if not reused.
+ *
+ * @ctxt[in, out] Table info.
+ * @param shift log2 table size, or \c 0 for table growth. On table growth,
+ * increase the new table size by 2, and don't free the previous table.
+ */
 static void table_alloc(count_context_t *ctxt, unsigned int shift)
 {
 	static TLS Table_connector **kept_table = NULL;
@@ -116,6 +127,9 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 
 	memset(kept_table, 0, sizeof(Table_connector *) * ctxt->table_size);
 
+	/* This is here and not in init_table() because it must be set
+	 * also when the table growths. */
+	ctxt->log2_table_size = shift;
 	ctxt->table = kept_table;
 
 	if (shift >= MAX_LOG2_TABLE_SIZE)
@@ -377,6 +391,32 @@ static void table_stat(count_context_t *ctxt)
 #define DEBUG_TABLE_STAT(x)
 #endif /* DEBUG  */
 
+static void table_grow(count_context_t *ctxt)
+{
+	Table_connector **old_table = ctxt->table;
+	const int old_table_size = ctxt->table_size;
+
+	table_alloc(ctxt, 0);
+
+	/* Rehash. */
+	for (int oi = 0; oi < old_table_size; oi++)
+	{
+		Table_connector *onext;
+		for (Table_connector *oe = old_table[oi]; oe != NULL; oe = onext)
+		{
+			unsigned int ni = oe->hash & (ctxt->table_size-1);
+
+			if (ctxt->table[ni] == NULL) ctxt->table_available_count--;
+			onext = oe->next;
+			oe->next = ctxt->table[ni];
+			ctxt->table[ni] = oe;
+		}
+	}
+	free(old_table);
+
+	ctxt->num_growth++;
+}
+
 /**
  * Stores the value in the table.  Assumes it's not already there.
  */
@@ -386,10 +426,15 @@ static Count_bin table_store(count_context_t *ctxt,
                                      unsigned int null_count,
                                      unsigned int hash, Count_bin c)
 {
+	if (ctxt->table_available_count == 0) table_grow(ctxt);
+
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
 	unsigned int i = hash & (ctxt->table_size -1);
 	Table_connector *n = pool_alloc(ctxt->sent->Table_connector_pool);
+
+	if (ctxt->table[i] == NULL)
+		ctxt->table_available_count--;
 
 	n->l_id = l_id;
 	n->r_id = r_id;
@@ -413,7 +458,7 @@ find_table_pointer(count_context_t *ctxt,
 	int r_id = (NULL != re) ? re->tracon_id : rw;
 
 	unsigned int h = pair_hash(lw, rw, l_id, r_id, null_count);
-	Table_connector *t = ctxt->table[h];
+	Table_connector *t = ctxt->table[h & (ctxt->table_size-1)];
 
 	for (; t != NULL; t = t->next)
 	{
@@ -427,6 +472,7 @@ find_table_pointer(count_context_t *ctxt,
 	DEBUG_TABLE_STAT(miss++);
 
 	if (hash != NULL) *hash = h;
+	DEBUG_TABLE_STAT(miss++);
 	return t;
 }
 
