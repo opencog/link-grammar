@@ -294,7 +294,7 @@ static size_t hit, miss;  /* Table value found/not found */
  * Provide data for insights on the effectively of the connector pair table.
  * Hits, misses, chain length, number of elements with zero/nonzero counts.
  */
-static void table_stat(count_context_t *ctxt, Sentence sent)
+static void table_stat(count_context_t *ctxt)
 {
 	int z = 0, nz = 0;  /* Number of entries with zero and non-zero counts */
 	int c, total_c = 0; /* Chain length */
@@ -334,7 +334,7 @@ static void table_stat(count_context_t *ctxt, Sentence sent)
 	       ctxt->num_growth, ctxt->log2_table_size, used_slots, ctxt->table_size,
 			 100.0f*used_slots/ctxt->table_size, 1.0f*total_c/used_slots,
 	       z+nz, z, nz, N, 100.0f*(z+nz)/ctxt->table_size,
-	       hit+miss, hit, miss, sent->length);
+	       hit+miss, hit, miss, ctxt->sent->length);
 
 	printf("Chain length:\n");
 	for (size_t i = 1; i < ARRAY_SIZE(chain_length); i++)
@@ -1089,7 +1089,7 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 
-	DEBUG_TABLE_STAT(if (verbosity_level(+D_COUNT)) table_stat(ctxt, sent));
+	DEBUG_TABLE_STAT(if (verbosity_level(+D_COUNT)) table_stat(ctxt));
 
 	return hist;
 }
