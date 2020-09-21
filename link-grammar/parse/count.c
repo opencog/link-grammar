@@ -84,7 +84,7 @@ static void free_kept_table(void);
 static void table_alloc(count_context_t *ctxt, unsigned int shift)
 {
 	static TLS Table_connector **kept_table = NULL;
-	static TLS unsigned int log2_table_size = 0;
+	static TLS unsigned int log2_kept_table_size = 0;
 
 	if (ctxt == NULL)
 	{
@@ -105,10 +105,10 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 	 * system calls to mmap/munmap that eat up a lot of time.
 	 * (Up to 20%, depending on the sentence and CPU.) */
 	ctxt->table_size = (1U << shift);
-	if (shift > log2_table_size)
+	if ((shift > log2_kept_table_size) || (kept_table == NULL))
 	{
-		if (log2_table_size == 0) atexit(free_kept_table);
-		log2_table_size = shift;
+		if (log2_kept_table_size == 0) atexit(free_kept_table);
+		log2_kept_table_size = shift;
 
 		if (kept_table) free(kept_table);
 		kept_table = malloc(sizeof(Table_connector *) * ctxt->table_size);
