@@ -60,15 +60,19 @@ struct count_context_s
 	/* int     null_block; */ /* not used, always 1 */
 	bool    islands_ok;
 	bool    exhausted;
+	uint8_t num_growth;       /* Number of table growths, for debug */
 	unsigned int checktimer;  /* Avoid excess system calls */
 	unsigned int table_size;
+	unsigned int log2_table_size;
+	unsigned int table_available_count;
 	unsigned int table_lrcnt_size;
 	unsigned int table_lrcnt_available_count;
-	/* int     log2_table_size; */ /* not unused */
-	Table_connector ** table;
+	Table_connector **table;
 	Table_lrcnt *table_lrcnt;
 	Resources current_resources;
 };
+#define MAX_TABLE_SIZE(s) (s / 10) /* Low load factor, for speed */
+#define MAX_LOG2_TABLE_SIZE 24     /* 128 on 64-bit systems */
 
 static void free_table(count_context_t *ctxt)
 {
@@ -113,6 +117,11 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 	memset(kept_table, 0, sizeof(Table_connector *) * ctxt->table_size);
 
 	ctxt->table = kept_table;
+
+	if (shift >= MAX_LOG2_TABLE_SIZE)
+		ctxt->table_available_count = UINT_MAX; /* Prevent growth */
+	else
+		ctxt->table_available_count = MAX_TABLE_SIZE(ctxt->table_size);
 }
 
 static void free_kept_table(void)
@@ -138,8 +147,6 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 		shift = 12;
 	}
 
-#define MAX_LOG2_TABLE_SIZE 24
-	/* Clamp at max 8*(1<<MAX_LOG2_TABLE_SIZE)==128 MBytes on 64 bit systems. */
 	if (MAX_LOG2_TABLE_SIZE < shift) shift = MAX_LOG2_TABLE_SIZE;
 	lgdebug(+D_COUNT, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector *));
 
