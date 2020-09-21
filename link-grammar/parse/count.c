@@ -615,11 +615,15 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 	return r;
 }
 
-static Count_bin do_count1(int lineno,
-#define do_count(...) do_count(__LINE__, __VA_ARGS__)
+#define do_count do_count1
 #else
 #define TRACE_LABEL(l, do_count) (do_count)
+#endif /* DO_COUNT TRACE */
 static Count_bin do_count(
+#ifdef DO_COUNT_TRACE
+#undef do_count
+#define do_count(...) do_count(__LINE__, __VA_ARGS__)
+                          int lineno,
 #endif
                           count_context_t *ctxt,
                           int lw, int rw,
