@@ -574,15 +574,15 @@ Count_bin count_unknown = INIT_NO_COUNT;
 
 /**
  * psuedocount is used to check to see if a parse is even possible,
- * so that we don't waste cpu time performing an actual count, only
+ * so that we don't waste CPU time performing an actual count, only
  * to discover that it is zero.
  *
- * Returns false if and only if this entry is in the hash table
- * with a count value of 0. If an entry is not in the hash table,
- * we have to assume the worst case: that the count might be non-zero,
- * and since we don't know, we return true.  However, if the entry is
- * in the hash table, and its zero, then we know, for sure, that the
- * count is zero.
+ * A table entry with a count 0 indicates that the parse is not possible.
+ * In that case we can skip parsing. If it is not 0, it is the parse
+ * result and we can use it and skip parsing too.
+ * However, if an entry is not in the hash table, we have to assume the
+ * worst case: that the count might be non-zero.  To indicate that case,
+ * return the special sentinel value \c count_unknown.
  */
 static Count_bin pseudocount(count_context_t * ctxt,
                        int lw, int rw, Connector *le, Connector *re,
