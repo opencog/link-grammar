@@ -124,6 +124,14 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 		ctxt->table_available_count = MAX_TABLE_SIZE(ctxt->table_size);
 }
 
+/**
+ * This function is called on program exit so no memory remains allocated.
+ * This is not really necessary because even for debug the message on
+ * memory that left allocated can be put in an ignore-list.
+ *
+ * FIXME: Fix thread memory leak resulted by not freeing table memory
+ * on thread exit.
+ */
 static void free_kept_table(void)
 {
 	table_alloc(NULL, 0);
