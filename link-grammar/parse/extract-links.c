@@ -459,7 +459,26 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	RECOUNT({xt->set.recount = 0;})
 	for (w = start_word; w < end_word; w++)
 	{
-		size_t mlb = form_match_list(mchxt, w, le, lw, re, rw);
+		/* Start of nonzero leftcount/rightcount range cache check. */
+		Connector *fml_re = re;       /* For form_match_list() only */
+
+		if (le != NULL)
+		{
+			if (no_count(ctxt, 0, le, lw, w, null_count)) continue;
+			if (re != NULL)
+			{
+				if (no_count(ctxt, 1, re, rw, w, null_count))
+					fml_re = NULL;
+			}
+		}
+		else
+		{
+			/* Here re != NULL. */
+			if (no_count(ctxt, 1, re, rw, w, null_count)) continue;
+		}
+		/* End of nonzero leftcount/rightcount range cache check. */
+
+		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw);
 		if (pex->sort_match_list) sort_match_list(mchxt, mlb);
 
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)

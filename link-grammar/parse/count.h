@@ -20,6 +20,7 @@ typedef struct count_context_s count_context_t;
 
 Count_bin* table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigned int);
 int do_parse(Sentence, fast_matcher_t*, count_context_t*, Parse_Options);
+bool no_count(count_context_t *, int, Connector *, int, int, unsigned int);
 
 count_context_t* alloc_count_context(Sentence);
 void free_count_context(count_context_t*, Sentence);

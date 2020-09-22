@@ -481,6 +481,12 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir,
 	return lrcnt_cache;
 }
 
+bool no_count(count_context_t *ctxt, int dir, Connector *c, int cw, int w,
+              unsigned int null_count)
+{
+	return &lrcnt_cache_zero == is_lrcnt(ctxt, dir, c, cw, w, null_count, NULL);
+}
+
 static void lrcnt_cache_update(Table_lrcnt *lrcnt_cache, bool lrcnt_found,
                               bool match_list, unsigned int null_count)
 {
