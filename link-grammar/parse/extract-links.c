@@ -74,7 +74,7 @@ struct Pset_bucket_struct
 struct extractor_s
 {
 	unsigned int   x_table_size;
-	unsigned int   log2_x_table_size;
+	unsigned int   log2_x_table_size; /* Not used */
 	Pset_bucket ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
 	Word           *words;
@@ -175,8 +175,8 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->rand_state = ranstat;
 
 	/* Alloc the x_table */
-	if (nwords > 96) {
-		log2_table_size = 15 + nwords / 48;
+	if (nwords >= 72) {
+		log2_table_size = 15 + nwords / 36;
 	} else if (nwords >= 10) {
 		log2_table_size = 14 + nwords / 24;
 	} else if (nwords >= 4) {
@@ -184,7 +184,7 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	} else {
 		log2_table_size = 5;
 	}
-	/* if (log2_table_size > 21) log2_table_size = 21; */
+	/* At nwords>=252, log2_table_size is 15+7=22. */
 	pex->log2_x_table_size = log2_table_size;
 	pex->x_table_size = (1 << log2_table_size);
 
