@@ -63,6 +63,7 @@ struct count_context_s
 	uint8_t num_growth;       /* Number of table growths, for debug */
 	unsigned int checktimer;  /* Avoid excess system calls */
 	unsigned int table_size;
+	unsigned int table_mask;
 	unsigned int log2_table_size;
 	unsigned int table_available_count;
 	unsigned int table_lrcnt_size;
@@ -130,6 +131,7 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 	/* This is here and not in init_table() because it must be set
 	 * also when the table growths. */
 	ctxt->log2_table_size = shift;
+	ctxt->table_mask = ctxt->table_size - 1;
 	ctxt->table = kept_table;
 
 	if (shift >= MAX_LOG2_TABLE_SIZE)
@@ -404,7 +406,7 @@ static void table_grow(count_context_t *ctxt)
 		Table_connector *onext;
 		for (Table_connector *oe = old_table[oi]; oe != NULL; oe = onext)
 		{
-			unsigned int ni = oe->hash & (ctxt->table_size-1);
+			unsigned int ni = oe->hash & ctxt->table_mask;
 
 			if (ctxt->table[ni] == NULL) ctxt->table_available_count--;
 			onext = oe->next;
@@ -430,7 +432,7 @@ static Count_bin table_store(count_context_t *ctxt,
 
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
-	unsigned int i = hash & (ctxt->table_size -1);
+	unsigned int i = hash & ctxt->table_mask;
 	Table_connector *n = pool_alloc(ctxt->sent->Table_connector_pool);
 
 	if (ctxt->table[i] == NULL)
@@ -463,7 +465,7 @@ table_lookup(count_context_t *ctxt, int lw, int rw,
 	int r_id = (NULL != re) ? re->tracon_id : rw;
 
 	unsigned int h = pair_hash(lw, rw, l_id, r_id, null_count);
-	Table_connector *t = ctxt->table[h & (ctxt->table_size-1)];
+	Table_connector *t = ctxt->table[h & ctxt->table_mask];
 
 	for (; t != NULL; t = t->next)
 	{
