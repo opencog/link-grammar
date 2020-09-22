@@ -503,10 +503,29 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 						              lw, w, le, d->left,
 						              lnull_count, pex);
 
-					ls_exists =
-						ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL;
+					if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL)
+					{
+						ls_exists = true;
+						/* Evaluate using the left match, but not the right */
+						Parse_set* rset = mk_parse_set(mchxt, ctxt,
+						                               w, rw, d->right, re,
+						                               rnull_count, pex);
+						if (rset != NULL)
+						{
+							for (i=0; i<4; i++)
+							{
+								if (ls[i] == NULL) continue;
+								/* this ordering is probably not consistent with
+								 * that needed to use list_links */
+								record_choice(ls[i], le, d->left,
+								              rset,  NULL /* d->right */,
+								              re,  /* the NULL indicates no link*/
+								              d, &xt->set);
+								RECOUNT({xt->set.recount += ls[i]->recount * rset->recount;})
+							}
+						}
+					}
 				}
-
 
 				if (Rmatch && (ls_exists || le == NULL))
 				{
@@ -528,64 +547,47 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 						rs[3] = mk_parse_set(mchxt, ctxt,
 						              w, rw, d->right, re,
 						              rnull_count, pex);
-				}
 
-				for (i=0; i<4; i++)
-				{
-					/* This ordering is probably not consistent with that
-					 * needed to use list_links. (??) */
-					if (ls[i] == NULL) continue;
-					for (j=0; j<4; j++)
+					if ((rs[0] != NULL || rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
 					{
-						if (rs[j] == NULL) continue;
-						record_choice(ls[i], le, d->left,
-						              rs[j], d->right, re,
-						              d, &xt->set);
-						RECOUNT({xt->set.recount += ls[i]->recount * rs[j]->recount;})
-					}
-				}
-
-				if (ls_exists)
-				{
-					/* Evaluate using the left match, but not the right */
-					Parse_set* rset = mk_parse_set(mchxt, ctxt,
-					                        w, rw, d->right, re,
-					                        rnull_count, pex);
-					if (rset != NULL)
-					{
-						for (i=0; i<4; i++)
+						if (le == NULL)
 						{
-							if (ls[i] == NULL) continue;
-							/* this ordering is probably not consistent with
-							 * that needed to use list_links */
-							record_choice(ls[i], le, d->left,
-							              rset,  NULL /* d->right */,
-							              re,  /* the NULL indicates no link*/
-							              d, &xt->set);
-							RECOUNT({xt->set.recount += ls[i]->recount * rset->recount;})
+							/* Evaluate using the right match, but not the left */
+							Parse_set* lset = mk_parse_set(mchxt, ctxt,
+							                               lw, w, le, d->left,
+							                               lnull_count, pex);
+
+							if (lset != NULL)
+							{
+								for (j=0; j<4; j++)
+								{
+									if (rs[j] == NULL) continue;
+									/* this ordering is probably not consistent with
+									 * that needed to use list_links */
+									record_choice(lset, NULL /* le */,
+									              d->left,  /* NULL indicates no link */
+									              rs[j], d->right, re,
+									              d, &xt->set);
+									RECOUNT({xt->set.recount += lset->recount * rs[j]->recount;})
+								}
+							}
 						}
-					}
-				}
-				else if ((le == NULL) && (rs[0] != NULL ||
-				     rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
-				{
-					/* Evaluate using the right match, but not the left */
-					Parse_set* lset = mk_parse_set(mchxt, ctxt,
-					                        lw, w, le, d->left,
-					                        lnull_count, pex);
-
-					if (lset != NULL)
-					{
-						for (j=0; j<4; j++)
+						else
 						{
-							if (rs[j] == NULL) continue;
-							/* this ordering is probably not consistent with
-							 * that needed to use list_links */
-							record_choice(lset, NULL /* le */,
-							              d->left,  /* NULL indicates no link */
-							              rs[j], d->right, re,
-							              d, &xt->set);
-							RECOUNT({xt->set.recount += lset->recount * rs[j]->recount;})
+							for (i=0; i<4; i++)
+							{
+								/* This ordering is probably not consistent with that
+								 * needed to use list_links. (??) */
+								if (ls[i] == NULL) continue;
+								for (j=0; j<4; j++)
+								{
+									if (rs[j] == NULL) continue;
+									record_choice(ls[i], le, d->left,
+									              rs[j], d->right, re,
+									              d, &xt->set);
+									RECOUNT({xt->set.recount += ls[i]->recount * rs[j]->recount;})
+								}
+							}
 						}
 					}
 				}
