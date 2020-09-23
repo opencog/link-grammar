@@ -400,6 +400,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		           sent->num_linkages_found, sent->null_count,
 		           (sent->null_count != 1) ? "s" : "");
 
+		free_tracon_sharing(ts_parsing);
+		ts_parsing = NULL;
+
 		if (sent->num_linkages_found > 0)
 		{
 			extractor_t * pex = extractor_new(sent->length, sent->rand_state);
@@ -426,9 +429,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
 			prt_error("No complete linkages found.\n");
-
-		free_tracon_sharing(ts_parsing);
-		ts_parsing = NULL;
 	}
 	sort_linkages(sent, opts);
 
@@ -438,7 +438,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		free_tracon_sharing(ts_pruning);
 		free(saved_memblock);
 	}
-	free_tracon_sharing(ts_parsing);
 
 	free_count_context(ctxt, sent);
 	free_fast_matcher(sent, mchxt);
