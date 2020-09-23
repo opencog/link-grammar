@@ -304,14 +304,20 @@ static Table_lrcnt *find_table_lrcnt_pointer(count_context_t *ctxt,
 //#define DEBUG_TABLE_STAT
 #if defined(DEBUG) || defined(DEBUG_TABLE_STAT)
 static size_t hit, miss;  /* Table value found/not found */
-#undef DEBUG_TABLE_STAT
-#define DEBUG_TABLE_STAT(x) x
+#define TABLE_STAT(...) __VA_ARGS__
+#else
+#define TABLE_STAT(...)
+#endif
+
 /**
  * Provide data for insights on the effectively of the connector pair table.
  * Hits, misses, chain length, number of elements with zero/nonzero counts.
  */
 static void table_stat(count_context_t *ctxt)
 {
+#ifdef DEBUG_TABLE_STAT
+	if (!verbosity_level(+D_COUNT)) return;
+
 	int z = 0, nz = 0;  /* Number of entries with zero and non-zero counts */
 	int c, total_c = 0; /* Chain length */
 	int N = 0;          /* NULL table slots */
@@ -388,10 +394,8 @@ static void table_stat(count_context_t *ctxt)
 	}
 
 	hit = miss = 0;
+#endif /* DEBUG_TABLE_STAT */
 }
-#else
-#define DEBUG_TABLE_STAT(x)
-#endif /* DEBUG  */
 
 static void table_grow(count_context_t *ctxt)
 {
@@ -472,14 +476,14 @@ table_lookup(count_context_t *ctxt, int lw, int rw,
 		if ((t->l_id == l_id) && (t->r_id == r_id) &&
 		    (t->null_count == null_count))
 		{
-			DEBUG_TABLE_STAT(hit++);
+			TABLE_STAT(hit++);
 			return &t->count;
 		}
 	}
-	DEBUG_TABLE_STAT(miss++);
+	TABLE_STAT(miss++);
 
 	if (hash != NULL) *hash = h;
-	DEBUG_TABLE_STAT(miss++);
+	TABLE_STAT(miss++);
 	return NULL;
 }
 
@@ -1131,12 +1135,10 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 
-	DEBUG_TABLE_STAT(if (verbosity_level(+D_COUNT)) table_stat(ctxt));
-
+	table_stat(ctxt);
 	return hist;
 }
 
-/* sent_length is used only as a hint for the hash table size ... */
 count_context_t * alloc_count_context(Sentence sent)
 {
 	count_context_t *ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
