@@ -400,24 +400,27 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		           sent->num_linkages_found, sent->null_count,
 		           (sent->null_count != 1) ? "s" : "");
 
-		extractor_t * pex = extractor_new(sent->length, sent->rand_state);
-		bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
-		process_linkages(sent, pex, ovfl, opts);
-		free_extractor(pex);
-
-		post_process_lkgs(sent, opts);
-
-		if (sent->num_valid_linkages > 0) break;
-
-		if (verbosity >= D_USER_INFO)
+		if (sent->num_linkages_found > 0)
 		{
-			if ((sent->num_valid_linkages == 0) &&
-			    (sent->num_linkages_post_processed > 0) &&
-			    ((int)opts->linkage_limit < sent->num_linkages_found))
-				prt_error("Info: All examined linkages (%zu) had P.P. violations.\n"
-				          "Consider increasing the linkage limit.\n"
-				          "At the command line, use !limit\n",
-				          sent->num_linkages_post_processed);
+			extractor_t * pex = extractor_new(sent->length, sent->rand_state);
+			bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
+			process_linkages(sent, pex, ovfl, opts);
+			free_extractor(pex);
+
+			post_process_lkgs(sent, opts);
+
+			if (sent->num_valid_linkages > 0) break;
+
+			if (verbosity >= D_USER_INFO)
+			{
+				if ((sent->num_valid_linkages == 0) &&
+				    (sent->num_linkages_post_processed > 0) &&
+				    ((int)opts->linkage_limit < sent->num_linkages_found))
+					prt_error("Info: All examined linkages (%zu) had P.P. violations.\n"
+					          "Consider increasing the linkage limit.\n"
+					          "At the command line, use !limit\n",
+					          sent->num_linkages_post_processed);
+			}
 		}
 
 		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
