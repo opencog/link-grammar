@@ -53,7 +53,6 @@ void pool_free(Pool_desc *, void *e);
 struct  Pool_desc_s
 {
 	/* Used only by the real pool allocator. */
-	char *chain;                // Allocated blocks. */
 	char *ring;                 // Current area for allocation.
 	char *alloc_next;           // Next element to be allocated.
 #ifdef POOL_FREE
@@ -64,6 +63,7 @@ struct  Pool_desc_s
 	size_t alignment;           // Alignment of element allocation.
 
 	/* Common to the real and fake pool allocators. */
+	char *chain;                // Allocated blocks.
 	size_t element_size;        // Allocated memory per element.
 	const char *name;           // Pool name.
 	const char *func;           // Invoker of pool_new().
