@@ -149,7 +149,12 @@ static void free_kept_table(void)
 	table_alloc(NULL, 0);
 }
 
-static void init_table(count_context_t *ctxt, size_t sent_len)
+/**
+ * Allocate the table with a sentence-depended table size.  Use
+ * sent->length as a hint for the initial table size. Usually, this
+ * saves on dynamic table growth, which is costly.
+ * */
+static void init_table(count_context_t *ctxt, Sentence sent)
 {
 	if (ctxt->table) free_table(ctxt);
 
@@ -158,17 +163,20 @@ static void init_table(count_context_t *ctxt, size_t sent_len)
 	 * disjuncts, rather than just the number of words.
 	 */
 	unsigned int shift;
-	if (sent_len >= 10)
+	if (sent->length >= 16)
 	{
-		shift = 12 + (sent_len) / 4;
+		shift = 14 + sent->length / 16;
 	}
 	else
 	{
-		shift = 12;
+		shift = 14;
 	}
+#if 0 /* Not yet */
+	shift += (unsigned int)sent->num_disjuncts / (sent->length * 200);
+#endif
 
 	if (MAX_LOG2_TABLE_SIZE < shift) shift = MAX_LOG2_TABLE_SIZE;
-	lgdebug(+D_COUNT, "Connector table size (1<<%u)*%zu\n", shift, sizeof(Table_connector *));
+	lgdebug(+D_COUNT, "Initial connector table log2 size %u\n", shift);
 
 	table_alloc(ctxt, shift);
 }
@@ -1146,11 +1154,11 @@ count_context_t * alloc_count_context(Sentence sent)
 	{
 		sent->Table_connector_pool =
 			pool_new(__func__, "Table_connector",
-			         /*num_elements*/10240, sizeof(Table_connector),
+			         /*num_elements*/16384, sizeof(Table_connector),
 			         /*zero_out*/false, /*align*/false, /*exact*/false);
 	}
 
-	init_table(ctxt, sent->length);
+	init_table(ctxt, sent);
 	return ctxt;
 }
 
