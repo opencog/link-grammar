@@ -91,7 +91,7 @@ static void free_kept_table(void);
  *
  * @ctxt[in, out] Table info.
  * @param shift log2 table size, or \c 0 for table growth. On table growth,
- * increase the new table size by 2, and don't free the previous table.
+ * increase the new table size by 2.
  */
 static void table_alloc(count_context_t *ctxt, unsigned int shift)
 {
@@ -105,11 +105,7 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 	}
 
 	if (shift == 0)
-	{
-		/* This is a request to grow the table. */
-		shift = ctxt->log2_table_size + 1; /* Double the table size. */
-		kept_table = NULL;                 /* Don't free it. */
-	}
+		shift = ctxt->log2_table_size + 1; /* Double the table size */
 
 	/* Keep the table indefinitely (or until exiting), so that it can
 	 * be reused. This avoids a large overhead in malloc/free when
@@ -399,26 +395,19 @@ static void table_stat(count_context_t *ctxt)
 
 static void table_grow(count_context_t *ctxt)
 {
-	Table_connector **old_table = ctxt->table;
-	const int old_table_size = ctxt->table_size;
-
 	table_alloc(ctxt, 0);
 
 	/* Rehash. */
-	for (int oi = 0; oi < old_table_size; oi++)
+	Table_connector *oe;
+	Pool_location loc = { 0 };
+	while ((oe = pool_next(ctxt->sent->Table_connector_pool, &loc)) != NULL)
 	{
-		Table_connector *onext;
-		for (Table_connector *oe = old_table[oi]; oe != NULL; oe = onext)
-		{
-			unsigned int ni = oe->hash & ctxt->table_mask;
+		unsigned int ni = oe->hash & ctxt->table_mask;
 
-			if (ctxt->table[ni] == NULL) ctxt->table_available_count--;
-			onext = oe->next;
-			oe->next = ctxt->table[ni];
-			ctxt->table[ni] = oe;
-		}
+		if (ctxt->table[ni] == NULL) ctxt->table_available_count--;
+		oe->next = ctxt->table[ni];
+		ctxt->table[ni] = oe;
 	}
-	free(old_table);
 
 	ctxt->num_growth++;
 }
