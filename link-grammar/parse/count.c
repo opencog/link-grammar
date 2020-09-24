@@ -1136,7 +1136,7 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 
 	table_stat(ctxt);
-	return hist;
+	return (int)hist_total(&hist);
 }
 
 count_context_t * alloc_count_context(Sentence sent)
