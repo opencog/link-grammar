@@ -13,6 +13,7 @@
 #define _MEMORY_POOL_H
 
 #include "link-includes.h"
+#include "error.h"
 #include "utilities.h"                  // GNUC_MALLOC (XXX separate include?)
 
 #define D_MEMPOOL (D_SPEC+4)
@@ -71,7 +72,7 @@ struct  Pool_desc_s
 	/* num_elements is also used by the fake allocator if the POOL_EXACT
 	 * feature is used (it is not used for now). */
 
-	size_t curr_elements;
+	size_t curr_elements;       // Originally for debug. Now used by pool_next().
 
 	/* Flags that are used by pool_alloc(). */
 	bool zero_out;              // Zero out allocated elements.
@@ -79,6 +80,63 @@ struct  Pool_desc_s
 	bool exact;                 // Abort if more than num_elements are needed.
 #endif /* POOL_EXACT */
 };
+
+typedef struct
+{
+	char *current_element;
+	char *block_end;
+	size_t element_number;
+} Pool_location;
+
+/**
+ * Return the next element in the pool.
+ * @param Pool_location Iteration state. Should be initialized to 0
+ * before starting the iteration.
+ * @return A different element on each call, \c NULL when there are no more.
+ */
+static inline void *pool_next(Pool_desc *mp, Pool_location *l)
+{
+#ifdef POOL_FREE
+	assert(mp->free_list == NULL, "Cannot be called after pool_free()");
+#endif
+
+	if (l->element_number == mp->curr_elements) return NULL;
+
+	if (l->element_number == 0)
+	{
+		/* This is an initial request for pool traversal.
+		 * Initialize the location descriptor and return the first element. */
+		l->element_number = 1;
+		l->current_element = mp->chain;
+#ifdef POOL_ALLOCATOR
+		l->block_end = mp->chain + mp->data_size;
+#endif
+
+		return l->current_element;
+	}
+
+#if POOL_ALLOCATOR
+	l->current_element += mp->element_size;
+	if (l->current_element == l->block_end)
+	{
+		l->current_element = *(char **)l->block_end;
+		dassert(l->current_element != NULL, "Truncated memory pool");
+		l->block_end = l->current_element + mp->data_size;
+	}
+#else
+	l->current_element = POOL_NEXT_BLOCK(l->current_element, mp->element_size);
+#endif
+
+	l->element_number++;
+	return l->current_element;
+}
+
+#if 0 /* For planned memory management. */
+static size_t pool_size(Pool_desc *mp)
+{
+	return mp->current_elements;
+}
+#endif
 
 // Macros for our memory-pool usage debugging.
 // https://github.com/google/sanitizers/wiki/AddressSanitizerManualPoisoning
