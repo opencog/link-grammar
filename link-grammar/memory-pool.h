@@ -61,15 +61,16 @@ struct  Pool_desc_s
 	size_t block_size;          // Block size for pool extension.
 	size_t data_size;           // Size of data inside block_size.
 	size_t alignment;           // Alignment of element allocation.
+	size_t num_elements;        // Number of elements per block.
 
 	/* Common to the real and fake pool allocators. */
 	char *chain;                // Allocated blocks.
 	size_t element_size;        // Allocated memory per element.
 	const char *name;           // Pool name.
 	const char *func;           // Invoker of pool_new().
+	/* num_elements is also used by the fake allocator if the POOL_EXACT
+	 * feature is used (it is not used for now). */
 
-	/* For debug and stats. */
-	size_t num_elements;
 	size_t curr_elements;
 
 	/* Flags that are used by pool_alloc(). */
