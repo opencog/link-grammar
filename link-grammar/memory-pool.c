@@ -119,7 +119,9 @@ void pool_delete (const char *func, Pool_desc *mp)
 	for (char *c = mp->chain; c != NULL; c = c_next)
 	{
 #if !POOL_ALLOCATOR
+#ifdef POOL_FREE
 		ASAN_UNPOISON_MEMORY_REGION(c, mp->element_size + FLDSIZE_NEXT);
+#endif
 #endif
 		c_next = POOL_NEXT_BLOCK(c, alloc_size);
 #if POOL_ALLOCATOR
@@ -150,7 +152,9 @@ void *pool_alloc(Pool_desc *mp)
 	if (NULL != mp->free_list)
 	{
 		void *alloc_next = mp->free_list;
+#ifdef POOL_FREE
 		ASAN_UNPOISON_MEMORY_REGION(alloc_next, mp->element_size);
+#endif
 		mp->free_list = *(char **)mp->free_list;
 		if (mp->zero_out) memset(alloc_next, 0, mp->element_size);
 		return alloc_next;
@@ -283,7 +287,9 @@ void pool_reuse(Pool_desc *mp)
 	char *c_next;
 	for (char *c = mp->chain; c != NULL; c = c_next)
 	{
+#ifdef POOL_FREE
 		ASAN_UNPOISON_MEMORY_REGION(c, mp->element_size + FLDSIZE_NEXT);
+#endif
 		c_next = POOL_NEXT_BLOCK(c, mp->element_size);
 		free(c);
 	}
