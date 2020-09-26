@@ -24,9 +24,10 @@
 
 typedef struct Pool_desc_s Pool_desc;
 
-/* See below the definition of pool_new(). */
 Pool_desc *pool_new(const char *, const char *, size_t, size_t, bool, bool, bool);
 void *pool_alloc(Pool_desc *) GNUC_MALLOC;
+void *pool_alloc_vec(Pool_desc *, size_t) GNUC_MALLOC;
+
 void pool_reuse(Pool_desc *);
 #ifndef DEBUG
 void pool_delete(Pool_desc *);
