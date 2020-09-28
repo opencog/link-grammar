@@ -13,7 +13,7 @@
 
 #include "error.h"
 #include "memory-pool.h"
-#include "utilities.h"                  // MIN/MAX, aligned alloc, lg_strerror
+#include "utilities.h"                  // MIN/MAX, aligned_alloc, lg_strerror
 
 /* TODO: Add valgrind descriptions. See:
  * http://valgrind.org/docs/manual/mc-manual.html#mc-manual.mempools */

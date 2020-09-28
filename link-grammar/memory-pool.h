@@ -39,7 +39,7 @@ void pool_free(Pool_desc *, void *e);
 #endif // POOL_FREE
 
 /* Pool allocator debug facility:
- * If configured with "CFLAGS=-DPOOL_ALLOCATOR=0", a fake pool allocator
+ * If configured with "CPPFLAGS=-DPOOL_ALLOCATOR=0", a fake pool allocator
  * that uses malloc() for each allocation is defined, in order that ASAN
  * or valgrind can be used to find memory usage bugs.
  */
