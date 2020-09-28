@@ -562,6 +562,25 @@ static void lrcnt_cache_update(Table_lrcnt *lrcnt_cache, bool lrcnt_found,
 
 }
 
+static bool is_panic(count_context_t *ctxt)
+{
+	/* Panic mode: Return a parse bypass indication if resources are
+	 * exhausted.  checktimer is a device to avoid a gazillion system calls
+	 * to get the timer value. On circa-2018 machines, it results in
+	 * several timer calls per second. */
+	ctxt->checktimer++;
+	if (ctxt->exhausted || ((0 == ctxt->checktimer%(1<<22)) &&
+	                        (ctxt->current_resources != NULL) &&
+	                        //fprintf(stderr, "T") &&
+	                        resources_exhausted(ctxt->current_resources)))
+	{
+		ctxt->exhausted = true;
+		return true;
+	}
+
+	return false;
+}
+
 #define NO_COUNT -1
 #ifdef PERFORM_COUNT_HISTOGRAMMING
 #define INIT_NO_COUNT (Count_bin){.total = NO_COUNT}
@@ -686,6 +705,8 @@ static Count_bin do_count(
 {
 	Count_bin total = hist_zero();
 	int start_word, end_word, w;
+
+	if (is_panic(ctxt)) return hist_zero();
 
 	/* TODO: static_assert() that null_count is an unsigned int. */
 	assert (null_count < INT_MAX, "Bad null count %d", (int)null_count);
