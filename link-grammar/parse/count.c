@@ -40,9 +40,12 @@ struct Table_connector_s
 typedef uint8_t null_count_m;  /* Storage representation of null_count */
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
-/* Table of ranges [tracon_id, w) that would yield a zero
- * leftcount/rightcount up to null_count. */
 typedef struct
+/* An element in a table indexed by tracon_id and w.
+ * The status field indicates if parsing the range [tracon_id, w) would
+ * yield a zero/none-zero leftcount/rightcount and this prediction
+ * is valid for null counts up to null_count (or for any null count if
+ * it is null_count is ANY_NULL_COUNT). */
 {
 	int tracon_id;
 	WordIdx_m w;
