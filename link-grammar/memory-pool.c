@@ -62,16 +62,14 @@ Pool_desc *pool_new(const char *func, const char *name,
 		mp->element_size = align_size(element_size);
 		mp->alignment = MAX(MIN_ALIGNMENT, mp->element_size);
 		mp->alignment = MIN(MAX_ALIGNMENT, mp->alignment);
-		mp->data_size = num_elements * mp->element_size;
-		mp->block_size = ALIGN(mp->data_size + FLDSIZE_NEXT, mp->alignment);
 	}
 	else
 	{
 		mp->element_size = element_size;
 		mp->alignment = MIN_ALIGNMENT;
-		mp->data_size = num_elements * mp->element_size;
-		mp->block_size = mp->data_size + FLDSIZE_NEXT;
 	}
+	mp->data_size = ALIGN(num_elements * mp->element_size, FLDSIZE_NEXT);
+	mp->block_size = ALIGN(mp->data_size + FLDSIZE_NEXT, mp->alignment);
 
 	mp->zero_out = zero_out;
 #ifdef POOL_EXACT
