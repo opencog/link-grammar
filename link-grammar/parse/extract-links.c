@@ -448,18 +448,25 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	 * it may omit some optimizations. */
 	if (UINT_MAX == null_count) return NULL;
 
+#ifdef FIXME
+	wordvecp lwv, rwv;
+	if (!get_lrcnt_wordvec(ctxt, le, re, lw, rw, &lwv, &rwv))
+		return &xt->set;
+#endif
+
 	RECOUNT({xt->set.recount = 0;})
 	for (w = start_word; w < end_word; w++)
 	{
 		/* Start of nonzero leftcount/rightcount range cache check. */
 		Connector *fml_re = re;       /* For form_match_list() only */
 
+#ifdef FIXME
 		if (le != NULL)
 		{
-			if (no_count(ctxt, 0, le, lw, w, null_count)) continue;
+			if (no_count(wlv, le, null_count, NULL)) continue;
 			if (re != NULL)
 			{
-				if (no_count(ctxt, 1, re, rw, w, null_count))
+				if (no_count(wrv, re, null_count, NULL))
 					fml_re = NULL;
 			}
 		}
@@ -469,6 +476,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 			if (no_count(ctxt, 1, re, rw, w, null_count)) continue;
 		}
 		/* End of nonzero leftcount/rightcount range cache check. */
+#endif
 
 		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw);
 		if (pex->sort_match_list) sort_match_list(mchxt, mlb);

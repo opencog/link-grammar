@@ -24,6 +24,6 @@ Count_bin* table_lookup(count_context_t *, int, int,
 int do_parse(Sentence, fast_matcher_t*, count_context_t*, Parse_Options);
 bool no_count(count_context_t *, int, Connector *, int, int, unsigned int);
 
-count_context_t* alloc_count_context(Sentence);
+count_context_t* alloc_count_context(Sentence, Tracon_sharing*);
 void free_count_context(count_context_t*, Sentence);
 #endif /* _COUNT_H */

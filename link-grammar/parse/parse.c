@@ -379,6 +379,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			ts_parsing = pack_sentence_for_parsing(sent);
 			print_time(opts, "Encoded for parsing");
 
+			free_count_context(ctxt, sent);
+			ctxt = alloc_count_context(sent, ts_parsing);
+
 			if (!more_pruning_possible)
 			{
 				/* At this point no further pruning will be done. Free the
@@ -397,9 +400,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			}
 
 			gword_record_in_connector(sent);
-
-			free_count_context(ctxt, sent);
-			ctxt = alloc_count_context(sent);
 
 			free_fast_matcher(sent, mchxt);
 			mchxt = alloc_fast_matcher(sent, ncu);

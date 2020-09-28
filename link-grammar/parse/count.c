@@ -47,14 +47,21 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * it is null_count is ANY_NULL_COUNT). */
 typedef struct
 {
-	int tracon_id;
-	WordIdx_m w;
 	null_count_m null_count;
-	unsigned short status;  /* 0: Count would be 0; 1: Count may be nonzero */
+	int8_t status;            /* 0: Count would be 0; 1: Count may be nonzero */
 } Table_lrcnt;
-#define MAX_TABLE_LRCNT_SIZE(s) ((s) * 3 / 4) /* Limit pathological cases */
+
+/* Using the word-vectors for very short sentences has too much overhead. */
+static const size_t min_len_word_vector = 10; /* This is just an estimation. */
+
+/* Special values for Table_lrcnt fields null_count and check_next. */
 #define ANY_NULL_COUNT (MAX_SENTENCE + 1)
-static Table_lrcnt lrcnt_cache_zero; /* A returned sentinel */
+#define INCREMENT_WORD ((uint8_t)(MAX_SENTENCE+1)) /* last checked word + 1 */
+
+typedef Table_lrcnt *wordvecp;
+static Table_lrcnt lrcnt_cache_zero; /* A sentinel for status==0 */
+
+#define ANY_NULL_COUNT (MAX_SENTENCE + 1)
 
 struct count_context_s
 {
@@ -69,10 +76,10 @@ struct count_context_s
 	unsigned int table_mask;
 	unsigned int log2_table_size;
 	unsigned int table_available_count;
-	unsigned int table_lrcnt_size;
-	unsigned int table_lrcnt_available_count;
-	Table_connector **table;
-	Table_lrcnt *table_lrcnt;
+	unsigned int table_lrcnt_size[2];
+	Table_connector ** table;
+	wordvecp *table_lrcnt[2];  /* Per dir wordvec, indexed by tracon_id */
+	Pool_desc *wordvec_pool;
 	Resources current_resources;
 };
 #define MAX_TABLE_SIZE(s) (s / 10) /* Low load factor, for speed */
@@ -188,110 +195,76 @@ static void free_table_lrcnt(count_context_t *ctxt)
 {
 	if (verbosity_level(D_COUNT))
 	{
-		unsigned int table_usage = MAX_TABLE_LRCNT_SIZE(ctxt->table_lrcnt_size) -
-			ctxt->table_lrcnt_available_count;
-		unsigned int nonzero = 0;
-		unsigned int any_null = 0;
-		unsigned int zero = 0;
-		unsigned int non_max_null = 0;
-
-		for (unsigned int i = 0; i < ctxt->table_lrcnt_size; i++)
+		for (unsigned int dir = 0; dir < 2; dir++)
 		{
-			if (ctxt->table_lrcnt[i].tracon_id == -1) continue;
+			unsigned int table_usage = 0;
+			unsigned int nonzero = 0;
+			unsigned int any_null = 0;
+			unsigned int zero = 0;
+			unsigned int non_max_null = 0;
 
-			if (ctxt->table_lrcnt[i].status == 1)
-				nonzero++;
-			else if (ctxt->table_lrcnt[i].null_count == ANY_NULL_COUNT)
-				any_null++;
-			else if (ctxt->sent->null_count > ctxt->table_lrcnt[i].null_count)
-				non_max_null++;
-			else if (ctxt->sent->null_count == ctxt->table_lrcnt[i].null_count)
-				zero++;
+			for (size_t i = 0; i < ctxt->table_lrcnt_size[dir]; i++)
+			{
+				if (ctxt->table_lrcnt[dir][i] != NULL) continue;
+				table_usage++;
+			}
+
+#if POOL_NEXT
+			while ((Table_lrcnt *t = pool_next()) != NULL)
+			{
+				if (t->status == -1) continue;
+				if (t->status == 1)
+					nonzero++;
+				else if (t->null_count == ANY_NULL_COUNT)
+					any_null++;
+				else if (ctxt->sent->null_count > t->null_count)
+					non_max_null++;
+				else if (ctxt->sent->null_count == t->null_count)
+					zero++;
+			}
+#endif
+
+			lgdebug(+0, "Direction %u: Usage %u/%u %.2f%% "
+			        "(usage = non_max_null %u + other %u, "
+			        "other = any_null_zero %u + zero %u + nonzero %u)\n",
+			        dir, table_usage, ctxt->table_lrcnt_size[dir],
+			        100.0f*table_usage / ctxt->table_lrcnt_size[dir],
+			        non_max_null, table_usage-non_max_null, any_null, zero, nonzero);
 		}
-
-		lgdebug(+0, "Usage %u/%u %.2f%% "
-		        "(usage = non_max_null %u + other %u, "
-		        "other = any_null_zero %u + zero %u + nonzero %u)\n",
-		        table_usage, ctxt->table_lrcnt_size,
-		        100.0f*table_usage / ctxt->table_lrcnt_size,
-		        non_max_null, table_usage-non_max_null, any_null, zero, nonzero);
 	}
 
-	free(ctxt->table_lrcnt);
-	ctxt->table_lrcnt = NULL;
+	for (unsigned int dir = 0; dir < 2; dir++)
+	{
+		free(ctxt->table_lrcnt[dir]);
+		ctxt->table_lrcnt[dir] = NULL;
+	}
+	pool_delete(ctxt->wordvec_pool);
 }
 
 static void init_table_lrcnt(count_context_t *ctxt, Sentence sent)
 {
-
-	if (ctxt->table_lrcnt == NULL)
+	for (unsigned int dir = 0; dir < 2; dir++)
 	{
-		ctxt->table_lrcnt_size =
-			next_power_of_two_up(2048 + sent->num_disjuncts * sent->length / 1.5f);
-		ctxt->table_lrcnt = malloc(ctxt->table_lrcnt_size * sizeof(Table_lrcnt));
+		const size_t sz = sizeof(wordvecp) * ctxt->table_lrcnt_size[dir];
+		ctxt->table_lrcnt[dir] = malloc(sz);
+		memset(ctxt->table_lrcnt[dir], 0, sz);
 	}
 
-	for (size_t i = 0; i < ctxt->table_lrcnt_size; i++)
-	{
-		ctxt->table_lrcnt[i].tracon_id = -1;
-	}
-	ctxt->table_lrcnt_available_count = MAX_TABLE_LRCNT_SIZE(ctxt->table_lrcnt_size);
+	const size_t initial_size = MIN(sent->length/2, 16) *
+		                   (ctxt->table_lrcnt_size[0] + ctxt->table_lrcnt_size[1]);
+
+	ctxt->wordvec_pool =
+		pool_new(__func__, "Table_lrcnt", /*num_elements*/initial_size,
+		         sizeof(Table_lrcnt), /*zero_out*/false,
+		         /*align*/false, /*exact*/false);
 }
 
-static size_t table_lrcnt_hash(int tracon_id, int cw, int w)
+static wordvecp alloc_wordvec(Pool_desc *wordvec_pool, unsigned int max_index)
 {
-	unsigned int i = tracon_id;
-	i = cw + (i << 6) + (i << 16) - i;
-	i = w + (i << 6) + (i << 16) - i;
+	wordvecp wvp = pool_alloc_vec(wordvec_pool, max_index + 1);
+	memset(wvp, -1, sizeof(Table_lrcnt) * (max_index + 1));
 
-	return i;
-}
-
-static Table_lrcnt *table_lrcnt_store(count_context_t *ctxt, int tracon_id,
-                                    int cw, int w)
-{
-	static Table_lrcnt table_full; /* It may get written never read */
-	if (ctxt->table_lrcnt_available_count == 0) return &table_full;
-
-	const size_t sizemod = ctxt->table_lrcnt_size-1;
-	size_t h = table_lrcnt_hash(tracon_id, cw, w) & sizemod;
-	Table_lrcnt *t = ctxt->table_lrcnt;
-
-	while (t[h].tracon_id != -1)
-	{
-		h = (h+1) & sizemod;
-	}
-
-	ctxt->table_lrcnt_available_count--;
-	t[h].tracon_id = tracon_id;
-	t[h].w = w;
-	t[h].null_count = (null_count_m)-1;
-
-	return &t[h];
-}
-
-static Table_lrcnt *find_table_lrcnt_pointer(count_context_t *ctxt,
-                                           int tracon_id, int cw, int w)
-{
-	static Table_lrcnt table_full =
-	{
-		.null_count = (null_count_m)-1,
-		.status = 1,
-	};
-	/* Disregard caching in case the table is full - this shouldn't happen. */
-	if (ctxt->table_lrcnt_available_count == 0) return &table_full;
-
-	const size_t sizemod = ctxt->table_lrcnt_size-1;
-	size_t h = table_lrcnt_hash(tracon_id, cw, w) & sizemod;
-	Table_lrcnt *t = ctxt->table_lrcnt;
-
-	while (t[h].tracon_id != -1)
-	{
-		if ((t[h].tracon_id == tracon_id) && (t[h].w == w)) return &t[h];
-		h = (h+1) & sizemod;
-	}
-
-	return NULL;
+	return wvp;
 }
 
 //#define DEBUG_TABLE_STAT
@@ -489,58 +462,92 @@ table_lookup(count_context_t *ctxt, int lw, int rw,
  * skipped because the cache indicates they yield a zero count.)
  * @return Cache entry for the given range. Possible values:
  *    NULL - A nonzero count may be encountered for null_count>=lnull_start.
- *    lrcnt_cache_zero - A zero count would result.
+ *    Table_lrcnt_zero - A zero count would result.
  *    Cache pointer - An update for null_count>=lnull_start is needed.
  */
-static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir,
-                             Connector *c, int cw, int w,
+static Table_lrcnt *is_lrcnt(wordvecp wv, unsigned int wordvec_index,
                              unsigned int null_count, unsigned int *null_start)
 {
-	const int rhs_id = 0x40000000;
-	int tracon_id = c->tracon_id | (dir * rhs_id);
+	Table_lrcnt *lp = &wv[wordvec_index];
 
-	Table_lrcnt *lrcnt_cache = find_table_lrcnt_pointer(ctxt, tracon_id, cw, w);
+	/* Below, several checks are done on the cache. The function returns
+	 * on the first one that succeeds. */
 
-	if (lrcnt_cache == NULL)
+	if (lp->status == -1)
 	{
-		/* Create a cache entry */
 		if (null_start != NULL)
 		{
+			/* This is a new cache entry. It will get updated by
+			 * lrcnt_cache_update(). */
 			*null_start = 0;
-			lrcnt_cache = table_lrcnt_store(ctxt, tracon_id, cw, w);
+			return lp;
 		}
+		return NULL;
 	}
-	else if (lrcnt_cache->status == 1) /* Must be checked first (XXX) */
+
+	if  (lp->status == 1) /* Must be checked first (XXX) */
 	{
 		/* The range yields a nonzero leftcount/rightcount for some
 		 * null_count. But we can still skip the initial null counts. */
 		if (null_start != NULL)
-			*null_start = (null_count_m)(lrcnt_cache->null_count + 1);
-		lrcnt_cache = NULL; /* No update needed - this is a permanent status */
+			*null_start = (null_count_m)(lp->null_count + 1);
+		return NULL; /* No update needed - this is a permanent status */
 	}
-	else if (null_count <= lrcnt_cache->null_count)
+
+	if (null_count <= lp->null_count)
 	{
-		/* Here (lrcnt_cache->status == 0) which means our count would
+		/* Here (lp->status == 0) which means our count would
 		 * be zero - so nothing to do for this word. */
 		return &lrcnt_cache_zero;
 	}
-	else
-	{
-		/* The null counts greater than lrcnt_cache->null_count have not
-		 * been handled yet for the given range (the cache will be
-		 * updated for them by lrcnt_cache_update()). */
-		if (null_start == NULL) return NULL;
-		*null_start = lrcnt_cache->null_count + 1;
-	}
 
-	return lrcnt_cache;
+	/* The null counts greater than lp->null_count have not
+	 * been handled yet for the given range (the cache will get
+	 * updated for them by lrcnt_cache_update()). */
+	if (null_start == NULL) return NULL;
+	*null_start = lp->null_count + 1;
+	return lp;
 }
 
+static wordvecp *find_lrcnt_wordvec(count_context_t *ctxt, int dir,
+                                    Connector *c)
+{
+	return &ctxt->table_lrcnt[dir][c->tracon_id];
+}
+
+static bool get_lrcnt_wordvec(count_context_t *ctxt,
+                          Connector *le, Connector *re, int lw, int rw,
+                          wordvecp *lwv, wordvecp *rwv)
+{
+	/* For non-NULL connectors, create a cache entry if none already exists. */
+
+	if (le != NULL)
+	{
+		wordvecp *wvip = find_lrcnt_wordvec(ctxt, 0, le);
+		if (*wvip == NULL) *wvip =
+			alloc_wordvec(ctxt->wordvec_pool, le->farthest_word-le->nearest_word);
+		*lwv = *wvip;
+	}
+	if (re != NULL)
+	{
+		wordvecp *wvip = find_lrcnt_wordvec(ctxt, 1, re);
+		if (*wvip == NULL) *wvip =
+			alloc_wordvec(ctxt->wordvec_pool, re->nearest_word-re->farthest_word);
+		*rwv = *wvip;
+	}
+
+	return true;
+}
+
+#ifdef FIXME
 bool no_count(count_context_t *ctxt, int dir, Connector *c, int cw, int w,
               unsigned int null_count)
 {
-	return &lrcnt_cache_zero == is_lrcnt(ctxt, dir, c, cw, w, null_count, NULL);
+	return
+		&lrcnt_cache_zero ==
+		is_lrcnt(ctxt, dir, w - c->nearest_word, null_count, NULL);
 }
+#endif
 
 static void lrcnt_cache_update(Table_lrcnt *lrcnt_cache, bool lrcnt_found,
                               bool match_list, unsigned int null_count)
@@ -835,21 +842,20 @@ static Count_bin do_count(
 
 	fast_matcher_t *mchxt = ctxt->mchxt;
 
+	wordvecp lwv, rwv;
+	if (!get_lrcnt_wordvec(ctxt, le, re, lw, rw, &lwv, &rwv))
+		return hist_zero();
+
 	for (w = start_word; w < end_word; w++)
 	{
 		/* Start of nonzero leftcount/rightcount range cache check. It is
 		 * extremely effective for long sentences, but doesn't speed up
 		 * short ones.
 		 *
-		 * FIXME 1: lrcnt_optimize==false doubles the Table_connector cache!
+		 * FIXME: lrcnt_optimize==false doubles the Table_connector cache!
 		 * Try to fix it by not caching zero counts in Table_connector when
 		 * lrcnt_optimize==false. If this can be fixed, a significant
-		 * speedup is expected.
-		 *
-		 * FIXME 2: Change the lrcnt_cache structure to use one cache entry
-		 * per [connector, word-vector) instead of per [connector, word).
-		 * This will reduce the lookup complexity by O(sent_length).
-		 */
+		 * speedup is expected. */
 
 		Table_lrcnt *lrcnt_cache = NULL;
 		bool lrcnt_found = false;     /* TRUE iff a range yielded l/r count */
@@ -860,19 +866,21 @@ static Count_bin do_count(
 
 		if (le != NULL)
 		{
-			lrcnt_cache = is_lrcnt(ctxt, 0, le, lw, w, null_count, &lnull_start);
+			lrcnt_cache =
+				is_lrcnt(lwv, w - le->nearest_word, null_count, &lnull_start);
 			if (lrcnt_cache == &lrcnt_cache_zero) continue;
 
 			if (lrcnt_cache != NULL)
 			{
 				lrcnt_optimize = false;
 			}
-			else if (re != NULL)
+			else if ((re != NULL) && (re->farthest_word <= w))
 			{
 				/* If it is already known that "re" would yield a zero
 				 * rightcount, there is no need to fetch the right match list.
 				 * The code below will still check for possible l_bnr counts. */
-				Table_lrcnt *rgc = is_lrcnt(ctxt, 1, re, rw, w, null_count, NULL);
+				Table_lrcnt *rgc =
+					is_lrcnt(rwv, w - re->farthest_word, null_count, NULL);
 				if (rgc == &lrcnt_cache_zero) fml_re = NULL;
 			}
 		}
@@ -880,7 +888,8 @@ static Count_bin do_count(
 		{
 			/* Here re != NULL. */
 			unsigned int rnull_start;
-			lrcnt_cache = is_lrcnt(ctxt, 1, re, rw, w, null_count, &rnull_start);
+			lrcnt_cache =
+				is_lrcnt(rwv, w - re->farthest_word, null_count, &rnull_start);
 			if (lrcnt_cache == &lrcnt_cache_zero) continue;
 
 			if (lrcnt_cache != NULL)
@@ -1146,10 +1155,17 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 	return (int)hist_total(&hist);
 }
 
-count_context_t * alloc_count_context(Sentence sent)
+/* sent_length is used only as a hint for the hash table size ... */
+count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 {
 	count_context_t *ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
 	memset(ctxt, 0, sizeof(count_context_t));
+
+	/* 1. next_id keeps the last tracon_id used, so we need +1 for array size.
+	 * 2. In do_count(), le and re are right and left connectors respectively.
+	 */
+	for (unsigned int dir = 0; dir < 2; dir++)
+		ctxt->table_lrcnt_size[dir] = ts->next_id[!dir] + 1;
 
 	ctxt->sent = sent;
 	/* consecutive blocks of this many words are considered as
