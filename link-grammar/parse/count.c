@@ -42,9 +42,9 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
 /* An element in a table indexed by tracon_id and w.
  * The status field indicates if parsing the range [tracon_id, w) would
- * yield a zero/none-zero leftcount/rightcount and this prediction
+ * yield a zero/none-zero leftcount/rightcount, when the zero prediction
  * is valid for null counts up to null_count (or for any null count if
- * it is null_count is ANY_NULL_COUNT). */
+ * null_count is ANY_NULL_COUNT). */
 typedef struct
 {
 	null_count_m null_count;
@@ -264,14 +264,6 @@ static void init_table_lrcnt(count_context_t *ctxt, Sentence sent)
 		         /*align*/false, /*exact*/false);
 }
 
-static wordvecp alloc_wordvec(Pool_desc *wordvec_pool, unsigned int max_index)
-{
-	wordvecp wvp = pool_alloc_vec(wordvec_pool, max_index + 1);
-	memset(wvp, -1, sizeof(Table_lrcnt) * (max_index + 1));
-
-	return wvp;
-}
-
 //#define DEBUG_TABLE_STAT
 #if defined(DEBUG) || defined(DEBUG_TABLE_STAT)
 static size_t hit, miss;  /* Table value found/not found */
@@ -470,27 +462,34 @@ table_lookup(count_context_t *ctxt, int lw, int rw,
  *    Table_lrcnt_zero - A zero count would result.
  *    Cache pointer - An update for null_count>=lnull_start is needed.
  */
-static Table_lrcnt *is_lrcnt(wordvecp wv, unsigned int wordvec_index,
+static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
+                             unsigned int wordvec_index,
                              unsigned int null_count, unsigned int *null_start)
 {
-	Table_lrcnt *lp = &wv[wordvec_index];
+	wordvecp *wv = &ctxt->table_lrcnt[dir][c->tracon_id];
+	if (*wv == NULL)
+	{
+		if (null_start != NULL)
+		{
+			/* Create a new cache entry, to be updated by lrcnt_cache_update(). */
+			const size_t wordvec_size = abs(c->farthest_word - c->nearest_word) + 1;
+			*wv = pool_alloc_vec(ctxt->wordvec_pool, wordvec_size);
+			memset(*wv, -1, sizeof(Table_lrcnt) * wordvec_size);
+
+			*null_start = 0;
+			return &(*wv)[wordvec_index]; /* Needs update */
+		}
+		return NULL;
+	}
+	Table_lrcnt *lp = &(*wv)[wordvec_index];
 
 	/* Below, several checks are done on the cache. The function returns
 	 * on the first one that succeeds. */
 
 	if (lp->status == -1)
-	{
-		if (null_start != NULL)
-		{
-			/* This is a new cache entry. It will get updated by
-			 * lrcnt_cache_update(). */
-			*null_start = 0;
-			return lp;
-		}
-		return NULL;
-	}
+		return lp; /* Needs update */
 
-	if  (lp->status == 1) /* Must be checked first (XXX) */
+	if  (lp->status == 1)
 	{
 		/* The range yields a nonzero leftcount/rightcount for some
 		 * null_count. But we can still skip the initial null counts. */
@@ -512,36 +511,6 @@ static Table_lrcnt *is_lrcnt(wordvecp wv, unsigned int wordvec_index,
 	if (null_start == NULL) return NULL;
 	*null_start = lp->null_count + 1;
 	return lp;
-}
-
-static wordvecp *find_lrcnt_wordvec(count_context_t *ctxt, int dir,
-                                    Connector *c)
-{
-	return &ctxt->table_lrcnt[dir][c->tracon_id];
-}
-
-static bool get_lrcnt_wordvec(count_context_t *ctxt,
-                          Connector *le, Connector *re, int lw, int rw,
-                          wordvecp *lwv, wordvecp *rwv)
-{
-	/* For non-NULL connectors, create a cache entry if none already exists. */
-
-	if (le != NULL)
-	{
-		wordvecp *wvip = find_lrcnt_wordvec(ctxt, 0, le);
-		if (*wvip == NULL) *wvip =
-			alloc_wordvec(ctxt->wordvec_pool, le->farthest_word-le->nearest_word);
-		*lwv = *wvip;
-	}
-	if (re != NULL)
-	{
-		wordvecp *wvip = find_lrcnt_wordvec(ctxt, 1, re);
-		if (*wvip == NULL) *wvip =
-			alloc_wordvec(ctxt->wordvec_pool, re->nearest_word-re->farthest_word);
-		*rwv = *wvip;
-	}
-
-	return true;
 }
 
 #ifdef FIXME
@@ -847,10 +816,6 @@ static Count_bin do_count(
 
 	fast_matcher_t *mchxt = ctxt->mchxt;
 
-	wordvecp lwv, rwv;
-	if (!get_lrcnt_wordvec(ctxt, le, re, lw, rw, &lwv, &rwv))
-		return hist_zero();
-
 	for (w = start_word; w < end_word; w++)
 	{
 		/* Start of nonzero leftcount/rightcount range cache check. It is
@@ -868,11 +833,12 @@ static Count_bin do_count(
 		unsigned int lnull_start = 0; /* First null_count to check */
 		unsigned int lnull_end = null_count; /* Last null_count to check */
 		Connector *fml_re = re;       /* For form_match_list() only */
+#define S(c) (!c?"(nil)":connector_string(c))
 
 		if (le != NULL)
 		{
 			lrcnt_cache =
-				is_lrcnt(lwv, w - le->nearest_word, null_count, &lnull_start);
+				is_lrcnt(ctxt, 0, le, w - le->nearest_word, null_count, &lnull_start);
 			if (lrcnt_cache == &lrcnt_cache_zero) continue;
 
 			if (lrcnt_cache != NULL)
@@ -885,7 +851,7 @@ static Count_bin do_count(
 				 * rightcount, there is no need to fetch the right match list.
 				 * The code below will still check for possible l_bnr counts. */
 				Table_lrcnt *rgc =
-					is_lrcnt(rwv, w - re->farthest_word, null_count, NULL);
+					is_lrcnt(ctxt, 1, re, w - re->farthest_word, null_count, NULL);
 				if (rgc == &lrcnt_cache_zero) fml_re = NULL;
 			}
 		}
@@ -894,7 +860,7 @@ static Count_bin do_count(
 			/* Here re != NULL. */
 			unsigned int rnull_start;
 			lrcnt_cache =
-				is_lrcnt(rwv, w - re->farthest_word, null_count, &rnull_start);
+				is_lrcnt(ctxt, 1, re, w - re->farthest_word, null_count, &rnull_start);
 			if (lrcnt_cache == &lrcnt_cache_zero) continue;
 
 			if (lrcnt_cache != NULL)
