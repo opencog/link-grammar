@@ -195,13 +195,36 @@ static void free_table_lrcnt(count_context_t *ctxt)
 {
 	if (verbosity_level(D_COUNT))
 	{
+		unsigned int nonzero = 0;
+		unsigned int any_null = 0;
+		unsigned int zero = 0;
+		unsigned int non_max_null = 0;
+#if POOL_NEXT
+
+		Pool_location loc = { 0 };
+		while ((Table_lrcnt *t = pool_next(ctxt->wordvec_pool, &loc)) != NULL)
+		{
+			if (t->status == -1) continue;
+			if (t->status == 1)
+				nonzero++;
+			else if (t->null_count == ANY_NULL_COUNT)
+				any_null++;
+			else if (ctxt->sent->null_count > t->null_count)
+				non_max_null++;
+			else if (ctxt->sent->null_count == t->null_count)
+				zero++;
+		}
+#endif
+
+		const unsigned int num_values = ctxt->wordvec_pool->curr_elements;
+		lgdebug(+0, "Values %u (usage = non_max_null %u + other %u, "
+		        "other = any_null_zero %u + zero %u + nonzero %u)\n",
+		        num_values, non_max_null, num_values-non_max_null,
+		        any_null, zero, nonzero);
+
 		for (unsigned int dir = 0; dir < 2; dir++)
 		{
 			unsigned int table_usage = 0;
-			unsigned int nonzero = 0;
-			unsigned int any_null = 0;
-			unsigned int zero = 0;
-			unsigned int non_max_null = 0;
 
 			for (size_t i = 0; i < ctxt->table_lrcnt_size[dir]; i++)
 			{
@@ -209,27 +232,9 @@ static void free_table_lrcnt(count_context_t *ctxt)
 				table_usage++;
 			}
 
-#if POOL_NEXT
-			while ((Table_lrcnt *t = pool_next()) != NULL)
-			{
-				if (t->status == -1) continue;
-				if (t->status == 1)
-					nonzero++;
-				else if (t->null_count == ANY_NULL_COUNT)
-					any_null++;
-				else if (ctxt->sent->null_count > t->null_count)
-					non_max_null++;
-				else if (ctxt->sent->null_count == t->null_count)
-					zero++;
-			}
-#endif
-
-			lgdebug(+0, "Direction %u: Usage %u/%u %.2f%% "
-			        "(usage = non_max_null %u + other %u, "
-			        "other = any_null_zero %u + zero %u + nonzero %u)\n",
+			lgdebug(+0, "Direction %u: Using %u/%u tracons %.2f%%\n\\",
 			        dir, table_usage, ctxt->table_lrcnt_size[dir],
-			        100.0f*table_usage / ctxt->table_lrcnt_size[dir],
-			        non_max_null, table_usage-non_max_null, any_null, zero, nonzero);
+			        100.0f*table_usage / ctxt->table_lrcnt_size[dir]);
 		}
 	}
 
