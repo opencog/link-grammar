@@ -826,14 +826,12 @@ static Count_bin do_count(
 
 	for (w = start_word; w < end_word; w = next_word)
 	{
-#if 1
-		if (wv != NULL)
+		if ((wv != NULL) && (w != end_word -1))
 		{
 			next_word = wv[w - le->nearest_word].check_next;
 			if (next_word == INCREMENT_WORD) next_word = w + 1;
 		}
 		else
-#endif
 		{
 			next_word = w + 1;
 		}
