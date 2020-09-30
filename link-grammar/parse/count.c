@@ -62,6 +62,12 @@ static const size_t min_len_word_vector = 10; /* This is just an estimation. */
 typedef Table_lrcnt *wordvecp;
 static Table_lrcnt lrcnt_cache_zero; /* A sentinel for status==0 */
 
+#if defined DEBUG || DEBUG_COUNT_COST
+#define COUNT_COST(...) __VA_ARGS__
+#else
+#define COUNT_COST(...)
+#endif
+
 struct count_context_s
 {
 	fast_matcher_t *mchxt;
@@ -82,6 +88,7 @@ struct count_context_s
 	wordvecp *table_lrcnt[2];  /* Per dir wordvec, indexed by tracon_id */
 	Pool_desc *wordvec_pool;
 	Resources current_resources;
+	COUNT_COST(unsigned long long count_cost[3];)
 };
 #define MAX_TABLE_SIZE(s) (s / 10) /* Low load factor, for speed */
 #define MAX_LOG2_TABLE_SIZE 24     /* 128 on 64-bit systems */
@@ -833,6 +840,8 @@ static Count_bin do_count(
 
 	for (w = start_word; w < end_word; w = next_word)
 	{
+		COUNT_COST(ctxt->count_cost[0]++;)
+
 		if ((wv != NULL) && (w != end_word -1))
 		{
 			next_word = wv[w - le->nearest_word].check_next;
@@ -906,6 +915,8 @@ static Count_bin do_count(
 
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
+			COUNT_COST(ctxt->count_cost[1]++;)
+
 			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
@@ -916,6 +927,8 @@ static Count_bin do_count(
 
 			for (unsigned int lnull_cnt = lnull_start; lnull_cnt <= lnull_end; lnull_cnt++)
 			{
+				COUNT_COST(ctxt->count_cost[2]++;)
+
 				int rnull_cnt = null_count - lnull_cnt;
 				/* Now lnull_cnt and rnull_cnt are the null-counts we're
 				 * requiring in those parts respectively. */
@@ -1114,7 +1127,7 @@ static Count_bin do_count(
 			for (i = start_word + 1; i < end_word; i++)
 			{
 				Table_lrcnt *e = &wv[i - le->nearest_word];
-				e->check_next = -1;
+				e->check_next = INCREMENT_WORD;
 				if((e->status != 0) || (sent_nc > e->null_count))
 				{
 					wv[check_word - le->nearest_word].check_next = i;
@@ -1228,6 +1241,9 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 void free_count_context(count_context_t *ctxt, Sentence sent)
 {
 	if (NULL == ctxt) return;
+	COUNT_COST(lgdebug(+D_COUNT,
+	           "Count cost per: word %llu, disjunct %llu, null_count %llu\n",
+	            ctxt->count_cost[0], ctxt->count_cost[1], ctxt->count_cost[2]);)
 
 	free_table(ctxt);
 	free_table_lrcnt(ctxt);
