@@ -47,8 +47,9 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * null_count is ANY_NULL_COUNT). */
 typedef struct
 {
-	null_count_m null_count;
-	int8_t status;            /* 0: Count would be 0; 1: Count may be nonzero */
+	null_count_m null_count; /* status==0 valid up to this null count */
+	int8_t status;         /* -1: Needs update; 0: No count; 1: Count possible */
+	uint8_t check_next;      /* Next word to check */
 } Table_lrcnt;
 
 /* Using the word-vectors for very short sentences has too much overhead. */
@@ -60,8 +61,6 @@ static const size_t min_len_word_vector = 10; /* This is just an estimation. */
 
 typedef Table_lrcnt *wordvecp;
 static Table_lrcnt lrcnt_cache_zero; /* A sentinel for status==0 */
-
-#define ANY_NULL_COUNT (MAX_SENTENCE + 1)
 
 struct count_context_s
 {
@@ -523,13 +522,17 @@ bool no_count(count_context_t *ctxt, int dir, Connector *c, int cw, int w,
 }
 #endif
 
-static void lrcnt_cache_update(Table_lrcnt *lrcnt_cache, bool lrcnt_found,
+static bool lrcnt_cache_update(Table_lrcnt *lrcnt_cache, bool lrcnt_found,
                               bool match_list, unsigned int null_count)
 {
+	bool lrcnt_status_changed = (lrcnt_cache->status != (int)lrcnt_found);
+	unsigned int prev_null_count = lrcnt_cache->null_count;
+
 	if (!lrcnt_found)
 		lrcnt_cache->null_count = match_list ? null_count : ANY_NULL_COUNT;
 	lrcnt_cache->status = (int)lrcnt_found;
 
+	return lrcnt_status_changed || (prev_null_count != lrcnt_cache->null_count);
 }
 
 static bool is_panic(count_context_t *ctxt)
@@ -815,9 +818,26 @@ static Count_bin do_count(
 	}
 
 	fast_matcher_t *mchxt = ctxt->mchxt;
+	bool lrcnt_cache_changed = false;
+	int next_word = MAX_SENTENCE;
 
-	for (w = start_word; w < end_word; w++)
+	wordvecp wv = NULL;
+	if (le != NULL) wv = ctxt->table_lrcnt[0][le->tracon_id];
+
+	for (w = start_word; w < end_word; w = next_word)
 	{
+#if 1
+		if (wv != NULL)
+		{
+			next_word = wv[w - le->nearest_word].check_next;
+			if (next_word == INCREMENT_WORD) next_word = w + 1;
+		}
+		else
+#endif
+		{
+			next_word = w + 1;
+		}
+
 		/* Start of nonzero leftcount/rightcount range cache check. It is
 		 * extremely effective for long sentences, but doesn't speed up
 		 * short ones.
@@ -1069,11 +1089,51 @@ static Count_bin do_count(
 		if (lrcnt_cache != NULL)
 		{
 			bool match_list = (get_match_list_element(mchxt, mlb) != NULL);
-			lrcnt_cache_update(lrcnt_cache, lrcnt_found, match_list, null_count);
+			if (lrcnt_cache_update(lrcnt_cache, lrcnt_found, match_list, null_count))
+				lrcnt_cache_changed = true;
 		}
 
 		pop_match_list(mchxt, mlb);
 	}
+
+	if (lrcnt_cache_changed)
+	{
+		/* Generate a word skip vector. */
+		if (le != NULL)
+		{
+			int check_word = start_word;
+			int i;
+
+			if (wv == NULL) wv = ctxt->table_lrcnt[0][le->tracon_id];
+			unsigned int sent_nc = ctxt->sent->null_count;
+			for (i = start_word + 1; i < end_word; i++)
+			{
+				Table_lrcnt *e = &wv[i - le->nearest_word];
+				e->check_next = -1;
+				if((e->status != 0) || (sent_nc > e->null_count))
+				{
+					wv[check_word - le->nearest_word].check_next = i;
+					check_word = i;
+				}
+			}
+			if (check_word <= end_word - 1)
+				wv[check_word - le->nearest_word].check_next = end_word;
+
+#if 0
+			printf("id %d w(%3d, %3d),  se(%3d, %3d) sent_nc %u size %d\n",
+			       le->tracon_id, lw, rw, start_word, end_word,
+			       ctxt->sent->null_count, le->farthest_word-le->nearest_word+1);
+			for (i = start_word; i < end_word; i++)
+			{
+				Table_lrcnt *e = &wv[i - le->nearest_word];
+				printf("\tw%-3d idx %-3d status %d nc %-3u next %d\n",
+				       i,  i - le->nearest_word, e->status, e->null_count,
+				       e->check_next);
+			}
+#endif
+		}
+	}
+
 	return table_store(ctxt, lw, rw, le, re, null_count, h, total);
 }
 
