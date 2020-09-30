@@ -70,6 +70,8 @@ struct count_context_s
 	bool    islands_ok;
 	bool    exhausted;
 	uint8_t num_growth;       /* Number of table growths, for debug */
+	bool    keep_table;
+	bool    is_short;
 	unsigned int checktimer;  /* Avoid excess system calls */
 	unsigned int table_size;
 	unsigned int table_mask;
@@ -465,6 +467,8 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
                              unsigned int wordvec_index,
                              unsigned int null_count, unsigned int *null_start)
 {
+	if (ctxt->is_short) return NULL;
+
 	wordvecp *wv = &ctxt->table_lrcnt[dir][c->tracon_id];
 	if (*wv == NULL)
 	{
@@ -822,7 +826,10 @@ static Count_bin do_count(
 	int next_word = MAX_SENTENCE;
 
 	wordvecp wv = NULL;
-	if (le != NULL) wv = ctxt->table_lrcnt[0][le->tracon_id];
+	if (!ctxt->is_short)
+	{
+		if (le != NULL) wv = ctxt->table_lrcnt[0][le->tracon_id];
+	}
 
 	for (w = start_word; w < end_word; w = next_word)
 	{
@@ -1174,6 +1181,7 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 	ctxt->checktimer = 0;
 	ctxt->islands_ok = opts->islands_ok;
 	ctxt->mchxt = mchxt;
+	ctxt->is_short = sent->length <= min_len_word_vector;
 
 	/* Cannot reuse since its content is invalid on an increased null_count. */
 	init_table_lrcnt(ctxt, sent);
