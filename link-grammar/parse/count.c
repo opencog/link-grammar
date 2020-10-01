@@ -568,11 +568,11 @@ static bool is_panic(count_context_t *ctxt)
 	 * exhausted.  checktimer is a device to avoid a gazillion system calls
 	 * to get the timer value. On circa-2018 machines, it results in
 	 * several timer calls per second. */
+	if (ctxt->exhausted) return true;
 	ctxt->checktimer++;
-	if (ctxt->exhausted || ((0 == ctxt->checktimer%(1<<18)) &&
-	                        (ctxt->current_resources != NULL) &&
-	                        //fprintf(stderr, "T") &&
-	                        resources_exhausted(ctxt->current_resources)))
+	if (((0 == ctxt->checktimer%(1<<18)) && (ctxt->current_resources != NULL) &&
+	     //fprintf(stderr, "T") &&
+	     resources_exhausted(ctxt->current_resources)))
 	{
 		ctxt->exhausted = true;
 		return true;
