@@ -452,6 +452,50 @@ table_lookup(count_context_t *ctxt, int lw, int rw,
 }
 
 /**
+ * Generate a word skip vector.
+ * This implements an idea similar to the Boyer-Moore algo for searches.
+ */
+static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
+                                      Connector *le, Connector *re,
+                                      int start_word, int end_word,
+                                      int lw, int rw)
+{
+	if (le != NULL)
+	{
+		int check_word = start_word;
+		int i;
+
+		if (wv == NULL) wv = ctxt->table_lrcnt[0][le->tracon_id];
+		unsigned int sent_nc = ctxt->sent->null_count;
+		for (i = start_word + 1; i < end_word; i++)
+		{
+			Table_lrcnt *e = &wv[i - le->nearest_word];
+			e->check_next = INCREMENT_WORD;
+			if((e->status != 0) || (sent_nc > e->null_count))
+			{
+				wv[check_word - le->nearest_word].check_next = i;
+				check_word = i;
+			}
+		}
+		if (check_word <= end_word - 1)
+			wv[check_word - le->nearest_word].check_next = end_word;
+
+#if 0
+		printf("id %d w(%3d, %3d), se(%3d, %3d) sent_nc %u size %d\n",
+		       le->tracon_id, lw, rw, start_word, end_word,
+		       ctxt->sent->null_count, le->farthest_word-le->nearest_word+1);
+		for (i = start_word; i < end_word; i++)
+		{
+			Table_lrcnt *e = &wv[i - le->nearest_word];
+			printf("\tw%-3d idx %-3d status %d nc %-3u next %d\n",
+			       i,  i - le->nearest_word, e->status, e->null_count,
+			       e->check_next);
+		}
+#endif
+	}
+}
+
+/**
  * Cache lookup:
  * Is the range [c, w) going to yield a nonzero leftcount / rightcount?
  *
@@ -1115,42 +1159,7 @@ static Count_bin do_count(
 	}
 
 	if (lrcnt_cache_changed)
-	{
-		/* Generate a word skip vector. */
-		if (le != NULL)
-		{
-			int check_word = start_word;
-			int i;
-
-			if (wv == NULL) wv = ctxt->table_lrcnt[0][le->tracon_id];
-			unsigned int sent_nc = ctxt->sent->null_count;
-			for (i = start_word + 1; i < end_word; i++)
-			{
-				Table_lrcnt *e = &wv[i - le->nearest_word];
-				e->check_next = INCREMENT_WORD;
-				if((e->status != 0) || (sent_nc > e->null_count))
-				{
-					wv[check_word - le->nearest_word].check_next = i;
-					check_word = i;
-				}
-			}
-			if (check_word <= end_word - 1)
-				wv[check_word - le->nearest_word].check_next = end_word;
-
-#if 0
-			printf("id %d w(%3d, %3d),  se(%3d, %3d) sent_nc %u size %d\n",
-			       le->tracon_id, lw, rw, start_word, end_word,
-			       ctxt->sent->null_count, le->farthest_word-le->nearest_word+1);
-			for (i = start_word; i < end_word; i++)
-			{
-				Table_lrcnt *e = &wv[i - le->nearest_word];
-				printf("\tw%-3d idx %-3d status %d nc %-3u next %d\n",
-				       i,  i - le->nearest_word, e->status, e->null_count,
-				       e->check_next);
-			}
-#endif
-		}
-	}
+		generate_word_skip_vector(ctxt, wv, le, re, start_word, end_word, lw, rw);
 
 	return table_store(ctxt, lw, rw, le, re, null_count, h, total);
 }
