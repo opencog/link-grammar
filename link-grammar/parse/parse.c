@@ -304,7 +304,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
-	if (resources_exhausted(opts->resources)) return;
+	if (resources_exhausted(opts->resources)) return; /* Nothing to free yet. */
 
 	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent);
 	free_sentence_disjuncts(sent);
@@ -381,7 +381,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			}
 
 			gword_record_in_connector(sent);
-			if (resources_exhausted(opts->resources)) break;
+			if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 
 			free_count_context(ctxt, sent);
 			ctxt = alloc_count_context(sent);
@@ -391,7 +391,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			print_time(opts, "Initialized fast matcher");
 		}
 
-		if (resources_exhausted(opts->resources)) break;
+		if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 		free_linkages(sent);
 
 		sent->num_linkages_found = do_parse(sent, mchxt, ctxt, opts);
@@ -432,12 +432,15 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	}
 	sort_linkages(sent, opts);
 
+parse_end_cleanup:
 	if (NULL != ts_pruning)
 	{
 		free(ts_pruning->memblock);
 		free_tracon_sharing(ts_pruning);
 		free(saved_memblock);
 	}
+	if (NULL != ts_parsing)
+		free_tracon_sharing(ts_parsing);
 
 	free_count_context(ctxt, sent);
 	free_fast_matcher(sent, mchxt);
