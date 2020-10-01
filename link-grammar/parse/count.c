@@ -493,6 +493,39 @@ static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
 		}
 #endif
 	}
+	else
+	{
+		int check_word = start_word;
+		int i;
+
+		if (wv == NULL) wv = ctxt->table_lrcnt[1][re->tracon_id];
+		unsigned int sent_nc = ctxt->sent->null_count;
+		for (i = start_word + 1; i < end_word; i++)
+		{
+			Table_lrcnt *e = &wv[i - re->farthest_word];
+			e->check_next = INCREMENT_WORD;
+			if((e->status != 0) || (sent_nc > e->null_count))
+			{
+				wv[check_word - re->farthest_word].check_next = i;
+				check_word = i;
+			}
+		}
+		if (check_word <= end_word - 1)
+			wv[check_word - re->farthest_word].check_next = end_word;
+
+#if 0
+		printf("id %d w(%3d, %3d), se(%3d, %3d) sent_nc %u size %d\n",
+		       le->tracon_id, lw, rw, start_word, end_word,
+		       ctxt->sent->null_count, re->nearest_word-re->farthest_word+1);
+		for (i = start_word; i < end_word; i++)
+		{
+			Table_lrcnt *e = &wv[i - re->farthest_word];
+			printf("\tw%-3d idx %-3d status %d nc %-3u next %d\n",
+			       i,  i - re->farthest_word, e->status, e->null_count,
+			       e->check_next);
+		}
+#endif
+	}
 }
 
 /**
@@ -876,19 +909,32 @@ static Count_bin do_count(
 	bool lrcnt_cache_changed = false;
 	int next_word = MAX_SENTENCE;
 
+	/* Select the table and word-vector offset for word skipping. */
 	wordvecp wv = NULL;
+	int woffset = 0;
 	if (!ctxt->is_short)
 	{
-		if (le != NULL) wv = ctxt->table_lrcnt[0][le->tracon_id];
+		if (le != NULL)
+		{
+			wv = ctxt->table_lrcnt[0][le->tracon_id];
+			woffset = le->nearest_word;
+		}
+		else
+		{
+			wv = ctxt->table_lrcnt[1][re->tracon_id];
+			woffset = re->farthest_word;
+		}
 	}
 
 	for (w = start_word; w < end_word; w = next_word)
 	{
 		COUNT_COST(ctxt->count_cost[0]++;)
 
+		/* Use the word-skip vector to skip over words that are
+		 * known to yield a zero count. */
 		if ((wv != NULL) && (w != end_word -1))
 		{
-			next_word = wv[w - le->nearest_word].check_next;
+			next_word = wv[w - woffset].check_next;
 			if (next_word == INCREMENT_WORD) next_word = w + 1;
 		}
 		else
