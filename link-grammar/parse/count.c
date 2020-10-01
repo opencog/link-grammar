@@ -569,7 +569,7 @@ static bool is_panic(count_context_t *ctxt)
 	 * to get the timer value. On circa-2018 machines, it results in
 	 * several timer calls per second. */
 	ctxt->checktimer++;
-	if (ctxt->exhausted || ((0 == ctxt->checktimer%(1<<22)) &&
+	if (ctxt->exhausted || ((0 == ctxt->checktimer%(1<<18)) &&
 	                        (ctxt->current_resources != NULL) &&
 	                        //fprintf(stderr, "T") &&
 	                        resources_exhausted(ctxt->current_resources)))
