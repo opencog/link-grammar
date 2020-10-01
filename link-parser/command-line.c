@@ -1004,7 +1004,7 @@ Command_Options* command_options_create(void)
 	co->allow_null = true;
 	co->batch_mode = false;
 	co->echo_on = false;
-	co->panic_mode = false;
+	co->panic_mode = true;
 	co->display_on = true;
 	co->display_walls = false;
 	co->display_postscript = false;

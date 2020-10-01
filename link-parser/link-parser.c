@@ -671,7 +671,6 @@ int main(int argc, char * argv[])
 	opts = copts->popts;
 
 	setup_panic_parse_options(copts->panic_opts);
-	copts->panic_mode = true;
 
 	parse_options_set_max_parse_time(opts, 30);
 	parse_options_set_linkage_limit(opts, 1000);
