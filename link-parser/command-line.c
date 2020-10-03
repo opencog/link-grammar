@@ -629,55 +629,69 @@ static int info_cmd(const Switch *uc, int n)
 	return 'c';
 }
 
+const char helpmsg[] = "Type \"!help\" or \"!variables\".";
+
+/**
+ * Handle a request for a particular command help.
+ */
+static int handle_help_command(const Switch *as, char *line,
+                               Command_Options *copts)
+{
+	char *dupline = strdup(line);
+	int count, j;
+	int rc = 0;
+
+	/* If we are here, it is not a command-line parameter. */
+	char *s = strtok(dupline, WHITESPACE);
+	if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
+	{
+		s = strtok(NULL, WHITESPACE);
+		if (s != NULL)
+		{
+			/* This is a help request for the command name at s. */
+			j = -1; /* command index */
+			count = 0;  /* number of matching commands */
+
+			/* Is it a unique abbreviation? */
+			for (int i = 0; as[i].string != NULL; i++)
+			{
+				if (strncasecmp(s, as[i].string, strlen(s)) == 0)
+				{
+					count++;
+					j = i;
+				}
+			}
+
+			if (count == 1)
+			{
+				display_help(&as[j], copts);
+				rc = 'c';    /* Command done. */
+			}
+			else
+			{
+				rc = -1;     /* Error indication. */
+				if (count > 1)
+					prt_error("Ambiguous command: \"%s\".  %s\n", s, helpmsg);
+				else
+					prt_error("Undefined command: \"%s\".  %s\n", s, helpmsg);
+			}
+		}
+	}
+
+	free(dupline);
+	return rc;
+}
+
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
 {
 	char *s, *x, *y;
 	int count, j;
 	const Switch *as = default_switches;
-	const char helpmsg[] = "Type \"!help\" or \"!variables\".";
 
-	/* Handle a request for a particular command help. */
-	if (NULL != dict)
+	if (NULL != dict) /* No dict if we are called from the command line */
 	{
-		char *dupline = strdup(line);
-		/* If we are here, it is not a command-line parameter. */
-		s = strtok(dupline, WHITESPACE);
-		if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
-		{
-			s = strtok(NULL, WHITESPACE);
-			if (s != NULL)
-			{
-				/* This is a help request for the command name at s. */
-				j = -1; /* command index */
-				count = 0;  /* number of matching commands */
-
-				/* Is it a unique abbreviation? */
-				for (int i = 0; as[i].string != NULL; i++)
-				{
-					if (strncasecmp(s, as[i].string, strlen(s)) == 0)
-					{
-						count++;
-						j = i;
-					}
-				}
-
-				if (count == 1)
-				{
-					free(dupline);
-					display_help(&as[j], copts);
-					return 'c';
-				}
-
-				if (count > 1)
-					prt_error("Ambiguous command: \"%s\".  %s\n", s, helpmsg);
-				else
-					prt_error("Undefined command: \"%s\".  %s\n", s, helpmsg);
-
-				free(dupline);
-				return -1;
-			}
-		}
-		free(dupline);
+		int rc = handle_help_command(as, line, copts);
+		if (rc != 0) return rc;
 	}
 
 	s = line;
