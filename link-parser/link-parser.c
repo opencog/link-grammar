@@ -939,46 +939,49 @@ open_error:
 			continue;
 		}
 
-#if 0
-		/* Try again, this time omitting the requirement for
-		 * definite articles, etc. This should allow for the parsing
-		 * of newspaper headlines and other clipped speech.
-		 *
-		 * XXX Unfortunately, this also allows for the parsing of
-		 * all sorts of ungrammatical sentences which should not
-		 * parse, and leads to bad parses of many other unparsable
-		 * but otherwise grammatical sentences.  Thus, this trick
-		 * pretty much fails; we leave it here to document the
-		 * experiment.
-		 */
-		if (num_linkages == 0)
+		if (!(copts->panic_mode && parse_options_resources_exhausted(opts)))
 		{
-			parse_options_set_disjunct_cost(opts, 4.5);
-			num_linkages = sentence_parse(sent, opts);
-			if (num_linkages < 0) continue;
-		}
+#if 0
+			/* Try again, this time omitting the requirement for
+			 * definite articles, etc. This should allow for the parsing
+			 * of newspaper headlines and other clipped speech.
+			 *
+			 * XXX Unfortunately, this also allows for the parsing of
+			 * all sorts of ungrammatical sentences which should not
+			 * parse, and leads to bad parses of many other unparsable
+			 * but otherwise grammatical sentences.  Thus, this trick
+			 * pretty much fails; we leave it here to document the
+			 * experiment.
+			 */
+			if (num_linkages == 0)
+			{
+				parse_options_set_disjunct_cost(opts, 4.5);
+				num_linkages = sentence_parse(sent, opts);
+				if (num_linkages < 0) continue;
+			}
 #endif /* 0 */
 
-		/* If asked to show bad linkages, then show them. */
-		if ((num_linkages == 0) && (!copts->batch_mode))
-		{
-			if (copts->display_bad)
+			/* If asked to show bad linkages, then show them. */
+			if ((num_linkages == 0) && (!copts->batch_mode))
 			{
-				num_linkages = sentence_num_linkages_found(sent);
+				if (copts->display_bad)
+				{
+					num_linkages = sentence_num_linkages_found(sent);
+				}
 			}
-		}
 
-		/* Now parse with null links */
-		if (!one_step_parse && num_linkages == 0 && !copts->batch_mode)
-		{
-			if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
-
-			if (copts->allow_null)
+			/* Now parse with null links */
+			if (!one_step_parse && num_linkages == 0 && !copts->batch_mode)
 			{
-				/* XXX should use expanded disjunct list here too */
-				parse_options_set_min_null_count(opts, 1);
-				parse_options_set_max_null_count(opts, sentence_length(sent));
-				num_linkages = sentence_parse(sent, opts);
+				if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
+
+				if (copts->allow_null)
+				{
+					/* XXX should use expanded disjunct list here too */
+					parse_options_set_min_null_count(opts, 1);
+					parse_options_set_max_null_count(opts, sentence_length(sent));
+					num_linkages = sentence_parse(sent, opts);
+				}
 			}
 		}
 
