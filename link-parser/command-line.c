@@ -51,7 +51,7 @@ static struct
 	int display_disjuncts;
 	int display_morphology;
 	int display_wordgraph;
-} local, local_saved;
+} local, saved_defaults;
 
 static const char *value_type[] =
 {
@@ -116,12 +116,12 @@ static void put_opts_in_local_vars(Command_Options *);
 void save_default_opts(Command_Options *copts)
 {
 	put_opts_in_local_vars(copts);
-	local_saved = local;
+	saved_defaults = local;
 }
 
 static void restore_default_local_vars(void)
 {
-	local = local_saved;
+	local = saved_defaults;
 }
 
 /**
