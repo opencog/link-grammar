@@ -991,9 +991,7 @@ open_error:
 				fprintf(stdout, "Memory is exhausted!\n");
 		}
 
-		if ((num_linkages == 0) &&
-			copts->panic_mode &&
-			parse_options_resources_exhausted(opts))
+		if (copts->panic_mode && parse_options_resources_exhausted(opts))
 		{
 			batch_errors++;
 			if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
