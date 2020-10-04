@@ -575,16 +575,12 @@ static void check_winsize(Command_Options* copts)
 
 	/* Create a handle to the console screen. */
 	console = (HANDLE)_get_osfhandle(fd);
-	if (!console || (console == INVALID_HANDLE_VALUE)) goto fail;
+	if (!console || (console == INVALID_HANDLE_VALUE)) return;
 
 	/* Calculate the size of the console window. */
-	if (GetConsoleScreenBufferInfo(console, &info) == 0) goto fail;
+	if (GetConsoleScreenBufferInfo(console, &info) == 0) return;
 
-	copts->screen_width = (size_t)(info.srWindow.Right - info.srWindow.Left + 1);
-	return;
-
-fail:
-	copts->screen_width = 80;
+	copts->screen_width = info.dwSize.X;
 	return;
 #else
 	struct winsize ws;
