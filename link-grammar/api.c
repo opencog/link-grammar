@@ -669,8 +669,10 @@ int sentence_parse(Sentence sent, Parse_Options opts)
  * Definitions for linkgrammar_get_configuration().
  */
 
+#define MACVAL(macro) #macro lg_str(=macro) " "
+
 #ifdef __STDC_VERSION__
-#define LG_S1 "__STDC_VERSION__=" lg_xstr(__STDC_VERSION__)
+#define LG_S1 MACVAL(__STDC_VERSION__)
 #else
 #define LG_S1
 #endif
@@ -685,13 +687,13 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 #endif
 
 #ifdef __VERSION__
-#define LG_V1 "__VERSION__=" lg_xstr(__VERSION__)
+#define LG_V1 MACVAL(__VERSION__)
 #else
 #define LG_V1
 #endif
 
 #ifdef _MSC_FULL_VER
-#define LG_V2 "_MSC_FULL_VER=" lg_xstr(_MSC_FULL_VER)
+#define LG_V2 MACVAL(_MSC_FULL_VER)
 #else
 #define LG_V2
 #endif
