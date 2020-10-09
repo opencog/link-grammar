@@ -677,6 +677,22 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 #define LG_S1
 #endif
 
+#ifdef _POSIX_C_SOURCE
+#define LG_S2 MACVAL(_POSIX_C_SOURCE)
+#else
+#define LG_S2
+#endif
+
+#if !defined _POSIX_C_SOURCE || _POSIX_C_SOURCE == 0
+ #ifdef _POSIX_SOURCE
+ #define LG_S3 MACVAL(_POSIX_SOURCE)
+ #else
+ #define LG_S3
+ #endif
+#else
+#define LG_S3
+#endif
+
 /* -DCC=$(CC) is added in the Makefile. */
 #ifdef CC
 #define LG_CC CC
@@ -699,7 +715,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 #endif
 
 #define LG_COMP LG_CC " " LG_V1 " " LG_V2
-#define LG_STD LG_S1
+#define LG_STD LG_S1 LG_S2 LG_S3
 
 #ifdef __unix__
 #define LG_unix "__unix__ "
