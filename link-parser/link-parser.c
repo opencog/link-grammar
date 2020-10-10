@@ -890,16 +890,18 @@ open_error:
 			}
 
 			/* Now parse with null links */
-			if (!one_step_parse && num_linkages == 0 && !copts->batch_mode)
+			if (!one_step_parse && num_linkages == 0)
 			{
 				if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
-
-				if (copts->allow_null)
+				if (!copts->batch_mode)
 				{
-					/* XXX should use expanded disjunct list here too */
-					parse_options_set_min_null_count(opts, 1);
-					parse_options_set_max_null_count(opts, sentence_length(sent));
-					num_linkages = sentence_parse(sent, opts);
+					if (copts->allow_null)
+					{
+						/* XXX should use expanded disjunct list here too */
+						parse_options_set_min_null_count(opts, 1);
+						parse_options_set_max_null_count(opts, sentence_length(sent));
+						num_linkages = sentence_parse(sent, opts);
+					}
 				}
 			}
 		}
