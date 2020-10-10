@@ -39,18 +39,12 @@
 #include <string.h>
 #include <sys/stat.h>
 
-/* Used for terminal resizing */
+/* For dup2*(). */
 #ifndef _WIN32
-#include <termios.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <signal.h>
 #include <unistd.h>
 #else
-#include <windows.h>
-#include <wchar.h>
 #include <io.h>
-#endif /* _WIN32 */
+#endif
 
 #ifdef _MSC_VER
 #define LINK_GRAMMAR_DLL_EXPORT 0
@@ -555,68 +549,6 @@ static void print_usage(FILE *out, char *argv0, Command_Options *copts, int exit
 	exit(exit_value);
 }
 
-static unsigned int screen_width;
-/**
- * Query the system for the current tty/console width.
- * May be called directly or as SIGWINCH handler (if SIGWINCH exists).
- * Put the found screen width in a global variable \c screen_width;
- * @param sig Used only for type check in case SIGWINCH exists.
- * @return Void.
- */
-static void get_screen_width(int sig)
-{
-	if (!isatty_stdout) return;
-
-	int fd = fileno(stdout);
-
-#ifdef _WIN32
-	HANDLE console;
-	CONSOLE_SCREEN_BUFFER_INFO info;
-
-	/* Create a handle to the console screen. */
-	console = (HANDLE)_get_osfhandle(fd);
-	if (!console || (console == INVALID_HANDLE_VALUE)) return;
-
-	/* Calculate the size of the console window. */
-	if (GetConsoleScreenBufferInfo(console, &info) == 0) return;
-
-	screen_width = info.dwSize.X;
-	return;
-#else
-	struct winsize ws;
-
-	/* If there is no controlling terminal, the fileno will fail. This
-	 * seems to happen while building docker images, I don't know why.
-	 */
-	if (fd < 0) return;
-
-	if (0 != ioctl(fd, TIOCGWINSZ, &ws))
-	{
-		perror("stdout: ioctl TIOCGWINSZ");
-		return;
-	}
-
-	/* Set the screen width only if the returned value seems
-	 * rational: it's positive and not insanely tiny.
-	 */
-	if ((10 < ws.ws_col) && (16123 > ws.ws_col))
-		screen_width = ws.ws_col;
-#endif /* _WIN32 */
-}
-
-/**
- * Set the "width" user variable from the global \c screen_size.
- * If SIGWINCH is not defined, poll the screen width beforehand.
- */
-static void set_screen_width(Command_Options* copts)
-{
-#ifndef SIGWINCH
-	get_screen_width(0);
-#endif
-
-	copts->screen_width = screen_width;
-}
-
 #ifdef INTERRUPT_EXIT
 static void interrupt_exit(int n)
 {
@@ -660,25 +592,6 @@ int main(int argc, char * argv[])
 
 	win32_set_utf8_output();
 #endif /* _WIN32 */
-
-#ifdef SIGWINCH
-#if HAVE_SIGACTION
-	struct sigaction winch_act = { 0 };
-	winch_act.sa_handler = get_screen_width;
-	sigemptyset(&winch_act.sa_mask);
-	winch_act.sa_flags = 0;
-	if (sigaction(SIGWINCH, &winch_act, NULL) == -1)
-		perror("sigaction SIGWINCH");
-#else
-	if (signal(SIGWINCH, get_screen_width) == SIG_ERR)
-		perror("signal SIGWINCH");
-#endif /* HAVE_SIGACTION */
-#endif /* SIGWINCH */
-
-#ifdef INTERRUPT_EXIT
-	(void)signal(SIGINT, interrupt_exit);
-	(void)signal(SIGTERM, interrupt_exit);
-#endif
 
 	copts = command_options_create();
 	if (copts == NULL || copts->panic_opts == NULL)
@@ -775,9 +688,7 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	screen_width = copts->screen_width;
-	get_screen_width(0);
-	set_screen_width(copts);
+	initialize_screen_width(copts);
 
 	if ((parse_options_get_verbosity(opts)) > 0 && (quiet_start == 0))
 	{
