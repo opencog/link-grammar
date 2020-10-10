@@ -41,7 +41,6 @@ typedef struct
 
 typedef struct {
 	Parse_Options popts;
-	Parse_Options panic_opts;
 	panic_options panic;
 
 	unsigned int screen_width; /* width of screen for displaying linkages */
@@ -60,6 +59,9 @@ typedef struct {
 	bool display_links;     /* if true, a list o' links is printed out */
 	int  display_wordgraph; /* if nonzero, the word-graph is displayed */
 } Command_Options;
+
+void put_local_vars_in_opts(Command_Options *);
+void setup_panic_parse_options(Command_Options *, int);
 
 typedef enum
 {

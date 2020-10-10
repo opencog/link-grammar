@@ -487,19 +487,6 @@ static Label strip_off_label(char * input_string)
 	}
 }
 
-static void setup_panic_parse_options(Parse_Options opts)
-{
-	parse_options_set_disjunct_cost(opts, 4.0f);
-	parse_options_set_min_null_count(opts, 1);
-	parse_options_set_max_null_count(opts, 100);
-	parse_options_set_max_parse_time(opts, 60);
-	parse_options_set_islands_ok(opts, false);
-	parse_options_set_short_length(opts, 12);
-	parse_options_set_all_short_connectors(opts, true);
-	parse_options_set_linkage_limit(opts, 100);
-	parse_options_set_spell_guess(opts, 0);
-}
-
 static int divert_stdio(FILE *from, FILE *to)
 {
 	const int origfd = dup(fileno(from));
@@ -597,14 +584,12 @@ int main(int argc, char * argv[])
 #endif /* _WIN32 */
 
 	copts = command_options_create();
-	if (copts == NULL || copts->panic_opts == NULL)
+	if (copts == NULL || copts->popts == NULL)
 	{
 		prt_error("Fatal error: unable to create parse options\n");
 		exit(-1);
 	}
 	opts = copts->popts;
-
-	setup_panic_parse_options(copts->panic_opts);
 
 	parse_options_set_max_parse_time(opts, 30);
 	parse_options_set_linkage_limit(opts, 1000);
@@ -931,24 +916,19 @@ open_error:
 		if (copts->panic_mode && parse_options_resources_exhausted(opts))
 		{
 			batch_errors++;
-			if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
-			/* If the parser used was the SAT solver, set the panic parser to
-			 * it too.
-			 * FIXME? Currently, the SAT solver code is not too useful in
-			 * panic mode since it doesn't handle parsing with null words, so
-			 * using the regular parser in that case could be beneficial.
-			 * However, this currently causes a crash due to a memory
-			 * management mess. */
-			parse_options_set_use_sat_parser(copts->panic_opts,
-				parse_options_get_use_sat_parser(opts));
-			parse_options_reset_resources(copts->panic_opts);
-			parse_options_set_verbosity(copts->panic_opts, verbosity);
-			(void)sentence_parse(sent, copts->panic_opts);
 			if (verbosity > 0)
 			{
-				if (parse_options_timer_expired(copts->panic_opts))
+				fprintf(stdout, "Entering \"panic\" mode...\n");
+			}
+
+			setup_panic_parse_options(copts, sentence_length(sent));
+			(void)sentence_parse(sent, opts);
+			if (verbosity > 0)
+			{
+				if (parse_options_timer_expired(copts->popts))
 					fprintf(stdout, "Panic timer is expired!\n");
 			}
+			put_local_vars_in_opts(copts); /* Undo setup_panic_parse_options() */
 		}
 
 		if (verbosity > 1) parse_options_print_total_time(opts);
