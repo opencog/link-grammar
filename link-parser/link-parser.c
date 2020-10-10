@@ -1002,7 +1002,6 @@ open_error:
 			copts->panic_mode &&
 			parse_options_resources_exhausted(opts))
 		{
-			/* print_total_time(opts); */
 			batch_errors++;
 			if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
 			/* If the parser used was the SAT solver, set the panic parser to
