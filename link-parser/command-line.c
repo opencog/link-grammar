@@ -216,7 +216,7 @@ static const char *switch_value_description(const Switch *as)
  * Return a static buffer with a string value of the given switch.
  *
  * Since the static buffer is overwritten on each call, this function
- * should not use more than once as an argument of the same function.
+ * should not be used more than once as an argument of the same function.
  */
 static const char *switch_value_string(const Switch *as)
 {
@@ -445,7 +445,7 @@ static void display_help(const Switch *sp, Command_Options *copts)
 	display_1line_help(sp, /*is_completion*/false);
 	if (Cmd != sp->param_type)
 	{
-		printf("Current value: %s\n",switch_value_string(sp));
+		printf("Current value: %s\n", switch_value_string(sp));
 		restore_default_local_vars();
 		printf("Default value: %s\n", switch_value_string(sp));
 		put_opts_in_local_vars(copts);
