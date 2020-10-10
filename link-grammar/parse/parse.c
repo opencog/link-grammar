@@ -229,6 +229,13 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	print_time(opts, "Sorted all linkages");
 }
 
+static void notify_no_complete_linkages(unsigned int null_count,
+                                        unsigned int max_null_count)
+{
+		if ((0 == null_count) && (0 < max_null_count) && verbosity > 0)
+			prt_error("No complete linkages found.\n");
+}
+
 /**
  * classic_parse() -- parse the given sentence.
  * Perform parsing, using the original link-grammar parsing algorithm
@@ -350,6 +357,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 					else
 						prt_error("null%s)\n", (nl != 1) ? "s" : "");
 				}
+				notify_no_complete_linkages(nl, max_null_count);
 				nl = expexted_null_count-1;
 				/* To get a result, parse w/null count which is at most one less
 				 * than the number of tokens (w/all nulls there is no linkage). */
@@ -427,8 +435,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			}
 		}
 
-		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
-			prt_error("No complete linkages found.\n");
+		notify_no_complete_linkages(nl, max_null_count);
 	}
 	sort_linkages(sent, opts);
 
