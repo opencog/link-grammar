@@ -164,6 +164,9 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 	}
 	if (copts->display_on)
 	{
+#ifdef SIGWINCH
+		set_screen_width(copts);
+#endif
 		string = linkage_print_diagram(linkage, copts->display_walls, copts->screen_width);
 		fprintf(stdout, "%s", string);
 		linkage_free_diagram(string);
@@ -950,7 +953,9 @@ open_error:
 
 		if (verbosity > 1) parse_options_print_total_time(opts);
 
+#ifndef SIGWINCH
 		set_screen_width(copts);
+#endif
 
 		const char *rc = "";
 		if (copts->batch_mode)
