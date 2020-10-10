@@ -579,22 +579,22 @@ static int help_cmd(const Switch *uc, int n)
 	printf("Special commands always begin with \"!\".  Command and variable names\n");
 	printf("can be abbreviated.  Here is a list of the commands:\n\n");
 
-	printf(" !help command   Show a detailed help for the given command.\n");
+	printf(" !help command    Show a detailed help for the given command.\n");
 	for (int i = 0; uc[i].string != NULL; i++)
 	{
 		if (Cmd != uc[i].param_type) continue;
 		if (UNDOC[0] == uc[i].description[0]) continue;
-		printf(" !%-14s ", uc[i].string);
+		printf(" !%-15s ", uc[i].string);
 		printf("%s.\n", uc[i].description);
 	}
 
 	printf("\n");
-	printf(" !!<string>      Print all the dictionary words that match <string>.\n");
-	printf("                 A wildcard * may be used to find multiple matches.\n");
-	printf("                 Issue \"!help !\" for more details.\n");
+	printf(" !!<string>       Print all the dictionary words that match <string>.\n");
+	printf("                  A wildcard * may be used to find multiple matches.\n");
+	printf("                  Issue \"!help !\" for more details.\n");
 	printf("\n");
-	printf(" !<var>          Toggle the specified Boolean variable.\n");
-	printf(" !<var>=<val>    Assign that value to that variable.\n");
+	printf(" !<var>           Toggle the specified Boolean variable.\n");
+	printf(" !<var>=<val>     Assign that value to that variable.\n");
 
 	print_url_info();
 
