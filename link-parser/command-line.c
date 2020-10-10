@@ -89,8 +89,8 @@ Switch default_switches[] =
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	{"spell",      Int, "Up to this many spell-guesses per unknown word", &local.spell_guess},
-	{"test",       String, "Comma-separated test features", &local.test},
 #endif /* HAVE_HUNSPELL */
+	{"test",       String, "Comma-separated test features", &local.test},
 	{"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
 #ifdef USE_SAT_SOLVER
 	{"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
