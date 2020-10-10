@@ -29,9 +29,20 @@
 #define MAX(X,Y)  (((X) > (Y)) ? (X) : (Y))
 #endif
 
+typedef struct
+{
+	double max_cost;
+	int linkage_limit;
+	int max_null_count;
+	int short_length;
+	int spell_guess;
+	int timeout;
+} panic_options;
+
 typedef struct {
 	Parse_Options popts;
 	Parse_Options panic_opts;
+	panic_options panic;
 
 	unsigned int screen_width; /* width of screen for displaying linkages */
 	bool batch_mode;        /* if true, process sentences non-interactively */

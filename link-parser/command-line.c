@@ -51,6 +51,8 @@ static struct
 	int display_disjuncts;
 	int display_morphology;
 	int display_wordgraph;
+
+	panic_options panic;
 } local, saved_defaults;
 
 static const char *value_type[] =
@@ -925,6 +927,8 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.display_links = copts->display_links;
 
 	local.display_morphology = parse_options_get_display_morphology(opts);
+
+	local.panic = copts->panic;
 }
 
 static void put_local_vars_in_opts(Command_Options* copts)
@@ -963,6 +967,8 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	copts->display_bad = local.display_bad;
 	copts->display_disjuncts = local.display_disjuncts;
 	copts->display_links = local.display_links;
+
+	copts->panic = local.panic;
 }
 
 int issue_special_command(const char * line, Command_Options* opts, Dictionary dict)
@@ -1015,6 +1021,13 @@ Command_Options* command_options_create(void)
 	co->display_disjuncts = false;
 	co->display_links = false;
 	co->display_wordgraph = 0;
+
+	co->panic.max_cost = 4.0f;
+	co->panic.linkage_limit = 1000;
+	co->panic.max_null_count = 10;
+	co->panic.short_length = 12;
+	co->panic.spell_guess = 0;
+	co->panic.timeout = 30;
 	return co;
 }
 
