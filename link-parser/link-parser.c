@@ -555,14 +555,20 @@ static void print_usage(FILE *out, char *argv0, Command_Options *copts, int exit
 	exit(exit_value);
 }
 
+static unsigned int screen_width;
 /**
- * On Unix, this checks for the current window size,
- * and sets the output screen width accordingly.
+ * Query the system for the current tty/console width.
+ * May be called directly or as SIGWINCH handler (if SIGWINCH exists).
+ * Put the found screen width in a global variable \c screen_width;
+ * @param sig Used only for type check in case SIGWINCH exists.
+ * @return Void.
  */
-static void check_winsize(Command_Options* copts)
+static void get_screen_width(int sig)
 {
 	if (!isatty_stdout) return;
+
 	int fd = fileno(stdout);
+
 #ifdef _WIN32
 	HANDLE console;
 	CONSOLE_SCREEN_BUFFER_INFO info;
@@ -574,7 +580,7 @@ static void check_winsize(Command_Options* copts)
 	/* Calculate the size of the console window. */
 	if (GetConsoleScreenBufferInfo(console, &info) == 0) return;
 
-	copts->screen_width = info.dwSize.X;
+	screen_width = info.dwSize.X;
 	return;
 #else
 	struct winsize ws;
@@ -590,17 +596,25 @@ static void check_winsize(Command_Options* copts)
 		return;
 	}
 
-	/* printf("rows %i\n", ws.ws_row); */
-	/* printf("cols %i\n", ws.ws_col); */
-
 	/* Set the screen width only if the returned value seems
 	 * rational: it's positive and not insanely tiny.
 	 */
 	if ((10 < ws.ws_col) && (16123 > ws.ws_col))
-	{
-		copts->screen_width = ws.ws_col;
-	}
+		screen_width = ws.ws_col;
 #endif /* _WIN32 */
+}
+
+/**
+ * Set the "width" user variable from the global \c screen_size.
+ * If SIGWINCH is not defined, poll the screen width beforehand.
+ */
+static void set_screen_width(Command_Options* copts)
+{
+#ifndef SIGWINCH
+	get_screen_width(0);
+#endif
+
+	copts->screen_width = screen_width;
 }
 
 #ifdef INTERRUPT_EXIT
@@ -647,15 +661,19 @@ int main(int argc, char * argv[])
 	win32_set_utf8_output();
 #endif /* _WIN32 */
 
-#if LATER
-	/* Try to catch the SIGWINCH ... except this is not working. */
-	struct sigaction winch_act;
-	winch_act.sa_handler = winch_handler;
-	winch_act.sa_sigaction = NULL;
-	sigemptyset (&winch_act.sa_mask);
+#ifdef SIGWINCH
+#if HAVE_SIGACTION
+	struct sigaction winch_act = { 0 };
+	winch_act.sa_handler = get_screen_width;
+	sigemptyset(&winch_act.sa_mask);
 	winch_act.sa_flags = 0;
-	sigaction (SIGWINCH, &winch_act, NULL);
-#endif
+	if (sigaction(SIGWINCH, &winch_act, NULL) == -1)
+		perror("sigaction SIGWINCH");
+#else
+	if (signal(SIGWINCH, get_screen_width) == SIG_ERR)
+		perror("signal SIGWINCH");
+#endif /* HAVE_SIGACTION */
+#endif /* SIGWINCH */
 
 #ifdef INTERRUPT_EXIT
 	(void)signal(SIGINT, interrupt_exit);
@@ -757,7 +775,9 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	check_winsize(copts);
+	screen_width = copts->screen_width;
+	get_screen_width(0);
+	set_screen_width(copts);
 
 	if ((parse_options_get_verbosity(opts)) > 0 && (quiet_start == 0))
 	{
@@ -783,7 +803,7 @@ int main(int argc, char * argv[])
 		test = parse_options_get_test(opts);
 
 		input_string = fget_input_string(input_fh, stdout, /*check_return*/false);
-		check_winsize(copts);
+		set_screen_width(copts);
 
 		if (NULL == input_string)
 		{
@@ -1018,6 +1038,8 @@ open_error:
 		}
 
 		if (verbosity > 1) parse_options_print_total_time(opts);
+
+		set_screen_width(copts);
 
 		const char *rc = "";
 		if (copts->batch_mode)

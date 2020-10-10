@@ -33,7 +33,7 @@ typedef struct {
 	Parse_Options popts;
 	Parse_Options panic_opts;
 
-	size_t screen_width;    /* width of screen for displaying linkages */
+	unsigned int screen_width; /* width of screen for displaying linkages */
 	bool batch_mode;        /* if true, process sentences non-interactively */
 	bool allow_null;        /* true if we allow null links in parsing */
 	bool echo_on;           /* true if we should echo the input sentence */
