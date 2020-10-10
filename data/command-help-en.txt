@@ -144,7 +144,7 @@ possible number of null links.
 If enabled, then a "panic-mode" will be entered when a parse cannot be
 found within the time limit set by !timeout. When in panic mode, various
 parse options are loosened so that a less accurate parse can be found
-quickly.
+quickly. See "!help panic_variables" for info on these parse options.
 
 [use-sat]
 Use the Boolean-SAT parser instead of the traditional parser. The SAT
@@ -406,3 +406,37 @@ In this sample output:
 These variables affect the output:
 Disjuncts, expressions: !dialect
 Disjuncts only:         !cost-max
+
+[panic_variables]
+Show the variables that may take effect in panic mode (see "!help panic")
+and their current values.  They may replace the value of the similar named
+variables (without the prefix "panic_") according to certain replacement
+rules - see "!help panic_timeout".
+
+[panic_short,panic_cost-max,panic_limit,panic_max-null-count,panic_spell,panic_timeout]
+The following variables are panic mode variables, meaning that they may take
+effect in panic mode according to the rules that are listed below.
+
+Here are their names, roles and initial values, as shown by
+!panic_variables:
+
+ Variable             Controls                              Default value
+ --------             --------                              -------------
+ panic_short          Max length of all links                          12
+ panic_cost-max       Largest cost to be considered                  4.00
+ panic_limit          The maximum linkages processed                 1000
+ panic_max-null-count Max number of null links allowed                 10
+ panic_spell          Up to this many spell-guesses per unknown word    0
+ panic_timeout        Abort panic parsing after this many seconds      30
+
+Their values are used in panic mode according to the following rules:
+
+ !panic_short          - replaces !short if its value is lower.
+ !panic_cost-max       - replaces !cost-max if its value is higher [*].
+ !panic_limit          - replaces !limit if its value is lower.
+ !panic_max-null-count - the maximum allowed null links.
+ !panic_spell          - replaces !spell if its value is lower.
+ !panic_timeout        - the timeout of the panic mode parsing.
+
+[*] The library all_short_connectors parse option is always set in panic
+mode, so !short determines the maximum length of all the links.
