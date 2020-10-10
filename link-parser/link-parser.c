@@ -803,7 +803,6 @@ int main(int argc, char * argv[])
 		test = parse_options_get_test(opts);
 
 		input_string = fget_input_string(input_fh, stdout, /*check_return*/false);
-		set_screen_width(copts);
 
 		if (NULL == input_string)
 		{
@@ -827,6 +826,7 @@ int main(int argc, char * argv[])
 		if (strspn(input_string, WHITESPACE) == strlen(input_string))
 			continue;
 
+		set_screen_width(copts);
 		int command = special_command(input_string, copts, dict);
 		if ('e' == command) break;    /* It was an exit command */
 		if ('c' == command) continue; /* It was another command */
