@@ -18,19 +18,13 @@
 #include "disjunct-utils.h"             // Disjunct
 #include "extract-links.h"
 #include "fast-match.h"
+#include "memory-pool.h"
 #include "utilities.h"                  // Windows rand_r()
 #include "linkage/linkage.h"
 #include "tokenize/word-structures.h"   // Word_Struct
 
 //#define RECOUNT
-
 //#define DEBUG_X_TABLE
-#ifdef DEBUG_X_TABLE
-#undef DEBUG_X_TABLE
-#define DEBUG_X_TABLE(...) __VA_ARGS__
-#else
-#define DEBUG_X_TABLE(...)
-#endif
 
 typedef struct Parse_choice_struct Parse_choice;
 
@@ -74,12 +68,14 @@ struct Pset_bucket_struct
 struct extractor_s
 {
 	unsigned int   x_table_size;
-	unsigned int   log2_x_table_size;
+	unsigned int   log2_x_table_size; /* Not used */
 	Pset_bucket ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
 	Word           *words;
 	bool           islands_ok;
 	bool           sort_match_list;
+	Pool_desc *    Pset_bucket_pool;
+	Pool_desc *    Parse_choice_pool;
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
@@ -95,24 +91,13 @@ struct extractor_s
  * continuation).
  */
 
-static void free_set(Parse_set *s)
-{
-	Parse_choice *p, *xp;
-	if (s == NULL) return;
-	for (p=s->first; p != NULL; p = xp)
-	{
-		xp = p->next;
-		xfree((void *)p, sizeof(*p));
-	}
-}
-
 static Parse_choice *
 make_choice(Parse_set *lset, Connector * llc, Connector * lrc,
             Parse_set *rset, Connector * rlc, Connector * rrc,
-            Disjunct *md)
+            Disjunct *md, extractor_t* pex)
 {
 	Parse_choice *pc;
-	pc = (Parse_choice *) xalloc(sizeof(*pc));
+	pc = pool_alloc(pex->Parse_choice_pool);
 	pc->next = NULL;
 	pc->set[0] = lset;
 	pc->link[0].link_name = NULL;
@@ -151,11 +136,11 @@ static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
 static void record_choice(
     Parse_set *lset, Connector * llc, Connector * lrc,
     Parse_set *rset, Connector * rlc, Connector * rrc,
-    Disjunct *md, Parse_set *s)
+    Disjunct *md, Parse_set *s, extractor_t* pex)
 {
 	put_choice_in_set(s, make_choice(lset, llc, lrc,
 	                                 rset, rlc, rrc,
-	                                 md));
+	                                 md, pex));
 }
 
 /**
@@ -175,8 +160,8 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->rand_state = ranstat;
 
 	/* Alloc the x_table */
-	if (nwords > 96) {
-		log2_table_size = 15 + nwords / 48;
+	if (nwords >= 72) {
+		log2_table_size = 15 + nwords / 36;
 	} else if (nwords >= 10) {
 		log2_table_size = 14 + nwords / 24;
 	} else if (nwords >= 4) {
@@ -184,16 +169,26 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	} else {
 		log2_table_size = 5;
 	}
-	/* if (log2_table_size > 21) log2_table_size = 21; */
+	/* At nwords>=252, log2_table_size is 15+7=22. */
 	pex->log2_x_table_size = log2_table_size;
 	pex->x_table_size = (1 << log2_table_size);
 
-	DEBUG_X_TABLE(
+#ifdef DEBUG_X_TABLE
 		printf("Allocating x_table of size %u (nwords %d)\n",
 		       pex->x_table_size, nwords);
-	)
+#endif /* DEBUG_X_TABLE */
+
 	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
 	memset(pex->x_table, 0, pex->x_table_size * sizeof(Pset_bucket*));
+
+	pex->Pset_bucket_pool =
+		pool_new(__func__, "Pset_bucket",
+		         /*num_elements*/1024, sizeof(Pset_bucket),
+		         /*zero_out*/false, /*align*/false, /*exact*/false);
+	pex->Parse_choice_pool =
+		pool_new(__func__, "Parse_choice",
+		         /*num_elements*/1024, sizeof(Parse_choice),
+		         /*zero_out*/false, /*align*/false, /*exact*/false);
 
 	return pex;
 }
@@ -205,39 +200,35 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
  */
 void free_extractor(extractor_t * pex)
 {
-	unsigned int i;
-	Pset_bucket *t, *x;
 	if (!pex) return;
 
-	DEBUG_X_TABLE(int N = 0;)
-	for (i=0; i<pex->x_table_size; i++)
+#ifdef DEBUG_X_TABLE
+	int N = 0;
+	for (unsigned int i = 0; i < pex->x_table_size; i++)
 	{
-		DEBUG_X_TABLE(int c = 0;)
-		for (t = pex->x_table[i]; t!= NULL; t=x)
-		{
-			DEBUG_X_TABLE(c++;)
-			x = t->next;
-			free_set(&t->set);
-			xfree((void *) t, sizeof(Pset_bucket));
-		}
-		DEBUG_X_TABLE(
-			if (c > 0)
-				;//printf("I %d: chain %d\n", i, c);
-			else
-				N++;
-		)
+		int c = 0;
+		for (Pset_bucket *t = pex->x_table[i]; t != NULL; t = t->next)
+			c++;
+
+		if (c > 0)
+			;//printf("I %d: chain %d\n", i, c);
+		else
+			N++;
 	}
-	DEBUG_X_TABLE(
-		printf("Used x_table %u/%u %.2f%%\n",
-				 pex->x_table_size-N, pex->x_table_size,
-				 100.0f*(pex->x_table_size-N)/pex->x_table_size);
-	)
+	printf("Used x_table %u/%u %.2f%%\n",
+	       pex->x_table_size-N, pex->x_table_size,
+	       100.0f*(pex->x_table_size-N)/pex->x_table_size);
+#endif /* DEBUG_X_TABLE */
+
 	pex->parse_set = NULL;
 
 	//printf("Freeing x_table of size %d\n", pex->x_table_size);
 	xfree((void *) pex->x_table, pex->x_table_size * sizeof(Pset_bucket*));
 	pex->x_table_size = 0;
 	pex->x_table = NULL;
+
+	pool_delete(pex->Pset_bucket_pool);
+	pool_delete(pex->Parse_choice_pool);
 
 	xfree((void *) pex, sizeof(extractor_t));
 }
@@ -273,7 +264,7 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	Pset_bucket *t, *n;
 	unsigned int h;
 
-	n = (Pset_bucket *) xalloc(sizeof(Pset_bucket));
+	n = pool_alloc(pex->Pset_bucket_pool);
 	n->set.lw = lw;
 	n->set.rw = rw;
 	n->set.null_count = null_count;
@@ -410,7 +401,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 					dummy = dummy_set(lw, w, null_count-1, pex);
 					record_choice(dummy, NULL, NULL,
 									  pset, dis->right, NULL,
-									  dis, &xt->set);
+									  dis, &xt->set, pex);
 					RECOUNT({xt->set.recount += pset->recount;})
 				}
 			}
@@ -422,7 +413,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 				dummy = dummy_set(lw, w, null_count-1, pex);
 				record_choice(dummy, NULL, NULL,
 								  pset,  NULL, NULL,
-								  NULL, &xt->set);
+								  NULL, &xt->set, pex);
 				RECOUNT({xt->set.recount += pset->recount;})
 			}
 		}
@@ -459,7 +450,26 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	RECOUNT({xt->set.recount = 0;})
 	for (w = start_word; w < end_word; w++)
 	{
-		size_t mlb = form_match_list(mchxt, w, le, lw, re, rw);
+		/* Start of nonzero leftcount/rightcount range cache check. */
+		Connector *fml_re = re;       /* For form_match_list() only */
+
+		if (le != NULL)
+		{
+			if (no_count(ctxt, 0, le, lw, w, null_count)) continue;
+			if (re != NULL)
+			{
+				if (no_count(ctxt, 1, re, rw, w, null_count))
+					fml_re = NULL;
+			}
+		}
+		else
+		{
+			/* Here re != NULL. */
+			if (no_count(ctxt, 1, re, rw, w, null_count)) continue;
+		}
+		/* End of nonzero leftcount/rightcount range cache check. */
+
+		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw);
 		if (pex->sort_match_list) sort_match_list(mchxt, mlb);
 
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
@@ -503,10 +513,29 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 						              lw, w, le, d->left,
 						              lnull_count, pex);
 
-					ls_exists =
-						ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL;
+					if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL)
+					{
+						ls_exists = true;
+						/* Evaluate using the left match, but not the right */
+						Parse_set* rset = mk_parse_set(mchxt, ctxt,
+						                               w, rw, d->right, re,
+						                               rnull_count, pex);
+						if (rset != NULL)
+						{
+							for (i=0; i<4; i++)
+							{
+								if (ls[i] == NULL) continue;
+								/* this ordering is probably not consistent with
+								 * that needed to use list_links */
+								record_choice(ls[i], le, d->left,
+								              rset,  NULL /* d->right */,
+								              re,  /* the NULL indicates no link*/
+								              d, &xt->set, pex);
+								RECOUNT({xt->set.recount += ls[i]->recount * rset->recount;})
+							}
+						}
+					}
 				}
-
 
 				if (Rmatch && (ls_exists || le == NULL))
 				{
@@ -528,64 +557,47 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 						rs[3] = mk_parse_set(mchxt, ctxt,
 						              w, rw, d->right, re,
 						              rnull_count, pex);
-				}
 
-				for (i=0; i<4; i++)
-				{
-					/* This ordering is probably not consistent with that
-					 * needed to use list_links. (??) */
-					if (ls[i] == NULL) continue;
-					for (j=0; j<4; j++)
+					if ((rs[0] != NULL || rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
 					{
-						if (rs[j] == NULL) continue;
-						record_choice(ls[i], le, d->left,
-						              rs[j], d->right, re,
-						              d, &xt->set);
-						RECOUNT({xt->set.recount += ls[i]->recount * rs[j]->recount;})
-					}
-				}
-
-				if (ls_exists)
-				{
-					/* Evaluate using the left match, but not the right */
-					Parse_set* rset = mk_parse_set(mchxt, ctxt,
-					                        w, rw, d->right, re,
-					                        rnull_count, pex);
-					if (rset != NULL)
-					{
-						for (i=0; i<4; i++)
+						if (le == NULL)
 						{
-							if (ls[i] == NULL) continue;
-							/* this ordering is probably not consistent with
-							 * that needed to use list_links */
-							record_choice(ls[i], le, d->left,
-							              rset,  NULL /* d->right */,
-							              re,  /* the NULL indicates no link*/
-							              d, &xt->set);
-							RECOUNT({xt->set.recount += ls[i]->recount * rset->recount;})
+							/* Evaluate using the right match, but not the left */
+							Parse_set* lset = mk_parse_set(mchxt, ctxt,
+							                               lw, w, le, d->left,
+							                               lnull_count, pex);
+
+							if (lset != NULL)
+							{
+								for (j=0; j<4; j++)
+								{
+									if (rs[j] == NULL) continue;
+									/* this ordering is probably not consistent with
+									 * that needed to use list_links */
+									record_choice(lset, NULL /* le */,
+									              d->left,  /* NULL indicates no link */
+									              rs[j], d->right, re,
+									              d, &xt->set, pex);
+									RECOUNT({xt->set.recount += lset->recount * rs[j]->recount;})
+								}
+							}
 						}
-					}
-				}
-				else if ((le == NULL) && (rs[0] != NULL ||
-				     rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
-				{
-					/* Evaluate using the right match, but not the left */
-					Parse_set* lset = mk_parse_set(mchxt, ctxt,
-					                        lw, w, le, d->left,
-					                        lnull_count, pex);
-
-					if (lset != NULL)
-					{
-						for (j=0; j<4; j++)
+						else
 						{
-							if (rs[j] == NULL) continue;
-							/* this ordering is probably not consistent with
-							 * that needed to use list_links */
-							record_choice(lset, NULL /* le */,
-							              d->left,  /* NULL indicates no link */
-							              rs[j], d->right, re,
-							              d, &xt->set);
-							RECOUNT({xt->set.recount += lset->recount * rs[j]->recount;})
+							for (i=0; i<4; i++)
+							{
+								/* This ordering is probably not consistent with that
+								 * needed to use list_links. (??) */
+								if (ls[i] == NULL) continue;
+								for (j=0; j<4; j++)
+								{
+									if (rs[j] == NULL) continue;
+									record_choice(ls[i], le, d->left,
+									              rs[j], d->right, re,
+									              d, &xt->set, pex);
+									RECOUNT({xt->set.recount += ls[i]->recount * rs[j]->recount;})
+								}
+							}
 						}
 					}
 				}
