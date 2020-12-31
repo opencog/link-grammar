@@ -1,10 +1,10 @@
-Version 5.8.1 (XXX 2020)
+Version 5.8.1 (XXX 2021)
  * Fix macOS/SunOS build break.
  * English dict: fix numerical identifiers used as adjectives.
  * English dict: fix post-posed Latin adjectival modifiers.
  * Merge upstream gentoo patches. #1102
  * Make -O3 default for CFLAGS/CXXFLAGS, but overridable by the user.
- * English dict: fix look_at, listen_to person_action
+ * English dict: fix look_at, listen_to person-action
  * English dict: fix verb "felt" with object-action.
  * English dict: fix why-perform-action questions.
 
