@@ -387,9 +387,17 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	char *input = get_file_contents(fname);
 	if (input == NULL)
 	{
-		if (dict->dialect_tag.num != 0)
-			prt_error("warning: No dialect file\n");
-		return true; /* Not an error for now. */
+		if (dict->dialect_tag.num == 0) return true;
+
+		prt_error("Error: "
+		          "Dialects found in the dictionary but no dialect file.\n");
+		return false; /* Parsing results may be wrong */
+	}
+	if (dict->dialect_tag.num == 0)
+	{
+		prt_error("Warning: "
+		          "File '%s' found but no dialects in the dictionary.\n", fname);
+		return true;
 	}
 
 	Dialect *di = dict->dialect = dialect_alloc();
