@@ -520,8 +520,8 @@ static uint32_t make_flags(const char *flags)
  * Optional [nearest_word, length_limit or farthest_word]: (flag 'l').
  * x: Shallow/deep indication as "s" / "d" (if shallow != -1)
  */
-static void dyn_print_one_connector(dyn_str *s, Connector *e, int dir,
-                                    int shallow, uint32_t flags)
+static void dyn_print_one_connector(dyn_str *s, const Connector *e, int dir,
+                                    uint32_t flags)
 {
 	if (e->multi)
 		dyn_strcat(s, "@");
@@ -536,44 +536,66 @@ static void dyn_print_one_connector(dyn_str *s, Connector *e, int dir,
 #if 0
 	append_string(s, "<<%d>>", e->exp_pos);
 #endif
-	if (-1 != shallow)
-		dyn_strcat(s, (0 == shallow) ? "d" : "s");
+	if (is_flag(flags, 's'))
+		dyn_strcat(s, e->shallow ? "s" : "d");
 }
 
-GNUC_UNUSED static void print_one_connector(Connector *e, int dir, int shallow,
-                                            uint32_t flags)
+void print_one_connector(const Connector *e, const char *flags)
 {
 	dyn_str *s = dyn_str_new();
+	int dir = -1;
 
-	dyn_print_one_connector(s, e, dir, shallow, flags);
+	if (flags == NULL) flags = "lt";
+	if (*flags == '-') { flags++; dir = 0; }
+	if (*flags == '+') { flags++; dir = 1; }
+
+	uint32_t int_flags = make_flags(flags);
+	dyn_print_one_connector(s, e, dir, int_flags);
 
 	char *t = dyn_str_take(s);
 	puts(t);
 	free(t);
 }
 
-static void dyn_print_connector_list(dyn_str *s, Connector *e, int dir,
+static void dyn_print_connector_list(dyn_str *s, const Connector *e, int dir,
                                      uint32_t flags)
 {
 
 	if (e == NULL) return;
 	dyn_print_connector_list(s, e->next, dir, flags);
 	if (e->next != NULL) dyn_strcat(s, " ");
-	dyn_print_one_connector(s, e, dir, /*shallow*/-1, flags);
+	dyn_print_one_connector(s, e, dir, flags);
 }
 
-void print_connector_list(Connector *e, const char *flags)
+/* Special flags here: Initial "-" or "+" for direction sign. */
+
+char *sprint_connector_list(const Connector *e, const char *flags)
 {
 	dyn_str *s = dyn_str_new();
+	int dir = -1;
 
 	if (flags == NULL) flags = "lt";
+	if (*flags == '-') { flags++; dir = 0; }
+	if (*flags == '+') { flags++; dir = 1; }
+
+	dyn_print_connector_list(s, e, dir, make_flags(flags));
+
+	return dyn_str_take(s);
+}
+
+char *sprint_one_connector(const Connector *e, const char *flags)
+{
+	dyn_str *s = dyn_str_new();
+	int dir = -1;
+
+	if (flags == NULL) flags = "lt";
+	if (*flags == '-') { flags++; dir = 0; }
+	if (*flags == '+') { flags++; dir = 1; }
+
 	uint32_t int_flags = make_flags(flags);
+	dyn_print_one_connector(s, e, dir, int_flags);
 
-	dyn_print_connector_list(s, e, /*dir*/-1, int_flags);
-
-	char *t = dyn_str_take(s);
-	puts(t);
-	free(t);
+	return dyn_str_take(s);
 }
 
 /* Ascending sort of connector positions. */
@@ -596,7 +618,8 @@ typedef struct
 	unsigned int num_tunnels;
 } select_data;
 
-static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
+static void dyn_print_disjunct_list(dyn_str *s, const Disjunct *dj,
+              uint32_t flags,
               bool (* select)(const char *dj_str, select_data *criterion),
               select_data *criterion)
 {
@@ -656,7 +679,7 @@ static void dyn_print_disjunct_list(dyn_str *s, Disjunct *dj, uint32_t flags,
 	}
 }
 
-void print_disjunct_list(Disjunct *d, const char *flags)
+void print_disjunct_list(const Disjunct *d, const char *flags)
 {
 	dyn_str *s = dyn_str_new();
 

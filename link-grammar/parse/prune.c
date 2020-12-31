@@ -141,6 +141,52 @@ struct prune_context_s
 	int N_xlink;      /* counts linked interval link-crossing rejections */
 };
 
+#ifdef DEBUG
+GNUC_UNUSED static void print_power_table_entry(power_table *pt, int w, int dir)
+{
+	C_list **t;
+	unsigned int size;
+
+	if (dir == 0)
+	{
+		t = pt->l_table[w];
+		size = pt->l_table_size[w];
+	}
+	else
+	{
+		t = pt->r_table[w];
+		size = pt->r_table_size[w];
+	}
+	if (size == 1) return;
+	printf("w%d dir%d size=%u:\n", w, dir, size);
+
+	for (unsigned int i = 0; i < size; i++)
+	{
+		if (t[i] == NULL) continue;
+
+		printf(" [%u]: ", i);
+		for (C_list *cl = t[i]; cl != NULL; cl = cl->next)
+		{
+			char *cstr = print_one_connector_str(cl->c, "lrs");
+			printf("%s", cstr);
+			free(cstr);
+			if (cl->next != NULL) printf(" ");
+		}
+		printf("\n");
+	}
+}
+
+GNUC_UNUSED static void print_power_table(Sentence sent, power_table *pt)
+{
+	printf("power table:\n");
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (int dir = 0; dir < 2; dir++)
+			print_power_table_entry(pt, w, dir);
+	}
+}
+#endif
+
 /*
  * Here is what you've been waiting for: POWER-PRUNE
  *
