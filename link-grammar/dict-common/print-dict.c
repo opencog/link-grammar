@@ -532,7 +532,7 @@ static void dyn_print_one_connector(dyn_str *s, Connector *e, int dir,
 	if (is_flag(flags, 'r') && e->refcount)
 		append_string(s, "{%d}",e->refcount);
 	if (is_flag(flags, 'l'))
-		append_string(s, "(%d,%d)", e->nearest_word, e->length_limit);
+		append_string(s, "(%d,%d)", e->nearest_word, e->farthest_word);
 #if 0
 	append_string(s, "<<%d>>", e->exp_pos);
 #endif

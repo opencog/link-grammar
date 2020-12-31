@@ -169,14 +169,7 @@ static inline bool matches_S(connector_table **ct, int w, condesc_t * c)
 
 	for (e = ct[hash_S(c)]; e != NULL; e = e->next)
 	{
-		if (e->farthest_word <= 0)
-		{
-			if (w < -e->farthest_word) continue;
-		}
-		else
-		{
-			if (w > e->farthest_word) continue;
-		}
+		if (w > e->farthest_word) continue;
 		if (easy_match_desc(e->condesc, c)) return true;
 	}
 	return false;
@@ -292,7 +285,7 @@ static Exp* purge_Exp(exprune_context *ctxt, int w, Exp *e, char dir)
 	{
 		if (e->dir == dir)
 		{
-			if (!matches_S(ctxt->ct, w, e->condesc))
+			if (!matches_S(ctxt->ct, (dir == '-') ? w : -w, e->condesc))
 			{
 				ctxt->N_deleted++;
 				return NULL;
@@ -334,7 +327,8 @@ static void zero_connector_table(exprune_context *ctxt)
  * This function puts connector c into the connector table
  * if one like it isn't already there.
  */
-static void insert_connector(exprune_context *ctxt, int farthest_word, condesc_t * c)
+static void insert_connector(exprune_context *ctxt, int farthest_word,
+                             condesc_t *c)
 {
 	unsigned int h;
 	connector_table *e;
@@ -368,11 +362,7 @@ static void insert_connectors(exprune_context *ctxt, int w, Exp * e, int dir)
 		if (e->dir == dir)
 		{
 			assert(NULL != e->condesc, "NULL connector");
-			Connector c = { .desc = e->condesc };
-
-			set_connector_length_limit(&c, ctxt->opts);
-			int farthest_word = (dir == '-') ? -MAX(0, w-c.length_limit) :
-				                              w+c.length_limit;
+			int farthest_word = (dir == '-') ? -e->farthest_word : e->farthest_word;
 			insert_connector(ctxt, farthest_word, e->condesc);
 		}
 	}

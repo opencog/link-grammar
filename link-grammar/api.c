@@ -632,6 +632,12 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	if (IS_DB_DICT(sent->dict))
 		condesc_setup(sent->dict);
 
+	for (WordIdx w = 0; w < sent->length; w++)
+	{
+		for (X_node *x = sent->word[w].x; x != NULL; x = x->next)
+			set_connector_farthest_word(x->exp, (int)w, (int)sent->length, opts);
+	}
+
 	/* Expressions were set up during the tokenize stage.
 	 * Prune them, and then parse.
 	 */

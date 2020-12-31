@@ -105,15 +105,9 @@ typedef struct
  * Lets try to keep it that way. */
 struct Connector_struct
 {
-	union
-	{
-		uint8_t farthest_word;/* The farthest word to my left (or right)
-		                         that this could ever connect to. Computed
-		                         from length_limit by setup_connectors(). */
-		uint8_t length_limit; /* Same purpose as above but relative to the
-		                         current word. This is how it is initially
-		                         set. */
-	};
+	uint8_t farthest_word;/* The farthest word to my left (or right)
+		                      that this could ever connect to. Computed
+		                      by set_connector_farthest_word(). */
 	uint8_t nearest_word; /* The nearest word to my left (or right) that
 	                         this could ever connect to.  Initialized by
 	                         setup_connectors(). Final value is found in
@@ -180,7 +174,7 @@ static inline unsigned int connector_uc_num(const Connector * c)
 
 /* Connector utilities ... */
 Connector * connector_new(Pool_desc *, const condesc_t *, Parse_Options);
-void set_connector_length_limit(Connector *, Parse_Options);
+void set_connector_farthest_word(Exp *, int, int, Parse_Options);
 void free_connectors(Connector *);
 
 /**

@@ -20,6 +20,7 @@
 #include "api-structures.h"             // Parse_Options_s
 #include "connectors.h"
 #include "link-includes.h"              // Parse_Options
+#include "utilities.h"                  // MIN, MAX
 
 #define WILD_TYPE '*'
 #define LENGTH_LINIT_WILD_TYPE WILD_TYPE
@@ -38,23 +39,42 @@ void free_connectors(Connector *e)
 	}
 }
 
-void
-set_connector_length_limit(Connector *c, Parse_Options opts)
+static unsigned int get_connector_length_limit(condesc_t *cd,
+                                               Parse_Options opts)
 {
-	if (NULL == opts)
-	{
-		c->length_limit = UNLIMITED_LEN;
-		return;
-	}
+	if (NULL == opts) return UNLIMITED_LEN;
 
 	int short_len = opts->short_length;
 	bool all_short = opts->all_short;
-	int length_limit = c->desc->length_limit;
+	int length_limit = cd->length_limit;
 
 	if ((all_short && (length_limit > short_len)) || (0 == length_limit))
-		c->length_limit = short_len;
+		return short_len;
+
+	return length_limit;
+}
+
+void set_connector_farthest_word(Exp *e, int w, int sent_length,
+                                 Parse_Options opts)
+{
+	if (e->type == CONNECTOR_type)
+	{
+		assert(NULL != e->condesc, "NULL connector");
+		int length_limit = get_connector_length_limit(e->condesc, opts);
+		dassert(0 != length_limit, "Connector_new(): Zero length_limit");
+
+		if (e->dir == '-')
+			e->farthest_word = MAX(0, w - length_limit);
+		else
+			e->farthest_word = MIN(sent_length-1, w + length_limit);
+	}
 	else
-		c->length_limit = length_limit;
+	{
+		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+		{
+			set_connector_farthest_word(opd, w, sent_length, opts);
+		}
+	}
 }
 
 Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc,
@@ -71,8 +91,6 @@ Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc,
 		c = pool_alloc(connector_pool); /* Memory-pool has zero_out attribute.*/
 
 	c->desc = desc;
-	set_connector_length_limit(c, opts);
-	dassert(0 != c->length_limit, "Connector_new(): Zero length_limit");
 
 	return c;
 }
