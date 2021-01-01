@@ -143,19 +143,9 @@ struct prune_context_s
 #ifdef DEBUG
 GNUC_UNUSED static void print_power_table_entry(power_table *pt, int w, int dir)
 {
-	C_list **t;
-	unsigned int size;
+	C_list **t = pt->table[w][dir];
+	unsigned int size = pt->table_size[w][dir];
 
-	if (dir == 0)
-	{
-		t = pt->l_table[w];
-		size = pt->l_table_size[w];
-	}
-	else
-	{
-		t = pt->r_table[w];
-		size = pt->r_table_size[w];
-	}
 	if (size == 1) return;
 	printf("w%d dir%d size=%u:\n", w, dir, size);
 
