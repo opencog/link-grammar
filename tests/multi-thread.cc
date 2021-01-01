@@ -146,7 +146,7 @@ int main(int argc, char* argv[])
 	for (int i=0; i < n_threads; i++)
 	{
 		Dictionary dict = dicte;
-		if (0 == i%3) dict = dictr;
+		if (0 == i%2) dict = dictr;
 
 		Parse_Options opts = optsa;
 		if (0 == i%2) opts = optsb;
