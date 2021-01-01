@@ -15,11 +15,14 @@
 
 #include <thread>
 #include <vector>
+#include <atomic>
 
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "link-grammar/link-includes.h"
+
+static std::atomic_int parse_count; // Just to validate that it can parse.
 
 static void parse_one_sent(Dictionary dict, Parse_Options opts, const char *sent_str)
 {
@@ -38,6 +41,7 @@ static void parse_one_sent(Dictionary dict, Parse_Options opts, const char *sent
 #endif
 	if (0 < num_linkages)
 	{
+		parse_count++;
 		if (10 < num_linkages) num_linkages = 10;
 
 		for (int li = 0; li<num_linkages; li++)
@@ -156,7 +160,13 @@ int main(int argc, char* argv[])
 
 	// Wait for all threads to complete
 	for (std::thread& t : thread_pool) t.join();
-	printf("Done with multi-threaded parsing\n");
+	const int pcnt = parse_count;
+	if (0 == pcnt)
+	{
+		printf("Fatal error: Nothing got parsed\n");
+		exit(2);
+	}
+	printf("Done with multi-threaded parsing (stat: %d full parses)\n", pcnt);
 
 
 	for (int i=0; i < n_threads; i++)
