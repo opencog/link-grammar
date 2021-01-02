@@ -28,6 +28,7 @@
 #endif // __MINGW32__
 
 #include "link-includes.h"
+#include "error.h"
 #include "spellcheck.h"
 
 #ifndef HUNSPELL_DICT_DIR
@@ -123,7 +124,12 @@ void * spellcheck_create(const char * lang)
 			/* if hunspell handle was created break from loop */
 			if (h != NULL) break;
 		}
-		if (h == NULL) hunspell_aff_file[0] = '\0';
+		if (h == NULL)
+		{
+			if ((hunspell_aff_file[0] != '\0') && verbosity_level(D_USER_FILES))
+				prt_error("Warning: Cannot find hunspell language files\n");
+			hunspell_aff_file[0] = '\0';
+		}
 	}
 	pthread_mutex_unlock(&findpath_lock);
 	return h;
