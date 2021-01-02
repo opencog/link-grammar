@@ -20,8 +20,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef __MINGW32__
 #include <pthread.h>
+#ifdef __MINGW32__
 #define LGPTHREAD(x) x
 #else
 #define LGPTHREAD(x)
@@ -60,10 +60,6 @@ static const char *spellcheck_lang_mapping[] = {
 	"lt", "lt_LT",
 };
 
-#define FPATHLEN 256
-static char hunspell_aff_file[FPATHLEN];
-static char hunspell_dic_file[FPATHLEN];
-
 #include <hunspell.h>
 #include <string.h>
 
@@ -72,43 +68,64 @@ void * spellcheck_create(const char * lang)
 	size_t i = 0, j = 0;
 	Hunhandle *h = NULL;
 
-	memset(hunspell_aff_file, 0, FPATHLEN);
-	memset(hunspell_dic_file, 0, FPATHLEN);
-	for (i = 0; i < sizeof(spellcheck_lang_mapping)/sizeof(char *); i += 2)
+#define FPATHLEN 1024
+	static char hunspell_aff_file[FPATHLEN];
+	static char hunspell_dic_file[FPATHLEN];
+
+	static pthread_mutex_t findpath_lock = PTHREAD_MUTEX_INITIALIZER;
+
+	pthread_mutex_lock(&findpath_lock);
+
+	if (hunspell_aff_file[0] != '\0')
 	{
-		if (0 != strcmp(lang, spellcheck_lang_mapping[i])) continue;
-
-		/* check in each hunspell_dict_dir if the files exist */
-		for (j = 0; j < sizeof(hunspell_dict_dirs)/sizeof(char *); ++j)
-		{
-			FILE *fh;
-			/* if the directory name is NULL then ignore */
-			if (hunspell_dict_dirs[j] == NULL) continue;
-
-			snprintf(hunspell_aff_file, FPATHLEN, "%s/%s.aff", hunspell_dict_dirs[j],
-					spellcheck_lang_mapping[i+1]);
-			snprintf(hunspell_dic_file, FPATHLEN, "%s/%s.dic", hunspell_dict_dirs[j],
-					spellcheck_lang_mapping[i+1]);
-
-			/* Some versions of Hunspell_create() will succeed even if
-			 * there are no dictionary files. So test for permissions.
-			 */
-			fh = fopen(hunspell_aff_file, "r");
-			if (fh) fclose (fh);
-			else continue;
-
-			fh = fopen(hunspell_dic_file, "r");
-			if (fh) fclose (fh);
-			else continue;
-
-			h = Hunspell_create(hunspell_aff_file, hunspell_dic_file);
-			/* if hunspell handle was created break from loop */
-			if (h != NULL)
-				break;
-		}
-		/* if hunspell handle was created break from loop */
-		if (h != NULL) break;
+		h = Hunspell_create(hunspell_aff_file, hunspell_dic_file);
+		if (h == NULL)
+			prt_error("Error: Hunspell_create(%s, %s): Unexpected failure\n",
+			          hunspell_aff_file, hunspell_dic_file);
 	}
+	else
+	{
+		for (i = 0; i < sizeof(spellcheck_lang_mapping)/sizeof(char *); i += 2)
+		{
+			if (0 != strcmp(lang, spellcheck_lang_mapping[i])) continue;
+
+			/* check in each hunspell_dict_dir if the files exist */
+			for (j = 0; j < sizeof(hunspell_dict_dirs)/sizeof(char *); ++j)
+			{
+				FILE *fh;
+				/* if the directory name is NULL then ignore */
+				if (hunspell_dict_dirs[j] == NULL) continue;
+
+				snprintf(hunspell_aff_file, FPATHLEN, "%s/%s.aff", hunspell_dict_dirs[j],
+				         spellcheck_lang_mapping[i+1]);
+				snprintf(hunspell_dic_file, FPATHLEN, "%s/%s.dic", hunspell_dict_dirs[j],
+				         spellcheck_lang_mapping[i+1]);
+
+				/* Some versions of Hunspell_create() will succeed even if
+				 * there are no dictionary files. So test for permissions.
+				 */
+				fh = fopen(hunspell_aff_file, "r");
+				if (fh) fclose (fh);
+				else continue;
+
+				fh = fopen(hunspell_dic_file, "r");
+				if (fh) fclose (fh);
+				else continue;
+
+				h = Hunspell_create(hunspell_aff_file, hunspell_dic_file);
+				if (h == NULL)
+					prt_error("Error: Hunspell_create(%s, %s): Unexpected failure\n",
+					          hunspell_aff_file, hunspell_dic_file);
+				/* if hunspell handle was created break from loop */
+				if (h != NULL)
+					break;
+			}
+			/* if hunspell handle was created break from loop */
+			if (h != NULL) break;
+		}
+		if (h == NULL) hunspell_aff_file[0] = '\0';
+	}
+	pthread_mutex_unlock(&findpath_lock);
 	return h;
 }
 
