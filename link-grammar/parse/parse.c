@@ -408,6 +408,15 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		           sent->num_linkages_found, sent->null_count,
 		           (sent->null_count != 1) ? "s" : "");
 
+		/* In case of a timeout, the linkage is partial and may be
+		 * inconsistent. It is also usually different on each run.
+		 * So in that case, pretend that the linkage count is 0. */
+		if (resources_exhausted(opts->resources))
+		{
+			sent->num_linkages_found = 0;
+			goto parse_end_cleanup;
+		}
+
 		free_tracon_sharing(ts_parsing);
 		ts_parsing = NULL;
 
@@ -419,6 +428,13 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			free_extractor(pex);
 
 			post_process_lkgs(sent, opts);
+			if (resources_exhausted(opts->resources))
+			{
+				sent->num_linkages_found = 0;
+				sent->num_valid_linkages = 0;
+				sent->num_linkages_post_processed = 0;
+				goto parse_end_cleanup;
+			}
 
 			if (sent->num_valid_linkages > 0) break;
 
