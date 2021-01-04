@@ -569,7 +569,7 @@ static void dyn_print_connector_list(dyn_str *s, const Connector *e, int dir,
 
 /* Special flags here: Initial "-" or "+" for direction sign. */
 
-char *sprint_connector_list(const Connector *e, const char *flags)
+char *print_connector_list_str(const Connector *e, const char *flags)
 {
 	dyn_str *s = dyn_str_new();
 	int dir = -1;
@@ -583,7 +583,7 @@ char *sprint_connector_list(const Connector *e, const char *flags)
 	return dyn_str_take(s);
 }
 
-char *sprint_one_connector(const Connector *e, const char *flags)
+char *print_one_connector_str(const Connector *e, const char *flags)
 {
 	dyn_str *s = dyn_str_new();
 	int dir = -1;

@@ -363,7 +363,7 @@ static void prt_con(Connector *c, dyn_str * p, char dir)
 	}
 }
 
-char * print_one_disjunct(const Disjunct *dj)
+char *print_one_disjunct_str(const Disjunct *dj)
 {
 	dyn_str *p = dyn_str_new();
 

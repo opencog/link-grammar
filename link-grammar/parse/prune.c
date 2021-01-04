@@ -143,19 +143,9 @@ struct prune_context_s
 #ifdef DEBUG
 GNUC_UNUSED static void print_power_table_entry(power_table *pt, int w, int dir)
 {
-	C_list **t;
-	unsigned int size;
+	C_list **t = pt->table[w][dir];
+	unsigned int size = pt->table_size[w][dir];
 
-	if (dir == 0)
-	{
-		t = pt->l_table[w];
-		size = pt->l_table_size[w];
-	}
-	else
-	{
-		t = pt->r_table[w];
-		size = pt->r_table_size[w];
-	}
 	if (size == 1) return;
 	printf("w%d dir%d size=%u:\n", w, dir, size);
 
@@ -457,9 +447,11 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 static void clean_table(unsigned int size, C_list **t)
 {
 	/* Table entry tombstone. */
+#define UC_NUM_TOMBSTONE ((connector_hash_t)-1)
 	static condesc_t desc_no_match =
 	{
-		.uc_num = (connector_hash_t)-1, /* get_power_table_entry() will skip. */
+		.string = "TOMBSTONE",
+		.uc_num = UC_NUM_TOMBSTONE, /* get_power_table_entry() will skip. */
 	};
 	static Connector con_no_match =
 	{
