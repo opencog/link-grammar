@@ -7,6 +7,7 @@ Version 5.8.1 (XXX 2021)
  * English dict: fix look_at, listen_to person-action
  * English dict: fix verb "felt" with object-action.
  * English dict: fix why-perform-action questions.
+ * Fix race condition in spell-guesser. #1122 #1123
 
 Version 5.8.0 (28 February 2020)
  * Java bindings: Remove the obsolete senses API.
