@@ -73,7 +73,7 @@ unsigned int exptag_dialect_add(Dictionary dict, const char *tag)
 
 /**
  * Set in the cost table the dialect component cost at \p table_index.
- * @retrun \c false iff the component doesn't exist in the dictionary.
+ * @return \c false iff the component doesn't exist in the dictionary.
  */
 static bool apply_component(Dictionary dict, Dialect *di,
                             unsigned int table_index, float *cost_table)
@@ -100,7 +100,7 @@ static bool apply_component(Dictionary dict, Dialect *di,
  * file or from the user setting kept in the dialect_info option.
  * The dialect table at \p to is always from "4.0.dialect".
  * Recursive (for applying sub-dialects).
- * @retrun \c true on success, \c false on failure.
+ * @return \c true on success, \c false on failure.
  */
 static bool apply_table_entry(Dictionary dict, Dialect *from,
                               unsigned int table_index, Dialect *to,
@@ -217,7 +217,7 @@ const char no_dialect[] = "(unset the dialect option)\n";
  * Build the dialect cost table if it doesn't exist.
  * Note: All IDs start from 1, so the 0'th elements are ignored
  * (but section[0] which points to the default section).
- * @retrun \c true on success, \c false on failure.
+ * @return \c true on success, \c false on failure.
  */
 bool setup_dialect(Dictionary dict, Parse_Options opts)
 {

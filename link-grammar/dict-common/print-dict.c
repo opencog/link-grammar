@@ -1030,9 +1030,9 @@ static bool validate_flags(const char *display_type, const char *flags)
  * !!word*.sub and get a list of all words that match up to the wild-card.
  * In this case no split is done.
  *
- * @arg arg[0] specifies the display type. If it is equal to &do_display_expr
- * than this is request to display expressions. Else it is a request to
- * display disjuncts. arg[2] specifies the request flags.
+ * @param arg arg[0] specifies the display type. If it is equal to
+ * &do_display_expr than this is request to display expressions. Else it
+ * is a request to display disjuncts. arg[2] specifies the request flags.
  */
 static char *display_word_split(Dictionary dict,
                const char * word, Parse_Options opts,
@@ -1236,7 +1236,7 @@ static char *display_expr(Dictionary dict, const char *word, Dict_node *dn,
 /**
  * A callback function to display \p word number of disjuncts and file name.
  *
- * @arg Callback args (unused).
+ * @param arg Callback args (unused).
  * @return String to display. Must be freed by the caller.
  */
 static char *display_word_info(Dictionary dict, const char *word,

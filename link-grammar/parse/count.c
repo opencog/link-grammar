@@ -425,8 +425,8 @@ Count_bin* table_lookup(count_context_t * ctxt,
  * @param ctxt Count context.
  * @param dir Direction - 0: leftcount, 1: rightcount.
  * @param c The connector that starts the range.
- * @w The word that ends the range.
- * @null_count The current null_count to check.
+ * @param w The word that ends the range.
+ * @param null_count The current null_count to check.
  * @param cw The word of this connector.
  *
  * Return these values:

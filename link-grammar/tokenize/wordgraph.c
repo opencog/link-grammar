@@ -468,7 +468,7 @@ static void word_queue_delete(Sentence sent)
 
 /**
  * Delete the gword_set associated with the Wordgraph.
- * @w First Wordgraph word.
+ * @param w First Wordgraph word.
  */
 static void gword_set_delete(Gword *w)
 {
