@@ -42,7 +42,7 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
 /* Table of ranges [tracon_id, w) that would yield a zero
  * leftcount/rightcount up to null_count. */
-typedef struct Table_lrcnt_s
+typedef struct
 {
 	int tracon_id;
 	WordIdx_m w;
@@ -496,8 +496,8 @@ table_lookup(count_context_t *ctxt, int lw, int rw,
  *    Cache pointer - An update for null_count>=lnull_start is needed.
  */
 static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir,
-                              Connector *c, int cw, int w,
-                              unsigned int null_count, unsigned int *null_start)
+                             Connector *c, int cw, int w,
+                             unsigned int null_count, unsigned int *null_start)
 {
 	const int rhs_id = 0x40000000;
 	int tracon_id = c->tracon_id | (dir * rhs_id);
