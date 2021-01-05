@@ -77,7 +77,7 @@ bool apply_dialect(Dictionary, Dialect *, unsigned int, Dialect *, dialect_info 
 
 /**
  * Validate that \p name is a valid dialect tag name.
- * @name Dialect tag name
+ * @param name Dialect tag name
  * @return NULL if valid, else the first offending character.
  */
 static inline const char *valid_dialect_name(const char *name)

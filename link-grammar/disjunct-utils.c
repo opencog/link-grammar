@@ -602,14 +602,14 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 					{
 						/* This is a rare case in which a shallow and deep
 						 * connectors don't have the same nearest_word, because
-						 * a shallow connector may mach a deep connector
+						 * a shallow connector may match a deep connector
 						 * earlier. Because the nearest word is different, we
 						 * cannot share it. (Such shallow and deep tracons could
 						 * be shared separately, but because this is a rare
 						 * event there is no benefit to do that.)
 						 * Note:
 						 * In case the parsing ever depends on other Connector
-						 * fields, their will be a need to add a check for them
+						 * fields, there will be a need to add a check for them
 						 * here.
 						 * Update: farthest_word added. */
 						newc = NULL; /* Don't share it. */
@@ -863,7 +863,7 @@ void free_tracon_sharing(Tracon_sharing *ts)
 }
 
 /**
- * Pack all disjunct and connectors into a one big memory block, share
+ * Pack all disjunct and connectors into one big memory block, share
  * tracon memory and generate tracon IDs (for parsing) or tracon lists
  * with reference count (for pruning). Aka "connector encoding".
  *

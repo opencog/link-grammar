@@ -216,7 +216,7 @@ static void skip_space(dialect_file_status *dfile)
 
 /**
  * Build a dialect table from field \c pin in \p dfile.
- * @retrun \c true on success, \c false on failure.
+ * @return \c true on success, \c false on failure.
  */
 
 static bool dialect_read_from_str(Dictionary dict, Dialect *di,

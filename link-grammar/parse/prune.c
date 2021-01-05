@@ -1139,7 +1139,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 		if (pruning_pass_end(pc, "r->l", &total_deleted)) break;
 
-		/* The verbose debug printouts revealed that the xlink counter doesn't
+		/* The above debug printouts revealed that the xlink counter doesn't
 		 * get increased after the first 2 passes. So neutralize the mlink table
 		 * here to save a slight overhead. */
 		pc->ml = NULL;
@@ -2212,9 +2212,8 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 		}
 	}
 
-	/* No benefit for now to make additional pp_prune() & power_prune() -
-	 * additional deletions are very rare and even then most of the
-	 * times only one disjunct is deleted. */
+	/* It is not cost-effective to make additional pp_prune() & power_prune()
+	 * as most of the times too few disjunct are deleted. */
 
 	/* Initialize tentative values. */
 	unsigned int min_nulls = sent->null_count;

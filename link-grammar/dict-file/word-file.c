@@ -26,13 +26,13 @@ void patch_subscript(char * s)
 	ds = strrchr(s, SUBSCRIPT_DOT);
 	if (!ds) return;
 
-	/* a dot at the end or a dot followed by a number is NOT
+	/* A dot at the end or a dot followed by a number is NOT
 	 * considered a subscript */
 	de = ds + 1;
 	if (*de == '\0') return;
 	dp = (int) *de;
 
-	/* If its followed by a UTF8 char, its NOT a subscript */
+	/* If it's followed by a UTF8 char, its NOT a subscript */
 	if (127 < dp || dp < 0) return;
 	/* assert ((0 < dp) && (dp <= 127), "Bad dictionary entry!"); */
 	if (isdigit(dp)) return;

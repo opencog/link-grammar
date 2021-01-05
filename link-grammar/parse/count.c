@@ -46,7 +46,7 @@ typedef struct Table_lrcnt_s
 	int tracon_id;
 	WordIdx_m w;
 	null_count_m null_count;
-	unsigned short status;  /* range status flags */
+	unsigned short status;  /* 0: Count would be 0; 1: Count may be nonzero */
 } Table_lrcnt;
 #define MAX_TABLE_LRCNT_SIZE(s) ((s) * 3 / 4) /* Limit pathological cases */
 #define ANY_NULL_COUNT (MAX_SENTENCE + 1)
@@ -425,8 +425,8 @@ Count_bin* table_lookup(count_context_t * ctxt,
  * @param ctxt Count context.
  * @param dir Direction - 0: leftcount, 1: rightcount.
  * @param c The connector that starts the range.
- * @w The word that ends the range.
- * @null_count The current null_count to check.
+ * @param w The word that ends the range.
+ * @param null_count The current null_count to check.
  * @param cw The word of this connector.
  *
  * Return these values:
