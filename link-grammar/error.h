@@ -15,7 +15,7 @@
 
 #include "link-includes.h"
 #include "externs.h"                    // verbosity
-#include "utilities.h"                  // GNUC_NORETURN
+#include "utilities.h"                  // GNUC_NORETURN, STRINGIFY
 
 /* User verbosity levels are 1-4, to be used for user info/debug.
  * For now hard-coded numbers are still used instead of D_USER_BASIC/TIMES. */

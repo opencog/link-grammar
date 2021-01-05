@@ -262,7 +262,7 @@ typedef struct
 	int indent;
 	int pos;                 /* current connector position in expression */
 	int *find_pos;           /* disjunct expression connectors positions */
-	bool is_after_connector; /* an indicators for printing '&' */
+	bool is_after_connector; /* an indicator for printing '&' */
 } cmacro_context;
 
 /**

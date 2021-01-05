@@ -1139,7 +1139,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 		if (pruning_pass_end(pc, "r->l", &total_deleted)) break;
 
-		/* The verbose debug printouts revealed that the xlink counter doesn't
+		/* The above debug printouts revealed that the xlink counter doesn't
 		 * get increased after the first 2 passes. So neutralize the mlink table
 		 * here to save a slight overhead. */
 		pc->ml = NULL;

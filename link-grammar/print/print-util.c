@@ -232,7 +232,7 @@ size_t append_utf8_char(dyn_str * string, const char * mbs)
 	assert('\0' != *mbs, "append_utf8_char(): Null string");
 	int nb = utf8_charlen(mbs);
 	int n = nb;
-	if (n < 0) n = 1; // charlen is negative if its not a valid UTF-8
+	if (n < 0) n = 1; // charlen is negative if it's not a valid UTF-8
 
 	assert((size_t)n<sizeof(buf), "Multi-byte character is too long!");
 	memcpy(buf, mbs, n);

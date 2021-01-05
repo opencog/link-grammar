@@ -299,7 +299,7 @@ static Exp* purge_Exp(exprune_context *ctxt, int w, Exp *e, char dir)
 	{
 		if (!and_purge_operands(ctxt, w, e, dir)) return NULL;
 	}
-	else /* if we are here, its OR_type */
+	else /* if we are here, it's OR_type */
 	{
 		if (!or_purge_operands(ctxt, w, e, dir)) return NULL;
 	}

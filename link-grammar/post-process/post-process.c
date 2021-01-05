@@ -1376,7 +1376,7 @@ void compute_domain_names(Linkage lkg)
 	Linkage_info *lifo = &lkg->lifo;
 	if (lifo->N_violations) return;
 
-	// If pp_domains is set, its been computed already
+	// If pp_domains is set, it's been computed already
 	if (NULL != lkg->pp_domains) return;
 
 	do_post_process(pp, lkg, true);
