@@ -305,7 +305,8 @@ void dictionary_delete(Dictionary dict)
 	string_id_delete(dict->dialect_tag.set);
 	if (dict->macro_tag != NULL) free(dict->macro_tag->name);
 	free(dict->macro_tag);
-
+	string_id_delete(dict->define->name);
+	free(dict->define->value);
 	free((void *)dict->suppress_warning);
 	free_regexs(dict->regex_root);
 	free_anysplit(dict);
