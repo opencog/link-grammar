@@ -1,0 +1,12 @@
+This directory includes CPU profiling per source file (using pprof) of the 5.8.1 release-candidate code,
+for each batch in the en and ru dictionaries.
+
+Here is how to interpret the columns:
+
+1. Number of profiling samples in this function.
+2. Percentage of profiling samples in this function.
+3. Percentage of profiling samples in the functions printed so far.
+4. Number of profiling samples in this function and its callees.
+5. Percentage of profiling samples in this function and its callees.
+6. Source file name.
+.
