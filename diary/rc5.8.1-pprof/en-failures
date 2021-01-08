@@ -1,0 +1,104 @@
+    4258  24.9%  24.9%     5678  33.2% link-grammar/parse/count.c
+    2065  12.1%  36.9%     3317  19.4% link-grammar/disjunct-utils.c
+    2016  11.8%  48.7%     2202  12.9% link-grammar/parse/prune.c
+    1329   7.8%  56.5%     2496  14.6% link-grammar/prepare/build-disjuncts.c
+    1113   6.5%  63.0%     1198   7.0% link-grammar/tracon-set.c
+    1100   6.4%  69.4%     1104   6.5% link-grammar/parse/fast-match.c
+     810   4.7%  74.2%     1080   6.3% link-grammar/memory-pool.c
+     647   3.8%  77.9%     4435  25.9% link-grammar/parse/preparation.c
+     546   3.2%  81.1%      546   3.2% link-grammar/connectors.h
+     455   2.7%  83.8%      780   4.6% link-grammar/post-process/post-process.c
+     383   2.2%  86.0%      400   2.3% /usr/src/debug/glibc-2.31-48-g64246fccaf/malloc/malloc.c
+     367   2.1%  88.2%      367   2.1% /usr/src/debug/glibc-2.31-48-g64246fccaf/string/../sysdeps/x86_64/multiarch/memset-vec-unaligned-erms.S
+     353   2.1%  90.2%     1001   5.8% link-grammar/parse/extract-links.c
+     295   1.7%  91.9%      306   1.8% link-grammar/prepare/exprune.c
+     199   1.2%  93.1%      710   4.1% link-grammar/connectors.c
+     141   0.8%  93.9%      187   1.1% link-grammar/post-process/pp_linkset.c
+     116   0.7%  94.6%      147   0.9% link-grammar/dict-common/dict-utils.c
+     112   0.7%  95.3%      136   0.8% link-grammar/dict-file/read-dict.c
+      87   0.5%  95.8%       87   0.5% parse_options_create ??:0
+      81   0.5%  96.2%       81   0.5% /usr/src/debug/glibc-2.31-48-g64246fccaf/string/../sysdeps/x86_64/multiarch/strcmp-avx2.S
+      77   0.4%  96.7%      335   2.0% link-grammar/linkage/sane.c
+      75   0.4%  97.1%      201   1.2% link-grammar/tokenize/wordgraph.c
+      64   0.4%  97.5%       64   0.4% link-grammar/const-prime.h
+      46   0.3%  97.8%       51   0.3% link-grammar/linkage/analyze-linkage.c
+      38   0.2%  98.0%       38   0.2% link-grammar/parse/fast-match.h
+      30   0.2%  98.2%       30   0.2% link-grammar/parse/histogram.h
+      30   0.2%  98.4%      451   2.6% link-grammar/tokenize/tokenize.c
+      25   0.1%  98.5%       26   0.2% /usr/src/debug/pcre2-10.36-1.fc32.x86_64/src/pcre2_match.c
+      19   0.1%  98.6%       19   0.1% /usr/src/debug/glibc-2.31-48-g64246fccaf/string/../sysdeps/x86_64/multiarch/strcspn-c.c
+      17   0.1%  98.7%       17   0.1% /usr/src/debug/glibc-2.31-48-g64246fccaf/string/../sysdeps/x86_64/multiarch/memmove-vec-unaligned-erms.S
+      16   0.1%  98.8%       16   0.1% /usr/src/debug/glibc-2.31-48-g64246fccaf/ctype/../include/ctype.h
+      15   0.1%  98.9%       15   0.1% link-grammar/disjunct-utils.h
+      15   0.1%  99.0%       15   0.1% link-grammar/linkage/score.c
+      15   0.1%  99.1%       15   0.1% parse_options_create ??:0
+      13   0.1%  99.1%       13   0.1% /usr/lib/gcc/x86_64-redhat-linux/10/include/smmintrin.h
+      11   0.1%  99.2%       11   0.1% /usr/src/debug/glibc-2.31-48-g64246fccaf/misc/../sysdeps/unix/syscall-template.S
+      11   0.1%  99.3%       11   0.1% /usr/src/debug/glibc-2.31-48-g64246fccaf/string/../sysdeps/x86_64/multiarch/strlen-avx2.S
+      10   0.1%  99.3%       17   0.1% link-grammar/string-set.c
+      10   0.1%  99.4%       10   0.1% parse_options_create ??:0
+       9   0.1%  99.4%       36   0.2% link-grammar/dict-common/regex-morph.c
+       9   0.1%  99.5%        9   0.1% /usr/src/debug/glibc-2.31-48-g64246fccaf/misc/../sysdeps/unix/sysv/linux/x86_64/brk.c
+       9   0.1%  99.5%        9   0.1% parse_options_create ??:0
+       9   0.1%  99.6%        9   0.1% parse_options_create ??:0
+       6   0.0%  99.6%        6   0.0% link-grammar/linkage/linkage.c
+       4   0.0%  99.7%        4   0.0% link-grammar/memory-pool.h
+       4   0.0%  99.7%        4   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/stdlib/rand_r.c
+       4   0.0%  99.7%        6   0.0% /usr/src/debug/hunspell-1.7.0-5.fc32.x86_64/src/hunspell/hashmgr.cxx
+       4   0.0%  99.7%        4   0.0% parse_options_create ??:0
+       3   0.0%  99.7%        3   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/libio/getc.c
+       2   0.0%  99.8%    17068  99.7% link-grammar/api.c
+       2   0.0%  99.8%       26   0.2% link-grammar/dict-common/dict-common.c
+       2   0.0%  99.8%        2   0.0% /usr/lib/gcc/x86_64-redhat-linux/10/include/tmmintrin.h
+       2   0.0%  99.8%        2   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/resource/../sysdeps/unix/syscall-template.S
+       2   0.0%  99.8%        4   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/stdlib/msort.c
+       2   0.0%  99.8%        3   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/wcsmbs/mbrtowc.c
+       2   0.0%  99.8%        2   0.0% parse_options_create ??:0
+       2   0.0%  99.8%        2   0.0% parse_options_create ??:0
+       2   0.0%  99.8%        2   0.0% parse_options_create ??:0
+       2   0.0%  99.9%        2   0.0% parse_options_create ??:0
+       2   0.0%  99.9%        2   0.0% parse_options_create ??:0
+       1   0.0%  99.9%        3   0.0% link-grammar/resources.c
+       1   0.0%  99.9%        4   0.0% link-grammar/utilities.c
+       1   0.0%  99.9%        1   0.0% /tmp/link-grammar/cnt-dyn-cache/link-grammar/sat-solver/../../../../../usr/local/src/link-grammar-devel/cnt-dyn-cache/link-grammar/sat-solver/sat-encoder.cpp
+       1   0.0%  99.9%        1   0.0% /usr/include/c++/10/bits/basic_string.tcc
+       1   0.0%  99.9%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/elf/../elf/dl-runtime.c
+       1   0.0%  99.9%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/iconv/../iconv/skeleton.c
+       1   0.0%  99.9%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/io/../sysdeps/unix/sysv/linux/write.c
+       1   0.0%  99.9%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/libio/genops.c
+       1   0.0%  99.9%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/libio/iogetline.c
+       1   0.0%  99.9%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/locale/mb_cur_max.c
+       1   0.0%  99.9%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/stdio-common/fprintf.c
+       1   0.0%  99.9%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/string/../sysdeps/x86_64/multiarch/../strchr.S
+       1   0.0%  99.9%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/string/../sysdeps/x86_64/multiarch/memchr-avx2.S
+       1   0.0% 100.0%        1   0.0% /usr/src/debug/hunspell-1.7.0-5.fc32.x86_64/src/hunspell/csutil.cxx
+       1   0.0% 100.0%        1   0.0% _init ??:0
+       1   0.0% 100.0%        1   0.0% pcre2_code_copy_8 ??:0
+       1   0.0% 100.0%        1   0.0% parse_options_create ??:0
+       1   0.0% 100.0%        1   0.0% parse_options_create ??:0
+       1   0.0% 100.0%        1   0.0% parse_options_create ??:0
+       1   0.0% 100.0%        1   0.0% parse_options_create ??:0
+       1   0.0% 100.0%        1   0.0% parse_options_create ??:0
+       1   0.0% 100.0%        1   0.0% parse_options_create ??:0
+       0   0.0% 100.0%        3   0.0% link-grammar/dict-common/idiom.c
+       0   0.0% 100.0%       34   0.2% link-grammar/dict-file/dictionary.c
+       0   0.0% 100.0%        9   0.1% link-grammar/dict-file/word-file.c
+       0   0.0% 100.0%       23   0.1% link-grammar/linkage/freeli.c
+       0   0.0% 100.0%    16162  94.4% link-grammar/parse/parse.c
+       0   0.0% 100.0%        5   0.0% link-grammar/tokenize/spellcheck-hun.c
+       0   0.0% 100.0%        8   0.0% link-grammar/utilities.h
+       0   0.0% 100.0%    17113 100.0% /tmp/link-grammar/cnt-dyn-cache/link-parser/../../../../usr/local/src/link-grammar-devel/cnt-dyn-cache/link-parser/link-parser.c
+       0   0.0% 100.0%        1   0.0% /usr/include/bits/string_fortified.h
+       0   0.0% 100.0%        1   0.0% /usr/include/c++/10/bits/basic_string.h
+       0   0.0% 100.0%    17113 100.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/csu/../csu/libc-start.c
+       0   0.0% 100.0%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/elf/../sysdeps/x86_64/dl-trampoline.h
+       0   0.0% 100.0%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/libio/fileops.c
+       0   0.0% 100.0%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/libio/iofflush.c
+       0   0.0% 100.0%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/libio/iofgets.c
+       0   0.0% 100.0%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/libio/vsnprintf.c
+       0   0.0% 100.0%        9   0.1% /usr/src/debug/glibc-2.31-48-g64246fccaf/malloc/morecore.c
+       0   0.0% 100.0%        9   0.1% /usr/src/debug/glibc-2.31-48-g64246fccaf/misc/sbrk.c
+       0   0.0% 100.0%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/stdio-common/snprintf.c
+       0   0.0% 100.0%        1   0.0% /usr/src/debug/glibc-2.31-48-g64246fccaf/stdlib/exit.c
+       0   0.0% 100.0%        6   0.0% /usr/src/debug/hunspell-1.7.0-5.fc32.x86_64/src/hunspell/hunspell.cxx
+       0   0.0% 100.0%    17113 100.0% _start ??:0
