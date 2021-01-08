@@ -18,7 +18,9 @@
 
 typedef struct count_context_s count_context_t;
 
-Count_bin* table_lookup(count_context_t *, int, int, Connector *, Connector *, unsigned int);
+Count_bin* table_lookup(count_context_t *, int, int,
+                        const Connector *, const Connector *,
+                        unsigned int, unsigned int *);
 int do_parse(Sentence, fast_matcher_t*, count_context_t*, Parse_Options);
 bool no_count(count_context_t *, int, Connector *, int, int, unsigned int);
 

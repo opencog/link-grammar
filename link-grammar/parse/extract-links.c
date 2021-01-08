@@ -245,7 +245,8 @@ static Pset_bucket * x_table_pointer(int lw, int rw,
 	Pset_bucket *t;
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
-	t = pex->x_table[pair_hash(pex->x_table_size, lw, rw, l_id, r_id, null_count)];
+	unsigned int hash = pair_hash(lw, rw, l_id, r_id, null_count);
+	t = pex->x_table[hash & (pex->x_table_size-1)];
 
 	for (; t != NULL; t = t->next) {
 		if ((t->set.l_id == l_id) && (t->set.r_id == r_id) &&
@@ -261,7 +262,7 @@ static Pset_bucket * x_table_store(int lw, int rw,
                                   Connector *le, Connector *re,
                                   unsigned int null_count, extractor_t * pex)
 {
-	Pset_bucket *t, *n;
+	Pset_bucket **t, *n;
 	unsigned int h;
 
 	n = pool_alloc(pex->Pset_bucket_pool);
@@ -274,10 +275,10 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.first = NULL;
 	n->set.tail = NULL;
 
-	h = pair_hash(pex->x_table_size, lw, rw, n->set.l_id, n->set.r_id, null_count);
-	t = pex->x_table[h];
-	n->next = t;
-	pex->x_table[h] = n;
+	h = pair_hash(lw, rw, n->set.l_id, n->set.r_id, null_count);
+	t = &pex->x_table[h & (pex->x_table_size -1)];
+	n->next = *t;
+	*t = n;
 	return n;
 }
 
@@ -345,7 +346,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 	assert(null_count < 0x7fff, "mk_parse_set() called with null_count < 0.");
 
-	count = table_lookup(ctxt, lw, rw, le, re, null_count);
+	count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 
 	/* If there's no counter, then there's no way to parse. */
 	if (NULL == count) return NULL;
