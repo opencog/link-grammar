@@ -55,6 +55,9 @@ link_public_api(const char *)
 link_public_api(const char *)
 	linkgrammar_get_dict_define(Dictionary, const char *);
 
+link_public_api(double)
+	linkgrammar_get_dict_max_disjunct_cost(Dictionary);
+
 /**********************************************************************
  *
  * Functions and definitions for the error handler.
