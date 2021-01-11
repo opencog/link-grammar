@@ -92,6 +92,7 @@ struct Dictionary_s
 	const char * lang;
 	const char * version;
 	const char * locale;    /* Locale name */
+	double default_max_disjunct_cost;
 	locale_t     lctype;    /* Locale argument for the *_l() functions */
 	int          num_entries;
 	define_s     define;    /* Name-value definitions */

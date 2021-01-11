@@ -346,6 +346,29 @@ void dictionary_setup_locale(Dictionary dict)
 	dict->locale = string_set_add(dict->locale, dict->string_set);
 }
 
+static bool dictionary_setup_max_disjunct_cost(Dictionary dict)
+{
+	const char *disjunct_cost_str =
+		linkgrammar_get_dict_define(dict, LG_DISJUNCT_COST);
+	if (NULL == disjunct_cost_str)
+	{
+		dict->default_max_disjunct_cost = DEFAULT_MAX_DISJUNCT_COST;
+	}
+	else
+	{
+		float disjunct_cost_value;
+		if (!strtodC(disjunct_cost_str, &disjunct_cost_value))
+		{
+			prt_error("Error: %s: Invalid cost \"%s\"", LG_DISJUNCT_COST,
+			          disjunct_cost_str);
+			return false;
+		}
+		dict->default_max_disjunct_cost = disjunct_cost_value;
+	}
+
+	return true;
+}
+
 /**
  * Perform initializations according to definitions in the dictionary.
  * There are 3 kind of definitions:
@@ -372,6 +395,8 @@ bool dictionary_setup_defines(Dictionary dict)
 	}
 
 	dict->shuffle_linkages = false;
+
+	if (!dictionary_setup_max_disjunct_cost(dict)) return false;
 
 	return true;
 }
