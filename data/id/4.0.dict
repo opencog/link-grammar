@@ -7,8 +7,7 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.4.5 (formatted as V5v4v5+)
-<dictionary-version-number>: V5v4v5+;
+#define dictionary-version-number 5.4.5;
 <dictionary-locale>: ID4id+;
 
 anjing kucing wanita cewek pria cowok lelaki laki-laki taman lapangan tulang

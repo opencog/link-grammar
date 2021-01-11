@@ -26,6 +26,7 @@ static const double UNINITIALIZED_MAX_DISJUNCT_COST = -10000.0;
 static const double DEFAULT_MAX_DISJUNCT_COST = 2.7;
 /* We need some of these as literal strings. */
 #define LG_DISJUNCT_COST                        "max-disjunct-cost"
+#define LG_DICTIONARY_VERSION_NUMBER            "dictionary-version-number"
 #define LG_DICTIONARY_LOCALE                    "dictionary-locale"
 
 /*      Some size definitions.  Reduce these for small machines */

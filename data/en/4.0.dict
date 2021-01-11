@@ -10,8 +10,7 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.8.1 (formatted as V5v8v1+)
-<dictionary-version-number>: V5v8v1+;
+#define dictionary-version-number 5.8.1;
 <dictionary-locale>: EN4us+;
 
 % The default largest disjunct cost to consider during parsing.

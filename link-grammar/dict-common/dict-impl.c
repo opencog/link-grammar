@@ -262,19 +262,30 @@ const char * linkgrammar_get_version(void)
 
 const char * linkgrammar_get_dict_version(Dictionary dict)
 {
+	if (dict->version) return dict->version;
+
+	const char *version =
+		linkgrammar_get_dict_define(dict, LG_DICTIONARY_VERSION_NUMBER);
+	if (NULL != version)
+	{
+		dict->version = version;
+		return dict->version;
+	}
+
+	/* Original code is left for backward compatibility. Note that the
+	 * check for now version should be moved up if it is ever removed. */
+
 	char * ver;
 	char * p;
 	Dict_node *dn;
 	Exp *e;
-
-	if (dict->version) return dict->version;
 
 	/* The newer dictionaries should contain a macro of the form:
 	 * <dictionary-version-number>: V4v6v6+;
 	 * which would indicate dictionary version 4.6.6
 	 * Older dictionaries contain no version info.
 	 */
-	dn = dict->lookup_list(dict, "<dictionary-version-number>");
+	dn = dict->lookup_list(dict, "<"LG_DICTIONARY_VERSION_NUMBER">");
 	if (NULL == dn) return "[unknown]";
 
 	e = dn->exp;

@@ -40,8 +40,7 @@
 % Among numerous other things, changes to handle count/uncountable changes
 % have not been done yet. The created infrastructure for that may still need changes.
 
-% Dictionary version number is 5.3.15 (formatted as V5v3v15+)
-<dictionary-version-number>: V5v3v15+;
+#define dictionary-version-number 5.3.15;
 <dictionary-locale>: HE4il+;
 
 % For now.

@@ -2,8 +2,7 @@
 % Kazakh dictionary -- experimental -- 2016
 % -- Tatiana Batura, Aigerim Bakiyeva, Aigerim Yerimbetova
 %
-% Dictionary version number is 5.3.15 (formatted as V5v3v15+)
-<dictionary-version-number>: V5v3v15+;
+#define dictionary-version-number 5.3.15;
 <dictionary-locale>: KK4kz+;
 
 мен.pron: {W-} & S1s+;
