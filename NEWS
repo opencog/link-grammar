@@ -41,6 +41,9 @@ languages as well), based on Link Grammar, an original theory of English
 syntax. Given a sentence, the system assigns to it a syntactic structure,
 which consists of a set of labeled links connecting pairs of words.
 
+See the Wikipedia page for more info:
+https://en.wikipedia.org/wiki/Link_grammar
+
 
 =================================================================
 =================================================================

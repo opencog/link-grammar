@@ -72,10 +72,10 @@ struct extractor_s
 	Pset_bucket ** x_table;  /* Hash table */
 	Parse_set *    parse_set;
 	Word           *words;
-	bool           islands_ok;
-	bool           sort_match_list;
 	Pool_desc *    Pset_bucket_pool;
 	Pool_desc *    Parse_choice_pool;
+	bool           islands_ok;
+	bool           sort_match_list;
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
