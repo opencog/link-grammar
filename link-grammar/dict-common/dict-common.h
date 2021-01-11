@@ -70,7 +70,8 @@ struct Afdict_class_struct
 /* "#define name value" */
 typedef struct
 {
-	String_id *name;
+	String_id *set;                    /* "define" name set */
+	const char **name;
 	const char **value;
 	unsigned int size;                 /* Allocated value array size */
 } define_s;

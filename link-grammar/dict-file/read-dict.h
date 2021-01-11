@@ -17,6 +17,7 @@
 
 void print_dictionary_data(Dictionary dict);
 void print_dictionary_words(Dictionary dict);
+void print_dictionary_defines(Dictionary dict);
 
 Dictionary dictionary_six(const char *lang, const char *dict_name,
                           const char *pp_name, const char *cons_name,

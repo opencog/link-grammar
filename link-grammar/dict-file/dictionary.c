@@ -148,7 +148,7 @@ dictionary_six_str(const char * lang,
 			memset(dict->macro_tag, 0, sizeof(*dict->macro_tag));
 		}
 
-		dict->define->name = string_id_create();
+		dict->define.set = string_id_create();
 	}
 	else
 	{

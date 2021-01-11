@@ -52,6 +52,9 @@ link_public_api(const char *)
 link_public_api(const char *)
 	linkgrammar_get_dict_locale(Dictionary);
 
+link_public_api(const char *)
+	linkgrammar_get_dict_define(Dictionary, const char *);
+
 /**********************************************************************
  *
  * Functions and definitions for the error handler.

@@ -21,6 +21,7 @@
 #include "regex-morph.h"
 #include "dict-structures.h"
 #include "string-set.h"
+#include "string-id.h"
 #include "utilities.h"
 
 /* ======================================================================= */
@@ -60,6 +61,16 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 #else
 #define callGetLocaleInfoEx GetLocaleInfoEx
 #endif // _WINVER == 0x501
+
+/* ======================================================================= */
+
+const char *linkgrammar_get_dict_define(Dictionary dict, const char *name)
+{
+	if (IS_DB_DICT(dict)) return NULL; /* Not supported yet */
+	unsigned int id = string_id_lookup(name, dict->define.set);
+	if (id == 0) return NULL;
+	return dict->define.value[id - 1];
+}
 
 /* ======================================================================= */
 

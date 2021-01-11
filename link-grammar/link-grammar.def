@@ -3,6 +3,7 @@ linkgrammar_get_configuration
 linkgrammar_open_data_file
 linkgrammar_get_dict_version
 linkgrammar_get_dict_locale
+linkgrammar_get_dict_definition
 dictionary_create_lang
 dictionary_create_default_lang
 dictionary_get_lang
