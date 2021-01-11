@@ -3,7 +3,7 @@
 % Copyright (c) 2006 Warren Casbeer and Jon Dehdari
 %
 #define dictionary-version-number 5.0.1;
-<dictionary-locale>: C+; % Only the English alphabet is in use here
+#define dictionary-locale C; % Only the English alphabet is in use here
 
 
 % Link Types:  [Forms in brackets roughly equate with English Link Grammar]

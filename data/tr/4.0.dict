@@ -2,7 +2,7 @@
 % Turkish dictionary -- experimental -- 2016 -- Tatiana Batura, Maria Mitkovskaya, Natalya Semenova
 %
 #define dictionary-version-number 5.3.15;
-<dictionary-locale>: TR4tr+;
+#define dictionary-locale         tr_TR.UTF-8;
 
 % adjectives
 kırmızı şişman hasta kızgın güzel genç yasli iyi kötü hos üzücü mutlu aç siyah beyaz mavi yeşil mor pembe sarı: {AO+};

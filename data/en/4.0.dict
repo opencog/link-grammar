@@ -11,7 +11,7 @@
  %***************************************************************************%
 
 #define dictionary-version-number 5.8.1;
-<dictionary-locale>: EN4us+;
+#define dictionary-locale         en_US.UTF-8;
 
 % The default largest disjunct cost to consider during parsing.
 #define max-disjunct-cost 2.7;

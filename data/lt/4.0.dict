@@ -12,7 +12,7 @@
 % and also be sure to configure the terminal to use utf-8 encoding.
 %
 #define dictionary-version-number 5.1.0;
-<dictionary-locale>: LT4lt+;
+#define dictionary-locale         lt_LT.UTF-8;
 
 % Ženklai:
 % Ą Č Ę Ė Į Š Ų Ū Ž

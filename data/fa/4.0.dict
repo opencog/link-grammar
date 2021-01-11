@@ -11,7 +11,7 @@
 %*****************************************************************************
 
 #define dictionary-version-number 5.0.1;
-<dictionary-locale>: FA4ir+;
+#define dictionary-locale         fa_IR.UTF-8;
 
 % PERSIAN SYNTAX NOTES:
 %	-Normal Order:	(S) (PP) (O) V

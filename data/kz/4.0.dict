@@ -3,7 +3,7 @@
 % -- Tatiana Batura, Aigerim Bakiyeva, Aigerim Yerimbetova
 %
 #define dictionary-version-number 5.3.15;
-<dictionary-locale>: KK4kz+;
+#define dictionary-locale         kk_KZ.UTF-8;
 
 мен.pron: {W-} & S1s+;
 сен.pron: {W-} & S2s+;

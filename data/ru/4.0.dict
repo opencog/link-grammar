@@ -8,7 +8,7 @@
 %% This file uses the utf8 encoding
 
 #define dictionary-version-number 5.3.15;
-<dictionary-locale>: RU4ru+;
+#define dictionary-locale         ru_RU.UTF-8;
 
 <costly-null>: [[[[]]]];
 

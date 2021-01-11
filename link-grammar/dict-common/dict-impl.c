@@ -171,6 +171,7 @@ static const char * format_locale(Dictionary dict,
  * - Else use the locale from the environment.
  * - On Windows, if no environment locale use the default locale.
  *
+ * Old style dictionary domain definition:
  * <dictionary-locale>: LL4cc+;
  * LL is the ISO639 language code in uppercase,
  * cc is the ISO3166 territory code in lowercase.
@@ -179,6 +180,10 @@ static const char * format_locale(Dictionary dict,
  * For transliterated dictionaries:
  * <dictionary-locale>: C+;
  *
+ * New style dictionary domain definition:
+ * #define dictionary-locale ll-CC;
+ * #define dictionary-locale C;
+ *
  * @param dict The dictionary for which the locale is needed.
  * @return The locale, in a format suitable for use by setlocale().
  */
@@ -186,34 +191,60 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 {
 	if (dict->locale) return dict->locale;
 
-	const char *locale;
-	Dict_node *dn = dict->lookup_list(dict, "<dictionary-locale>");
+	Dict_node *dn = NULL;
+	const char *locale =
+		linkgrammar_get_dict_define(dict, LG_DICTIONARY_LOCALE);
 
-	if (NULL == dn)
+	if (NULL == locale)
 	{
-		lgdebug(D_USER_FILES, "Debug: Dictionary '%s': Locale is not defined.\n",
-		        dict->name);
-		goto locale_error;
+		dn = dict->lookup_list(dict, "<"LG_DICTIONARY_LOCALE">");
+		if (NULL == dn)
+		{
+			lgdebug(D_USER_FILES, "Debug: Dictionary '%s': Locale is not defined.\n",
+			        dict->name);
+			goto locale_error;
+		}
+		else
+		{
+			locale = dn->exp->condesc->string;
+		}
 	}
 
-	if (0 == strcmp(dn->exp->condesc->string, "C"))
+	if (0 == strcmp(locale, "C"))
 	{
 		locale = string_set_add("C", dict->string_set);
 	}
 	else
 	{
-		char c;
-		char locale_ll[4], locale_cc[3];
-		int locale_numelement = sscanf(dn->exp->condesc->string, "%3[A-Z]4%2[a-z]%c",
-										locale_ll, locale_cc, &c);
-		if (2 != locale_numelement)
+		char locale_ll[4], locale_cc[3], c;
+
+		if (NULL == dn)
 		{
-			prt_error("Error: \"<dictionary-locale>: %s\" "
-			          "should be in the form LL4cc+\n"
-						 "\t(LL: language code; cc: territory code) "
-						 "\tor C+ for transliterated dictionaries.\n",
-						 dn->exp->condesc->string);
-			goto locale_error;
+			int locale_numelement = sscanf(locale, "%3[a-z]_%2[A-Z].UTF-8%c",
+			                               locale_ll, locale_cc, &c);
+			if (2 != locale_numelement)
+			{
+				prt_error("Error: "LG_DICTIONARY_LOCALE": \"%s\" "
+				          "should be in the form ll_CC.UTF-8\n"
+				          "\t(ll: language code; CC: territory code) "
+				          "or \"C\" for transliterated dictionaries.\n",
+				          locale);
+				goto locale_error;
+			}
+		}
+		else
+		{
+			int locale_numelement = sscanf(locale, "%3[A-Z]4%2[a-z]%c",
+			                               locale_ll, locale_cc, &c);
+			if (2 != locale_numelement)
+			{
+				prt_error("Error: <"LG_DICTIONARY_LOCALE">: \"%s\" "
+				          "should be in the form LL4cc+\n"
+				          "\t(LL: language code; cc: territory code) "
+				          "or \"C\" for transliterated dictionaries.\n",
+				          locale);
+				goto locale_error;
+			}
 		}
 
 		locale = format_locale(dict, locale_ll, locale_cc);
@@ -226,7 +257,8 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 		}
 	}
 
-	dict->free_lookup(dict, dn);
+
+	if (NULL != dn) dict->free_lookup(dict, dn);
 	lgdebug(D_USER_FILES, "Debug: Dictionary locale: \"%s\"\n", locale);
 	dict->locale = locale;
 	return locale;

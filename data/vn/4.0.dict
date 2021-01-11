@@ -1,7 +1,7 @@
 % Vietnamese Dictionary
 
 #define dictionary-version-number 5.4.5;
-<dictionary-locale>: VI4vn+;
+#define dictionary-locale         vi_VN.UTF-8;
 
 % See https://bitbucket.org/ngocminh/lienkate for the master
 % project; this includes a version of the link-grammar parser

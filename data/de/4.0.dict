@@ -8,7 +8,7 @@
  %***************************************************************************%
 
 #define dictionary-version-number 5.0.2;
-<dictionary-locale>: DE4de+;
+#define dictionary-locale         de_DE.UTF-8;
 
 % NOUNS, PRONOUNS
 
