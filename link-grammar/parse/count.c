@@ -564,6 +564,7 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
 			memset(*wv, -1, sizeof(Table_lrcnt) * wordvec_size);
 
 			*null_start = 0;
+			assert(wordvec_index < ctxt->sent->length, "Bad wordvec index");
 			return &(*wv)[wordvec_index]; /* Needs update */
 		}
 		return NULL;
@@ -600,15 +601,13 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
 	return lp;
 }
 
-#ifdef FIXME
-bool no_count(count_context_t *ctxt, int dir, Connector *c, int cw, int w,
-              unsigned int null_count)
+bool no_count(count_context_t *ctxt, int dir, Connector *c,
+              unsigned int wordvec_index, unsigned int null_count)
 {
 	return
 		&lrcnt_cache_zero ==
-		is_lrcnt(ctxt, dir, w - c->nearest_word, null_count, NULL);
+		is_lrcnt(ctxt, dir, c, wordvec_index, null_count, NULL);
 }
-#endif
 
 static bool lrcnt_cache_update(Table_lrcnt *lrcnt_cache, bool lrcnt_found,
                               bool match_list, unsigned int null_count)
