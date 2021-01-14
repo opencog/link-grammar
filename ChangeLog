@@ -1,5 +1,5 @@
 Version 5.9.0 (XXX 2021)
- * New stuff...
+ * Use #define for custom configuration in dictionaries. #1128
 
 Version 5.8.1 (8 January 2021)
  * Fix macOS/SunOS build break.
