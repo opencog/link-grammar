@@ -1631,6 +1631,30 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	insert_list(dict, dn_second_half, l-k-1);
 }
 
+static void add_define(Dictionary dict, const char *name, const char *value)
+{
+	int id = string_id_add(name, dict->define.set);
+
+	if (!IS_DB_DICT(dict) && (dict->define.size >= (unsigned int)id))
+	{
+		prt_error("Warning: Redefinition of \"%s\", "
+		          "found near line %d of \"%s\"\n",
+		          name, dict->line_number, dict->name);
+	}
+	else
+	{
+		dict->define.size++;
+		dict->define.value =
+			realloc(dict->define.value, dict->define.size * sizeof(char *));
+		dict->define.name =
+			realloc(dict->define.name, dict->define.size * sizeof(char *));
+		assert(dict->define.size == (unsigned int)id,
+		       "\"define\" array size inconsistency");
+		dict->define.name[id - 1] = string_set_add(name, dict->string_set);
+	}
+	dict->define.value[id - 1] = string_set_add(value, dict->string_set);
+}
+
 /**
  * read_entry() -- read one dictionary entry
  * Starting with the current token, parse one dictionary entry.
@@ -1729,6 +1753,22 @@ static bool read_entry(Dictionary dict)
 
 			return true;
 		}
+		else if (0 == strcmp(dict->token, "#define"))
+		{
+			if (!link_advance(dict)) goto syntax_error;
+			const char *name = strdupa(dict->token);
+
+			/* Get the value. */
+			if (!link_advance(dict)) goto syntax_error;
+			add_define(dict, name, dict->token);
+
+			if (!link_advance(dict)) goto syntax_error;
+			if (!is_equal(dict, ';'))
+			{
+				dict_error(dict, "Expecting \";\" at the end of #define.");
+				goto syntax_error;
+			}
+		}
 		else
 		{
 			Dict_node * dn_new = dict_node_new();
@@ -1802,6 +1842,16 @@ syntax_error:
 	return false;
 }
 
+void print_dictionary_defines(Dictionary dict)
+{
+	for (size_t i = 0; i < dict->define.size; i++)
+	{
+		const char *value = dict->define.value[i];
+		int q = (int)(strcspn(value, SPECIAL) == strlen(value));
+		printf("#define %s %s%s%s\n",
+		       dict->define.name[i], &"\""[q], value, &"\""[q]);
+	}
+}
 
 static void rprint_dictionary_data(Dict_node * n)
 {

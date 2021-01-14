@@ -19,9 +19,11 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.8.1 (formatted as V5v8v1+)
-<dictionary-version-number>: V5v8v1+;
-<dictionary-locale>: EN4us+;
+#define dictionary-version-number 5.9.0;
+#define dictionary-locale         en_US.UTF-8;
+
+% The default largest disjunct cost to consider during parsing.
+#define max-disjunct-cost 2.7;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %

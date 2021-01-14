@@ -7,9 +7,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.4.5 (formatted as V5v4v5+)
-<dictionary-version-number>: V5v4v5+;
-<dictionary-locale>: ID4id+;
+#define dictionary-version-number 5.9.0;
+#define dictionary-locale         id_ID.UTF-8;
 
 anjing kucing wanita cewek pria cowok lelaki laki-laki taman lapangan tulang
 tetangga toko jalan burung palu hidung pesta teman rumah film sinetron kakak adik

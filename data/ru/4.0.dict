@@ -7,9 +7,8 @@
 %%
 %% This file uses the utf8 encoding
 
-%% Dictionary version number is 5.3.15 (formatted as V5v3v15+)
-<dictionary-version-number>: V5v3v15+;
-<dictionary-locale>: RU4ru+;
+#define dictionary-version-number 5.9.0;
+#define dictionary-locale         ru_RU.UTF-8;
 
 <costly-null>: [[[[]]]];
 

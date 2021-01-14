@@ -11,9 +11,8 @@
 % If editing with "vi", be sure to "set encoding=utf-8"
 % and also be sure to configure the terminal to use utf-8 encoding.
 %
-% Dictionary version number is 5.1.0 (formatted as V5v1v0+)
-<dictionary-version-number>: V5v1v0+;
-<dictionary-locale>: LT4lt+;
+#define dictionary-version-number 5.9.0;
+#define dictionary-locale         lt_LT.UTF-8;
 
 % Ženklai:
 % Ą Č Ę Ė Į Š Ų Ū Ž

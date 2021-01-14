@@ -14,6 +14,7 @@
 #include <string.h>
 
 #include "api-structures.h"
+#include "dict-common/dict-defines.h"
 #include "dict-common/dialect.h"
 #include "dict-common/dict-utils.h"
 #include "disjunct-utils.h"             // free_sentence_disjuncts
@@ -88,11 +89,8 @@ Parse_Options parse_options_create(void)
 
 	/* A cost of 2.7 allows the usual cost-2 connectors, plus the
 	 * assorted fractional costs, without going to cost 3.0, which
-	 * is used only during panic-parsing.
-	 * XXX In the long run, this should be fetched from the dictionary
-	 * (and should probably not be a parse option).
-	 */
-	po->disjunct_cost = 2.7;
+	 * is used only during panic-parsing. */
+	po->disjunct_cost = UNINITIALIZED_MAX_DISJUNCT_COST;
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->islands_ok = false;
@@ -596,6 +594,9 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 int sentence_parse(Sentence sent, Parse_Options opts)
 {
 	int rc;
+
+	if (opts->disjunct_cost == UNINITIALIZED_MAX_DISJUNCT_COST)
+		opts->disjunct_cost = sent->dict->default_max_disjunct_cost;
 
 	sent->num_valid_linkages = 0;
 

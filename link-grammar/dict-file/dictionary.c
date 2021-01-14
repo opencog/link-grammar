@@ -16,6 +16,7 @@
 #include "dict-common/dict-affix.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-defines.h"
 #include "dict-common/dict-impl.h"
 #include "dict-common/dict-utils.h"
 #include "dict-common/file-utils.h"
@@ -147,6 +148,8 @@ dictionary_six_str(const char * lang,
 			dict->macro_tag = malloc(sizeof(*dict->macro_tag));
 			memset(dict->macro_tag, 0, sizeof(*dict->macro_tag));
 		}
+
+		dict->define.set = string_id_create();
 	}
 	else
 	{
@@ -193,7 +196,8 @@ dictionary_six_str(const char * lang,
 		dict->dialect_tag.set = NULL;
 	}
 
-	dictionary_setup_locale(dict);
+	if (!dictionary_setup_defines(dict))
+		goto failure;
 
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
@@ -231,7 +235,6 @@ dictionary_six_str(const char * lang,
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
 
-	dictionary_setup_defines(dict);
 	condesc_setup(dict);
 
 	// Special-case hack.

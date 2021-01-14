@@ -21,6 +21,7 @@
 #include "regex-morph.h"
 #include "dict-structures.h"
 #include "string-set.h"
+#include "string-id.h"
 #include "utilities.h"
 
 /* ======================================================================= */
@@ -60,6 +61,16 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 #else
 #define callGetLocaleInfoEx GetLocaleInfoEx
 #endif // _WINVER == 0x501
+
+/* ======================================================================= */
+
+const char *linkgrammar_get_dict_define(Dictionary dict, const char *name)
+{
+	if (IS_DB_DICT(dict)) return NULL; /* Not supported yet */
+	unsigned int id = string_id_lookup(name, dict->define.set);
+	if (id == 0) return NULL;
+	return dict->define.value[id - 1];
+}
 
 /* ======================================================================= */
 
@@ -160,6 +171,7 @@ static const char * format_locale(Dictionary dict,
  * - Else use the locale from the environment.
  * - On Windows, if no environment locale use the default locale.
  *
+ * Old style dictionary domain definition:
  * <dictionary-locale>: LL4cc+;
  * LL is the ISO639 language code in uppercase,
  * cc is the ISO3166 territory code in lowercase.
@@ -168,6 +180,10 @@ static const char * format_locale(Dictionary dict,
  * For transliterated dictionaries:
  * <dictionary-locale>: C+;
  *
+ * New style dictionary domain definition:
+ * #define dictionary-locale ll-CC;
+ * #define dictionary-locale C;
+ *
  * @param dict The dictionary for which the locale is needed.
  * @return The locale, in a format suitable for use by setlocale().
  */
@@ -175,34 +191,60 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 {
 	if (dict->locale) return dict->locale;
 
-	const char *locale;
-	Dict_node *dn = dict->lookup_list(dict, "<dictionary-locale>");
+	Dict_node *dn = NULL;
+	const char *locale =
+		linkgrammar_get_dict_define(dict, LG_DICTIONARY_LOCALE);
 
-	if (NULL == dn)
+	if (NULL == locale)
 	{
-		lgdebug(D_USER_FILES, "Debug: Dictionary '%s': Locale is not defined.\n",
-		        dict->name);
-		goto locale_error;
+		dn = dict->lookup_list(dict, "<"LG_DICTIONARY_LOCALE">");
+		if (NULL == dn)
+		{
+			lgdebug(D_USER_FILES, "Debug: Dictionary '%s': Locale is not defined.\n",
+			        dict->name);
+			goto locale_error;
+		}
+		else
+		{
+			locale = dn->exp->condesc->string;
+		}
 	}
 
-	if (0 == strcmp(dn->exp->condesc->string, "C"))
+	if (0 == strcmp(locale, "C"))
 	{
 		locale = string_set_add("C", dict->string_set);
 	}
 	else
 	{
-		char c;
-		char locale_ll[4], locale_cc[3];
-		int locale_numelement = sscanf(dn->exp->condesc->string, "%3[A-Z]4%2[a-z]%c",
-										locale_ll, locale_cc, &c);
-		if (2 != locale_numelement)
+		char locale_ll[4], locale_cc[3], c;
+
+		if (NULL == dn)
 		{
-			prt_error("Error: \"<dictionary-locale>: %s\" "
-			          "should be in the form LL4cc+\n"
-						 "\t(LL: language code; cc: territory code) "
-						 "\tor C+ for transliterated dictionaries.\n",
-						 dn->exp->condesc->string);
-			goto locale_error;
+			int locale_numelement = sscanf(locale, "%3[a-z]_%2[A-Z].UTF-8%c",
+			                               locale_ll, locale_cc, &c);
+			if (2 != locale_numelement)
+			{
+				prt_error("Error: "LG_DICTIONARY_LOCALE": \"%s\" "
+				          "should be in the form ll_CC.UTF-8\n"
+				          "\t(ll: language code; CC: territory code) "
+				          "or \"C\" for transliterated dictionaries.\n",
+				          locale);
+				goto locale_error;
+			}
+		}
+		else
+		{
+			int locale_numelement = sscanf(locale, "%3[A-Z]4%2[a-z]%c",
+			                               locale_ll, locale_cc, &c);
+			if (2 != locale_numelement)
+			{
+				prt_error("Error: <"LG_DICTIONARY_LOCALE">: \"%s\" "
+				          "should be in the form LL4cc+\n"
+				          "\t(LL: language code; cc: territory code) "
+				          "or \"C\" for transliterated dictionaries.\n",
+				          locale);
+				goto locale_error;
+			}
 		}
 
 		locale = format_locale(dict, locale_ll, locale_cc);
@@ -215,7 +257,8 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 		}
 	}
 
-	dict->free_lookup(dict, dn);
+
+	if (NULL != dn) dict->free_lookup(dict, dn);
 	lgdebug(D_USER_FILES, "Debug: Dictionary locale: \"%s\"\n", locale);
 	dict->locale = locale;
 	return locale;
@@ -251,19 +294,30 @@ const char * linkgrammar_get_version(void)
 
 const char * linkgrammar_get_dict_version(Dictionary dict)
 {
+	if (dict->version) return dict->version;
+
+	const char *version =
+		linkgrammar_get_dict_define(dict, LG_DICTIONARY_VERSION_NUMBER);
+	if (NULL != version)
+	{
+		dict->version = version;
+		return dict->version;
+	}
+
+	/* Original code is left for backward compatibility. Note that the
+	 * check for now version should be moved up if it is ever removed. */
+
 	char * ver;
 	char * p;
 	Dict_node *dn;
 	Exp *e;
-
-	if (dict->version) return dict->version;
 
 	/* The newer dictionaries should contain a macro of the form:
 	 * <dictionary-version-number>: V4v6v6+;
 	 * which would indicate dictionary version 4.6.6
 	 * Older dictionaries contain no version info.
 	 */
-	dn = dict->lookup_list(dict, "<dictionary-version-number>");
+	dn = dict->lookup_list(dict, "<"LG_DICTIONARY_VERSION_NUMBER">");
 	if (NULL == dn) return "[unknown]";
 
 	e = dn->exp;
@@ -281,9 +335,14 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	return dict->version;
 }
 
+double linkgrammar_get_dict_max_disjunct_cost(Dictionary dict)
+{
+	return dict->default_max_disjunct_cost;
+}
+
 /* ======================================================================= */
 
-void dictionary_setup_locale(Dictionary dict)
+static void dictionary_setup_locale(Dictionary dict)
 {
 	/* Get the locale for the dictionary. The first one of the
 	 * following which exists, is used:
@@ -335,7 +394,39 @@ void dictionary_setup_locale(Dictionary dict)
 	dict->locale = string_set_add(dict->locale, dict->string_set);
 }
 
-void dictionary_setup_defines(Dictionary dict)
+static bool dictionary_setup_max_disjunct_cost(Dictionary dict)
+{
+	const char *disjunct_cost_str =
+		linkgrammar_get_dict_define(dict, LG_DISJUNCT_COST);
+	if (NULL == disjunct_cost_str)
+	{
+		dict->default_max_disjunct_cost = DEFAULT_MAX_DISJUNCT_COST;
+	}
+	else
+	{
+		float disjunct_cost_value;
+		if (!strtodC(disjunct_cost_str, &disjunct_cost_value))
+		{
+			prt_error("Error: %s: Invalid cost \"%s\"", LG_DISJUNCT_COST,
+			          disjunct_cost_str);
+			return false;
+		}
+		dict->default_max_disjunct_cost = disjunct_cost_value;
+	}
+
+	return true;
+}
+
+/**
+ * Perform initializations according to definitions in the dictionary.
+ * There are 3 kind of definitions:
+ * 1. Special expressions.
+ * 2. #define name value;
+ * 3. Currently not in the dictionary (FIXME).
+ *
+ * @return \c true on success, \c false on failure.
+ */
+bool dictionary_setup_defines(Dictionary dict)
 {
 	dict->left_wall_defined  = dict_has_word(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = dict_has_word(dict, RIGHT_WALL_WORD);
@@ -352,6 +443,11 @@ void dictionary_setup_defines(Dictionary dict)
 	}
 
 	dict->shuffle_linkages = false;
+
+	if (!dictionary_setup_max_disjunct_cost(dict)) return false;
+	dictionary_setup_locale(dict);
+
+	return true;
 }
 
 /* ======================================================================= */

@@ -7,9 +7,8 @@
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.0.2 (formatted as V5v0v2+)
-<dictionary-version-number>: V5v0v2+;
-<dictionary-locale>: DE4de+;
+#define dictionary-version-number 5.9.0;
+#define dictionary-locale         de_DE.UTF-8;
 
 % NOUNS, PRONOUNS
 

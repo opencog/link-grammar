@@ -67,6 +67,15 @@ struct Afdict_class_struct
 #define IS_DB_DICT(dict) false
 #endif /* HAVE_SQLITE */
 
+/* "#define name value" */
+typedef struct
+{
+	String_id *set;                    /* "define" name set */
+	const char **name;
+	const char **value;
+	unsigned int size;                 /* Allocated value array size */
+} define_s;
+
 typedef struct
 {
 	String_id *set;                    /* Expression tag names */
@@ -83,8 +92,10 @@ struct Dictionary_s
 	const char * lang;
 	const char * version;
 	const char * locale;    /* Locale name */
+	double default_max_disjunct_cost;
 	locale_t     lctype;    /* Locale argument for the *_l() functions */
 	int          num_entries;
+	define_s     define;    /* Name-value definitions */
 
 	bool         use_unknown_word;
 	bool         unknown_word_defined;
