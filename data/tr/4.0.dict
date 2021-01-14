@@ -1,7 +1,7 @@
 %
 % Turkish dictionary -- experimental -- 2016 -- Tatiana Batura, Maria Mitkovskaya, Natalya Semenova
 %
-#define dictionary-version-number 5.3.15;
+#define dictionary-version-number 5.9.0;
 #define dictionary-locale         tr_TR.UTF-8;
 
 % adjectives

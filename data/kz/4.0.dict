@@ -2,7 +2,7 @@
 % Kazakh dictionary -- experimental -- 2016
 % -- Tatiana Batura, Aigerim Bakiyeva, Aigerim Yerimbetova
 %
-#define dictionary-version-number 5.3.15;
+#define dictionary-version-number 5.9.0;
 #define dictionary-locale         kk_KZ.UTF-8;
 
 мен.pron: {W-} & S1s+;

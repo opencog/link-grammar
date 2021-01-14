@@ -1,6 +1,6 @@
 % Vietnamese Dictionary
 
-#define dictionary-version-number 5.4.5;
+#define dictionary-version-number 5.9.0;
 #define dictionary-locale         vi_VN.UTF-8;
 
 % See https://bitbucket.org/ngocminh/lienkate for the master

@@ -11,7 +11,7 @@
 % If editing with "vi", be sure to "set encoding=utf-8"
 % and also be sure to configure the terminal to use utf-8 encoding.
 %
-#define dictionary-version-number 5.1.0;
+#define dictionary-version-number 5.9.0;
 #define dictionary-locale         lt_LT.UTF-8;
 
 % Ženklai:
