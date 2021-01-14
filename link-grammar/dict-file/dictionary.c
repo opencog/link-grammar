@@ -233,7 +233,9 @@ dictionary_six_str(const char * lang,
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
 
-	dictionary_setup_defines(dict);
+	if (!dictionary_setup_defines(dict))
+		goto failure;
+
 	condesc_setup(dict);
 
 	// Special-case hack.

@@ -346,7 +346,16 @@ void dictionary_setup_locale(Dictionary dict)
 	dict->locale = string_set_add(dict->locale, dict->string_set);
 }
 
-void dictionary_setup_defines(Dictionary dict)
+/**
+ * Perform initializations according to definitions in the dictionary.
+ * There are 3 kind of definitions:
+ * 1. Special expressions.
+ * 2. #define name value;
+ * 3. Currently not in the dictionary (FIXME).
+ *
+ * @return \c true on success, \c false on failure.
+ */
+bool dictionary_setup_defines(Dictionary dict)
 {
 	dict->left_wall_defined  = dict_has_word(dict, LEFT_WALL_WORD);
 	dict->right_wall_defined = dict_has_word(dict, RIGHT_WALL_WORD);
@@ -363,6 +372,8 @@ void dictionary_setup_defines(Dictionary dict)
 	}
 
 	dict->shuffle_linkages = false;
+
+	return true;
 }
 
 /* ======================================================================= */

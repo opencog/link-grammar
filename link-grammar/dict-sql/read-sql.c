@@ -501,7 +501,8 @@ Dictionary dictionary_create_from_db(const char *lang)
 
 	dictionary_setup_locale(dict);
 
-	dictionary_setup_defines(dict);
+	if (!dictionary_setup_defines(dict))
+		goto failure;
 
 	return dict;
 
