@@ -499,8 +499,6 @@ Dictionary dictionary_create_from_db(const char *lang)
 	if (!afdict_init(dict))
 		goto failure;
 
-	dictionary_setup_locale(dict);
-
 	if (!dictionary_setup_defines(dict))
 		goto failure;
 

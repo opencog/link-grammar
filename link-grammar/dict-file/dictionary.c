@@ -196,7 +196,8 @@ dictionary_six_str(const char * lang,
 		dict->dialect_tag.set = NULL;
 	}
 
-	dictionary_setup_locale(dict);
+	if (!dictionary_setup_defines(dict))
+		goto failure;
 
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
@@ -233,9 +234,6 @@ dictionary_six_str(const char * lang,
 
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
-
-	if (!dictionary_setup_defines(dict))
-		goto failure;
 
 	condesc_setup(dict);
 
