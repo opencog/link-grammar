@@ -15,6 +15,7 @@
 
 % The default largest disjunct cost to consider during parsing.
 #define max-disjunct-cost 2.7;
+#define max-disjunct-cost 2.7;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %

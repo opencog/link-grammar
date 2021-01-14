@@ -1633,15 +1633,25 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 
 static void add_define(Dictionary dict, const char *name, const char *value)
 {
-	dict->define.size++;
-	dict->define.value =
-		realloc(dict->define.value, dict->define.size * sizeof(char *));
-	dict->define.name =
-		realloc(dict->define.name, dict->define.size * sizeof(char *));
 	int id = string_id_add(name, dict->define.set);
-	assert(dict->define.size == (unsigned int)id,
-	       "\"define\" array size inconsistency");
-	dict->define.name[id - 1] = string_set_add(name, dict->string_set);
+
+	if (!IS_DB_DICT(dict) && (dict->define.size >= (unsigned int)id))
+	{
+		prt_error("Warning: Redefinition of \"%s\", "
+		          "found near line %d of \"%s\"\n",
+		          name, dict->line_number, dict->name);
+	}
+	else
+	{
+		dict->define.size++;
+		dict->define.value =
+			realloc(dict->define.value, dict->define.size * sizeof(char *));
+		dict->define.name =
+			realloc(dict->define.name, dict->define.size * sizeof(char *));
+		assert(dict->define.size == (unsigned int)id,
+		       "\"define\" array size inconsistency");
+		dict->define.name[id - 1] = string_set_add(name, dict->string_set);
+	}
 	dict->define.value[id - 1] = string_set_add(value, dict->string_set);
 }
 
