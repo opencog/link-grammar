@@ -857,7 +857,7 @@ open_error:
 		}
 
 		/* First parse with the default disjunct_cost as set by the library
-		 * (currently 2.7). Usually parse here with no null links.
+		 * (typically 2.7). Usually parse here with no null links.
 		 * However, if "-test=one-step-parse" is used and we are said to
 		 * parse with null links, allow parsing here with null links too. */
 		bool one_step_parse = !copts->batch_mode && copts->allow_null &&
