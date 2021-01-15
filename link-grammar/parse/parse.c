@@ -397,7 +397,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			}
 
 			gword_record_in_connector(sent);
-			if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 
 			free_count_context(ctxt, sent);
 			ctxt = alloc_count_context(sent);
@@ -405,9 +404,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			free_fast_matcher(sent, mchxt);
 			mchxt = alloc_fast_matcher(sent, ncu);
 			print_time(opts, "Initialized fast matcher");
+			if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 		}
 
-		if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 		free_linkages(sent);
 
 		sent->num_linkages_found = do_parse(sent, mchxt, ctxt, opts);
