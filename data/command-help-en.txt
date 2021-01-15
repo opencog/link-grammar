@@ -423,7 +423,7 @@ Here are their names, roles and initial values, as shown by
  Variable             Controls                              Default value
  --------             --------                              -------------
  panic_short          Max length of all links                          12
- panic_cost-max       Largest cost to be considered                  4.00
+ panic_cost-max       Largest cost to be considered                  4.00 [*]
  panic_limit          The maximum linkages processed                 1000
  panic_max-null-count Max number of null links allowed                 10
  panic_spell          Up to this many spell-guesses per unknown word    0
@@ -431,12 +431,13 @@ Here are their names, roles and initial values, as shown by
 
 Their values are used in panic mode according to the following rules:
 
- !panic_short          - replaces !short if its value is lower.
- !panic_cost-max       - replaces !cost-max if its value is higher [*].
+ !panic_short          - replaces !short if its value is lower. [**]
+ !panic_cost-max       - replaces !cost-max if its value is higher.
  !panic_limit          - replaces !limit if its value is lower.
  !panic_max-null-count - the maximum allowed null links.
  !panic_spell          - replaces !spell if its value is lower.
  !panic_timeout        - the timeout of the panic mode parsing.
 
-[*] The library all_short_connectors parse option is always set in panic
-mode, so !short determines the maximum length of all the links.
+[*]  Unless set in the dictionary to another value.
+[**] The library all_short_connectors parse option is always set in panic
+mode, so !panic_short determines the maximum length of all the links.
