@@ -644,6 +644,13 @@ int main(int argc, char * argv[])
 		}
 	}
 
+	/* This is not absolutely needed because the library set it after
+	 * the first parse. However, it is initialized here so !variables,
+	 * "link-parser DICT -variables" and "!help cost-max" show the
+	 * correct value. */
+	parse_options_set_disjunct_cost(opts,
+	   linkgrammar_get_dict_max_disjunct_cost(dict));
+
 	save_default_opts(copts); /* Options so far are the defaults */
 
 	/* Process options used by GNU programs. */
