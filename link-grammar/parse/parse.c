@@ -330,6 +330,14 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	{
 		sent->null_count = nl;
 
+		/* We may be here again for parsing with a higher null_count since
+		 * num_valid_linkages of the previous parse was 0 because all the
+		 * linkages had P.P. violations. Ensure that in case of a timeout we
+		 * will not end up with the previous num_linkages_found. */
+		sent->num_linkages_found = 0;
+		sent->num_valid_linkages = 0;
+		sent->num_linkages_post_processed = 0;
+
 		if (needed_prune_level > current_prune_level)
 		{
 			current_prune_level = needed_prune_level;
