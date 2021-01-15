@@ -56,12 +56,6 @@
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif /* _MSC_VER */
 
-#ifndef _WIN32
-#define LAST_RESORT_LOCALE "en_US.UTF-8" /* Supposing POSIX systems */
-#else
-#define LAST_RESORT_LOCALE ""            /* Use user default locale */
-#endif /* _WIN32 */
-
 #include "parser-utilities.h"
 #include "command-line.h"
 #include "lg_readline.h"
