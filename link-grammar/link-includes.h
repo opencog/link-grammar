@@ -52,11 +52,13 @@ link_public_api(const char *)
 link_public_api(const char *)
 	linkgrammar_get_dict_locale(Dictionary);
 
-link_public_api(const char *)
-	linkgrammar_get_dict_define(Dictionary, const char *);
-
 link_public_api(double)
 	linkgrammar_get_dict_max_disjunct_cost(Dictionary);
+
+#define LG_PANIC_DISJUNCT_COST "panic-max-disjunct-cost"
+
+link_public_api(const char *)
+	linkgrammar_get_dict_define(Dictionary, const char *);
 
 /**********************************************************************
  *

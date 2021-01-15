@@ -583,6 +583,30 @@ int main(int argc, char * argv[])
 	win32_set_utf8_output();
 #endif /* _WIN32 */
 
+	if ((argc > 1) && (argv[1][0] != '-')) {
+		/* The dictionary is the first argument if it doesn't begin with "-" */
+		language = argv[1];
+	}
+
+	if (language && *language)
+	{
+		dict = dictionary_create_lang(language);
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open dictionary.\n");
+			exit(-1);
+		}
+	}
+	else
+	{
+		dict = dictionary_create_default_lang();
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open default dictionary.\n");
+			exit(-1);
+		}
+	}
+
 	copts = command_options_create();
 	if (copts == NULL || copts->popts == NULL)
 	{
@@ -599,12 +623,28 @@ int main(int argc, char * argv[])
 	parse_options_set_islands_ok(opts, false);
 	parse_options_set_display_morphology(opts, false);
 
-	save_default_opts(copts); /* Options so far are the defaults */
+	/* Get the panic disjunct cost from the dictionary. */
+	const char *panic_max_cost_str =
+		linkgrammar_get_dict_define(dict, LG_PANIC_DISJUNCT_COST);
+	if (panic_max_cost_str != NULL)
+	{
+		const char *locale =  setlocale(LC_NUMERIC, "C");
+		char *err;
+		double panic_max_cost = strtod(panic_max_cost_str, &err);
+		setlocale(LC_NUMERIC, locale);
 
-	if ((argc > 1) && (argv[1][0] != '-')) {
-		/* The dictionary is the first argument if it doesn't begin with "-" */
-		language = argv[1];
+		if ('\0' == *err)
+		{
+			copts->panic.max_cost = panic_max_cost;
+		}
+		else
+		{
+			prt_error("Warning: Unparsable "LG_PANIC_DISJUNCT_COST " \"%s\" "
+			          "in the dictionary\n", panic_max_cost_str);
+		}
 	}
+
+	save_default_opts(copts); /* Options so far are the defaults */
 
 	/* Process options used by GNU programs. */
 	int quiet_start = 0; /* Iff > 0, inhibit the initial messages */
@@ -644,25 +684,6 @@ int main(int argc, char * argv[])
 		{
 			prt_error("Fatal error: Unknown argument '%s'.\n", argv[i]);
 			print_usage(stderr, argv[0], copts, -1);
-		}
-	}
-
-	if (language && *language)
-	{
-		dict = dictionary_create_lang(language);
-		if (dict == NULL)
-		{
-			prt_error("Fatal error: Unable to open dictionary.\n");
-			exit(-1);
-		}
-	}
-	else
-	{
-		dict = dictionary_create_default_lang();
-		if (dict == NULL)
-		{
-			prt_error("Fatal error: Unable to open default dictionary.\n");
-			exit(-1);
 		}
 	}
 
