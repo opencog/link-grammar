@@ -11,11 +11,15 @@
 /*                                                                       */
 /*************************************************************************/
 
+#ifndef _COMMAND_LINE_
+#define _COMMAND_LINE_
+
 #include <link-grammar/link-includes.h>
 
 #define COMMENT_CHAR '%'       /* input lines beginning with this are ignored */
 #define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here */
 #define FIELD_WIDTH(str, width) (int)((width)+strlen(str)-utf8_strwidth(str))
+#define INITIAL_SCREEN_WIDTH 16381
 
 #if !defined(MIN)
 #define MIN(X,Y)  (((X) < (Y)) ? (X) : (Y))
@@ -43,7 +47,7 @@ typedef struct {
 	bool display_bad;       /* if true, bad linkages are displayed */
 	bool display_disjuncts; /* if true, print disjuncts that were used */
 	bool display_links;     /* if true, a list o' links is printed out */
-	int  display_wordgraph; /* if true, the word-graph is displayed */
+	int  display_wordgraph; /* if nonzero, the word-graph is displayed */
 } Command_Options;
 
 typedef enum
@@ -72,3 +76,5 @@ void print_url_info(void);
 
 
 #define UNDOC "\1" /* undocumented command */
+
+#endif /* _COMMAND_LINE_ */

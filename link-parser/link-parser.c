@@ -56,12 +56,6 @@
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif /* _MSC_VER */
 
-#ifndef _WIN32
-#define LAST_RESORT_LOCALE "en_US.UTF-8" /* Supposing POSIX systems */
-#else
-#define LAST_RESORT_LOCALE ""            /* Use user default locale */
-#endif /* _WIN32 */
-
 #include "parser-utilities.h"
 #include "command-line.h"
 #include "lg_readline.h"
@@ -575,16 +569,12 @@ static void check_winsize(Command_Options* copts)
 
 	/* Create a handle to the console screen. */
 	console = (HANDLE)_get_osfhandle(fd);
-	if (!console || (console == INVALID_HANDLE_VALUE)) goto fail;
+	if (!console || (console == INVALID_HANDLE_VALUE)) return;
 
 	/* Calculate the size of the console window. */
-	if (GetConsoleScreenBufferInfo(console, &info) == 0) goto fail;
+	if (GetConsoleScreenBufferInfo(console, &info) == 0) return;
 
-	copts->screen_width = (size_t)(info.srWindow.Right - info.srWindow.Left + 1);
-	return;
-
-fail:
-	copts->screen_width = 80;
+	copts->screen_width = info.dwSize.X;
 	return;
 #else
 	struct winsize ws;
@@ -1006,7 +996,6 @@ open_error:
 			copts->panic_mode &&
 			parse_options_resources_exhausted(opts))
 		{
-			/* print_total_time(opts); */
 			batch_errors++;
 			if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
 			/* If the parser used was the SAT solver, set the panic parser to

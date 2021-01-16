@@ -89,8 +89,8 @@ Switch default_switches[] =
 	{"short",      Int,  "Max length of short links",       &local.short_length},
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	{"spell",      Int, "Up to this many spell-guesses per unknown word", &local.spell_guess},
-	{"test",       String, "Comma-separated test features", &local.test},
 #endif /* HAVE_HUNSPELL */
+	{"test",       String, "Comma-separated test features", &local.test},
 	{"timeout",    Int,  "Abort parsing after this many seconds", &local.timeout},
 #ifdef USE_SAT_SOLVER
 	{"use-sat",    Bool, "Use Boolean SAT-based parser",    &local.use_sat_solver},
@@ -216,7 +216,7 @@ static const char *switch_value_description(const Switch *as)
  * Return a static buffer with a string value of the given switch.
  *
  * Since the static buffer is overwritten on each call, this function
- * should not use more than once as an argument of the same function.
+ * should not be used more than once as an argument of the same function.
  */
 static const char *switch_value_string(const Switch *as)
 {
@@ -445,7 +445,7 @@ static void display_help(const Switch *sp, Command_Options *copts)
 	display_1line_help(sp, /*is_completion*/false);
 	if (Cmd != sp->param_type)
 	{
-		printf("Current value: %s\n",switch_value_string(sp));
+		printf("Current value: %s\n", switch_value_string(sp));
 		restore_default_local_vars();
 		printf("Default value: %s\n", switch_value_string(sp));
 		put_opts_in_local_vars(copts);
@@ -629,55 +629,71 @@ static int info_cmd(const Switch *uc, int n)
 	return 'c';
 }
 
+const char helpmsg[] = "Type \"!help\" or \"!variables\".";
+
+/**
+ * Handle a request for a particular command help.
+ */
+static int handle_help_command(const Switch *as, char *line,
+                               Command_Options *copts)
+{
+	char *dupline = strdup(line);
+	int count, j;
+	int rc = 0;
+
+	/* If we are here, it is not a command-line parameter. */
+	char *s = strtok(dupline, WHITESPACE);
+	if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
+	{
+		s = strtok(NULL, WHITESPACE);
+		if (s != NULL)
+		{
+			/* This is a help request for the command name at s. */
+			j = -1; /* command index */
+			count = 0;  /* number of matching commands */
+
+			/* Is it a unique abbreviation? */
+			for (int i = 0; as[i].string != NULL; i++)
+			{
+				if (strncasecmp(s, as[i].string, strlen(s)) == 0)
+				{
+					count++;
+					j = i;
+				}
+			}
+
+			if (count == 1)
+			{
+				display_help(&as[j], copts);
+				rc = 'c';    /* Command done. */
+			}
+			else
+			{
+				rc = -1;     /* Error indication. */
+				if (count > 1)
+					prt_error("Ambiguous command: \"%s\".  %s\n", s, helpmsg);
+				else
+					prt_error("Undefined command: \"%s\".  %s\n", s, helpmsg);
+			}
+		}
+	}
+
+	free(dupline);
+	return rc;
+}
+
 static int x_issue_special_command(char * line, Command_Options *copts, Dictionary dict)
 {
 	char *s, *x, *y;
 	int count, j;
 	const Switch *as = default_switches;
-	const char helpmsg[] = "Type \"!help\" or \"!variables\".";
 
-	/* Handle a request for a particular command help. */
-	if (NULL != dict)
+	line = &line[strspn(line, WHITESPACE)]; /* Trim initial whitespace */
+
+	if (NULL != dict) /* No dict if we are called from the command line */
 	{
-		char *dupline = strdup(line);
-		/* If we are here, it is not a command-line parameter. */
-		s = strtok(dupline, WHITESPACE);
-		if ((s != NULL) && strncasecmp(s, "help", strlen(s)) == 0)
-		{
-			s = strtok(NULL, WHITESPACE);
-			if (s != NULL)
-			{
-				/* This is a help request for the command name at s. */
-				j = -1; /* command index */
-				count = 0;  /* number of matching commands */
-
-				/* Is it a unique abbreviation? */
-				for (int i = 0; as[i].string != NULL; i++)
-				{
-					if (strncasecmp(s, as[i].string, strlen(s)) == 0)
-					{
-						count++;
-						j = i;
-					}
-				}
-
-				if (count == 1)
-				{
-					free(dupline);
-					display_help(&as[j], copts);
-					return 'c';
-				}
-
-				if (count > 1)
-					prt_error("Ambiguous command: \"%s\".  %s\n", s, helpmsg);
-				else
-					prt_error("Undefined command: \"%s\".  %s\n", s, helpmsg);
-
-				free(dupline);
-				return -1;
-			}
-		}
-		free(dupline);
+		int rc = handle_help_command(as, line, copts);
+		if (rc != 0) return rc;
 	}
 
 	s = line;
@@ -710,44 +726,55 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		return 'c';
 	}
 
+	if (strchr(s, '=') == NULL)
+	{
+		j = -1;
+		count = 0;
+
+		/* Look for Boolean flippers or command abbreviations. */
+		for (int i = 0; as[i].string != NULL; i++)
+		{
+			if (((Bool == as[i].param_type) || (Cmd == as[i].param_type)) &&
+			    strncasecmp(s, as[i].string, strcspn(s, WHITESPACE)) == 0)
+			{
+				if ((UNDOC[0] == as[i].description[0]) &&
+				    (strlen(as[i].string) != strlen(s))) continue;
+				count++;
+				j = i;
+			}
+		}
+
+		if (count > 1)
+		{
+			prt_error("Ambiguous command \"%s\".  %s\n", s, helpmsg);
+			return -1;
+		}
+		if (count == 1)
+		{
+			/* Flip Boolean value. */
+			if (Bool == as[j].param_type)
+			{
+				size_t junk = strcspn(s, WHITESPACE);
+				if (junk != strlen(s))
+				{
+					prt_error("Junk after a boolean variable: \"%s\".  %s\n",
+					          &s[junk], helpmsg);
+					return -1;
+				}
+				setival(as[j], (0 == ival(as[j])));
+				int undoc = !!(UNDOC[0] == as[j].description[0]);
+				printf("%s turned %s.\n",
+				       as[j].description+undoc, (ival(as[j]))? "on" : "off");
+				return 'c';
+			}
+
+			/* Found an abbreviated, but it wasn't a Boolean.
+			 * It means it is a user command, to be handled below. */
+			return ((int (*)(const Switch*, int)) (as[j].ptr))(as, j);
+		}
+	}
+
 	clean_up_string(line);
-	j = -1;
-	count = 0;
-
-	/* Look for Boolean flippers or command abbreviations. */
-	for (int i = 0; as[i].string != NULL; i++)
-	{
-		if (((Bool == as[i].param_type) || (Cmd == as[i].param_type)) &&
-		    strncasecmp(s, as[i].string, strlen(s)) == 0)
-		{
-			if ((UNDOC[0] == as[i].description[0]) &&
-			    (strlen(as[i].string) != strlen(s))) continue;
-			count++;
-			j = i;
-		}
-	}
-
-	if (count > 1)
-	{
-		prt_error("Ambiguous command \"%s\".  %s\n", s, helpmsg);
-		return -1;
-	}
-	else if (count == 1)
-	{
-		/* Flip Boolean value. */
-		if (Bool == as[j].param_type)
-		{
-			setival(as[j], (0 == ival(as[j])));
-			int undoc = !!(UNDOC[0] == as[j].description[0]);
-			printf("%s turned %s.\n",
-			       as[j].description+undoc, (ival(as[j]))? "on" : "off");
-			return 'c';
-		}
-
-		/* Found an abbreviated, but it wasn't a Boolean.
-		 * It means it is a user command, to be handled below. */
-		return ((int (*)(const Switch*, int)) (as[j].ptr))(as, j);
-	}
 
 	/* Test here for an equation i.e. does the command line hold an equals sign? */
 	for (x=s; (*x != '=') && (*x != '\0'); x++)
@@ -761,6 +788,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		/* Figure out which command it is .. it'll be the j'th one */
 		j = -1;
+		count = 0;
 		for (int i = 0; as[i].string != NULL; i++)
 		{
 			if (Cmd == as[i].param_type) continue;
@@ -796,7 +824,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			if ((val < 0) ||
 			    ((as[j].param_type == Bool) && (val != 0) && (val != 1)))
 			{
-				prt_error("Error: Invalid value %s for variable \"%s\". %s\n",
+				prt_error("Error: Invalid value \"%s\" for variable \"%s\". %s\n",
 				          y, as[j].string, helpmsg);
 				return -1;
 			}
@@ -812,7 +840,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			double val = strtod(y, &err);
 			if (('\0' == *y) || ('\0' != *err))
 			{
-				prt_error("Error: Invalid value %s for variable \"%s\". %s\n",
+				prt_error("Error: Invalid value \"%s\" for variable \"%s\". %s\n",
 				          y, as[j].string, helpmsg);
 				return -1;
 			}
