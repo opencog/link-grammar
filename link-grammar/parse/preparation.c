@@ -32,8 +32,6 @@
  * possibly connect to.
  * The connector *might*, in the end, connect to something more distant,
  * but this is the nearest one that could be connected.
- * Also recalculate length_limit to be the farthest word number that could
- * be connected.
  */
 static int set_dist_fields(Connector * c, size_t w, int delta)
 {
