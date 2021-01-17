@@ -29,11 +29,21 @@
 #define MAX(X,Y)  (((X) > (Y)) ? (X) : (Y))
 #endif
 
+typedef struct
+{
+	double max_cost;
+	int linkage_limit;
+	int max_null_count;
+	int short_length;
+	int spell_guess;
+	int timeout;
+} panic_options;
+
 typedef struct {
 	Parse_Options popts;
-	Parse_Options panic_opts;
+	panic_options panic;
 
-	size_t screen_width;    /* width of screen for displaying linkages */
+	unsigned int screen_width; /* width of screen for displaying linkages */
 	bool batch_mode;        /* if true, process sentences non-interactively */
 	bool allow_null;        /* true if we allow null links in parsing */
 	bool echo_on;           /* true if we should echo the input sentence */
@@ -49,6 +59,9 @@ typedef struct {
 	bool display_links;     /* if true, a list o' links is printed out */
 	int  display_wordgraph; /* if nonzero, the word-graph is displayed */
 } Command_Options;
+
+void put_local_vars_in_opts(Command_Options *);
+void setup_panic_parse_options(Command_Options *, int);
 
 typedef enum
 {

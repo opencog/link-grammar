@@ -39,18 +39,12 @@
 #include <string.h>
 #include <sys/stat.h>
 
-/* Used for terminal resizing */
+/* For dup2*(). */
 #ifndef _WIN32
-#include <termios.h>
-#include <sys/ioctl.h>
-#include <fcntl.h>
-#include <signal.h>
 #include <unistd.h>
 #else
-#include <windows.h>
-#include <wchar.h>
 #include <io.h>
-#endif /* _WIN32 */
+#endif
 
 #ifdef _MSC_VER
 #define LINK_GRAMMAR_DLL_EXPORT 0
@@ -170,6 +164,9 @@ static void process_linkage(Linkage linkage, Command_Options* copts)
 	}
 	if (copts->display_on)
 	{
+#ifdef SIGWINCH
+		set_screen_width(copts);
+#endif
 		string = linkage_print_diagram(linkage, copts->display_walls, copts->screen_width);
 		fprintf(stdout, "%s", string);
 		linkage_free_diagram(string);
@@ -490,19 +487,6 @@ static Label strip_off_label(char * input_string)
 	}
 }
 
-static void setup_panic_parse_options(Parse_Options opts)
-{
-	parse_options_set_disjunct_cost(opts, 4.0f);
-	parse_options_set_min_null_count(opts, 1);
-	parse_options_set_max_null_count(opts, 100);
-	parse_options_set_max_parse_time(opts, 60);
-	parse_options_set_islands_ok(opts, false);
-	parse_options_set_short_length(opts, 12);
-	parse_options_set_all_short_connectors(opts, true);
-	parse_options_set_linkage_limit(opts, 100);
-	parse_options_set_spell_guess(opts, 0);
-}
-
 static int divert_stdio(FILE *from, FILE *to)
 {
 	const int origfd = dup(fileno(from));
@@ -555,54 +539,6 @@ static void print_usage(FILE *out, char *argv0, Command_Options *copts, int exit
 	exit(exit_value);
 }
 
-/**
- * On Unix, this checks for the current window size,
- * and sets the output screen width accordingly.
- */
-static void check_winsize(Command_Options* copts)
-{
-	if (!isatty_stdout) return;
-	int fd = fileno(stdout);
-#ifdef _WIN32
-	HANDLE console;
-	CONSOLE_SCREEN_BUFFER_INFO info;
-
-	/* Create a handle to the console screen. */
-	console = (HANDLE)_get_osfhandle(fd);
-	if (!console || (console == INVALID_HANDLE_VALUE)) return;
-
-	/* Calculate the size of the console window. */
-	if (GetConsoleScreenBufferInfo(console, &info) == 0) return;
-
-	copts->screen_width = info.dwSize.X;
-	return;
-#else
-	struct winsize ws;
-
-	/* If there is no controlling terminal, the fileno will fail. This
-	 * seems to happen while building docker images, I don't know why.
-	 */
-	if (fd < 0) return;
-
-	if (0 != ioctl(fd, TIOCGWINSZ, &ws))
-	{
-		perror("stdout: ioctl TIOCGWINSZ");
-		return;
-	}
-
-	/* printf("rows %i\n", ws.ws_row); */
-	/* printf("cols %i\n", ws.ws_col); */
-
-	/* Set the screen width only if the returned value seems
-	 * rational: it's positive and not insanely tiny.
-	 */
-	if ((10 < ws.ws_col) && (16123 > ws.ws_col))
-	{
-		copts->screen_width = ws.ws_col;
-	}
-#endif /* _WIN32 */
-}
-
 #ifdef INTERRUPT_EXIT
 static void interrupt_exit(int n)
 {
@@ -647,31 +583,37 @@ int main(int argc, char * argv[])
 	win32_set_utf8_output();
 #endif /* _WIN32 */
 
-#if LATER
-	/* Try to catch the SIGWINCH ... except this is not working. */
-	struct sigaction winch_act;
-	winch_act.sa_handler = winch_handler;
-	winch_act.sa_sigaction = NULL;
-	sigemptyset (&winch_act.sa_mask);
-	winch_act.sa_flags = 0;
-	sigaction (SIGWINCH, &winch_act, NULL);
-#endif
+	if ((argc > 1) && (argv[1][0] != '-')) {
+		/* The dictionary is the first argument if it doesn't begin with "-" */
+		language = argv[1];
+	}
 
-#ifdef INTERRUPT_EXIT
-	(void)signal(SIGINT, interrupt_exit);
-	(void)signal(SIGTERM, interrupt_exit);
-#endif
+	if (language && *language)
+	{
+		dict = dictionary_create_lang(language);
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open dictionary.\n");
+			exit(-1);
+		}
+	}
+	else
+	{
+		dict = dictionary_create_default_lang();
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open default dictionary.\n");
+			exit(-1);
+		}
+	}
 
 	copts = command_options_create();
-	if (copts == NULL || copts->panic_opts == NULL)
+	if (copts == NULL || copts->popts == NULL)
 	{
 		prt_error("Fatal error: unable to create parse options\n");
 		exit(-1);
 	}
 	opts = copts->popts;
-
-	setup_panic_parse_options(copts->panic_opts);
-	copts->panic_mode = true;
 
 	parse_options_set_max_parse_time(opts, 30);
 	parse_options_set_linkage_limit(opts, 1000);
@@ -681,12 +623,35 @@ int main(int argc, char * argv[])
 	parse_options_set_islands_ok(opts, false);
 	parse_options_set_display_morphology(opts, false);
 
-	save_default_opts(copts); /* Options so far are the defaults */
+	/* Get the panic disjunct cost from the dictionary. */
+	const char *panic_max_cost_str =
+		linkgrammar_get_dict_define(dict, LG_PANIC_DISJUNCT_COST);
+	if (panic_max_cost_str != NULL)
+	{
+		const char *locale =  setlocale(LC_NUMERIC, "C");
+		char *err;
+		double panic_max_cost = strtod(panic_max_cost_str, &err);
+		setlocale(LC_NUMERIC, locale);
 
-	if ((argc > 1) && (argv[1][0] != '-')) {
-		/* The dictionary is the first argument if it doesn't begin with "-" */
-		language = argv[1];
+		if ('\0' == *err)
+		{
+			copts->panic.max_cost = panic_max_cost;
+		}
+		else
+		{
+			prt_error("Warning: Unparsable "LG_PANIC_DISJUNCT_COST " \"%s\" "
+			          "in the dictionary\n", panic_max_cost_str);
+		}
 	}
+
+	/* This is not absolutely needed because the library set it after
+	 * the first parse. However, it is initialized here so !variables,
+	 * "link-parser DICT -variables" and "!help cost-max" show the
+	 * correct value. */
+	parse_options_set_disjunct_cost(opts,
+	   linkgrammar_get_dict_max_disjunct_cost(dict));
+
+	save_default_opts(copts); /* Options so far are the defaults */
 
 	/* Process options used by GNU programs. */
 	int quiet_start = 0; /* Iff > 0, inhibit the initial messages */
@@ -729,25 +694,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	if (language && *language)
-	{
-		dict = dictionary_create_lang(language);
-		if (dict == NULL)
-		{
-			prt_error("Fatal error: Unable to open dictionary.\n");
-			exit(-1);
-		}
-	}
-	else
-	{
-		dict = dictionary_create_default_lang();
-		if (dict == NULL)
-		{
-			prt_error("Fatal error: Unable to open default dictionary.\n");
-			exit(-1);
-		}
-	}
-
 	/* Process the command line '!' commands */
 	for (int i = 1; i < argc; i++)
 	{
@@ -758,7 +704,7 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	check_winsize(copts);
+	initialize_screen_width(copts);
 
 	if ((parse_options_get_verbosity(opts)) > 0 && (quiet_start == 0))
 	{
@@ -784,7 +730,6 @@ int main(int argc, char * argv[])
 		test = parse_options_get_test(opts);
 
 		input_string = fget_input_string(input_fh, stdout, /*check_return*/false);
-		check_winsize(copts);
 
 		if (NULL == input_string)
 		{
@@ -808,6 +753,7 @@ int main(int argc, char * argv[])
 		if (strspn(input_string, WHITESPACE) == strlen(input_string))
 			continue;
 
+		set_screen_width(copts);
 		int command = special_command(input_string, copts, dict);
 		if ('e' == command) break;    /* It was an exit command */
 		if ('c' == command) continue; /* It was another command */
@@ -918,7 +864,7 @@ open_error:
 		}
 
 		/* First parse with the default disjunct_cost as set by the library
-		 * (currently 2.7). Usually parse here with no null links.
+		 * (typically 2.7). Usually parse here with no null links.
 		 * However, if "-test=one-step-parse" is used and we are said to
 		 * parse with null links, allow parsing here with null links too. */
 		bool one_step_parse = !copts->batch_mode && copts->allow_null &&
@@ -940,46 +886,51 @@ open_error:
 			continue;
 		}
 
-#if 0
-		/* Try again, this time omitting the requirement for
-		 * definite articles, etc. This should allow for the parsing
-		 * of newspaper headlines and other clipped speech.
-		 *
-		 * XXX Unfortunately, this also allows for the parsing of
-		 * all sorts of ungrammatical sentences which should not
-		 * parse, and leads to bad parses of many other unparsable
-		 * but otherwise grammatical sentences.  Thus, this trick
-		 * pretty much fails; we leave it here to document the
-		 * experiment.
-		 */
-		if (num_linkages == 0)
+		if (!(copts->panic_mode && parse_options_resources_exhausted(opts)))
 		{
-			parse_options_set_disjunct_cost(opts, 4.5);
-			num_linkages = sentence_parse(sent, opts);
-			if (num_linkages < 0) continue;
-		}
+#if 0
+			/* Try again, this time omitting the requirement for
+			 * definite articles, etc. This should allow for the parsing
+			 * of newspaper headlines and other clipped speech.
+			 *
+			 * XXX Unfortunately, this also allows for the parsing of
+			 * all sorts of ungrammatical sentences which should not
+			 * parse, and leads to bad parses of many other unparsable
+			 * but otherwise grammatical sentences.  Thus, this trick
+			 * pretty much fails; we leave it here to document the
+			 * experiment.
+			 */
+			if (num_linkages == 0)
+			{
+				parse_options_set_disjunct_cost(opts, 4.5);
+				num_linkages = sentence_parse(sent, opts);
+				if (num_linkages < 0) continue;
+			}
 #endif /* 0 */
 
-		/* If asked to show bad linkages, then show them. */
-		if ((num_linkages == 0) && (!copts->batch_mode))
-		{
-			if (copts->display_bad)
+			/* If asked to show bad linkages, then show them. */
+			if ((num_linkages == 0) && (!copts->batch_mode))
 			{
-				num_linkages = sentence_num_linkages_found(sent);
+				if (copts->display_bad)
+				{
+					num_linkages = sentence_num_linkages_found(sent);
+				}
 			}
-		}
 
-		/* Now parse with null links */
-		if (!one_step_parse && num_linkages == 0 && !copts->batch_mode)
-		{
-			if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
-
-			if (copts->allow_null)
+			/* Now parse with null links */
+			if (!one_step_parse && num_linkages == 0)
 			{
-				/* XXX should use expanded disjunct list here too */
-				parse_options_set_min_null_count(opts, 1);
-				parse_options_set_max_null_count(opts, sentence_length(sent));
-				num_linkages = sentence_parse(sent, opts);
+				if (verbosity > 0) fprintf(stdout, "No complete linkages found.\n");
+				if (!copts->batch_mode)
+				{
+					if (copts->allow_null)
+					{
+						/* XXX should use expanded disjunct list here too */
+						parse_options_set_min_null_count(opts, 1);
+						parse_options_set_max_null_count(opts, sentence_length(sent));
+						num_linkages = sentence_parse(sent, opts);
+					}
+				}
 			}
 		}
 
@@ -992,32 +943,29 @@ open_error:
 				fprintf(stdout, "Memory is exhausted!\n");
 		}
 
-		if ((num_linkages == 0) &&
-			copts->panic_mode &&
-			parse_options_resources_exhausted(opts))
+		if (copts->panic_mode && parse_options_resources_exhausted(opts))
 		{
 			batch_errors++;
-			if (verbosity > 0) fprintf(stdout, "Entering \"panic\" mode...\n");
-			/* If the parser used was the SAT solver, set the panic parser to
-			 * it too.
-			 * FIXME? Currently, the SAT solver code is not too useful in
-			 * panic mode since it doesn't handle parsing with null words, so
-			 * using the regular parser in that case could be beneficial.
-			 * However, this currently causes a crash due to a memory
-			 * management mess. */
-			parse_options_set_use_sat_parser(copts->panic_opts,
-				parse_options_get_use_sat_parser(opts));
-			parse_options_reset_resources(copts->panic_opts);
-			parse_options_set_verbosity(copts->panic_opts, verbosity);
-			(void)sentence_parse(sent, copts->panic_opts);
 			if (verbosity > 0)
 			{
-				if (parse_options_timer_expired(copts->panic_opts))
+				fprintf(stdout, "Entering \"panic\" mode...\n");
+			}
+
+			setup_panic_parse_options(copts, sentence_length(sent));
+			(void)sentence_parse(sent, opts);
+			if (verbosity > 0)
+			{
+				if (parse_options_timer_expired(copts->popts))
 					fprintf(stdout, "Panic timer is expired!\n");
 			}
+			put_local_vars_in_opts(copts); /* Undo setup_panic_parse_options() */
 		}
 
 		if (verbosity > 1) parse_options_print_total_time(opts);
+
+#ifndef SIGWINCH
+		set_screen_width(copts);
+#endif
 
 		const char *rc = "";
 		if (copts->batch_mode)

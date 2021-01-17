@@ -104,10 +104,16 @@ void resources_reset_space(Resources r)
 
 bool resources_exhausted(Resources r)
 {
-	if (r->timer_expired) return true;
-	if (resources_timer_expired(r)) r->timer_expired = true;
+	if (!r->timer_expired && !resources_timer_expired(r)) return false;
 
-	return r->timer_expired;
+	if (!r->timer_expired && (verbosity_level(D_USER_TIMES)))
+	{
+		prt_error("#### Timeout (%.2f seconds)\n",
+		          current_usage_time() - r->time_when_parse_started);
+	}
+	r->timer_expired = true;
+
+	return true;
 }
 
 #if 0 /* max_memory is not being set any more. */

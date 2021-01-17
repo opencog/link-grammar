@@ -669,10 +669,28 @@ int sentence_parse(Sentence sent, Parse_Options opts)
  * Definitions for linkgrammar_get_configuration().
  */
 
+#define MACVAL(macro) #macro lg_str(=macro) " "
+
 #ifdef __STDC_VERSION__
-#define LG_S1 "__STDC_VERSION__=" lg_xstr(__STDC_VERSION__)
+#define LG_S1 MACVAL(__STDC_VERSION__)
 #else
 #define LG_S1
+#endif
+
+#ifdef _POSIX_C_SOURCE
+#define LG_S2 MACVAL(_POSIX_C_SOURCE)
+#else
+#define LG_S2
+#endif
+
+#if !defined _POSIX_C_SOURCE || _POSIX_C_SOURCE == 0
+ #ifdef _POSIX_SOURCE
+ #define LG_S3 MACVAL(_POSIX_SOURCE)
+ #else
+ #define LG_S3
+ #endif
+#else
+#define LG_S3
 #endif
 
 /* -DCC=$(CC) is added in the Makefile. */
@@ -685,19 +703,19 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 #endif
 
 #ifdef __VERSION__
-#define LG_V1 "__VERSION__=" lg_xstr(__VERSION__)
+#define LG_V1 MACVAL(__VERSION__)
 #else
 #define LG_V1
 #endif
 
 #ifdef _MSC_FULL_VER
-#define LG_V2 "_MSC_FULL_VER=" lg_xstr(_MSC_FULL_VER)
+#define LG_V2 MACVAL(_MSC_FULL_VER)
 #else
 #define LG_V2
 #endif
 
 #define LG_COMP LG_CC " " LG_V1 " " LG_V2
-#define LG_STD LG_S1
+#define LG_STD LG_S1 LG_S2 LG_S3
 
 #ifdef __unix__
 #define LG_unix "__unix__ "

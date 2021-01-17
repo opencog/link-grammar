@@ -51,13 +51,16 @@ static struct
 	int display_disjuncts;
 	int display_morphology;
 	int display_wordgraph;
-} local, local_saved;
+
+	panic_options panic;
+} local, saved_defaults;
 
 static const char *value_type[] =
 {
 	"(integer) ", "(Boolean) ", "(float) ", "(string) ", "(command) ", ""
 };
 
+static int panic_variables_cmd(const Switch*, int);
 static int variables_cmd(const Switch*, int);
 static int file_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
@@ -83,6 +86,12 @@ Switch default_switches[] =
 	{"morphology", Bool, "Display word morphology",         &local.display_morphology},
 	{"null",       Bool, "Allow null links",                &local.allow_null},
 	{"panic",      Bool, "Use of \"panic mode\"",           &local.panic_mode},
+	{"panic_short", Int, "Max length of all links",     &local.panic.short_length},
+	{"panic_cost-max", Float, "Largest cost to be considered", &local.panic.max_cost},
+	{"panic_limit",     Int, "The maximum linkages processed", &local.panic.linkage_limit},
+	{"panic_max-null-count", Int, "Max number of null links allowed", &local.panic.max_null_count},
+	{"panic_spell",     Int, "Up to this many spell-guesses per unknown word", &local.panic.spell_guess},
+	{"panic_timeout",   Int, "Abort panic parsing after this many seconds", &local.panic.timeout},
 	{"postscript", Bool, "Generate postscript output",      &local.display_postscript},
 	{"ps-header",  Bool, "Generate postscript header",      &local.display_ps_header},
 	{"rand",       Bool, "Use repeatable random numbers",   &local.repeatable_rand},
@@ -102,6 +111,7 @@ Switch default_switches[] =
 	{"exit",       Cmd,  "Exit the program",                       exit_cmd},
 	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
+	{"panic_variables", Cmd,  "List panic mode setup",  panic_variables_cmd},
 	{"quit",       Cmd,  UNDOC "Exit the program",                 exit_cmd},
 	{"variables",  Cmd,  "List user-settable variables and their functions", variables_cmd},
 	{"!",          Cmd,  UNDOC "Print information on dictionary words", info_cmd},
@@ -116,12 +126,12 @@ static void put_opts_in_local_vars(Command_Options *);
 void save_default_opts(Command_Options *copts)
 {
 	put_opts_in_local_vars(copts);
-	local_saved = local;
+	saved_defaults = local;
 }
 
 static void restore_default_local_vars(void)
 {
-	local = local_saved;
+	local = saved_defaults;
 }
 
 /**
@@ -569,25 +579,102 @@ static int help_cmd(const Switch *uc, int n)
 	printf("Special commands always begin with \"!\".  Command and variable names\n");
 	printf("can be abbreviated.  Here is a list of the commands:\n\n");
 
-	printf(" !help command   Show a detailed help for the given command.\n");
+	printf(" !help command    Show a detailed help for the given command.\n");
 	for (int i = 0; uc[i].string != NULL; i++)
 	{
 		if (Cmd != uc[i].param_type) continue;
 		if (UNDOC[0] == uc[i].description[0]) continue;
-		printf(" !%-14s ", uc[i].string);
+		printf(" !%-15s ", uc[i].string);
 		printf("%s.\n", uc[i].description);
 	}
 
 	printf("\n");
-	printf(" !!<string>      Print all the dictionary words that match <string>.\n");
-	printf("                 A wildcard * may be used to find multiple matches.\n");
-	printf("                 Issue \"!help !\" for more details.\n");
+	printf(" !!<string>       Print all the dictionary words that match <string>.\n");
+	printf("                  A wildcard * may be used to find multiple matches.\n");
+	printf("                  Issue \"!help !\" for more details.\n");
 	printf("\n");
-	printf(" !<var>          Toggle the specified Boolean variable.\n");
-	printf(" !<var>=<val>    Assign that value to that variable.\n");
+	printf(" !<var>           Toggle the specified Boolean variable.\n");
+	printf(" !<var>=<val>     Assign that value to that variable.\n");
 
 	print_url_info();
 
+	return 'c';
+}
+
+void setup_panic_parse_options(Command_Options *copts, int sentence_length)
+{
+	Parse_Options opts = copts->popts;
+
+	parse_options_reset_resources(opts);
+
+	parse_options_set_max_parse_time(opts, local.panic.timeout);
+
+	/* Use panic_cost if it is greater than the current cost. */
+	parse_options_set_disjunct_cost(opts,
+	   MAX(local.max_cost, local.panic.max_cost));
+
+	/* In case !null=0, min_null_count and max_null_count are already 0 as
+	 * needed. In case !null=1, the parsing is done by default in 2 steps,
+	 * when on the first step nulls are not allowed and in the second step
+	 * nulls are allowed, and any of these steps may fail (the code is
+	 * currently kept this way to make code tests easy). Since the code is
+	 * not structured to potentially make a 2-step panic parsing, the panic
+	 * parsing for the case of !null=1 will be done in one step.
+	 * Note that min_null_count is always already set as needed. */
+
+	if (copts->allow_null)
+	{
+		/* Restrict max_null_count. */
+		parse_options_set_max_null_count(opts,
+	      MIN(sentence_length, local.panic.max_null_count));
+	}
+
+	/* Restrict short_length. */
+	parse_options_set_short_length(opts,
+	   MIN(local.short_length, local.panic.short_length));
+	parse_options_set_all_short_connectors(opts, 1);
+
+	/* Restrict spell. */
+	parse_options_set_spell_guess(opts,
+	   MIN(local.spell_guess, local.panic.spell_guess));
+
+	if (local.verbosity > 1)
+	{
+		int n = 0;
+		fprintf(stdout, "Panic mode setup: %n", &n); /* Remember alignment. */
+		fprintf(stdout,
+		        "!cost-max=%.2f !limit=%d !timeout=%d " "!spell=%d !short=%d\n"
+		        "%*s(all_short=%d min_null_count=%d max_null_count=%d)\n",
+		        parse_options_get_disjunct_cost(opts),
+		        parse_options_get_linkage_limit(opts),
+		        parse_options_get_max_parse_time(opts),
+		        parse_options_get_spell_guess(opts),
+		        parse_options_get_short_length(opts),
+		        n, "",                               /* Align to legend length. */
+		        parse_options_get_all_short_connectors(opts),
+		        parse_options_get_min_null_count(opts),
+		        parse_options_get_max_null_count(opts));
+	}
+}
+
+static int panic_variables_cmd(const Switch *uc, int n)
+{
+	printf(" Variable             Controls                                      Value\n");
+	printf(" --------             --------                                      -----\n");
+	for (int i = 0; uc[i].string != NULL; i++)
+	{
+		if (Cmd == uc[i].param_type) continue;
+		if (strncasecmp("panic_", uc[i].string, 6) != 0) continue;
+		if (UNDOC[0] == uc[i].description[0]) continue;
+		printf(" %-21s", uc[i].string);
+		printf("%-*s", FIELD_WIDTH(uc[i].description, 46), uc[i].description);
+		printf("%5s", switch_value_string(&uc[i]));
+		printf("%s\n", switch_value_description(&uc[i]));
+	}
+
+	printf("\n");
+	printf("Set a variable as so: \"!panic_timeout=10\".\n");
+	printf("Get detailed help on a variable with: \"!help var\".\n");
 	return 'c';
 }
 
@@ -598,6 +685,7 @@ static int variables_cmd(const Switch *uc, int n)
 	for (int i = 0; uc[i].string != NULL; i++)
 	{
 		if (Cmd == uc[i].param_type) continue;
+		if (strncasecmp("panic_", uc[i].string, 6) == 0) continue;
 		if (UNDOC[0] == uc[i].description[0]) continue;
 		printf(" %-13s", uc[i].string);
 		printf("%-*s", FIELD_WIDTH(uc[i].description, 46), uc[i].description);
@@ -925,9 +1013,11 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.display_links = copts->display_links;
 
 	local.display_morphology = parse_options_get_display_morphology(opts);
+
+	local.panic = copts->panic;
 }
 
-static void put_local_vars_in_opts(Command_Options* copts)
+void put_local_vars_in_opts(Command_Options* copts)
 {
 	Parse_Options opts = copts->popts;
 	parse_options_set_verbosity(opts, local.verbosity);
@@ -963,19 +1053,13 @@ static void put_local_vars_in_opts(Command_Options* copts)
 	copts->display_bad = local.display_bad;
 	copts->display_disjuncts = local.display_disjuncts;
 	copts->display_links = local.display_links;
+
+	copts->panic = local.panic;
 }
 
 int issue_special_command(const char * line, Command_Options* opts, Dictionary dict)
 {
 	int rc;
-	Parse_Options save = NULL;
-
-	if (strncmp(line, "panic_", 6) == 0)
-	{
-		line += 6;
-		save = opts->popts;
-		opts->popts = opts->panic_opts;
-	}
 
 	put_opts_in_local_vars(opts);
 	char *cline = strdup(line);
@@ -987,7 +1071,6 @@ int issue_special_command(const char * line, Command_Options* opts, Dictionary d
 	put_opts_in_local_vars(opts);
 	free(cline);
 
-	if (save) opts->popts = save;
 	return rc;
 }
 
@@ -996,7 +1079,6 @@ Command_Options* command_options_create(void)
 {
 	Command_Options* co = malloc(sizeof (Command_Options));
 	co->popts = parse_options_create();
-	co->panic_opts = parse_options_create();
 
 	/* "Unlimited" screen width when writing to a file, auto-updated
 	 * later, when writing to a tty. */
@@ -1004,7 +1086,7 @@ Command_Options* command_options_create(void)
 	co->allow_null = true;
 	co->batch_mode = false;
 	co->echo_on = false;
-	co->panic_mode = false;
+	co->panic_mode = true;
 	co->display_on = true;
 	co->display_walls = false;
 	co->display_postscript = false;
@@ -1015,12 +1097,18 @@ Command_Options* command_options_create(void)
 	co->display_disjuncts = false;
 	co->display_links = false;
 	co->display_wordgraph = 0;
+
+	co->panic.max_cost = 4.0f;
+	co->panic.linkage_limit = 1000;
+	co->panic.max_null_count = 10;
+	co->panic.short_length = 12;
+	co->panic.spell_guess = 0;
+	co->panic.timeout = 30;
 	return co;
 }
 
 void command_options_delete(Command_Options* co)
 {
-	parse_options_delete(co->panic_opts);
 	parse_options_delete(co->popts);
 	free(co);
 }

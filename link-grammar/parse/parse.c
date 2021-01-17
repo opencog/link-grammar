@@ -229,6 +229,13 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	print_time(opts, "Sorted all linkages");
 }
 
+static void notify_no_complete_linkages(unsigned int null_count,
+                                        unsigned int max_null_count)
+{
+		if ((0 == null_count) && (0 < max_null_count) && verbosity > 0)
+			prt_error("No complete linkages found.\n");
+}
+
 /**
  * classic_parse() -- parse the given sentence.
  * Perform parsing, using the original link-grammar parsing algorithm
@@ -304,7 +311,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 	/* Build lists of disjuncts */
 	prepare_to_parse(sent, opts);
-	if (resources_exhausted(opts->resources)) return;
+	if (resources_exhausted(opts->resources)) return; /* Nothing to free yet. */
 
 	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent);
 	free_sentence_disjuncts(sent);
@@ -322,6 +329,14 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	for (unsigned int nl = opts->min_null_count; nl <= max_null_count; nl++)
 	{
 		sent->null_count = nl;
+
+		/* We may be here again for parsing with a higher null_count since
+		 * num_valid_linkages of the previous parse was 0 because all the
+		 * linkages had P.P. violations. Ensure that in case of a timeout we
+		 * will not end up with the previous num_linkages_found. */
+		sent->num_linkages_found = 0;
+		sent->num_valid_linkages = 0;
+		sent->num_linkages_post_processed = 0;
 
 		if (needed_prune_level > current_prune_level)
 		{
@@ -350,6 +365,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 					else
 						prt_error("null%s)\n", (nl != 1) ? "s" : "");
 				}
+				notify_no_complete_linkages(nl, max_null_count);
 				nl = expexted_null_count-1;
 				/* To get a result, parse w/null count which is at most one less
 				 * than the number of tokens (w/all nulls there is no linkage). */
@@ -381,7 +397,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			}
 
 			gword_record_in_connector(sent);
-			if (resources_exhausted(opts->resources)) break;
 
 			free_count_context(ctxt, sent);
 			ctxt = alloc_count_context(sent);
@@ -389,9 +404,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			free_fast_matcher(sent, mchxt);
 			mchxt = alloc_fast_matcher(sent, ncu);
 			print_time(opts, "Initialized fast matcher");
+			if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 		}
 
-		if (resources_exhausted(opts->resources)) break;
 		free_linkages(sent);
 
 		sent->num_linkages_found = do_parse(sent, mchxt, ctxt, opts);
@@ -399,6 +414,15 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		print_time(opts, "Counted parses (%d w/%u null%s)",
 		           sent->num_linkages_found, sent->null_count,
 		           (sent->null_count != 1) ? "s" : "");
+
+		/* In case of a timeout, the linkage is partial and may be
+		 * inconsistent. It is also usually different on each run.
+		 * So in that case, pretend that the linkage count is 0. */
+		if (resources_exhausted(opts->resources))
+		{
+			sent->num_linkages_found = 0;
+			goto parse_end_cleanup;
+		}
 
 		free_tracon_sharing(ts_parsing);
 		ts_parsing = NULL;
@@ -411,6 +435,13 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			free_extractor(pex);
 
 			post_process_lkgs(sent, opts);
+			if (resources_exhausted(opts->resources))
+			{
+				sent->num_linkages_found = 0;
+				sent->num_valid_linkages = 0;
+				sent->num_linkages_post_processed = 0;
+				goto parse_end_cleanup;
+			}
 
 			if (sent->num_valid_linkages > 0) break;
 
@@ -427,17 +458,19 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			}
 		}
 
-		if ((0 == nl) && (0 < max_null_count) && verbosity > 0)
-			prt_error("No complete linkages found.\n");
+		notify_no_complete_linkages(nl, max_null_count);
 	}
 	sort_linkages(sent, opts);
 
+parse_end_cleanup:
 	if (NULL != ts_pruning)
 	{
 		free(ts_pruning->memblock);
 		free_tracon_sharing(ts_pruning);
 		free(saved_memblock);
 	}
+	if (NULL != ts_parsing)
+		free_tracon_sharing(ts_parsing);
 
 	free_count_context(ctxt, sent);
 	free_fast_matcher(sent, mchxt);

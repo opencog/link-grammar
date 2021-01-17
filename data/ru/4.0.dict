@@ -9,6 +9,8 @@
 
 #define dictionary-version-number 5.9.0;
 #define dictionary-locale         ru_RU.UTF-8;
+#define max-disjunct-cost         2.7;
+#define panic_max-disjunct-cost   4.0;
 
 <costly-null>: [[[[]]]];
 

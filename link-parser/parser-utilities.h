@@ -15,7 +15,11 @@
 
 #include "../link-grammar/link-includes.h"
 
+#include "command-line.h"
+
 char *expand_homedir(const char *fn);
+void set_screen_width(Command_Options*);
+void initialize_screen_width(Command_Options *);
 
 #define MAX_INPUT 2048
 
