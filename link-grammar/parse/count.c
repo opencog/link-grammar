@@ -40,11 +40,28 @@ struct Table_connector_s
 typedef uint8_t null_count_m;  /* Storage representation of null_count */
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
-/* An element in a table indexed by tracon_id and w.
- * The status field indicates if parsing the range [tracon_id, w) would
- * yield a zero/none-zero leftcount/rightcount, when the zero prediction
- * is valid for null counts up to null_count (or for any null count if
- * null_count is ANY_NULL_COUNT). */
+/* Normally, do_count() yields a zero leftcount/rightcount when it parses a
+ * word range in which one end is a certain tracon and the other end is a
+ * word that is between the nearest_word and farthest_word of the first
+ * connector of that tracon (words out of this range are not checked).
+ * Memoizing this results in a huge speedup for sentences that are not
+ * short.
+ *
+ * To that end, two cache arrays, one of leftcount and the other for
+ * rightcount, indexed by the tracon number (tracon_id), are maintained.
+ *
+ * Each element of these arrays points to a vector, called here word-vector,
+ * with a size equal to abs(nearest_word - farthest_word) + 1.
+ *
+ * Each element of this vector predicts, in it's status field, whether the
+ * expected count is zero for a given null-count (when the word it
+ * represents is the end word of the range).
+ * This prediction is valid for null-counts up to null_count (or for any
+ * null-count if null_count is ANY_NULL_COUNT).
+ *
+ * The check_next filed indicates the next word to be checked. Each
+ * word-vector is updated each time one of its elements gets updated, so
+ * check_next skips all the words for which the count is known to be zero. */
 typedef struct
 {
 	null_count_m null_count; /* status==0 valid up to this null count */
