@@ -278,20 +278,6 @@ static Table_lrcnt *find_table_lrcnt_pointer(count_context_t *ctxt,
 	/* Disregard caching in case the table is full - this shouldn't happen. */
 	if (ctxt->table_lrcnt_available_count == 0) return &table_full;
 
-	/* Panic mode: Return a parse bypass indication if resources are
-	 * exhausted.  checktimer is a device to avoid a gazillion system calls
-	 * to get the timer value. On circa-2018 machines, it results in
-	 * several timer calls per second. */
-	ctxt->checktimer ++;
-	if (ctxt->exhausted || ((0 == ctxt->checktimer%(1<<22)) &&
-	                       (ctxt->current_resources != NULL) &&
-	                       //fprintf(stderr, "T") &&
-	                       resources_exhausted(ctxt->current_resources)))
-	{
-		ctxt->exhausted = true;
-		return &lrcnt_cache_zero;
-	}
-
 	const size_t sizemod = ctxt->table_lrcnt_size-1;
 	size_t h = table_lrcnt_hash(tracon_id, cw, w) & sizemod;
 	Table_lrcnt *t = ctxt->table_lrcnt;
