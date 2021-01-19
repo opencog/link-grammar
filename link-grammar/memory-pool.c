@@ -10,13 +10,25 @@
 /*************************************************************************/
 
 #include <errno.h>                      // errno
+#include <stddef.h>                     // max_align_t
 
 #include "error.h"
 #include "memory-pool.h"
-#include "utilities.h"                  // MIN/MAX, aligned alloc, lg_strerror
+#include "utilities.h"                  // MIN/MAX, aligned_alloc, lg_strerror
 
 /* TODO: Add valgrind descriptions. See:
  * http://valgrind.org/docs/manual/mc-manual.html#mc-manual.mempools */
+
+#if !POOL_ALLOCATOR
+typedef union
+{
+	struct{
+		char *next;
+		size_t size;
+	};
+	max_align_t dymmy;
+} alloc_attr;
+#endif
 
 /**
  * Align given size to the nearest upper power of 2
@@ -62,16 +74,14 @@ Pool_desc *pool_new(const char *func, const char *name,
 		mp->element_size = align_size(element_size);
 		mp->alignment = MAX(MIN_ALIGNMENT, mp->element_size);
 		mp->alignment = MIN(MAX_ALIGNMENT, mp->alignment);
-		mp->data_size = num_elements * mp->element_size;
-		mp->block_size = ALIGN(mp->data_size + FLDSIZE_NEXT, mp->alignment);
 	}
 	else
 	{
 		mp->element_size = element_size;
 		mp->alignment = MIN_ALIGNMENT;
-		mp->data_size = num_elements * mp->element_size;
-		mp->block_size = mp->data_size + FLDSIZE_NEXT;
 	}
+	mp->data_size = ALIGN(num_elements * mp->element_size, FLDSIZE_NEXT);
+	mp->block_size = ALIGN(mp->data_size + FLDSIZE_NEXT, mp->alignment);
 
 	mp->zero_out = zero_out;
 #ifdef POOL_EXACT
@@ -92,6 +102,7 @@ Pool_desc *pool_new(const char *func, const char *name,
 	return mp;
 }
 
+#if POOL_ALLOCATOR
 /**
  * Delete the given memory pool.
  */
@@ -111,29 +122,17 @@ void pool_delete (const char *func, Pool_desc *mp)
 	        mp->curr_elements, mp->num_elements, from_func, mp->name, mp->func);
 
 	/* Free its chained memory blocks. */
+	size_t alloc_size = mp->data_size;
 	char *c_next;
-	size_t alloc_size;
-#if POOL_ALLOCATOR
-	alloc_size = mp->data_size;
-#else
-	alloc_size = mp->element_size;
-#endif
+
 	for (char *c = mp->chain; c != NULL; c = c_next)
 	{
-#if !POOL_ALLOCATOR
-		ASAN_UNPOISON_MEMORY_REGION(c, mp->element_size + FLDSIZE_NEXT);
-#endif
 		c_next = POOL_NEXT_BLOCK(c, alloc_size);
-#if POOL_ALLOCATOR
 		aligned_free(c);
-#else
-		free(c);
-#endif
 	}
 	free(mp);
 }
 
-#if POOL_ALLOCATOR
 /**
  * Allocate an element from the requested pool.
  * This function uses the feature that pointers to void and char are
@@ -144,22 +143,29 @@ void pool_delete (const char *func, Pool_desc *mp)
  * 2. Zero the block if required;
  * 3. Return element pointer.
  */
-void *pool_alloc(Pool_desc *mp)
+inline void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 {
-	mp->curr_elements++; /* For stats. */
+	dassert(vecsize < mp->num_elements, "Pool block is too small %zu > %zu)",
+	        vecsize, mp->num_elements);
+
+	mp->curr_elements += vecsize; /* skipped space disregarded when vecsize > 1 */
 
 #ifdef POOL_FREE
-	if (NULL != mp->free_list)
+	if ((NULL != mp->free_list) && (vecsize == 1))
 	{
 		void *alloc_next = mp->free_list;
+#ifdef POOL_FREE
 		ASAN_UNPOISON_MEMORY_REGION(alloc_next, mp->element_size);
+#endif
 		mp->free_list = *(char **)mp->free_list;
 		if (mp->zero_out) memset(alloc_next, 0, mp->element_size);
 		return alloc_next;
 	}
 #endif // POOL_FREE
 
-	if ((NULL == mp->alloc_next) || (mp->alloc_next == mp->ring + mp->data_size))
+	size_t alloc_size = mp->element_size * vecsize;
+	if ((NULL == mp->alloc_next) ||
+	    (mp->alloc_next + alloc_size >= mp->ring + mp->data_size))
 	{
 #ifdef POOL_EXACT
 		assert(!mp->exact || (NULL == mp->alloc_next),
@@ -193,7 +199,7 @@ void *pool_alloc(Pool_desc *mp)
 			else
 				POOL_NEXT_BLOCK(prev, mp->data_size) = mp->ring;
 			POOL_NEXT_BLOCK(mp->ring, mp->data_size) = NULL;
-			//printf("New ring %p next %p\n", mp->ring,
+			//printf("New ring %p next %p ", mp->ring,
 			       //POOL_NEXT_BLOCK(mp->ring, mp->data_size));
 		} /* Else reuse existing block. */
 
@@ -203,8 +209,13 @@ void *pool_alloc(Pool_desc *mp)
 
 	/* Grab a new element. */
 	void *alloc_next = mp->alloc_next;
-	mp->alloc_next += mp->element_size;
+	mp->alloc_next +=  alloc_size;
 	return alloc_next;
+}
+
+void *pool_alloc(Pool_desc *mp)
+{
+	return pool_alloc_vec(mp, 1);
 }
 
 /**
@@ -252,9 +263,13 @@ void pool_free(Pool_desc *mp, void *e)
 /*
  * Allocate an element by using malloc() directly.
  */
-void *pool_alloc(Pool_desc *mp)
+inline void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 {
-	mp->curr_elements++;
+	dassert(vecsize < mp->num_elements, "Pool block is too small %zu > %zu)",
+	        vecsize, mp->num_elements);
+	mp->curr_elements += vecsize;
+	size_t alloc_size = mp->num_elements * vecsize;
+
 #ifdef POOL_EXACT
 	assert(!mp->exact || mp->curr_elements <= mp->num_elements,
 	       "Too many elements (%zu>%zu) (pool '%s' created in %s())",
@@ -263,13 +278,22 @@ void *pool_alloc(Pool_desc *mp)
 
 	/* Allocate a new element and chain it. */
 	char *next = mp->chain;
-	mp->chain = malloc(mp->element_size + FLDSIZE_NEXT);
-	POOL_NEXT_BLOCK(mp->chain, mp->element_size) = next;
 
-	void *alloc_next = mp->chain;
-	if (mp->zero_out) memset(alloc_next, 0, mp->element_size);
+	mp->chain = malloc(sizeof(alloc_attr) + alloc_size);
+
+	alloc_attr *at = (alloc_attr *)mp->chain;
+	at->next = next;
+	at->size = alloc_size;
+
+	char *alloc_next = mp->chain + sizeof(alloc_attr);
+	if (mp->zero_out) memset(alloc_next, 0, alloc_size);
 
 	return alloc_next;
+}
+
+void *pool_alloc(Pool_desc *mp)
+{
+	return pool_alloc_vec(mp, 1);
 }
 
 /*
@@ -283,10 +307,14 @@ void pool_reuse(Pool_desc *mp)
 
 	/* Free its chained memory blocks. */
 	char *c_next;
+
 	for (char *c = mp->chain; c != NULL; c = c_next)
 	{
-		ASAN_UNPOISON_MEMORY_REGION(c, mp->element_size + FLDSIZE_NEXT);
-		c_next = POOL_NEXT_BLOCK(c, mp->element_size);
+		alloc_attr *at = (alloc_attr *)c;
+#ifdef POOL_FREE
+		ASAN_UNPOISON_MEMORY_REGION(c,  sizeof(alloc_attr) + at->size);
+#endif
+		c_next = at->next;
 		free(c);
 	}
 
@@ -294,16 +322,52 @@ void pool_reuse(Pool_desc *mp)
 	mp->curr_elements = 0;
 }
 
+/*
+ * Delete the given memory pool.
+ */
+#undef pool_delete
+#ifndef DEBUG
+void pool_delete (Pool_desc *mp)
+#else
+void pool_delete (const char *func, Pool_desc *mp)
+#endif
+{
+	if (NULL == mp) return;
+	const char *from_func = "";
+#ifdef DEBUG /* Macro-added first argument. */
+	from_func = func;
+#endif
+	lgdebug(+D_MEMPOOL, "Used %zu (%zu) elements (%s deleted pool '%s' created in %s())\n",
+	        mp->curr_elements, mp->num_elements, from_func, mp->name, mp->func);
+
+	/* Free its chained memory blocks. */
+	char *c_next;
+
+	for (char *c = mp->chain; c != NULL; c = c_next)
+	{
+		alloc_attr *at = (alloc_attr *)c;
+#ifdef POOL_FREE
+		ASAN_UNPOISON_MEMORY_REGION(c, sizeof(alloc_attr) + at->size);
+#endif
+		c_next = at->next;
+		free(c);
+	}
+	free(mp);
+}
+
+
 #ifdef POOL_FREE
 void pool_free(Pool_desc *mp, void *e)
 {
+	mp->curr_elements--;
+#ifdef POOL_FREE
 	if (ASAN_ADDRESS_IS_POISONED(e))
 	{
 		prt_error("Fatal error: Double pool free of %p\n", e);
 		exit(1);
 	}
-	mp->curr_elements--;
-	ASAN_POISON_MEMORY_REGION(e, mp->element_size + FLDSIZE_NEXT);
+	ASAN_POISON_MEMORY_REGION(e, sizeof(alloc_attr) + ((alloc_attr *)e)->size);
+#endif
 }
 #endif // POOL_FREE
 #endif // POOL_ALLOCATOR

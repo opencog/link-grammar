@@ -24,9 +24,10 @@
 
 typedef struct Pool_desc_s Pool_desc;
 
-/* See below the definition of pool_new(). */
 Pool_desc *pool_new(const char *, const char *, size_t, size_t, bool, bool, bool);
 void *pool_alloc(Pool_desc *) GNUC_MALLOC;
+void *pool_alloc_vec(Pool_desc *, size_t) GNUC_MALLOC;
+
 void pool_reuse(Pool_desc *);
 #ifndef DEBUG
 void pool_delete(Pool_desc *);
@@ -39,7 +40,7 @@ void pool_free(Pool_desc *, void *e);
 #endif // POOL_FREE
 
 /* Pool allocator debug facility:
- * If configured with "CFLAGS=-DPOOL_ALLOCATOR=0", a fake pool allocator
+ * If configured with "CPPFLAGS=-DPOOL_ALLOCATOR=0", a fake pool allocator
  * that uses malloc() for each allocation is defined, in order that ASAN
  * or valgrind can be used to find memory usage bugs.
  */

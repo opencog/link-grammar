@@ -456,17 +456,17 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 		if (le != NULL)
 		{
-			if (no_count(ctxt, 0, le, lw, w, null_count)) continue;
-			if (re != NULL)
+			if (no_count(ctxt, 0, le, w - le->nearest_word, null_count)) continue;
+			if ((re != NULL) && (re->farthest_word <= w))
 			{
-				if (no_count(ctxt, 1, re, rw, w, null_count))
+				if (no_count(ctxt, 1, re, w - re->farthest_word, null_count))
 					fml_re = NULL;
 			}
 		}
 		else
 		{
 			/* Here re != NULL. */
-			if (no_count(ctxt, 1, re, rw, w, null_count)) continue;
+			if (no_count(ctxt, 1, re, w - re->farthest_word, null_count)) continue;
 		}
 		/* End of nonzero leftcount/rightcount range cache check. */
 
