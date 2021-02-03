@@ -644,17 +644,16 @@ static bool set_overflowed(extractor_t * pex)
 }
 
 /**
- * This is the top level call that computes the whole parse_set.  It
- * points whole_set at the result.  It creates the necessary hash
- * table (x_table) which will be freed at the same time the
- * whole_set is freed.
+ * This is the top level call that computes the whole parse-set.
+ * It creates the necessary hash table (x_table) which will be freed at
+ * the same time the parse-set related memory is freed.
  *
  * This assumes that do_parse() has been run, and that the count_context
  * is filled with the values thus computed.  This function is structured
  * much like do_parse(), which wraps the main workhorse do_count().
  *
  * If the number of linkages gets huge, then the counts can overflow.
- * We check if this has happened when verifying the parse set.
+ * We check if this has happened when verifying the parse-set.
  * This routine returns TRUE iff an overflow occurred.
  */
 
