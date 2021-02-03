@@ -711,19 +711,19 @@ static void issue_links_for_choice(Linkage lkg, Parse_choice *pc)
 
 static void list_links(Linkage lkg, const Parse_set * set, int index)
 {
-	 Parse_choice *pc;
-	 s64 n;
+	Parse_choice *pc;
+	int n; /* No overflow here - see extract_links() and process_linkages() */
 
-	 if (set == NULL || set->first == NULL) return;
-	 for (pc = set->first; pc != NULL; pc = pc->next) {
-		  n = pc->set[0]->count * pc->set[1]->count;
-		  if (index < n) break;
-		  index -= n;
-	 }
-	 assert(pc != NULL, "walked off the end in list_links");
-	 issue_links_for_choice(lkg, pc);
-	 list_links(lkg, pc->set[0], index % pc->set[0]->count);
-	 list_links(lkg, pc->set[1], index / pc->set[0]->count);
+	if (set == NULL || set->first == NULL) return;
+	for (pc = set->first; pc != NULL; pc = pc->next) {
+		n = pc->set[0]->count * pc->set[1]->count;
+		if (index < n) break;
+		index -= n;
+	}
+	assert(pc != NULL, "walked off the end in list_links");
+	issue_links_for_choice(lkg, pc);
+	list_links(lkg, pc->set[0], index % pc->set[0]->count);
+	list_links(lkg, pc->set[1], index / pc->set[0]->count);
 }
 
 static void list_random_links(Linkage lkg, unsigned int *rand_state,
