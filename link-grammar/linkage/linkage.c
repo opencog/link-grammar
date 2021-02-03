@@ -689,7 +689,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	 * to facilitate using diff on sentence batch runs. */
 	if (test_enabled("removeZZZ"))
 	{
-		for (i=0, j=0; i<linkage->num_links; i++)
+		for (i=0; i<linkage->num_links; i++)
 		{
 			Link *lnk = &(linkage->link_array[i]);
 
