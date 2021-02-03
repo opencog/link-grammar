@@ -678,7 +678,6 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 		mk_parse_set(mchxt, ctxt,
 		             -1, sent->length, NULL, NULL, null_count+1, pex);
 
-
 	return set_overflowed(pex);
 }
 

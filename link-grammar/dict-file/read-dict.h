@@ -11,7 +11,7 @@
 /*************************************************************************/
 
 #ifndef _LG_READ_DICT_H_
-#define  _LG_READ_DICT_H_
+#define _LG_READ_DICT_H_
 
 #include "dict-common/dict-structures.h"
 

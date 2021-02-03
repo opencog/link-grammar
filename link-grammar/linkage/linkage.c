@@ -266,7 +266,6 @@ void remove_empty_words(Linkage lkg)
  *   computed by extract_links().  It represents the chosen disjuncts
  *   for the current linkage. It is used here to compute the chosen_words[].
  *
- *
  * wg_path[]
  *    A pointer to a NULL-terminated array of pointers to Wordgraph words.
  *    It corresponds 1-1 to the chosen_disjuncts array in Linkage structure.
