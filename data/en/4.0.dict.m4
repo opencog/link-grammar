@@ -2752,6 +2752,9 @@ per "/.per": Us+ & Mp-;
 % (($1) or [()]) & <verb-and-pl+>):
 %    "they might supplement or replace anticoagulants"
 %    The first verb is expecting an object, but there isn't one.
+% ([$1]0.1 or [()]) & <verb-and-pl+>):
+%    "I love cats and dogs"
+%    Do not be too eager in attaching an object to the first verb.
 % ({@E-} & hXd- & dWi- & ($1) & hXc+):
 %    Parenthetical phrases: "(please refer to the list below)"
 %    Getting the parenthesis cannot be achieved by hacking <verb-ico>
@@ -2765,7 +2768,7 @@ define(`VERB_PLI',`'
   ({@E-} & {([Sp-] or (Xd- & EI-))} & dWi- & ($1) & Xc+ & SI*i+ & {Xc+} & {@MV+}) or
   ({@E-} & hXd- & dWi- & ($1) & hXc+) or
   (<verb-and-pl-> & (($1) or ())) or
-  ((($1) or [()]) & <verb-and-pl+>)))
+  (([$1]0.1 or [()]) & <verb-and-pl+>)))
 
 % Generic singular intransitive form
 define(`VERB_x_S',`'
