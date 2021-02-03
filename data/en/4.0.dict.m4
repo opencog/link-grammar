@@ -8541,6 +8541,7 @@ and.j-r or.j-r:
 % I'm guessing the costly [O-] is needed to avoid some other screwup ..?
 % {Dm-}: "I have a number of pennies and dimes"
 % "I saw the (dog and pony) show"
+% "I love cats and dogs" requires O- without cost.
 %
 % and_not ,_not: "I saw John, not Mary"
 % We treat this here as an idiom, even though it's explicitly handled for
@@ -8571,7 +8572,7 @@ and.j-n 'n':
     or SIp-
     or ((SIp- or ({Dm-} & Op-) or Jp-) & Rw+ & B+)
     or Wa-
-    or [{{Jd-} & Dmc-} & Op-]
+    or ({{Jd-} & Dmc-} & Op-)
     or ({Dmc-} & Op- & Rw+ & B+)
     or <post-nominal-p>))
   or (<noun-conj-dep-u> & <noun-rel-x> & {XJa-} & (
