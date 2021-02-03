@@ -25,7 +25,6 @@
 typedef struct Pool_desc_s Pool_desc;
 
 Pool_desc *pool_new(const char *, const char *, size_t, size_t, bool, bool, bool);
-void *pool_alloc(Pool_desc *) GNUC_MALLOC;
 void *pool_alloc_vec(Pool_desc *, size_t) GNUC_MALLOC;
 
 void pool_reuse(Pool_desc *);
@@ -88,6 +87,11 @@ typedef struct
 	char *block_end;
 	size_t element_number;
 } Pool_location;
+
+static inline void *pool_alloc(Pool_desc *mp)
+{
+	return pool_alloc_vec(mp, 1);
+}
 
 /**
  * Return the next element in the pool.

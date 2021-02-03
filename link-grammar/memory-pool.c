@@ -213,11 +213,6 @@ inline void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 	return alloc_next;
 }
 
-void *pool_alloc(Pool_desc *mp)
-{
-	return pool_alloc_vec(mp, 1);
-}
-
 /**
  * Reuse the given memory pool.
  * Reset the pool pointers without freeing its memory.
@@ -263,7 +258,7 @@ void pool_free(Pool_desc *mp, void *e)
 /*
  * Allocate an element by using malloc() directly.
  */
-inline void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
+void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 {
 	dassert(vecsize < mp->num_elements, "Pool block is too small %zu > %zu)",
 	        vecsize, mp->num_elements);
@@ -289,11 +284,6 @@ inline void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 	if (mp->zero_out) memset(alloc_next, 0, alloc_size);
 
 	return alloc_next;
-}
-
-void *pool_alloc(Pool_desc *mp)
-{
-	return pool_alloc_vec(mp, 1);
 }
 
 /*
