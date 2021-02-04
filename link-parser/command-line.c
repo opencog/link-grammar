@@ -775,6 +775,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	char *s, *x, *y;
 	int count, j;
 	const Switch *as = default_switches;
+	int  fullname = -1; /* Allow full name even if it is a prefix. */
 
 	line = &line[strspn(line, WHITESPACE)]; /* Trim initial whitespace */
 
@@ -825,8 +826,14 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			if (((Bool == as[i].param_type) || (Cmd == as[i].param_type)) &&
 			    strncasecmp(s, as[i].string, strcspn(s, WHITESPACE)) == 0)
 			{
-				if ((UNDOC[0] == as[i].description[0]) &&
-				    (strlen(as[i].string) != strlen(s))) continue;
+				if (strlen(as[i].string) == strcspn(s, WHITESPACE))
+				{
+					fullname = i;
+				}
+				else
+				{
+					if (UNDOC[0] == as[i].description[0]) continue;
+				}
 				count++;
 				j = i;
 			}
@@ -834,8 +841,13 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		if (count > 1)
 		{
-			prt_error("Ambiguous command \"%s\".  %s\n", s, helpmsg);
-			return -1;
+			if (fullname == -1)
+			{
+				prt_error("Ambiguous command \"%s\".  %s\n", s, helpmsg);
+				return -1;
+			}
+			j = fullname;
+			count = 1;
 		}
 		if (count == 1)
 		{
@@ -882,8 +894,14 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			if (Cmd == as[i].param_type) continue;
 			if (strncasecmp(x, as[i].string, strlen(x)) == 0)
 			{
-				if ((UNDOC[0] == as[i].description[0]) &&
-				    (strlen(as[i].string) != strlen(x))) continue;
+				if (strlen(as[i].string) == strlen(x))
+				{
+					fullname = i;
+				}
+				else
+				{
+					if (UNDOC[0] == as[i].description[0]) continue;
+				}
 				j = i;
 				count ++;
 			}
@@ -897,8 +915,12 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		if (count > 1)
 		{
-			prt_error("Error: Ambiguous variable \"%s\".  %s\n", x, helpmsg);
-			return -1;
+			if (fullname == -1)
+			{
+				prt_error("Error: Ambiguous variable \"%s\".  %s\n", x, helpmsg);
+				return -1;
+			}
+			j = fullname;
 		}
 
 		if ((as[j].param_type == Int) || (as[j].param_type == Bool))
