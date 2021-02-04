@@ -539,13 +539,6 @@ static void print_usage(FILE *out, char *argv0, Command_Options *copts, int exit
 	exit(exit_value);
 }
 
-#ifdef INTERRUPT_EXIT
-static void interrupt_exit(int n)
-{
-	exit(128+n);
-}
-#endif
-
 int main(int argc, char * argv[])
 {
 	FILE            *input_fh = stdin;
