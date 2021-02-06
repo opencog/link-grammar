@@ -352,21 +352,21 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			more_pruning_possible =
 				one_step_parse && (current_prune_level != MAX_SENTENCE);
 
-			unsigned int expexted_null_count =
+			unsigned int expected_null_count =
 				pp_and_power_prune(sent, ts_pruning, current_prune_level, opts,
 				                   ncu);
-			if (expexted_null_count > nl)
+			if (expected_null_count > nl)
 			{
 				if (opts->verbosity >= D_USER_TIMES)
 				{
 					prt_error("#### Skip parsing (w/%u ", nl);
-					if (expexted_null_count-1 > nl)
-						prt_error("to %u nulls)\n", expexted_null_count-1);
+					if (expected_null_count-1 > nl)
+						prt_error("to %u nulls)\n", expected_null_count-1);
 					else
 						prt_error("null%s)\n", (nl != 1) ? "s" : "");
 				}
 				notify_no_complete_linkages(nl, max_null_count);
-				nl = expexted_null_count-1;
+				nl = expected_null_count-1;
 				/* To get a result, parse w/null count which is at most one less
 				 * than the number of tokens (w/all nulls there is no linkage). */
 				if (nl == sent->length-1) nl--;
