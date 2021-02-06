@@ -220,14 +220,11 @@ static void free_table_lrcnt(count_context_t *ctxt)
 {
 	if (verbosity_level(D_COUNT))
 	{
-		unsigned int nonzero = 0;
-		unsigned int any_null = 0;
-		unsigned int zero = 0;
-		unsigned int non_max_null = 0;
-#if POOL_NEXT
-
+		unsigned int nonzero = 0, any_null = 0, zero = 0, non_max_null = 0;
 		Pool_location loc = { 0 };
-		while ((Table_lrcnt *t = pool_next(ctxt->wordvec_pool, &loc)) != NULL)
+		Table_lrcnt *t;
+
+		while ((t = pool_next(ctxt->wordvec_pool, &loc)) != NULL)
 		{
 			if (t->status == -1) continue;
 			if (t->status == 1)
@@ -239,7 +236,6 @@ static void free_table_lrcnt(count_context_t *ctxt)
 			else if (ctxt->sent->null_count == t->null_count)
 				zero++;
 		}
-#endif
 
 		const unsigned int num_values = ctxt->wordvec_pool->curr_elements;
 		lgdebug(+0, "Values %u (usage = non_max_null %u + other %u, "
