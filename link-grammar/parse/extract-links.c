@@ -697,6 +697,8 @@ void check_link_size(Linkage lkg)
  */
 static void issue_link(Linkage lkg, bool lr, Disjunct *md, Link *link)
 {
+	if (link[0].lc == NULL) return; /* no link to generate */
+
 	if (link->rc != NULL)
 	{
 		check_link_size(lkg);
@@ -709,12 +711,8 @@ static void issue_link(Linkage lkg, bool lr, Disjunct *md, Link *link)
 
 static void issue_links_for_choice(Linkage lkg, Parse_choice *pc)
 {
-	if (pc->link[0].lc != NULL) { /* there is a link to generate */
-		issue_link(lkg, /*lr*/false, pc->md, &pc->link[0]);
-	}
-	if (pc->link[1].lc != NULL) {
-		issue_link(lkg, /*lr*/true, pc->md, &pc->link[1]);
-	}
+	issue_link(lkg, /*lr*/false, pc->md, &pc->link[0]);
+	issue_link(lkg, /*lr*/true, pc->md, &pc->link[1]);
 }
 
 static void list_links(Linkage lkg, const Parse_set * set, int index)
