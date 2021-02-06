@@ -376,16 +376,15 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 		if (NULL != ts_pruning)
 		{
+
+			free_tracon_sharing(ts_parsing);
 			ts_parsing = pack_sentence_for_parsing(sent);
 			print_time(opts, "Encoded for parsing");
-
-			free_count_context(ctxt, sent);
-			ctxt = alloc_count_context(sent, ts_parsing);
 
 			if (!more_pruning_possible)
 			{
 				/* At this point no further pruning will be done. Free the
-				 * pruning and parsing tracon stuff here instead of at the end. */
+				 * pruning tracon stuff here instead of at the end. */
 				if (NULL != ts_pruning)
 				{
 					free(ts_pruning->memblock);
@@ -394,9 +393,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 					if (NULL != saved_memblock)
 						free(saved_memblock);
 				}
-
-				free_tracon_sharing(ts_parsing);
-				ts_parsing = NULL;
 			}
 
 			gword_record_in_connector(sent);
@@ -408,6 +404,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		}
 
 		free_linkages(sent);
+
+		free_count_context(ctxt, sent);
+		ctxt = alloc_count_context(sent, ts_parsing);
 
 		sent->num_linkages_found = do_parse(sent, mchxt, ctxt, opts);
 
@@ -423,9 +422,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			sent->num_linkages_found = 0;
 			goto parse_end_cleanup;
 		}
-
-		free_tracon_sharing(ts_parsing);
-		ts_parsing = NULL;
 
 		if (sent->num_linkages_found > 0)
 		{
@@ -469,9 +465,7 @@ parse_end_cleanup:
 		free_tracon_sharing(ts_pruning);
 		free(saved_memblock);
 	}
-	if (NULL != ts_parsing)
-		free_tracon_sharing(ts_parsing);
-
+	free_tracon_sharing(ts_parsing);
 	free_count_context(ctxt, sent);
 	free_fast_matcher(sent, mchxt);
 }
