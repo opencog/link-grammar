@@ -28,7 +28,12 @@
 
 typedef struct Parse_choice_struct Parse_choice;
 
-/* The parse_choice is used to extract links for a given parse */
+/* Parse_choice records a parse of the word range set[0]->lw to
+ * set[1]->rw, when the middle disjunct md is of word set[0]->rw
+ * (which is always equal to set[1]->lw, link[0]->rw, and link[1]->lw).
+ * See make_choice() below.
+ * The number of linkages in this parse is the multiplication of the
+ * counts of the two Parse_set elements. */
 typedef struct Parse_set_struct Parse_set;
 struct Parse_choice_struct
 {
@@ -38,11 +43,14 @@ struct Parse_choice_struct
 	Disjunct    *md;     /* the chosen disjunct for the middle word */
 };
 
+/* Parse_set serves as a header of Parse_choice chained elements, that
+ * describe the possible parses with the specified null_count, using
+ * tracons l_id and r_id on words lw and rw, correspondingly. */
 struct Parse_set_struct
 {
 	short          lw, rw; /* left and right word index */
 	unsigned int   null_count; /* number of island words */
-	int            l_id, r_id; /* pending, unconnected connectors */
+	int            l_id, r_id; /* tracons on words lw, rw */
 
 	s64 count;      /* The number of ways to parse. */
 #ifdef RECOUNT
