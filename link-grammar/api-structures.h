@@ -134,6 +134,7 @@ struct Sentence_s
 	String_set *   string_set;  /* Used for assorted strings */
 	Pool_desc * fm_Match_node;  /* Fast-matcher Match_node memory pool */
 	Pool_desc * Table_connector_pool; /* Count memoizing memory pool */
+	Pool_desc * wordvec_pool;   /* For tracon-word zero-count memoizing */
 	Pool_desc * Exp_pool;
 	Pool_desc * X_node_pool;
 	Pool_desc * Disjunct_pool;
