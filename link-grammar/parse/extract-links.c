@@ -715,6 +715,50 @@ static void issue_links_for_choice(Linkage lkg, Parse_choice *pc)
 	issue_link(lkg, /*lr*/true, pc->md, &pc->link[1]);
 }
 
+/**
+ * Recursively find the \p index'th path in the parse-set tree provided by
+ * \p Parse_set and construct the corresponding linkage into the result
+ * parameter \p lkg.
+ *
+ * In order to generate all the possible linkages, the top-level function
+ * is repetitively invoked, when \p index is changing from 0 to
+ * \c num_linkages_found-1 (by extract_links(), see process_linkages()).
+ *
+ * How it works:
+ *
+ * Each "level" in the parse-set tree consists of a linked lists of
+ * Parse_choice elements. Each such element is pointed to by a
+ * Parse_choice element of an upper level.
+ *
+ * The algo is based on our knowledge of the exact number of paths in each
+ * Parse_set element. Note that the count of the root Parse_set (used at
+ * the top-level invocation) is equal to num_linkages_found.
+ *
+ * Each list_links() invocation is done with an \p index parameter
+ * within the range of 0 to \c set->count-1 in order to extract all the
+ * paths from this set. All the \p index values in that range are used.
+ *
+ * First a selection of the Parse_choice element within the given set is
+ * done.
+ * We know that:
+ *              m
+ * set->count = ∑ S(0)ₘ * S(1)ₘ
+ *             c=1
+ * when S(0) and S(1) are the sets in the m'th Parse_choice element in the
+ * chain.
+ *
+ * The linkage paths are distributed between the Parse_choice elements,
+ * each has its share (S(0)ₘ * S(1)ₘ for the m'th element). We scan these
+ * Parse_choice elements until we find the element that corresponds to
+ * \p index. A new index (called Nindex below) is computed, which has the
+ * property of ranging between 0 and (S(0)ₘ * S(1)ₘ)-1. It is used to
+ * further select a path in the selected Parse_choice element m. To that
+ * end we need to use its S(0) and S(1) components in all possible
+ * combinations (when the total number of combinations is (S(0)ₘ * S(1)ₘ)):
+ *
+ * For S(0)ₘ: (Nindex % pc->set[0]->count) ranges from 0 to (S(0)ₘ-1).
+ * For S(1)ₘ: (Nindex / pc->set[0]->count) ranges from 0 to (S(1)ₘ-1).
+ */
 static void list_links(Linkage lkg, const Parse_set * set, int index)
 {
 	Parse_choice *pc;
