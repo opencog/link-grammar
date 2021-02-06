@@ -92,7 +92,7 @@ struct extractor_s
 /**
  * The first thing we do is we build a data structure to represent the
  * result of the entire parse search.  There will be a set of nodes
- * built for each call to the count() function that returned a non-zero
+ * built for each call to the do_count() function that returned a non-zero
  * value, AND which is part of a valid linkage.  Each of these nodes
  * represents a valid continuation, and contains pointers to two other
  * sets (one for the left continuation and one for the right
