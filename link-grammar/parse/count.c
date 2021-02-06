@@ -1267,9 +1267,6 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 	ctxt->mchxt = mchxt;
 	ctxt->is_short = sent->length <= min_len_word_vector;
 
-	/* Cannot reuse since its content is invalid on an increased null_count. */
-	init_table_lrcnt(ctxt, sent);
-
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 
 	table_stat(ctxt);
@@ -1282,11 +1279,11 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	count_context_t *ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
 	memset(ctxt, 0, sizeof(count_context_t));
 
-	/* 1. next_id keeps the last tracon_id used, so we need +1 for array size.
-	 * 2. In do_count(), le and re are right and left connectors respectively.
-	 */
+	/* next_id keeps the last tracon_id used, so we need +1 for array size.  */
 	for (unsigned int dir = 0; dir < 2; dir++)
 		ctxt->table_lrcnt_size[dir] = ts->next_id[!dir] + 1;
+
+	init_table_lrcnt(ctxt, sent);
 
 	ctxt->sent = sent;
 	/* consecutive blocks of this many words are considered as
