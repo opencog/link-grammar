@@ -426,6 +426,25 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 
 	sent->postprocessor = post_process_new(dict->base_knowledge);
 
+	if (IS_GENERATION(dict))
+	{
+		/* Sentence-generation mode - input_string is the sentence length. */
+		int len = atoi(input_string);
+		if (len <= 0)
+		{
+			input_string = "";
+		}
+		else
+		{
+			dyn_str *s = dyn_str_new();
+			for (int i = 0; i < len; i++)
+				dyn_strcat(s, "\\* ");
+			char *tmp = dyn_str_take(s);
+			input_string = strdupa(tmp);
+			free(tmp);
+		}
+	}
+
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add(input_string, sent->string_set);
 
