@@ -333,6 +333,11 @@ void dictionary_delete(Dictionary dict)
 	free_regexs(dict->regex_root);
 	free_anysplit(dict);
 	free_dictionary(dict);
+
+	/* Free sentence generation word lists. */
+	for (unsigned int i = 0; i < dict->num_categories; i++)
+		free(dict->category->word);
+
 	free(dict);
 	object_open(NULL, NULL, NULL); /* Free the directory path cache */
 }
