@@ -403,7 +403,7 @@ static const char *stringify_Exp_tag(Exp *e, Dictionary dict)
 				if (dict == NULL)
 				{
 					snprintf(tag_info, sizeof(tag_info), " dialect_tag=%u",
-					         e->tag_id);
+					         (unsigned int)e->tag_id);
 				}
 				else
 				{
