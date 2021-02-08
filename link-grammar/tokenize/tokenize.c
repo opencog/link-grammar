@@ -2712,7 +2712,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	if (!word_can_lrmsplit && !word_is_known &&
 	    !contains_digits(word, dict->lctype) &&
 	    !is_proper_name(word, dict->lctype) &&
-	    opts->use_spell_guess && dict->spell_checker)
+	    opts->use_spell_guess && dict->spell_checker &&
+	    !strstr(word, "\\*"))
 	{
 		bool spell_suggest = guess_misspelled_word(sent, unsplit_word, opts);
 		lgdebug(+D_SW, "Spell suggest=%d\n", spell_suggest);
@@ -2998,7 +2999,20 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 	X_node * x, * y;
 	const Dictionary dict = sent->dict;
 
-	dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
+	if (NULL != strstr(w->subword, "\\*"))
+	{
+		char *t = alloca(strlen(w->subword) + 8); /* + room for multibyte copy */
+		const char *backslash = strchr(w->subword, '\\');
+
+		strcpy(t, w->subword);
+		strcpy(t+(backslash - w->subword), backslash+1);
+		dn_head = dictionary_lookup_wild(dict, t);
+	}
+	else
+	{
+		dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
+	}
+
 	x = NULL;
 	dn = dn_head;
 	while (dn != NULL)
@@ -3084,9 +3098,19 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 #endif /* DEBUG */
 		if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-			we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
-			assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
-			w->status |= WS_UNKNOWN;
+			if (NULL == strstr(s, "\\*"))
+			{
+
+				we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
+				assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
+				w->status |= WS_UNKNOWN;
+			}
+			else
+			{
+				lgdebug(+D_DWE, "Wildcard word %s\n", s);
+				we = build_word_expressions(sent, w, NULL, opts);
+				w->status = WS_INDICT; /* Prevent marking as "unknown word". */
+			}
 		}
 		else
 		{
