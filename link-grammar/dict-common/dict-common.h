@@ -85,11 +85,13 @@ typedef struct
 	unsigned int size;                 /* Allocated tag array size */
 } expression_tag;
 
-/* List of words in a dict entry, for sentence generation. */
+/* List of words in a dict category, for sentence generation. */
 typedef struct
 {
 	unsigned int num_words;
-	char **word;
+	char category_string[8];
+	Exp *exp;
+	char const ** word;
 } dict_category;
 
 struct Dictionary_s
@@ -148,7 +150,7 @@ struct Dictionary_s
 	/* Sentence generation */
 	unsigned int num_categories;
 	unsigned int num_categories_alloced;
-	dict_category * category;   /* Word lists - indexed by dict cluster ordinal number */
+	dict_category * category; /* Word lists - indexed by category number */
 
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.

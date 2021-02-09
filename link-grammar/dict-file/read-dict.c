@@ -1655,6 +1655,63 @@ static void add_define(Dictionary dict, const char *name, const char *value)
 	dict->define.value[id - 1] = string_set_add(value, dict->string_set);
 }
 
+static bool is_macro(const char *s)
+{
+	if (s[0] == '<')
+	{
+		char *end = strchr(s, '>');
+		if (end == NULL) return false;
+		if ((end[1] == '\0') || (end[1] == SUBSCRIPT_MARK)) return true;
+		return false;
+	}
+	if (0 == strcmp(s, LEFT_WALL_WORD)) return true;
+	if (0 == strcmp(s, RIGHT_WALL_WORD)) return true;
+
+	return false;
+}
+
+static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
+{
+	e->category = 0;
+	if ((n == 1) && is_macro(dn->string)) return;
+
+	/* Add a category with a place for n words. */
+	dict->num_categories++;
+	if (dict->num_categories >= dict->num_categories_alloced)
+	{
+		dict->num_categories_alloced *= 2;
+		dict->category =
+			realloc(dict->category,
+			        sizeof(dict_category) * dict->num_categories_alloced);
+	}
+	dict->category[dict->num_categories].word =
+		malloc(sizeof(dict->category[0].word) * n);
+
+	n = 0;
+	for (Dict_node *dnx = dn; dnx != NULL; dnx = dnx->left)
+	{
+		if (is_macro(dnx->string)) continue;
+		dict->category[dict->num_categories].word[n] = dnx->string;
+		n++;
+	}
+
+	if (n == 0)
+	{
+		free(dict->category[dict->num_categories].word);
+		--dict->num_categories;
+	}
+	else
+	{
+		assert(dict->num_categories < 1024 * 1024, "Insane number of categories");
+		snprintf(dict->category[dict->num_categories].category_string,
+		         sizeof(dict->category[0].category_string),
+		         "%x", dict->num_categories);
+		e->category = dict->num_categories;
+		dict->category[dict->num_categories].exp = e;
+		dict->category[dict->num_categories].num_words = n;
+	}
+}
+
 /**
  * read_entry() -- read one dictionary entry
  * Starting with the current token, parse one dictionary entry.
@@ -1821,6 +1878,9 @@ static bool read_entry(Dictionary dict)
 		i++;
 	}
 	dict->insert_entry(dict, dn, i);
+
+	if (IS_GENERATION(dict))
+		add_category(dict, n, dn, i);
 
 	if (dict->suppress_warning)
 	{

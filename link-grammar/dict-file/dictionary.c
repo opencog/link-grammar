@@ -155,7 +155,7 @@ dictionary_six_str(const char * lang,
 		{
 			const size_t initial_allocation = 256;
 			dict->num_categories_alloced = initial_allocation;
-			dict->category = malloc(initial_allocation * sizeof(*dict->category));
+			dict->category = malloc(initial_allocation * sizeof(dict_category));
 		}
 	}
 	else
