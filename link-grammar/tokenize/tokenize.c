@@ -2981,6 +2981,21 @@ bool word0_set(Sentence sent, char *w, Parse_Options opts)
 	return setup_dialect(sent->dict, opts);
 }
 
+static Dict_node *dictionary_all_categories(Dictionary dict)
+{
+	Dict_node * dn = malloc(sizeof(*dn) * dict->num_categories);
+
+	for (size_t i = 0; i < dict->num_categories; i++)
+	{
+		dn[i].exp = dict->category[i + 1].exp;
+		dn[i].string = dict->category[i + 1].category_string;
+		dn[i].right = &dn[i + 1];
+	}
+	dn[dict->num_categories-1].right = NULL;
+
+	return dn;
+}
+
 /**
  * build_word_expressions() -- build list of expressions for a word.
  *
@@ -3006,7 +3021,10 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 
 		strcpy(t, w->subword);
 		strcpy(t+(backslash - w->subword), backslash+1);
-		dn_head = dictionary_lookup_wild(dict, t);
+		if (0 == strcmp(w->subword, "\\*"))
+			dn_head = dictionary_all_categories(dict);
+		else
+			dn_head = dictionary_lookup_wild(dict, t);
 	}
 	else
 	{
@@ -3038,7 +3056,10 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		x->word = w;
 		dn = dn->right;
 	}
-	free_lookup_list (dict, dn_head);
+	if (0 != strcmp(w->subword, "\\*"))
+		free_lookup_list (dict, dn_head);
+	else
+		free(dn_head);
 	return x;
 }
 
