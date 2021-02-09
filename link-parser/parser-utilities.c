@@ -399,6 +399,13 @@ void set_screen_width(Command_Options* copts)
 	copts->screen_width = screen_width;
 }
 
+#ifdef INTERRUPT_EXIT
+static void interrupt_exit(int n)
+{
+	exit(128+n);
+}
+#endif
+
 void initialize_screen_width(Command_Options *copts)
 {
 #ifdef SIGWINCH
