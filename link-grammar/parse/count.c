@@ -103,7 +103,6 @@ struct count_context_s
 	unsigned int table_lrcnt_size[2];
 	Table_connector ** table;
 	wordvecp *table_lrcnt[2];  /* Per dir wordvec, indexed by tracon_id */
-	Pool_desc *wordvec_pool;
 	Resources current_resources;
 	COUNT_COST(unsigned long long count_cost[3];)
 };
@@ -220,14 +219,11 @@ static void free_table_lrcnt(count_context_t *ctxt)
 {
 	if (verbosity_level(D_COUNT))
 	{
-		unsigned int nonzero = 0;
-		unsigned int any_null = 0;
-		unsigned int zero = 0;
-		unsigned int non_max_null = 0;
-#if POOL_NEXT
-
+		unsigned int nonzero = 0, any_null = 0, zero = 0, non_max_null = 0;
 		Pool_location loc = { 0 };
-		while ((Table_lrcnt *t = pool_next(ctxt->wordvec_pool, &loc)) != NULL)
+		Table_lrcnt *t;
+
+		while ((t = pool_next(ctxt->sent->wordvec_pool, &loc)) != NULL)
 		{
 			if (t->status == -1) continue;
 			if (t->status == 1)
@@ -239,9 +235,8 @@ static void free_table_lrcnt(count_context_t *ctxt)
 			else if (ctxt->sent->null_count == t->null_count)
 				zero++;
 		}
-#endif
 
-		const unsigned int num_values = ctxt->wordvec_pool->curr_elements;
+		const unsigned int num_values = ctxt->sent->wordvec_pool->curr_elements;
 		lgdebug(+0, "Values %u (usage = non_max_null %u + other %u, "
 		        "other = any_null_zero %u + zero %u + nonzero %u)\n",
 		        num_values, non_max_null, num_values-non_max_null,
@@ -268,7 +263,6 @@ static void free_table_lrcnt(count_context_t *ctxt)
 		free(ctxt->table_lrcnt[dir]);
 		ctxt->table_lrcnt[dir] = NULL;
 	}
-	pool_delete(ctxt->wordvec_pool);
 }
 
 static void init_table_lrcnt(count_context_t *ctxt, Sentence sent)
@@ -283,10 +277,18 @@ static void init_table_lrcnt(count_context_t *ctxt, Sentence sent)
 	const size_t initial_size = MIN(sent->length/2, 16) *
 		                   (ctxt->table_lrcnt_size[0] + ctxt->table_lrcnt_size[1]);
 
-	ctxt->wordvec_pool =
-		pool_new(__func__, "Table_lrcnt", /*num_elements*/initial_size,
-		         sizeof(Table_lrcnt), /*zero_out*/false,
-		         /*align*/false, /*exact*/false);
+
+	if (NULL != sent->wordvec_pool)
+	{
+		pool_reuse(sent->wordvec_pool);
+	}
+	else
+	{
+		ctxt->sent->wordvec_pool =
+			pool_new(__func__, "Table_lrcnt", /*num_elements*/initial_size,
+			         sizeof(Table_lrcnt), /*zero_out*/false,
+			         /*align*/false, /*exact*/false);
+	}
 }
 
 //#define DEBUG_TABLE_STAT
@@ -577,7 +579,7 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
 		{
 			/* Create a new cache entry, to be updated by lrcnt_cache_update(). */
 			const size_t wordvec_size = abs(c->farthest_word - c->nearest_word) + 1;
-			*wv = pool_alloc_vec(ctxt->wordvec_pool, wordvec_size);
+			*wv = pool_alloc_vec(ctxt->sent->wordvec_pool, wordvec_size);
 			memset(*wv, -1, sizeof(Table_lrcnt) * wordvec_size);
 
 			*null_start = 0;
@@ -1267,9 +1269,6 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 	ctxt->mchxt = mchxt;
 	ctxt->is_short = sent->length <= min_len_word_vector;
 
-	/* Cannot reuse since its content is invalid on an increased null_count. */
-	init_table_lrcnt(ctxt, sent);
-
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 
 	table_stat(ctxt);
@@ -1282,13 +1281,14 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	count_context_t *ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
 	memset(ctxt, 0, sizeof(count_context_t));
 
-	/* 1. next_id keeps the last tracon_id used, so we need +1 for array size.
-	 * 2. In do_count(), le and re are right and left connectors respectively.
-	 */
+	ctxt->sent = sent;
+
+	/* next_id keeps the last tracon_id used, so we need +1 for array size.  */
 	for (unsigned int dir = 0; dir < 2; dir++)
 		ctxt->table_lrcnt_size[dir] = ts->next_id[!dir] + 1;
 
-	ctxt->sent = sent;
+	init_table_lrcnt(ctxt, sent);
+
 	/* consecutive blocks of this many words are considered as
 	 * one null link. */
 	/* ctxt->null_block = 1; */

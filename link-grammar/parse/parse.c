@@ -352,21 +352,21 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			more_pruning_possible =
 				one_step_parse && (current_prune_level != MAX_SENTENCE);
 
-			unsigned int expexted_null_count =
+			unsigned int expected_null_count =
 				pp_and_power_prune(sent, ts_pruning, current_prune_level, opts,
 				                   ncu);
-			if (expexted_null_count > nl)
+			if (expected_null_count > nl)
 			{
 				if (opts->verbosity >= D_USER_TIMES)
 				{
 					prt_error("#### Skip parsing (w/%u ", nl);
-					if (expexted_null_count-1 > nl)
-						prt_error("to %u nulls)\n", expexted_null_count-1);
+					if (expected_null_count-1 > nl)
+						prt_error("to %u nulls)\n", expected_null_count-1);
 					else
 						prt_error("null%s)\n", (nl != 1) ? "s" : "");
 				}
 				notify_no_complete_linkages(nl, max_null_count);
-				nl = expexted_null_count-1;
+				nl = expected_null_count-1;
 				/* To get a result, parse w/null count which is at most one less
 				 * than the number of tokens (w/all nulls there is no linkage). */
 				if (nl == sent->length-1) nl--;
@@ -376,16 +376,15 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 		if (NULL != ts_pruning)
 		{
+
+			free_tracon_sharing(ts_parsing);
 			ts_parsing = pack_sentence_for_parsing(sent);
 			print_time(opts, "Encoded for parsing");
-
-			free_count_context(ctxt, sent);
-			ctxt = alloc_count_context(sent, ts_parsing);
 
 			if (!more_pruning_possible)
 			{
 				/* At this point no further pruning will be done. Free the
-				 * pruning and parsing tracon stuff here instead of at the end. */
+				 * pruning tracon stuff here instead of at the end. */
 				if (NULL != ts_pruning)
 				{
 					free(ts_pruning->memblock);
@@ -394,9 +393,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 					if (NULL != saved_memblock)
 						free(saved_memblock);
 				}
-
-				free_tracon_sharing(ts_parsing);
-				ts_parsing = NULL;
 			}
 
 			gword_record_in_connector(sent);
@@ -408,6 +404,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		}
 
 		free_linkages(sent);
+
+		free_count_context(ctxt, sent);
+		ctxt = alloc_count_context(sent, ts_parsing);
 
 		sent->num_linkages_found = do_parse(sent, mchxt, ctxt, opts);
 
@@ -423,9 +422,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			sent->num_linkages_found = 0;
 			goto parse_end_cleanup;
 		}
-
-		free_tracon_sharing(ts_parsing);
-		ts_parsing = NULL;
 
 		if (sent->num_linkages_found > 0)
 		{
@@ -469,9 +465,7 @@ parse_end_cleanup:
 		free_tracon_sharing(ts_pruning);
 		free(saved_memblock);
 	}
-	if (NULL != ts_parsing)
-		free_tracon_sharing(ts_parsing);
-
+	free_tracon_sharing(ts_parsing);
 	free_count_context(ctxt, sent);
 	free_fast_matcher(sent, mchxt);
 }
