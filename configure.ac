@@ -52,7 +52,10 @@ AC_SUBST(LINK_MINOR_VERSION)
 AC_SUBST(LINK_MICRO_VERSION)
 
 AM_INIT_AUTOMAKE([foreign subdir-objects])
-AM_MAINTAINER_MODE([enable])
+
+# When maintainer-mode is enabled, downstream users sometimes trip
+# trip over automake issues. See bug #649.
+AM_MAINTAINER_MODE([disable])
 
 AC_CONFIG_MACRO_DIR([m4])
 
