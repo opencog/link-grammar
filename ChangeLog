@@ -1,6 +1,7 @@
 Version 5.9.0 (XXX 2021)
  * Use #define for custom configuration in dictionaries. #1128
  * English dict: fix silly mistake with "I love cats and dogs".
+ * Disable maintainer-mode in `configure.ac`.
 
 Version 5.8.1 (8 January 2021)
  * Fix macOS/SunOS build break.
