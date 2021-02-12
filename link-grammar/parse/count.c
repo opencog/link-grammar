@@ -17,6 +17,7 @@
 #include "api-structures.h"
 #include "connectors.h"
 #include "count.h"
+#include "dict-common/dict-common.h"    // IS_GENERATION
 #include "disjunct-utils.h"
 #include "fast-match.h"
 #include "resources.h"
@@ -107,7 +108,7 @@ struct count_context_s
 	COUNT_COST(unsigned long long count_cost[3];)
 };
 #define MAX_TABLE_SIZE(s) (s / 10) /* Low load factor, for speed */
-#define MAX_LOG2_TABLE_SIZE 24     /* 128 on 64-bit systems */
+#define MAX_LOG2_TABLE_SIZE 31
 
 static void free_table(count_context_t *ctxt)
 {
@@ -995,6 +996,9 @@ static Count_bin do_count(
 		Connector *fml_re = re;       /* For form_match_list() only */
 #define S(c) (!c?"(nil)":connector_string(c))
 
+		if (!ctxt->is_short)
+		{
+
 		if (le != NULL)
 		{
 			lrcnt_cache =
@@ -1031,6 +1035,8 @@ static Count_bin do_count(
 			}
 		}
 		/* End of nonzero leftcount/rightcount range cache check. */
+
+		}
 
 		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw);
 
@@ -1285,7 +1291,8 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 	ctxt->checktimer = 0;
 	ctxt->islands_ok = opts->islands_ok;
 	ctxt->mchxt = mchxt;
-	ctxt->is_short = sent->length <= min_len_word_vector;
+	ctxt->is_short =
+		(sent->length <= min_len_word_vector) && !IS_GENERATION(ctxt->sent->dict);
 
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 
