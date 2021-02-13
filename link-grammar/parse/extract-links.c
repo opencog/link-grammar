@@ -28,7 +28,12 @@
 
 typedef struct Parse_choice_struct Parse_choice;
 
-/* The parse_choice is used to extract links for a given parse */
+/* Parse_choice records a parse of the word range set[0]->lw to
+ * set[1]->rw, when the middle disjunct md is of word set[0]->rw
+ * (which is always equal to set[1]->lw, link[0]->rw, and link[1]->lw).
+ * See make_choice() below.
+ * The number of linkages in this parse is the multiplication of the
+ * counts of the two Parse_set elements. */
 typedef struct Parse_set_struct Parse_set;
 struct Parse_choice_struct
 {
@@ -38,11 +43,14 @@ struct Parse_choice_struct
 	Disjunct    *md;     /* the chosen disjunct for the middle word */
 };
 
+/* Parse_set serves as a header of Parse_choice chained elements, that
+ * describe the possible parses with the specified null_count, using
+ * tracons l_id and r_id on words lw and rw, correspondingly. */
 struct Parse_set_struct
 {
 	short          lw, rw; /* left and right word index */
 	unsigned int   null_count; /* number of island words */
-	int            l_id, r_id; /* pending, unconnected connectors */
+	int            l_id, r_id; /* tracons on words lw, rw */
 
 	s64 count;      /* The number of ways to parse. */
 #ifdef RECOUNT
@@ -84,7 +92,7 @@ struct extractor_s
 /**
  * The first thing we do is we build a data structure to represent the
  * result of the entire parse search.  There will be a set of nodes
- * built for each call to the count() function that returned a non-zero
+ * built for each call to the do_count() function that returned a non-zero
  * value, AND which is part of a valid linkage.  Each of these nodes
  * represents a valid continuation, and contains pointers to two other
  * sets (one for the left continuation and one for the right
@@ -644,17 +652,16 @@ static bool set_overflowed(extractor_t * pex)
 }
 
 /**
- * This is the top level call that computes the whole parse_set.  It
- * points whole_set at the result.  It creates the necessary hash
- * table (x_table) which will be freed at the same time the
- * whole_set is freed.
+ * This is the top level call that computes the whole parse-set.
+ * It creates the necessary hash table (x_table) which will be freed at
+ * the same time the parse-set related memory is freed.
  *
  * This assumes that do_parse() has been run, and that the count_context
  * is filled with the values thus computed.  This function is structured
  * much like do_parse(), which wraps the main workhorse do_count().
  *
  * If the number of linkages gets huge, then the counts can overflow.
- * We check if this has happened when verifying the parse set.
+ * We check if this has happened when verifying the parse-set.
  * This routine returns TRUE iff an overflow occurred.
  */
 
@@ -690,6 +697,8 @@ void check_link_size(Linkage lkg)
  */
 static void issue_link(Linkage lkg, bool lr, Disjunct *md, Link *link)
 {
+	if (link[0].lc == NULL) return; /* no link to generate */
+
 	if (link->rc != NULL)
 	{
 		check_link_size(lkg);
@@ -702,29 +711,69 @@ static void issue_link(Linkage lkg, bool lr, Disjunct *md, Link *link)
 
 static void issue_links_for_choice(Linkage lkg, Parse_choice *pc)
 {
-	if (pc->link[0].lc != NULL) { /* there is a link to generate */
-		issue_link(lkg, /*lr*/false, pc->md, &pc->link[0]);
-	}
-	if (pc->link[1].lc != NULL) {
-		issue_link(lkg, /*lr*/true, pc->md, &pc->link[1]);
-	}
+	issue_link(lkg, /*lr*/false, pc->md, &pc->link[0]);
+	issue_link(lkg, /*lr*/true, pc->md, &pc->link[1]);
 }
 
+/**
+ * Recursively find the \p index'th path in the parse-set tree provided by
+ * \p Parse_set and construct the corresponding linkage into the result
+ * parameter \p lkg.
+ *
+ * In order to generate all the possible linkages, the top-level function
+ * is repetitively invoked, when \p index is changing from 0 to
+ * \c num_linkages_found-1 (by extract_links(), see process_linkages()).
+ *
+ * How it works:
+ *
+ * Each "level" in the parse-set tree consists of a linked lists of
+ * Parse_choice elements. Each such element is pointed to by a
+ * Parse_choice element of an upper level.
+ *
+ * The algo is based on our knowledge of the exact number of paths in each
+ * Parse_set element. Note that the count of the root Parse_set (used at
+ * the top-level invocation) is equal to num_linkages_found.
+ *
+ * Each list_links() invocation is done with an \p index parameter
+ * within the range of 0 to \c set->count-1 in order to extract all the
+ * paths from this set. All the \p index values in that range are used.
+ *
+ * First a selection of the Parse_choice element within the given set is
+ * done.
+ * We know that:
+ *              m
+ * set->count = ∑ S(0)ₘ * S(1)ₘ
+ *             c=1
+ * when S(0) and S(1) are the sets in the m'th Parse_choice element in the
+ * chain.
+ *
+ * The linkage paths are distributed between the Parse_choice elements,
+ * each has its share (S(0)ₘ * S(1)ₘ for the m'th element). We scan these
+ * Parse_choice elements until we find the element that corresponds to
+ * \p index. A new index (called Nindex below) is computed, which has the
+ * property of ranging between 0 and (S(0)ₘ * S(1)ₘ)-1. It is used to
+ * further select a path in the selected Parse_choice element m. To that
+ * end we need to use its S(0) and S(1) components in all possible
+ * combinations (when the total number of combinations is (S(0)ₘ * S(1)ₘ)):
+ *
+ * For S(0)ₘ: (Nindex % pc->set[0]->count) ranges from 0 to (S(0)ₘ-1).
+ * For S(1)ₘ: (Nindex / pc->set[0]->count) ranges from 0 to (S(1)ₘ-1).
+ */
 static void list_links(Linkage lkg, const Parse_set * set, int index)
 {
-	 Parse_choice *pc;
-	 s64 n;
+	Parse_choice *pc;
+	int n; /* No overflow here - see extract_links() and process_linkages() */
 
-	 if (set == NULL || set->first == NULL) return;
-	 for (pc = set->first; pc != NULL; pc = pc->next) {
-		  n = pc->set[0]->count * pc->set[1]->count;
-		  if (index < n) break;
-		  index -= n;
-	 }
-	 assert(pc != NULL, "walked off the end in list_links");
-	 issue_links_for_choice(lkg, pc);
-	 list_links(lkg, pc->set[0], index % pc->set[0]->count);
-	 list_links(lkg, pc->set[1], index / pc->set[0]->count);
+	if (set == NULL || set->first == NULL) return;
+	for (pc = set->first; pc != NULL; pc = pc->next) {
+		n = pc->set[0]->count * pc->set[1]->count;
+		if (index < n) break;
+		index -= n;
+	}
+	assert(pc != NULL, "walked off the end in list_links");
+	issue_links_for_choice(lkg, pc);
+	list_links(lkg, pc->set[0], index % pc->set[0]->count);
+	list_links(lkg, pc->set[1], index / pc->set[0]->count);
 }
 
 static void list_random_links(Linkage lkg, unsigned int *rand_state,
