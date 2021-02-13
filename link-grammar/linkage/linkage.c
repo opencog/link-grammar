@@ -307,7 +307,8 @@ void remove_empty_words(Linkage lkg)
  * Note: For historical reasons there is some overlap between the results.
  */
 #define D_CCW 8
-void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
+static void compute_chosen_words(Sentence sent, Linkage linkage,
+                                 Parse_Options opts)
 {
 	WordIdx i;   /* index of chosen_words */
 	WordIdx j;
