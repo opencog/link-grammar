@@ -9069,7 +9069,7 @@ a_bitch :
   or ({EA- or EF+} & {[[@Ec-]]} & {Xc+} & A+);
 
 % Surely this is incomplete...
-one_and_only:
+one_and_only in_situ:
   A+;
 
 % Identical to below, but starts with vowel.
