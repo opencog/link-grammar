@@ -422,7 +422,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 		if (sent->num_linkages_found > 0)
 		{
-			extractor_t * pex = extractor_new(sent->length, sent->rand_state);
+			extractor_t * pex =
+				extractor_new(sent->length, sent->rand_state, IS_GENERATION(sent->dict));
 			bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
 			process_linkages(sent, pex, ovfl, opts);
 			free_extractor(pex);

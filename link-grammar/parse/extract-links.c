@@ -158,7 +158,7 @@ static void record_choice(
  * table.  Probably should make use of the actual number of disjuncts,
  * rather than just the number of words.
  */
-extractor_t * extractor_new(int nwords, unsigned int ranstat)
+extractor_t * extractor_new(int nwords, unsigned int ranstat, bool generation)
 {
 	int log2_table_size;
 	extractor_t * pex;
@@ -168,7 +168,9 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->rand_state = ranstat;
 
 	/* Alloc the x_table */
-	if (nwords >= 72) {
+	if (generation) {
+		log2_table_size = 28;
+	} else if (nwords >= 72) {
 		log2_table_size = 15 + nwords / 36;
 	} else if (nwords >= 10) {
 		log2_table_size = 14 + nwords / 24;
