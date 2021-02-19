@@ -154,9 +154,7 @@ inline void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 	if ((NULL != mp->free_list) && (vecsize == 1))
 	{
 		void *alloc_next = mp->free_list;
-#ifdef POOL_FREE
 		ASAN_UNPOISON_MEMORY_REGION(alloc_next, mp->element_size);
-#endif
 		mp->free_list = *(char **)mp->free_list;
 		if (mp->zero_out) memset(alloc_next, 0, mp->element_size);
 		return alloc_next;
@@ -350,14 +348,12 @@ void pool_delete (const char *func, Pool_desc *mp)
 void pool_free(Pool_desc *mp, void *e)
 {
 	mp->curr_elements--;
-#ifdef POOL_FREE
 	if (ASAN_ADDRESS_IS_POISONED(e))
 	{
 		prt_error("Fatal error: Double pool free of %p\n", e);
 		exit(1);
 	}
 	ASAN_POISON_MEMORY_REGION(e, sizeof(alloc_attr) + ((alloc_attr *)e)->size);
-#endif
 }
 #endif // POOL_FREE
 #endif // POOL_ALLOCATOR
