@@ -552,19 +552,18 @@ static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
  * Is the range [c, w) going to yield a nonzero leftcount / rightcount?
  *
  * @param ctxt Count context.
- * @param dir Direction - 0: leftcount, 1: rightcount.
+ * @param dir Direction - 0: leftcount; 1: rightcount.
  * @param c The connector that starts the range.
- * @param w The word that ends the range.
- * @param null_count The current null_count to check.
- * @param cw The word of this connector.
+ * @param wordvec_index Word-vector index.
+ * @param null_count The current null-count to check.
  *
  * Return these values:
  * @param lnull_start First null count to check (the previous ones can be
  * skipped because the cache indicates they yield a zero count.)
  * @return Cache entry for the given range. Possible values:
- *    NULL - A nonzero count may be encountered for null_count>=lnull_start.
+ *    NULL - A nonzero count may be encountered for \c null_count>=lnull_start.
  *    Table_lrcnt_zero - A zero count would result.
- *    Cache pointer - An update for null_count>=lnull_start is needed.
+ *    Cache pointer - An update for \c null_count>=lnull_start is needed.
  */
 static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
                              unsigned int wordvec_index,
