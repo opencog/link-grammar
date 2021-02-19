@@ -165,7 +165,7 @@ inline void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 
 	size_t alloc_size = mp->element_size * vecsize;
 	if ((NULL == mp->alloc_next) ||
-	    (mp->alloc_next + alloc_size >= mp->ring + mp->data_size))
+	    (mp->alloc_next + alloc_size > mp->ring + mp->data_size))
 	{
 #ifdef POOL_EXACT
 		assert(!mp->exact || (NULL == mp->alloc_next),
