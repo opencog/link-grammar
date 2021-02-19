@@ -312,6 +312,7 @@ static inline unsigned int pair_hash(int lw, int rw,
 	i = r_id + (i << 6) + (i << 16) - i;
 #endif
 
+	if (i == 0) i = 1; /* Allow for table hash field validation. */
 	return i;
 }
 

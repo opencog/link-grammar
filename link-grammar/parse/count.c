@@ -318,9 +318,25 @@ static void table_stat(count_context_t *ctxt)
 
 	for (unsigned int i = 0; i < ctxt->table_size; i++)
 	{
-		c = 0;
 		Table_connector *t = ctxt->table[i];
-		if (t == NULL) N++;
+
+		c = 0;
+		if (t == NULL)
+		{
+			N++;
+		}
+		else
+		{
+			assert(t->hash != 0, "Invalid hash value: 0");
+			assert((hist_total(&t->count)>=0)&&(hist_total(&t->count) <= INT_MAX),
+			       "Invalid count %lld", hist_total(&t->count));
+			assert(t->l_id < (int)ctxt->sent->length ||
+			       ((t->l_id >= 255)&&(t->l_id < (int)ctxt->table_lrcnt_size[0])),
+			       "invalid l_id %d", t->l_id);
+			assert(t->r_id <= (int)ctxt->sent->length ||
+			       ((t->r_id > 255)&&(t->r_id < (int)ctxt->table_lrcnt_size[1])),
+			       "invalid r_id %d", t->r_id);
+		}
 		for (; t != NULL; t = t->next)
 		{
 			c++;
