@@ -10,7 +10,6 @@
 /*************************************************************************/
 
 #include <errno.h>                      // errno
-#include <stddef.h>                     // max_align_t
 
 #include "error.h"
 #include "memory-pool.h"
@@ -18,17 +17,6 @@
 
 /* TODO: Add valgrind descriptions. See:
  * http://valgrind.org/docs/manual/mc-manual.html#mc-manual.mempools */
-
-#if !POOL_ALLOCATOR
-typedef union
-{
-	struct{
-		char *next;
-		size_t size;
-	};
-	max_align_t dymmy;
-} alloc_attr;
-#endif
 
 /**
  * Align given size to the nearest upper power of 2
@@ -261,7 +249,7 @@ void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 	dassert(vecsize < mp->num_elements, "Pool block is too small %zu > %zu)",
 	        vecsize, mp->num_elements);
 	mp->curr_elements += vecsize;
-	size_t alloc_size = mp->num_elements * vecsize;
+	size_t alloc_size = mp->element_size * vecsize;
 
 #ifdef POOL_EXACT
 	assert(!mp->exact || mp->curr_elements <= mp->num_elements,
@@ -311,6 +299,7 @@ void pool_reuse(Pool_desc *mp)
 }
 
 /*
+ * num_elements
  * Delete the given memory pool.
  */
 #undef pool_delete
