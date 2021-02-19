@@ -140,6 +140,7 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 
 	if (shift == 0)
 		shift = ctxt->log2_table_size + 1; /* Double the table size */
+	lgdebug(+D_COUNT, "Connector table log2 size %u\n", shift);
 
 	/* Keep the table indefinitely (or until exiting), so that it can
 	 * be reused. This avoids a large overhead in malloc/free when
@@ -210,7 +211,6 @@ static void init_table(count_context_t *ctxt, Sentence sent)
 #endif
 
 	if (MAX_LOG2_TABLE_SIZE < shift) shift = MAX_LOG2_TABLE_SIZE;
-	lgdebug(+D_COUNT, "Initial connector table log2 size %u\n", shift);
 
 	table_alloc(ctxt, shift);
 }
