@@ -94,10 +94,11 @@ static inline void *pool_alloc(Pool_desc *mp)
 }
 
 /**
- * Return the next element in the pool.
- * @param Pool_location Iteration state. Should be initialized to 0
- * before starting the iteration.
- * @return A different element on each call, \c NULL when there are no more.
+ * Return the next element in the pool, starting with the first one.
+ * @param l Iteration state. \c *l should be initialized to
+ * (Pool_location)0 before starting the iteration.
+ * @return The next element on each call, \c NULL when there are no
+ * more.
  */
 static inline void *pool_next(Pool_desc *mp, Pool_location *l)
 {
