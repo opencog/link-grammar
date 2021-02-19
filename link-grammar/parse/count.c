@@ -609,7 +609,10 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
 	 * on the first one that succeeds. */
 
 	if (lp->status == -1)
+	{
+		if (null_start != NULL) *null_start = 0;
 		return lp; /* Needs update */
+	}
 
 	if  (lp->status == 1)
 	{
