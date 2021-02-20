@@ -35,7 +35,7 @@ struct Linkage_info_struct
 /**
  * num_links:
  *   The number of links in the current linkage.  Computed by
- *   extract_linkage().
+ *   extract_links().
  *
  * chosen_disjuncts[]
  *   This is an array pointers to disjuncts, one for each word, that is
@@ -79,8 +79,6 @@ struct Link_s
 	Connector * rc;
 	const char * link_name; /* Spelling of full link name */
 };
-
-void compute_chosen_words(Sentence, Linkage, Parse_Options);
 
 void partial_init_linkage(Sentence, Linkage, unsigned int N_words);
 void check_link_size(Linkage);

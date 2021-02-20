@@ -427,7 +427,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	sent->postprocessor = post_process_new(dict->base_knowledge);
 
 	/* Make a copy of the input */
-	sent->orig_sentence = string_set_add (input_string, sent->string_set);
+	sent->orig_sentence = string_set_add(input_string, sent->string_set);
 
 	/* Set the minimum length for tracon sharing.
 	 * In that case a tracon list is produced for the pruning step,

@@ -116,10 +116,10 @@ static void section_add(Dialect *di, const char *token, unsigned int *size,
 	assert(di->num_sections == section_num, "Section number mismatch");
 }
 
- /**
-  * Add an entry to the dialect table di->table.
-  * @return Table index of the added entry.
-  */
+/**
+* Add an entry to the dialect table di->table.
+* @return Table index of the added entry.
+*/
 static unsigned int dialect_table_add(Dialect *di, const char *token,
                                       unsigned int *size, double cost)
 {

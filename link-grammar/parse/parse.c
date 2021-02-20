@@ -374,37 +374,31 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			}
 		}
 
-		if (NULL != ts_pruning)
+		free_tracon_sharing(ts_parsing);
+		ts_parsing = pack_sentence_for_parsing(sent);
+		print_time(opts, "Encoded for parsing");
+
+		if (!more_pruning_possible)
 		{
-
-			free_tracon_sharing(ts_parsing);
-			ts_parsing = pack_sentence_for_parsing(sent);
-			print_time(opts, "Encoded for parsing");
-
-			if (!more_pruning_possible)
+			/* At this point no further pruning will be done. Free the
+			 * pruning tracon stuff here instead of at the end. */
+			if (NULL != ts_pruning)
 			{
-				/* At this point no further pruning will be done. Free the
-				 * pruning tracon stuff here instead of at the end. */
-				if (NULL != ts_pruning)
-				{
-					free(ts_pruning->memblock);
-					free_tracon_sharing(ts_pruning);
-					ts_pruning = NULL;
-					if (NULL != saved_memblock)
-						free(saved_memblock);
-				}
+				free(ts_pruning->memblock);
+				free_tracon_sharing(ts_pruning);
+				ts_pruning = NULL;
+				if (NULL != saved_memblock)
+					free(saved_memblock);
 			}
-
-			gword_record_in_connector(sent);
-
-			free_fast_matcher(sent, mchxt);
-			mchxt = alloc_fast_matcher(sent, ncu);
-			print_time(opts, "Initialized fast matcher");
-			if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 		}
 
-		free_linkages(sent);
+		gword_record_in_connector(sent);
+		free_fast_matcher(sent, mchxt);
+		mchxt = alloc_fast_matcher(sent, ncu);
+		print_time(opts, "Initialized fast matcher");
+		if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 
+		free_linkages(sent);
 		free_count_context(ctxt, sent);
 		ctxt = alloc_count_context(sent, ts_parsing);
 

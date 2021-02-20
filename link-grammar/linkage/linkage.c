@@ -266,7 +266,6 @@ void remove_empty_words(Linkage lkg)
  *   computed by extract_links().  It represents the chosen disjuncts
  *   for the current linkage. It is used here to compute the chosen_words[].
  *
- *
  * wg_path[]
  *    A pointer to a NULL-terminated array of pointers to Wordgraph words.
  *    It corresponds 1-1 to the chosen_disjuncts array in Linkage structure.
@@ -308,7 +307,8 @@ void remove_empty_words(Linkage lkg)
  * Note: For historical reasons there is some overlap between the results.
  */
 #define D_CCW 8
-void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
+static void compute_chosen_words(Sentence sent, Linkage linkage,
+                                 Parse_Options opts)
 {
 	WordIdx i;   /* index of chosen_words */
 	WordIdx j;
@@ -690,7 +690,7 @@ void compute_chosen_words(Sentence sent, Linkage linkage, Parse_Options opts)
 	 * to facilitate using diff on sentence batch runs. */
 	if (test_enabled("removeZZZ"))
 	{
-		for (i=0, j=0; i<linkage->num_links; i++)
+		for (i=0; i<linkage->num_links; i++)
 		{
 			Link *lnk = &(linkage->link_array[i]);
 

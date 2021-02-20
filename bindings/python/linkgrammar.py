@@ -417,7 +417,7 @@ class Link(object):
 
     def __eq__(self, other):
         return self.left_word == other.left_word and self.left_label == other.left_label and \
-               self.right_word == other.right_word and self.right_label == other.right_label
+            self.right_word == other.right_word and self.right_label == other.right_label
 
     def __str__(self):
         if self.left_label == self.right_label:
@@ -456,7 +456,6 @@ class Linkage(object):
         return bool(self._obj)
 
     __bool__ = __nonzero__      # Account python3
-
 
     def num_of_words(self):
         return clg.linkage_get_num_words(self._obj)
@@ -517,6 +516,7 @@ class Linkage(object):
 
 class LG_TimerExhausted(LG_Error):
     pass
+
 
 class Sentence(object):
     """

@@ -318,10 +318,6 @@ Dictionary dictionary_create_from_file(const char * lang)
 				dictionary->dialect = NULL;
 			}
 			free(dialect_name);
-
-			if (0)
-			{
-			}
 		}
 	}
 	else

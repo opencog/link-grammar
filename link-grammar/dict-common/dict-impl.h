@@ -3,6 +3,9 @@
 #include "dict-common/dict-common.h"        // For Afdict_class
 #include "utilities.h"
 
+#ifndef _DICT_IMPL_H_
+#define _DICT_IMPL_H_
+
 // Already declared in link-includes.h
 // const char * linkgrammar_get_dict_locale(Dictionary dict);
 // const char * linkgrammar_get_version(void);
@@ -16,3 +19,5 @@ void affix_list_add(Dictionary afdict, Afdict_class *, const char *);
 #ifdef __MINGW32__
 int callGetLocaleInfoEx(LPCWSTR, LCTYPE, LPWSTR, int);
 #endif /* __MINGW32__ */
+
+#endif /* _DICT_IMPL_H_ */
