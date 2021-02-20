@@ -31,14 +31,14 @@ print(clg.linkgrammar_get_configuration())
 for imported_module in 'linkgrammar$', 'clinkgrammar', '_clinkgrammar', 'lg_testutils':
     module_found = False
     for module in sys.modules:
-        if re.search(r'^(linkgrammar\.)?'+imported_module, module):
+        if re.search(r'^(linkgrammar\.)?' + imported_module, module):
             print("Using", sys.modules[module], end='')
             if hasattr(sys.modules[module], '__version__'):
                 print(' version', sys.modules[module].__version__, end='')
             print()
             module_found = True
     if not module_found:
-        print("Warning: Module", imported_module,  "not loaded.")
+        print("Warning: Module", imported_module, "not loaded.")
 
 sys.stdout.flush()
 #===
@@ -422,7 +422,7 @@ class DBasicParsingTestCase(unittest.TestCase):
 class EErrorFacilityTestCase(unittest.TestCase):
     # Initialize class variables to invalid (for the test) values.
     handler = {
-        "default":  lambda x, y=None: None,
+        "default": lambda x, y=None: None,
         "previous": lambda x, y=None: None
     }
 
@@ -463,7 +463,7 @@ class EErrorFacilityTestCase(unittest.TestCase):
         self.assertEqual(self.__class__.handler["previous"].__name__, "error_handler_test")
         self.assertRaises(LG_Error, Dictionary, "seh_dummy2")
         self.gotit = None
-        for i in range(0, 2+self.testleaks):
+        for i in range(0, 2 + self.testleaks):
             self.numerr = LG_Error.printall(self.error_handler_test, self)
             if i == 0:
                 self.assertEqual(self.numerr, 1)
@@ -507,13 +507,13 @@ class EErrorFacilityTestCase(unittest.TestCase):
                                 self.errinfo, "bad param")
         self.assertRaisesRegexp(ValueError, "must be an integer",
                                 self.__class__.handler["default"],
-                                self.errinfo, clg.lg_None+1)
+                                self.errinfo, clg.lg_None + 1)
         self.assertRaises(ValueError, self.__class__.handler["default"],
                           self.errinfo, -1)
 
         try:
             self.param_ok = False
-            save_stdout  = divert_start(1) # Note: Handler parameter is stdout
+            save_stdout = divert_start(1) # Note: Handler parameter is stdout
             self.__class__.handler["default"](self.errinfo, 1)
             self.assertIn(dummy_lang, save_stdout.divert_end())
             self.param_ok = True
@@ -548,7 +548,7 @@ class EErrorFacilityTestCase(unittest.TestCase):
 
     def test_30_formatmsg(self):
         # Here the error handler is still set to None.
-        for _ in range (0, 1+self.testleaks):
+        for _ in range(0, 1 + self.testleaks):
             self.assertRaises(LG_Error, Dictionary, "formatmsg-test-dummy-dict")
             LG_Error.printall(self.error_handler_test, self)
             self.assertRegexpMatches(self.errinfo.formatmsg(), "link-grammar: Error: .*formatmsg-test-dummy-dict")
@@ -586,7 +586,7 @@ class EErrorFacilityTestCase(unittest.TestCase):
         # The error message is now visible (but we cannot test that).
         self.__class__.handler["previous"] = LG_Error.set_handler(self.__class__.handler["default"])
         self.assertIsNone(self.__class__.handler["previous"])
-        for _ in range(0, 1+self.testleaks):
+        for _ in range(0, 1 + self.testleaks):
             self.__class__.handler["previous"] = LG_Error.set_handler(self.__class__.handler["default"])
         self.assertEqual(self.__class__.handler["previous"].__name__, "_default_handler")
 
@@ -777,7 +777,6 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 "\n    |      |     |        |        |    |"
 "\nLEFT-WALL I.p enjoy.v eating.v bass.n-u ."
 "\n\n")
-
 
         sent = 'We are from the planet Gorpon'
         linkage = self.parse_sent(sent)[0]
@@ -1191,14 +1190,14 @@ def linkage_testfile(self, lgdict, popt, desc=''):
 
         # Lines starting with "-" contain a Parse Option
         elif line[0] == '-':
-                exec('popt.' + line[1:]) in {}, locals()
+            exec('popt.' + line[1:]) in {}, locals()
 
         elif line[0] in '%\r\n':
             pass
         else:
             self.fail('\nTest file "{}": Invalid opcode "{}" (ord={})'.format(testfile, line[0], ord(line[0])))
 
-    self.assertIn(last_opcode , 'OCP', "Missing result comparison in " + testfile)
+    self.assertIn(last_opcode, 'OCP', "Missing result comparison in " + testfile)
 
 def warning(*msg):
     progname = os.path.basename(sys.argv[0])
@@ -1240,12 +1239,12 @@ lg_testutils.add_eqcost_linkage_order(Sentence)
 # "test", "debug" and "verbosity" options. The following allows to specify them
 # as "tests.py" arguments, interleaved with standard "unittest" arguments.
 
-for i,arg in enumerate(sys.argv):
+for i, arg in enumerate(sys.argv):
     debug = sys.argv.pop(i)[7:] if arg.startswith('-debug' + '=') else ''
-for i,arg in enumerate(sys.argv):
-    test = sys.argv.pop(i)[6:] if arg.startswith('-test' + '=')  else ''
-for i,arg in enumerate(sys.argv):
-    verbosity = int(sys.argv.pop(i)[11:]) if arg.startswith('-verbosity' + '=')  else ''
+for i, arg in enumerate(sys.argv):
+    test = sys.argv.pop(i)[6:] if arg.startswith('-test' + '=') else ''
+for i, arg in enumerate(sys.argv):
+    verbosity = int(sys.argv.pop(i)[11:]) if arg.startswith('-verbosity' + '=') else ''
 if (test or debug or verbosity):
     ParseOptions = lg_testutils.add_test_option(ParseOptions, test, debug, verbosity)
 
