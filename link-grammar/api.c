@@ -528,7 +528,9 @@ void sentence_delete(Sentence sent)
 	pool_delete(sent->X_node_pool);
 	if (IS_DB_DICT(sent->dict))
 	{
+#if 0 /* Cannot reuse in case a previous sentence is not deleted yet. */
 		condesc_reuse(sent->dict);
+#endif
 		pool_reuse(sent->dict->Exp_pool);
 	}
 
