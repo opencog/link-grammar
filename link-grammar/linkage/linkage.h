@@ -35,7 +35,7 @@ struct Linkage_info_struct
 /**
  * num_links:
  *   The number of links in the current linkage.  Computed by
- *   extract_linkage().
+ *   extract_links().
  *
  * chosen_disjuncts[]
  *   This is an array pointers to disjuncts, one for each word, that is
