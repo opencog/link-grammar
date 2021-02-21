@@ -745,8 +745,13 @@ static int handle_help_command(const Switch *as, char *line,
 			{
 				if (strncasecmp(s, as[i].string, strlen(s)) == 0)
 				{
-					count++;
 					j = i;
+					if (strlen(as[i].string) == strlen(s))
+					{
+						count = 1;
+						break;
+					}
+					count++;
 				}
 			}
 
