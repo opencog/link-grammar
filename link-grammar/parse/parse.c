@@ -385,14 +385,11 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			{
 				/* At this point no further pruning will be done. Free the
 				 * pruning tracon stuff here instead of at the end. */
-				if (NULL != ts_pruning)
-				{
-					free(ts_pruning->memblock);
-					free_tracon_sharing(ts_pruning);
-					ts_pruning = NULL;
-					if (NULL != saved_memblock)
-						free(saved_memblock);
-				}
+				free(ts_pruning->memblock);
+				free_tracon_sharing(ts_pruning);
+				ts_pruning = NULL;
+				if (NULL != saved_memblock)
+					free(saved_memblock);
 			}
 
 			gword_record_in_connector(sent);
