@@ -780,7 +780,6 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	char *s, *x, *y;
 	int count, j;
 	const Switch *as = default_switches;
-	int  fullname = -1; /* Allow full name even if it is a prefix. */
 
 	line = &line[strspn(line, WHITESPACE)]; /* Trim initial whitespace */
 
@@ -831,28 +830,21 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			if (((Bool == as[i].param_type) || (Cmd == as[i].param_type)) &&
 			    strncasecmp(s, as[i].string, strcspn(s, WHITESPACE)) == 0)
 			{
+				j = i;
 				if (strlen(as[i].string) == strcspn(s, WHITESPACE))
 				{
-					fullname = i;
+					count = 1;
+					break;
 				}
-				else
-				{
-					if (UNDOC[0] == as[i].description[0]) continue;
-				}
+				if (UNDOC[0] == as[i].description[0]) continue;
 				count++;
-				j = i;
 			}
 		}
 
 		if (count > 1)
 		{
-			if (fullname == -1)
-			{
-				prt_error("Ambiguous command \"%s\".  %s\n", s, helpmsg);
-				return -1;
-			}
-			j = fullname;
-			count = 1;
+			prt_error("Ambiguous command \"%s\".  %s\n", s, helpmsg);
+			return -1;
 		}
 		if (count == 1)
 		{
@@ -899,15 +891,13 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			if (Cmd == as[i].param_type) continue;
 			if (strncasecmp(x, as[i].string, strlen(x)) == 0)
 			{
+				j = i;
 				if (strlen(as[i].string) == strlen(x))
 				{
-					fullname = i;
+					count = 1;
+					break;
 				}
-				else
-				{
-					if (UNDOC[0] == as[i].description[0]) continue;
-				}
-				j = i;
+				if (UNDOC[0] == as[i].description[0]) continue;
 				count ++;
 			}
 		}
@@ -920,12 +910,8 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		if (count > 1)
 		{
-			if (fullname == -1)
-			{
-				prt_error("Error: Ambiguous variable \"%s\".  %s\n", x, helpmsg);
-				return -1;
-			}
-			j = fullname;
+			prt_error("Error: Ambiguous variable \"%s\".  %s\n", x, helpmsg);
+			return -1;
 		}
 
 		if ((as[j].param_type == Int) || (as[j].param_type == Bool))
