@@ -87,9 +87,9 @@ static char * get_terminal_line(char *input_string, FILE *in, FILE *out)
 	if (!running_under_cygwin)
 		pline = get_console_line();
 	else
-		pline = fgets(input_string, MAX_INPUT, in);
+		pline = fgets(input_string, MAX_INPUT_LINE, in);
 #else
-	pline = fgets(input_string, MAX_INPUT, in);
+	pline = fgets(input_string, MAX_INPUT_LINE, in);
 #endif /* _WIN32 */
 #endif /* HAVE_EDITLINE */
 
@@ -99,7 +99,7 @@ static char * get_terminal_line(char *input_string, FILE *in, FILE *out)
 static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 {
 	static char *pline;
-	static char input_string[MAX_INPUT];
+	static char input_string[MAX_INPUT_LINE];
 	static bool input_pending = false;
 
 	if (input_pending)
@@ -108,12 +108,12 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 		return pline;
 	}
 
-	input_string[MAX_INPUT-2] = '\0';
+	input_string[MAX_INPUT_LINE-2] = '\0';
 
 	if (((in != stdin) && !check_return) || !isatty_stdin)
 	{
 		/* Get input from a file. */
-		pline = fgets(input_string, MAX_INPUT, in);
+		pline = fgets(input_string, MAX_INPUT_LINE, in);
 	}
 	else
 	{
@@ -123,10 +123,10 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 
 	if (NULL == pline) return NULL;      /* EOF or error */
 
-	if (('\0' != input_string[MAX_INPUT-2]) &&
-	    ('\n' != input_string[MAX_INPUT-2]))
+	if (('\0' != input_string[MAX_INPUT_LINE-2]) &&
+	    ('\n' != input_string[MAX_INPUT_LINE-2]))
 	{
-		prt_error("Warning: Input line too long (>%d)\n", MAX_INPUT-1);
+		prt_error("Warning: Input line too long (>%d)\n", MAX_INPUT_LINE-1);
 		/* TODO: Ignore it and its continuation part(s). */
 	}
 

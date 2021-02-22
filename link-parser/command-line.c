@@ -450,7 +450,7 @@ void display_1line_help(const Switch *sp, bool is_completion)
 
 static void display_help(const Switch *sp, Command_Options *copts)
 {
-	char line[MAX_INPUT]; /* Maximum number of character in a help file line */
+	char line[MAX_INPUT_LINE]; /* Maximum number of character in a help file line */
 
 	display_1line_help(sp, /*is_completion*/false);
 	if (Cmd != sp->param_type)
@@ -478,7 +478,7 @@ static void display_help(const Switch *sp, Command_Options *copts)
 			 * in a hope that the same help text can be used for the
 			 * language bindings too (which have different option names
 			 * from historical reasons).
-			 * Note: We suppose the lines are not longer than MAX_INPUT.
+			 * Note: We suppose the lines are not longer than MAX_INPUT_LINE.
 			 * Longer lines may render the help text incorrectly.
 			 * FIXME: Add command reference notation in the help text if
 			 * needed.
@@ -521,7 +521,7 @@ static void display_help(const Switch *sp, Command_Options *copts)
 		while (NULL != fgets(line, sizeof(line), hf))
 		{
 			const size_t len = strlen(line);
-			if ((MAX_INPUT == len-1) && '\n' != line[MAX_INPUT-2])
+			if ((MAX_INPUT_LINE == len-1) && '\n' != line[MAX_INPUT_LINE-2])
 			{
 				prt_error("Warning: Help-file text line too long at offset %ld\n",
 							 ftell(hf));

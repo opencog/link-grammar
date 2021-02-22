@@ -115,9 +115,9 @@ char *expand_homedir(const char *filename)
 char *get_console_line(void)
 {
 	static HANDLE console_handle = NULL;
-	wchar_t winbuf[MAX_INPUT];
+	wchar_t winbuf[MAX_INPUT_LINE];
 	/* Worst-case: 4 bytes per UTF-8 char, 1 UTF-8 char per wchar_t char. */
-	static char utf8inbuf[MAX_INPUT*4+1];
+	static char utf8inbuf[MAX_INPUT_LINE*4+1];
 
 	if (NULL == console_handle)
 	{
@@ -131,7 +131,7 @@ char *get_console_line(void)
 	}
 
 	DWORD nchar;
-	if (!ReadConsoleW(console_handle, &winbuf, MAX_INPUT-sizeof(wchar_t), &nchar, NULL))
+	if (!ReadConsoleW(console_handle, &winbuf, MAX_INPUT_LINE-sizeof(wchar_t), &nchar, NULL))
 	{
 		prt_error("Error: ReadConsoleW: Error %d\n", (int)GetLastError());
 		return NULL;
