@@ -241,13 +241,13 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 	ctxt->match_list = xalloc(ctxt->match_list_size * sizeof(*ctxt->match_list));
 	ctxt->match_list_end = 0;
 
-	if (NULL != sent->fm_Match_node)
+	if (NULL != sent->Match_node_pool)
 	{
-		pool_reuse(sent->fm_Match_node);
+		pool_reuse(sent->Match_node_pool);
 	}
 	else
 	{
-		sent->fm_Match_node =
+		sent->Match_node_pool =
 			pool_new(__func__, "Match_node",
 			         /*num_elements*/2048, sizeof(Match_node),
 			         /*zero_out*/false, /*align*/true, /*exact*/false);
@@ -300,7 +300,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 		{
 			if (d->left != NULL)
 			{
-				Match_node *m = pool_alloc(sent->fm_Match_node);
+				Match_node *m = pool_alloc(sent->Match_node_pool);
 				m->d = d;
 				sort_by_nearest_word(m, sbin, d->left->nearest_word);
 			}
@@ -309,7 +309,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 		{
 			if (d->right != NULL)
 			{
-				Match_node *m = pool_alloc(sent->fm_Match_node);
+				Match_node *m = pool_alloc(sent->Match_node_pool);
 				m->d = d;
 				sort_by_nearest_word(m, sbin, d->right->nearest_word);
 			}

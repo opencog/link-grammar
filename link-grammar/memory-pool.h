@@ -12,6 +12,8 @@
 #ifndef _MEMORY_POOL_H
 #define _MEMORY_POOL_H
 
+#include <stddef.h>                     // max_align_t
+
 #include "link-includes.h"
 #include "error.h"
 #include "utilities.h"                  // GNUC_MALLOC (XXX separate include?)
@@ -46,6 +48,17 @@ void pool_free(Pool_desc *, void *e);
 
 #ifndef POOL_ALLOCATOR
 #define POOL_ALLOCATOR 1
+#endif
+
+#if !POOL_ALLOCATOR
+typedef union
+{
+	struct{
+		char *next;     /* Next allocation. */
+		size_t size;    /* Allocation payload size. */
+	};
+	max_align_t dymmy; /* Align the payload properly for all payload sizes. */
+} alloc_attr;
 #endif
 
 #define FLDSIZE_NEXT sizeof(char *) // "next block" field size
@@ -94,10 +107,11 @@ static inline void *pool_alloc(Pool_desc *mp)
 }
 
 /**
- * Return the next element in the pool.
- * @param Pool_location Iteration state. Should be initialized to 0
- * before starting the iteration.
- * @return A different element on each call, \c NULL when there are no more.
+ * Return the next element in the pool, starting with the first one.
+ * @param l Iteration state. \c *l should be initialized to
+ * (Pool_location)0 before starting the iteration.
+ * @return The next element on each call, \c NULL when there are no
+ * more.
  */
 static inline void *pool_next(Pool_desc *mp, Pool_location *l)
 {
@@ -112,9 +126,11 @@ static inline void *pool_next(Pool_desc *mp, Pool_location *l)
 		/* This is an initial request for pool traversal.
 		 * Initialize the location descriptor and return the first element. */
 		l->element_number = 1;
+#if POOL_ALLOCATOR
 		l->current_element = mp->chain;
-#ifdef POOL_ALLOCATOR
 		l->block_end = mp->chain + mp->data_size;
+#else
+		l->current_element = mp->chain + sizeof(alloc_attr);
 #endif
 
 		return l->current_element;
@@ -129,7 +145,8 @@ static inline void *pool_next(Pool_desc *mp, Pool_location *l)
 		l->block_end = l->current_element + mp->data_size;
 	}
 #else
-	l->current_element = POOL_NEXT_BLOCK(l->current_element, mp->element_size);
+	alloc_attr *at = (alloc_attr *)(l->current_element - sizeof(alloc_attr));
+	l->current_element = at->next + sizeof(alloc_attr);
 #endif
 
 	l->element_number++;

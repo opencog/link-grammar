@@ -521,14 +521,16 @@ void sentence_delete(Sentence sent)
 	lg_exp_stringify(NULL);
 
 	global_rand_state = sent->rand_state;
-	pool_delete(sent->fm_Match_node);
+	pool_delete(sent->Match_node_pool);
 	pool_delete(sent->Table_connector_pool);
 	pool_delete(sent->wordvec_pool);
 	pool_delete(sent->Exp_pool);
 	pool_delete(sent->X_node_pool);
 	if (IS_DB_DICT(sent->dict))
 	{
+#if 0 /* Cannot reuse in case a previous sentence is not deleted yet. */
 		condesc_reuse(sent->dict);
+#endif
 		pool_reuse(sent->dict->Exp_pool);
 	}
 

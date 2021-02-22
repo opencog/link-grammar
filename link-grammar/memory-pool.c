@@ -10,7 +10,6 @@
 /*************************************************************************/
 
 #include <errno.h>                      // errno
-#include <stddef.h>                     // max_align_t
 
 #include "error.h"
 #include "memory-pool.h"
@@ -18,17 +17,6 @@
 
 /* TODO: Add valgrind descriptions. See:
  * http://valgrind.org/docs/manual/mc-manual.html#mc-manual.mempools */
-
-#if !POOL_ALLOCATOR
-typedef union
-{
-	struct{
-		char *next;
-		size_t size;
-	};
-	max_align_t dymmy;
-} alloc_attr;
-#endif
 
 /**
  * Align given size to the nearest upper power of 2
@@ -154,9 +142,7 @@ inline void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 	if ((NULL != mp->free_list) && (vecsize == 1))
 	{
 		void *alloc_next = mp->free_list;
-#ifdef POOL_FREE
 		ASAN_UNPOISON_MEMORY_REGION(alloc_next, mp->element_size);
-#endif
 		mp->free_list = *(char **)mp->free_list;
 		if (mp->zero_out) memset(alloc_next, 0, mp->element_size);
 		return alloc_next;
@@ -165,7 +151,7 @@ inline void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 
 	size_t alloc_size = mp->element_size * vecsize;
 	if ((NULL == mp->alloc_next) ||
-	    (mp->alloc_next + alloc_size >= mp->ring + mp->data_size))
+	    (mp->alloc_next + alloc_size > mp->ring + mp->data_size))
 	{
 #ifdef POOL_EXACT
 		assert(!mp->exact || (NULL == mp->alloc_next),
@@ -263,7 +249,7 @@ void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 	dassert(vecsize < mp->num_elements, "Pool block is too small %zu > %zu)",
 	        vecsize, mp->num_elements);
 	mp->curr_elements += vecsize;
-	size_t alloc_size = mp->num_elements * vecsize;
+	size_t alloc_size = mp->element_size * vecsize;
 
 #ifdef POOL_EXACT
 	assert(!mp->exact || mp->curr_elements <= mp->num_elements,
@@ -313,6 +299,7 @@ void pool_reuse(Pool_desc *mp)
 }
 
 /*
+ * num_elements
  * Delete the given memory pool.
  */
 #undef pool_delete
@@ -350,14 +337,12 @@ void pool_delete (const char *func, Pool_desc *mp)
 void pool_free(Pool_desc *mp, void *e)
 {
 	mp->curr_elements--;
-#ifdef POOL_FREE
 	if (ASAN_ADDRESS_IS_POISONED(e))
 	{
 		prt_error("Fatal error: Double pool free of %p\n", e);
 		exit(1);
 	}
 	ASAN_POISON_MEMORY_REGION(e, sizeof(alloc_attr) + ((alloc_attr *)e)->size);
-#endif
 }
 #endif // POOL_FREE
 #endif // POOL_ALLOCATOR
