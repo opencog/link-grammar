@@ -3,6 +3,7 @@ Version 5.9.0 (XXX 2021)
  * Panic-mode fixes and extensions. In link-parser see !help panic_variables.
  * English dict: fix silly mistake with "I love cats and dogs".
  * Disable maintainer-mode in `configure.ac`.
+ * Fix very rare crash/corruption introduced in v.5.8.1 #1142
 
 Version 5.8.1 (8 January 2021)
  * Fix macOS/SunOS build break.
