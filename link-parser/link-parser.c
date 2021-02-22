@@ -34,6 +34,7 @@
  ****************************************************************************/
 
 #include <errno.h>
+#include <limits.h>                     // CHAR_BIT
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
@@ -581,6 +582,44 @@ int main(int argc, char * argv[])
 		language = argv[1];
 	}
 
+	copts = command_options_create();
+
+	/* First set the debug options, to allow dictionary-related debug. */
+	const char * const debug_vars[] = { "verbosity", "debug", "test" };
+	const int debug_vars_min_len[] = { 1, 2, 2 }; /* Ambiguous if shorter */
+	unsigned long long argv_done = 0;             /* Process them only once */
+
+	/* Process debug command line variable-setting commands (only). */
+	for (int i = 1; i < argc; i++)
+	{
+		if (argv[i][0] == '-')
+		{
+			char *var = strdup(argv[i] + ((argv[i][1] != '-') ? 1 : 2));
+			char *eqpos = strchr(var, '=');
+
+			if (eqpos != NULL)
+			{
+				*eqpos = '\0';
+
+				for (size_t j = 0; j < sizeof(debug_vars)/sizeof(debug_vars[0]); j++)
+				{
+					if (eqpos - var < debug_vars_min_len[j]) continue;
+					if (strncasecmp(debug_vars[j], var, eqpos - var) != 0) continue;
+					*eqpos = '=';
+					if (0 > issue_special_command(var, copts, NULL))
+						print_usage(stderr, argv[0], copts, -1);
+					if (i < (int)sizeof(argv_done) * CHAR_BIT)
+						argv_done |= (1LL<<(i-1));
+					else
+						prt_error("Warning: Too many arguments (%d).\n", i);
+					break;
+				}
+			}
+			free(var);
+		}
+	}
+	/* End of debug options setup. */
+
 	if (language && *language)
 	{
 		dict = dictionary_create_lang(language);
@@ -600,7 +639,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	copts = command_options_create();
 	if (copts == NULL || copts->popts == NULL)
 	{
 		prt_error("Fatal error: unable to create parse options\n");
@@ -644,6 +682,9 @@ int main(int argc, char * argv[])
 	parse_options_set_disjunct_cost(opts,
 	   linkgrammar_get_dict_max_disjunct_cost(dict));
 
+	parse_options_set_verbosity(opts, 1); /* XXX assuming 1 is the default */
+	parse_options_set_debug(opts, "");
+	parse_options_set_test(opts, "");
 	save_default_opts(copts); /* Options so far are the defaults */
 
 	/* Process options used by GNU programs. */
@@ -669,10 +710,12 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	/* Process command line variable-setting commands (only). */
+	/* Process non-debug command line variable-setting commands (only). */
 	for (int i = 1; i < argc; i++)
 	{
 		if (i == quiet_start) continue;
+		if ((i < (int)sizeof(argv_done) * CHAR_BIT) &&
+		    (argv_done & (1LL<<(i-1)))) continue;
 
 		if (argv[i][0] == '-')
 		{
