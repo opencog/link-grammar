@@ -140,6 +140,7 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 
 	if (shift == 0)
 		shift = ctxt->log2_table_size + 1; /* Double the table size */
+	lgdebug(+D_COUNT, "Connector table log2 size %u\n", shift);
 
 	/* Keep the table indefinitely (or until exiting), so that it can
 	 * be reused. This avoids a large overhead in malloc/free when
@@ -210,7 +211,6 @@ static void init_table(count_context_t *ctxt, Sentence sent)
 #endif
 
 	if (MAX_LOG2_TABLE_SIZE < shift) shift = MAX_LOG2_TABLE_SIZE;
-	lgdebug(+D_COUNT, "Initial connector table log2 size %u\n", shift);
 
 	table_alloc(ctxt, shift);
 }
@@ -318,9 +318,25 @@ static void table_stat(count_context_t *ctxt)
 
 	for (unsigned int i = 0; i < ctxt->table_size; i++)
 	{
-		c = 0;
 		Table_connector *t = ctxt->table[i];
-		if (t == NULL) N++;
+
+		c = 0;
+		if (t == NULL)
+		{
+			N++;
+		}
+		else
+		{
+			assert(t->hash != 0, "Invalid hash value: 0");
+			assert((hist_total(&t->count)>=0)&&(hist_total(&t->count) <= INT_MAX),
+			       "Invalid count %lld", hist_total(&t->count));
+			assert(t->l_id < (int)ctxt->sent->length ||
+			       ((t->l_id >= 255)&&(t->l_id < (int)ctxt->table_lrcnt_size[0])),
+			       "invalid l_id %d", t->l_id);
+			assert(t->r_id <= (int)ctxt->sent->length ||
+			       ((t->r_id > 255)&&(t->r_id < (int)ctxt->table_lrcnt_size[1])),
+			       "invalid r_id %d", t->r_id);
+		}
 		for (; t != NULL; t = t->next)
 		{
 			c++;
@@ -552,19 +568,18 @@ static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
  * Is the range [c, w) going to yield a nonzero leftcount / rightcount?
  *
  * @param ctxt Count context.
- * @param dir Direction - 0: leftcount, 1: rightcount.
+ * @param dir Direction - 0: leftcount; 1: rightcount.
  * @param c The connector that starts the range.
- * @param w The word that ends the range.
- * @param null_count The current null_count to check.
- * @param cw The word of this connector.
+ * @param wordvec_index Word-vector index.
+ * @param null_count The current null-count to check.
  *
  * Return these values:
  * @param lnull_start First null count to check (the previous ones can be
  * skipped because the cache indicates they yield a zero count.)
  * @return Cache entry for the given range. Possible values:
- *    NULL - A nonzero count may be encountered for null_count>=lnull_start.
+ *    NULL - A nonzero count may be encountered for \c null_count>=lnull_start.
  *    Table_lrcnt_zero - A zero count would result.
- *    Cache pointer - An update for null_count>=lnull_start is needed.
+ *    Cache pointer - An update for \c null_count>=lnull_start is needed.
  */
 static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
                              unsigned int wordvec_index,
@@ -594,7 +609,10 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
 	 * on the first one that succeeds. */
 
 	if (lp->status == -1)
+	{
+		if (null_start != NULL) *null_start = 0;
 		return lp; /* Needs update */
+	}
 
 	if  (lp->status == 1)
 	{
