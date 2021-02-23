@@ -196,7 +196,17 @@ void parse_options_set_debug(Parse_Options opts, const char * dummy)
 }
 
 char * parse_options_get_debug(Parse_Options opts) {
-	return opts->debug;
+	static char buff[256]; /* see parse_options_set_debug() */
+	char *buffp = buff;
+
+	/* Remove the added commas. */
+	strcpy(buff, opts->debug);
+	if (buffp[0] == ',')
+		buffp++;
+	if ((buffp[0] != '\0') && buffp[strlen(buffp)-1] == ',')
+		buffp[strlen(buffp)-1] = '\0';
+
+	return buffp;
 }
 
 void parse_options_set_test(Parse_Options opts, const char * dummy)
@@ -233,7 +243,17 @@ void parse_options_set_test(Parse_Options opts, const char * dummy)
 }
 
 char * parse_options_get_test(Parse_Options opts) {
-	return opts->test;
+	static char buff[256]; /* see parse_options_set_test() */
+	char *buffp = buff;
+
+	/* Remove the added commas. */
+	strcpy(buff, opts->test);
+	if (buffp[0] == ',')
+		buffp++;
+	if ((buffp[0] != '\0') && buffp[strlen(buffp)-1] == ',')
+		buffp[strlen(buffp)-1] = '\0';
+
+	return buffp;
 }
 
 void parse_options_set_use_sat_parser(Parse_Options opts, bool dummy) {
