@@ -151,6 +151,7 @@ struct Dictionary_s
 	unsigned int num_categories;
 	unsigned int num_categories_alloced;
 	dict_category * category; /* Word lists - indexed by category number */
+	bool leave_subscripts;    /* Leave generated-word subscripts */
 
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.
