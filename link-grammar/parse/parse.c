@@ -314,7 +314,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	if (resources_exhausted(opts->resources)) return; /* Nothing to free yet. */
 
 	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent);
-	free_sentence_disjuncts(sent);
+	free_sentence_disjuncts(sent, /*category_too*/false);
 
 	if (one_step_parse)
 	{

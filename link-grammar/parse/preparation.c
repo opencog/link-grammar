@@ -59,7 +59,8 @@ static void setup_connectors(Sentence sent)
 			if ((set_dist_fields(d->left, w, -1) < 0) ||
 			    (set_dist_fields(d->right, w, 1) >= (int)sent->length))
 			{
-				; /* Skip this disjunct. */
+				if (d->is_category != 0) free(d->category);
+				/* Skip this disjunct. */
 			}
 			else
 			{

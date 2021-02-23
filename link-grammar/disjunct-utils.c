@@ -45,10 +45,20 @@ void free_disjuncts(Disjunct *c)
 	}
 }
 
-void free_sentence_disjuncts(Sentence sent)
+void free_sentence_disjuncts(Sentence sent, bool category_too)
 {
 	if (NULL != sent->dc_memblock)
 	{
+		if (category_too)
+		{
+			for (Disjunct *d = sent->dc_memblock;
+			     d < &((Disjunct *)sent->dc_memblock)[sent->num_disjuncts]; d++)
+			{
+				if (d->is_category != 0)
+					free(d->category);
+			}
+		}
+
 		free(sent->dc_memblock);
 		sent->dc_memblock = NULL;
 	}
@@ -327,6 +337,11 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 
 			count++;
 			prev->next = d->next;
+			if (d->is_category != 0)
+			{
+				free(d->category);
+				d->is_category = 0; /* Save free() call on sentence delete. */
+			}
 		}
 		else
 		{

@@ -525,7 +525,7 @@ static void free_sentence_words(Sentence sent)
 	{
 		free(sent->word[i].alternatives);
 	}
-	free_sentence_disjuncts(sent);
+	free_sentence_disjuncts(sent, /*categories_too*/true);
 	free((void *) sent->word);
 	sent->word = NULL;
 }
@@ -640,7 +640,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		 * garbage. Free it. We really should make the code that is panicking
 		 * do this free, but right now, they have no API for it, so we do it
 		 * as a favor. XXX FIXME someday. */
-		free_sentence_disjuncts(sent);
+		free_sentence_disjuncts(sent, /*categories_too*/true);
 	}
 
 	/* Check for bad sentence length */
