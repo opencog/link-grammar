@@ -682,10 +682,22 @@ int main(int argc, char * argv[])
 	parse_options_set_disjunct_cost(opts,
 	   linkgrammar_get_dict_max_disjunct_cost(dict));
 
+	/* Remember the debug setting, because we temporary neglect it below. */
+	int verbosity_tmp = parse_options_get_verbosity(opts);
+	char *debug_tmp = strdup(parse_options_get_debug(opts));
+	char *test_tmp = strdup(parse_options_get_test(opts));
+
 	parse_options_set_verbosity(opts, 1); /* XXX assuming 1 is the default */
 	parse_options_set_debug(opts, "");
 	parse_options_set_test(opts, "");
 	save_default_opts(copts); /* Options so far are the defaults */
+
+	/* Restore the debug setting. */
+	parse_options_set_verbosity(opts, verbosity_tmp);
+	parse_options_set_debug(opts, debug_tmp);
+	parse_options_set_test(opts, test_tmp);
+	free(debug_tmp);
+	free(test_tmp);
 
 	/* Process options used by GNU programs. */
 	int quiet_start = 0; /* Iff > 0, inhibit the initial messages */

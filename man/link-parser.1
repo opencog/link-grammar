@@ -292,6 +292,12 @@ Flat, treebank-style tree (A like (B this))
 .BR !cost-max \ (2.7)
 Largest cost to be considered.
 .TP
+.BR !dialect \ (no\ value)
+Use the specified (comma-separated) names.
+.br
+They modify the disjunct cost of dictionary words
+whose expressions contain symbolic cost specifications.
+.TP
 .BR !disjuncts \ (off)
 Display of disjuncts used.
 .TP
@@ -432,6 +438,9 @@ Values of entities used in tokenization.
 Regular expressions (see
 .BR regex (7))
 that are used to match tokens not found in the dictionary.
+.TP
+.IR LL /4.0.dialect
+Dialect component definitions.
 .TP
 .IR LL /4.0.knowledge
 Post-processing definitions.
