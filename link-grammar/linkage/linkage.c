@@ -740,6 +740,72 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 }
 #undef D_CCW
 
+void compute_generated_words(Sentence sent, Linkage linkage)
+{
+	Disjunct **cdjp = linkage->chosen_disjuncts;
+	unsigned int rand_state = sent->rand_state;
+
+	if (rand_state == 0) rand_state = linkage->lifo.index;
+
+	linkage->word = malloc(linkage->num_words * sizeof(char *));
+
+	for (WordIdx i = 0; i < linkage->num_words; i++)
+	{
+		if (cdjp[i] == NULL)
+		{
+			dassert(
+				i = (cdjp[0]->originating_gword->o_gword->morpheme_type == MT_WALL),
+				"NULL disjunct in generated sentence");
+			continue;
+		}
+		Disjunct *cdj = cdjp[i];
+
+		if (cdj->is_category == 0)
+		{
+			linkage->word[i] = cdj->word_string;
+			continue;
+		}
+
+		assert(cdj->num_categories > 0, "0 categories in disjunct");
+		int disjunct_category_idx = rand_r(&rand_state) % cdj->num_categories;
+		linkage->lifo.disjunct_cost = cdj->category[disjunct_category_idx].cost;
+		unsigned int categoty_num = cdj->category[disjunct_category_idx].num;
+		unsigned int num_words = sent->dict->category[categoty_num].num_words;
+
+		int dict_word_idx = rand_r(&rand_state) % num_words;
+		const char *ow = sent->dict->category[categoty_num].word[dict_word_idx];
+
+		const char *sm = strchr(ow, SUBSCRIPT_MARK);
+		const char *w;
+		if (sm == NULL)
+		{
+			w = ow;
+		}
+		else
+		{
+			char *wtmp;
+			const int baselen = sm - ow;
+			wtmp = strndupa(ow, baselen);
+			if (sent->dict->leave_subscripts)
+			{
+				wtmp = strdupa(ow);
+				wtmp[baselen] = SUBSCRIPT_DOT;
+			}
+			else
+			{
+				wtmp = strndupa(ow, baselen);
+			}
+			w = string_set_add(wtmp, sent->string_set);
+		}
+
+		linkage->word[i] = w;
+//printf("%s ", linkage->word[i]);
+	}
+//printf("\n");
+
+	if (sent->rand_state != 0) sent->rand_state = rand_state;
+}
+
 Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 {
 	Linkage linkage;
@@ -757,7 +823,8 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	}
 
 	/* Perform remaining initialization we haven't done yet...*/
-	compute_chosen_words(sent, linkage, opts);
+	if (!IS_GENERATION(sent->dict))
+		compute_chosen_words(sent, linkage, opts);
 
 	linkage->is_sent_long = (linkage->num_words >= opts->twopass_length);
 

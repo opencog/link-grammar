@@ -174,15 +174,9 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 			print_chosen_disjuncts_words(lkg, /*prt_opt*/true);
 		}
 
-		if (sane_linkage_morphism(sent, lkg, opts))
+		if (IS_GENERATION(sent->dict))
 		{
-			remove_empty_words(lkg);
-
-			if (verbosity_level(+D_PL))
-			{
-				err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
-				print_chosen_disjuncts_words(lkg, /*prt_opt*/false);
-			}
+			compute_generated_words(sent, lkg);
 
 			need_init = true;
 			in++;
@@ -190,11 +184,28 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 		}
 		else
 		{
-			N_invalid_morphism++;
-			lkg->num_links = 0;
-			lkg->num_words = sent->length;
-			// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
-			memset(lkg->chosen_disjuncts, 0, sent->length * sizeof(Disjunct *));
+			if (sane_linkage_morphism(sent, lkg, opts))
+			{
+				remove_empty_words(lkg);
+
+				if (verbosity_level(+D_PL))
+				{
+					err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
+					print_chosen_disjuncts_words(lkg, /*prt_opt*/false);
+				}
+
+				need_init = true;
+				in++;
+				if (in >= sent->num_linkages_alloced) break;
+			}
+			else
+			{
+				N_invalid_morphism++;
+				lkg->num_links = 0;
+				lkg->num_words = sent->length;
+				// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
+				memset(lkg->chosen_disjuncts, 0, sent->length * sizeof(Disjunct *));
+			}
 		}
 	}
 
