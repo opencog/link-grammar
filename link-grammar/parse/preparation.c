@@ -164,6 +164,12 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 	setup_connectors(sent);
 
+	if (verbosity_level(D_PREP))
+	{
+		prt_error("Debug: After setting connectors:\n");
+		print_disjunct_counts(sent);
+	}
+
 	if (verbosity_level(D_SPEC+2))
 	{
 		printf("prepare_to_parse:\n");
