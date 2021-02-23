@@ -671,6 +671,7 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	newd = (ts->dblock)++;
 	newd->word_string = d->word_string;
 	newd->cost = d->cost;
+	newd->is_category = d->is_category;
 	newd->originating_gword = d->originating_gword;
 
 	if (NULL == ts->tracon_list)
