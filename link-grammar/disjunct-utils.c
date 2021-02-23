@@ -351,7 +351,8 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 		}
 	}
 
-	lgdebug(+D_DISJ+(0==count)*1000, "Killed %u duplicates\n", count);
+	lgdebug(+D_DISJ+(0==count)*1000, "w%zu: Killed %u duplicates\n",
+	        dw->originating_gword->o_gword->sent_wordidx, count);
 
 	disjunct_dup_table_delete(dt);
 	return dw;
