@@ -82,7 +82,7 @@ void free_disjuncts(Disjunct *);
 void free_sentence_disjuncts(Sentence, bool);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
-Disjunct * eliminate_duplicate_disjuncts(Disjunct *);
+Disjunct * eliminate_duplicate_disjuncts(Disjunct *, bool);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 
