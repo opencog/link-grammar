@@ -1584,8 +1584,9 @@ this.p:
   or [<noun-and-s>]0.5;
 
 % this as a determiner
+% {ALx-} & DD+: "Give me just this one thing"
 this.d:
-  ({AL-} & D*u+)
+  ({ALx-} & (D*u+ or DD+))
   or DTn+
   or Wa-;
 
