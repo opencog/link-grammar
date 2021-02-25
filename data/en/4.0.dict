@@ -1734,10 +1734,10 @@ any:
 <PHv> : PHv+ or [()]0.2;
 %
 % See also a.eq below.
-a:  ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**c+ or (<PHc> & Ds**x+)))
+a:  ({(AA- & HA-) or ALa- or [[Lf+]] or dHM-} & (Ds**c+ or (<PHc> & Ds**x+)))
   or NN+ or NSa+ or NIm+;
 
-an: ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**v+ or (<PHv> & Ds**x+)))
+an: ({(AA- & HA-) or ALa- or [[Lf+]] or dHM-} & (Ds**v+ or (<PHv> & Ds**x+)))
   or NN+ or NSa+ or NIm+;
 
 such: (ND- & Dmc+) or Dm*k+;
@@ -3111,16 +3111,16 @@ rest.w: Ix- & Pv+;
 % "There is neither pine nor apple in the pineapple."
 % "There is no ham in the hamburger, and neither pine nor apple in the pineapple."
 <vc-be-obj>:
-  {@EBm+} & (O*t+ or O*m+) & {@MV+} & {THb+};
+  {hHM+} & {@EBm+} & (O*t+ or O*m+) & {@MV+} & {THb+};
 
 <vc-be-obj-p>:
-  {@EBm+} & (Opt+ or Omm+) & {@MV+} & {THb+};
+  {hHM+} & {@EBm+} & (Opt+ or Omm+) & {@MV+} & {THb+};
 
 <vc-be-obj-sp>:
-  {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+} & {THb+};
+  {hHM+} & {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+} & {THb+};
 
 <vc-be-obj-u>:
-  {@EBm+} & Out+ & {@MV+} & {THb+};
+  {hHM+} & {@EBm+} & Out+ & {@MV+} & {THb+};
 
 <vc-be>:         <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
 <vc-be-sp>:      <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
@@ -12974,7 +12974,7 @@ oh.voc O: OH+;
 uh.h uhh.h er.h err.h errr.h um.h umm.h ummm.h
 oh.h ooh.h oooh.h o.h oo.h ooo.h ah.h ahh.h aah.h
 ....h yeah.h sure.h like.h you_know I_mean okay.h so.h
-actually.h basically.h right.h well.h:
+actually.h basically.h right.h uh_huh well.h:
   {Xd-} & dHM- & {Xc+} & hHM+;
 
 % -----------------------------------------------------------
