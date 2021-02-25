@@ -1585,8 +1585,10 @@ this.p:
 
 % this as a determiner
 % {ALx-} & DD+: "Give me just this one thing"
+% ALx-: "I want just this"
 this.d:
   ({ALx-} & (D*u+ or DD+))
+  or ALx-
   or DTn+
   or Wa-;
 
@@ -1599,8 +1601,10 @@ just.d only.d:
 % "these" to be the object.  See also "those"
 % (Jd- & Dmu- & Op-): "I gave him a number of these"
 % (Jd- & Dmu- & {Wd-} & Sp+): "a number of these were found"
+% Alx-: "I want only these"
 these:
-  ({AL-} & (Dmc+ or DD+))
+  ({ALx-} & (Dmc+ or DD+))
+  or ALx-
   or (Jd- & Dmu- & Op-)
   or (Jd- & Dmu- & {Wd-} & Sp+)
   or [[<noun-main-p>]]
@@ -1661,6 +1665,7 @@ many:
 % <noun-main2-x> costs no mater what, so that Ofd+ is preferred.
 % [E+]0.5: all modifying a verb probably is not right.
 % Wa-: "All the people!" as a response to a question.
+% {MVa-} & Alx+: "I want all these"
 all.a:
   ({EN-} & (
     [E+]0.5
@@ -1677,6 +1682,7 @@ all.a:
         or (S**t+ & <CLAUSE>)
         or SI**t-))
     or <noun-and-x>))
+  or ({MVa-} & ALx+)
   or DTa+;
 
 all_that: EA+ or EE+ or (<noun-rel-s> & <noun-main-s>);
