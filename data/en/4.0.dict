@@ -96,9 +96,10 @@ nonCAP.zzz: ZZZ-;
 <clause-conjoin>: dRJrc- or dRJlc+;
 
 % {@COd-} : "That is the man who, in Joe's opinion, we should hire"
-<CLAUSE>:   {({@hCOd-} & (C- or <clause-conjoin>)) or ({@hCO-} & Wd-) or [Rn-]};
-<S-CLAUSE>: {({@hCOd-} & (C- or <clause-conjoin>)) or ({@hCO-} & Wd-)};
-<CLAUSE-E>: {({@hCOd-} & (C- or <clause-conjoin>)) or ({@hCO-} & Wd-) or Re-};
+<clause-head>:  ({@hCOd-} & (C- or <clause-conjoin>)) or ({@hCO-} & Wd-);
+<CLAUSE>:   {<clause-head> or [Rn-]};
+<S-CLAUSE>: {<clause-head>};
+<CLAUSE-E>: {<clause-head> or Re-};
 
 % Post-nominal qualifiers, complete with commas, etc.
 % We give these a small cost, so that they don't hide quotational
