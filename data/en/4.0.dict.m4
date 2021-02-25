@@ -1590,6 +1590,10 @@ this.d:
   or DTn+
   or Wa-;
 
+% "Just the regulars are here"
+just.d only.d:
+  {MVa-} & ALx+;
+
 % [[<noun-main-p>]] costs so that ditransitive verbs don't suffer:
 % "I taught these mice to jump", taught is ditransitive, we don't want
 % "these" to be the object.  See also "those"

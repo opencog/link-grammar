@@ -770,6 +770,14 @@ I have an MFA
 I have a MA
 
 % ===================================================================
+% quasi-comparative determiners.
+I want just this one thing
+Give me just this one thing
+Give me just these things
+Give me just these two things
+Give me only these things
+
+% ===================================================================
 % quasi-numeric determiners aka quantifying determiners
 % There are a zillion of these, mostly due to the product of the
 % special-case quantifiers (some of, none of, all of, etc) with objects,
@@ -3233,6 +3241,7 @@ Only I say so.
 % "just" takes MVa- link (just like "only")
 They do just that.
 He did just what you asked.
+He did only what you asked.
 
 % "only" has to have MVa- and MVl- & MVp+ links
 I am only here for a few days
