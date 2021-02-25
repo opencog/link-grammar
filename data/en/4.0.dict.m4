@@ -7335,7 +7335,7 @@ just_over just_under well_over: EN+;
 % XXX original LG recommends using the LI link, however the
 % <prep-main-b> sort of clobbers this. Should this be "fixed"?
 like.p:
-  ({[EA-]} & (((J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
+  ({[EA-]} & (({hHM+} & (J+ or Mgp+ or [[Mp+ or MVs+]]) & <prep-main-b>)
      or (Vf- & Mgp+)
      or (LI- & (J+ or <subcl-verb>))))
   or <locative>
