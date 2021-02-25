@@ -34,6 +34,7 @@
  ****************************************************************************/
 
 #include <errno.h>
+#include <limits.h>                     // CHAR_BIT
 #include <locale.h>
 #include <stdlib.h>
 #include <string.h>
@@ -86,9 +87,9 @@ static char * get_terminal_line(char *input_string, FILE *in, FILE *out)
 	if (!running_under_cygwin)
 		pline = get_console_line();
 	else
-		pline = fgets(input_string, MAX_INPUT, in);
+		pline = fgets(input_string, MAX_INPUT_LINE, in);
 #else
-	pline = fgets(input_string, MAX_INPUT, in);
+	pline = fgets(input_string, MAX_INPUT_LINE, in);
 #endif /* _WIN32 */
 #endif /* HAVE_EDITLINE */
 
@@ -98,7 +99,7 @@ static char * get_terminal_line(char *input_string, FILE *in, FILE *out)
 static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 {
 	static char *pline;
-	static char input_string[MAX_INPUT];
+	static char input_string[MAX_INPUT_LINE];
 	static bool input_pending = false;
 
 	if (input_pending)
@@ -107,12 +108,12 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 		return pline;
 	}
 
-	input_string[MAX_INPUT-2] = '\0';
+	input_string[MAX_INPUT_LINE-2] = '\0';
 
 	if (((in != stdin) && !check_return) || !isatty_stdin)
 	{
 		/* Get input from a file. */
-		pline = fgets(input_string, MAX_INPUT, in);
+		pline = fgets(input_string, MAX_INPUT_LINE, in);
 	}
 	else
 	{
@@ -122,10 +123,10 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 
 	if (NULL == pline) return NULL;      /* EOF or error */
 
-	if (('\0' != input_string[MAX_INPUT-2]) &&
-	    ('\n' != input_string[MAX_INPUT-2]))
+	if (('\0' != input_string[MAX_INPUT_LINE-2]) &&
+	    ('\n' != input_string[MAX_INPUT_LINE-2]))
 	{
-		prt_error("Warning: Input line too long (>%d)\n", MAX_INPUT-1);
+		prt_error("Warning: Input line too long (>%d)\n", MAX_INPUT_LINE-1);
 		/* TODO: Ignore it and its continuation part(s). */
 	}
 
@@ -581,6 +582,44 @@ int main(int argc, char * argv[])
 		language = argv[1];
 	}
 
+	copts = command_options_create();
+
+	/* First set the debug options, to allow dictionary-related debug. */
+	const char * const debug_vars[] = { "verbosity", "debug", "test" };
+	const int debug_vars_min_len[] = { 1, 2, 2 }; /* Ambiguous if shorter */
+	unsigned long long argv_done = 0;             /* Process them only once */
+
+	/* Process debug command line variable-setting commands (only). */
+	for (int i = 1; i < argc; i++)
+	{
+		if (argv[i][0] == '-')
+		{
+			char *var = strdup(argv[i] + ((argv[i][1] != '-') ? 1 : 2));
+			char *eqpos = strchr(var, '=');
+
+			if (eqpos != NULL)
+			{
+				*eqpos = '\0';
+
+				for (size_t j = 0; j < sizeof(debug_vars)/sizeof(debug_vars[0]); j++)
+				{
+					if (eqpos - var < debug_vars_min_len[j]) continue;
+					if (strncasecmp(debug_vars[j], var, eqpos - var) != 0) continue;
+					*eqpos = '=';
+					if (0 > issue_special_command(var, copts, NULL))
+						print_usage(stderr, argv[0], copts, -1);
+					if (i < (int)sizeof(argv_done) * CHAR_BIT)
+						argv_done |= (1LL<<(i-1));
+					else
+						prt_error("Warning: Too many arguments (%d).\n", i);
+					break;
+				}
+			}
+			free(var);
+		}
+	}
+	/* End of debug options setup. */
+
 	if (language && *language)
 	{
 		dict = dictionary_create_lang(language);
@@ -600,7 +639,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	copts = command_options_create();
 	if (copts == NULL || copts->popts == NULL)
 	{
 		prt_error("Fatal error: unable to create parse options\n");
@@ -644,7 +682,22 @@ int main(int argc, char * argv[])
 	parse_options_set_disjunct_cost(opts,
 	   linkgrammar_get_dict_max_disjunct_cost(dict));
 
+	/* Remember the debug setting, because we temporary neglect it below. */
+	int verbosity_tmp = parse_options_get_verbosity(opts);
+	char *debug_tmp = strdup(parse_options_get_debug(opts));
+	char *test_tmp = strdup(parse_options_get_test(opts));
+
+	parse_options_set_verbosity(opts, 1); /* XXX assuming 1 is the default */
+	parse_options_set_debug(opts, "");
+	parse_options_set_test(opts, "");
 	save_default_opts(copts); /* Options so far are the defaults */
+
+	/* Restore the debug setting. */
+	parse_options_set_verbosity(opts, verbosity_tmp);
+	parse_options_set_debug(opts, debug_tmp);
+	parse_options_set_test(opts, test_tmp);
+	free(debug_tmp);
+	free(test_tmp);
 
 	/* Process options used by GNU programs. */
 	int quiet_start = 0; /* Iff > 0, inhibit the initial messages */
@@ -669,10 +722,12 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	/* Process command line variable-setting commands (only). */
+	/* Process non-debug command line variable-setting commands (only). */
 	for (int i = 1; i < argc; i++)
 	{
 		if (i == quiet_start) continue;
+		if ((i < (int)sizeof(argv_done) * CHAR_BIT) &&
+		    (argv_done & (1LL<<(i-1)))) continue;
 
 		if (argv[i][0] == '-')
 		{

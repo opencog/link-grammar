@@ -21,7 +21,7 @@ char *expand_homedir(const char *fn);
 void set_screen_width(Command_Options*);
 void initialize_screen_width(Command_Options *);
 
-#define MAX_INPUT 2048
+#define MAX_INPUT_LINE 2048
 
 #ifdef _WIN32
 #ifndef __MINGW32__
