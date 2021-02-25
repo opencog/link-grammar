@@ -105,7 +105,12 @@ nonCAP.zzz: ZZZ-;
 <clause-conjoin>: dRJrc- or dRJlc+;
 
 % {@COd-} : "That is the man who, in Joe's opinion, we should hire"
-<clause-head>:  ({@hCOd-} & (C- or <clause-conjoin>)) or ({@hCO-} & Wd-);
+% {hCO-} & {[@hCO-]}: first one is free, additional ones cost.
+%        "Despite newspaper reports to the contrary, Mary did stuff"
+<clause-head>:
+  ({@hCOd-} & (C- or <clause-conjoin>)) or
+  ({hCO-} & {[@hCO-]} & Wd-);
+
 <CLAUSE>:   {<clause-head> or [Rn-]};
 <S-CLAUSE>: {<clause-head>};
 <CLAUSE-E>: {<clause-head> or Re-};
