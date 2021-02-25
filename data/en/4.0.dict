@@ -1576,10 +1576,10 @@ this.p:
 
 % this as a determiner
 % {ALx-} & DD+: "Give me just this one thing"
-% ALx-: "I want just this"
+% ALx- & Os-: "I want just this"
 this.d:
   ({ALx-} & (D*u+ or DD+))
-  or ALx-
+  or (ALx- & Os-)
   or DTn+
   or Wa-;
 
