@@ -3173,8 +3173,9 @@ is.v:
 % But also, some contractions are prohibited:
 % *That's just the kind of person he's -- so: Ss- & PF- not allowed
 % SIs+ & PFb-: "Where's the ball?"
+% hHM+: "I think it's uh from Mars"
 's.v ’s.v:
-  [(<verb-z-s,u> &
+  [(<verb-z-s,u> & {hHM+} &
     (({@EBm+} & (((
         (O*t+ & <verb-wall>)
         or [K+ & <verb-wall>]
@@ -7126,7 +7127,7 @@ during:
 % EW+: "From where did it come?"
 % {EP-} & dWl-: "Just from down below"
 from:
-  ({Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
+  ({dHM-} & {Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
   or ({EP-} & dWl- & FM+)
   or [MVp- & B-]
   or EW+
