@@ -107,8 +107,9 @@ nonCAP.zzz: ZZZ-;
 % {@COd-} : "That is the man who, in Joe's opinion, we should hire"
 % {hCO-} & {[@hCO-]}: first one is free, additional ones cost.
 %        "Despite newspaper reports to the contrary, Mary did stuff"
+% {dHM-}: hesitation marker: "I told him that uh he's wrong"
 <clause-head>:
-  ({@hCOd-} & (C- or <clause-conjoin>)) or
+  ({@hCOd- or dHM-} & (C- or <clause-conjoin>)) or
   ({hCO-} & {[@hCO-]} & Wd-);
 
 <CLAUSE>:   {<clause-head> or [Rn-]};
@@ -315,13 +316,14 @@ nonCAP.zzz: ZZZ-;
 <tot-verb>: TOt+ & B+;
 <null-verb>: TO+ & Xc+;
 
-<embed-verb>: Ce+ & CV+;
-<that-verb>: Cet+ & CV+;
-<subcl-verb>: Cs+ & CV+;
-<advcl-verb>: Ca+ & CV+;
-<fitcl-verb>: Ci+ & CV+;
-<porcl-verb>: Cr+ & CV+;
-<thncl-verb>: Cc+ & CV+;
+% hHM+: hesitation marker: "I told him that uh he's wrong"
+<embed-verb>: {hHM+} & Ce+ & CV+;
+<that-verb>: {hHM+} & Cet+ & CV+;
+<subcl-verb>: {hHM+} & Cs+ & CV+;
+<advcl-verb>: {hHM+} & Ca+ & CV+;
+<fitcl-verb>: {hHM+} & Ci+ & CV+;
+<porcl-verb>: {hHM+} & Cr+ & CV+;
+<thncl-verb>: {hHM+} & Cc+ & CV+;
 % We don't handle Ct,Cta in the above, because the AF and B link plays
 % the role of CV, connecting to the head-verb.
 
@@ -10547,6 +10549,10 @@ stop.misc-inf sir.misc-inf madam.misc-inf ma'am:
 
 % Exclamations, vocatives
 oh.voc O: OH+;
+
+% Fillers, planners, hesitation markers
+uh.h er.h um.h:
+  {Xd-} & dHM- & {Xc+} & hHM+;
 
 % -----------------------------------------------------------
 %ADVERBS USABLE ONLY PRE-VERBALLY (OR PRE-/OPENER)
