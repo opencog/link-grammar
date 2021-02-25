@@ -208,6 +208,7 @@ nonCAP.zzz: ZZZ-;
 % (Jd- & Dmu- & Os-): they have plenty of this
 % (Jd- & Dmu- & {Wd-} & Ss+): "not enough of this was used"
 % Js-: "how did you learn of this?"
+% ALx- & Os-: "I want just this"
 <noun-main-h>:
   (Jd- & Dmu- & Os-)
   or (Jd- & Dmu- & {Wd-} & Ss*b+)
@@ -215,6 +216,7 @@ nonCAP.zzz: ZZZ-;
   or SIs*b-
   or Js-
   or [Os-]0.5
+  or (ALx- & Os-)
   or <post-nominal-x>
   or <costly-null>;
 
@@ -1585,10 +1587,8 @@ this.p:
 
 % this as a determiner
 % {ALx-} & DD+: "Give me just this one thing"
-% ALx- & Os-: "I want just this"
 this.d:
   ({ALx-} & (D*u+ or DD+))
-  or (ALx- & Os-)
   or DTn+
   or Wa-;
 
@@ -1601,10 +1601,10 @@ just.d only.d:
 % "these" to be the object.  See also "those"
 % (Jd- & Dmu- & Op-): "I gave him a number of these"
 % (Jd- & Dmu- & {Wd-} & Sp+): "a number of these were found"
-% Alx-: "I want only these"
+% ALx- & Op-: "I want only these"
 these:
   ({ALx-} & (Dmc+ or DD+))
-  or ALx-
+  or ({ALx-} & Op-)
   or (Jd- & Dmu- & Op-)
   or (Jd- & Dmu- & {Wd-} & Sp+)
   or [[<noun-main-p>]]
@@ -1616,6 +1616,7 @@ these:
 % See also "these"
 those:
   ({AL-} & (Dmc+ or DD+))
+  or ({ALx-} & Op-)
   or (Jd- & Dmu- & Op-)
   or (Jd- & Dmu- & {Wd-} & Sp+)
   or (<noun-rel-p> & ([[<noun-main-p>]] or dRJlr+ or dRJrr-))
@@ -1665,7 +1666,7 @@ many:
 % <noun-main2-x> costs no mater what, so that Ofd+ is preferred.
 % [E+]0.5: all modifying a verb probably is not right.
 % Wa-: "All the people!" as a response to a question.
-% {MVa-} & Alx+: "I want all these"
+% {MVa-} & ALx+: "I want all these"
 all.a:
   ({EN-} & (
     [E+]0.5
