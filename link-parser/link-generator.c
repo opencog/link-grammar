@@ -52,25 +52,35 @@ int main (int argc, char* argv[])
 	else
 	{
 		prt_error("Fatal error: A language must be specified!\n");
+		exit(-1);
 	}
 
 	opts = parse_options_create();
+	parse_options_set_linkage_limit(opts, 350);
 
 	sent = sentence_create("6", dict);
 	// sentence_split(sent, opts);
-	long num_linkages = sentence_parse(sent, opts);
-	printf("Linakges found: %ld\n", num_linkages);
+	int num_linkages = sentence_parse(sent, opts);
+	printf("Linakges generated: %d\n", num_linkages);
 
-	for (long i=0; i<num_linkages; i++)
+	int linkages_found = sentence_num_linkages_found(sent);
+	printf("Linakges found: %d\n", linkages_found);
+
+	int linkages_valid = sentence_num_valid_linkages(sent);
+	printf("Linakges valid: %d\n", linkages_valid);
+
+	for (int i=0; i<num_linkages; i++)
 	{
 		Linkage linkage;
 		linkage = linkage_create(i, sent, opts);
 
 		size_t nwords = linkage_get_num_words(linkage);
 		const char **words = linkage_get_words(linkage);
-		for (int w=0; w<nwords; w++)
+
+		printf("%d ", i);
+		for (unsigned int w=0; w<nwords; w++)
 		{
-			printf("%s ", words[w]);
+			printf(" %s", words[w]);
 		}
 		printf("\n");
 
