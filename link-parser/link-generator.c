@@ -54,7 +54,6 @@ static struct argp argp = { options, parse_opt, args_doc, 0, 0, 0 };
 
 int main (int argc, char* argv[])
 {
-	const char     *language = NULL;
 	Dictionary      dict;
 	Parse_Options   opts;
 	Sentence        sent = NULL;
@@ -66,39 +65,31 @@ int main (int argc, char* argv[])
 	parms.corpus_size = 50;
 	argp_parse(&argp, argc, argv, 0, 0, &parms);
 
-	if ((argc > 1) && (argv[1][0] != '-')) {
-		/* The dictionary is the first argument if it doesn't begin with "-" */
-		language = argv[1];
-	}
+	printf("#\n# Corpus for language \"%s\"\n", parms.language);
 
-	if (language && *language)
+	// Force the system into generation mode by appending "-generate"
+	// to the langauge. XXX this seems hacky, need a better API.
+	char lan[100]; // buffer overflow
+	lan[0] = 0;
+	strcat(lan, parms.language);
+	strcat(lan, "-generate");
+
+	dict = dictionary_create_lang(lan);
+	if (dict == NULL)
 	{
-		printf("#\n# Corpus for language \"%s\"\n", language);
-
-		// Force the system into generation mode by appending "-generate"
-		// to the langauge. XXX this seems hacky, need a better API.
-		char lan[100]; // buffer overflow
-		lan[0] = 0;
-		strcat(lan, language);
-		strcat(lan, "-generate");
-
-		dict = dictionary_create_lang(lan);
-		if (dict == NULL)
-		{
-			prt_error("Fatal error: Unable to open dictionary.\n");
-			exit(-1);
-		}
-	}
-	else
-	{
-		prt_error("Fatal error: A language must be specified!\n");
+		prt_error("Fatal error: Unable to open dictionary.\n");
 		exit(-1);
 	}
 
 	opts = parse_options_create();
 	parse_options_set_linkage_limit(opts, 350);
 
-	sent = sentence_create("6", dict);
+	// Set the number of words in the sentence.
+	// XXX this is a hacky API. Fix it.
+	char slen[30];
+	snprintf(slen, 30, "%d", parms.sentence_length);
+	sent = sentence_create(slen, dict);
+
 	// sentence_split(sent, opts);
 	int num_linkages = sentence_parse(sent, opts);
 	printf("Linakges generated: %d\n", num_linkages);
