@@ -22,8 +22,8 @@ typedef struct
 
 static struct argp_option options[] =
 {
-	{"length", 'l', 0, 0, "Sentence length."},
-	{"size", 's', 0, 0, "Corpus size."},
+	{"length", 'l', "length", 0, "Sentence length."},
+	{"size", 's', "size", 0, "Corpus size."},
 	{"version", 'v', 0, 0, "Print version and exit."},
 	{ 0 }
 };
@@ -65,7 +65,9 @@ int main (int argc, char* argv[])
 	parms.corpus_size = 50;
 	argp_parse(&argp, argc, argv, 0, 0, &parms);
 
-	printf("#\n# Corpus for language \"%s\"\n", parms.language);
+	printf("#\n# Corpus for language: \"%s\"\n", parms.language);
+	printf("# Sentence length: %d\n", parms.sentence_length);
+	printf("# Requested corpus size: %d\n", parms.corpus_size);
 
 	// Force the system into generation mode by appending "-generate"
 	// to the langauge. XXX this seems hacky, need a better API.
@@ -82,7 +84,7 @@ int main (int argc, char* argv[])
 	}
 
 	opts = parse_options_create();
-	parse_options_set_linkage_limit(opts, 350);
+	parse_options_set_linkage_limit(opts, parms.corpus_size);
 
 	// Set the number of words in the sentence.
 	// XXX this is a hacky API. Fix it.
@@ -92,13 +94,13 @@ int main (int argc, char* argv[])
 
 	// sentence_split(sent, opts);
 	int num_linkages = sentence_parse(sent, opts);
-	printf("Linakges generated: %d\n", num_linkages);
+	printf("# Linakges generated: %d\n", num_linkages);
 
 	int linkages_found = sentence_num_linkages_found(sent);
-	printf("Linakges found: %d\n", linkages_found);
+	printf("# Linakges found: %d\n", linkages_found);
 
 	int linkages_valid = sentence_num_valid_linkages(sent);
-	printf("Linakges valid: %d\n", linkages_valid);
+	printf("# Linakges valid: %d\n", linkages_valid);
 
 	for (int i=0; i<num_linkages; i++)
 	{
