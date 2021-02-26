@@ -953,6 +953,7 @@ data/Makefile
 data/ady/Makefile
 data/amy/Makefile
 data/any/Makefile
+data/gen/Makefile
 data/ar/Makefile
 data/ar/words/Makefile
 data/de/Makefile
