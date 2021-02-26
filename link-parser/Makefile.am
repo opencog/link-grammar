@@ -10,9 +10,9 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CFLAGS) \
 
 # -----------------------------------------------------------
 # Directives to build the link-parser command-line application
-bin_PROGRAMS=link-parser
-link_parser_SOURCES = link-generator.c \
-                      link-parser.c \
+bin_PROGRAMS=link-parser link-generator
+
+link_parser_SOURCES = link-parser.c \
                       command-line.c \
                       lg_readline.c \
                       parser-utilities.h \
@@ -26,6 +26,14 @@ link_parser_LDADD += $(LIBEDIT_LIBS)
 if HAVE_SQLITE
 link_parser_LDADD += $(SQLITE3_LIBS)
 endif
+
+link_generator_SOURCES = link-generator.c
+link_generator_LDFLAGS = $(LINK_CFLAGS)
+link_generator_LDADD = $(top_builddir)/link-grammar/liblink-grammar.la
+if HAVE_SQLITE
+link_generator_LDADD += $(SQLITE3_LIBS)
+endif
+
 
 # Installation checks, to be manually done after "make install".
 # link-parser checks:
