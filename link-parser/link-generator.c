@@ -11,6 +11,7 @@
 #include <string.h>
 
 #include "../link-grammar/link-includes.h"
+#include "../link-grammar/error.h"
 
 /* Argument parsing for the generator */
 typedef struct
@@ -49,7 +50,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 	return 0;
 }
 
-static char args_doc[] = "<language|dictionary>";
+static char args_doc[] = "";
 static struct argp argp = { options, parse_opt, args_doc, 0, 0, 0 };
 
 int main (int argc, char* argv[])
@@ -94,13 +95,20 @@ int main (int argc, char* argv[])
 
 	// sentence_split(sent, opts);
 	int num_linkages = sentence_parse(sent, opts);
-	printf("# Linakges generated: %d\n", num_linkages);
 
+	// In general, there will be more linkages found, than the
+	// requested corpus size. We make used of the random sampler
+	// that is already built into the linkage code to sample them
+	// randomly, with some "uniform distribution". XXX At this time,
+	// the precise meaning of "uniform distribution" is somewhat
+	// ill-defined. It needs to be described and documented.
 	int linkages_found = sentence_num_linkages_found(sent);
-	printf("# Linakges found: %d\n", linkages_found);
+	printf("# Linkages found: %d\n", linkages_found);
+	printf("# Linkages generated: %d\n", num_linkages);
+	printf("#\n");
 
 	int linkages_valid = sentence_num_valid_linkages(sent);
-	printf("# Linakges valid: %d\n", linkages_valid);
+	assert(linkages_valid == num_linkages, "unexpected linkages!");
 
 	for (int i=0; i<num_linkages; i++)
 	{
@@ -110,7 +118,7 @@ int main (int argc, char* argv[])
 		size_t nwords = linkage_get_num_words(linkage);
 		const char **words = linkage_get_words(linkage);
 
-		printf("%d ", i);
+		// printf("%d", i);
 		for (unsigned int w=0; w<nwords; w++)
 		{
 			printf(" %s", words[w]);
