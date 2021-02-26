@@ -42,7 +42,16 @@ int main (int argc, char* argv[])
 
 	if (language && *language)
 	{
-		dict = dictionary_create_lang(language);
+		printf("#\n# Corpus for language \"%s\"\n", language);
+
+		// Force the system into generation mode by appending "-generate"
+		// to the langauge. XXX this seems hacky, need a better API.
+		char lan[100]; // buffer overflow
+		lan[0] = 0;
+		strcat(lan, language);
+		strcat(lan, "-generate");
+
+		dict = dictionary_create_lang(lan);
 		if (dict == NULL)
 		{
 			prt_error("Fatal error: Unable to open dictionary.\n");
