@@ -45,10 +45,20 @@ void free_disjuncts(Disjunct *c)
 	}
 }
 
-void free_sentence_disjuncts(Sentence sent)
+void free_sentence_disjuncts(Sentence sent, bool category_too)
 {
 	if (NULL != sent->dc_memblock)
 	{
+		if (category_too)
+		{
+			for (Disjunct *d = sent->dc_memblock;
+			     d < &((Disjunct *)sent->dc_memblock)[sent->num_disjuncts]; d++)
+			{
+				if (d->is_category != 0)
+					free(d->category);
+			}
+		}
+
 		free(sent->dc_memblock);
 		sent->dc_memblock = NULL;
 	}
@@ -118,7 +128,8 @@ struct disjunct_dup_table_s
  * This is the old version that doesn't check for domination, just
  * equality.
  */
-static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
+static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt,
+                                             Disjunct * d, bool string_too)
 {
 	unsigned int i;
 	i = 0;
@@ -128,9 +139,8 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	for (Connector *e = d->right; e != NULL; e = e->next) {
 		i = (41 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
-#if 0 /* Redundant - the connector hashing has enough entropy. */
-	i += string_hash(d->word_string);
-#endif
+	if (string_too)
+		i += string_hash(d->word_string);
 	i += (i>>10);
 
 	d->dup_hash = i;
@@ -146,7 +156,7 @@ static bool connectors_equal_prune(Connector *c1, Connector *c2)
 }
 
 /** returns TRUE if the disjuncts are exactly the same */
-static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
+static bool disjuncts_equal(Disjunct * d1, Disjunct * d2, bool ignore_string)
 {
 	Connector *e1, *e2;
 
@@ -167,6 +177,8 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 		e2 = e2->next;
 	}
 	if ((e1 != NULL) || (e2 != NULL)) return false;
+
+	if (ignore_string) return true;
 
 	/* Save CPU time by comparing this last, since this will
 	 * almost always be true. Rarely, the strings are not from
@@ -294,7 +306,7 @@ static gword_set *gword_set_union(gword_set *kept, gword_set *eliminated)
  * Takes the list of disjuncts pointed to by d, eliminates all
  * duplicates, and returns a pointer to a new list.
  */
-Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
+Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 {
 	unsigned int count = 0;
 	disjunct_dup_table *dt;
@@ -309,24 +321,46 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 	for (Disjunct *d = dw; d != NULL; d = d->next)
 	{
 		Disjunct *dx;
-		unsigned int h = old_hash_disjunct(dt, d);
+		unsigned int h = old_hash_disjunct(dt, d, /*string_too*/!multi_string);
 
 		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->dup_table_next)
 		{
 			if (d->dup_hash != dx->dup_hash) continue;
-			if (disjuncts_equal(dx, d)) break;
+			if (disjuncts_equal(dx, d, multi_string)) break;
 		}
 
 		if (dx != NULL)
 		{
 			/* Discard the current disjunct. */
-			if (d->cost < dx->cost) dx->cost = d->cost;
 
-			dx->originating_gword =
-				gword_set_union(dx->originating_gword, d->originating_gword);
+			if (multi_string)
+			{
+				if (dx->num_categories == dx->num_categories_alloced)
+				{
+					dx->num_categories_alloced *= 2;
+					dx->category = realloc(dx->category,
+					   sizeof(dx->category) * dx->num_categories_alloced);
+				}
+				dassert((d->category[0].num > 0) && (d->category[0].num < 64*1024),
+				        "Insane category %u", d->category[0].num);
+				dx->category[dx->num_categories].num = d->category[0].num;
+				dx->category[dx->num_categories].cost = d->cost;
+				dx->num_categories++;
+			}
+			else
+			{
+				if (d->cost < dx->cost) dx->cost = d->cost;
+				dx->originating_gword =
+					gword_set_union(dx->originating_gword, d->originating_gword);
+			}
 
 			count++;
 			prev->next = d->next;
+			if (d->is_category != 0)
+			{
+				free(d->category);
+				d->is_category = 0; /* Save free() call on sentence delete. */
+			}
 		}
 		else
 		{
@@ -336,7 +370,9 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 		}
 	}
 
-	lgdebug(+D_DISJ+(0==count)*1000, "Killed %u duplicates\n", count);
+	lgdebug(+D_DISJ+(0==count)*1000, "w%zu: Killed %u duplicates%s\n",
+	        dw->originating_gword->o_gword->sent_wordidx, count,
+	        multi_string ? " (different word-strings)" : "");
 
 	disjunct_dup_table_delete(dt);
 	return dw;
@@ -671,6 +707,7 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	newd = (ts->dblock)++;
 	newd->word_string = d->word_string;
 	newd->cost = d->cost;
+	newd->is_category = d->is_category;
 	newd->originating_gword = d->originating_gword;
 
 	if (NULL == ts->tracon_list)

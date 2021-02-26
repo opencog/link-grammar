@@ -110,8 +110,8 @@ Not as in previous releases, capital letters which got downcased are not
 restored for display if the affected words have a linkage.
 
 A new experimental handling of capital words using the dictionary has been
-introduced. It inserts the token `1stCAP` before the uc version, and `nonCAP`
-before the lc one, as discussed in:
+introduced. It inserts the token `<1stCAP>` before the uc version, and
+`<nonCAP>` before the lc one, as discussed in:
 https://groups.google.com/forum/?hl=en#!topic/link-grammar/hmK5gjXYWbk
 It is enabled by `!test=dictcap`. The special "dictcap" tokens are not yet
 discarded, so in order to compare results to previous library versions, the

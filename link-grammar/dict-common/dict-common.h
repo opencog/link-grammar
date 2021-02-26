@@ -23,6 +23,7 @@
 #define EMPTY_CONNECTOR "ZZZ"
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
 #define LIMITED_CONNECTORS_WORD ("LENGTH-LIMIT-")
+#define IS_GENERATION(dict) (dict->category != NULL)
 
 /* Forward decls */
 typedef struct Afdict_class_struct Afdict_class;
@@ -84,6 +85,15 @@ typedef struct
 	unsigned int size;                 /* Allocated tag array size */
 } expression_tag;
 
+/* List of words in a dict category, for sentence generation. */
+typedef struct
+{
+	unsigned int num_words;
+	char category_string[8];
+	Exp *exp;
+	char const ** word;
+} dict_category;
+
 struct Dictionary_s
 {
 	Dict_node *  root;
@@ -136,6 +146,12 @@ struct Dictionary_s
 	ConTable        contable;
 
 	Pool_desc  * Exp_pool;
+
+	/* Sentence generation */
+	unsigned int num_categories;
+	unsigned int num_categories_alloced;
+	dict_category * category; /* Word lists - indexed by category number */
+	bool leave_subscripts;    /* Leave generated-word subscripts */
 
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.

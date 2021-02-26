@@ -174,15 +174,9 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 			print_chosen_disjuncts_words(lkg, /*prt_opt*/true);
 		}
 
-		if (sane_linkage_morphism(sent, lkg, opts))
+		if (IS_GENERATION(sent->dict))
 		{
-			remove_empty_words(lkg);
-
-			if (verbosity_level(+D_PL))
-			{
-				err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
-				print_chosen_disjuncts_words(lkg, /*prt_opt*/false);
-			}
+			compute_generated_words(sent, lkg);
 
 			need_init = true;
 			in++;
@@ -190,11 +184,28 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 		}
 		else
 		{
-			N_invalid_morphism++;
-			lkg->num_links = 0;
-			lkg->num_words = sent->length;
-			// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
-			memset(lkg->chosen_disjuncts, 0, sent->length * sizeof(Disjunct *));
+			if (sane_linkage_morphism(sent, lkg, opts))
+			{
+				remove_empty_words(lkg);
+
+				if (verbosity_level(+D_PL))
+				{
+					err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
+					print_chosen_disjuncts_words(lkg, /*prt_opt*/false);
+				}
+
+				need_init = true;
+				in++;
+				if (in >= sent->num_linkages_alloced) break;
+			}
+			else
+			{
+				N_invalid_morphism++;
+				lkg->num_links = 0;
+				lkg->num_words = sent->length;
+				// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
+				memset(lkg->chosen_disjuncts, 0, sent->length * sizeof(Disjunct *));
+			}
 		}
 	}
 
@@ -314,7 +325,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 	if (resources_exhausted(opts->resources)) return; /* Nothing to free yet. */
 
 	Tracon_sharing *ts_pruning = pack_sentence_for_pruning(sent);
-	free_sentence_disjuncts(sent);
+	free_sentence_disjuncts(sent, /*category_too*/false);
 
 	if (one_step_parse)
 	{
@@ -422,7 +433,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 		if (sent->num_linkages_found > 0)
 		{
-			extractor_t * pex = extractor_new(sent->length, sent->rand_state);
+			extractor_t * pex =
+				extractor_new(sent->length, sent->rand_state, IS_GENERATION(sent->dict));
 			bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
 			process_linkages(sent, pex, ovfl, opts);
 			free_extractor(pex);

@@ -20,6 +20,12 @@
 #include "api-types.h"
 #include "api-structures.h"             // Sentence
 
+typedef struct
+{
+	unsigned int num;    /* Index in the "category" field of Dictionary */
+	float cost;          /* Corresponding disjunct cost. */
+} category_and_cost;
+
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST
 
@@ -30,9 +36,23 @@ struct Disjunct_struct
 	/* 48 bytes of common stuff. */
 	Disjunct *next;
 	Connector *left, *right;
-	double cost;
 	gword_set *originating_gword; /* Set of originating gwords */
-	const char *word_string;      /* Subscripted dictionary word */
+	union
+	{
+		struct
+		{
+			const char *word_string;  /* Subscripted dictionary word */
+			float cost;               /* Disjunct cost */
+			unsigned int is_category; /* Use the category field */
+		};
+		struct
+		{
+			/* Dictionary category & disjunct cost (for sentence generation). */
+			category_and_cost *category;
+			unsigned int num_categories_alloced;
+			unsigned int num_categories;
+		};
+	};
 
 	/* Shared by different steps. For what | when. */
 	union
@@ -59,10 +79,10 @@ struct Disjunct_struct
 
 /* Disjunct utilities ... */
 void free_disjuncts(Disjunct *);
-void free_sentence_disjuncts(Sentence);
+void free_sentence_disjuncts(Sentence, bool);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
-Disjunct * eliminate_duplicate_disjuncts(Disjunct *);
+Disjunct * eliminate_duplicate_disjuncts(Disjunct *, bool);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 

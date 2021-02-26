@@ -58,8 +58,8 @@ typedef const char *stripped_t[MAX_STRIP];
 #define REPLACEMENT_MARK "~" /* a mark for a replacement word */
 
 /* Dictionary capitalization handling */
-#define CAP1st "1stCAP" /* Next word is capitalized */
-#define CAPnon "nonCAP" /* Next word the lc version of a capitalized word */
+#define CAP1st "<1stCAP>" /* Next word is capitalized */
+#define CAPnon "<nonCAP>" /* Next word the lc version of a capitalized word */
 
 
 /**
@@ -2712,7 +2712,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	if (!word_can_lrmsplit && !word_is_known &&
 	    !contains_digits(word, dict->lctype) &&
 	    !is_proper_name(word, dict->lctype) &&
-	    opts->use_spell_guess && dict->spell_checker)
+	    opts->use_spell_guess && dict->spell_checker &&
+	    !strstr(word, "\\*"))
 	{
 		bool spell_suggest = guess_misspelled_word(sent, unsplit_word, opts);
 		lgdebug(+D_SW, "Spell suggest=%d\n", spell_suggest);
@@ -2980,6 +2981,21 @@ bool word0_set(Sentence sent, char *w, Parse_Options opts)
 	return setup_dialect(sent->dict, opts);
 }
 
+static Dict_node *dictionary_all_categories(Dictionary dict)
+{
+	Dict_node * dn = malloc(sizeof(*dn) * dict->num_categories);
+
+	for (size_t i = 0; i < dict->num_categories; i++)
+	{
+		dn[i].exp = dict->category[i + 1].exp;
+		dn[i].string = dict->category[i + 1].category_string;
+		dn[i].right = &dn[i + 1];
+	}
+	dn[dict->num_categories-1].right = NULL;
+
+	return dn;
+}
+
 /**
  * build_word_expressions() -- build list of expressions for a word.
  *
@@ -2998,7 +3014,23 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 	X_node * x, * y;
 	const Dictionary dict = sent->dict;
 
-	dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
+	if (NULL != strstr(w->subword, "\\*"))
+	{
+		char *t = alloca(strlen(w->subword) + 8); /* + room for multibyte copy */
+		const char *backslash = strchr(w->subword, '\\');
+
+		strcpy(t, w->subword);
+		strcpy(t+(backslash - w->subword), backslash+1);
+		if (0 == strcmp(w->subword, "\\*"))
+			dn_head = dictionary_all_categories(dict);
+		else
+			dn_head = dictionary_lookup_wild(dict, t);
+	}
+	else
+	{
+		dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
+	}
+
 	x = NULL;
 	dn = dn_head;
 	while (dn != NULL)
@@ -3024,7 +3056,10 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		x->word = w;
 		dn = dn->right;
 	}
-	free_lookup_list (dict, dn_head);
+	if (0 != strcmp(w->subword, "\\*"))
+		free_lookup_list (dict, dn_head);
+	else
+		free(dn_head);
 	return x;
 }
 
@@ -3084,9 +3119,19 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 #endif /* DEBUG */
 		if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-			we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
-			assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
-			w->status |= WS_UNKNOWN;
+			if (NULL == strstr(s, "\\*"))
+			{
+
+				we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
+				assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
+				w->status |= WS_UNKNOWN;
+			}
+			else
+			{
+				lgdebug(+D_DWE, "Wildcard word %s\n", s);
+				we = build_word_expressions(sent, w, NULL, opts);
+				w->status = WS_INDICT; /* Prevent marking as "unknown word". */
+			}
 		}
 		else
 		{
