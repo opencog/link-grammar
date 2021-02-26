@@ -128,7 +128,8 @@ int main (int argc, char* argv[])
 		linkage_delete(linkage);
 	}
 
+	sentence_delete(sent);
 	dictionary_delete(dict);
-	printf ("Bye.\n");
+	printf ("# Bye.\n");
 	return 0;
 }
