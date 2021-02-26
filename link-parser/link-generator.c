@@ -5,11 +5,52 @@
  * February 2021
  */
 
+#include <argp.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "../link-grammar/link-includes.h"
+
+/* Argument parsing for the generator */
+typedef struct
+{
+	const char* language;
+	int sentence_length;
+	int corpus_size;
+} gen_parameters;
+
+static struct argp_option options[] =
+{
+	{"length", 'l', 0, 0, "Sentence length."},
+	{"size", 's', 0, 0, "Corpus size."},
+	{"version", 'v', 0, 0, "Print version and exit."},
+	{ 0 }
+};
+
+static error_t parse_opt(int key, char *arg, struct argp_state *state)
+{
+	gen_parameters* gp = state->input;
+	switch (key)
+	{
+		case 'l': gp->sentence_length = atoi(arg); break;
+		case 's': gp->corpus_size = atoi(arg); break;
+
+		case 'v':
+		{
+			printf("Version: %s\n", linkgrammar_get_version());
+			printf("%s\n", linkgrammar_get_configuration());
+			exit(0);
+		}
+
+		case ARGP_KEY_ARG: return 0;
+		default: return ARGP_ERR_UNKNOWN;
+	}
+	return 0;
+}
+
+static char args_doc[] = "<language|dictionary>";
+static struct argp argp = { options, parse_opt, args_doc, 0, 0, 0 };
 
 int main (int argc, char* argv[])
 {
@@ -19,21 +60,11 @@ int main (int argc, char* argv[])
 	Sentence        sent = NULL;
 
 	/* Process options used by GNU programs. */
-	for (int i = 1; i < argc; i++)
-	{
-		if (strcmp("--help", argv[i]) == 0)
-		{
-			printf("Usage: %s <language|dictionary>\n", argv[0]);
-			exit(0);
-		}
-
-		if (strcmp("--version", argv[i]) == 0)
-		{
-			printf("Version: %s\n", linkgrammar_get_version());
-			printf("%s\n", linkgrammar_get_configuration());
-			exit(0);
-		}
-	}
+	gen_parameters parms;
+	parms.language = "lt";
+	parms.sentence_length = 6;
+	parms.corpus_size = 50;
+	argp_parse(&argp, argc, argv, 0, 0, &parms);
 
 	if ((argc > 1) && (argv[1][0] != '-')) {
 		/* The dictionary is the first argument if it doesn't begin with "-" */
