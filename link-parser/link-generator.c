@@ -6,6 +6,7 @@
  */
 
 #include <stddef.h>
+#include <stdlib.h>
 
 #include "../link-grammar/link-includes.h"
 
@@ -13,11 +14,44 @@ int main (int argc, char* argv[])
 {
 	const char     *language = NULL;
 	Dictionary      dict;
+	Parse_Options   opts;
+
+	/* Process options used by GNU programs. */
+	for (int i = 1; i < argc; i++)
+	{
+		if (strcmp("--help", argv[i]) == 0)
+		{
+			printf("Usage: %s <language|dictionary>\n", argv[0]);
+			exit(0);
+		}
+
+		if (strcmp("--version", argv[i]) == 0)
+		{
+			printf("Version: %s\n", linkgrammar_get_version());
+			printf("%s\n", linkgrammar_get_configuration());
+			exit(0);
+		}
 
 	if ((argc > 1) && (argv[1][0] != '-')) {
 		/* The dictionary is the first argument if it doesn't begin with "-" */
 		language = argv[1];
 	}
+
+	if (language && *language)
+	{
+		dict = dictionary_create_lang(language);
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open dictionary.\n");
+			exit(-1);
+		}
+	}
+	else
+	{
+		prt_error("Fatal error: A language must be specified!\n");
+	}
+
+	opts = parse_options_create();
 
 	return 0;
 }
