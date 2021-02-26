@@ -23,8 +23,9 @@ typedef struct
 
 static struct argp_option options[] =
 {
-	{"length", 'l', "length", 0, "Sentence length."},
-	{"size", 's', "size", 0, "Corpus size."},
+	{"language", 'l', "language", 0, "Directory containing language definition."},
+	{"length", 's', "length", 0, "Sentence length."},
+	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
 	{"version", 'v', 0, 0, "Print version and exit."},
 	{ 0 }
 };
@@ -34,8 +35,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 	gen_parameters* gp = state->input;
 	switch (key)
 	{
-		case 'l': gp->sentence_length = atoi(arg); break;
-		case 's': gp->corpus_size = atoi(arg); break;
+		case 'l': gp->language = arg; break;
+		case 's': gp->sentence_length = atoi(arg); break;
+		case 'c': gp->corpus_size = atoi(arg); break;
 
 		case 'v':
 		{
