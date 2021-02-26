@@ -11,7 +11,8 @@ AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CFLAGS) \
 # -----------------------------------------------------------
 # Directives to build the link-parser command-line application
 bin_PROGRAMS=link-parser
-link_parser_SOURCES = link-parser.c \
+link_parser_SOURCES = link-generator.c \
+                      link-parser.c \
                       command-line.c \
                       lg_readline.c \
                       parser-utilities.h \
