@@ -6,3 +6,6 @@
 
 % Add stuff here
 #include "dict-file.lg"
+
+% Mandatory, else the generator won't work.
+<UNKNOWN-WORD>:  XXXXXXXX+;
