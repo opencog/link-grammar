@@ -48,11 +48,11 @@ struct Parse_choice_struct
  * tracons l_id and r_id on words lw and rw, correspondingly. */
 struct Parse_set_struct
 {
-	short          lw, rw; /* left and right word index */
+	short          lw, rw;     /* left and right word index */
 	unsigned int   null_count; /* number of island words */
 	int            l_id, r_id; /* tracons on words lw, rw */
 
-	count_t count;      /* The number of ways to parse. */
+	count_t count;             /* The number of ways to parse. */
 #ifdef RECOUNT
 	count_t recount;  /* Exactly the same as above, but counted at a later stage. */
 	count_t cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
@@ -77,7 +77,7 @@ struct extractor_s
 {
 	unsigned int   x_table_size;
 	unsigned int   log2_x_table_size; /* Not used */
-	Pset_bucket ** x_table;  /* Hash table */
+	Pset_bucket ** x_table;           /* Hash table */
 	Parse_set *    parse_set;
 	Word           *words;
 	Pool_desc *    Pset_bucket_pool;
