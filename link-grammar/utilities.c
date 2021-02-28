@@ -768,7 +768,7 @@ bool strtodC(const char *s, float *r)
 
 	if ('\0' != *err) return false; /* *r unaffected */
 
-	*r = val;
+	*r = (float)val;
 	return true;
 }
 
