@@ -131,7 +131,7 @@ void pool_delete (const char *func, Pool_desc *mp)
  * 2. Zero the block if required;
  * 3. Return element pointer.
  */
-inline void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
+void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 {
 	dassert(vecsize < mp->num_elements, "Pool block is too small %zu > %zu)",
 	        vecsize, mp->num_elements);
