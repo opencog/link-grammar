@@ -132,7 +132,8 @@ static unsigned int dialect_table_add(Dialect *di, const char *token,
 
 		di->table = realloc(di->table, *size * sizeof(*di->table));
 	}
-	di->table[di->num_table_tags] = (dialect_tag){ .name = token, .cost = cost };
+	di->table[di->num_table_tags] =
+		(dialect_tag){ .name = token, .cost = (float)cost };
 
 	return di->num_table_tags++;
 }

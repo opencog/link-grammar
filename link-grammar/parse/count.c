@@ -459,7 +459,7 @@ static Count_bin table_store(count_context_t *ctxt,
  * the entry is not found).
  * @return The count for this quintuple if there, NULL otherwise.
  */
-inline Count_bin *
+Count_bin *
 table_lookup(count_context_t *ctxt, int lw, int rw,
                    const Connector *le, const Connector *re,
                    unsigned int null_count, unsigned int *hash)
