@@ -192,7 +192,7 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 }
 
 /**
- * Allocate the table with a sentence-depent table size.  Use
+ * Allocate the table with a sentence-dependent table size.  Use
  * sent->length as a hint for the initial table size. Usually, this
  * saves on dynamic table growth, which is costly.
  * */
