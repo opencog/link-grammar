@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <limits.h>
+#include <threads.h>
 
 #include "link-includes.h"
 #include "api-structures.h"
@@ -115,13 +116,22 @@ static void free_table(count_context_t *ctxt)
 	ctxt->table_size = 0;
 }
 
-static void free_kept_table(void);
+static void free_tls_table(void* ptr_to_table)
+{
+	if (NULL == ptr_to_table) return;
+
+	Table_connector** kept_table = *((Table_connector***)ptr_to_table);
+	if (NULL == kept_table) return;
+
+	free(kept_table);
+	kept_table = NULL;
+}
 
 /**
  * Allocate memory for the connector-pair table and initialize table-size
  * related fields (table_size and table_available_count). Reuse the
- * previous table memory if the request is for a table that fits. If this is
- * not a call to grow the table, free it if not reused.
+ * previous table memory if the request is for a table that fits. If this
+ * is not a call to grow the table, free it if not reused.
  *
  * @ctxt[in, out] Table info.
  * @param shift log2 table size, or \c 0 for table growth. On table growth,
@@ -132,9 +142,20 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 	static TLS Table_connector **kept_table = NULL;
 	static TLS unsigned int log2_kept_table_size = 0;
 
+	// Install a thread-exit handler, to free kept_table on thread-exit.
+	static tss_t key;
+	if (NULL == kept_table)
+	{
+		if (thrd_success == tss_create(&key, free_tls_table))
+			tss_set(key, &kept_table);
+		else
+			prt_error("Error: unexpected failure of thread alloc\n");
+	}
+
 	if (ctxt == NULL)
 	{
 		free(kept_table);
+		kept_table = NULL;
 		return;
 	}
 
@@ -142,7 +163,7 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 		shift = ctxt->log2_table_size + 1; /* Double the table size */
 	lgdebug(+D_COUNT, "Connector table log2 size %u\n", shift);
 
-	/* Keep the table indefinitely (or until exiting), so that it can
+	/* Keep the table indefinitely (until thread-exit), so that it can
 	 * be reused. This avoids a large overhead in malloc/free when
 	 * large memory blocks are allocated. Large block in Linux trigger
 	 * system calls to mmap/munmap that eat up a lot of time.
@@ -150,7 +171,6 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 	ctxt->table_size = (1U << shift);
 	if ((shift > log2_kept_table_size) || (kept_table == NULL))
 	{
-		if (log2_kept_table_size == 0) atexit(free_kept_table);
 		log2_kept_table_size = shift;
 
 		if (kept_table) free(kept_table);
@@ -172,20 +192,7 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 }
 
 /**
- * This function is called on program exit so no memory remains allocated.
- * This is not really necessary because even for debug the message on
- * memory that left allocated can be put in an ignore-list.
- *
- * FIXME: Fix thread memory leak resulted by not freeing table memory
- * on thread exit.
- */
-static void free_kept_table(void)
-{
-	table_alloc(NULL, 0);
-}
-
-/**
- * Allocate the table with a sentence-depended table size.  Use
+ * Allocate the table with a sentence-depent table size.  Use
  * sent->length as a hint for the initial table size. Usually, this
  * saves on dynamic table growth, which is costly.
  * */

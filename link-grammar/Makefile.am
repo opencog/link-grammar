@@ -52,8 +52,6 @@ liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ \
 
 liblink_grammar_la_LIBADD  =  ${REGEX_LIBS}
 
-liblink_grammar_la_LIBADD  +=  ${REGEX_LIBS}
-
 if HAVE_HUNSPELL
 liblink_grammar_la_LIBADD  +=  ${HUNSPELL_LIBS}
 endif
@@ -77,6 +75,9 @@ else !LIBMINISAT_BUNDLED
 liblink_grammar_la_LIBADD  += ${MINISAT_LIBS}
 endif !LIBMINISAT_BUNDLED
 endif WITH_SAT_SOLVER
+
+# Needed for tss_create and tss_set
+liblink_grammar_la_LIBADD  += -lpthread
 
 # Math libraries are needed for floorf, etc.
 liblink_grammar_la_LIBADD  += -lm
