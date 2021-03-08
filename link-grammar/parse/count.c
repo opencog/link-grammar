@@ -152,13 +152,6 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 			prt_error("Error: unexpected failure of thread alloc\n");
 	}
 
-	if (ctxt == NULL)
-	{
-		free(kept_table);
-		kept_table = NULL;
-		return;
-	}
-
 	if (shift == 0)
 		shift = ctxt->log2_table_size + 1; /* Double the table size */
 	lgdebug(+D_COUNT, "Connector table log2 size %u\n", shift);
