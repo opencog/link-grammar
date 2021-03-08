@@ -143,14 +143,18 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 	static TLS unsigned int log2_kept_table_size = 0;
 
 	// Install a thread-exit handler, to free kept_table on thread-exit.
+	// This only needs to be done once.
+	static bool have_key = false;
 	static tss_t key;
-	if (NULL == kept_table)
+	if (false == have_key)
 	{
-		if (thrd_success == tss_create(&key, free_tls_table))
-			tss_set(key, &kept_table);
-		else
+		have_key = true;
+		if (thrd_success != tss_create(&key, free_tls_table))
 			prt_error("Error: unexpected failure of thread alloc\n");
 	}
+
+	if (NULL == kept_table)
+		tss_set(key, &kept_table);
 
 	if (shift == 0)
 		shift = ctxt->log2_table_size + 1; /* Double the table size */
