@@ -111,6 +111,9 @@ lg_tls=no
 AX_TLS(,:)
 test "$ac_cv_tls" != "none" && lg_tls=yes
 
+AX_PTHREAD
+CFLAGS="${CFLAGS} ${PTHREAD_CFLAGS}"
+
 dnl Check for specific OSs
 # ====================================================================
 

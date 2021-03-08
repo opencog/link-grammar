@@ -77,7 +77,7 @@ endif !LIBMINISAT_BUNDLED
 endif WITH_SAT_SOLVER
 
 # Needed for tss_create and tss_set
-liblink_grammar_la_LIBADD  += -lpthread
+liblink_grammar_la_LIBADD  += ${PTHREAD_LIBS}
 
 # Math libraries are needed for floorf, etc.
 liblink_grammar_la_LIBADD  += -lm
