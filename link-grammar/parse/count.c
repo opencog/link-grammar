@@ -124,7 +124,13 @@ static void free_tls_table(void* ptr_to_table)
 	if (NULL == kept_table) return;
 
 	free(kept_table);
-	kept_table = NULL;
+	*((Table_connector***) ptr_to_table) = NULL;
+}
+
+static tss_t key;
+static void make_key(void)
+{
+	tss_create(&key, free_tls_table);
 }
 
 /**
@@ -141,17 +147,10 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 {
 	static TLS Table_connector **kept_table = NULL;
 	static TLS unsigned int log2_kept_table_size = 0;
+	static once_flag flag = ONCE_FLAG_INIT;
 
 	// Install a thread-exit handler, to free kept_table on thread-exit.
-	// This only needs to be done once.
-	static bool have_key = false;
-	static tss_t key;
-	if (false == have_key)
-	{
-		have_key = true;
-		if (thrd_success != tss_create(&key, free_tls_table))
-			prt_error("Error: unexpected failure of thread alloc\n");
-	}
+	call_once(&flag, make_key);
 
 	if (NULL == kept_table)
 		tss_set(key, &kept_table);
