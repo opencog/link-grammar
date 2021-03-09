@@ -1,0 +1,25 @@
+name: C/C++ CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: install packages
+      run: sudo apt-get install autoconf-archive flex
+    - name: autoconf	
+      run: ./autogen.sh
+    - name: set files as executable
+      run: chmod +x js/install_emsdk.sh js/build_packages.sh js/link-parser/build.sh
+    - name: install emsdk
+      run: sudo ./js/install_emsdk.sh
+    - name: build packaes
+      run: sudo ./js/build_packages.sh
