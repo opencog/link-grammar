@@ -29,6 +29,15 @@ EXTRA_DIST =                              \
    autoit/_LinkGrammar.au3                \
    autoit/README                          \
    lisp/link-interface.cl                 \
+   js/build_packages.sh                   \
+   js/link-parser                         \
+   js/link-parser/build.sh                \
+   js/link-parser/bin.js                  \
+   js/link-parser/README.md               \
+   js/link-parser/package.json            \
+   js/link-parser/pre.js                  \
+   js/install_emsdk.sh                    \
+   js/publish_packages.sh                 \
    node.js/.npmignore                     \
    node.js/README.md                      \
    node.js/package.json                   \

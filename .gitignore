@@ -48,5 +48,5 @@ svn-commit.tmp*
 ylwrap
 pp_lexer.c
 __init__.py
-js/emsdk/
-js/link-parser/dist
+bindings/js/emsdk/
+bindings/js/link-parser/dist

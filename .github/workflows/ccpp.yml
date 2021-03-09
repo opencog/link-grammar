@@ -18,8 +18,8 @@ jobs:
     - name: autoconf	
       run: ./autogen.sh
     - name: set files as executable
-      run: chmod +x js/install_emsdk.sh js/build_packages.sh js/link-parser/build.sh
+      run: chmod +x bindings/js/install_emsdk.sh bindings/js/build_packages.sh bindings/js/link-parser/build.sh
     - name: install emsdk
-      run: sudo ./js/install_emsdk.sh
+      run: sudo ./bindings/js/install_emsdk.sh
     - name: build packaes
-      run: sudo ./js/build_packages.sh
+      run: sudo ./bindings/js/build_packages.sh
