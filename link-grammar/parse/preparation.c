@@ -59,7 +59,8 @@ static void setup_connectors(Sentence sent)
 			if ((set_dist_fields(d->left, w, -1) < 0) ||
 			    (set_dist_fields(d->right, w, 1) >= (int)sent->length))
 			{
-				; /* Skip this disjunct. */
+				if (d->is_category != 0) free(d->category);
+				/* Skip this disjunct. */
 			}
 			else
 			{
@@ -138,8 +139,9 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 	for (i=0; i<sent->length; i++)
 	{
-		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d);
-
+		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, false);
+		if (IS_GENERATION(sent->dict)) /* Also with different word_string. */
+			sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, true);
 #if 0
 		/* eliminate_duplicate_disjuncts() is now very efficient and doesn't
 		 * take a significant time even for millions of disjuncts. If a very
@@ -162,6 +164,12 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 
 	setup_connectors(sent);
+
+	if (verbosity_level(D_PREP))
+	{
+		prt_error("Debug: After setting connectors:\n");
+		print_disjunct_counts(sent);
+	}
 
 	if (verbosity_level(D_SPEC+2))
 	{

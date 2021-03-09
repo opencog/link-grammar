@@ -446,13 +446,35 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 
 	sent->postprocessor = post_process_new(dict->base_knowledge);
 
+	if (IS_GENERATION(dict))
+	{
+		/* Sentence-generation mode - input_string is the sentence length. */
+		int len = atoi(input_string);
+		if (len <= 0)
+		{
+			input_string = "";
+		}
+		else
+		{
+			dyn_str *s = dyn_str_new();
+			for (int i = 0; i < len; i++)
+				dyn_strcat(s, "\\* ");
+			char *tmp = dyn_str_take(s);
+			input_string = strdupa(tmp);
+			free(tmp);
+		}
+	}
+
 	/* Make a copy of the input */
 	sent->orig_sentence = string_set_add(input_string, sent->string_set);
 
 	/* Set the minimum length for tracon sharing.
 	 * In that case a tracon list is produced for the pruning step,
 	 * and disjunct/connector packing is done too. */
-	sent->min_len_encoding = SENTENCE_MIN_LENGTH_TRAILING_HASH;
+	if (IS_GENERATION(dict))
+		sent->min_len_encoding = 0;
+	else
+		sent->min_len_encoding = SENTENCE_MIN_LENGTH_TRAILING_HASH;
 	const char *min_len_encoding = test_enabled("min-len-encoding");
 	if (NULL != min_len_encoding)
 		sent->min_len_encoding = atoi(min_len_encoding+1);
@@ -523,7 +545,7 @@ static void free_sentence_words(Sentence sent)
 	{
 		free(sent->word[i].alternatives);
 	}
-	free_sentence_disjuncts(sent);
+	free_sentence_disjuncts(sent, /*categories_too*/true);
 	free((void *) sent->word);
 	sent->word = NULL;
 }
@@ -638,7 +660,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		 * garbage. Free it. We really should make the code that is panicking
 		 * do this free, but right now, they have no API for it, so we do it
 		 * as a favor. XXX FIXME someday. */
-		free_sentence_disjuncts(sent);
+		free_sentence_disjuncts(sent, /*categories_too*/true);
 	}
 
 	/* Check for bad sentence length */

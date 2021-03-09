@@ -18,7 +18,7 @@
 
 typedef struct extractor_s extractor_t;
 
-extractor_t* extractor_new(int nwords, unsigned int rand_state);
+extractor_t* extractor_new(int nwords, unsigned int rand_state, bool generation);
 void free_extractor(extractor_t*);
 
 bool build_parse_set(extractor_t*, Sentence,

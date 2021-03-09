@@ -1,0 +1,11 @@
+%
+% Template for generated dictionaries.
+%
+#define dictionary-version-number 5.9.0;
+#define dictionary-locale         en_US.UTF-8;
+
+% Add stuff here
+#include "dict-file.lg"
+
+% Mandatory, else the generator won't work.
+<UNKNOWN-WORD>:  XXXXXXXX+;

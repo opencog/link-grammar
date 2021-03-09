@@ -403,7 +403,7 @@ static const char *stringify_Exp_tag(Exp *e, Dictionary dict)
 				if (dict == NULL)
 				{
 					snprintf(tag_info, sizeof(tag_info), " dialect_tag=%u",
-					         e->tag_id);
+					         (unsigned int)e->tag_id);
 				}
 				else
 				{
@@ -786,7 +786,7 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 		                                      max_cost, NULL);
 
 		unsigned int dnum0 = count_disjuncts(d);
-		d = eliminate_duplicate_disjuncts(d);
+		d = eliminate_duplicate_disjuncts(d, NULL);
 		unsigned int dnum1 = count_disjuncts(d);
 
 		if ((flags != NULL) && (strchr(flags, 'm') != NULL))

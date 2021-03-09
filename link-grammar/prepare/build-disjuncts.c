@@ -291,8 +291,24 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			*loc = n;         /* update the connector list */
 		}
 
-		ndis->word_string = string;
-		ndis->cost = cl->cost;
+		if (!IS_GENERATION(sent->dict) || !isxdigit(string[0]))
+		{
+			ndis->word_string = string;
+			ndis->cost = cl->cost;
+			ndis->is_category = 0;
+		}
+		else
+		{
+			ndis->num_categories_alloced = 16;
+			ndis->category =
+				malloc(sizeof(ndis->category) * ndis->num_categories_alloced);
+			ndis->num_categories = 1;
+			sscanf(string, "%x", &ndis->category[0].num);
+			assert((ndis->category[0].num > 0) && (ndis->category[0].num < 64*1024),
+			       "Insane category %u", ndis->category[0].num);
+			ndis->category[0].cost = cl->cost;
+		}
+
 		ndis->originating_gword = (gword_set*)gs; /* XXX remove constness */
 		ndis->next = dis;
 		dis = ndis;

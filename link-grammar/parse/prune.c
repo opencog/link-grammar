@@ -27,7 +27,7 @@
 #include "tokenize/word-structures.h"   // Word_struct
 #include "tokenize/wordgraph.h"
 
-#define D_PRUNE 5      /* Debug level for this file. */
+#define D_PRUNE 5      /* Debug level for this file (6 for pp_prune()) */
 
 /* To debug pp_prune(), touch this file, run "make CPPFLAGS=-DDEBUG_PP_PRUNE",
  * and then run: link-parser -v=5 -debug=prune.c . */
@@ -36,7 +36,7 @@
 #endif
 
 #ifdef DEBUG_PP_PRUNE
-#define ppdebug(...) lgdebug(+D_PRUNE, __VA_ARGS__)
+#define ppdebug(...) lgdebug(+D_PRUNE+1, __VA_ARGS__)
 #else
 #define ppdebug(...)
 #endif
@@ -1091,6 +1091,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
+					if (d->is_category != 0) free(d->category);
 					pc->N_deleted[(int)bad]++;
 					continue;
 				}
@@ -1125,6 +1126,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
+					if (d->is_category != 0) free(d->category);
 					pc->N_deleted[(int)bad]++;
 					continue;
 				}
@@ -1759,7 +1761,7 @@ static int pp_prune(Sentence sent, Tracon_sharing *ts, Parse_Options opts)
 		}
 	}
 
-	lgdebug(+D_PRUNE, "Deleted %d (%d connector names)\n",
+	lgdebug(+D_PRUNE+1, "Deleted %d (%d connector names)\n",
 	        D_deleted, Cname_deleted);
 
 	cms_table_delete(cmt);

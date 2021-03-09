@@ -55,7 +55,7 @@ AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 # When maintainer-mode is enabled, downstream users sometimes trip
 # trip over automake issues. See bug #649.
-AM_MAINTAINER_MODE([disable])
+AM_MAINTAINER_MODE([enable])
 
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -955,6 +955,7 @@ data/Makefile
 data/ady/Makefile
 data/amy/Makefile
 data/any/Makefile
+data/gen/Makefile
 data/ar/Makefile
 data/ar/words/Makefile
 data/de/Makefile

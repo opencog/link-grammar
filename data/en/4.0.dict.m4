@@ -62,8 +62,8 @@ changecom(`%')
  % remain, below.
 
 % Capitalization handling (null effect for now- behave as empty words).
-1stCAP.zzz: ZZZ-;
-nonCAP.zzz: ZZZ-;
+<1stCAP>: ZZZ-;
+<nonCAP>: ZZZ-;
 
 % Null links. These are used to drop the requirement for certain words
 % to appear during parsing. Basically, if a parse fails at a given cost,
