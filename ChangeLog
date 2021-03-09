@@ -6,6 +6,7 @@ Version 5.9.0 (XXX 2021)
  * Fix very rare crash/corruption introduced in v.5.8.1 #1142
  * English dict: fix problems with "just/only".
  * English dict: work on hesitation markers.
+ * Fix multi-threading mem-leak. #1149
 
 Version 5.8.1 (8 January 2021)
  * Fix macOS/SunOS build break.

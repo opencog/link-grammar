@@ -111,6 +111,9 @@ lg_tls=no
 AX_TLS(,:)
 test "$ac_cv_tls" != "none" && lg_tls=yes
 
+AX_PTHREAD
+CFLAGS="${CFLAGS} ${PTHREAD_CFLAGS}"
+
 dnl Check for specific OSs
 # ====================================================================
 
@@ -535,7 +538,6 @@ if test "$do_aspell" = yes ; then
 	CPPFLAGS=$save_cpp_flags
 	if test  "x${ASpellFound}" = "xyes"; then
 		AC_DEFINE(HAVE_ASPELL, 1, [Define for compilation])
-		ASPELL_LIBS="${ASPELL_LIBS} -lpthread"
 		AC_SUBST(ASPELL_LIBS)
 		AC_SUBST(ASPELL_CFLAGS)
 	fi
