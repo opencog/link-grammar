@@ -157,9 +157,8 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 	static TLS unsigned int log2_kept_table_size = 0;
 
 #if HAVE_PTHREAD
-	static once_flag flag = ONCE_FLAG_INIT;
-
 	// Install a thread-exit handler, to free kept_table on thread-exit.
+	static once_flag flag = ONCE_FLAG_INIT;
 	call_once(&flag, make_key);
 
 	if (NULL == kept_table)
