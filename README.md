@@ -117,7 +117,8 @@ See also the
 [C/C++ API documentation](https://www.abisource.com/projects/link-grammar/api/index.html).
 Bindings for other programming languages, including python3, java
 and node.js, can be found in the [bindings directory](bindings).
-
+(There are two sets of javascript bindings: one set for the library API,
+and another set for the command-line parser.)
 
 Contents
 --------

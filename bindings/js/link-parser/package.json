@@ -1,0 +1,17 @@
+{
+  "name": "link-parser",
+  "version": "0.0.0",
+  "description": "CLI for the CMU Link Grammar natural language parser, compiled for node with emscripten",
+  "bin": {
+    "link-parser": "./bin.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/opencog/link-grammar.git"
+  },
+  "license": "LGPL-2.1-or-later",
+  "bugs": {
+    "url": "https://github.com/opencog/link-grammar/issues"
+  },
+  "homepage": "https://github.com/opencog/link-grammar/tree/master/js/link-parser#readme"
+}

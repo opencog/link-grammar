@@ -1,9 +1,15 @@
 language: c
+dist: bionic
+
+before_install:
+  - chmod +x bindings/js/install_emsdk.sh bindings/js/build_packages.sh bindings/js/link-parser/build.sh bindings/js/publish_packages.sh
 
 install:
   - sudo apt-get update
-  - sudo apt-get install -y make m4 gcc g++ autoconf autoconf-archive pkg-config libtool  # link-grammar required dependencies
-  - sudo apt-get install -y swig flex ant graphviz  # link-grammar optional dependencies
+  - sudo apt-get dist-upgrade
+  - sudo apt-get install -y make m4 gcc g++ autoconf autoconf-archive pkg-config libtool  # required dependencies
+  - sudo apt-get install -y swig flex ant graphviz  # optional dependencies
+  - sudo ./bindings/js/install_emsdk.sh
 
 script:
   - ./autogen.sh
@@ -14,6 +20,10 @@ script:
   - sudo ldconfig
   - make installcheck
   - echo "The needs of the many outweigh the needs of the few." | /usr/local/bin/link-parser
+  - sudo ./bindings/js/build_packages.sh
+
+after_success:
+  - if [[ $TRAVIS_TAG == link-grammar-* ]]; then sudo ./bindings/js/publish_packages.sh; fi;
 
 notifications:
   email: false
