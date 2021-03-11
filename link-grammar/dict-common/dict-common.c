@@ -81,27 +81,6 @@ Dictionary dictionary_create_lang(const char * lang)
 
 	object_open(NULL, NULL, NULL); /* Invalidate the directory path cache */
 
-	/* A hack to enable sentence generation mode for the demo. */
-#define GENERATE "generate"
-	char *generate = strstr(lang, "-"GENERATE);
-	if (NULL != generate)
-	{
-		Parse_Options po = parse_options_create();
-		char *orig_test = parse_options_get_test(po);
-		char *new_test = alloca(strlen(orig_test) + sizeof(GENERATE) + 2);
-		strcpy(new_test, orig_test);
-		strcat(new_test, ","GENERATE",");
-		parse_options_set_test(po, new_test);
-		new_test = parse_options_get_test(po);
-		parse_options_delete(po);
-		if (NULL == strstr(new_test, ","GENERATE","))
-		{
-			prt_error("Error: Failed to set generating mode\n");
-			return NULL;
-		}
-		*generate = '\0';
-	}
-
 	/* If an sql database exists, try to read that. */
 	if (check_db(lang))
 	{

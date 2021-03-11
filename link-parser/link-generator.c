@@ -72,21 +72,18 @@ int main (int argc, char* argv[])
 	printf("# Sentence length: %d\n", parms.sentence_length);
 	printf("# Requested corpus size: %d\n", parms.corpus_size);
 
-	// Force the system into generation mode by appending "-generate"
-	// to the langauge. XXX this seems hacky, need a better API.
-	char lan[100]; // buffer overflow
-	lan[0] = 0;
-	strcat(lan, parms.language);
-	strcat(lan, "-generate");
+	// Force the system into generation mode by setting the "test"
+	// parse-option to "generate".
+	opts = parse_options_create();
+	parse_options_set_test(opts, "generate");
 
-	dict = dictionary_create_lang(lan);
+	dict = dictionary_create_lang(parms.language);
 	if (dict == NULL)
 	{
 		prt_error("Fatal error: Unable to open dictionary.\n");
 		exit(-1);
 	}
 
-	opts = parse_options_create();
 	parse_options_set_linkage_limit(opts, parms.corpus_size);
 
 	// Set the number of words in the sentence.
