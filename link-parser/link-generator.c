@@ -13,6 +13,8 @@
 #include "../link-grammar/link-includes.h"
 #include "../link-grammar/error.h"
 
+#define WILDCARDWORD "\\*"
+
 /* Argument parsing for the generator */
 typedef struct
 {
@@ -86,11 +88,24 @@ int main (int argc, char* argv[])
 
 	parse_options_set_linkage_limit(opts, parms.corpus_size);
 
-	// Set the number of words in the sentence.
-	// XXX this is a hacky API. Fix it.
-	char slen[30];
-	snprintf(slen, 30, "%d", parms.sentence_length);
-	sent = sentence_create(slen, dict);
+	if (parms.sentence_length <= 0)
+	{
+		prt_error("Fatal error: Invalid sentence length \"%d\".\n",
+		          parms.sentence_length);
+		exit(-1);
+	}
+
+	if (parms.sentence_length >= 0)
+	{
+		// Set a sentence template for the requested sentence length.
+		char *stmp = malloc(4 * parms.sentence_length + 1);
+		stmp[0] = '\0';
+		for (int i = 0; i < parms.sentence_length; i++)
+			strcat(stmp, WILDCARDWORD " ");
+
+		sent = sentence_create(stmp, dict);
+		free(stmp);
+	}
 
 	// sentence_split(sent, opts);
 	int num_linkages = sentence_parse(sent, opts);
