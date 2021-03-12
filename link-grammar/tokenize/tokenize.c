@@ -58,8 +58,8 @@ typedef const char *stripped_t[MAX_STRIP];
 #define REPLACEMENT_MARK "~" /* a mark for a replacement word */
 
 /* Dictionary capitalization handling */
-#define CAP1st "1stCAP" /* Next word is capitalized */
-#define CAPnon "nonCAP" /* Next word the lc version of a capitalized word */
+#define CAP1st "<1stCAP>" /* Next word is capitalized */
+#define CAPnon "<nonCAP>" /* Next word the lc version of a capitalized word */
 
 
 /**
