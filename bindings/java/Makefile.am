@@ -42,7 +42,7 @@ endif
 install-data-hook:
 	${LN_SF} ${javadir}/${java_DATA} ${DESTDIR}${javadir}/linkgrammar.jar
 if HAVE_MVN
-	# Install linkgrammar into the local maven repository
+	: # Install linkgrammar into the local maven repository
 	mvn install:install-file \
 	  -Dfile=${java_DATA} \
 	  -DgroupId=org.opencog \
