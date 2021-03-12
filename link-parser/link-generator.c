@@ -88,14 +88,14 @@ int main (int argc, char* argv[])
 
 	parse_options_set_linkage_limit(opts, parms.corpus_size);
 
-	if (parms.sentence_length <= 0)
+	if (parms.sentence_length < 0)
 	{
 		prt_error("Fatal error: Invalid sentence length \"%d\".\n",
 		          parms.sentence_length);
 		exit(-1);
 	}
 
-	if (parms.sentence_length >= 0)
+	if (parms.sentence_length > 0)
 	{
 		// Set a sentence template for the requested sentence length.
 		char *stmp = malloc(4 * parms.sentence_length + 1);
@@ -105,6 +105,17 @@ int main (int argc, char* argv[])
 
 		sent = sentence_create(stmp, dict);
 		free(stmp);
+	}
+	else
+	{
+		char sbuf[1024] = { [sizeof(sbuf)-1] = 'x' };
+		fgets(sbuf, sizeof(sbuf), stdin);
+		if (sbuf[sizeof(sbuf)-1] != 'x')
+		{
+			prt_error("Fatal error: Input line too long (>%zu)\n", sizeof(sbuf)-2);
+			exit(-1);
+		}
+		sent = sentence_create(sbuf, dict);
 	}
 
 	// sentence_split(sent, opts);
