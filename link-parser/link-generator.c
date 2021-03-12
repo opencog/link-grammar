@@ -153,6 +153,7 @@ int main (int argc, char* argv[])
 		linkage_delete(linkage);
 	}
 
+	parse_options_delete(opts);
 	sentence_delete(sent);
 	dictionary_delete(dict);
 	printf ("# Bye.\n");
