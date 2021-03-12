@@ -770,7 +770,6 @@ void compute_generated_words(Sentence sent, Linkage linkage)
 		{
 			assert(cdj->num_categories > 0, "0 categories in disjunct");
 			int disjunct_category_idx = rand_r(&rand_state) % cdj->num_categories;
-			linkage->lifo.disjunct_cost = cdj->category[disjunct_category_idx].cost;
 			unsigned int categoty_num = cdj->category[disjunct_category_idx].num;
 			unsigned int num_words = sent->dict->category[categoty_num].num_words;
 
