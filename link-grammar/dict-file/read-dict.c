@@ -1670,10 +1670,16 @@ static bool is_macro(const char *s)
 	return false;
 }
 
+static bool is_correction(const char *s)
+{
+	static const char correction_mark[] = { SUBSCRIPT_MARK, '#' , '\0'};
+	return strstr(s, correction_mark) != 0;
+}
+
 static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 {
 	e->category = 0;
-	if ((n == 1) && is_macro(dn->string)) return;
+	if ((n == 1) && (is_macro(dn->string) || is_correction(dn->string))) return;
 
 	/* Add a category with a place for n words. */
 	dict->num_categories++;
@@ -1691,6 +1697,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 	for (Dict_node *dnx = dn; dnx != NULL; dnx = dnx->left)
 	{
 		if (is_macro(dnx->string)) continue;
+		if (is_correction(dnx->string)) continue;
 		dict->category[dict->num_categories].word[n] = dnx->string;
 		n++;
 	}
