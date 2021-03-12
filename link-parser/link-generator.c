@@ -21,6 +21,8 @@ typedef struct
 	const char* language;
 	int sentence_length;
 	int corpus_size;
+
+	Parse_Options opts;
 } gen_parameters;
 
 static struct argp_option options[] =
@@ -29,6 +31,10 @@ static struct argp_option options[] =
 	{"length", 's', "length", 0, "Sentence length."},
 	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
 	{"version", 'v', 0, 0, "Print version and exit."},
+	{0, 0, 0, 0, "Library options:"},
+	{"debug", '\1', "debug_specification", 0, 0, 1},
+	{"verbosity", '\2', "level", 0, 0},
+	{"test", '\3', "test_list", 0, 0},
 	{ 0 }
 };
 
@@ -48,6 +54,14 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 			exit(0);
 		}
 
+		// Library options.
+		case 1:
+			parse_options_set_debug(gp->opts, arg); break;
+		case 2:
+			parse_options_set_verbosity(gp->opts, atoi(arg)); break;
+		case 3:
+			parse_options_set_test(gp->opts, arg); break;
+
 		case ARGP_KEY_ARG: return 0;
 		default: return ARGP_ERR_UNKNOWN;
 	}
@@ -60,7 +74,7 @@ static struct argp argp = { options, parse_opt, args_doc, 0, 0, 0 };
 int main (int argc, char* argv[])
 {
 	Dictionary      dict;
-	Parse_Options   opts;
+	Parse_Options   opts = parse_options_create();
 	Sentence        sent = NULL;
 
 	/* Process options used by GNU programs. */
@@ -68,6 +82,7 @@ int main (int argc, char* argv[])
 	parms.language = "lt";
 	parms.sentence_length = 6;
 	parms.corpus_size = 50;
+	parms.opts = opts;
 	argp_parse(&argp, argc, argv, 0, 0, &parms);
 
 	printf("#\n# Corpus for language: \"%s\"\n", parms.language);
@@ -76,8 +91,10 @@ int main (int argc, char* argv[])
 
 	// Force the system into generation mode by setting the "test"
 	// parse-option to "generate".
-	opts = parse_options_create();
-	parse_options_set_test(opts, "generate");
+	const char *old_test = parse_options_get_test(opts);
+	char tbuf[256];
+	snprintf(tbuf, sizeof(tbuf), "generate,%s", old_test);
+	parse_options_set_test(opts, tbuf);
 
 	dict = dictionary_create_lang(parms.language);
 	if (dict == NULL)
