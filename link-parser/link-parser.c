@@ -589,9 +589,33 @@ int main(int argc, char * argv[])
 	const int debug_vars_min_len[] = { 1, 2, 2 }; /* Ambiguous if shorter */
 	unsigned long long argv_done = 0;             /* Process them only once */
 
+	/* Process options used by GNU programs. */
+	int quiet_start = 0; /* Iff > 0, inhibit the initial messages */
+	for (int i = 1; i < argc; i++)
+	{
+		if (strcmp("--help", argv[i]) == 0)
+		{
+			print_usage(stdout, argv[0], copts, 0);
+		}
+
+		if (strcmp("--version", argv[i]) == 0)
+		{
+			printf("Version: %s\n", linkgrammar_get_version());
+			printf("%s\n", linkgrammar_get_configuration());
+			exit(0);
+		}
+
+		if ((strcmp("--quiet", argv[i]) == 0) ||
+		    (strcmp("--silent", argv[i]) == 0))
+		{
+			quiet_start = i;
+		}
+	}
+
 	/* Process debug command line variable-setting commands (only). */
 	for (int i = 1; i < argc; i++)
 	{
+		if (i == quiet_start) continue;
 		if (argv[i][0] == '-')
 		{
 			char *var = strdup(argv[i] + ((argv[i][1] != '-') ? 1 : 2));
@@ -698,29 +722,6 @@ int main(int argc, char * argv[])
 	parse_options_set_test(opts, test_tmp);
 	free(debug_tmp);
 	free(test_tmp);
-
-	/* Process options used by GNU programs. */
-	int quiet_start = 0; /* Iff > 0, inhibit the initial messages */
-	for (int i = 1; i < argc; i++)
-	{
-		if (strcmp("--help", argv[i]) == 0)
-		{
-			print_usage(stdout, argv[0], copts, 0);
-		}
-
-		if (strcmp("--version", argv[i]) == 0)
-		{
-			printf("Version: %s\n", linkgrammar_get_version());
-			printf("%s\n", linkgrammar_get_configuration());
-			exit(0);
-		}
-
-		if ((strcmp("--quiet", argv[i]) == 0) ||
-		    (strcmp("--silent", argv[i]) == 0))
-		{
-			quiet_start = i;
-		}
-	}
 
 	/* Process non-debug command line variable-setting commands (only). */
 	for (int i = 1; i < argc; i++)
