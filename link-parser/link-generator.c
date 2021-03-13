@@ -109,6 +109,7 @@ int main (int argc, char* argv[])
 		prt_error("Fatal error: Unable to open dictionary.\n");
 		exit(-1);
 	}
+	printf("# Dictionary version %s\n", linkgrammar_get_dict_version(dict));
 
 	parse_options_set_linkage_limit(opts, parms.corpus_size);
 	parse_options_set_spell_guess(opts, 0);
@@ -141,6 +142,7 @@ int main (int argc, char* argv[])
 			exit(-1);
 		}
 		sent = sentence_create(sbuf, dict);
+		printf("# Sentence template: %s\n", sbuf);
 	}
 
 	// sentence_split(sent, opts);
