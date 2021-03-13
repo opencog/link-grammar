@@ -28,13 +28,16 @@ typedef struct
 static struct argp_option options[] =
 {
 	{"language", 'l', "language", 0, "Directory containing language definition."},
-	{"length", 's', "length", 0, "Sentence length."},
+	{"length", 's', "length", 0, "Sentence length. If 0 - get sentence template from stdin."},
 	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
 	{"version", 'v', 0, 0, "Print version and exit."},
-	{0, 0, 0, 0, "Library options:"},
-	{"debug", '\1', "debug_specification", 0, 0, 1},
-	{"verbosity", '\2', "level", 0, 0},
-	{"test", '\3', "test_list", 0, 0},
+	{0, 0, 0, 0, "Library options:", 1},
+	{"cost-max", '\4', "float"},
+	{"dialect", '\5', "dialect_list"},
+	{0, 0, 0, 0, "Library debug options:", 2},
+	{"debug", '\1', "debug_specification", 0, 0},
+	{"verbosity", '\2', "level"},
+	{"test", '\3', "test_list"},
 	{ 0 }
 };
 
@@ -61,6 +64,10 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 			parse_options_set_verbosity(gp->opts, atoi(arg)); break;
 		case 3:
 			parse_options_set_test(gp->opts, arg); break;
+		case 4:
+			parse_options_set_disjunct_cost(gp->opts, atof(arg)); break;
+		case 5:
+			parse_options_set_dialect(gp->opts, arg); break;
 
 		case ARGP_KEY_ARG: return 0;
 		default: return ARGP_ERR_UNKNOWN;
