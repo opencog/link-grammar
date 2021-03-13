@@ -138,6 +138,11 @@ int main (int argc, char* argv[])
 
 	// sentence_split(sent, opts);
 	int num_linkages = sentence_parse(sent, opts);
+	if (num_linkages < 0)
+	{
+		prt_error("Fatal error: Invalid sentence.\n");
+		exit(-1);
+	}
 
 	// In general, there will be more linkages found, than the
 	// requested corpus size. We make used of the random sampler
