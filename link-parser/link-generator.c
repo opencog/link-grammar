@@ -15,6 +15,8 @@
 
 #define WILDCARDWORD "\\*"
 
+static int verbosity_level; // Avoid using exposed library static variable.
+
 /* Argument parsing for the generator */
 typedef struct
 {
@@ -61,7 +63,8 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 		case 1:
 			parse_options_set_debug(gp->opts, arg); break;
 		case 2:
-			parse_options_set_verbosity(gp->opts, atoi(arg)); break;
+			verbosity_level = atoi(arg);
+			parse_options_set_verbosity(gp->opts, verbosity_level); break;
 		case 3:
 			parse_options_set_test(gp->opts, arg); break;
 		case 4:
@@ -176,6 +179,7 @@ int main (int argc, char* argv[])
 		const char **words = linkage_get_words(linkage);
 
 		// printf("%d", i);
+		if (verbosity_level >= 5) printf("%d: ", i);
 		for (unsigned int w=0; w<nwords; w++)
 		{
 			printf(" %s", words[w]);
