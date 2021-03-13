@@ -746,8 +746,6 @@ void compute_generated_words(Sentence sent, Linkage linkage)
 	Disjunct **cdjp = linkage->chosen_disjuncts;
 	unsigned int rand_state = sent->rand_state;
 
-	if (rand_state == 0) rand_state = linkage->lifo.index;
-
 	linkage->word = malloc(linkage->num_words * sizeof(char *));
 
 	lgdebug(D_CGW, "Sentence %d\n", abs(linkage->lifo.index) - 1);
@@ -810,7 +808,7 @@ void compute_generated_words(Sentence sent, Linkage linkage)
 		linkage->word[i] = w;
 	}
 
-	if (sent->rand_state != 0) sent->rand_state = rand_state;
+	sent->rand_state = rand_state;
 }
 #undef D_CGW
 
