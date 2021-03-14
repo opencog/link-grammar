@@ -148,6 +148,7 @@ typedef struct
 	Dict_node* dn;
 	bool found;
 	Exp* exp;
+	char* classname;
 } cbdata;
 
 static void db_free_llist(Dictionary dict, Dict_node *llist)
@@ -167,7 +168,7 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	cbdata* bs = user_data;
 	Dictionary dict = bs->dict;
 
-	assert(2 == argc, "Bad column count");
+	assert(2 == argc || 3 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
 
 	Exp* exp = NULL;
@@ -391,6 +392,36 @@ static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
 }
 
 /* ========================================================= */
+
+static int class_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
+	Dictionary dict = bs->dict;
+
+	printf("duuude yo! >>%s<< >>%s<< >>%s<<\n", argv[0], argv[1], argv[2]);
+	printf("duuude ey! >>%s<< >>%s<< >>%s<<\n", colName[0], colName[1], colName[2]);
+
+	/* Add a category. */
+	dict->num_categories++;
+	if (dict->num_categories >= dict->num_categories_alloced)
+	{
+		dict->num_categories_alloced *= 2;
+		dict->category =
+			realloc(dict->category,
+				sizeof(dict_category) * dict->num_categories_alloced);
+	}
+	dict->category[dict->num_categories].word = NULL;
+
+	int rc = exp_cb(user_data, argc, argv, colName);
+
+	bs->exp->category = dict->num_categories;
+	dict->category[dict->num_categories].exp = bs->exp;
+	dict->category[dict->num_categories].num_words = 0;
+
+	return rc;
+}
+
+/* ========================================================= */
 /* Dictionary creation, setup, open procedures */
 
 bool check_db(const char *lang)
@@ -502,6 +533,22 @@ Dictionary dictionary_create_from_db(const char *lang)
 	if (!dictionary_setup_defines(dict))
 		goto failure;
 
+	// if (IS_GENERATION(dict))
+	if (1)
+	{
+		const size_t ncat = 256;
+		dict->num_categories_alloced = ncat;
+		dict->category = malloc(ncat * sizeof(dict_category));
+
+		cbdata bs;
+		bs.dict = dict;
+		bs.exp = NULL;
+
+		sqlite3 *db = dict->db_handle;
+		sqlite3_exec(db, "SELECT disjunct, cost, classname FROM Disjuncts;",
+			class_cb, &bs, NULL);
+
+	}
 	return dict;
 
 failure:
