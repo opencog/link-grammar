@@ -140,8 +140,12 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	for (i=0; i<sent->length; i++)
 	{
 		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, false);
-		if (IS_GENERATION(sent->dict)) /* Also with different word_string. */
+		if (IS_GENERATION(sent->dict) &&
+		    (sent->word[i].d != NULL) && (sent->word[i].d->is_category != 0))
+		{
+			/* Also with different word_string. */
 			sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, true);
+		}
 #if 0
 		/* eliminate_duplicate_disjuncts() is now very efficient and doesn't
 		 * take a significant time even for millions of disjuncts. If a very
