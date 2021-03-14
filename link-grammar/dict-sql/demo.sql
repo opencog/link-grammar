@@ -53,4 +53,4 @@ INSERT INTO Morphemes VALUES ('test', 'test.n', '(noun)');
 INSERT INTO Morphemes VALUES ('dog', 'dog.n', '(noun)');
 INSERT INTO Morphemes VALUES ('cat', 'cat.n', '(noun)');
 INSERT INTO Disjuncts VALUES ('(noun)', 'Ds- & Os-', 0.0);
-INSERT INTO Disjuncts VALUES ('(noun)', 'Ds- & Ss+', 0.0);
+INSERT INTO Disjuncts VALUES ('(noun)', 'Ds- & Wd- & Ss+', 0.0);
