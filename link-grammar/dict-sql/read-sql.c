@@ -147,6 +147,7 @@ typedef struct
 	Dictionary dict;
 	Dict_node* dn;
 	bool found;
+	int count;
 	Exp* exp;
 	char* classname;
 } cbdata;
@@ -393,6 +394,16 @@ static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
 
 /* ========================================================= */
 
+static int count_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
+
+	assert(1 == argc, "Bad column count");
+	bs->count = atol(argv[0]);
+
+	return 0;
+}
+
 static int class_cb(void *user_data, int argc, char **argv, char **colName)
 {
 	cbdata* bs = user_data;
@@ -403,15 +414,9 @@ static int class_cb(void *user_data, int argc, char **argv, char **colName)
 
 	/* Add a category. */
 	dict->num_categories++;
-	if (dict->num_categories >= dict->num_categories_alloced)
-	{
-		dict->num_categories_alloced *= 2;
-		dict->category =
-			realloc(dict->category,
-				sizeof(dict_category) * dict->num_categories_alloced);
-	}
 	dict->category[dict->num_categories].word = NULL;
 
+	bs->exp = NULL;
 	int rc = exp_cb(user_data, argc, argv, colName);
 
 	bs->exp->category = dict->num_categories;
@@ -533,18 +538,19 @@ Dictionary dictionary_create_from_db(const char *lang)
 	if (!dictionary_setup_defines(dict))
 		goto failure;
 
+	/* Initialize word categories, for text generation. */
 	// if (IS_GENERATION(dict))
 	if (1)
 	{
-		const size_t ncat = 256;
-		dict->num_categories_alloced = ncat;
-		dict->category = malloc(ncat * sizeof(dict_category));
-
+		sqlite3 *db = dict->db_handle;
 		cbdata bs;
 		bs.dict = dict;
-		bs.exp = NULL;
+		sqlite3_exec(db, "SELECT count(*) FROM Disjuncts;",
+			count_cb, &bs, NULL);
 
-		sqlite3 *db = dict->db_handle;
+		dict->num_categories_alloced = bs.count;
+		dict->category = malloc(bs.count * sizeof(dict_category));
+
 		sqlite3_exec(db, "SELECT disjunct, cost, classname FROM Disjuncts;",
 			class_cb, &bs, NULL);
 
