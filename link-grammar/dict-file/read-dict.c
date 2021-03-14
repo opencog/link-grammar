@@ -1670,6 +1670,13 @@ static bool is_macro(const char *s)
 	return false;
 }
 
+static bool is_directive(const char *s)
+{
+	return
+		(strcmp(s, UNLIMITED_CONNECTORS_WORD) == 0) ||
+		(strncmp(s, LIMITED_CONNECTORS_WORD, sizeof(LIMITED_CONNECTORS_WORD)-1) == 0);
+}
+
 static bool is_correction(const char *s)
 {
 	static const char correction_mark[] = { SUBSCRIPT_MARK, '#' , '\0'};
@@ -1679,7 +1686,12 @@ static bool is_correction(const char *s)
 static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 {
 	e->category = 0;
-	if ((n == 1) && (is_macro(dn->string) || is_correction(dn->string))) return;
+	if (n == 1)
+	{
+		if (is_macro(dn->string)) return;
+		if (is_correction(dn->string)) return;
+		if (is_directive(dn->string)) return;
+	}
 
 	/* Add a category with a place for n words. */
 	dict->num_categories++;
@@ -1698,6 +1710,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 	{
 		if (is_macro(dnx->string)) continue;
 		if (is_correction(dnx->string)) continue;
+		if (is_directive(dnx->string)) return;
 		dict->category[dict->num_categories].word[n] = dnx->string;
 		n++;
 	}
