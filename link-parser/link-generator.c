@@ -96,7 +96,8 @@ int main (int argc, char* argv[])
 	argp_parse(&argp, argc, argv, 0, 0, &parms);
 
 	printf("#\n# Corpus for language: \"%s\"\n", parms.language);
-	printf("# Sentence length: %d\n", parms.sentence_length);
+	if (parms.sentence_length != 0)
+		printf("# Sentence length: %d\n", parms.sentence_length);
 	printf("# Requested corpus size: %d\n", parms.corpus_size);
 
 	// Force the system into generation mode by setting the "test"
