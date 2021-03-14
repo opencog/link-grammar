@@ -1,6 +1,6 @@
 Link Grammar Parser
 ===================
-***Version 5.8.1***
+***Version 5.9.0***
 
 The Link Grammar Parser implements the Sleator/Temperley/Lafferty
 theory of natural language parsing. This version of the parser is
@@ -252,9 +252,12 @@ Editline
 If libedit-dev is installed, then the arrow keys can be used to edit
 the input to the link-parser tool; the up and down arrow keys will
 recall previous entries.  You want this; it makes testing and
-editing much easier.  Note, however, most versions of editline are
-not UTF8-capable, and so won't work, for example, with the Russian
-dictionaries.  A UTF8-enabled version of libedit can be found here:
+editing much easier.
+
+Older versions of editline are not UTF8-capable, and so won't work,
+for example, with the Russian dictionaries.  This is commonplace for
+the version of editline included with most distros prior to 2017/2018.
+A UTF8-enabled version of libedit can be found here:
 
 http://www.thrysoee.dk/editline/
 
@@ -275,6 +278,11 @@ Use of editline in the link-parser can be disabled by saying:
 
 Node.js Bindings
 ----------------
+Two versions of node.js bindings are included. One version wraps the
+library; the other uses emscripten to wrap the command-line tool. The
+library bindings are in `bindings/node.js` while the emscripten wrapper
+is in `bindings/js`.
+
 These are built using `npm`. First, you must build the core C library.
 Then do the following:
 ```
@@ -282,9 +290,17 @@ Then do the following:
    npm install
    npm run make
 ```
-This will create the bindings and also run a small unit test (which
-should pass). An example can be found in
+This will create the library bindings and also run a small unit test
+(which should pass). An example can be found in
 `bindings/node.js/examples/simple.js`.
+
+For the command-line wrapper, do the following:
+```
+   cd bindings/js
+   ./install_emsdk.sh
+   ./build_packages.sh
+   ./publish_packages.sh
+```
 
 Python3 Bindings
 ----------------
