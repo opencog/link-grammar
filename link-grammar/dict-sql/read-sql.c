@@ -414,14 +414,15 @@ static int class_cb(void *user_data, int argc, char **argv, char **colName)
 
 	/* Add a category. */
 	dict->num_categories++;
+	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
+	dict->category[dict->num_categories].classname = strdup(argv[2]);
 
 	bs->exp = NULL;
 	int rc = exp_cb(user_data, argc, argv, colName);
 
 	bs->exp->category = dict->num_categories;
 	dict->category[dict->num_categories].exp = bs->exp;
-	dict->category[dict->num_categories].num_words = 0;
 
 	return rc;
 }
@@ -545,6 +546,8 @@ Dictionary dictionary_create_from_db(const char *lang)
 		sqlite3 *db = dict->db_handle;
 		cbdata bs;
 		bs.dict = dict;
+
+		/* How many lexical categories are there? Find out. */
 		sqlite3_exec(db, "SELECT count(*) FROM Disjuncts;",
 			count_cb, &bs, NULL);
 

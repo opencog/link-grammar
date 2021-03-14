@@ -19,7 +19,7 @@
 -- capitalized words during tokenization.
 --
 INSERT INTO Morphemes VALUES ('<dictionary-version-number>', '<dictionary-version-number>', '<dictionary-version-number>');
-INSERT INTO Disjuncts VALUES ('<dictionary-version-number>', 'V5v4v0+', 0.0);
+INSERT INTO Disjuncts VALUES ('<dictionary-version-number>', 'V5v9v0+', 0.0);
 
 INSERT INTO Morphemes VALUES ('<dictionary-locale>', '<dictionary-locale>', '<dictionary-locale>');
 INSERT INTO Disjuncts VALUES ('<dictionary-locale>', 'EN4us+', 0.0);
@@ -53,3 +53,4 @@ INSERT INTO Morphemes VALUES ('test', 'test.n', '(noun)');
 INSERT INTO Morphemes VALUES ('dog', 'dog.n', '(noun)');
 INSERT INTO Morphemes VALUES ('cat', 'cat.n', '(noun)');
 INSERT INTO Disjuncts VALUES ('(noun)', 'Ds- & Os-', 0.0);
+INSERT INTO Disjuncts VALUES ('(noun)', 'Ds- & Ss+', 0.0);
