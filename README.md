@@ -249,32 +249,11 @@ implementation, but needed for correctness on FreeBSD and Cygwin)
 
 Editline
 --------
-If libedit-dev is installed, then the arrow keys can be used to edit
+If `libedit-dev` is installed, then the arrow keys can be used to edit
 the input to the link-parser tool; the up and down arrow keys will
 recall previous entries.  You want this; it makes testing and
 editing much easier.
 
-Older versions of editline are not UTF8-capable, and so won't work,
-for example, with the Russian dictionaries.  This is commonplace for
-the version of editline included with most distros prior to 2017/2018.
-A UTF8-enabled version of libedit can be found here:
-
-http://www.thrysoee.dk/editline/
-
-If you use the above, be sure to say:
-```
-./configure --enable-widec
-```
-when building it, otherwise you won't actually get the UTF8 support!
-Attention: the above configure is for libedit, not for link-grammar!
-(In addition, you will need to uninstall the system default editline
-in order to get the above. You may also need to set the environment
-variable PKG_CONFIG_PATH to include /usr/local/lib/pkgconfig)
-
-Use of editline in the link-parser can be disabled by saying:
-```
-./configure --disable-editline
-```
 
 Node.js Bindings
 ----------------
