@@ -1884,10 +1884,10 @@ static bool read_entry(Dictionary dict)
 		dnx->exp = n;
 		i++;
 	}
-	dict->insert_entry(dict, dn, i);
-
 	if (IS_GENERATION(dict))
 		add_category(dict, n, dn, i);
+
+	dict->insert_entry(dict, dn, i);
 
 	if (dict->suppress_warning)
 	{
