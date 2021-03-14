@@ -740,17 +740,19 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 }
 #undef D_CCW
 
+#define D_CGW 5
 void compute_generated_words(Sentence sent, Linkage linkage)
 {
 	Disjunct **cdjp = linkage->chosen_disjuncts;
 	unsigned int rand_state = sent->rand_state;
 
-	if (rand_state == 0) rand_state = linkage->lifo.index;
-
 	linkage->word = malloc(linkage->num_words * sizeof(char *));
 
+	lgdebug(D_CGW, "Sentence %d\n", abs(linkage->lifo.index) - 1);
 	for (WordIdx i = 0; i < linkage->num_words; i++)
 	{
+		const char *ow;
+
 		if (cdjp[i] == NULL)
 		{
 			dassert(
@@ -762,18 +764,24 @@ void compute_generated_words(Sentence sent, Linkage linkage)
 
 		if (cdj->is_category == 0)
 		{
-			linkage->word[i] = cdj->word_string;
-			continue;
+			ow = cdj->word_string;
 		}
+		else
+		{
+			assert(cdj->num_categories > 0, "0 categories in disjunct");
+			int r = rand_r(&rand_state);
+			int disjunct_category_idx = r % cdj->num_categories;
+			unsigned int categoty_num = cdj->category[disjunct_category_idx].num;
+			lgdebug(D_CGW, "Word %zu: r=%08x category %d/%u \"%u\";",
+			        i, (unsigned int)r, disjunct_category_idx, cdj->num_categories, categoty_num);
+			unsigned int num_words = sent->dict->category[categoty_num].num_words;
 
-		assert(cdj->num_categories > 0, "0 categories in disjunct");
-		int disjunct_category_idx = rand_r(&rand_state) % cdj->num_categories;
-		linkage->lifo.disjunct_cost = cdj->category[disjunct_category_idx].cost;
-		unsigned int categoty_num = cdj->category[disjunct_category_idx].num;
-		unsigned int num_words = sent->dict->category[categoty_num].num_words;
-
-		int dict_word_idx = rand_r(&rand_state) % num_words;
-		const char *ow = sent->dict->category[categoty_num].word[dict_word_idx];
+			r = rand_r(&rand_state);
+			int dict_word_idx = r % num_words;
+			ow = sent->dict->category[categoty_num].word[dict_word_idx];
+			lgdebug(D_CGW, " r=%08x word %d/%u \"%s\"\n",
+			        (unsigned int)r, dict_word_idx, num_words, ow);
+		}
 
 		const char *sm = strchr(ow, SUBSCRIPT_MARK);
 		const char *w;
@@ -785,7 +793,6 @@ void compute_generated_words(Sentence sent, Linkage linkage)
 		{
 			char *wtmp;
 			const int baselen = sm - ow;
-			wtmp = strndupa(ow, baselen);
 			if (sent->dict->leave_subscripts)
 			{
 				wtmp = strdupa(ow);
@@ -799,12 +806,11 @@ void compute_generated_words(Sentence sent, Linkage linkage)
 		}
 
 		linkage->word[i] = w;
-//printf("%s ", linkage->word[i]);
 	}
-//printf("\n");
 
-	if (sent->rand_state != 0) sent->rand_state = rand_state;
+	sent->rand_state = rand_state;
 }
+#undef D_CGW
 
 Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 {
