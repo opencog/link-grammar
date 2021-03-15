@@ -412,11 +412,16 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	Dictionary dict = bs->dict;
 
 	/* Add a category. */
+	/* This is intetionally off-by-one, per design. */
+	dict->num_categories++;
 	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
 	dict->category[dict->num_categories].category_name =
 		string_set_add(argv[0], dict->string_set);
-	dict->num_categories++;
+
+	snprintf(dict->category[dict->num_categories].category_string,
+		sizeof(dict->category[0].category_string),
+		"%x", dict->num_categories);
 
 	return 0;
 }
@@ -560,14 +565,15 @@ Dictionary dictionary_create_from_db(const char *lang)
 			count_cb, &bs, NULL);
 
 		dict->num_categories = 0;
-		dict->num_categories_alloced = bs.count;
-		dict->category = malloc(bs.count * sizeof(dict_category));
+		dict->num_categories_alloced = bs.count + 1;
+		dict->category = malloc((bs.count +1)* sizeof(dict_category));
 
 		sqlite3_exec(db, "SELECT DISTINCT classname FROM Disjuncts;",
 			classname_cb, &bs, NULL);
 
+		/* Category 0 is unused, intentionally. Not sure why. */
 		unsigned int ncat = bs.count;
-		for (unsigned int i=0; i<ncat; i++)
+		for (unsigned int i=1; i<=ncat; i++)
 		{
 			/* For each category, get the expression. */
 			dyn_str *qry = dyn_str_new();
