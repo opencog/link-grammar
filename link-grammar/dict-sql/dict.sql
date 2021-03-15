@@ -26,7 +26,8 @@ CREATE TABLE Morphemes
 
 	-- The classname is the set that the subscripted 'word' belongs to.
 	-- All members of the class share a common set of disjuncts, with
-	-- a common set of costs.
+	-- a common set of costs. (This is the name of a "word category"
+	-- or "lexical category" or "part of speech".)
 	classname TEXT NOT NULL
 );
 
@@ -42,7 +43,7 @@ CREATE TABLE Disjuncts
 	-- The standard Link Grammar disjunct, expressed as an ASCII string.
 	-- The disjunct can be composed of the & operator, and the optional
 	-- connectors i.e. {} and the multiple connector i.e. @. The and
-	-- operator is NOT allowed. This means that the grouping parents () 
+	-- operator is NOT allowed. This means that the grouping parents ()
 	-- must also not appear in the expression.  The cost operators [] are
 	-- also not allowed; costs are to be expressed using the cost field.
 	--

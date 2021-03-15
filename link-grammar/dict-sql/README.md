@@ -60,5 +60,5 @@ as the demo database.
 
 TODO
 ----
-* Rename tabvle "Morphemes" to table "tokens".  Want consistent naming
+* Rename table "Morphemes" to table "tokens".  Want consistent naming
   with the token flow-graph name.

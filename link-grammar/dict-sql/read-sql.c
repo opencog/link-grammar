@@ -147,7 +147,9 @@ typedef struct
 	Dictionary dict;
 	Dict_node* dn;
 	bool found;
+	int count;
 	Exp* exp;
+	char* classname;
 } cbdata;
 
 static void db_free_llist(Dictionary dict, Dict_node *llist)
@@ -315,6 +317,7 @@ db_lookup_common(Dictionary dict, const char *s, const char *equals,
 	sqlite3 *db = dict->db_handle;
 	dyn_str *qry;
 
+printf("duuude lookup %s\n", s);
 	/* Escape single-quotes.  That is, replace single-quotes by
 	 * two single-quotes. e.g. don't --> don''t */
 	char * es = escape_quotes(s);
@@ -388,6 +391,48 @@ static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
 		}
 	}
 	return bs.dn;
+}
+
+/* ========================================================= */
+
+static int count_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
+
+	assert(1 == argc, "Bad column count");
+	bs->count = atol(argv[0]);
+
+	return 0;
+}
+
+/* Record the name of each lexical class */
+static int classname_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
+	Dictionary dict = bs->dict;
+
+	/* Add a category. */
+	dict->category[dict->num_categories].num_words = 0;
+	dict->category[dict->num_categories].word = NULL;
+	dict->category[dict->num_categories].category_name =
+		string_set_add(argv[0], dict->string_set);
+	dict->num_categories++;
+
+	return 0;
+}
+
+/* Record the words in each lexical class */
+static int classword_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
+	Dictionary dict = bs->dict;
+
+	/* Add then name */
+	dict->category[dict->num_categories].word[bs->count] =
+		string_set_add(argv[0], dict->string_set);
+	bs->count++;
+
+	return 0;
 }
 
 /* ========================================================= */
@@ -502,6 +547,74 @@ Dictionary dictionary_create_from_db(const char *lang)
 	if (!dictionary_setup_defines(dict))
 		goto failure;
 
+	/* Initialize word categories, for text generation. */
+	// if (IS_GENERATION(dict))
+	if (1)
+	{
+		sqlite3 *db = dict->db_handle;
+		cbdata bs;
+		bs.dict = dict;
+
+		/* How many lexical categories are there? Find out. */
+		sqlite3_exec(db, "SELECT count(DISTINCT classname) FROM Disjuncts;",
+			count_cb, &bs, NULL);
+
+		dict->num_categories = 0;
+		dict->num_categories_alloced = bs.count;
+		dict->category = malloc(bs.count * sizeof(dict_category));
+
+		sqlite3_exec(db, "SELECT DISTINCT classname FROM Disjuncts;",
+			classname_cb, &bs, NULL);
+
+		unsigned int ncat = bs.count;
+		for (unsigned int i=0; i<ncat; i++)
+		{
+			/* For each category, get the expression. */
+			dyn_str *qry = dyn_str_new();
+			dyn_strcat(qry,
+				"SELECT disjunct, cost FROM Disjuncts WHERE classname = \'");
+			dyn_strcat(qry, dict->category[i].category_name);
+			dyn_strcat(qry, "\';");
+
+printf("duude doing cat %s\n", dict->category[i].category_name);
+			bs.exp = NULL;
+			sqlite3_exec(db, qry->str, exp_cb, &bs, NULL);
+			dyn_str_delete(qry);
+
+			bs.exp->category = i;
+			dict->category[i].exp = bs.exp;
+
+			/* ------------------ */
+			/* For each category, get the number of words in the category */
+			qry = dyn_str_new();
+			dyn_strcat(qry,
+				"SELECT count(*) FROM Morphemes WHERE classname = \'");
+			dyn_strcat(qry, dict->category[i].category_name);
+			dyn_strcat(qry, "\';");
+
+			sqlite3_exec(db, qry->str, count_cb, &bs, NULL);
+			dyn_str_delete(qry);
+
+			dict->category[i].num_words = bs.count;
+			dict->category[i].word =
+				malloc(bs.count * sizeof(dict->category[0].word));
+
+			/* ------------------ */
+			/* For each category, get the words in the category */
+			qry = dyn_str_new();
+			dyn_strcat(qry,
+				"SELECT morpheme FROM Morphemes WHERE classname = \'");
+			dyn_strcat(qry, dict->category[i].category_name);
+			dyn_strcat(qry, "\';");
+
+			dict->num_categories = i;
+			bs.count = 0;
+			sqlite3_exec(db, qry->str, classword_cb, &bs, NULL);
+			dyn_str_delete(qry);
+
+		}
+		dict->num_categories = ncat;
+	}
 	return dict;
 
 failure:

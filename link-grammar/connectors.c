@@ -538,8 +538,6 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 
 	if (NULL == h->desc)
 	{
-		assert(0 == ct->num_uc, "Trying to add a connector (%s) "
-				 "after reading the dict.\n", constring);
 		lgdebug(+11, "Creating connector '%s' (%zu)\n", constring, ct->num_con);
 		h->desc = pool_alloc(ct->mempool);
 		h->desc->string = constring;
