@@ -426,9 +426,9 @@ static int classword_cb(void *user_data, int argc, char **argv, char **colName)
 	cbdata* bs = user_data;
 	Dictionary dict = bs->dict;
 
-printf("ola %s\n", argv[0]);
 	/* Add then name */
-	// dict->category[dict->num_categories].word[x] = strdup(argv[0]);
+	dict->category[dict->num_categories].word[bs->count] = strdup(argv[0]);
+	bs->count++;
 
 	return 0;
 }
@@ -564,8 +564,8 @@ Dictionary dictionary_create_from_db(const char *lang)
 		sqlite3_exec(db, "SELECT DISTINCT classname FROM Disjuncts;",
 			classname_cb, &bs, NULL);
 
-		int ncat = bs.count;
-		for (int i=0; i<ncat; i++)
+		unsigned int ncat = bs.count;
+		for (unsigned int i=0; i<ncat; i++)
 		{
 			/* For each category, get the expression. */
 			dyn_str *qry = dyn_str_new();
@@ -605,11 +605,13 @@ printf("duude doing cat %s\n", dict->category[i].category_name);
 			dyn_strcat(qry, dict->category[i].category_name);
 			dyn_strcat(qry, "\';");
 
+			dict->num_categories = i;
 			bs.count = 0;
 			sqlite3_exec(db, qry->str, classword_cb, &bs, NULL);
 			dyn_str_delete(qry);
 
 		}
+		dict->num_categories = ncat;
 	}
 	return dict;
 
