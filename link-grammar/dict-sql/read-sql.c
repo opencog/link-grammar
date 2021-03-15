@@ -414,7 +414,8 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	/* Add a category. */
 	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
-	dict->category[dict->num_categories].category_name = strdup(argv[0]);
+	dict->category[dict->num_categories].category_name =
+		string_set_add(argv[0], dict->string_set);
 	dict->num_categories++;
 
 	return 0;
@@ -427,7 +428,8 @@ static int classword_cb(void *user_data, int argc, char **argv, char **colName)
 	Dictionary dict = bs->dict;
 
 	/* Add then name */
-	dict->category[dict->num_categories].word[bs->count] = strdup(argv[0]);
+	dict->category[dict->num_categories].word[bs->count] =
+		string_set_add(argv[0], dict->string_set);
 	bs->count++;
 
 	return 0;
