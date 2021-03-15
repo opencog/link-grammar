@@ -412,10 +412,10 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	Dictionary dict = bs->dict;
 
 	/* Add a category. */
-	dict->num_categories++;
 	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
 	dict->category[dict->num_categories].category_name = strdup(argv[0]);
+	dict->num_categories++;
 
 	return 0;
 }
@@ -544,6 +544,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 		sqlite3_exec(db, "SELECT count(DISTINCT classname) FROM Disjuncts;",
 			count_cb, &bs, NULL);
 
+		dict->num_categories = 0;
 		dict->num_categories_alloced = bs.count;
 		dict->category = malloc(bs.count * sizeof(dict_category));
 
@@ -559,6 +560,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 			dyn_strcat(qry, dict->category[i].category_name);
 			dyn_strcat(qry, "\';");
 
+printf("duude doing cat %s\n", dict->category[i].category_name);
 			bs.exp = NULL;
 			sqlite3_exec(db, qry->str, exp_cb, &bs, NULL);
 			dyn_str_delete(qry);
