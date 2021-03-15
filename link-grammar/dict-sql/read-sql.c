@@ -317,7 +317,6 @@ db_lookup_common(Dictionary dict, const char *s, const char *equals,
 	sqlite3 *db = dict->db_handle;
 	dyn_str *qry;
 
-printf("duuude lookup %s\n", s);
 	/* Escape single-quotes.  That is, replace single-quotes by
 	 * two single-quotes. e.g. don't --> don''t */
 	char * es = escape_quotes(s);
@@ -412,11 +411,16 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	Dictionary dict = bs->dict;
 
 	/* Add a category. */
+	/* This is intetionally off-by-one, per design. */
+	dict->num_categories++;
 	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
 	dict->category[dict->num_categories].category_name =
 		string_set_add(argv[0], dict->string_set);
-	dict->num_categories++;
+
+	snprintf(dict->category[dict->num_categories].category_string,
+		sizeof(dict->category[0].category_string),
+		"%x", dict->num_categories);
 
 	return 0;
 }
@@ -560,14 +564,15 @@ Dictionary dictionary_create_from_db(const char *lang)
 			count_cb, &bs, NULL);
 
 		dict->num_categories = 0;
-		dict->num_categories_alloced = bs.count;
-		dict->category = malloc(bs.count * sizeof(dict_category));
+		dict->num_categories_alloced = bs.count + 1;
+		dict->category = malloc((bs.count +1)* sizeof(dict_category));
 
 		sqlite3_exec(db, "SELECT DISTINCT classname FROM Disjuncts;",
 			classname_cb, &bs, NULL);
 
+		/* Category 0 is unused, intentionally. Not sure why. */
 		unsigned int ncat = bs.count;
-		for (unsigned int i=0; i<ncat; i++)
+		for (unsigned int i=1; i<=ncat; i++)
 		{
 			/* For each category, get the expression. */
 			dyn_str *qry = dyn_str_new();
@@ -576,7 +581,6 @@ Dictionary dictionary_create_from_db(const char *lang)
 			dyn_strcat(qry, dict->category[i].category_name);
 			dyn_strcat(qry, "\';");
 
-printf("duude doing cat %s\n", dict->category[i].category_name);
 			bs.exp = NULL;
 			sqlite3_exec(db, qry->str, exp_cb, &bs, NULL);
 			dyn_str_delete(qry);
@@ -600,10 +604,10 @@ printf("duude doing cat %s\n", dict->category[i].category_name);
 				malloc(bs.count * sizeof(dict->category[0].word));
 
 			/* ------------------ */
-			/* For each category, get the words in the category */
+			/* For each category, get the (subscripted) words in the category */
 			qry = dyn_str_new();
 			dyn_strcat(qry,
-				"SELECT morpheme FROM Morphemes WHERE classname = \'");
+				"SELECT subscript FROM Morphemes WHERE classname = \'");
 			dyn_strcat(qry, dict->category[i].category_name);
 			dyn_strcat(qry, "\';");
 
@@ -611,9 +615,9 @@ printf("duude doing cat %s\n", dict->category[i].category_name);
 			bs.count = 0;
 			sqlite3_exec(db, qry->str, classword_cb, &bs, NULL);
 			dyn_str_delete(qry);
-
 		}
 		dict->num_categories = ncat;
+printf("duuude -- SQL total num cats=%d\n", ncat);
 	}
 	return dict;
 
