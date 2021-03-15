@@ -169,7 +169,7 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	cbdata* bs = user_data;
 	Dictionary dict = bs->dict;
 
-	assert(2 == argc || 3 == argc, "Bad column count");
+	assert(2 == argc, "Bad column count");
 	assert(argv[0], "NULL column value");
 
 	Exp* exp = NULL;
@@ -317,6 +317,7 @@ db_lookup_common(Dictionary dict, const char *s, const char *equals,
 	sqlite3 *db = dict->db_handle;
 	dyn_str *qry;
 
+printf("duuude lookup %s\n", s);
 	/* Escape single-quotes.  That is, replace single-quotes by
 	 * two single-quotes. e.g. don't --> don''t */
 	char * es = escape_quotes(s);
@@ -404,27 +405,19 @@ static int count_cb(void *user_data, int argc, char **argv, char **colName)
 	return 0;
 }
 
-static int class_cb(void *user_data, int argc, char **argv, char **colName)
+/* Record the name of each lexical class */
+static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 {
 	cbdata* bs = user_data;
 	Dictionary dict = bs->dict;
-
-	printf("duuude yo! >>%s<< >>%s<< >>%s<<\n", argv[0], argv[1], argv[2]);
-	printf("duuude ey! >>%s<< >>%s<< >>%s<<\n", colName[0], colName[1], colName[2]);
 
 	/* Add a category. */
 	dict->num_categories++;
 	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
-	dict->category[dict->num_categories].classname = strdup(argv[2]);
+	dict->category[dict->num_categories].category_name = strdup(argv[0]);
 
-	bs->exp = NULL;
-	int rc = exp_cb(user_data, argc, argv, colName);
-
-	bs->exp->category = dict->num_categories;
-	dict->category[dict->num_categories].exp = bs->exp;
-
-	return rc;
+	return 0;
 }
 
 /* ========================================================= */
@@ -548,15 +541,31 @@ Dictionary dictionary_create_from_db(const char *lang)
 		bs.dict = dict;
 
 		/* How many lexical categories are there? Find out. */
-		sqlite3_exec(db, "SELECT count(*) FROM Disjuncts;",
+		sqlite3_exec(db, "SELECT count(DISTINCT classname) FROM Disjuncts;",
 			count_cb, &bs, NULL);
 
 		dict->num_categories_alloced = bs.count;
 		dict->category = malloc(bs.count * sizeof(dict_category));
 
-		sqlite3_exec(db, "SELECT disjunct, cost, classname FROM Disjuncts;",
-			class_cb, &bs, NULL);
+		sqlite3_exec(db, "SELECT DISTINCT classname FROM Disjuncts;",
+			classname_cb, &bs, NULL);
 
+		int ncat = bs.count;
+		for (int i=0; i<ncat; i++)
+		{
+			dyn_str *qry = dyn_str_new();
+			dyn_strcat(qry,
+				"SELECT disjunct, cost FROM Disjuncts WHERE classname = \'");
+			dyn_strcat(qry, dict->category[i].category_name);
+			dyn_strcat(qry, "\';");
+
+			bs.exp = NULL;
+			sqlite3_exec(db, qry->str, exp_cb, &bs, NULL);
+			dyn_str_delete(qry);
+
+			bs.exp->category = i;
+			dict->category[i].exp = bs.exp;
+		}
 	}
 	return dict;
 
