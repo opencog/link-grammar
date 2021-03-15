@@ -420,6 +420,19 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	return 0;
 }
 
+/* Record the words in each lexical class */
+static int classword_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
+	Dictionary dict = bs->dict;
+
+printf("ola %s\n", argv[0]);
+	/* Add then name */
+	// dict->category[dict->num_categories].word[x] = strdup(argv[0]);
+
+	return 0;
+}
+
 /* ========================================================= */
 /* Dictionary creation, setup, open procedures */
 
@@ -554,6 +567,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 		int ncat = bs.count;
 		for (int i=0; i<ncat; i++)
 		{
+			/* For each category, get the expression. */
 			dyn_str *qry = dyn_str_new();
 			dyn_strcat(qry,
 				"SELECT disjunct, cost FROM Disjuncts WHERE classname = \'");
@@ -567,6 +581,34 @@ printf("duude doing cat %s\n", dict->category[i].category_name);
 
 			bs.exp->category = i;
 			dict->category[i].exp = bs.exp;
+
+			/* ------------------ */
+			/* For each category, get the number of words in the category */
+			qry = dyn_str_new();
+			dyn_strcat(qry,
+				"SELECT count(*) FROM Morphemes WHERE classname = \'");
+			dyn_strcat(qry, dict->category[i].category_name);
+			dyn_strcat(qry, "\';");
+
+			sqlite3_exec(db, qry->str, count_cb, &bs, NULL);
+			dyn_str_delete(qry);
+
+			dict->category[i].num_words = bs.count;
+			dict->category[i].word =
+				malloc(bs.count * sizeof(dict->category[0].word));
+
+			/* ------------------ */
+			/* For each category, get the words in the category */
+			qry = dyn_str_new();
+			dyn_strcat(qry,
+				"SELECT morpheme FROM Morphemes WHERE classname = \'");
+			dyn_strcat(qry, dict->category[i].category_name);
+			dyn_strcat(qry, "\';");
+
+			bs.count = 0;
+			sqlite3_exec(db, qry->str, classword_cb, &bs, NULL);
+			dyn_str_delete(qry);
+
 		}
 	}
 	return dict;
