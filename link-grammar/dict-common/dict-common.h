@@ -90,7 +90,7 @@ typedef struct
 {
 	unsigned int num_words;
 	char category_string[8];
-	char* category_name;
+	const char* category_name;
 	Exp *exp;
 	char const ** word;
 } dict_category;
