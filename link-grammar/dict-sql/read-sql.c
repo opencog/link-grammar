@@ -317,7 +317,6 @@ db_lookup_common(Dictionary dict, const char *s, const char *equals,
 	sqlite3 *db = dict->db_handle;
 	dyn_str *qry;
 
-printf("duuude lookup %s\n", s);
 	/* Escape single-quotes.  That is, replace single-quotes by
 	 * two single-quotes. e.g. don't --> don''t */
 	char * es = escape_quotes(s);
@@ -582,7 +581,6 @@ Dictionary dictionary_create_from_db(const char *lang)
 			dyn_strcat(qry, dict->category[i].category_name);
 			dyn_strcat(qry, "\';");
 
-printf("duude doing cat %s\n", dict->category[i].category_name);
 			bs.exp = NULL;
 			sqlite3_exec(db, qry->str, exp_cb, &bs, NULL);
 			dyn_str_delete(qry);
@@ -606,10 +604,10 @@ printf("duude doing cat %s\n", dict->category[i].category_name);
 				malloc(bs.count * sizeof(dict->category[0].word));
 
 			/* ------------------ */
-			/* For each category, get the words in the category */
+			/* For each category, get the (subscripted) words in the category */
 			qry = dyn_str_new();
 			dyn_strcat(qry,
-				"SELECT morpheme FROM Morphemes WHERE classname = \'");
+				"SELECT subscript FROM Morphemes WHERE classname = \'");
 			dyn_strcat(qry, dict->category[i].category_name);
 			dyn_strcat(qry, "\';");
 
@@ -617,9 +615,9 @@ printf("duude doing cat %s\n", dict->category[i].category_name);
 			bs.count = 0;
 			sqlite3_exec(db, qry->str, classword_cb, &bs, NULL);
 			dyn_str_delete(qry);
-
 		}
 		dict->num_categories = ncat;
+printf("duuude -- SQL total num cats=%d\n", ncat);
 	}
 	return dict;
 
