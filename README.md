@@ -278,7 +278,6 @@ For the command-line wrapper, do the following:
    cd bindings/js
    ./install_emsdk.sh
    ./build_packages.sh
-   ./publish_packages.sh
 ```
 
 Python3 Bindings
