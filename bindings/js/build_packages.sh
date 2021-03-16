@@ -7,7 +7,7 @@ pushd "$(dirname "$0")"
 [ ! $EMSDK ] && pushd emsdk && source ./emsdk_env.sh && popd
 
 # Compile LLVM bitcode
-pushd ..
+pushd ../..
 emconfigure ./configure --disable-editline --disable-sat-solver --disable-java-bindings --disable-python-bindings
 emmake make
 popd
