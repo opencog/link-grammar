@@ -56,7 +56,10 @@ CREATE TABLE Disjuncts
 	disjunct TEXT NOT NULL,
 
 	-- Cost of using this disjunct.
-	cost REAL
+	cost REAL,
+
+	-- A given disjunct should appear only once for some class.
+	UNIQUE(classname, disjunct)
 );
 
 -- We want fast lookup of classnames.
