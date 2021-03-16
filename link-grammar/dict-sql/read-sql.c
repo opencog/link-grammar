@@ -626,7 +626,10 @@ Dictionary dictionary_create_from_db(const char *lang)
 
 	/* Initialize word categories, for text generation. */
 	if (test_enabled("generate"))
+	{
+		dict->leave_subscripts = test_enabled("leave-subscripts");
 		add_categories(dict);
+	}
 
 	return dict;
 
