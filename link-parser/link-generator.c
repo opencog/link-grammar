@@ -23,6 +23,7 @@ typedef struct
 	const char* language;
 	int sentence_length;
 	int corpus_size;
+	bool display_disjuncts;
 
 	Parse_Options opts;
 } gen_parameters;
@@ -33,6 +34,7 @@ static struct argp_option options[] =
 	{"length", 's', "length", 0, "Sentence length. If 0 - get sentence template from stdin."},
 	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
 	{"version", 'v', 0, 0, "Print version and exit."},
+	{"disjuncts", 'd'},
 	{0, 0, 0, 0, "Library options:", 1},
 	{"cost-max", '\4', "float"},
 	{"dialect", '\5', "dialect_list"},
@@ -51,6 +53,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 		case 'l': gp->language = arg; break;
 		case 's': gp->sentence_length = atoi(arg); break;
 		case 'c': gp->corpus_size = atoi(arg); break;
+		case 'd': gp->display_disjuncts = true; break;
 
 		case 'v':
 		{
@@ -186,6 +189,9 @@ int main (int argc, char* argv[])
 			printf(" %s", words[w]);
 		}
 		printf("\n");
+		char *disjuncts = linkage_print_disjuncts(linkage);
+		printf("%s\n", disjuncts);
+		free(disjuncts);
 
 		linkage_delete(linkage);
 	}

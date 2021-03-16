@@ -291,7 +291,9 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			*loc = n;         /* update the connector list */
 		}
 
-		if (!IS_GENERATION(sent->dict) || !isxdigit(string[0]))
+		/* XXX add_category() starts category strings by ' '.
+		 * FIXME Replace it by a better indication. */
+		if (!IS_GENERATION(sent->dict) || (' ' != string[0]))
 		{
 			ndis->word_string = string;
 			ndis->cost = cl->cost;
@@ -303,7 +305,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			ndis->category =
 				malloc(sizeof(ndis->category) * ndis->num_categories_alloced);
 			ndis->num_categories = 1;
-			sscanf(string, "%x", &ndis->category[0].num);
+			sscanf(string, " %x", &ndis->category[0].num);
 			assert((ndis->category[0].num > 0) && (ndis->category[0].num < 64*1024),
 			       "Insane category %u", ndis->category[0].num);
 			ndis->category[0].cost = cl->cost;

@@ -1725,7 +1725,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 		assert(dict->num_categories < 1024 * 1024, "Insane number of categories");
 		snprintf(dict->category[dict->num_categories].category_string,
 		         sizeof(dict->category[0].category_string),
-		         "%x", dict->num_categories);
+		         " %x", dict->num_categories); /* FIXME ' ' is a category mark. */
 		e->category = dict->num_categories;
 		dict->category[dict->num_categories].exp = e;
 		dict->category[dict->num_categories].num_words = n;
