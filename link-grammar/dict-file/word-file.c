@@ -96,7 +96,6 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 
 	wf = malloc(sizeof (Word_file));
 	wf->file = string_set_add(filename, dict->string_set);
-	wf->changed = false;
 	wf->next = dict->word_file_header;
 	dict->word_file_header = wf;
 
