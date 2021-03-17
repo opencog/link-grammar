@@ -18,7 +18,6 @@ struct Word_file_struct
 {
 	Word_file * next;
 	const char *file;    /* the file name */
-	bool changed;        /* TRUE if this file has been changed (XXX unused) */
 };
 
 void free_Word_file(Word_file * wf);
