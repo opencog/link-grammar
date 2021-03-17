@@ -643,7 +643,8 @@ static void dyn_print_disjunct_list(dyn_str *s, const Disjunct *dj,
 		if (print_disjunct_address) append_string(s, "(%p)", dj);
 		dyn_strcat(l, ": ");
 
-		append_string(l, "[%d]%s= ", djn++, cost_stringify(dj->cost));
+		const char *cost_str = cost_stringify(dj->cost);
+		append_string(l, "[%d]%s%s= ", djn++, &" "[(*cost_str == '-')], cost_str);
 		dyn_print_connector_list(l, dj->left, /*dir*/0, flags);
 		dyn_strcat(l, " <> ");
 		dyn_print_connector_list(l, dj->right, /*dir*/1, flags);
