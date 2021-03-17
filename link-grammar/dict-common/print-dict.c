@@ -395,6 +395,8 @@ static const char *stringify_Exp_tag(Exp *e, Dictionary dict)
 {
 	static TLS char tag_info[64];
 
+	if (e->type == CONNECTOR_type) return "";
+
 		switch (e->tag_type)
 		{
 			case Exptag_none:
