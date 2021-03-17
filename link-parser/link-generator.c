@@ -34,7 +34,7 @@ static struct argp_option options[] =
 	{"length", 's', "length", 0, "Sentence length. If 0 - get sentence template from stdin."},
 	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
 	{"version", 'v', 0, 0, "Print version and exit."},
-	{"disjuncts", 'd'},
+	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts"},
 	{0, 0, 0, 0, "Library options:", 1},
 	{"cost-max", '\4', "float"},
 	{"dialect", '\5', "dialect_list"},
@@ -189,9 +189,12 @@ int main (int argc, char* argv[])
 			printf(" %s", words[w]);
 		}
 		printf("\n");
-		char *disjuncts = linkage_print_disjuncts(linkage);
-		printf("%s\n", disjuncts);
-		free(disjuncts);
+		if (parms.display_disjuncts)
+		{
+			char *disjuncts = linkage_print_disjuncts(linkage);
+			printf("%s\n", disjuncts);
+			free(disjuncts);
+		}
 
 		linkage_delete(linkage);
 	}
