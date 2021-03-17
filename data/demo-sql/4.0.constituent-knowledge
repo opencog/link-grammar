@@ -1,1 +1,5 @@
-; This file intentionally empty.
+
+; No-op -- there are no constituents being used.
+
+STARTING_LINK_TYPE_TABLE:
+W	s
