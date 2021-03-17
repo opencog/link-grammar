@@ -422,7 +422,7 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 
 	snprintf(dict->category[dict->num_categories].category_string,
 		sizeof(dict->category[0].category_string),
-		"%x", dict->num_categories);
+		" %x", dict->num_categories); /* ' ': See comment in build_disjuncts() */
 
 	return 0;
 }
