@@ -305,7 +305,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			ndis->category =
 				malloc(sizeof(ndis->category) * ndis->num_categories_alloced);
 			ndis->num_categories = 1;
-			sscanf(string, " %x", &ndis->category[0].num);
+			ndis->category[0].num = strtol(string, NULL, 16);
 			assert((ndis->category[0].num > 0) && (ndis->category[0].num < 64*1024),
 			       "Insane category %u", ndis->category[0].num);
 			ndis->category[0].cost = cl->cost;
