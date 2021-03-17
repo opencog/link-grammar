@@ -890,8 +890,8 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 		notify_ignoring_flag(is_full);
 		notify_ignoring_flag(is_anyorder);
 
-		const char added_chars[] = "\\[]";
-		regpat = alloca(pat_len + sizeof(added_chars));
+		const size_t added_chars_len = sizeof("\\[]");
+		regpat = alloca(pat_len + added_chars_len);
 		strcpy(regpat, "\\[");
 		strcat(regpat, pattern);
 		strcat(regpat, "]");
@@ -925,8 +925,8 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 		}
 
 		/* Note: This section is sensitive to the disjunct print format. */
-		const char added_chars[] = "= <> $";
-		const size_t regpat_size = 2 * (pat_len + sizeof(added_chars));
+		const size_t added_chars_len = sizeof("= <> $");
+		const size_t regpat_size = 2 * (pat_len + added_chars_len);
 		regpat = alloca(regpat_size);
 
 		size_t dst_pos = lg_strlcpy(regpat, "= ", regpat_size);
