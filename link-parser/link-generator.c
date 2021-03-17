@@ -95,6 +95,7 @@ int main (int argc, char* argv[])
 	parms.language = "lt";
 	parms.sentence_length = 6;
 	parms.corpus_size = 50;
+	parms.display_disjuncts = false;
 	parms.opts = opts;
 	argp_parse(&argp, argc, argv, 0, 0, &parms);
 
