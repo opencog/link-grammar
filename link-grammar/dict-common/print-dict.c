@@ -970,7 +970,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 						alloca(strlen(constring) + sizeof(added_chars));
 					word_boundary_constring[0] = ' ';
 					strcpy(word_boundary_constring+1, constring);
-					strcat(word_boundary_constring+1, "( |$)");
+					strcat(word_boundary_constring+1, added_chars+1);
 					constring = word_boundary_constring;
 
 				}
