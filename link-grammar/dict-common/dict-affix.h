@@ -84,5 +84,6 @@ typedef enum {
 
 Afdict_class * afdict_find(Dictionary, const char *, bool);
 bool is_stem(const char *);
+bool is_macro(const char *); /* Not an affix but best include file to use */
 
 #endif /* _LG_DICT_AFFIX_H_ */
