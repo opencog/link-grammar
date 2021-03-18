@@ -395,6 +395,8 @@ static const char *stringify_Exp_tag(Exp *e, Dictionary dict)
 {
 	static TLS char tag_info[64];
 
+	if (e->type == CONNECTOR_type) return "";
+
 		switch (e->tag_type)
 		{
 			case Exptag_none:
@@ -641,7 +643,8 @@ static void dyn_print_disjunct_list(dyn_str *s, const Disjunct *dj,
 		if (print_disjunct_address) append_string(s, "(%p)", dj);
 		dyn_strcat(l, ": ");
 
-		append_string(l, "[%d]%s= ", djn++, cost_stringify(dj->cost));
+		const char *cost_str = cost_stringify(dj->cost);
+		append_string(l, "[%d]%s%s= ", djn++, &" "[(*cost_str == '-')], cost_str);
 		dyn_print_connector_list(l, dj->left, /*dir*/0, flags);
 		dyn_strcat(l, " <> ");
 		dyn_print_connector_list(l, dj->right, /*dir*/1, flags);
@@ -888,8 +891,8 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 		notify_ignoring_flag(is_full);
 		notify_ignoring_flag(is_anyorder);
 
-		const char added_chars[] = "\\[]";
-		regpat = alloca(pat_len + sizeof(added_chars));
+		const size_t added_chars_len = sizeof("\\[]");
+		regpat = alloca(pat_len + added_chars_len);
 		strcpy(regpat, "\\[");
 		strcat(regpat, pattern);
 		strcat(regpat, "]");
@@ -923,8 +926,8 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 		}
 
 		/* Note: This section is sensitive to the disjunct print format. */
-		const char added_chars[] = "= <> $";
-		const size_t regpat_size = 2 * (pat_len + sizeof(added_chars));
+		const size_t added_chars_len = sizeof("= <> $");
+		const size_t regpat_size = 2 * (pat_len + added_chars_len);
 		regpat = alloca(regpat_size);
 
 		size_t dst_pos = lg_strlcpy(regpat, "= ", regpat_size);
@@ -968,7 +971,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 						alloca(strlen(constring) + sizeof(added_chars));
 					word_boundary_constring[0] = ' ';
 					strcpy(word_boundary_constring+1, constring);
-					strcat(word_boundary_constring+1, "( |$)");
+					strcat(word_boundary_constring+1, added_chars+1);
 					constring = word_boundary_constring;
 
 				}
