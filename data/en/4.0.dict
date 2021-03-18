@@ -9545,8 +9545,9 @@ during:
 
 % EW+: "From where did it come?"
 % {EP-} & dWl-: "Just from down below"
+% {hHM+}: "I think it's from uhh Mars"
 from:
-  ({dHM-} & {Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
+  ({hHM+} & {Yd-} & {JQ+} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
   or ({EP-} & dWl- & FM+)
   or [MVp- & B-]
   or EW+
