@@ -420,9 +420,10 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	dict->category[dict->num_categories].category_name =
 		string_set_add(argv[0], dict->string_set);
 
-	snprintf(dict->category[dict->num_categories].category_string,
-		sizeof(dict->category[0].category_string),
-		" %x", dict->num_categories); /* ' ': See comment in build_disjuncts() */
+	char category_string[16];     /* For the tokenizer - not used here */
+	snprintf(category_string, sizeof(category_string), " %x",
+	         dict->num_categories); /* ' ': See comment in build_disjuncts() */
+	string_set_add(category_string, dict->string_set);
 
 	return 0;
 }

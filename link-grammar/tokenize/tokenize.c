@@ -2992,7 +2992,12 @@ static Dict_node *dictionary_all_categories(Dictionary dict)
 	for (size_t i = 0; i < dict->num_categories; i++)
 	{
 		dn[i].exp = dict->category[i + 1].exp;
-		dn[i].string = dict->category[i + 1].category_string;
+		char category_string[16];
+		snprintf(category_string, sizeof(category_string), " %x",
+		         (unsigned int)i + 1);
+		dn[i].string = string_set_lookup(category_string, dict->string_set);
+		assert(dn[i].string != NULL, "Missing string for category %u",
+		       dict->num_categories);
 		dn[i].right = &dn[i + 1];
 	}
 	dn[dict->num_categories-1].right = NULL;

@@ -89,7 +89,6 @@ typedef struct
 typedef struct
 {
 	unsigned int num_words;
-	char category_string[8];
 	const char* category_name;
 	Exp *exp;
 	char const ** word;
