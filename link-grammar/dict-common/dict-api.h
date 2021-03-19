@@ -38,6 +38,19 @@ link_public_api(Dict_node *)
 link_public_api(void)
 	free_lookup_list(const Dictionary, Dict_node *);
 
+/**********************************************************************
+ *
+ * Category. Experimental and subject to changes.
+ *
+ ***********************************************************************/
+
+link_public_api(const Category *)
+	dictionary_get_categories(const Dictionary);
+
+link_public_api(const Category_cost *)
+	linkage_get_categories(const Linkage, WordIdx);
+
+
 /* Return true if word can be found. */
 link_public_api(bool)
 	dictionary_word_is_known(const Dictionary, const char *);
