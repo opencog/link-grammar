@@ -182,7 +182,6 @@ int main (int argc, char* argv[])
 		size_t nwords = linkage_get_num_words(linkage);
 		const char **words = linkage_get_words(linkage);
 
-		// printf("%d", i);
 		if (verbosity_level >= 5) printf("%d: ", i);
 		for (unsigned int w=0; w<nwords; w++)
 		{
