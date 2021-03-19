@@ -459,7 +459,7 @@ static void add_categories(Dictionary dict)
 
 	dict->num_categories = 0;
 	dict->num_categories_alloced = bs.count + 1;
-	dict->category = malloc((bs.count +1)* sizeof(dict_category));
+	dict->category = malloc((bs.count +1)* sizeof(*dict->category));
 
 	sqlite3_exec(db, "SELECT DISTINCT classname FROM Disjuncts;",
 		classname_cb, &bs, NULL);

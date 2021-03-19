@@ -1694,7 +1694,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 		dict->num_categories_alloced *= 2;
 		dict->category =
 			realloc(dict->category,
-			        sizeof(dict_category) * dict->num_categories_alloced);
+			        sizeof(*dict->category) * dict->num_categories_alloced);
 	}
 	dict->category[dict->num_categories].word =
 		malloc(sizeof(dict->category[0].word) * n);
