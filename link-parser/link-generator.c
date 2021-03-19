@@ -120,7 +120,6 @@ int main (int argc, char* argv[])
 	printf("# Dictionary version %s\n", linkgrammar_get_dict_version(dict));
 
 	parse_options_set_linkage_limit(opts, parms.corpus_size);
-	parse_options_set_spell_guess(opts, 0);
 
 	if (parms.sentence_length < 0)
 	{
