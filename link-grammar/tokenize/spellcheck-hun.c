@@ -12,12 +12,6 @@
 
 #ifdef HAVE_HUNSPELL
 
-#ifdef __MINGW32__
-#define LGPTHREAD(x) x
-#else
-#define LGPTHREAD(x)
-#endif // __MINGW32__
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
