@@ -45,20 +45,35 @@ void free_disjuncts(Disjunct *c)
 	}
 }
 
-void free_sentence_disjuncts(Sentence sent, bool category_too)
+void free_categories(Sentence sent)
 {
 	if (NULL != sent->dc_memblock)
 	{
-		if (category_too)
+		for (Disjunct *d = sent->dc_memblock;
+		     d < &((Disjunct *)sent->dc_memblock)[sent->num_disjuncts]; d++)
 		{
-			for (Disjunct *d = sent->dc_memblock;
-			     d < &((Disjunct *)sent->dc_memblock)[sent->num_disjuncts]; d++)
+			if (d->is_category != 0)
+				free(d->category);
+		}
+	}
+	else
+	{
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 			{
 				if (d->is_category != 0)
 					free(d->category);
 			}
 		}
+	}
+}
 
+void free_sentence_disjuncts(Sentence sent, bool category_too)
+{
+	if (NULL != sent->dc_memblock)
+	{
+		if (category_too) free_categories(sent);
 		free(sent->dc_memblock);
 		sent->dc_memblock = NULL;
 	}

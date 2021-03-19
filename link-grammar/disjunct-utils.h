@@ -80,6 +80,7 @@ struct Disjunct_struct
 /* Disjunct utilities ... */
 void free_disjuncts(Disjunct *);
 void free_sentence_disjuncts(Sentence, bool);
+void free_categories(Sentence);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct *, bool);
