@@ -16,6 +16,7 @@
 
 #include "api-structures.h"
 #include "connectors.h"
+#include "dict-common/dict-api.h"       // linkage_get_categories
 #include "dict-common/dict-affix.h"     // INFIX_MARK
 #include "dict-common/dict-defines.h"   // SUBSCRIPT_MARK
 #include "dict-common/idiom.h"
@@ -996,4 +997,14 @@ WordIdx linkage_get_word_char_end(const Linkage linkage, WordIdx w)
 	int pos = (int)(linkage->wg_path_display[w]->end - linkage->sent->orig_sentence);
 	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
+}
+
+const Category_cost *linkage_get_categories(const Linkage linkage, WordIdx w)
+{
+	if (NULL == linkage) return NULL;
+	if (linkage->num_words <= w) return NULL; /* bounds-check */
+
+	Disjunct *dj = linkage->chosen_disjuncts[w];
+	if (dj->is_category == 0) return NULL;
+	return dj->category;
 }

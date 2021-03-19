@@ -301,11 +301,12 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 		}
 		else
 		{
-			ndis->num_categories_alloced = 16;
+			ndis->num_categories_alloced = 4;
 			ndis->category =
 				malloc(sizeof(ndis->category) * ndis->num_categories_alloced);
 			ndis->num_categories = 1;
 			ndis->category[0].num = strtol(string, NULL, 16);
+			ndis->category[1].num = 0; /* API array terminator */
 			assert((ndis->category[0].num > 0) && (ndis->category[0].num < 64*1024),
 			       "Insane category %u", ndis->category[0].num);
 			ndis->category[0].cost = cl->cost;

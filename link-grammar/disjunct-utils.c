@@ -350,7 +350,7 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 
 			if (multi_string)
 			{
-				if (dx->num_categories == dx->num_categories_alloced)
+				if (dx->num_categories == dx->num_categories_alloced - 1)
 				{
 					dx->num_categories_alloced *= 2;
 					dx->category = realloc(dx->category,
@@ -361,6 +361,7 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 				dx->category[dx->num_categories].num = d->category[0].num;
 				dx->category[dx->num_categories].cost = d->cost;
 				dx->num_categories++;
+				dx->category[dx->num_categories].num = 0; /* API array terminator.*/
 			}
 			else
 			{
