@@ -84,6 +84,13 @@ typedef struct
 	char const ** word;
 } Category;
 
+/* List of disjuncts categories and their costs. */
+typedef struct
+{
+	unsigned int num;    /* Index in the Category array. */
+	float cost;          /* Corresponding disjunct cost. */
+} Category_cost;
+
 bool cost_eq(double cost1, double cost2);
 const char *cost_stringify(double cost);
 
