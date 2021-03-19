@@ -458,8 +458,9 @@ static void add_categories(Dictionary dict)
 		count_cb, &bs, NULL);
 
 	dict->num_categories = 0;
-	dict->num_categories_alloced = bs.count + 1;
-	dict->category = malloc((bs.count +1)* sizeof(*dict->category));
+	dict->num_categories_alloced = 1 + bs.count + 1; // skip slot 0 + terminator
+	dict->category = malloc(dict->num_categories_alloced *
+	                        sizeof(*dict->category));
 
 	sqlite3_exec(db, "SELECT DISTINCT classname FROM Disjuncts;",
 		classname_cb, &bs, NULL);
@@ -511,6 +512,9 @@ static void add_categories(Dictionary dict)
 		dyn_str_delete(qry);
 	}
 	dict->num_categories = ncat;
+
+	/* Set the termination entry. */
+	dict->category[dict->num_categories + 1].num_words = 0;
 }
 
 /* ========================================================= */

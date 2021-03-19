@@ -168,6 +168,14 @@ bool dictionary_word_is_known(const Dictionary dict, const char * word)
 	return dict_has_word(dict, regex_name);
 }
 
+/**
+ * Return the dictionary Category array.
+ */
+const Category *dictionary_get_categories(const Dictionary dict)
+{
+	return dict->category + 1; /* First entry is not used */
+}
+
 /* ======================================================================== */
 /* the following functions are for handling deletion */
 
