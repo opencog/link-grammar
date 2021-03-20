@@ -1725,6 +1725,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 		e->category = dict->num_categories;
 		dict->category[dict->num_categories].exp = e;
 		dict->category[dict->num_categories].num_words = n;
+		dict->category[dict->num_categories].category_name = "";
 	}
 }
 
