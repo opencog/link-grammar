@@ -14,6 +14,8 @@
 #include "link-grammar/dict-common/dict-api.h"
 #include "link-grammar/error.h"
 
+#include "generator-utilities.h"
+
 #define WILDCARDWORD "\\*"
 
 static int verbosity_level; // Avoid using exposed library static variable.
@@ -135,6 +137,18 @@ int main (int argc, char* argv[])
 		exit(-1);
 	}
 	printf("# Dictionary version %s\n", linkgrammar_get_dict_version(dict));
+
+	const Category* category = dictionary_get_categories(dict);
+	unsigned int num_categories = 0;
+	for (const Category* c = category; c->num_words != 0; c++)
+		num_categories++;
+	printf("# Number of categories: %u\n", num_categories);
+
+	if (verbosity_level == 200)
+	{
+		dump_categories(dict, category);
+		exit(0);
+	}
 
 	parse_options_set_linkage_limit(opts, parms.corpus_size);
 
