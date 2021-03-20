@@ -1655,15 +1655,8 @@ static void add_define(Dictionary dict, const char *name, const char *value)
 	dict->define.value[id - 1] = string_set_add(value, dict->string_set);
 }
 
-static bool is_macro(const char *s)
+static bool is_wall(const char *s)
 {
-	if (s[0] == '<')
-	{
-		char *end = strchr(s, '>');
-		if (end == NULL) return false;
-		if ((end[1] == '\0') || (end[1] == SUBSCRIPT_MARK)) return true;
-		return false;
-	}
 	if (0 == strcmp(s, LEFT_WALL_WORD)) return true;
 	if (0 == strcmp(s, RIGHT_WALL_WORD)) return true;
 
@@ -1689,6 +1682,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 	if (n == 1)
 	{
 		if (is_macro(dn->string)) return;
+		if (is_wall(dn->string)) return;
 		if (is_correction(dn->string)) return;
 		if (is_directive(dn->string)) return;
 	}
@@ -1709,6 +1703,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 	for (Dict_node *dnx = dn; dnx != NULL; dnx = dnx->left)
 	{
 		if (is_macro(dnx->string)) continue;
+		if (is_wall(dnx->string)) continue;
 		if (is_correction(dnx->string)) continue;
 		if (is_directive(dnx->string)) return;
 		dict->category[dict->num_categories].word[n] = dnx->string;
@@ -1723,9 +1718,10 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 	else
 	{
 		assert(dict->num_categories < 1024 * 1024, "Insane number of categories");
-		snprintf(dict->category[dict->num_categories].category_string,
-		         sizeof(dict->category[0].category_string),
-		         " %x", dict->num_categories); /* FIXME ' ' is a category mark. */
+		char category_string[16]; /* For the tokenizer - not used here */
+		snprintf(category_string, sizeof(category_string), " %x",
+		         dict->num_categories);
+		string_set_add(category_string, dict->string_set);
 		e->category = dict->num_categories;
 		dict->category[dict->num_categories].exp = e;
 		dict->category[dict->num_categories].num_words = n;

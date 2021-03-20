@@ -124,8 +124,18 @@ dictionary_six_str(const char * lang,
 
 	if (NULL != affix_name)
 	{
-		/* To disable spell-checking, just set the checker to NULL */
-		dict->spell_checker = spellcheck_create(dict->lang);
+		if (test_enabled("generate")) /* Sentence generation. */
+		{
+			const size_t initial_allocation = 256;
+			dict->num_categories_alloced = initial_allocation;
+			dict->category = malloc(initial_allocation * sizeof(dict_category));
+			dict->leave_subscripts = test_enabled("leave-subscripts");
+			dict->spell_checker = NULL; /* Disable spell-checking. */
+		}
+		else
+		{
+			dict->spell_checker = spellcheck_create(dict->lang);
+		}
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
 		if (verbosity_level(D_USER_BASIC) && (NULL == dict->spell_checker))
@@ -150,14 +160,6 @@ dictionary_six_str(const char * lang,
 		}
 
 		dict->define.set = string_id_create();
-
-		if (test_enabled("generate")) /* Sentence generation. */
-		{
-			const size_t initial_allocation = 256;
-			dict->num_categories_alloced = initial_allocation;
-			dict->category = malloc(initial_allocation * sizeof(dict_category));
-			dict->leave_subscripts = test_enabled("leave-subscripts");
-		}
 	}
 	else
 	{

@@ -35,7 +35,7 @@
 #define STEM_MARK '='
 
 /* ======================================================================== */
-/* Affix type finding */
+/* Identifying dictionary word formats */
 
 /**
  * Return TRUE if the word seems to be in stem form.
@@ -50,6 +50,17 @@ bool is_stem(const char* w)
 	if (subscrmark == w) return false;
 	if (STEM_MARK != subscrmark[1]) return false;
 	return true;
+}
+
+bool is_macro(const char *w)
+{
+	if (w[0] == '<')
+	{
+		char *end = strchr(w, '>');
+		if (end == NULL) return false;
+		if ((end[1] == '\0') || (end[1] == SUBSCRIPT_MARK)) return true;
+	}
+	return false;
 }
 
 /* ======================================================================== */

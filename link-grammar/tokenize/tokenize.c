@@ -2284,12 +2284,16 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		issue_word_alternative(sent, unsplit_word, "W", 0,NULL, 1,&word, 0,NULL);
 		unsplit_word->status |= WS_INDICT;
 		word_is_known = true;
+
+		if (IS_GENERATION(sent->dict) && is_macro(word))
+			unsplit_word->tokenizing_step = TS_DONE;
 	}
 
-	if (unsplit_word->status & (WS_SPELL|WS_RUNON))
+	if (unsplit_word->status & (WS_SPELL|WS_RUNON) ||
+	    (unsplit_word->tokenizing_step == TS_DONE))
 	{
-		/* The word is a result of spelling, so it doesn't need right/left
-		 * stripping. Skip it. */
+		/* The word is a result of spelling, or is a dictionary macro, so it
+		 * doesn't need right/left stripping. Skip it. */
 	}
 	else
 	{
@@ -2988,7 +2992,12 @@ static Dict_node *dictionary_all_categories(Dictionary dict)
 	for (size_t i = 0; i < dict->num_categories; i++)
 	{
 		dn[i].exp = dict->category[i + 1].exp;
-		dn[i].string = dict->category[i + 1].category_string;
+		char category_string[16];
+		snprintf(category_string, sizeof(category_string), " %x",
+		         (unsigned int)i + 1);
+		dn[i].string = string_set_lookup(category_string, dict->string_set);
+		assert(dn[i].string != NULL, "Missing string for category %u",
+		       dict->num_categories);
 		dn[i].right = &dn[i + 1];
 	}
 	dn[dict->num_categories-1].right = NULL;
