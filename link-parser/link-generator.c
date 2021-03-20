@@ -45,15 +45,29 @@ static struct argp_option options[] =
 	{ 0 }
 };
 
+static void invalid_int_value(const char *name, int value)
+{
+	prt_error("Fatal error: Invalid sentence %s \"%d\".\n", name, value);
+	exit(-1);
+
+}
+
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
 	gen_parameters* gp = state->input;
 	switch (key)
 	{
 		case 'l': gp->language = arg; break;
-		case 's': gp->sentence_length = atoi(arg); break;
+		case 's': gp->sentence_length = atoi(arg);
+		          if ((gp->sentence_length < 0) || (gp->sentence_length > 253))
+			          invalid_int_value("sentence length", gp->sentence_length);
+		          break;
 		case 'c': gp->corpus_size = atoi(arg); break;
+		          if (gp->corpus_size <= 0)
+			          invalid_int_value("corpus size", gp->corpus_size);
+		          break;
 		case 'd': gp->display_disjuncts = true; break;
+
 
 		case 'v':
 		{
@@ -67,6 +81,8 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 			parse_options_set_debug(gp->opts, arg); break;
 		case 2:
 			verbosity_level = atoi(arg);
+			if (verbosity_level < 0)
+				invalid_int_value("verbosity", verbosity_level);
 			parse_options_set_verbosity(gp->opts, verbosity_level); break;
 		case 3:
 			parse_options_set_test(gp->opts, arg); break;
@@ -120,13 +136,6 @@ int main (int argc, char* argv[])
 	printf("# Dictionary version %s\n", linkgrammar_get_dict_version(dict));
 
 	parse_options_set_linkage_limit(opts, parms.corpus_size);
-
-	if (parms.sentence_length < 0)
-	{
-		prt_error("Fatal error: Invalid sentence length \"%d\".\n",
-		          parms.sentence_length);
-		exit(-1);
-	}
 
 	if (parms.sentence_length > 0)
 	{
