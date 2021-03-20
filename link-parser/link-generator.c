@@ -10,8 +10,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../link-grammar/link-includes.h"
-#include "../link-grammar/error.h"
+#include "link-grammar/link-includes.h"
+#include "link-grammar/dict-common/dict-api.h"
+#include "link-grammar/error.h"
 
 #define WILDCARDWORD "\\*"
 
