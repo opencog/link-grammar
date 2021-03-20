@@ -79,7 +79,7 @@ struct Exp_struct
 typedef struct
 {
 	unsigned int num_words;
-	const char* category_name;
+	const char* name;
 	Exp *exp;
 	char const ** word;
 } Category;

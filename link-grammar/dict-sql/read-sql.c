@@ -417,7 +417,7 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	dict->num_categories++;
 	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
-	dict->category[dict->num_categories].category_name =
+	dict->category[dict->num_categories].name =
 		string_set_add(argv[0], dict->string_set);
 
 	char category_string[16];     /* For the tokenizer - not used here */
@@ -473,7 +473,7 @@ static void add_categories(Dictionary dict)
 		dyn_str *qry = dyn_str_new();
 		dyn_strcat(qry,
 			"SELECT disjunct, cost FROM Disjuncts WHERE classname = \'");
-		dyn_strcat(qry, dict->category[i].category_name);
+		dyn_strcat(qry, dict->category[i].name);
 		dyn_strcat(qry, "\';");
 
 		bs.exp = NULL;
@@ -488,7 +488,7 @@ static void add_categories(Dictionary dict)
 		qry = dyn_str_new();
 		dyn_strcat(qry,
 			"SELECT count(*) FROM Morphemes WHERE classname = \'");
-		dyn_strcat(qry, dict->category[i].category_name);
+		dyn_strcat(qry, dict->category[i].name);
 		dyn_strcat(qry, "\';");
 
 		sqlite3_exec(db, qry->str, count_cb, &bs, NULL);
@@ -503,7 +503,7 @@ static void add_categories(Dictionary dict)
 		qry = dyn_str_new();
 		dyn_strcat(qry,
 			"SELECT subscript FROM Morphemes WHERE classname = \'");
-		dyn_strcat(qry, dict->category[i].category_name);
+		dyn_strcat(qry, dict->category[i].name);
 		dyn_strcat(qry, "\';");
 
 		dict->num_categories = i;

@@ -13,8 +13,8 @@ void dump_categories(Dictionary dict, const Category *category)
 	for (unsigned int n = 0; category[n].num_words != 0; n++)
 	{
 		printf(TAB"\{\n");
-		if (category[n].category_name != NULL)
-			printf(TAB TAB"\"category_name\": %s,\n", category[n].category_name);
+		if (category[n].name[0] != '\0')
+			printf(TAB TAB"\"name\": %s,\n", category[n].name);
 		printf(TAB TAB"\"category_num\": %u,\n", n + 1);
 		printf(TAB TAB"\"exp\": %s,\n", lg_exp_stringify(category[n].exp));
 		printf(TAB TAB"\"num_words\": %u,\n", category[n].num_words);
