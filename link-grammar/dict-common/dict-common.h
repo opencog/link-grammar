@@ -85,15 +85,6 @@ typedef struct
 	unsigned int size;                 /* Allocated tag array size */
 } expression_tag;
 
-/* List of words in a dict category, for sentence generation. */
-typedef struct
-{
-	unsigned int num_words;
-	const char* category_name;
-	Exp *exp;
-	char const ** word;
-} dict_category;
-
 struct Dictionary_s
 {
 	Dict_node *  root;
@@ -150,7 +141,7 @@ struct Dictionary_s
 	/* Sentence generation */
 	unsigned int num_categories;
 	unsigned int num_categories_alloced;
-	dict_category * category; /* Word lists - indexed by category number */
+	Category * category;      /* Word lists - indexed by category number */
 	bool leave_subscripts;    /* Leave generated-word subscripts */
 
 	/* Private data elements that come in play only while the

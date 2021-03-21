@@ -128,7 +128,7 @@ dictionary_six_str(const char * lang,
 		{
 			const size_t initial_allocation = 256;
 			dict->num_categories_alloced = initial_allocation;
-			dict->category = malloc(initial_allocation * sizeof(dict_category));
+			dict->category = malloc(sizeof(*dict->category) *initial_allocation);
 			dict->leave_subscripts = test_enabled("leave-subscripts");
 			dict->spell_checker = NULL; /* Disable spell-checking. */
 		}

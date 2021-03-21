@@ -16,6 +16,7 @@
 
 #include "api-structures.h"
 #include "connectors.h"
+#include "dict-common/dict-api.h"       // linkage_get_categories
 #include "dict-common/dict-affix.h"     // INFIX_MARK
 #include "dict-common/dict-defines.h"   // SUBSCRIPT_MARK
 #include "dict-common/idiom.h"
@@ -744,71 +745,33 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 void compute_generated_words(Sentence sent, Linkage linkage)
 {
 	Disjunct **cdjp = linkage->chosen_disjuncts;
-	unsigned int rand_state = sent->rand_state;
 
 	linkage->word = malloc(linkage->num_words * sizeof(char *));
 
 	lgdebug(D_CGW, "Sentence %d\n", abs(linkage->lifo.index) - 1);
 	for (WordIdx i = 0; i < linkage->num_words; i++)
 	{
-		const char *ow;
+		assert(cdjp[i] != NULL, "NULL disjunct in generated sentence");
+		const char *word;
 
-		if (cdjp[i] == NULL)
-		{
-			dassert(
-				i = (cdjp[0]->originating_gword->o_gword->morpheme_type == MT_WALL),
-				"NULL disjunct in generated sentence");
-			continue;
-		}
 		Disjunct *cdj = cdjp[i];
 
 		if (cdj->is_category == 0)
 		{
-			ow = cdj->word_string;
+			word = cdj->word_string;
 		}
 		else
 		{
 			assert(cdj->num_categories > 0, "0 categories in disjunct");
-			int r = rand_r(&rand_state);
-			int disjunct_category_idx = r % cdj->num_categories;
-			unsigned int categoty_num = cdj->category[disjunct_category_idx].num;
-			lgdebug(D_CGW, "Word %zu: r=%08x category %d/%u \"%u\";",
-			        i, (unsigned int)r, disjunct_category_idx, cdj->num_categories, categoty_num);
-			unsigned int num_words = sent->dict->category[categoty_num].num_words;
-
-			r = rand_r(&rand_state);
-			int dict_word_idx = r % num_words;
-			ow = sent->dict->category[categoty_num].word[dict_word_idx];
-			lgdebug(D_CGW, " r=%08x word %d/%u \"%s\"\n",
-			        (unsigned int)r, dict_word_idx, num_words, ow);
+			word = linkage_get_disjunct_str(linkage, i);
+			size_t len = strlen(word) + sizeof("<>");
+			char *disjunct_string = alloca(len);
+			snprintf(disjunct_string, len, "<%s>", word);
+			word = string_set_add(disjunct_string, sent->string_set);
 		}
 
-		const char *sm = strchr(ow, SUBSCRIPT_MARK);
-		const char *w;
-		if (sm == NULL)
-		{
-			w = ow;
-		}
-		else
-		{
-			char *wtmp;
-			const int baselen = sm - ow;
-			if (sent->dict->leave_subscripts)
-			{
-				wtmp = strdupa(ow);
-				wtmp[baselen] = SUBSCRIPT_DOT;
-			}
-			else
-			{
-				wtmp = strndupa(ow, baselen);
-			}
-			w = string_set_add(wtmp, sent->string_set);
-		}
-
-		linkage->word[i] = w;
+		linkage->word[i] = word;
 	}
-
-	sent->rand_state = rand_state;
 }
 #undef D_CGW
 
@@ -996,4 +959,14 @@ WordIdx linkage_get_word_char_end(const Linkage linkage, WordIdx w)
 	int pos = (int)(linkage->wg_path_display[w]->end - linkage->sent->orig_sentence);
 	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
+}
+
+const Category_cost *linkage_get_categories(const Linkage linkage, WordIdx w)
+{
+	if (NULL == linkage) return NULL;
+	if (linkage->num_words <= w) return NULL; /* bounds-check */
+
+	Disjunct *dj = linkage->chosen_disjuncts[w];
+	if (dj->is_category == 0) return NULL;
+	return dj->category;
 }

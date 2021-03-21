@@ -5,13 +5,22 @@
  * February 2021
  */
 
+#ifdef _WIN32
+#include <process.h>
+#else
+#include <unistd.h>
+#endif
+
 #include <argp.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "../link-grammar/link-includes.h"
-#include "../link-grammar/error.h"
+#include "link-grammar/link-includes.h"
+#include "link-grammar/dict-common/dict-api.h"
+#include "link-grammar/error.h"
+
+#include "generator-utilities.h"
 
 #define WILDCARDWORD "\\*"
 
@@ -24,6 +33,8 @@ typedef struct
 	int sentence_length;
 	int corpus_size;
 	bool display_disjuncts;
+	bool leave_subscripts;
+	bool unrepeatable_random;
 
 	Parse_Options opts;
 } gen_parameters;
@@ -34,16 +45,25 @@ static struct argp_option options[] =
 	{"length", 's', "length", 0, "Sentence length. If 0 - get sentence template from stdin."},
 	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
 	{"version", 'v', 0, 0, "Print version and exit."},
-	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts"},
+	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts."},
+	{"leave-subscripts", '.', 0, 0, "Don't remove word subscripts."},
+	{"random", 'r', 0, 0, "Don't remove word subscripts."},
 	{0, 0, 0, 0, "Library options:", 1},
-	{"cost-max", '\4', "float"},
-	{"dialect", '\5', "dialect_list"},
+	{"cost-max", 4, "float"},
+	{"dialect", 5, "dialect_list"},
 	{0, 0, 0, 0, "Library debug options:", 2},
-	{"debug", '\1', "debug_specification", 0, 0},
-	{"verbosity", '\2', "level"},
-	{"test", '\3', "test_list"},
+	{"debug", 1, "debug_specification", 0, 0},
+	{"verbosity", 2, "level"},
+	{"test", 3, "test_list"},
 	{ 0 }
 };
+
+static void invalid_int_value(const char *name, int value)
+{
+	prt_error("Fatal error: Invalid sentence %s \"%d\".\n", name, value);
+	exit(-1);
+
+}
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
@@ -51,9 +71,18 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 	switch (key)
 	{
 		case 'l': gp->language = arg; break;
-		case 's': gp->sentence_length = atoi(arg); break;
+		case 's': gp->sentence_length = atoi(arg);
+		          if ((gp->sentence_length < 0) || (gp->sentence_length > 253))
+			          invalid_int_value("sentence length", gp->sentence_length);
+		          break;
 		case 'c': gp->corpus_size = atoi(arg); break;
+		          if (gp->corpus_size <= 0)
+			          invalid_int_value("corpus size", gp->corpus_size);
+		          break;
 		case 'd': gp->display_disjuncts = true; break;
+		case '.': gp->leave_subscripts = true; break;
+		case 'r': gp->unrepeatable_random = true; break;
+
 
 		case 'v':
 		{
@@ -67,6 +96,8 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 			parse_options_set_debug(gp->opts, arg); break;
 		case 2:
 			verbosity_level = atoi(arg);
+			if (verbosity_level < 0)
+				invalid_int_value("verbosity", verbosity_level);
 			parse_options_set_verbosity(gp->opts, verbosity_level); break;
 		case 3:
 			parse_options_set_test(gp->opts, arg); break;
@@ -96,8 +127,18 @@ int main (int argc, char* argv[])
 	parms.sentence_length = 6;
 	parms.corpus_size = 50;
 	parms.display_disjuncts = false;
+	parms.leave_subscripts = false;
+	parms.unrepeatable_random = false;
 	parms.opts = opts;
 	argp_parse(&argp, argc, argv, 0, 0, &parms);
+	if (!parms.unrepeatable_random)
+	{
+		srand(0);
+	}
+	else
+	{
+		srand(getpid());
+	}
 
 	printf("#\n# Corpus for language: \"%s\"\n", parms.language);
 	if (parms.sentence_length != 0)
@@ -119,14 +160,19 @@ int main (int argc, char* argv[])
 	}
 	printf("# Dictionary version %s\n", linkgrammar_get_dict_version(dict));
 
-	parse_options_set_linkage_limit(opts, parms.corpus_size);
+	const Category* category = dictionary_get_categories(dict);
+	unsigned int num_categories = 0;
+	for (const Category* c = category; c->num_words != 0; c++)
+		num_categories++;
+	printf("# Number of categories: %u\n", num_categories);
 
-	if (parms.sentence_length < 0)
+	if (verbosity_level == 200)
 	{
-		prt_error("Fatal error: Invalid sentence length \"%d\".\n",
-		          parms.sentence_length);
-		exit(-1);
+		dump_categories(dict, category);
+		exit(0);
 	}
+
+	parse_options_set_linkage_limit(opts, parms.corpus_size);
 
 	if (parms.sentence_length > 0)
 	{
@@ -182,12 +228,22 @@ int main (int argc, char* argv[])
 		size_t nwords = linkage_get_num_words(linkage);
 		const char **words = linkage_get_words(linkage);
 
-		// printf("%d", i);
 		if (verbosity_level >= 5) printf("%d: ", i);
-		for (unsigned int w=0; w<nwords; w++)
+		for(WordIdx w = 0; w < nwords; w++)
 		{
-			printf(" %s", words[w]);
+			const Category_cost *cc = linkage_get_categories(linkage, w);
+			if (cc == NULL)
+			{
+				printf("%s", cond_subscript(words[w], parms.leave_subscripts));
+			}
+			else
+			{
+				const char *word = select_word(category, cc, w);
+				printf("%s", cond_subscript(word, parms.leave_subscripts));
+			}
+			if (w < nwords-1) printf(" ");
 		}
+
 		printf("\n");
 		if (parms.display_disjuncts)
 		{

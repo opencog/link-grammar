@@ -120,3 +120,5 @@ lg_error_flush
 lg_exp_stringify
 prt_error
 utf8_strwidth
+dictionary_get_categories
+linkage_get_categories

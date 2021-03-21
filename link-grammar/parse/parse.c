@@ -470,6 +470,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 parse_end_cleanup:
 	if (NULL != ts_pruning)
 	{
+		free_categories(sent);
 		free(ts_pruning->memblock);
 		free_tracon_sharing(ts_pruning);
 		free(saved_memblock);

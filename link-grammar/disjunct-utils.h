@@ -20,12 +20,6 @@
 #include "api-types.h"
 #include "api-structures.h"             // Sentence
 
-typedef struct
-{
-	unsigned int num;    /* Index in the "category" field of Dictionary */
-	float cost;          /* Corresponding disjunct cost. */
-} category_and_cost;
-
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST
 
@@ -48,7 +42,7 @@ struct Disjunct_struct
 		struct
 		{
 			/* Dictionary category & disjunct cost (for sentence generation). */
-			category_and_cost *category;
+			Category_cost *category;
 			unsigned int num_categories_alloced;
 			unsigned int num_categories;
 		};
@@ -80,6 +74,7 @@ struct Disjunct_struct
 /* Disjunct utilities ... */
 void free_disjuncts(Disjunct *);
 void free_sentence_disjuncts(Sentence, bool);
+void free_categories(Sentence);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct *, bool);

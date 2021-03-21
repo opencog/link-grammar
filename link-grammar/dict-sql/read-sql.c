@@ -29,6 +29,7 @@
 #include "dict-common/dict-structures.h"
 #include "dict-common/file-utils.h"
 #include "dict-file/read-dict.h"         // dictionary_six()
+#include "dict-file/word-file.h"         // patch_subscript()
 #include "error.h"
 #include "externs.h"
 #include "memory-pool.h"
@@ -395,7 +396,7 @@ static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
 /* ========================================================= */
 /* Callbacks and functions to support lexical category loading. */
 
-/* Used for `SELECT count(*) FROM foo` type of quries */
+/* Used for `SELECT count(*) FROM foo` type of queries */
 static int count_cb(void *user_data, int argc, char **argv, char **colName)
 {
 	cbdata* bs = user_data;
@@ -413,11 +414,11 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	Dictionary dict = bs->dict;
 
 	/* Add a category. */
-	/* This is intetionally off-by-one, per design. */
+	/* This is intentionally off-by-one, per design. */
 	dict->num_categories++;
 	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
-	dict->category[dict->num_categories].category_name =
+	dict->category[dict->num_categories].name =
 		string_set_add(argv[0], dict->string_set);
 
 	char category_string[16];     /* For the tokenizer - not used here */
@@ -434,9 +435,12 @@ static int classword_cb(void *user_data, int argc, char **argv, char **colName)
 	cbdata* bs = user_data;
 	Dictionary dict = bs->dict;
 
-	/* Add then name */
+	char *word = strdupa(argv[0]);
+	patch_subscript(word);
+
+	/* Add the word. */
 	dict->category[dict->num_categories].word[bs->count] =
-		string_set_add(argv[0], dict->string_set);
+		string_set_add(word, dict->string_set);
 	bs->count++;
 
 	return 0;
@@ -458,8 +462,9 @@ static void add_categories(Dictionary dict)
 		count_cb, &bs, NULL);
 
 	dict->num_categories = 0;
-	dict->num_categories_alloced = bs.count + 1;
-	dict->category = malloc((bs.count +1)* sizeof(dict_category));
+	dict->num_categories_alloced = 1 + bs.count + 1; // skip slot 0 + terminator
+	dict->category = malloc(dict->num_categories_alloced *
+	                        sizeof(*dict->category));
 
 	sqlite3_exec(db, "SELECT DISTINCT classname FROM Disjuncts;",
 		classname_cb, &bs, NULL);
@@ -472,7 +477,7 @@ static void add_categories(Dictionary dict)
 		dyn_str *qry = dyn_str_new();
 		dyn_strcat(qry,
 			"SELECT disjunct, cost FROM Disjuncts WHERE classname = \'");
-		dyn_strcat(qry, dict->category[i].category_name);
+		dyn_strcat(qry, dict->category[i].name);
 		dyn_strcat(qry, "\';");
 
 		bs.exp = NULL;
@@ -487,7 +492,7 @@ static void add_categories(Dictionary dict)
 		qry = dyn_str_new();
 		dyn_strcat(qry,
 			"SELECT count(*) FROM Morphemes WHERE classname = \'");
-		dyn_strcat(qry, dict->category[i].category_name);
+		dyn_strcat(qry, dict->category[i].name);
 		dyn_strcat(qry, "\';");
 
 		sqlite3_exec(db, qry->str, count_cb, &bs, NULL);
@@ -502,7 +507,7 @@ static void add_categories(Dictionary dict)
 		qry = dyn_str_new();
 		dyn_strcat(qry,
 			"SELECT subscript FROM Morphemes WHERE classname = \'");
-		dyn_strcat(qry, dict->category[i].category_name);
+		dyn_strcat(qry, dict->category[i].name);
 		dyn_strcat(qry, "\';");
 
 		dict->num_categories = i;
@@ -511,6 +516,9 @@ static void add_categories(Dictionary dict)
 		dyn_str_delete(qry);
 	}
 	dict->num_categories = ncat;
+
+	/* Set the termination entry. */
+	dict->category[dict->num_categories + 1].num_words = 0;
 }
 
 /* ========================================================= */

@@ -1694,7 +1694,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 		dict->num_categories_alloced *= 2;
 		dict->category =
 			realloc(dict->category,
-			        sizeof(dict_category) * dict->num_categories_alloced);
+			        sizeof(*dict->category) * dict->num_categories_alloced);
 	}
 	dict->category[dict->num_categories].word =
 		malloc(sizeof(dict->category[0].word) * n);
@@ -1725,6 +1725,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 		e->category = dict->num_categories;
 		dict->category[dict->num_categories].exp = e;
 		dict->category[dict->num_categories].num_words = n;
+		dict->category[dict->num_categories].name = "";
 	}
 }
 
@@ -1964,6 +1965,18 @@ bool read_dictionary(Dictionary dict)
 			return false;
 		}
 	}
+
+	if (dict->category != NULL)
+	{
+		/* Create a category element which contains 0 words, to signify the
+		 * end of the category array for the user API. The number of
+		 * categories will not get changed because macros are considered an
+		 * invalid word. */
+		Exp dummy_exp;
+		add_category(dict, &dummy_exp, NULL, 0);
+		dict->category[dict->num_categories + 1].num_words = 0;
+	}
+
 	dict->root = dsw_tree_to_vine(dict->root);
 	dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
 	return true;

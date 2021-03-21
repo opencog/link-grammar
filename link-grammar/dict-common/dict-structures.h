@@ -75,6 +75,21 @@ struct Exp_struct
 	Exp *operand_next;     /* Next same-level operand. */
 };
 
+/* List of words in a dictionary category. */
+typedef struct
+{
+	unsigned int num_words;
+	const char* name;
+	Exp *exp;
+	char const ** word;
+} Category;
+
+/* List of disjuncts categories and their costs. */
+typedef struct
+{
+	unsigned int num;    /* Index in the Category array. */
+	float cost;          /* Corresponding disjunct cost. */
+} Category_cost;
 
 bool cost_eq(double cost1, double cost2);
 const char *cost_stringify(double cost);

@@ -45,20 +45,35 @@ void free_disjuncts(Disjunct *c)
 	}
 }
 
-void free_sentence_disjuncts(Sentence sent, bool category_too)
+void free_categories(Sentence sent)
 {
 	if (NULL != sent->dc_memblock)
 	{
-		if (category_too)
+		for (Disjunct *d = sent->dc_memblock;
+		     d < &((Disjunct *)sent->dc_memblock)[sent->num_disjuncts]; d++)
 		{
-			for (Disjunct *d = sent->dc_memblock;
-			     d < &((Disjunct *)sent->dc_memblock)[sent->num_disjuncts]; d++)
+			if (d->is_category != 0)
+				free(d->category);
+		}
+	}
+	else
+	{
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 			{
 				if (d->is_category != 0)
 					free(d->category);
 			}
 		}
+	}
+}
 
+void free_sentence_disjuncts(Sentence sent, bool category_too)
+{
+	if (NULL != sent->dc_memblock)
+	{
+		if (category_too) free_categories(sent);
 		free(sent->dc_memblock);
 		sent->dc_memblock = NULL;
 	}
@@ -335,7 +350,7 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 
 			if (multi_string)
 			{
-				if (dx->num_categories == dx->num_categories_alloced)
+				if (dx->num_categories == dx->num_categories_alloced - 1)
 				{
 					dx->num_categories_alloced *= 2;
 					dx->category = realloc(dx->category,
@@ -346,6 +361,7 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 				dx->category[dx->num_categories].num = d->category[0].num;
 				dx->category[dx->num_categories].cost = d->cost;
 				dx->num_categories++;
+				dx->category[dx->num_categories].num = 0; /* API array terminator.*/
 			}
 			else
 			{
