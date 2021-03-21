@@ -188,8 +188,8 @@ int main (int argc, char* argv[])
 	else
 	{
 		char sbuf[1024] = { [sizeof(sbuf)-1] = 'x' };
-		fgets(sbuf, sizeof(sbuf), stdin);
-		if (sbuf[sizeof(sbuf)-1] != 'x')
+		char *retbuf = fgets(sbuf, sizeof(sbuf), stdin);
+		if (NULL == retbuf || sbuf[sizeof(sbuf)-1] != 'x')
 		{
 			prt_error("Fatal error: Input line too long (>%zu)\n", sizeof(sbuf)-2);
 			exit(-1);
