@@ -27,9 +27,9 @@
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-impl.h"
 #include "dict-common/dict-structures.h"
+#include "dict-common/dict-utils.h"      // patch_subscript()
 #include "dict-common/file-utils.h"
 #include "dict-file/read-dict.h"         // dictionary_six()
-#include "dict-file/word-file.h"         // patch_subscript()
 #include "error.h"
 #include "externs.h"
 #include "memory-pool.h"
