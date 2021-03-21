@@ -5,6 +5,12 @@
  * February 2021
  */
 
+#ifdef _WIN32
+#include <process.h>
+#else
+#include <unistd.h>
+#endif
+
 #include <argp.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -28,6 +34,7 @@ typedef struct
 	int corpus_size;
 	bool display_disjuncts;
 	bool leave_subscripts;
+	bool unrepeatable_random;
 
 	Parse_Options opts;
 } gen_parameters;
@@ -40,6 +47,7 @@ static struct argp_option options[] =
 	{"version", 'v', 0, 0, "Print version and exit."},
 	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts"},
 	{"leave-subscripts", '.', 0, 0, "Don't remove word subscripts."},
+	{"random", 'r', 0, 0, "Don't remove word subscripts."},
 	{0, 0, 0, 0, "Library options:", 1},
 	{"cost-max", '\4', "float"},
 	{"dialect", '\5', "dialect_list"},
@@ -73,6 +81,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 		          break;
 		case 'd': gp->display_disjuncts = true; break;
 		case '.': gp->leave_subscripts = true; break;
+		case 'r': gp->unrepeatable_random = true; break;
 
 
 		case 'v':
@@ -119,8 +128,17 @@ int main (int argc, char* argv[])
 	parms.corpus_size = 50;
 	parms.display_disjuncts = false;
 	parms.leave_subscripts = false;
+	parms.unrepeatable_random = false;
 	parms.opts = opts;
 	argp_parse(&argp, argc, argv, 0, 0, &parms);
+	if (!parms.unrepeatable_random)
+	{
+		srand(0);
+	}
+	else
+	{
+		srand(getpid());
+	}
 
 	printf("#\n# Corpus for language: \"%s\"\n", parms.language);
 	if (parms.sentence_length != 0)
