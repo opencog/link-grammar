@@ -29,6 +29,7 @@
 #include "dict-common/dict-structures.h"
 #include "dict-common/file-utils.h"
 #include "dict-file/read-dict.h"         // dictionary_six()
+#include "dict-file/word-file.h"         // patch_subscript()
 #include "error.h"
 #include "externs.h"
 #include "memory-pool.h"
@@ -434,9 +435,12 @@ static int classword_cb(void *user_data, int argc, char **argv, char **colName)
 	cbdata* bs = user_data;
 	Dictionary dict = bs->dict;
 
-	/* Add then name */
+	char *word = strdupa(argv[0]);
+	patch_subscript(word);
+
+	/* Add the word. */
 	dict->category[dict->num_categories].word[bs->count] =
-		string_set_add(argv[0], dict->string_set);
+		string_set_add(word, dict->string_set);
 	bs->count++;
 
 	return 0;
