@@ -23,6 +23,3 @@ struct Word_file_struct
 void free_Word_file(Word_file * wf);
 
 Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename);
-
-void patch_subscript(char *);
-

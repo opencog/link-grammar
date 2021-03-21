@@ -17,7 +17,7 @@
 #include "dict-common/dialect.h"
 #include "dict-common/dict-affix.h"     // is_stem
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-defines.h"   // SUBSCRIPT_MARK
+#include "dict-common/dict-utils.h"     // patch_subscript
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
 #include "error.h"
