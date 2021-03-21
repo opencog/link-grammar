@@ -18,6 +18,8 @@
 #include "dict-structures.h"            // Exp
 #include "utilities.h"                  // dyn_str
 
+void patch_subscript(char *);
+
 /* Exp utilities ... */
 void free_Exp(Exp *);
 int  size_of_expression(Exp *);

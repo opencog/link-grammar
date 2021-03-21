@@ -13,31 +13,11 @@
 #include "error.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h" // for MAX_WORD
+#include "dict-common/dict-utils.h" // for patch_subscript()
 #include "dict-common/file-utils.h"
 #include "string-set.h"
 #include "read-dict.h"
 #include "word-file.h"
-
-/** Replace the right-most dot with SUBSCRIPT_MARK */
-void patch_subscript(char * s)
-{
-	char *ds, *de;
-	int dp;
-	ds = strrchr(s, SUBSCRIPT_DOT);
-	if (!ds) return;
-
-	/* A dot at the end or a dot followed by a number is NOT
-	 * considered a subscript */
-	de = ds + 1;
-	if (*de == '\0') return;
-	dp = (int) *de;
-
-	/* If it's followed by a UTF8 char, its NOT a subscript */
-	if (127 < dp || dp < 0) return;
-	/* assert ((0 < dp) && (dp <= 127), "Bad dictionary entry!"); */
-	if (isdigit(dp)) return;
-	*ds = SUBSCRIPT_MARK;
-}
 
 /**
  * Reads in one word from the file, allocates space for it,
