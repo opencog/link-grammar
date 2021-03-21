@@ -45,16 +45,16 @@ static struct argp_option options[] =
 	{"length", 's', "length", 0, "Sentence length. If 0 - get sentence template from stdin."},
 	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
 	{"version", 'v', 0, 0, "Print version and exit."},
-	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts"},
+	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts."},
 	{"leave-subscripts", '.', 0, 0, "Don't remove word subscripts."},
 	{"random", 'r', 0, 0, "Don't remove word subscripts."},
 	{0, 0, 0, 0, "Library options:", 1},
-	{"cost-max", '\4', "float"},
-	{"dialect", '\5', "dialect_list"},
+	{"cost-max", 4, "float"},
+	{"dialect", 5, "dialect_list"},
 	{0, 0, 0, 0, "Library debug options:", 2},
-	{"debug", '\1', "debug_specification", 0, 0},
-	{"verbosity", '\2', "level"},
-	{"test", '\3', "test_list"},
+	{"debug", 1, "debug_specification", 0, 0},
+	{"verbosity", 2, "level"},
+	{"test", 3, "test_list"},
 	{ 0 }
 };
 

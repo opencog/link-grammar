@@ -396,7 +396,7 @@ static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
 /* ========================================================= */
 /* Callbacks and functions to support lexical category loading. */
 
-/* Used for `SELECT count(*) FROM foo` type of quries */
+/* Used for `SELECT count(*) FROM foo` type of queries */
 static int count_cb(void *user_data, int argc, char **argv, char **colName)
 {
 	cbdata* bs = user_data;
@@ -414,7 +414,7 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	Dictionary dict = bs->dict;
 
 	/* Add a category. */
-	/* This is intetionally off-by-one, per design. */
+	/* This is intentionally off-by-one, per design. */
 	dict->num_categories++;
 	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
