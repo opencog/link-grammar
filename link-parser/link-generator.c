@@ -27,6 +27,7 @@ typedef struct
 	int sentence_length;
 	int corpus_size;
 	bool display_disjuncts;
+	bool leave_subscripts;
 
 	Parse_Options opts;
 } gen_parameters;
@@ -38,6 +39,7 @@ static struct argp_option options[] =
 	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
 	{"version", 'v', 0, 0, "Print version and exit."},
 	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts"},
+	{"leave-subscripts", '.', 0, 0, "Don't remove word subscripts."},
 	{0, 0, 0, 0, "Library options:", 1},
 	{"cost-max", '\4', "float"},
 	{"dialect", '\5', "dialect_list"},
@@ -70,6 +72,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 			          invalid_int_value("corpus size", gp->corpus_size);
 		          break;
 		case 'd': gp->display_disjuncts = true; break;
+		case '.': gp->leave_subscripts = true; break;
 
 
 		case 'v':
@@ -115,6 +118,7 @@ int main (int argc, char* argv[])
 	parms.sentence_length = 6;
 	parms.corpus_size = 50;
 	parms.display_disjuncts = false;
+	parms.leave_subscripts = false;
 	parms.opts = opts;
 	argp_parse(&argp, argc, argv, 0, 0, &parms);
 
@@ -207,10 +211,21 @@ int main (int argc, char* argv[])
 		const char **words = linkage_get_words(linkage);
 
 		if (verbosity_level >= 5) printf("%d: ", i);
-		for (unsigned int w=0; w<nwords; w++)
+		for(WordIdx w = 0; w < nwords; w++)
 		{
-			printf(" %s", words[w]);
+			const Category_cost *cc = linkage_get_categories(linkage, w);
+			if (cc == NULL)
+			{
+				printf("%s", cond_subscript(words[w], parms.leave_subscripts));
+			}
+			else
+			{
+				const char *word = select_word(category, cc, w);
+				printf("%s", cond_subscript(word, parms.leave_subscripts));
+			}
+			if (w < nwords-1) printf(" ");
 		}
+
 		printf("\n");
 		if (parms.display_disjuncts)
 		{

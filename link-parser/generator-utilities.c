@@ -1,8 +1,53 @@
+#include <stdlib.h>
 #include <string.h>
 
 #include "link-grammar/dict-common/dict-api.h"
+#include "link-grammar/error.h"
 
 #include "generator-utilities.h"
+
+#define SUBSCRIPT_MARK '\3'
+#define SUBSCRIPT_DOT '.'
+#define MAX_WORD 180
+
+const char *select_word(const Category *category, const Category_cost *cc,
+								WordIdx w)
+{
+	unsigned int disjunct_num_categories;
+	for (disjunct_num_categories = 0; cc[disjunct_num_categories].num != 0;
+	   disjunct_num_categories++)
+		;
+	if (disjunct_num_categories == 0) return "BAD_DISJUNCT";
+
+	/* Select a disjunct category. */
+	unsigned int r = (unsigned int)rand();
+	unsigned int disjunct_category_idx = r % disjunct_num_categories;
+	unsigned int category_num = cc[disjunct_category_idx].num;
+	lgdebug(5, "Word %zu: r=%08x category %d/%u \"%u\";", w, r,
+	        disjunct_category_idx, disjunct_num_categories, category_num);
+	category_num--; /* Categories starts with 1 but Category is 0 based. */
+	unsigned int num_words = category[category_num].num_words;
+
+	/* Select a dictionary word from the selected disjunct category. */
+	r = (unsigned int)rand();
+	unsigned int dict_word_idx = r % num_words;
+	const char *word = category[category_num].word[dict_word_idx];
+	lgdebug(5, " r=%08x word %d/%u \"%s\"\n",
+	        r, dict_word_idx, num_words, word);
+
+	return word;
+}
+
+char w[MAX_WORD + 1];
+const char *cond_subscript(const char *ow, bool leave_subscript)
+{
+	const char *sm = strchr(ow, SUBSCRIPT_MARK);
+	if (sm == NULL) return ow;
+
+	strcpy(w, ow);
+	w[sm - ow] = leave_subscript ? SUBSCRIPT_DOT : '\0';
+	return w;
+}
 
 void dump_categories(Dictionary dict, const Category *category)
 {
