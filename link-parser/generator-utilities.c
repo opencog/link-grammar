@@ -38,12 +38,12 @@ const char *select_word(const Category *category, const Category_cost *cc,
 	return word;
 }
 
-char w[MAX_WORD + 1];
 const char *cond_subscript(const char *ow, bool leave_subscript)
 {
 	const char *sm = strchr(ow, SUBSCRIPT_MARK);
 	if (sm == NULL) return ow;
 
+	static char w[MAX_WORD + 1]; // XXX this is not thread-safe!
 	strcpy(w, ow);
 	w[sm - ow] = leave_subscript ? SUBSCRIPT_DOT : '\0';
 	return w;
