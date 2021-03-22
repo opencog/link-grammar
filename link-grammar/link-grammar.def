@@ -3,7 +3,7 @@ linkgrammar_get_configuration
 linkgrammar_open_data_file
 linkgrammar_get_dict_version
 linkgrammar_get_dict_locale
-linkgrammar_get_dict_definition
+linkgrammar_get_dict_define
 dictionary_create_lang
 dictionary_create_default_lang
 dictionary_get_lang
@@ -111,12 +111,14 @@ linkage_unused_word_cost
 linkage_disjunct_cost
 linkage_link_cost
 linkage_get_violation_name
+linkgrammar_get_dict_max_disjunct_cost
 lg_error_set_handler
 lg_error_set_handler_data
 lg_error_formatmsg
 lg_error_printall
 lg_error_clearall
 lg_error_flush
+lg_exp_get_string
 lg_exp_stringify
 prt_error
 utf8_strwidth
