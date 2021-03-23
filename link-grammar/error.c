@@ -402,6 +402,23 @@ const char *feature_enabled(const char * list, ...)
 			va_end(given_features);
 			return strstr(list, buff) + len + 1;
 		}
+
+		if (list[0] == ':')
+		{
+			/* Check for a parameter in ":param1:param2," */
+			buff[0] = ':';
+			bool found = (NULL != strstr(list, buff));
+			if (!found)
+			{
+				buff[len+1] = ',';
+				found = (NULL != strstr(list, buff));
+			}
+			if (found)
+			{
+				va_end(given_features);
+				return strstr(list, buff) + strlen(buff) + 2;
+			}
+		}
 	}
 	va_end(given_features);
 
