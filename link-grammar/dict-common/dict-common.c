@@ -65,9 +65,16 @@ bool is_macro(const char *w)
 
 bool is_wall(const char *s)
 {
-	if (0 == strcmp(s, LEFT_WALL_WORD)) return true;
-	if (0 == strcmp(s, RIGHT_WALL_WORD)) return true;
-
+	if (0 == strncmp(s, LEFT_WALL_WORD, sizeof(LEFT_WALL_WORD)-1))
+	{
+		if (s[sizeof(LEFT_WALL_WORD)-1] == '\0' ||
+			(s[sizeof(LEFT_WALL_WORD)-1] == SUBSCRIPT_MARK)) return true;
+	}
+	if (0 == strncmp(s, RIGHT_WALL_WORD, sizeof(RIGHT_WALL_WORD)-1))
+	{
+		if (s[sizeof(RIGHT_WALL_WORD)-1] == '\0' ||
+			(s[sizeof(RIGHT_WALL_WORD)-1] == SUBSCRIPT_MARK)) return true;
+	}
 	return false;
 }
 
