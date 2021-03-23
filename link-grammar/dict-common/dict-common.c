@@ -173,6 +173,7 @@ bool dictionary_word_is_known(const Dictionary dict, const char * word)
  */
 const Category *dictionary_get_categories(const Dictionary dict)
 {
+	if (dict->category == NULL) return NULL;
 	return dict->category + 1; /* First entry is not used */
 }
 

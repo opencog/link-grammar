@@ -166,6 +166,12 @@ int main (int argc, char* argv[])
 	printf("# Dictionary version %s\n", linkgrammar_get_dict_version(dict));
 
 	const Category* catlist = dictionary_get_categories(dict);
+	const Category* category = dictionary_get_categories(dict);
+	if (catlist == NULL)
+	{
+		prt_error("Fatal error: dictionary_get_categories() failed\n");
+		exit(-1);
+	}
 	unsigned int num_categories = 0;
 	for (const Category* c = catlist; c->num_words != 0; c++)
 		num_categories++;
