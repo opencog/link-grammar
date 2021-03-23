@@ -159,7 +159,9 @@ struct Dictionary_s
 	char            token[MAX_TOKEN_LENGTH];
 };
 
+bool is_stem(const char *);
 bool is_wall(const char *);
+bool is_macro(const char *);
 
 /* The functions here are intended for use by the tokenizer, only,
  * and pretty much no one else. If you are not the tokenizer, you
