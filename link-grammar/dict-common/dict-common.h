@@ -143,6 +143,7 @@ struct Dictionary_s
 	unsigned int num_categories_alloced;
 	Category * category;      /* Word lists - indexed by category number */
 	bool leave_subscripts;    /* Leave generated-word subscripts */
+	bool generate_walls;      /* Generate walls too for wildcard words */
 
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.
@@ -157,6 +158,9 @@ struct Dictionary_s
 	char            current_idiom[IDIOM_LINK_SZ];
 	char            token[MAX_TOKEN_LENGTH];
 };
+
+bool is_wall(const char *);
+
 /* The functions here are intended for use by the tokenizer, only,
  * and pretty much no one else. If you are not the tokenizer, you
  * probably don't need these. */

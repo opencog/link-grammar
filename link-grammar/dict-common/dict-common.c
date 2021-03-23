@@ -63,6 +63,14 @@ bool is_macro(const char *w)
 	return false;
 }
 
+bool is_wall(const char *s)
+{
+	if (0 == strcmp(s, LEFT_WALL_WORD)) return true;
+	if (0 == strcmp(s, RIGHT_WALL_WORD)) return true;
+
+	return false;
+}
+
 /* ======================================================================== */
 
 Dictionary dictionary_create_default_lang(void)

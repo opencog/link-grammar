@@ -124,13 +124,16 @@ dictionary_six_str(const char * lang,
 
 	if (NULL != affix_name)
 	{
-		if (test_enabled("generate")) /* Sentence generation. */
+		const char *generation_mode = test_enabled("generate");
+		if (generation_mode != NULL) /* Sentence generation. */
 		{
 			const size_t initial_allocation = 256;
 			dict->num_categories_alloced = initial_allocation;
 			dict->category = malloc(sizeof(*dict->category) *initial_allocation);
 			dict->leave_subscripts = test_enabled("leave-subscripts");
 			dict->spell_checker = NULL; /* Disable spell-checking. */
+			dict->generate_walls =
+				feature_enabled(generation_mode, "walls", NULL) != NULL;
 		}
 		else
 		{

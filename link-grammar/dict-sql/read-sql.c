@@ -413,6 +413,9 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	cbdata* bs = user_data;
 	Dictionary dict = bs->dict;
 
+	/* This assumes a class name of a wall is the same as the wall name. */
+	if (!dict->generate_walls && is_wall(argv[0])) return 0;
+
 	/* Add a category. */
 	/* This is intentionally off-by-one, per design. */
 	dict->num_categories++;
@@ -470,7 +473,7 @@ static void add_categories(Dictionary dict)
 		classname_cb, &bs, NULL);
 
 	/* Category 0 is unused, intentionally. Not sure why. */
-	unsigned int ncat = bs.count;
+	unsigned int ncat = dict->num_categories;
 	for (unsigned int i=1; i<=ncat; i++)
 	{
 		/* For each category, get the expression. */
@@ -515,7 +518,6 @@ static void add_categories(Dictionary dict)
 		sqlite3_exec(db, qry->str, classword_cb, &bs, NULL);
 		dyn_str_delete(qry);
 	}
-	dict->num_categories = ncat;
 
 	/* Set the termination entry. */
 	dict->category[dict->num_categories + 1].num_words = 0;
@@ -634,9 +636,12 @@ Dictionary dictionary_create_from_db(const char *lang)
 		goto failure;
 
 	/* Initialize word categories, for text generation. */
-	if (test_enabled("generate"))
+	const char *generation_mode = test_enabled("generate");
+	if (generation_mode != NULL)
 	{
 		dict->leave_subscripts = test_enabled("leave-subscripts");
+		dict->generate_walls =
+			feature_enabled(generation_mode, "walls", NULL) != NULL;
 		add_categories(dict);
 	}
 
