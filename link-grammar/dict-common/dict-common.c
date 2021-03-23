@@ -358,3 +358,33 @@ void dictionary_delete(Dictionary dict)
 }
 
 /* ======================================================================== */
+
+/**
+ * Set sentence generation indications if requested.
+ * Since dictionary_create*() doesn't support options, use the "test"
+ * parse_option, which is in a global variable:
+ * If it contains "generate", enable generation mode.
+ * If an argument "walls" is also supplied ("generate:walls"), then
+ * set a wall generation indication.
+ *
+ * @param dict Set the indications in this dictionary.
+ * @return \c true if in generation mode, \c false otherwise.
+ */
+bool dictionary_generation_request(const Dictionary dict)
+{
+	const char *generation_mode = test_enabled("generate");
+	if (generation_mode != NULL)
+	{
+		const size_t initial_allocation = 256;
+		dict->num_categories_alloced = initial_allocation;
+		dict->category = malloc(sizeof(*dict->category) *initial_allocation);
+		dict->leave_subscripts = test_enabled("leave-subscripts");
+		dict->generate_walls =
+			feature_enabled(generation_mode, "walls", NULL) != NULL;
+		dict->spell_checker = NULL; /* Disable spell-checking. */
+
+		return true;
+	}
+
+	return false;
+}

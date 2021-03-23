@@ -638,14 +638,8 @@ Dictionary dictionary_create_from_db(const char *lang)
 		goto failure;
 
 	/* Initialize word categories, for text generation. */
-	const char *generation_mode = test_enabled("generate");
-	if (generation_mode != NULL)
-	{
-		dict->leave_subscripts = test_enabled("leave-subscripts");
-		dict->generate_walls =
-			feature_enabled(generation_mode, "walls", NULL) != NULL;
+	if (!dictionary_generation_request(dict))
 		add_categories(dict);
-	}
 
 	return dict;
 

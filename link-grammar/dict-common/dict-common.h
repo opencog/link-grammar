@@ -167,6 +167,8 @@ Exp *Exp_create(Pool_desc *);
 Exp *Exp_create_dup(Pool_desc *, Exp *);
 Exp *make_unary_node(Pool_desc *, Exp *);
 
+bool dictionary_generation_request(const Dictionary);
+
 /* The functions here are intended for use by the tokenizer, only,
  * and pretty much no one else. If you are not the tokenizer, you
  * probably don't need these. */
