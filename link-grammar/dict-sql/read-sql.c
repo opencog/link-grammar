@@ -413,8 +413,10 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	cbdata* bs = user_data;
 	Dictionary dict = bs->dict;
 
-	/* This assumes a class name of a wall is the same as the wall name. */
+	/* Assuming here that a class name of a wall is the same as the wall
+	 * name, and a class name of a macro is in macro format. */
 	if (!dict->generate_walls && is_wall(argv[0])) return 0;
+	if (is_macro(argv[0])) return 0;
 
 	/* Add a category. */
 	/* This is intentionally off-by-one, per design. */
