@@ -22,7 +22,8 @@
 
 #include "generator-utilities.h"
 
-#define WILDCARDWORD "\\*"
+#define MAX_SENTENCE 254
+#define WILDCARD_WORD "\\*"
 
 static int verbosity_level; // TODO/FIXME: Avoid using exposed library static variable.
 
@@ -186,7 +187,7 @@ int main (int argc, char* argv[])
 		char *stmp = malloc(4 * parms.sentence_length + 1);
 		stmp[0] = '\0';
 		for (int i = 0; i < parms.sentence_length; i++)
-			strcat(stmp, WILDCARDWORD " ");
+			strcat(stmp, WILDCARD_WORD " ");
 
 		sent = sentence_create(stmp, dict);
 		free(stmp);
