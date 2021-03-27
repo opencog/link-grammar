@@ -77,7 +77,8 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 	{
 		case 'l': gp->language = arg; break;
 		case 's': gp->sentence_length = atoi(arg);
-		          if ((gp->sentence_length < 0) || (gp->sentence_length > 253))
+		          if ((gp->sentence_length < 0) ||
+		              (gp->sentence_length > MAX_SENTENCE))
 			          invalid_int_value("sentence length", gp->sentence_length);
 		          break;
 		case 'c': gp->corpus_size = atoll(arg);
