@@ -635,7 +635,16 @@ static void dyn_print_disjunct_list(dyn_str *s, const Disjunct *dj,
 
 	for (;dj != NULL; dj=dj->next)
 	{
-		lg_strlcpy(word, dj->word_string, sizeof(word));
+		if (dj->is_category == 0)
+		{
+			lg_strlcpy(word, dj->word_string, sizeof(word));
+		}
+		else
+		{
+			int n = snprintf(word, sizeof(word), "%x", dj->category[0].num);
+			if (dj->num_categories > 1)
+				snprintf(word + n, sizeof(word) - n, " (%u)", dj->num_categories);
+		}
 		patch_subscript_mark(word);
 		dyn_str *l = dyn_str_new();
 
