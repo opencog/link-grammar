@@ -771,11 +771,6 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 	                              /*num_elements*/65536, sizeof(Connector),
 	                              /*zero_out*/true, /*align*/false, false);
 
-	/* copy_Exp() needs an Exp memory pool. */
-	Pool_desc *Exp_pool = pool_new(__func__, "Exp", /*num_elements*/256,
-	                               sizeof(Exp), /*zero_out*/false,
-	                               /*align*/false, /*exact*/false);
-
 	select_data criterion = { .regex = rn };
 	void *select = (rn == NULL) ? NULL : select_disjunct;
 
@@ -784,7 +779,7 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 	for (; dn != NULL; dn = dn->right)
 	{
 		/* Use copy_Exp() to assign dialect cost. */
-		Exp *e = copy_Exp(dn->exp, Exp_pool, opts);
+		Exp *e = copy_Exp(dn->exp, dummy_sent->Exp_pool, opts);
 		Disjunct *d = build_disjuncts_for_exp(dummy_sent, e, dn->string, NULL,
 		                                      max_cost, NULL);
 
@@ -802,7 +797,7 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 		dyn_print_disjunct_list(dyn_pdl, d, int_flags, select, &criterion);
 		char *dliststr = dyn_str_take(dyn_pdl);
 
-		pool_reuse(Exp_pool);
+		pool_reuse(dummy_sent->Exp_pool);
 		pool_reuse(dummy_sent->Disjunct_pool);
 		pool_reuse(dummy_sent->Connector_pool);
 
@@ -826,7 +821,6 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 				              criterion.num_selected == 1 ? "" : "s");
 		}
 	}
-	pool_delete(Exp_pool);
 	sentence_delete(dummy_sent);
 
 	return dyn_str_take(s);
