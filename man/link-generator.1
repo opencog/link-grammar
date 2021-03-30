@@ -1,0 +1,172 @@
+.\" Portability macros (not validated).
+.\" FIXME: For some reason in man2html the registers are always null-strings.
+.\" Also, in man2html the code doesn't display the <a> HTML code even
+.\" if the conditionals are changed to always be true.
+.
+.\" Check whether we are using grohtml.
+.nr mH 0
+.if \n(.g \
+.  if '\*(.T'html' \
+.    nr mH 1
+.
+.\" Start URL.
+.de UR
+.  ds m1 \\$1\"
+.  nh
+.  if \\n(mH \{\
+.    \" Start diversion in a new environment.
+.    do ev URL-div
+.    do di URL-div
+.  \}
+..
+.
+.
+.\" End URL.
+.de UE
+.  ie \\n(mH \{\
+.    br
+.    di
+.    ev
+.
+.    \" Has there been one or more input lines for the link text?
+.    ie \\n(dn \{\
+.      do HTML-NS "<a href=""\\*(m1"">"
+.      \" Yes, strip off final newline of diversion and emit it.
+.      do chop URL-div
+.      do URL-div
+\c
+.      do HTML-NS </a>
+.    \}
+.    el \
+.      do HTML-NS "<a href=""\\*(m1"">\\*(m1</a>"
+\&\\$*\"
+.  \}
+.  el \
+\\*(la\\*(m1\\*(ra\\$*\"
+.
+.  hy \\n(HY
+..
+.\" define .EX/.EE (for multiline user-command examples; normal Courier font)
+.de EX
+.Vb
+.nf
+.ft CW
+..
+.de EE
+.Ve
+.ft P
+.fi
+..
+.\" =========================================================================
+.\"                                      Hey, EMACS: -*- nroff -*-
+.\" First parameter, NAME, should be all caps
+.\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
+.\" other parameters are allowed: see man(7), man(1)
+.TH LINK-PARSER 1 "2021-03-30" "Version 5.9.0"
+.\" Please adjust this date whenever revising the manpage.
+.\"
+.\" Some roff macros, for reference:
+.\" .nh        disable hyphenation
+.\" .hy        enable hyphenation
+.\" .ad l      left justify
+.\" .ad b      justify to both left and right margins
+.\" .nf        disable filling
+.\" .fi        enable filling
+.\" .br        insert line break
+.\" .sp <n>    insert n+1 empty lines
+.\" for manpage-specific macros, see man(7)
+.SH NAME
+link\-generator \- generate natural language sentences using Link Grammar
+.SH SYNOPSIS
+.B link\-generator
+.RB \-\-help
+.br
+.B link\-generator
+.RB \-\-version
+.br
+.nf
+.B link\-generator [\fIlanguage\fP|\fIdict\_location\fP] \
+\fR[\-\-quiet]\fP [\fI\-<special\_"!"\_command>\fP...]
+.fi
+.SH DESCRIPTION
+.PP
+.\" TeX users may be more comfortable with the \fB<whatever>\fP and
+.\" \fI<whatever>\fP escape sequences to invoke bold face and italics,
+.\" respectively.
+\fBlink\-generator\fP is a command-line tool for generating random
+sentences whose syntax is determined by the specified \%link\-grammar
+dictionary.
+.PP
+.SH EXAMPLE
+.EX
+.B link\-generator
+.EE
+.PP
+.SH BACKGROUND
+The theory of Link Grammar is explained in many academic papers.
+In the first of these, Daniel Sleator and Davy Temperley,
+"Parsing English with a Link Grammar" (1991),
+the authors defined a new formal grammatical system called a
+"link grammar". A sequence of words is in the language of a link
+grammar if there is a way to draw "links" between words in such a way
+that the local requirements of each word are satisfied, the links do
+not cross, and the words form a consistent connected graph. The authors
+encoded English grammar into such a system, and wrote the
+\%\fBlink\-parser\fP command-line tool to parse English using this grammar.
+.PP
+The engine that performs the parsing is separate from the dictionaries
+describing a language.  Currently, the most fully developed, complete
+dictionaries are for the English and Russian languages, although
+experimental, incomplete dictionaries exist for German and eight
+other languages.
+
+.SH OVERVIEW
+.PP
+\fBlink\-generator\fP generates sentences.
+
+.SH OPTIONS
+.TP
+.B \-\-help
+Print usage and exit.
+.TP
+.B \-\-version
+Print program version and configuration details, and exit.
+.TP
+.B \-\-usage
+Print a short synposis of the option flags.
+
+.SH SEE ALSO
+.nh
+The \%link\-parser is a command-line tool for parsing sentences. It
+provides some additional information about the \%link\-grammar
+implementation.
+.PP
+Information on the \%link\-grammar shared-library API and the link types
+used in the parse is available at the
+.UR http://www.abisource.com/projects/link-grammar/
+AbiWord website
+.UE .
+.PP
+Peer-reviewed papers explaining Link Grammar can be found at
+.UR http://www.link.cs.cmu.edu/link/papers
+original CMU site
+.UE .
+.PP
+The source code of \%\fBlink\-generator\fP and the \%link\-grammar library is
+located at
+.UR https://github.com/opencog/link-grammar
+GitHub
+.UE .
+.PP
+The mailing list for Link Grammar discussion is at
+.UR http://groups.google.com/group/link-grammar?hl=en
+link-grammar Google group
+.UE .
+.SH AUTHOR
+.nh
+The \%link\-grammar library were written by Daniel Sleator
+<sleator@cs.cmu.edu>, Davy Temperley <dtemp@theory.esm.rochester.edu>,
+and John Lafferty <lafferty@cs.cmu.edu>
+.PP
+This manual page was written by Ken Bloom <kbloom@gmail.com>, for the
+Debian project, and updated Linas Vepstas <linasvepstas@gmail.com>.
