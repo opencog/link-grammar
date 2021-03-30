@@ -90,10 +90,10 @@ static const char *select_random_word(const Category *catlist,
                                       const Category_cost *cc,
                                       WordIdx w)
 {
-	unsigned int disjunct_num_categories;
-	for (disjunct_num_categories = 0; cc[disjunct_num_categories].num != 0;
-	   disjunct_num_categories++)
-		;
+	unsigned int disjunct_num_categories = 0;
+	while (cc[disjunct_num_categories].num != 0)
+	   disjunct_num_categories++;
+
 	if (disjunct_num_categories == 0) return "BAD_DISJUNCT";
 
 	/* Select a disjunct category. */
@@ -142,6 +142,7 @@ void print_sentence(const Category* catlist,
 		}
 		if (w < nwords-1) printf(" ");
 	}
+	printf("\n");
 }
 
 /* ------------------------------------------------------------ */
