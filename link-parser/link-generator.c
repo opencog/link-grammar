@@ -224,6 +224,13 @@ int main (int argc, char* argv[])
 	int linkages_valid = sentence_num_valid_linkages(sent);
 	assert(linkages_valid == num_linkages, "unexpected linkages!");
 
+	// How many sentences to print per linkage.
+	// Print more than one only if explode flag set.
+	double samples = parms.explode ?
+		((double) parms.corpus_size) / ((double) num_linkages)
+		: 1.0;
+
+	int num_printed = 0;
 	for (int i=0; i<num_linkages; i++)
 	{
 		Linkage linkage;
@@ -233,8 +240,8 @@ int main (int argc, char* argv[])
 		const char **words = linkage_get_words(linkage);
 
 		if (verbosity_level >= 5) printf("%d: ", i);
-		print_sentence(catlist, linkage, nwords, words,
-		               parms.leave_subscripts, parms.explode);
+		num_printed += print_sentences(catlist, linkage, nwords, words,
+		                               parms.leave_subscripts, samples);
 
 		if (parms.display_disjuncts)
 		{
@@ -244,6 +251,8 @@ int main (int argc, char* argv[])
 		}
 
 		linkage_delete(linkage);
+
+		if (num_printed >= parms.corpus_size) break;
 	}
 
 	parse_options_delete(opts);

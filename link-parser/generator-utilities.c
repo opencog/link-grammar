@@ -84,9 +84,9 @@ static size_t sent_odom(const Category* catlist,
 	return count;
 }
 
-static void print_sent_all(const Category* catlist,
-                           Linkage linkage, size_t nwords, const char** words,
-                           bool subscript)
+static size_t print_several(const Category* catlist,
+                            Linkage linkage, size_t nwords, const char** words,
+                            bool subscript, double fraction)
 {
 	const Category_cost* cclist[nwords];
 	unsigned int cclen[nwords];
@@ -113,6 +113,8 @@ static void print_sent_all(const Category* catlist,
 	size_t num_word_choices = sent_odom(catlist, nwords, words, subscript,
 	          cclist, cclen, selected_words, 0, 0);
 	printf("# num word choices for linkage = %lu\n", num_word_choices);
+
+	return 1;
 }
 
 static const char *select_random_word(const Category *catlist,
@@ -146,14 +148,14 @@ static const char *select_random_word(const Category *catlist,
 	return word;
 }
 
-void print_sentence(const Category* catlist,
-                    Linkage linkage, size_t nwords, const char** words,
-                    bool subscript, bool explode)
+size_t print_sentences(const Category* catlist,
+                       Linkage linkage, size_t nwords, const char** words,
+                       bool subscript, double max_samples)
 {
-	if (explode)
+	if (1.0 < max_samples)
 	{
-		print_sent_all(catlist, linkage, nwords, words, subscript);
-		return;
+		return print_several(catlist, linkage, nwords, words,
+		                     subscript, max_samples);
 	}
 
 	/* Otherwise, just select one word at random */
@@ -174,6 +176,8 @@ void print_sentence(const Category* catlist,
 		if (w < nwords-1) printf(" ");
 	}
 	printf("\n");
+
+	return 1;
 }
 
 /* ------------------------------------------------------------ */
