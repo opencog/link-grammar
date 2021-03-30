@@ -34,9 +34,13 @@ static void print_sent(size_t nwords, const char** words,
 	printf("\n");
 }
 
-/* Recursive sentence odometer */
+/**
+ * Recursive sentence odometer.
+ * Loops over all possible word-selections for each disjunct
+ * in the linkage.
+ */
 static void sent_odom(const Category* catlist,
-                      Linkage linkage, size_t nwords, const char** words,
+                      size_t nwords, const char** words,
                       bool subscript,
                       const Category_cost** cclist,
                       unsigned int* cclen,
@@ -53,7 +57,7 @@ static void sent_odom(const Category* catlist,
 	if (cc == NULL)
 	{
 		selected_words[cur_word] = words[cur_word];
-		sent_odom(catlist, linkage, nwords, words, subscript,
+		sent_odom(catlist, nwords, words, subscript,
 		          cclist, cclen, selected_words, cur_word+1);
 	}
 	else
@@ -70,7 +74,7 @@ static void sent_odom(const Category* catlist,
 			{
 				selected_words[cur_word] = catlist[catno].word[widx];
 
-				sent_odom(catlist, linkage, nwords, words, subscript,
+				sent_odom(catlist, nwords, words, subscript,
 				          cclist, cclen, selected_words, cur_word+1);
 			}
 		}
@@ -103,7 +107,7 @@ static void print_sent_all(const Category* catlist,
 		}
 	}
 
-	sent_odom(catlist, linkage, nwords, words, subscript,
+	sent_odom(catlist, nwords, words, subscript,
 	          cclist, cclen, selected_words, 0);
 }
 
