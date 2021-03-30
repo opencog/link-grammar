@@ -45,16 +45,22 @@ void free_disjuncts(Disjunct *c)
 	}
 }
 
+void free_categories_from_disjunct_array(Disjunct *dbase,
+                                         unsigned int num_disjuncts)
+{
+	for (Disjunct *d = dbase; d < &dbase[num_disjuncts]; d++)
+	{
+		if (d->is_category != 0)
+			free(d->category);
+	}
+}
+
 void free_categories(Sentence sent)
 {
 	if (NULL != sent->dc_memblock)
 	{
-		for (Disjunct *d = sent->dc_memblock;
-		     d < &((Disjunct *)sent->dc_memblock)[sent->num_disjuncts]; d++)
-		{
-			if (d->is_category != 0)
-				free(d->category);
-		}
+		free_categories_from_disjunct_array(sent->dc_memblock,
+		                                    sent->num_disjuncts);
 	}
 	else
 	{
