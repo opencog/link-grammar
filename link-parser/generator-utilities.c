@@ -39,21 +39,38 @@ static void sent_odom(const Category* catlist,
                       bool subscript,
                       const Category_cost** cclist,
                       unsigned int* cclen,
-                      unsigned int* cc_select,
+                      const char** selected_words,
                       WordIdx cur_word)
 {
 	if (cur_word >= nwords)
 	{
-		// print_sent(catlist, linkage, nwords, words, subscript,
-		//           cclist, cc_select);
+		print_sent(nwords, selected_words, subscript);
 		return;
 	}
 
-	for (unsigned int ic = 0; ic < cclen[cur_word]; ic++)
+	for (unsigned int catidx = 0; catidx < cclen[cur_word]; catidx++)
 	{
-		cc_select[cur_word] = ic;
-		sent_odom(catlist, linkage, nwords, words, subscript,
-		          cclist, cclen, cc_select, cur_word+1);
+		const Category_cost *cc = cclist[cur_word];
+		if (cc == NULL)
+		{
+			selected_words[cur_word] = words[cur_word];
+			sent_odom(catlist, linkage, nwords, words, subscript,
+			          cclist, cclen, selected_words, cur_word+1);
+		}
+		else
+		{
+			/* Subtract 1 because there isn't any "category zero" */
+			unsigned int catno = cc[catidx].num - 1;
+			unsigned int num_words = catlist[catno].num_words;
+
+			for (unsigned int widx = 0; widx < num_words; widx++)
+			{
+				selected_words[cur_word] = catlist[catno].word[widx];
+
+				sent_odom(catlist, linkage, nwords, words, subscript,
+				          cclist, cclen, selected_words, cur_word+1);
+			}
+		}
 	}
 }
 
@@ -63,7 +80,7 @@ static void print_sent_all(const Category* catlist,
 {
 	const Category_cost* cclist[nwords];
 	unsigned int cclen[nwords];
-	unsigned int cc_select[nwords];
+	const char* selected_words[nwords];
 
 	for(WordIdx w = 0; w < nwords; w++)
 	{
@@ -72,7 +89,7 @@ static void print_sent_all(const Category* catlist,
 
 		unsigned int dj_num_cats = 0;
 		cclen[w] = 1;
-		cc_select[w] = 0;
+		selected_words[w] = "buggy-bug-bug";
 		if (NULL != cclist[w])
 		{
 			while (cc[dj_num_cats].num != 0) dj_num_cats++;
@@ -83,7 +100,7 @@ static void print_sent_all(const Category* catlist,
 	}
 
 	sent_odom(catlist, linkage, nwords, words, subscript,
-	          cclist, cclen, cc_select, 0);
+	          cclist, cclen, selected_words, 0);
 }
 
 static const char *select_random_word(const Category *catlist,
@@ -94,7 +111,7 @@ static const char *select_random_word(const Category *catlist,
 	while (cc[disjunct_num_categories].num != 0)
 	   disjunct_num_categories++;
 
-	if (disjunct_num_categories == 0) return "BAD_DISJUNCT";
+	assert(disjunct_num_categories != 0, "Bad disjunct!");
 
 	/* Select a disjunct category. */
 	unsigned int r = (unsigned int)rand();
