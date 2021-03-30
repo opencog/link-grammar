@@ -88,14 +88,14 @@ static void sent_odom(const Category* catlist,
 void count_choices(void* data)
 {
 	size_t* count = data;
-	count++;
+	(*count) ++;
 }
 
 typedef struct {
 	size_t nwords;
 	const char** selected_words;
 	bool subscript;
-	double fraction;
+	double chance;
 	size_t nprinted;
 } sent_data;
 
@@ -103,10 +103,10 @@ void print_word_choices(void* data)
 {
 	sent_data* sd = data;
 
-	/* If fraction is greater than one, always print. */
-	/* Otherwise, expect fraction to be between zero and one */
-	bool prt = (1.0 <= sd->fraction) ||
-		(((double) rand()) / ((double) RAND_MAX) < sd->fraction);
+	/* If chance is greater than one, always print. */
+	/* Otherwise, expect chance to be between zero and one */
+	bool prt = (1.0 <= sd->chance) ||
+		(((double) rand()) / ((double) RAND_MAX) < sd->chance);
 
 	if (prt)
 	{
@@ -146,14 +146,16 @@ static size_t print_several(const Category* catlist,
 	sent_odom(catlist, nwords, words,
 	          cclist, cclen, selected_words,
 	          count_choices, &num_word_choices, 0);
-	printf("# num possible word choices for linkage = %lu\n", num_word_choices);
+	double chance = fraction / ((double) num_word_choices);
+	printf("# num possible word choices for linkage = %lu chance to print=%f\n",
+		num_word_choices, chance);
 
 	/* Now, print those choices */
 	sent_data sd;
 	sd.nwords = nwords;
 	sd.selected_words = selected_words;
 	sd.subscript = subscript;
-	sd.fraction = fraction / ((double) num_word_choices);
+	sd.chance = chance;
 	sd.nprinted = 0;
 
 	/* Print at least one sentence! Keep trying till we get one. */
