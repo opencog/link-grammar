@@ -194,6 +194,20 @@ static const char *select_random_word(const Category *catlist,
 	return word;
 }
 
+/**
+ * Print one or more sample sentences per linkage.
+ * Return the number of sentences actually printed.
+ *
+ * `max_samples` should be the average number of sentences to be
+ * printed. If it is larger than the total number of possible
+ * word-choices for this linkage, then one sentence will be printed
+ * for each possible word-choice. If it is smaller than the total,
+ * then word-choices will be drawn at random, until, on average,
+ * this many word-choices have been sampled.
+ *
+ * If `max_samples` is less than one, then exactly one sentence will
+ * be printed.
+ */
 size_t print_sentences(const Category* catlist,
                        Linkage linkage, size_t nwords, const char** words,
                        bool subscript, double max_samples)
