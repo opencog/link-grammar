@@ -24,7 +24,7 @@
 
 #define WILDCARDWORD "\\*"
 
-static int verbosity_level; // Avoid using exposed library static variable.
+static int verbosity_level; // TODO/FIXME: Avoid using exposed library static variable.
 
 /* Argument parsing for the generator */
 typedef struct
@@ -35,6 +35,7 @@ typedef struct
 	bool display_disjuncts;
 	bool leave_subscripts;
 	bool unrepeatable_random;
+	bool explode;
 
 	Parse_Options opts;
 } gen_parameters;
@@ -44,10 +45,11 @@ static struct argp_option options[] =
 	{"language", 'l', "language", 0, "Directory containing language definition."},
 	{"length", 's', "length", 0, "Sentence length. If 0 - get sentence template from stdin."},
 	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
+	{"explode", 'x', 0, 0, "Generate all wording samples per linkage."},
 	{"version", 'v', 0, 0, "Print version and exit."},
 	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts."},
 	{"leave-subscripts", '.', 0, 0, "Don't remove word subscripts."},
-	{"random", 'r', 0, 0, "Don't remove word subscripts."},
+	{"random", 'r', 0, 0, "Use unrepeatable random numbers."},
 	{0, 0, 0, 0, "Library options:", 1},
 	{"cost-max", 4, "float"},
 	{"dialect", 5, "dialect_list"},
@@ -79,6 +81,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 		          if (gp->corpus_size <= 0)
 			          invalid_int_value("corpus size", gp->corpus_size);
 		          break;
+		case 'x': gp->explode = true; break;
 		case 'd': gp->display_disjuncts = true; break;
 		case '.': gp->leave_subscripts = true; break;
 		case 'r': gp->unrepeatable_random = true; break;
@@ -126,6 +129,7 @@ int main (int argc, char* argv[])
 	parms.language = "lt";
 	parms.sentence_length = 6;
 	parms.corpus_size = 50;
+	parms.explode = false;
 	parms.display_disjuncts = false;
 	parms.leave_subscripts = false;
 	parms.unrepeatable_random = false;
