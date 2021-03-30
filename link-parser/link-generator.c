@@ -164,15 +164,15 @@ int main (int argc, char* argv[])
 	}
 	printf("# Dictionary version %s\n", linkgrammar_get_dict_version(dict));
 
-	const Category* category = dictionary_get_categories(dict);
+	const Category* catlist = dictionary_get_categories(dict);
 	unsigned int num_categories = 0;
-	for (const Category* c = category; c->num_words != 0; c++)
+	for (const Category* c = catlist; c->num_words != 0; c++)
 		num_categories++;
 	printf("# Number of categories: %u\n", num_categories);
 
 	if (verbosity_level == 200)
 	{
-		dump_categories(dict, category);
+		dump_categories(dict, catlist);
 		exit(0);
 	}
 
@@ -242,7 +242,7 @@ int main (int argc, char* argv[])
 			}
 			else
 			{
-				const char *word = select_word(category, cc, w);
+				const char *word = select_word(catlist, cc, w);
 				printf("%s", cond_subscript(word, parms.leave_subscripts));
 			}
 			if (w < nwords-1) printf(" ");
