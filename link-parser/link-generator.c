@@ -233,22 +233,9 @@ int main (int argc, char* argv[])
 		const char **words = linkage_get_words(linkage);
 
 		if (verbosity_level >= 5) printf("%d: ", i);
-		for(WordIdx w = 0; w < nwords; w++)
-		{
-			const Category_cost *cc = linkage_get_categories(linkage, w);
-			if (cc == NULL)
-			{
-				printf("%s", cond_subscript(words[w], parms.leave_subscripts));
-			}
-			else
-			{
-				const char *word = select_word(catlist, cc, w);
-				printf("%s", cond_subscript(word, parms.leave_subscripts));
-			}
-			if (w < nwords-1) printf(" ");
-		}
+		print_sentence(catlist, linkage, nwords, words,
+		               parms.leave_subscripts, parms.explode);
 
-		printf("\n");
 		if (parms.display_disjuncts)
 		{
 			char *disjuncts = linkage_print_disjuncts(linkage);

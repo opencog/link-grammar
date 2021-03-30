@@ -95,3 +95,25 @@ void dump_categories(Dictionary dict, const Category *category)
 	printf(TAB"]\n");
 	printf("}\n");
 }
+
+void print_sentence(const Category* catlist,
+                    Linkage linkage, size_t nwords, const char** words,
+                    bool subscript, bool explode)
+{
+	for(WordIdx w = 0; w < nwords; w++)
+	{
+		const Category_cost *cc = linkage_get_categories(linkage, w);
+		if (cc == NULL)
+		{
+			printf("%s", cond_subscript(words[w], subscript));
+		}
+		else
+		{
+			const char *word = select_word(catlist, cc, w);
+			printf("%s", cond_subscript(word, subscript));
+		}
+		if (w < nwords-1) printf(" ");
+	}
+
+	printf("\n");
+}
