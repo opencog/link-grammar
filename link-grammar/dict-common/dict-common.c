@@ -348,10 +348,11 @@ void dictionary_delete(Dictionary dict)
 	free_anysplit(dict);
 	free_dictionary(dict);
 
-	/* Free sentence generation categories and word lists. */
+	/* Free sentence generation stuff. */
 	for (unsigned int i = 1; i <= dict->num_categories; i++)
 		free(dict->category[i].word);
 	free(dict->category);
+	free(dict->wildcard_word_dc_memblock);
 
 	free(dict);
 	object_open(NULL, NULL, NULL); /* Free the directory path cache */
