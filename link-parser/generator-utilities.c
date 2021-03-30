@@ -107,7 +107,7 @@ static void print_sent_all(const Category* catlist,
 		cclist[w] = cc;
 
 		unsigned int dj_num_cats = 0;
-		cclen[w] = 0;
+		cclen[w] = 1;
 		cc_select[w] = 0;
 		if (NULL != cclist[w])
 		{
@@ -134,7 +134,6 @@ void print_sentence(const Category* catlist,
 
 	/* Otherwise, just select one word at random */
 	const Category_cost* cclist[nwords];
-	unsigned int cclen[nwords];
 	unsigned int cc_select[nwords];
 
 	for(WordIdx w = 0; w < nwords; w++)
@@ -143,14 +142,11 @@ void print_sentence(const Category* catlist,
 		cclist[w] = cc;
 
 		unsigned int dj_num_cats = 0;
-		cclen[w] = 0;
 		cc_select[w] = 0;
 		if (NULL != cc)
 		{
 			while (cc[dj_num_cats].num != 0) dj_num_cats++;
 			assert(dj_num_cats != 0, "Bad disjunct!");
-
-			cclen[w] = dj_num_cats;
 
 			/* Pick one at random. */
 			unsigned int r = (unsigned int)rand();
