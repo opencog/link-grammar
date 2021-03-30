@@ -748,7 +748,6 @@ void compute_generated_words(Sentence sent, Linkage linkage)
 
 	linkage->word = malloc(linkage->num_words * sizeof(char *));
 
-	lgdebug(D_CGW, "Sentence %d\n", abs(linkage->lifo.index) - 1);
 	for (WordIdx i = 0; i < linkage->num_words; i++)
 	{
 		assert(cdjp[i] != NULL, "NULL disjunct in generated sentence");
