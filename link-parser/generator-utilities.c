@@ -26,6 +26,7 @@ static void print_sent(size_t nwords, const char** words,
 {
 	for(WordIdx w = 0; w < nwords; w++)
 	{
+		assert(NULL != words[w], "Failed to select word!");
 		printf("%s", cond_subscript(words[w], subscript));
 		if (w < nwords-1) printf(" ");
 	}
@@ -48,21 +49,23 @@ static void sent_odom(const Category* catlist,
 		return;
 	}
 
-	for (unsigned int catidx = 0; catidx < cclen[cur_word]; catidx++)
+	const Category_cost *cc = cclist[cur_word];
+	if (cc == NULL)
 	{
-		const Category_cost *cc = cclist[cur_word];
-		if (cc == NULL)
-		{
-			selected_words[cur_word] = words[cur_word];
-			sent_odom(catlist, linkage, nwords, words, subscript,
-			          cclist, cclen, selected_words, cur_word+1);
-		}
-		else
+		selected_words[cur_word] = words[cur_word];
+		sent_odom(catlist, linkage, nwords, words, subscript,
+		          cclist, cclen, selected_words, cur_word+1);
+	}
+	else
+	{
+		/* Loop over all categories at the current odometer position. */
+		for (unsigned int catidx = 0; catidx < cclen[cur_word]; catidx++)
 		{
 			/* Subtract 1 because there isn't any "category zero" */
 			unsigned int catno = cc[catidx].num - 1;
 			unsigned int num_words = catlist[catno].num_words;
 
+			/* Loop over all words for the selected category */
 			for (unsigned int widx = 0; widx < num_words; widx++)
 			{
 				selected_words[cur_word] = catlist[catno].word[widx];
@@ -89,9 +92,10 @@ static void print_sent_all(const Category* catlist,
 
 		unsigned int dj_num_cats = 0;
 		cclen[w] = 1;
-		selected_words[w] = "buggy-bug-bug";
+		selected_words[w] = NULL;
 		if (NULL != cclist[w])
 		{
+			/* Count the number of categories for this disjunct */
 			while (cc[dj_num_cats].num != 0) dj_num_cats++;
 			assert(dj_num_cats != 0, "Bad disjunct!");
 
@@ -107,25 +111,27 @@ static const char *select_random_word(const Category *catlist,
                                       const Category_cost *cc,
                                       WordIdx w)
 {
-	unsigned int disjunct_num_categories = 0;
-	while (cc[disjunct_num_categories].num != 0)
-	   disjunct_num_categories++;
+	/* Count the number of categories for this disjunct */
+	unsigned int dj_num_cats = 0;
+	while (cc[dj_num_cats].num != 0)
+	   dj_num_cats++;
 
-	assert(disjunct_num_categories != 0, "Bad disjunct!");
+	assert(dj_num_cats != 0, "Bad disjunct!");
 
-	/* Select a disjunct category. */
+	/* Select a category on this disjunct. */
 	unsigned int r = (unsigned int)rand();
-	unsigned int disjunct_category_idx = r % disjunct_num_categories;
-	unsigned int category_num = cc[disjunct_category_idx].num;
+	unsigned int catidx = r % dj_num_cats;
+
+	/* Subtract 1 because Category 0 is undefined. */
+	unsigned int catnum = cc[catidx].num - 1;
 	lgdebug(5, "Word %zu: r=%08x category %d/%u \"%u\";", w, r,
-	        disjunct_category_idx, disjunct_num_categories, category_num);
-	category_num--; /* Categories starts with 1 but Category is 0 based. */
-	unsigned int num_words = catlist[category_num].num_words;
+	        catidx, dj_num_cats, catnum);
+	unsigned int num_words = catlist[catnum].num_words;
 
 	/* Select a dictionary word from the selected disjunct category. */
 	r = (unsigned int)rand();
 	unsigned int dict_word_idx = r % num_words;
-	const char *word = catlist[category_num].word[dict_word_idx];
+	const char *word = catlist[catnum].word[dict_word_idx];
 	lgdebug(5, " r=%08x word %d/%u \"%s\"\n",
 	        r, dict_word_idx, num_words, word);
 
