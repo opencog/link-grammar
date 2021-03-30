@@ -84,10 +84,6 @@ link\-generator \- generate natural language sentences using Link Grammar
 .B link\-generator
 .RB \-\-version
 .br
-.nf
-.B link\-generator [\fIlanguage\fP|\fIdict\_location\fP] \
-\fR[\-\-quiet]\fP [\fI\-<special\_"!"\_command>\fP...]
-.fi
 .SH DESCRIPTION
 .PP
 .\" TeX users may be more comfortable with the \fB<whatever>\fP and
@@ -134,6 +130,40 @@ Print program version and configuration details, and exit.
 .TP
 .B \-\-usage
 Print a short synposis of the option flags.
+.TP
+.B \-l\fR language|dict_location, \fB\-\-language\fR=language|dict_location
+Specify the language to use, or the directory file-path to the
+dictionary to use.
+.TP
+.B \-s\fR length, \fB\-\-length\fR=length
+Specify the length of the sentences to generate. All generated
+sentences will have exactly this length.
+.TP
+.B \-c\fR count, \fB\-\-count\fR=count
+Specify the number of sentences to generate. If this number is less
+than the number of possible linkages, then a random subset of possible
+linkages will be generated, and one representative sentence for each
+linkage will be printed. The words in the representative sentence are
+randomly chosen from the set of words associated with each disjunct
+in that linkage. If the count is greater than the number of possible
+linkages, then one representative sentence for each linkage will be
+printed.
+
+If the \-x option is set, and if the count is greater than the number
+of possible linkages, then more than one representative sentence will
+be printed for each linkage. Each sentence will consist of word choices
+drawn randomly from the set of words associated with each disjunct.
+An approximately equal number of sentences will be printed for each
+linkage; if the count is high enough, then all possible word-choices
+will be printed. Note that this typically results in a combinatorial
+explosion!
+
+.TP
+.B \-x\fR, \fB\-\-explode\fR
+If set, and is the count is greater than the number of possible
+linkages, then more than one sentence will be printed for each
+linkage. Each sentence will have a distinct random word-choice for
+that linkage.
 
 .SH SEE ALSO
 .nh
