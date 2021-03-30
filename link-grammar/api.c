@@ -557,6 +557,13 @@ void sentence_delete(Sentence sent)
 		pool_reuse(sent->dict->Exp_pool);
 	}
 
+	if (NULL != sent->wildcard_word_dc_memblock)
+	{
+		free_categories_from_disjunct_array(sent->wildcard_word_dc_memblock,
+		                                    sent->wildcard_word_num_disjuncts);
+		free(sent->wildcard_word_dc_memblock);
+	}
+
 	free(sent);
 }
 

@@ -178,6 +178,13 @@ struct Sentence_s
 #ifdef USE_SAT_SOLVER
 	void *hook;                 /* Hook for the SAT solver */
 #endif /* USE_SAT_SOLVER */
+
+	/* Generation mode - finding unused dictionary disjuncts.
+	 * This stuff is here and not in Dictionary because it depends on the
+	 * current dialect and cost. */
+	void *wildcard_word_dc_memblock;  /* Dictionary disjuncts & connectors. */
+	unsigned int wildcard_word_dc_memblock_sz;
+	unsigned int wildcard_word_num_disjuncts;
 };
 
 #endif

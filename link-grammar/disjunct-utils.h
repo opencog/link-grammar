@@ -75,6 +75,7 @@ struct Disjunct_struct
 void free_disjuncts(Disjunct *);
 void free_sentence_disjuncts(Sentence, bool);
 void free_categories(Sentence);
+void free_categories_from_disjunct_array(Disjunct *, unsigned int);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct *, bool);

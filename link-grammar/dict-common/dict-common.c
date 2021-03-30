@@ -17,7 +17,8 @@
 #include "dict-api.h"
 #include "dict-common.h"
 #include "dict-defines.h"
-#include "file-utils.h"
+#include "disjunct-utils.h"
+#include "file-utils.h"                // free_categories_from_disjunct_array
 #include "post-process/pp_knowledge.h" // Needed only for pp_close !!??
 #include "regex-morph.h"
 #include "string-set.h"
@@ -352,7 +353,6 @@ void dictionary_delete(Dictionary dict)
 	for (unsigned int i = 1; i <= dict->num_categories; i++)
 		free(dict->category[i].word);
 	free(dict->category);
-	free(dict->wildcard_word_dc_memblock);
 
 	free(dict);
 	object_open(NULL, NULL, NULL); /* Free the directory path cache */

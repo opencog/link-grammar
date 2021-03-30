@@ -23,6 +23,7 @@
 #include "string-set.h"
 #include "utilities.h"
 #include "tokenize/word-structures.h"   // Word_struct
+#include "tokenize/tokenize.h"          // word0_set
 #include "tokenize/tok-structures.h"    // gword_set
 
 #define D_PREP 5 // Debug level for this module.
@@ -122,6 +123,60 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
 	}
 }
 
+
+static void create_wildcard_word_disjunct_list(Sentence sent,
+                                               Parse_Options opts)
+{
+	if (opts->verbosity >= D_USER_TIMES)
+		prt_error("#### Creating a wild-card word disjunct list\n");
+
+	int spell_option = parse_options_get_spell_guess(opts);
+	parse_options_set_spell_guess(opts, 0);
+	Sentence wc_word_list = sentence_create(WILDCARD_WORD, sent->dict);
+	if (0 != sentence_split(wc_word_list, opts)) goto error;
+
+	/* The result sentence may already consist of a wild-card word only,
+	 * or may include walls. In the later case - discard the walls.
+	 * FIXME? Use build_word_expressions() instead. */
+	WordIdx w = 1; /* Check RIGHT-WALL here. */
+	if (0 == strcmp(wc_word_list->word[0].unsplit_word, LEFT_WALL_WORD))
+	{
+		Word tmp = wc_word_list->word[0];
+		wc_word_list->word[0] = wc_word_list->word[1];
+		wc_word_list->word[1] = tmp;
+		wc_word_list->word[1].x = NULL;  /* Don't generate disjuncts. */
+		w = 2;
+	}
+	if ((wc_word_list->length == w + 1) &&
+	    (0 == strcmp(wc_word_list->word[w].unsplit_word, RIGHT_WALL_WORD)))
+	{
+		wc_word_list->word[w].x = NULL;  /* Don't generate disjuncts. */
+	}
+
+	build_sentence_disjuncts(wc_word_list, opts->disjunct_cost, opts);
+
+	Word *word0 = &wc_word_list->word[0];
+	word0->d = eliminate_duplicate_disjuncts(word0->d, false);
+	word0->d = eliminate_duplicate_disjuncts(word0->d, true);
+
+	wc_word_list->min_len_encoding = 2; /* Don't share/encode. */
+	Tracon_sharing *t = pack_sentence_for_pruning(wc_word_list);
+
+	sent->wildcard_word_dc_memblock = t->memblock;
+	sent->wildcard_word_dc_memblock_sz = t->memblock_sz;
+	sent->wildcard_word_num_disjuncts = t->num_disjuncts;
+
+	if (opts->verbosity >= D_USER_TIMES)
+		print_time(opts, "Finished creating list: %u disjuncts", t->num_disjuncts);
+
+	t->memblock = NULL;
+	free_tracon_sharing(t);
+
+error:
+	parse_options_set_spell_guess(opts, spell_option);
+	sentence_delete(wc_word_list);
+}
+
 /**
  * Assumes that the sentence expression lists have been generated.
  */
@@ -137,6 +192,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Built disjuncts");
 
+	bool wildcard_word_found = false;
 	for (i=0; i<sent->length; i++)
 	{
 		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, false);
@@ -145,6 +201,16 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		{
 			/* Also with different word_string. */
 			sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, true);
+
+			unsigned int n = 1; /* 0 means no ordinal. */
+			for (Disjunct *d = sent->word[i].d; d != NULL; d = d->next)
+				d->ordinal = n++;
+
+			if (!wildcard_word_found)
+			{
+				wildcard_word_found = true;
+				create_wildcard_word_disjunct_list(sent, opts);
+			}
 		}
 #if 0
 		/* eliminate_duplicate_disjuncts() is now very efficient and doesn't
