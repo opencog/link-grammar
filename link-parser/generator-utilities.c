@@ -84,17 +84,14 @@ static void print_sent_all(const Category* catlist,
 
 		unsigned int dj_num_cats = 0;
 		cclen[w] = 0;
-		if (NULL != cclist[w]) /* when is it ever null ??? */
+		cc_select[w] = 0;
+		if (NULL != cclist[w])
 		{
 			while (cc[dj_num_cats].num != 0) dj_num_cats++;
 			assert(dj_num_cats != 0, "Bad disjunct!");
 
 			cclen[w] = dj_num_cats;
 		}
-
-		/* Pick one at random. */
-		unsigned int r = (unsigned int)rand();
-		cc_select[w] = r % dj_num_cats;
 	}
 
 	print_sent(catlist, linkage, nwords, words, subscript,
@@ -123,17 +120,18 @@ void print_sentence(const Category* catlist,
 
 		unsigned int dj_num_cats = 0;
 		cclen[w] = 0;
-		if (NULL != cclist[w]) /* when is it ever null ??? */
+		cc_select[w] = 0;
+		if (NULL != cc)
 		{
 			while (cc[dj_num_cats].num != 0) dj_num_cats++;
 			assert(dj_num_cats != 0, "Bad disjunct!");
 
 			cclen[w] = dj_num_cats;
-		}
 
-		/* Pick one at random. */
-		unsigned int r = (unsigned int)rand();
-		cc_select[w] = r % dj_num_cats;
+			/* Pick one at random. */
+			unsigned int r = (unsigned int)rand();
+			cc_select[w] = r % dj_num_cats;
+		}
 	}
 
 	print_sent(catlist, linkage, nwords, words, subscript,
