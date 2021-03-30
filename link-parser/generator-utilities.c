@@ -10,15 +10,11 @@
 #define SUBSCRIPT_DOT '.'
 #define MAX_WORD 180
 
-const char *select_word(const Category *catlist, const Category_cost *cc,
+const char *select_word(const Category *catlist,
+                        const Category_cost *cc,
+                        unsigned int disjunct_num_categories,
 								WordIdx w)
 {
-	unsigned int disjunct_num_categories;
-	for (disjunct_num_categories = 0; cc[disjunct_num_categories].num != 0;
-	   disjunct_num_categories++)
-		;
-	if (disjunct_num_categories == 0) return "BAD_DISJUNCT";
-
 	/* Select a disjunct category. */
 	unsigned int r = (unsigned int)rand();
 	unsigned int disjunct_category_idx = r % disjunct_num_categories;
@@ -38,7 +34,7 @@ const char *select_word(const Category *catlist, const Category_cost *cc,
 	return word;
 }
 
-const char *cond_subscript(const char *ow, bool leave_subscript)
+static const char *cond_subscript(const char *ow, bool leave_subscript)
 {
 	const char *sm = strchr(ow, SUBSCRIPT_MARK);
 	if (sm == NULL) return ow;
@@ -58,13 +54,19 @@ void print_sentence(const Category* catlist,
 		const Category_cost *cc = linkage_get_categories(linkage, w);
 		if (cc == NULL)
 		{
+			// When is cc NULL? When does this ever happen?
 			printf("%s", cond_subscript(words[w], subscript));
+			if (w < nwords-1) printf(" ");
+			continue;
 		}
-		else
-		{
-			const char *word = select_word(catlist, cc, w);
-			printf("%s", cond_subscript(word, subscript));
-		}
+
+		unsigned int dj_num_cats;
+		for (dj_num_cats = 0; cc[dj_num_cats].num != 0; dj_num_cats++)
+			;
+		assert(dj_num_cats != 0, "Bad disjunct!");
+
+		const char *word = select_word(catlist, cc, dj_num_cats, w);
+		printf("%s", cond_subscript(word, subscript));
 		if (w < nwords-1) printf(" ");
 	}
 
