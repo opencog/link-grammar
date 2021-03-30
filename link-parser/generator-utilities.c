@@ -36,67 +36,24 @@ static void print_sent(size_t nwords, const char** words,
 
 /**
  * Recursive sentence odometer.
- * Loops over all possible word-selections for each disjunct
- * in the linkage. Returns a count of how many selections are possible.
- */
-static size_t count_odom(const Category* catlist,
-                         size_t nwords, const char** words,
-                         bool subscript,
-                         const Category_cost** cclist,
-                         unsigned int* cclen,
-                         const char** selected_words,
-                         WordIdx cur_word,
-                         size_t count)
-{
-	/* We've reached the end of the sentence; we are done. */
-	if (cur_word >= nwords) return count+1;
-
-	/* If there aren't any categories, there is only one word-choice. */
-	const Category_cost *cc = cclist[cur_word];
-	if (cc == NULL)
-	{
-		selected_words[cur_word] = words[cur_word];
-		return count_odom(catlist, nwords, words, subscript,
-		          cclist, cclen, selected_words, cur_word+1, count);
-	}
-
-	/* Loop over all categories at the current odometer position. */
-	for (unsigned int catidx = 0; catidx < cclen[cur_word]; catidx++)
-	{
-		/* Subtract 1 because there isn't any "category zero" */
-		unsigned int catno = cc[catidx].num - 1;
-		unsigned int num_words = catlist[catno].num_words;
-
-		/* Loop over all words for the selected category */
-		for (unsigned int widx = 0; widx < num_words; widx++)
-		{
-			selected_words[cur_word] = catlist[catno].word[widx];
-
-			count = count_odom(catlist, nwords, words, subscript,
-			        cclist, cclen, selected_words, cur_word+1, count);
-		}
-	}
-
-	return count;
-}
-
-/**
- * Recursive sentence odometer.
- * Loops over all possible word-selections for each disjunct
- * in the linkage.
+ *
+ * Loops over all possible word-selections for each disjunct in the
+ * linkage. Calls the callback for each possible word-selection has
+ * been made.
  */
 static void sent_odom(const Category* catlist,
                       size_t nwords, const char** words,
-                      bool subscript,
                       const Category_cost** cclist,
                       unsigned int* cclen,
                       const char** selected_words,
+                      void (*callback)(void*),
+                      void* data,
                       WordIdx cur_word)
 {
 	/* We've reached the end of the sentence; we are done. */
 	if (cur_word >= nwords)
 	{
-		print_sent(nwords, selected_words, subscript);
+		callback(data);
 		return;
 	}
 
@@ -105,8 +62,8 @@ static void sent_odom(const Category* catlist,
 	if (cc == NULL)
 	{
 		selected_words[cur_word] = words[cur_word];
-		sent_odom(catlist, nwords, words, subscript,
-		          cclist, cclen, selected_words, cur_word+1);
+		sent_odom(catlist, nwords, words,
+		          cclist, cclen, selected_words, callback, data, cur_word+1);
 		return;
 	}
 
@@ -122,10 +79,28 @@ static void sent_odom(const Category* catlist,
 		{
 			selected_words[cur_word] = catlist[catno].word[widx];
 
-			sent_odom(catlist, nwords, words, subscript,
-			        cclist, cclen, selected_words, cur_word+1);
+			sent_odom(catlist, nwords, words,
+			          cclist, cclen, selected_words, callback, data, cur_word+1);
 		}
 	}
+}
+
+void count_choices(void* data)
+{
+	size_t* count = data;
+	count++;
+}
+
+typedef struct {
+	size_t nwords;
+	const char** selected_words;
+	bool subscript;
+} sent_data;
+
+void print_word_choices(void* data)
+{
+	sent_data* sd = data;
+	print_sent(sd->nwords, sd->selected_words, sd->subscript);
 }
 
 static size_t print_several(const Category* catlist,
@@ -154,11 +129,22 @@ static size_t print_several(const Category* catlist,
 		}
 	}
 
-	size_t num_word_choices = count_odom(catlist, nwords, words, subscript,
-	          cclist, cclen, selected_words, 0, 0);
+	/* First, count how many word choices there might be */
+	size_t num_word_choices = 0;
+	sent_odom(catlist, nwords, words,
+	          cclist, cclen, selected_words,
+	          count_choices, &num_word_choices, 0);
 	printf("# num possible word choices for linkage = %lu\n", num_word_choices);
-	sent_odom(catlist, nwords, words, subscript,
-	          cclist, cclen, selected_words, 0);
+
+	/* Now, print those choices */
+	sent_data sd;
+	sd.nwords = nwords;
+	sd.selected_words = selected_words;
+	sd.subscript = subscript;
+
+	sent_odom(catlist, nwords, words,
+	          cclist, cclen, selected_words,
+	          print_word_choices, &sd, 0);
 
 	return 1;
 }
