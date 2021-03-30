@@ -31,7 +31,7 @@ typedef struct
 {
 	const char* language;
 	int sentence_length;
-	int corpus_size;
+	size_t corpus_size;
 	bool display_disjuncts;
 	bool leave_subscripts;
 	bool unrepeatable_random;
@@ -77,7 +77,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 		          if ((gp->sentence_length < 0) || (gp->sentence_length > 253))
 			          invalid_int_value("sentence length", gp->sentence_length);
 		          break;
-		case 'c': gp->corpus_size = atoi(arg); break;
+		case 'c': gp->corpus_size = atoll(arg);
 		          if (gp->corpus_size <= 0)
 			          invalid_int_value("corpus size", gp->corpus_size);
 		          break;
@@ -147,7 +147,7 @@ int main (int argc, char* argv[])
 	printf("#\n# Corpus for language: \"%s\"\n", parms.language);
 	if (parms.sentence_length != 0)
 		printf("# Sentence length: %d\n", parms.sentence_length);
-	printf("# Requested corpus size: %d\n", parms.corpus_size);
+	printf("# Requested corpus size: %lu\n", parms.corpus_size);
 
 	// Force the system into generation mode by setting the "test"
 	// parse-option to "generate".
@@ -176,7 +176,9 @@ int main (int argc, char* argv[])
 		exit(0);
 	}
 
-	parse_options_set_linkage_limit(opts, parms.corpus_size);
+	int linkage_limit = parms.corpus_size;
+	if (INT_MAX < parms.corpus_size) linkage_limit = INT_MAX;
+	parse_options_set_linkage_limit(opts, linkage_limit);
 
 	if (parms.sentence_length > 0)
 	{
@@ -230,7 +232,7 @@ int main (int argc, char* argv[])
 		((double) parms.corpus_size) / ((double) num_linkages)
 		: 1.0;
 
-	int num_printed = 0;
+	size_t num_printed = 0;
 	for (int i=0; i<num_linkages; i++)
 	{
 		Linkage linkage;
