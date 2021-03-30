@@ -62,7 +62,7 @@
 .\" First parameter, NAME, should be all caps
 .\" Second parameter, SECTION, should be 1-8, maybe w/ subsection
 .\" other parameters are allowed: see man(7), man(1)
-.TH LINK-PARSER 1 "2018-09-28" "Version 5.5.2"
+.TH LINK-PARSER 1 "2021-03-30" "Version 5.9.0"
 .\" Please adjust this date whenever revising the manpage.
 .\"
 .\" Some roff macros, for reference:
@@ -94,8 +94,9 @@ link\-parser \- parse natural language sentences using Link Grammar
 .\" \fI<whatever>\fP escape sequences to invoke bold face and italics,
 .\" respectively.
 \fBlink\-parser\fP is the command-line wrapper to the \%link\-grammar
-natural language parsing library.  This library will parse English
-language sentences, generating linkage trees showing relationships
+natural language parsing library.  This library will parse sentences
+written in English, Russian and other languages,
+generating linkage trees showing relationships
 between the subject, the verb, and various adjectives, adverbs,
 etc. in the sentence.
 .PP
@@ -144,7 +145,7 @@ to parse English using this grammar.
 The engine that performs the parsing is separate from the dictionaries
 describing a language.  Currently, the most fully developed, complete
 dictionaries are for the English and Russian languages, although
-experimental, incomplete dictionaries exist for German, and several
+experimental, incomplete dictionaries exist for German and eight
 other languages.
 
 .SH OVERVIEW
