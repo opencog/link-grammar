@@ -95,12 +95,24 @@ typedef struct {
 	size_t nwords;
 	const char** selected_words;
 	bool subscript;
+	double fraction;
+	size_t nprinted;
 } sent_data;
 
 void print_word_choices(void* data)
 {
 	sent_data* sd = data;
-	print_sent(sd->nwords, sd->selected_words, sd->subscript);
+
+	/* If fraction is greater than one, always print. */
+	/* Otherwise, expect fraction to be between zero and one */
+	bool prt = (1.0 <= sd->fraction) ||
+		(((double) rand()) / ((double) RAND_MAX) < sd->fraction);
+
+	if (prt)
+	{
+		print_sent(sd->nwords, sd->selected_words, sd->subscript);
+		sd->nprinted ++;
+	}
 }
 
 static size_t print_several(const Category* catlist,
@@ -141,12 +153,18 @@ static size_t print_several(const Category* catlist,
 	sd.nwords = nwords;
 	sd.selected_words = selected_words;
 	sd.subscript = subscript;
+	sd.fraction = fraction / ((double) num_word_choices);
+	sd.nprinted = 0;
 
-	sent_odom(catlist, nwords, words,
-	          cclist, cclen, selected_words,
-	          print_word_choices, &sd, 0);
+	/* Print at least one sentence! Keep trying till we get one. */
+	while (0 == sd.nprinted)
+	{
+		sent_odom(catlist, nwords, words,
+		          cclist, cclen, selected_words,
+		          print_word_choices, &sd, 0);
+	}
 
-	return 1;
+	return sd.nprinted;
 }
 
 static const char *select_random_word(const Category *catlist,
