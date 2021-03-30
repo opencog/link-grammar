@@ -39,46 +39,49 @@ static void print_sent(size_t nwords, const char** words,
  * Loops over all possible word-selections for each disjunct
  * in the linkage.
  */
-static void sent_odom(const Category* catlist,
-                      size_t nwords, const char** words,
-                      bool subscript,
-                      const Category_cost** cclist,
-                      unsigned int* cclen,
-                      const char** selected_words,
-                      WordIdx cur_word)
+static size_t sent_odom(const Category* catlist,
+                        size_t nwords, const char** words,
+                        bool subscript,
+                        const Category_cost** cclist,
+                        unsigned int* cclen,
+                        const char** selected_words,
+                        WordIdx cur_word,
+                        size_t count)
 {
 	if (cur_word >= nwords)
 	{
 		print_sent(nwords, selected_words, subscript);
-		return;
+		count ++;
+		return count;
 	}
 
+	/* If there aren't any categories, there is only one word-choice. */
 	const Category_cost *cc = cclist[cur_word];
 	if (cc == NULL)
 	{
 		selected_words[cur_word] = words[cur_word];
-		sent_odom(catlist, nwords, words, subscript,
-		          cclist, cclen, selected_words, cur_word+1);
+		return sent_odom(catlist, nwords, words, subscript,
+		          cclist, cclen, selected_words, cur_word+1, count);
 	}
-	else
+
+	/* Loop over all categories at the current odometer position. */
+	for (unsigned int catidx = 0; catidx < cclen[cur_word]; catidx++)
 	{
-		/* Loop over all categories at the current odometer position. */
-		for (unsigned int catidx = 0; catidx < cclen[cur_word]; catidx++)
+		/* Subtract 1 because there isn't any "category zero" */
+		unsigned int catno = cc[catidx].num - 1;
+		unsigned int num_words = catlist[catno].num_words;
+
+		/* Loop over all words for the selected category */
+		for (unsigned int widx = 0; widx < num_words; widx++)
 		{
-			/* Subtract 1 because there isn't any "category zero" */
-			unsigned int catno = cc[catidx].num - 1;
-			unsigned int num_words = catlist[catno].num_words;
+			selected_words[cur_word] = catlist[catno].word[widx];
 
-			/* Loop over all words for the selected category */
-			for (unsigned int widx = 0; widx < num_words; widx++)
-			{
-				selected_words[cur_word] = catlist[catno].word[widx];
-
-				sent_odom(catlist, nwords, words, subscript,
-				          cclist, cclen, selected_words, cur_word+1);
-			}
+			count = sent_odom(catlist, nwords, words, subscript,
+			        cclist, cclen, selected_words, cur_word+1, count);
 		}
 	}
+
+	return count;
 }
 
 static void print_sent_all(const Category* catlist,
@@ -107,8 +110,9 @@ static void print_sent_all(const Category* catlist,
 		}
 	}
 
-	sent_odom(catlist, nwords, words, subscript,
-	          cclist, cclen, selected_words, 0);
+	size_t num_word_choices = sent_odom(catlist, nwords, words, subscript,
+	          cclist, cclen, selected_words, 0, 0);
+	printf("# num word choices for linkage = %lu\n", num_word_choices);
 }
 
 static const char *select_random_word(const Category *catlist,
