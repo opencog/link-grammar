@@ -10,28 +10,6 @@
 #define SUBSCRIPT_DOT '.'
 #define MAX_WORD 180
 
-const char *select_word(const Category *catlist,
-                        const Category_cost *cc,
-                        WordIdx w,
-                        unsigned int disjunct_category_idx)
-{
-	/* Select a disjunct category. */
-	unsigned int category_num = cc[disjunct_category_idx].num;
-	lgdebug(5, "Word %zu: category %d \"%u\";", w,
-	        disjunct_category_idx, category_num);
-	category_num--; /* Categories starts with 1 but Category is 0 based. */
-	unsigned int num_words = catlist[category_num].num_words;
-
-	/* Select a dictionary word from the selected disjunct category. */
-	unsigned int r = (unsigned int)rand();
-	unsigned int dict_word_idx = r % num_words;
-	const char *word = catlist[category_num].word[dict_word_idx];
-	lgdebug(5, " r=%08x word %d/%u \"%s\"\n",
-	        r, dict_word_idx, num_words, word);
-
-	return word;
-}
-
 static const char *cond_subscript(const char *ow, bool leave_subscript)
 {
 	const char *sm = strchr(ow, SUBSCRIPT_MARK);
@@ -43,26 +21,12 @@ static const char *cond_subscript(const char *ow, bool leave_subscript)
 	return w;
 }
 
-static void print_sent(const Category* catlist,
-                       Linkage linkage, size_t nwords, const char** words,
-                       bool subscript,
-                       const Category_cost** cclist,
-                       unsigned int* cc_select)
+static void print_sent(size_t nwords, const char** words,
+                       bool subscript)
 {
 	for(WordIdx w = 0; w < nwords; w++)
 	{
-		const Category_cost *cc = cclist[w];
-		if (cc == NULL)
-		{
-			// When is cc NULL? When does this ever happen?
-			printf("%s", cond_subscript(words[w], subscript));
-			if (w < nwords-1) printf(" ");
-			continue;
-		}
-
-		unsigned int dj_cat_idx = cc_select[w];
-		const char *word = select_word(catlist, cc, w, dj_cat_idx);
-		printf("%s", cond_subscript(word, subscript));
+		printf("%s", cond_subscript(words[w], subscript));
 		if (w < nwords-1) printf(" ");
 	}
 
@@ -80,8 +44,8 @@ static void sent_odom(const Category* catlist,
 {
 	if (cur_word >= nwords)
 	{
-		print_sent(catlist, linkage, nwords, words, subscript,
-		           cclist, cc_select);
+		// print_sent(catlist, linkage, nwords, words, subscript,
+		//           cclist, cc_select);
 		return;
 	}
 
@@ -122,6 +86,35 @@ static void print_sent_all(const Category* catlist,
 	          cclist, cclen, cc_select, 0);
 }
 
+static const char *select_random_word(const Category *catlist,
+                                      const Category_cost *cc,
+                                      WordIdx w)
+{
+	unsigned int disjunct_num_categories;
+	for (disjunct_num_categories = 0; cc[disjunct_num_categories].num != 0;
+	   disjunct_num_categories++)
+		;
+	if (disjunct_num_categories == 0) return "BAD_DISJUNCT";
+
+	/* Select a disjunct category. */
+	unsigned int r = (unsigned int)rand();
+	unsigned int disjunct_category_idx = r % disjunct_num_categories;
+	unsigned int category_num = cc[disjunct_category_idx].num;
+	lgdebug(5, "Word %zu: r=%08x category %d/%u \"%u\";", w, r,
+	        disjunct_category_idx, disjunct_num_categories, category_num);
+	category_num--; /* Categories starts with 1 but Category is 0 based. */
+	unsigned int num_words = catlist[category_num].num_words;
+
+	/* Select a dictionary word from the selected disjunct category. */
+	r = (unsigned int)rand();
+	unsigned int dict_word_idx = r % num_words;
+	const char *word = catlist[category_num].word[dict_word_idx];
+	lgdebug(5, " r=%08x word %d/%u \"%s\"\n",
+	        r, dict_word_idx, num_words, word);
+
+	return word;
+}
+
 void print_sentence(const Category* catlist,
                     Linkage linkage, size_t nwords, const char** words,
                     bool subscript, bool explode)
@@ -133,29 +126,22 @@ void print_sentence(const Category* catlist,
 	}
 
 	/* Otherwise, just select one word at random */
-	const Category_cost* cclist[nwords];
-	unsigned int cc_select[nwords];
+	const char* selected_words[nwords];
 
 	for(WordIdx w = 0; w < nwords; w++)
 	{
 		const Category_cost* cc = linkage_get_categories(linkage, w);
-		cclist[w] = cc;
-
-		unsigned int dj_num_cats = 0;
-		cc_select[w] = 0;
-		if (NULL != cc)
+		if (cc == NULL)
 		{
-			while (cc[dj_num_cats].num != 0) dj_num_cats++;
-			assert(dj_num_cats != 0, "Bad disjunct!");
-
-			/* Pick one at random. */
-			unsigned int r = (unsigned int)rand();
-			cc_select[w] = r % dj_num_cats;
+			printf("%s", cond_subscript(words[w], subscript));
 		}
+		else
+		{
+			const char *word = select_random_word(catlist, cc, w);
+			printf("%s", cond_subscript(word, subscript));
+		}
+		if (w < nwords-1) printf(" ");
 	}
-
-	print_sent(catlist, linkage, nwords, words, subscript,
-	           cclist, cc_select);
 }
 
 /* ------------------------------------------------------------ */
