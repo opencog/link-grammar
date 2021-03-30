@@ -162,6 +162,9 @@ static void create_wildcard_word_disjunct_list(Sentence sent,
 	wc_word_list->min_len_encoding = 2; /* Don't share/encode. */
 	Tracon_sharing *t = pack_sentence_for_pruning(wc_word_list);
 
+	for (unsigned int n = 0; n < t->num_disjuncts; n++)
+		t->dblock_base[n].ordinal = (int)n;
+
 	sent->wildcard_word_dc_memblock = t->memblock;
 	sent->wildcard_word_dc_memblock_sz = t->memblock_sz;
 	sent->wildcard_word_num_disjuncts = t->num_disjuncts;
@@ -196,20 +199,27 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	for (i=0; i<sent->length; i++)
 	{
 		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, false);
-		if (IS_GENERATION(sent->dict) &&
-		    (sent->word[i].d != NULL) && (sent->word[i].d->is_category != 0))
+		if (IS_GENERATION(sent->dict))
 		{
-			/* Also with different word_string. */
-			sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, true);
-
-			unsigned int n = 1; /* 0 means no ordinal. */
-			for (Disjunct *d = sent->word[i].d; d != NULL; d = d->next)
-				d->ordinal = n++;
-
-			if (!wildcard_word_found)
+			if ((sent->word[i].d != NULL) && (sent->word[i].d->is_category != 0))
 			{
-				wildcard_word_found = true;
-				create_wildcard_word_disjunct_list(sent, opts);
+				/* Also with different word_string. */
+				sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, true);
+
+				int n = 0;
+				for (Disjunct *d = sent->word[i].d; d != NULL; d = d->next)
+					d->ordinal = n++;
+
+				if (!wildcard_word_found)
+				{
+					wildcard_word_found = true;
+					create_wildcard_word_disjunct_list(sent, opts);
+				}
+			}
+			else
+			{
+				for (Disjunct *d = sent->word[i].d; d != NULL; d = d->next)
+					d->ordinal = -1;
 			}
 		}
 #if 0

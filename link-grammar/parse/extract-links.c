@@ -836,3 +836,26 @@ void extract_links(extractor_t * pex, Linkage lkg)
 		list_links(lkg, pex->parse_set, index);
 	}
 }
+
+static void mark_used_disjunct(Parse_set *set, bool *disjunct_used)
+{
+	if (set == NULL || set->first == NULL) return;
+
+	for (Parse_choice *pc = set->first; pc != NULL; pc = pc->next)
+	{
+		if (pc->md->ordinal != -1)
+			disjunct_used[pc->md->ordinal] = true;
+	}
+}
+
+void mark_used_disjuncts(extractor_t *pex, bool *disjunct_used)
+{
+	assert(pex->x_table != NULL, "x_table==NULL");
+
+	for (unsigned int i = 0; i < pex->x_table_size; i++)
+	{
+		for (Pset_bucket *t = pex->x_table[i]; t != NULL; t = t->next)
+			mark_used_disjunct(&t->set, disjunct_used);
+	}
+
+}

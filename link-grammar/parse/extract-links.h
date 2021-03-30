@@ -27,4 +27,6 @@ bool build_parse_set(extractor_t*, Sentence,
 
 void extract_links(extractor_t*, Linkage);
 
+void mark_used_disjuncts(extractor_t *, bool *);
+
 #endif /* _EXTRACT_LINKS_H */

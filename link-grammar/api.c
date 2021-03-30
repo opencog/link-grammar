@@ -542,6 +542,7 @@ void sentence_delete(Sentence sent)
 	post_process_free(sent->postprocessor);
 	post_process_free(sent->constituent_pp);
 	lg_exp_stringify(NULL);
+	free(sent->disjunct_used);
 
 	global_rand_state = sent->rand_state;
 	pool_delete(sent->Match_node_pool);
