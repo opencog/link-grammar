@@ -725,6 +725,7 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	newd->cost = d->cost;
 	newd->is_category = d->is_category;
 	newd->originating_gword = d->originating_gword;
+	newd->ordinal = d->ordinal;
 
 	if (NULL == ts->tracon_list)
 		 token = (uintptr_t)d->originating_gword;

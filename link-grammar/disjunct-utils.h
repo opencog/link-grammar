@@ -59,7 +59,7 @@ struct Disjunct_struct
 	union
 	{
 		uint32_t dup_hash;        /* Duplicate elimination | before pruning */
-		uint32_t unused2;         /* Unused now | before and during parsing */
+		int32_t ordinal;          /* Generation mode | after d. elimination */
 	}; /* 4 bytes */
 
 	struct
