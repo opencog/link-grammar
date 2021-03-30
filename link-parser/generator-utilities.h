@@ -1,5 +1,6 @@
 #include "link-grammar/dict-common/dict-api.h"
 
 void dump_categories(const Dictionary, const Category *);
-const char *cond_subscript(const char *, bool);
-const char *select_word(const Category *, const Category_cost *, WordIdx);
+size_t print_sentences(const Category*,
+                       Linkage, size_t nwords, const char** words,
+                       bool subscript, double max_samples);
