@@ -69,6 +69,30 @@ static void print_sent(const Category* catlist,
 	printf("\n");
 }
 
+/* Recursive sentence odometer */
+static void sent_odom(const Category* catlist,
+                      Linkage linkage, size_t nwords, const char** words,
+                      bool subscript,
+                      const Category_cost** cclist,
+                      unsigned int* cclen,
+                      unsigned int* cc_select,
+                      WordIdx cur_word)
+{
+	if (cur_word >= nwords)
+	{
+		print_sent(catlist, linkage, nwords, words, subscript,
+		           cclist, cc_select);
+		return;
+	}
+
+	for (unsigned int ic = 0; ic < cclen[cur_word]; ic++)
+	{
+		cc_select[cur_word] = ic;
+		sent_odom(catlist, linkage, nwords, words, subscript,
+		          cclist, cclen, cc_select, cur_word+1);
+	}
+}
+
 static void print_sent_all(const Category* catlist,
                            Linkage linkage, size_t nwords, const char** words,
                            bool subscript)
@@ -94,8 +118,8 @@ static void print_sent_all(const Category* catlist,
 		}
 	}
 
-	print_sent(catlist, linkage, nwords, words, subscript,
-	           cclist, cc_select);
+	sent_odom(catlist, linkage, nwords, words, subscript,
+	          cclist, cclen, cc_select, 0);
 }
 
 void print_sentence(const Category* catlist,
