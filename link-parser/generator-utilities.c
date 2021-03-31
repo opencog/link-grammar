@@ -10,6 +10,10 @@
 #define SUBSCRIPT_DOT '.'
 #define MAX_WORD 180
 
+/**
+ * Patch a subscript to SUBSCRIPT_DOT, or remove it iff
+ * \p leave_subscript is false.
+ */
 static const char *cond_subscript(const char *ow, bool leave_subscript)
 {
 	const char *sm = strchr(ow, SUBSCRIPT_MARK);

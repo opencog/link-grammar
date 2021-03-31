@@ -124,18 +124,9 @@ dictionary_six_str(const char * lang,
 
 	if (NULL != affix_name)
 	{
-		if (test_enabled("generate")) /* Sentence generation. */
-		{
-			const size_t initial_allocation = 256;
-			dict->num_categories_alloced = initial_allocation;
-			dict->category = malloc(sizeof(*dict->category) *initial_allocation);
-			dict->leave_subscripts = test_enabled("leave-subscripts");
-			dict->spell_checker = NULL; /* Disable spell-checking. */
-		}
-		else
-		{
+		if (!dictionary_generation_request(dict))
 			dict->spell_checker = spellcheck_create(dict->lang);
-		}
+
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
 		if (verbosity_level(D_USER_BASIC) && (NULL == dict->spell_checker))

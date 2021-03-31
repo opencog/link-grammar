@@ -1655,14 +1655,6 @@ static void add_define(Dictionary dict, const char *name, const char *value)
 	dict->define.value[id - 1] = string_set_add(value, dict->string_set);
 }
 
-static bool is_wall(const char *s)
-{
-	if (0 == strcmp(s, LEFT_WALL_WORD)) return true;
-	if (0 == strcmp(s, RIGHT_WALL_WORD)) return true;
-
-	return false;
-}
-
 static bool is_directive(const char *s)
 {
 	return
@@ -1682,7 +1674,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 	if (n == 1)
 	{
 		if (is_macro(dn->string)) return;
-		if (is_wall(dn->string)) return;
+		if (!dict->generate_walls && is_wall(dn->string)) return;
 		if (is_correction(dn->string)) return;
 		if (is_directive(dn->string)) return;
 	}
@@ -1703,7 +1695,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 	for (Dict_node *dnx = dn; dnx != NULL; dnx = dnx->left)
 	{
 		if (is_macro(dnx->string)) continue;
-		if (is_wall(dnx->string)) continue;
+		if (!dict->generate_walls && is_wall(dnx->string)) continue;
 		if (is_correction(dnx->string)) continue;
 		if (is_directive(dnx->string)) return;
 		dict->category[dict->num_categories].word[n] = dnx->string;

@@ -2717,7 +2717,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	    !contains_digits(word, dict->lctype) &&
 	    !is_proper_name(word, dict->lctype) &&
 	    opts->use_spell_guess && dict->spell_checker &&
-	    !strstr(word, "\\*"))
+	    !strstr(word, WILDCARD_WORD))
 	{
 		bool spell_suggest = guess_misspelled_word(sent, unsplit_word, opts);
 		lgdebug(+D_SW, "Spell suggest=%d\n", spell_suggest);
@@ -3023,14 +3023,14 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 	X_node * x, * y;
 	const Dictionary dict = sent->dict;
 
-	if (NULL != strstr(w->subword, "\\*"))
+	if (NULL != strstr(w->subword, WILDCARD_WORD))
 	{
 		char *t = alloca(strlen(w->subword) + 8); /* + room for multibyte copy */
 		const char *backslash = strchr(w->subword, '\\');
 
 		strcpy(t, w->subword);
 		strcpy(t+(backslash - w->subword), backslash+1);
-		if (0 == strcmp(w->subword, "\\*"))
+		if (0 == strcmp(w->subword, WILDCARD_WORD))
 			dn_head = dictionary_all_categories(dict);
 		else
 			dn_head = dictionary_lookup_wild(dict, t);
@@ -3065,7 +3065,7 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		x->word = w;
 		dn = dn->right;
 	}
-	if (0 != strcmp(w->subword, "\\*"))
+	if (0 != strcmp(w->subword, WILDCARD_WORD))
 		free_lookup_list (dict, dn_head);
 	else
 		free(dn_head);
@@ -3128,7 +3128,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 #endif /* DEBUG */
 		if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-			if (NULL == strstr(s, "\\*"))
+			if (NULL == strstr(s, WILDCARD_WORD))
 			{
 
 				we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);

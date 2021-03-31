@@ -36,6 +36,28 @@ static Linkage linkage_array_new(int num_to_alloc)
 	return lkgs;
 }
 
+
+static void find_unused_disjuncts(extractor_t *pex, Linkage linkage)
+{
+	Sentence sent = linkage->sent;
+	const size_t disjunct_used_sz =
+		sizeof(bool) * sent->wildcard_word_num_disjuncts;
+	linkage->sent->disjunct_used = malloc(disjunct_used_sz);
+
+	memset(linkage->sent->disjunct_used, 0, disjunct_used_sz);
+
+   mark_used_disjuncts(pex, linkage->sent->disjunct_used);
+
+	if (verbosity_level(+D_PARSE))
+	{
+		unsigned int num_unused = 0;
+		for (unsigned int i = 0; i < sent->wildcard_word_num_disjuncts; i++)
+			if (!linkage->sent->disjunct_used[i]) num_unused++;
+		prt_error("Info: Unused disjuncts %u/%u\n", num_unused,
+		          sent->wildcard_word_num_disjuncts);
+	}
+}
+
 static bool setup_linkages(Sentence sent, extractor_t* pex,
                           fast_matcher_t* mchxt,
                           count_context_t* ctxt,
@@ -437,6 +459,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				extractor_new(sent->length, sent->rand_state, IS_GENERATION(sent->dict));
 			bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
 			process_linkages(sent, pex, ovfl, opts);
+			if (IS_GENERATION(sent->dict))
+			    find_unused_disjuncts(pex, sent->lnkages);
 			free_extractor(pex);
 
 			post_process_lkgs(sent, opts);

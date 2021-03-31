@@ -359,7 +359,7 @@ int prt_error(const char *fmt, ...)
  * enabled if it is found in the comma delimited list of features.
  * This list, if not empty, has a leading and a trailing commas.
  * Return NULL if not enabled, else ",". If the feature appears
- * as "feature:param", return a pointer to param.
+ * as "feature:param", return a pointer to the ":" before param.
  * @param    list Comma delimited list of features (start/end commas too).
  * @param    ... List of features to check.
  * @return   If not enabled - NULL; Else "," or the feature param if exists.
@@ -401,6 +401,23 @@ const char *feature_enabled(const char * list, ...)
 		{
 			va_end(given_features);
 			return strstr(list, buff) + len + 1;
+		}
+
+		if (list[0] == ':')
+		{
+			/* Check for a parameter in ":param1:param2," */
+			buff[0] = ':';
+			bool found = (NULL != strstr(list, buff));
+			if (!found)
+			{
+				buff[len+1] = ',';
+				found = (NULL != strstr(list, buff));
+			}
+			if (found)
+			{
+				va_end(given_features);
+				return strstr(list, buff) + strlen(buff) + 2;
+			}
 		}
 	}
 	va_end(given_features);

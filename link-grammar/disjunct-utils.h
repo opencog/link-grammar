@@ -59,7 +59,7 @@ struct Disjunct_struct
 	union
 	{
 		uint32_t dup_hash;        /* Duplicate elimination | before pruning */
-		uint32_t unused2;         /* Unused now | before and during parsing */
+		int32_t ordinal;          /* Generation mode | after d. elimination */
 	}; /* 4 bytes */
 
 	struct
@@ -75,6 +75,7 @@ struct Disjunct_struct
 void free_disjuncts(Disjunct *);
 void free_sentence_disjuncts(Sentence, bool);
 void free_categories(Sentence);
+void free_categories_from_disjunct_array(Disjunct *, unsigned int);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
 Disjunct * eliminate_duplicate_disjuncts(Disjunct *, bool);

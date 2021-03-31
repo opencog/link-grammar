@@ -22,7 +22,8 @@
 
 #include "generator-utilities.h"
 
-#define WILDCARDWORD "\\*"
+#define MAX_SENTENCE 254
+#define WILDCARD_WORD "\\*"
 
 static int verbosity_level; // TODO/FIXME: Avoid using exposed library static variable.
 
@@ -36,6 +37,7 @@ typedef struct
 	bool leave_subscripts;
 	bool unrepeatable_random;
 	bool explode;
+	bool walls;
 
 	Parse_Options opts;
 } gen_parameters;
@@ -50,6 +52,7 @@ static struct argp_option options[] =
 	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts."},
 	{"leave-subscripts", '.', 0, 0, "Don't remove word subscripts."},
 	{"random", 'r', 0, 0, "Use unrepeatable random numbers."},
+	{"no-walls", 'w'+128, 0, 0, "Don't use walls in wildcard words."},
 	{0, 0, 0, 0, "Library options:", 1},
 	{"cost-max", 4, "float"},
 	{"dialect", 5, "dialect_list"},
@@ -74,7 +77,8 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 	{
 		case 'l': gp->language = arg; break;
 		case 's': gp->sentence_length = atoi(arg);
-		          if ((gp->sentence_length < 0) || (gp->sentence_length > 253))
+		          if ((gp->sentence_length < 0) ||
+		              (gp->sentence_length > MAX_SENTENCE))
 			          invalid_int_value("sentence length", gp->sentence_length);
 		          break;
 		case 'c': gp->corpus_size = atoll(arg);
@@ -85,7 +89,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 		case 'd': gp->display_disjuncts = true; break;
 		case '.': gp->leave_subscripts = true; break;
 		case 'r': gp->unrepeatable_random = true; break;
-
+		case 'w'+128: gp->walls = false; break;
 
 		case 'v':
 		{
@@ -133,6 +137,7 @@ int main (int argc, char* argv[])
 	parms.display_disjuncts = false;
 	parms.leave_subscripts = false;
 	parms.unrepeatable_random = false;
+	parms.walls = true;
 	parms.opts = opts;
 	argp_parse(&argp, argc, argv, 0, 0, &parms);
 	if (!parms.unrepeatable_random)
@@ -153,7 +158,8 @@ int main (int argc, char* argv[])
 	// parse-option to "generate".
 	const char *old_test = parse_options_get_test(opts);
 	char tbuf[256];
-	snprintf(tbuf, sizeof(tbuf), "generate,%s", old_test);
+	snprintf(tbuf, sizeof(tbuf), "generate%s,%s",
+	         parms.walls ? ":walls" : "", old_test);
 	parse_options_set_test(opts, tbuf);
 
 	dict = dictionary_create_lang(parms.language);
@@ -165,6 +171,12 @@ int main (int argc, char* argv[])
 	printf("# Dictionary version %s\n", linkgrammar_get_dict_version(dict));
 
 	const Category* catlist = dictionary_get_categories(dict);
+	const Category* category = dictionary_get_categories(dict);
+	if (catlist == NULL)
+	{
+		prt_error("Fatal error: dictionary_get_categories() failed\n");
+		exit(-1);
+	}
 	unsigned int num_categories = 0;
 	for (const Category* c = catlist; c->num_words != 0; c++)
 		num_categories++;
@@ -186,7 +198,7 @@ int main (int argc, char* argv[])
 		char *stmp = malloc(4 * parms.sentence_length + 1);
 		stmp[0] = '\0';
 		for (int i = 0; i < parms.sentence_length; i++)
-			strcat(stmp, WILDCARDWORD " ");
+			strcat(stmp, WILDCARD_WORD " ");
 
 		sent = sentence_create(stmp, dict);
 		free(stmp);

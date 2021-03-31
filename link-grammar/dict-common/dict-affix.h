@@ -81,9 +81,6 @@ typedef enum {
 #define INFIX_MARK(afdict) \
 	((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
 
-
 Afdict_class * afdict_find(Dictionary, const char *, bool);
-bool is_stem(const char *);
-bool is_macro(const char *); /* Not an affix but best include file to use */
 
 #endif /* _LG_DICT_AFFIX_H_ */

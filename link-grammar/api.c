@@ -542,6 +542,7 @@ void sentence_delete(Sentence sent)
 	post_process_free(sent->postprocessor);
 	post_process_free(sent->constituent_pp);
 	lg_exp_stringify(NULL);
+	free(sent->disjunct_used);
 
 	global_rand_state = sent->rand_state;
 	pool_delete(sent->Match_node_pool);
@@ -555,6 +556,13 @@ void sentence_delete(Sentence sent)
 		condesc_reuse(sent->dict);
 #endif
 		pool_reuse(sent->dict->Exp_pool);
+	}
+
+	if (NULL != sent->wildcard_word_dc_memblock)
+	{
+		free_categories_from_disjunct_array(sent->wildcard_word_dc_memblock,
+		                                    sent->wildcard_word_num_disjuncts);
+		free(sent->wildcard_word_dc_memblock);
 	}
 
 	free(sent);
