@@ -378,7 +378,6 @@ bool dictionary_generation_request(const Dictionary dict)
 		const size_t initial_allocation = 256;
 		dict->num_categories_alloced = initial_allocation;
 		dict->category = malloc(sizeof(*dict->category) *initial_allocation);
-		dict->leave_subscripts = test_enabled("leave-subscripts");
 		dict->generate_walls =
 			feature_enabled(generation_mode, "walls", NULL) != NULL;
 		dict->spell_checker = NULL; /* Disable spell-checking. */

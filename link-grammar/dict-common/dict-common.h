@@ -142,7 +142,6 @@ struct Dictionary_s
 	unsigned int num_categories;
 	unsigned int num_categories_alloced;
 	Category * category;      /* Word lists - indexed by category number */
-	bool leave_subscripts;    /* Leave generated-word subscripts */
 	bool generate_walls;      /* Generate walls too for wildcard words */
 
 	/* Private data elements that come in play only while the
