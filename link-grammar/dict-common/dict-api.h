@@ -25,6 +25,8 @@ LINK_BEGIN_DECLS
  * the public API to the link-parser system.
  */
 
+typedef struct Disjunct_struct Disjunct;
+
 /**********************************************************************
  *
  * Lookup-list.
