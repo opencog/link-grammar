@@ -14,6 +14,7 @@
 
 #include "api-structures.h"             // Sentence
 #include "connectors.h"
+#include "dict-common/dict-api.h"
 #include "dict-common/dict-structures.h"
 #include "dict-common/dict-utils.h"     // copy_Exp
 #include "dict-common/regex-morph.h"    // match_regex
@@ -21,10 +22,90 @@
 #include "memory-pool.h"
 #include "prepare/build-disjuncts.h"
 #include "print/print-util.h"
+#include "string-set.h"
 #include "tokenize/tok-structures.h"    // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h"
 #include "tracon-set.h"
 #include "utilities.h"
+
+/* Disjunct API ... */
+
+static char *connector_list_to_expression(const char *connector_list)
+{
+	dyn_str *e = dyn_str_new();
+	for (const char *p = connector_list; *p != '\0'; p++)
+	{
+		if (*p != ' ')
+		{
+			dyn_strcat(e, (char []){ *p, '\0' });
+			continue;
+		}
+		if (p[1] != '\0') dyn_strcat(e, " & ");
+	}
+
+	return dyn_str_take(e);
+}
+
+/**
+ * Return the expression of the given disjunct;
+ * The caller has to free the returned value.
+ */
+char * disjunct_expression(Disjunct *d)
+{
+	char *ls = print_connector_list_str(d->left, "-");
+	char *rs = print_connector_list_str(d->right, "+");
+
+	size_t lrs_sz = strlen(ls) + 1 + strlen(rs); /* ls " " rs */
+	char *lrs = alloca(lrs_sz + 1);
+	size_t n = lg_strlcpy(lrs, ls, lrs_sz);
+	if ((ls[0] != '\0') && (rs[0] != '\0'))
+	    n += lg_strlcpy(lrs + n, " ", lrs_sz);
+	lg_strlcpy(lrs + n, rs, lrs_sz);
+	lrs[lrs_sz] = '\0';
+
+	free(ls);
+	free(rs);
+
+	return connector_list_to_expression(lrs);
+}
+
+/**
+ * Return the Category_cost array (NULL terminated) of the given disjunct.
+ * It shouldn't be freed by the caller.
+ */
+const Category_cost * disjunct_categories(Disjunct *d)
+{
+	if (d->is_category == 0) return NULL;
+	return d->category;
+}
+
+/**
+ * Return a NULL terminated array of pointers to disjuncts which are
+ * unused in the current sentence-generation linkage.
+ * Note: Only wild-card words are considered (fixed words are currently
+ * ignored).
+ * The caller has to free the returned value.
+ */
+Disjunct ** sentence_unused_disjuncts(Sentence sent)
+{
+	unsigned int n = 0;
+	for (unsigned int i = 0; i < sent->wildcard_word_num_disjuncts; i++)
+	{
+		if (!sent->disjunct_used[i]) n++;
+	}
+	const size_t unused_d_sz = sizeof(Disjunct *) * (n + 1); /* 1 for NULL */
+	Disjunct **unused_d = malloc(unused_d_sz);
+
+	n = 0;
+	for (unsigned int i = 0; i < sent->wildcard_word_num_disjuncts; i++)
+	{
+		if (!sent->disjunct_used[i])
+			unused_d[n++] = &((Disjunct *)sent->wildcard_word_dc_memblock)[i];
+	}
+	unused_d[n] = NULL;
+
+	return unused_d;
+}
 
 /* Disjunct utilities ... */
 
