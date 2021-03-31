@@ -359,7 +359,7 @@ int prt_error(const char *fmt, ...)
  * enabled if it is found in the comma delimited list of features.
  * This list, if not empty, has a leading and a trailing commas.
  * Return NULL if not enabled, else ",". If the feature appears
- * as "feature:param", return a pointer to param.
+ * as "feature:param", return a pointer to the ":" before param.
  * @param    list Comma delimited list of features (start/end commas too).
  * @param    ... List of features to check.
  * @return   If not enabled - NULL; Else "," or the feature param if exists.
