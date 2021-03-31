@@ -34,6 +34,7 @@ typedef struct
 	int sentence_length;
 	size_t corpus_size;
 	bool display_disjuncts;
+	bool display_unused_disjuncts;
 	bool leave_subscripts;
 	bool unrepeatable_random;
 	bool explode;
@@ -50,6 +51,7 @@ static struct argp_option options[] =
 	{"explode", 'x', 0, 0, "Generate all wording samples per linkage."},
 	{"version", 'v', 0, 0, "Print version and exit."},
 	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts."},
+	{"unused", 'u', 0, 0, "Display unused disjuncts."},
 	{"leave-subscripts", '.', 0, 0, "Don't remove word subscripts."},
 	{"random", 'r', 0, 0, "Use unrepeatable random numbers."},
 	{"no-walls", 'w'+128, 0, 0, "Don't use walls in wildcard words."},
@@ -87,6 +89,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 		          break;
 		case 'x': gp->explode = true; break;
 		case 'd': gp->display_disjuncts = true; break;
+		case 'u': gp->display_unused_disjuncts = true; break;
 		case '.': gp->leave_subscripts = true; break;
 		case 'r': gp->unrepeatable_random = true; break;
 		case 'w'+128: gp->walls = false; break;
@@ -135,6 +138,7 @@ int main (int argc, char* argv[])
 	parms.corpus_size = 50;
 	parms.explode = false;
 	parms.display_disjuncts = false;
+	parms.display_unused_disjuncts = false;
 	parms.leave_subscripts = false;
 	parms.unrepeatable_random = false;
 	parms.walls = true;
@@ -233,7 +237,27 @@ int main (int argc, char* argv[])
 	int linkages_found = sentence_num_linkages_found(sent);
 	printf("# Linkages found: %d\n", linkages_found);
 	printf("# Linkages generated: %d\n", num_linkages);
+
+	Disjunct **unused_disjuncts = sentence_unused_disjuncts(sent);
+	unsigned int num_unused = 0;
+	for (Disjunct** d = unused_disjuncts; *d != NULL; d++)
+		num_unused++;
+	printf("# Number of unused disjuncts: %u\n", num_unused);
 	printf("#\n");
+
+	if (parms.display_unused_disjuncts)
+	{
+		// Display disjunct expressions with one word example.
+		for (Disjunct **d = unused_disjuncts; *d != NULL; d++)
+		{
+			char* exp = disjunct_expression(*d);
+			const Category_cost *cc = disjunct_categories(*d);
+			const char *word = catlist[cc[0].num-1].word[0];
+			printf("%5d: %20s  %s\n", (int)(d - unused_disjuncts), word, exp);
+			free(exp);
+		}
+		exit(0);
+	}
 
 	int linkages_valid = sentence_num_valid_linkages(sent);
 	assert(linkages_valid == num_linkages, "unexpected linkages!");
@@ -269,6 +293,7 @@ int main (int argc, char* argv[])
 		if (num_printed >= parms.corpus_size) break;
 	}
 
+	free(unused_disjuncts);
 	parse_options_delete(opts);
 	sentence_delete(sent);
 	dictionary_delete(dict);
