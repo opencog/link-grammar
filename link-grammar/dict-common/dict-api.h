@@ -52,11 +52,11 @@ link_public_api(const Category *)
 link_public_api(const Category_cost *)
 	linkage_get_categories(const Linkage linkage, WordIdx w);
 
-link_public_api(Disjunct **)
+link_public_api(Disjunct **)              /* To be freed by the caller */
 	sentence_unused_disjuncts(Sentence);
 
 link_public_api(char *)
-	disjunct_expression(Disjunct *);
+	disjunct_expression(Disjunct *);       /* To be freed by the caller */
 
 link_public_api(const Category_cost *)
 	disjunct_categories(Disjunct *);
