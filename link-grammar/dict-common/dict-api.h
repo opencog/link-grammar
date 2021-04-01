@@ -42,7 +42,7 @@ link_public_api(void)
 
 /**********************************************************************
  *
- * Category. Experimental and subject to changes.
+ * Generation mode. Experimental and subject to changes.
  *
  ***********************************************************************/
 
@@ -61,6 +61,7 @@ link_public_api(char *)
 link_public_api(const Category_cost *)
 	disjunct_categories(Disjunct *);
 
+/***********************************************************************/
 
 /* Return true if word can be found. */
 link_public_api(bool)
