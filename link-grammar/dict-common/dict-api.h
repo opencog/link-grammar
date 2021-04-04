@@ -34,8 +34,6 @@ bool dictionary_word_is_known(const Dictionary, const char *);
 
 void free_lookup_list(const Dictionary, Dict_node *);
 
-/* This was exported and used by mistake! */
-bool boolean_dictionary_lookup(const Dictionary, const char *);
 
 /* XXX the below probably does not belong ...  ?? */
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);

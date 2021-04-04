@@ -136,12 +136,6 @@ bool dict_has_word(const Dictionary dict, const char *s)
 	return dict->lookup(dict, s);
 }
 
-/* XXX Same as above. Exported and used by mistake. Deprecated. */
-bool boolean_dictionary_lookup(const Dictionary dict, const char *s)
-{
-	return dict->lookup(dict, s);
-}
-
 /**
  * Return true if word is in dictionary, or if word is matched by
  * regex.
