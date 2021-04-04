@@ -25,6 +25,8 @@ LINK_BEGIN_DECLS
  * the public API to the link-parser system.
  */
 
+typedef struct Disjunct_struct Disjunct;
+
 /**********************************************************************
  *
  * Lookup-list.
@@ -40,7 +42,7 @@ link_public_api(void)
 
 /**********************************************************************
  *
- * Category. Experimental and subject to changes.
+ * Generation mode. Experimental and subject to changes.
  *
  ***********************************************************************/
 
@@ -50,6 +52,16 @@ link_public_api(const Category *)
 link_public_api(const Category_cost *)
 	linkage_get_categories(const Linkage linkage, WordIdx w);
 
+link_public_api(Disjunct **)              /* To be freed by the caller */
+	sentence_unused_disjuncts(Sentence);
+
+link_public_api(char *)
+	disjunct_expression(Disjunct *);       /* To be freed by the caller */
+
+link_public_api(const Category_cost *)
+	disjunct_categories(Disjunct *);
+
+/***********************************************************************/
 
 /* Return true if word can be found. */
 link_public_api(bool)
