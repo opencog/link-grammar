@@ -28,7 +28,7 @@
 #   endif
 #  endif
 # else
-#  define link_public_api(x) x
+#  define link_public_api(x) @DEFAULT_VISIBILITY@ x
 # endif
 #endif
 
