@@ -28,6 +28,11 @@
 # endif
 #endif
 
+/* Users are discouraged from using functions in the experimental API,
+ * unless they are willing to commit to the possibility that these functions
+ * may change without notice or may simply be removed at any time. */
+#define link_experimental_api(x) link_public_api(x)
+
 #define LINK_MAJOR_VERSION @LINK_MAJOR_VERSION@
 #define LINK_MINOR_VERSION @LINK_MINOR_VERSION@
 #define LINK_MICRO_VERSION @LINK_MICRO_VERSION@
