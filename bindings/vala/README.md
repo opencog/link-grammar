@@ -4,7 +4,7 @@ If you run into an issue, please tag @kmwallio or [create an issue here](https:/
 
 ## Usage
 
-Place link-grammar.vapi into your projects Vapi directory and add it to your build.
+Place link-grammar.vapi into your project's Vapi directory and add it to your build.
 
 For meson, it would look like:
 
