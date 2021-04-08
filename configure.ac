@@ -928,9 +928,6 @@ WARN_CXXFLAGS="$link_cv_warn_cxxflags"
 AC_SUBST(WARN_CFLAGS)
 AC_SUBST(WARN_CXXFLAGS)
 
-LINK_CC_TRY_FLAG([-fno-strict-aliasing],
-		[LINK_CFLAGS="$LINK_CFLAGS -fno-strict-aliasing"])
-
 AC_SUBST(LINK_CFLAGS)
 
 LINK_CC_TRY_FLAG([-Wmaybe-uninitialized -Werror], [AC_DEFINE(HAVE_MAYBE_UNINITIALIZED)])
