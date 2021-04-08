@@ -31,9 +31,6 @@ multi_thread_SOURCES = multi-thread.cc
 mem_leak_SOURCES = mem-leak.cc
 
 LDADD = -L$(top_builddir)/link-grammar/ -llink-grammar
-if HAVE_SQLITE
-LDADD += $(SQLITE3_LIBS)
-endif
 
 multi_dict_LDADD = -lpthread $(LDADD)
 multi_thread_LDADD = -lpthread $(LDADD)

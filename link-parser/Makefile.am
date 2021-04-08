@@ -22,9 +22,6 @@ link_parser_SOURCES = link-parser.c \
 link_parser_LDFLAGS = $(LINK_CFLAGS)
 link_parser_LDADD = $(top_builddir)/link-grammar/liblink-grammar.la
 link_parser_LDADD += $(LIBEDIT_LIBS)
-if HAVE_SQLITE
-link_parser_LDADD += $(SQLITE3_LIBS)
-endif
 
 # Installation checks, to be manually done after "make install".
 # link-parser checks:
