@@ -178,8 +178,8 @@ CXXFLAGS="${CXXFLAGS} -Wall"
 # Final solution: enable std=c11, explicitly turn on BSD and SVID and
 # GNU, but do NOT turn on POSIX.
 
-CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS} ${CFLAG_VISIBILITY}" #"
-CXXFLAGS="-std=c++11 ${CXXFLAGS} ${CFLAG_VISIBILITY}" #"
+CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS} ${CFLAG_VISIBILITY}"
+CXXFLAGS="-std=c++11 ${CXXFLAGS} ${CFLAG_VISIBILITY}"
 
 if test x${native_win32} = xyes; then
 	# We need the shlwapi for PathRemoveFileSpecA().
