@@ -523,7 +523,7 @@ if test x"$do_hunspell" = xyes; then
 		fi
 
 		if ! test -d "$HunSpellDictDir" ; then
-			AC_MSG_WARN([HunSpell dictionary directory \"$HunSpellDictDir\" not found.])
+			AC_MSG_WARN([HunSpell dictionary directory "$HunSpellDictDir" not found.])
 			HunSpellDictDir_status=' (not found)'
 		fi
 		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
