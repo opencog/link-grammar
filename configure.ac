@@ -4,7 +4,7 @@
 # accordingly.
 # Don't end the URLs with a slash even if it appears in the official address,
 # because we may append a component. Also, they cannot include "!".
-AC_INIT([link-grammar],[5.8.1],[https://github.com/opencog/link-grammar],,
+AC_INIT([link-grammar],[5.8.1],[https://github.com/opencog/link-grammar],[],
 		  [https://www.abisource.com/projects/link-grammar])
 
 dnl Check whether we want to set defaults for CFLAGS and CXXFLAGS
@@ -66,7 +66,7 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])], [AC_SUBST([AM_DEFAULT_VERB
 
 dnl "Undefined AX_ macro" is checked in autogen.sh, so if this message
 dnl is changed here it should be changed there too.
-m4_pattern_forbid([^AX_(COMPILER_VENDOR|TLS|CHECK_ZLIB|PKG_SWIG)\b],
+m4_pattern_forbid([^AX_(COMPILER_VENDOR|TLS|AX_CHECK_ZLIB|PKG_SWIG)\b],
 	[Undefined AX_ macro. Please install the "autoconf-archive" package.])
 
 # OS checks, including Win32
@@ -78,7 +78,6 @@ AX_COMPILER_VENDOR
 AC_PROG_CPP
 AM_PROG_LEX(noyywrap)
 AC_PROG_INSTALL
-#AC_PROG_LIBTOOL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 AC_HEADER_STDC
