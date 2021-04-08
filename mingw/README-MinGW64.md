@@ -9,7 +9,8 @@ MinGW/MSYS2 uses the Gnu toolset to compile Windows programs for
 Windows.  This is probably the easiest way to obtain workable Java
 bindings for Windows.
 
-In order to prepare this document, MSYS2 version 20161025 was installed.
+In order to prepare this document, MSYS2 and Mingw-w64 (current to the start of 04/2021,
+based on Cygwin 3.2.0, with GCC 102.0) were installed.
 
 A note for new MSYS2 users
 --------------------------
@@ -17,7 +18,9 @@ Download and install MinGW/MSYS2 from http://msys2.org.
 
 MSYS2 uses the `pacman` package management. If you are not familiar
 with it, consult the
-[Pacman Rosetta](https://wiki.archlinux.org/index.php/Pacman/Rosetta).
+[Pacman Rosetta](https://wiki.archlinux.org/index.php/Pacman/Rosetta).<br>
+For specific details of the MSYS2 package management, consult with
+[Package Management](https://www.msys2.org/docs/package-management/).
 
 Also note that MSYS2 have two working modes (shells): MSYS and MINGW64.
 The difference between them is the value of environment variables, e.g.
@@ -30,12 +33,13 @@ First install `mingw-w64-x86_64-toolchain`. Also install the rest of the
 prerequisite tools from the list in the main
 [README](/README.md#building-from-the-github-repository).
 
-NOTE: You must also install **mingw-w64-x86_64-pkg-config** .
+NOTE (may not needed with recent installations):
+You must also install **mingw-w64-x86_64-pkg-config** .
 
 You may find that the system is extremely slow. In that case, consult the
 Web for how to make tweaks that considerably speed it up. In addition, to
 avoid I/O trashing, don't use a too high `make` parallelism (maybe even
-only `-j 2`).
+only `-j 2` or nothing at all).
 
 Packages that are used by the link-grammar library
 --------------------------------------------------
@@ -91,6 +95,13 @@ LEFT-WALL this.p is.v a  test.n
 >>>
 ```
 
+Build break due to recent FORTIFY_SOURCES misconfiguration in Mingw-w64
+-----------------------------------------------------------------------
+Some packages are compiled with FORTIFY_SOURCES=2. Their configurations updates
+CFLAGS but not LIBS. If you get linking errors on undefined references to `__strcpy_chk`
+and `__stack_chk_fail`, add LIBS=-ssp to `configure` as follows:<br>
+`configure LIBS=-ssp ...`
+
 Test results
 ------------
 All the `tests.py` tests pass, and also `make installcheck` is fine.
@@ -104,6 +115,8 @@ BTW, here is how to run the `java-multi` test directly:<br>
 Running
 -------
 On MINGW64, just invoke `link-parser`.<br>
+Note: Currently it gets stuck under MINGW64 just before printing the `linkparser>` prompt (will be checked).
+
 In Windows, put `C:\msys64\mingw64\bin` in your PATH (or `cd` to it), then invoke `link-parser`.
 On both MINGW64 and Windows console, you can invoke `mingw/link-parser.bat`, which also
 sets PATH for the `dot` and `PhotoViewer` commands (needed for the wordgraph display feature).
