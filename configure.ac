@@ -638,16 +638,16 @@ dnl libpcre2-8, libtre, libregex, libc.
 if test -z "$REGEX_LIBS"; then
 	AC_CHECK_HEADER([pcre2.h],
 		[PKG_CHECK_MODULES([REGEX], [libpcre2-8],
-								 [AC_DEFINE([HAVE_PCRE2_H], 1)],
-								 [AC_MSG_RESULT([... missing libpcre2-8, continuing])])]
-							    , , [#define PCRE2_CODE_UNIT_WIDTH 8])
+		                   [AC_DEFINE([HAVE_PCRE2_H], 1)],
+		                   [AC_MSG_RESULT([... missing libpcre2-8, continuing])])]
+		                   , , [#define PCRE2_CODE_UNIT_WIDTH 8])
 
 fi
 if test -z "$REGEX_LIBS"; then
 	AC_CHECK_HEADER([tre/regex.h],
 		[PKG_CHECK_MODULES([REGEX], [tre],
-								 [AC_DEFINE([HAVE_TRE_REGEX_H], 1)],
-								 [AC_MSG_RESULT([... missing libtre, continuing])])])
+		                   [AC_DEFINE([HAVE_TRE_REGEX_H], 1)],
+		                   [AC_MSG_RESULT([... missing libtre, continuing])])])
 fi
 if test -z "$REGEX_LIBS"; then
 	AC_CHECK_HEADERS([regex.h],
