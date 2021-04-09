@@ -8,6 +8,8 @@ Version 5.9.0 (XXX 2021)
  * English dict: work on hesitation markers.
  * Fix multi-threading mem-leak. #1149
  * Provide emscripten javascript wrapper for the command-line parser.
+ * Public API shared library entry points exported automatically. #1182
+ * Provide bindings for the Vala programming language.
 
 Version 5.8.1 (8 January 2021)
  * Fix macOS/SunOS build break.
