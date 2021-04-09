@@ -11,7 +11,7 @@
  * Copyright (c) 2014 Linas Vepstas <linasvepstas@gmail.com>
  */
 
-#ifdef HAVE_SQLITE
+#ifdef HAVE_SQLITE3
 
 #define D_SQL 5 /* Verbosity levels for this module are 5 and 6. */
 
@@ -509,4 +509,4 @@ failure:
 	return NULL;
 }
 
-#endif /* HAVE_SQLITE */
+#endif /* HAVE_SQLITE3 */

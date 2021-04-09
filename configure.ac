@@ -423,24 +423,30 @@ AM_CONDITIONAL(WITH_ANYSPLIT, test x${enable_wordgraph_display} = xyes)
 
 dnl ====================================================================
 
+# Couldn't use AX_LIB_SQLITE3 since it is currently (04/2021) buggy.
+
 AC_CHECK_HEADER([sqlite3.h], [SQLiteFound=yes], SQLiteFound=no)
 
-# If sqlite3 and pkg-config are not found on MacOS, then
-# recommend that user install MacPorts http://www.macports.org/
-if test "x${SQLiteFound}" = "xyes"; then
-	PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0, [SQLiteFound=yes], [SQLiteFound=no])
+if test "${SQLiteFound}" = yes; then
+	PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0, [SQLiteFound=yes],
+							[SQLiteFound=nopc])
 fi
 
-# Don't set the CPPFLAGS unless we can find the library too.
-# Which is insane, of course, except that some Apple OSX systems
-# appear to be broken... have header files but no libs ...
-if test "x${SQLiteFound}" = "xyes"; then
-	AC_DEFINE(HAVE_SQLITE, 1, [Define for compilation])
+dnl On macOS, the sqlite3 library exists but the .pc file may not exist.
+if test "${SQLiteFound}" = nopc; then
+	AC_CHECK_LIB(sqlite3, sqlite3_open, [SQLITE3_LIBS=-lsqlite3])
 fi
-AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
+
+if test -n "${SQLITE3_LIBS}"; then
+	AC_DEFINE(HAVE_SQLITE3, 1, [Support sqlite3 dictionary])
+	SQLiteFound=yes
+else
+	SQLiteFound=no
+fi
+
+AM_CONDITIONAL(HAVE_SQLITE3, test "${SQLiteFound}" = yes)
 AC_SUBST(SQLITE3_LIBS)
 AC_SUBST(SQLITE3_CFLAGS)
-
 
 # ====================================================================
 # Set Default Spell Checker settings
