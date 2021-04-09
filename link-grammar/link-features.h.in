@@ -1,7 +1,7 @@
 #ifndef LINK_FEATURES_H
 #define LINK_FEATURES_H
 
-#if defined(_MSC_VER) && !defined(LINK_GRAMMAR_DLL_EXPORT)
+#if (defined(_WIN32) || defined(__CYGWIN__)) && !defined(LINK_GRAMMAR_DLL_EXPORT)
 #define LINK_GRAMMAR_DLL_EXPORT 1
 #endif
 
@@ -14,19 +14,28 @@
 #endif
 
 #ifndef link_public_api
-# if defined(_MSC_VER) && !defined(LINK_GRAMMAR_STATIC)
-#  if !defined LINK_GRAMMAR_DLL_EXPORT
-#   error !defined LINK_GRAMMAR_DLL_EXPORT
-#  endif
-#  if LINK_GRAMMAR_DLL_EXPORT
-#   define link_public_api(x) __declspec(dllexport) x
+# if (defined(_WIN32) || defined(__CYGWIN__))
+#  if defined(LINK_GRAMMAR_STATIC)
+#   define link_public_api(x)
 #  else
-#   define link_public_api(x) __declspec(dllimport) x
+#   if !defined LINK_GRAMMAR_DLL_EXPORT
+#    error !defined LINK_GRAMMAR_DLL_EXPORT
+#   endif
+#   if LINK_GRAMMAR_DLL_EXPORT
+#    define link_public_api(x) __declspec(dllexport) x
+#   else
+#    define link_public_api(x) __declspec(dllimport) x
+#   endif
 #  endif
 # else
-#  define link_public_api(x) x
+#  define link_public_api(x) @DEFAULT_VISIBILITY@ x
 # endif
 #endif
+
+/* Users are discouraged from using functions in the experimental API,
+ * unless they are willing to commit to the possibility that these functions
+ * may change without notice or may simply be removed at any time. */
+#define link_experimental_api(x) link_public_api(x)
 
 #define LINK_MAJOR_VERSION @LINK_MAJOR_VERSION@
 #define LINK_MINOR_VERSION @LINK_MINOR_VERSION@

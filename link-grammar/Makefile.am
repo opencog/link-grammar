@@ -43,11 +43,8 @@ lib_LTLIBRARIES = liblink-grammar.la
 
 LINK_CFLAGS += ${REGEX_CFLAGS}
 
-EXTRA_liblink_grammar_la_DEPENDENCIES = $(srcdir)/link-grammar.def
-
 liblink_grammar_la_LDFLAGS = -version-info @VERSION_INFO@ \
 	-export-dynamic -no-undefined \
-	-export-symbols $(srcdir)/link-grammar.def \
 	$(LINK_CFLAGS)
 
 liblink_grammar_la_LIBADD  =  ${REGEX_LIBS}
