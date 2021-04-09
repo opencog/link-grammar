@@ -12,7 +12,9 @@
 /*************************************************************************/
 
 #include <limits.h>
+#if HAVE_THREADS_H
 #include <threads.h>
+#endif /* HAVE_THREADS_H */
 
 #include "link-includes.h"
 #include "api-structures.h"
@@ -117,7 +119,7 @@ static void free_table(count_context_t *ctxt)
 	ctxt->table_size = 0;
 }
 
-#if HAVE_PTHREAD
+#if HAVE_THREADS_H
 /* Each thread will geit it's own version of the `kept_table`.
  * If the program creates zillions of threads, then there will
  * be a mem-leak if this table is not released when each thread
@@ -140,7 +142,7 @@ static void make_key(void)
 {
 	tss_create(&key, free_tls_table);
 }
-#endif /* HAVE_PTHREAD */
+#endif /* HAVE_THREADS_H */
 
 /**
  * Allocate memory for the connector-pair table and initialize table-size
@@ -157,14 +159,14 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 	static TLS Table_connector **kept_table = NULL;
 	static TLS unsigned int log2_kept_table_size = 0;
 
-#if HAVE_PTHREAD
+#if HAVE_THREADS_H
 	// Install a thread-exit handler, to free kept_table on thread-exit.
 	static once_flag flag = ONCE_FLAG_INIT;
 	call_once(&flag, make_key);
 
 	if (NULL == kept_table)
 		tss_set(key, &kept_table);
-#endif /* HAVE_PTHREAD */
+#endif /* HAVE_THREADS_H */
 
 	if (shift == 0)
 		shift = ctxt->log2_table_size + 1; /* Double the table size */

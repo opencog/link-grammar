@@ -12,20 +12,18 @@
 
 #ifdef HAVE_HUNSPELL
 
-#ifdef __MINGW32__
-#define LGPTHREAD(x) x
-#else
-#define LGPTHREAD(x)
-#endif // __MINGW32__
+#if HAVE_PTHREAD && __MINGW32__
+#define HUN_THREAD_PROTECT
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
+#if HUN_THREAD_PROTECT
 #include <pthread.h>
-#ifdef __MINGW32__
-#define LGPTHREAD(x) x
 #else
-#define LGPTHREAD(x)
-#endif // __MINGW32__
+#define pthread_mutex_lock(x)
+#define pthread_mutex_unlock(x)
+#endif /* HUN_THREAD_PROTECT */
 
 #include "link-includes.h"
 #include "error.h"
@@ -73,7 +71,9 @@ void * spellcheck_create(const char * lang)
 	static char hunspell_aff_file[FPATHLEN];
 	static char hunspell_dic_file[FPATHLEN];
 
+#if HUN_THREAD_PROTECT
 	static pthread_mutex_t findpath_lock = PTHREAD_MUTEX_INITIALIZER;
+#endif /* HUN_THREAD_PROTECT */
 
 	pthread_mutex_lock(&findpath_lock);
 
@@ -155,7 +155,9 @@ bool spellcheck_test(void * chk, const char * word)
 	return (bool) Hunspell_spell((Hunhandle *)chk, word);
 }
 
-LGPTHREAD(static pthread_mutex_t hunspell_lock = PTHREAD_MUTEX_INITIALIZER;)
+#if HUN_THREAD_PROTECT
+static pthread_mutex_t hunspell_lock = PTHREAD_MUTEX_INITIALIZER;
+#endif /* HUN_THREAD_PROTECT */
 
 int spellcheck_suggest(void * chk, char ***sug, const char * word)
 {
@@ -165,9 +167,9 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 		return 0;
 	}
 
-	LGPTHREAD(pthread_mutex_lock(&hunspell_lock);)
+	pthread_mutex_lock(&hunspell_lock);
 	int rc = Hunspell_suggest((Hunhandle *)chk, sug, word);
-	LGPTHREAD(pthread_mutex_unlock(&hunspell_lock);)
+	pthread_mutex_unlock(&hunspell_lock);
 	return rc;
 }
 

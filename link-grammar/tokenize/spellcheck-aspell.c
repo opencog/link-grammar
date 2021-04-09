@@ -16,7 +16,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <aspell.h>
+#if HAVE_PTHREAD
 #include <pthread.h>
+#else
+#define pthread_mutex_lock(x)
+#define pthread_mutex_ulock(x)
+#endif /* HAVE_PTHREAD */
 
 #include "link-includes.h"
 #include "spellcheck.h"
@@ -119,7 +124,9 @@ bool spellcheck_test(void * chk, const char * word)
 
 // Despite having a thread-compatible API, it appears that apsell
 // is not actually thread-safe. Bummer.
+#if HAVE_PTHREAD
 static pthread_mutex_t aspell_lock = PTHREAD_MUTEX_INITIALIZER;
+#endif /* HAVE_PTHREAD */
 
 int spellcheck_suggest(void * chk, char ***sug, const char * word)
 {

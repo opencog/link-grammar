@@ -55,6 +55,7 @@ AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 # When maintainer-mode is enabled, downstream users sometimes trip
 # trip over automake issues. See bug #649.
+# AM_MAINTAINER_MODE([disable])
 AM_MAINTAINER_MODE([enable])
 
 AC_CONFIG_MACRO_DIR([m4])
@@ -114,6 +115,13 @@ test "$ac_cv_tls" != "none" && lg_tls=yes
 AX_PTHREAD
 CFLAGS="${CFLAGS} ${PTHREAD_CFLAGS}"
 
+dnl Check if we can use C11 threads functions
+AC_CHECK_HEADERS_ONCE([threads.h])
+
+dnl If the visibility __attribute__  is supported, define HAVE_VISIBILITY
+dnl and a variable a CFLAG_VISIBILITY, to be added to CFLAGS/CXXFLAGS.
+LG_C_ATTRIBUTE_VISIBILITY
+
 dnl Check for specific OSs
 # ====================================================================
 
@@ -170,8 +178,8 @@ CXXFLAGS="${CXXFLAGS} -Wall"
 # Final solution: enable std=c11, explicitly turn on BSD and SVID and
 # GNU, but do NOT turn on POSIX.
 
-CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS}" #"
-CXXFLAGS="-std=c++11 ${CXXFLAGS}" #"
+CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS} ${CFLAG_VISIBILITY}" #"
+CXXFLAGS="-std=c++11 ${CXXFLAGS} ${CFLAG_VISIBILITY}" #"
 
 if test x${native_win32} = xyes; then
 	# We need the shlwapi for PathRemoveFileSpecA().

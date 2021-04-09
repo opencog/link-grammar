@@ -34,11 +34,17 @@ typedef struct Disjunct_struct Disjunct;
  ***********************************************************************/
 
 link_public_api(Dict_node *)
-	dictionary_lookup_list(const Dictionary dict, const char *word);
+	dictionary_lookup_list(const Dictionary, const char *);
+
 link_public_api(Dict_node *)
-	dictionary_lookup_wild(const Dictionary dict, const char *word);
+	dictionary_lookup_wild(const Dictionary, const char *);
+
 link_public_api(void)
-	free_lookup_list(const Dictionary dict, Dict_node * n);
+	free_lookup_list(const Dictionary, Dict_node *);
+
+/* Return true if word can be found. */
+link_public_api(bool)
+	dictionary_word_is_known(const Dictionary, const char *);
 
 /**********************************************************************
  *

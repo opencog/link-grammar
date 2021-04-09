@@ -6,9 +6,12 @@ Davy Temperley: http://theory.esm.rochester.edu/temperley/
 Daniel Sleator: http://www.cs.cmu.edu/~sleator/
 John Lafferty: http://www.cs.cmu.edu/~lafferty/
 
-Much additional work has been done by many different developers.
-The current lead developer is
+Vast amounts of additional work has been done by many different
+linguists and software developers.
+
+The current lead developers are
 Linas Vepstas: http://linas.org/
+Amir Plivatsky <amirpli_at_gmail.com>
 
 Arabic dictionaries were provided by
 Warren Casbeer and Jon Dehdari
@@ -22,10 +25,6 @@ as a part of the 2008 Google Summer of Code (GSoC) project for OpenCog.
 
 Russian dictionaries were provided by
 Sergey Protasov <svp_at_tj.ru>
-
-Support for Hebrew, a complete overhaul of tokenization, and assorted
-general maintenance and performance work:
-Amir Plivatsky <amirpli_at_gmail.com>
 
 Turkish dictionaries by:
 Can John Bruce <can.bruce_at_yale.edu>
