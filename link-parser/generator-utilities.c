@@ -1,8 +1,8 @@
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "link-grammar/dict-common/dict-api.h"
-#include "link-grammar/error.h"
 
 #include "generator-utilities.h"
 
@@ -30,7 +30,7 @@ static void print_sent(size_t nwords, const char** words,
 {
 	for(WordIdx w = 0; w < nwords; w++)
 	{
-		assert(NULL != words[w], "Failed to select word!");
+		assert(NULL != words[w] /* Failed to select word! */);
 		printf("%s", cond_subscript(words[w], subscript));
 		if (w < nwords-1) printf(" ");
 	}
@@ -139,7 +139,7 @@ static size_t print_several(const Category* catlist,
 		{
 			/* Count the number of categories for this disjunct */
 			while (cc[dj_num_cats].num != 0) dj_num_cats++;
-			assert(dj_num_cats != 0, "Bad disjunct!");
+			assert(dj_num_cats != 0 /* Bad disjunct! */);
 
 			cclen[w] = dj_num_cats;
 		}
@@ -182,7 +182,7 @@ static const char *select_random_word(const Category *catlist,
 	while (cc[dj_num_cats].num != 0)
 	   dj_num_cats++;
 
-	assert(dj_num_cats != 0, "Bad disjunct!");
+	assert(dj_num_cats != 0 /* Bad disjunct! */);
 
 	/* Select a category on this disjunct. */
 	unsigned int r = (unsigned int)rand();

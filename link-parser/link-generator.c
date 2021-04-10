@@ -260,7 +260,7 @@ int main (int argc, char* argv[])
 	}
 
 	int linkages_valid = sentence_num_valid_linkages(sent);
-	assert(linkages_valid == num_linkages, "unexpected linkages!");
+	assert(linkages_valid == num_linkages /* "unexpected linkages! */);
 
 	// How many sentences to print per linkage.
 	// Print more than one only if explode flag set.
