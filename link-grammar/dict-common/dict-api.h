@@ -52,19 +52,19 @@ link_public_api(bool)
  *
  ***********************************************************************/
 
-link_public_api(const Category *)
+link_experimental_api(const Category *)
 	dictionary_get_categories(const Dictionary dict);
 
-link_public_api(const Category_cost *)
+link_experimental_api(const Category_cost *)
 	linkage_get_categories(const Linkage linkage, WordIdx w);
 
-link_public_api(Disjunct **)              /* To be freed by the caller */
+link_experimental_api(Disjunct **)              /* To be freed by the caller */
 	sentence_unused_disjuncts(Sentence);
 
-link_public_api(char *)
+link_experimental_api(char *)
 	disjunct_expression(Disjunct *);       /* To be freed by the caller */
 
-link_public_api(const Category_cost *)
+link_experimental_api(const Category_cost *)
 	disjunct_categories(Disjunct *);
 
 /***********************************************************************/
