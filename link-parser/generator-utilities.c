@@ -190,16 +190,22 @@ static const char *select_random_word(const Category *catlist,
 
 	/* Subtract 1 because Category 0 is undefined. */
 	unsigned int catnum = cc[catidx].num - 1;
-	lgdebug(5, "Word %zu: r=%08x category %d/%u \"%u\";", w, r,
-	        catidx, dj_num_cats, catnum);
+	if (verbosity_level >= 5)
+	{
+		printf("Word %zu: r=%08x category %d/%u \"%u\";", w, r,
+		       catidx, dj_num_cats, catnum);
+	}
 	unsigned int num_words = catlist[catnum].num_words;
 
 	/* Select a dictionary word from the selected disjunct category. */
 	r = (unsigned int)rand();
 	unsigned int dict_word_idx = r % num_words;
 	const char *word = catlist[catnum].word[dict_word_idx];
-	lgdebug(5, " r=%08x word %d/%u \"%s\"\n",
-	        r, dict_word_idx, num_words, word);
+	if (verbosity_level >= 5)
+	{
+		printf(" r=%08x word %d/%u \"%s\"\n",
+		       r, dict_word_idx, num_words, word);
+	}
 
 	return word;
 }

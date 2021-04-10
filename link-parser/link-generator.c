@@ -12,20 +12,20 @@
 #endif
 
 #include <argp.h>
+#include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "link-grammar/link-includes.h"
 #include "link-grammar/dict-common/dict-api.h"
-#include "link-grammar/error.h"
 
 #include "generator-utilities.h"
 
 #define MAX_SENTENCE 254
 #define WILDCARD_WORD "\\*"
 
-static int verbosity_level; // TODO/FIXME: Avoid using exposed library static variable.
+int verbosity_level;
 
 /* Argument parsing for the generator */
 typedef struct
