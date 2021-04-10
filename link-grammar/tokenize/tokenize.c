@@ -3130,7 +3130,6 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 		{
 			if (NULL == strstr(s, WILDCARD_WORD))
 			{
-
 				we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
 				assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
 				w->status |= WS_UNKNOWN;
