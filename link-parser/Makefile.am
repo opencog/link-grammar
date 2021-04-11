@@ -2,8 +2,6 @@
 # Automake file for building the command line application `link-parser`.
 #
 
-DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
-
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir)
 AM_CFLAGS = $(WARN_CFLAGS) $(HUNSPELL_CFLAGS) $(LIBEDIT_CFLAGS)
