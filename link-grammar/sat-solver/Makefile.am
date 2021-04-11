@@ -3,7 +3,8 @@ BUNDLED_INCLUDES = -I$(top_srcdir)/link-grammar/minisat -I$(top_srcdir)/link-gra
 endif
 
 AM_CPPFLAGS = -I$(top_srcdir) -I$(top_srcdir)/link-grammar -I$(top_builddir) \
-				  ${MINISAT_INCLUDES} $(ZLIB_CPPFLAGS) $(BUNDLED_INCLUDES) $(WARN_CXXFLAGS)
+	${MINISAT_INCLUDES} $(ZLIB_CPPFLAGS) $(BUNDLED_INCLUDES)
+AM_CFLAGS =  $(WARN_CXXFLAGS)
 
 noinst_LTLIBRARIES = libsat-solver.la
 

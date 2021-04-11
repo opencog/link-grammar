@@ -62,11 +62,11 @@ struct Afdict_class_struct
 #define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
 #define IDIOM_LINK_SZ 5
 
-#ifdef HAVE_SQLITE
+#ifdef HAVE_SQLITE3
 #define IS_DB_DICT(dict) (NULL != dict->db_handle)
 #else
 #define IS_DB_DICT(dict) false
-#endif /* HAVE_SQLITE */
+#endif /* HAVE_SQLITE3 */
 
 /* "#define name value" */
 typedef struct
@@ -119,7 +119,7 @@ struct Dictionary_s
 
 	/* If not null, then use spelling guesser for unknown words */
 	void *          spell_checker;     /* spell checker handle */
-#ifdef HAVE_SQLITE
+#ifdef HAVE_SQLITE3
 	void *          db_handle;         /* database handle */
 #endif
 

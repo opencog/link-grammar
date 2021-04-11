@@ -5,8 +5,8 @@
 DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir)\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
-AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) $(WARN_CFLAGS) \
-	$(HUNSPELL_CFLAGS) $(LIBEDIT_CFLAGS)
+AM_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir)
+AM_CFLAGS = $(WARN_CFLAGS) $(HUNSPELL_CFLAGS) $(LIBEDIT_CFLAGS)
 
 # -----------------------------------------------------------
 # Directives to build the link-parser command-line application
@@ -23,9 +23,6 @@ link_parser_SOURCES = link-parser.c \
 link_parser_LDFLAGS = $(LINK_CFLAGS)
 link_parser_LDADD = $(top_builddir)/link-grammar/liblink-grammar.la
 link_parser_LDADD += $(LIBEDIT_LIBS)
-if HAVE_SQLITE
-link_parser_LDADD += $(SQLITE3_LIBS)
-endif
 
 link_generator_SOURCES = link-generator.c \
 								 generator-utilities.h \
