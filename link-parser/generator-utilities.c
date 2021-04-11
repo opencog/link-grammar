@@ -93,7 +93,7 @@ static void sent_odom(const Category* catlist,
 	}
 }
 
-void count_choices(void* data)
+static void count_choices(void* data)
 {
 	size_t* count = data;
 	(*count) ++;
@@ -107,7 +107,7 @@ typedef struct {
 	size_t nprinted;
 } sent_data;
 
-void print_word_choices(void* data)
+static void print_word_choices(void* data)
 {
 	sent_data* sd = data;
 
