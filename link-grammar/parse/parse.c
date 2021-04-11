@@ -36,7 +36,6 @@ static Linkage linkage_array_new(int num_to_alloc)
 	return lkgs;
 }
 
-
 static void find_unused_disjuncts(extractor_t *pex, Linkage linkage)
 {
 	Sentence sent = linkage->sent;

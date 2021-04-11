@@ -1,8 +1,12 @@
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _MSC_VER
+#define LINK_GRAMMAR_DLL_EXPORT 0
+#endif /* _MSC_VER */
+
 #include "link-grammar/dict-common/dict-api.h"
-#include "link-grammar/error.h"
 
 #include "generator-utilities.h"
 
@@ -30,7 +34,7 @@ static void print_sent(size_t nwords, const char** words,
 {
 	for(WordIdx w = 0; w < nwords; w++)
 	{
-		assert(NULL != words[w], "Failed to select word!");
+		assert(NULL != words[w] /* Failed to select word! */);
 		printf("%s", cond_subscript(words[w], subscript));
 		if (w < nwords-1) printf(" ");
 	}
@@ -139,7 +143,7 @@ static size_t print_several(const Category* catlist,
 		{
 			/* Count the number of categories for this disjunct */
 			while (cc[dj_num_cats].num != 0) dj_num_cats++;
-			assert(dj_num_cats != 0, "Bad disjunct!");
+			assert(dj_num_cats != 0 /* Bad disjunct! */);
 
 			cclen[w] = dj_num_cats;
 		}
@@ -182,7 +186,7 @@ static const char *select_random_word(const Category *catlist,
 	while (cc[dj_num_cats].num != 0)
 	   dj_num_cats++;
 
-	assert(dj_num_cats != 0, "Bad disjunct!");
+	assert(dj_num_cats != 0 /* Bad disjunct! */);
 
 	/* Select a category on this disjunct. */
 	unsigned int r = (unsigned int)rand();
@@ -190,16 +194,22 @@ static const char *select_random_word(const Category *catlist,
 
 	/* Subtract 1 because Category 0 is undefined. */
 	unsigned int catnum = cc[catidx].num - 1;
-	lgdebug(5, "Word %zu: r=%08x category %d/%u \"%u\";", w, r,
-	        catidx, dj_num_cats, catnum);
+	if (verbosity_level >= 5)
+	{
+		printf("Word %zu: r=%08x category %d/%u \"%u\";", w, r,
+		       catidx, dj_num_cats, catnum);
+	}
 	unsigned int num_words = catlist[catnum].num_words;
 
 	/* Select a dictionary word from the selected disjunct category. */
 	r = (unsigned int)rand();
 	unsigned int dict_word_idx = r % num_words;
 	const char *word = catlist[catnum].word[dict_word_idx];
-	lgdebug(5, " r=%08x word %d/%u \"%s\"\n",
-	        r, dict_word_idx, num_words, word);
+	if (verbosity_level >= 5)
+	{
+		printf(" r=%08x word %d/%u \"%s\"\n",
+		       r, dict_word_idx, num_words, word);
+	}
 
 	return word;
 }
