@@ -38,7 +38,7 @@ You must also install **mingw-w64-x86_64-pkg-config** .
 
 You may find that the system is extremely slow. In that case, consult the
 Web for how to make tweaks that considerably speed it up. In addition, to
-avoid I/O trashing, don't use a too high `make` parallelism (maybe even
+avoid I/O thrashing, don't use a too high `make` parallelism (maybe even
 only `-j 2` or nothing at all).
 
 Packages that are used by the link-grammar library
