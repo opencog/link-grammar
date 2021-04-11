@@ -238,9 +238,6 @@ size_t print_sentences(const Category* catlist,
 		                     subscript, max_samples);
 	}
 
-	/* Otherwise, just select one word at random */
-	const char* selected_words[nwords];
-
 	for(WordIdx w = 0; w < nwords; w++)
 	{
 		const Category_cost* cc = linkage_get_categories(linkage, w);
