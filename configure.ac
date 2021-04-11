@@ -4,7 +4,7 @@
 # accordingly.
 # Don't end the URLs with a slash even if it appears in the official address,
 # because we may append a component. Also, they cannot include "!".
-AC_INIT([link-grammar],[5.8.1],[https://github.com/opencog/link-grammar],,
+AC_INIT([link-grammar],[5.8.1],[https://github.com/opencog/link-grammar],[],
 		  [https://www.abisource.com/projects/link-grammar])
 
 dnl Check whether we want to set defaults for CFLAGS and CXXFLAGS
@@ -66,7 +66,7 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])], [AC_SUBST([AM_DEFAULT_VERB
 
 dnl "Undefined AX_ macro" is checked in autogen.sh, so if this message
 dnl is changed here it should be changed there too.
-m4_pattern_forbid([^AX_(COMPILER_VENDOR|TLS|CHECK_ZLIB|PKG_SWIG)\b],
+m4_pattern_forbid([^AX_(COMPILER_VENDOR|TLS|AX_CHECK_ZLIB|PKG_SWIG)\b],
 	[Undefined AX_ macro. Please install the "autoconf-archive" package.])
 
 # OS checks, including Win32
@@ -76,12 +76,10 @@ AC_PROG_CC
 AC_PROG_CXX
 AX_COMPILER_VENDOR
 AC_PROG_CPP
-AM_PROG_LEX
+AM_PROG_LEX(noyywrap)
 AC_PROG_INSTALL
-#AC_PROG_LIBTOOL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_HEADER_STDC
 LT_INIT([win32-dll])
 PKG_PROG_PKG_CONFIG
 
@@ -178,8 +176,8 @@ CXXFLAGS="${CXXFLAGS} -Wall"
 # Final solution: enable std=c11, explicitly turn on BSD and SVID and
 # GNU, but do NOT turn on POSIX.
 
-CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS} ${CFLAG_VISIBILITY}" #"
-CXXFLAGS="-std=c++11 ${CXXFLAGS} ${CFLAG_VISIBILITY}" #"
+CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS} ${CFLAG_VISIBILITY}"
+CXXFLAGS="-std=c++11 ${CXXFLAGS} ${CFLAG_VISIBILITY}"
 
 if test x${native_win32} = xyes; then
 	# We need the shlwapi for PathRemoveFileSpecA().
@@ -424,24 +422,30 @@ AM_CONDITIONAL(WITH_ANYSPLIT, test x${enable_wordgraph_display} = xyes)
 
 dnl ====================================================================
 
+# Couldn't use AX_LIB_SQLITE3 since it is currently (04/2021) buggy.
+
 AC_CHECK_HEADER([sqlite3.h], [SQLiteFound=yes], SQLiteFound=no)
 
-# If sqlite3 and pkg-config are not found on MacOS, then
-# recommend that user install MacPorts http://www.macports.org/
-if test "x${SQLiteFound}" = "xyes"; then
-	PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0, [SQLiteFound=yes], [SQLiteFound=no])
+if test "${SQLiteFound}" = yes; then
+	PKG_CHECK_MODULES(SQLITE3, sqlite3 >= 3.0.0, [SQLiteFound=yes],
+							[SQLiteFound=nopc])
 fi
 
-# Don't set the CPPFLAGS unless we can find the library too.
-# Which is insane, of course, except that some Apple OSX systems
-# appear to be broken... have header files but no libs ...
-if test "x${SQLiteFound}" = "xyes"; then
-	AC_DEFINE(HAVE_SQLITE, 1, [Define for compilation])
+dnl On macOS, the sqlite3 library exists but the .pc file may not exist.
+if test "${SQLiteFound}" = nopc; then
+	AC_CHECK_LIB(sqlite3, sqlite3_open, [SQLITE3_LIBS=-lsqlite3])
 fi
-AM_CONDITIONAL(HAVE_SQLITE, test x${SQLiteFound} = xyes)
+
+if test -n "${SQLITE3_LIBS}"; then
+	AC_DEFINE(HAVE_SQLITE3, 1, [Support sqlite3 dictionary])
+	SQLiteFound=yes
+else
+	SQLiteFound=no
+fi
+
+AM_CONDITIONAL(HAVE_SQLITE3, test "${SQLiteFound}" = yes)
 AC_SUBST(SQLITE3_LIBS)
 AC_SUBST(SQLITE3_CFLAGS)
-
 
 # ====================================================================
 # Set Default Spell Checker settings
@@ -523,7 +527,7 @@ if test x"$do_hunspell" = xyes; then
 		fi
 
 		if ! test -d "$HunSpellDictDir" ; then
-			AC_MSG_WARN([HunSpell dictionary directory \"$HunSpellDictDir\" not found.])
+			AC_MSG_WARN([HunSpell dictionary directory "$HunSpellDictDir" not found.])
 			HunSpellDictDir_status=' (not found)'
 		fi
 		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
@@ -638,16 +642,16 @@ dnl libpcre2-8, libtre, libregex, libc.
 if test -z "$REGEX_LIBS"; then
 	AC_CHECK_HEADER([pcre2.h],
 		[PKG_CHECK_MODULES([REGEX], [libpcre2-8],
-								 [AC_DEFINE([HAVE_PCRE2_H], 1)],
-								 [AC_MSG_RESULT([... missing libpcre2-8, continuing])])]
-							    , , [#define PCRE2_CODE_UNIT_WIDTH 8])
+		                   [AC_DEFINE([HAVE_PCRE2_H], 1)],
+		                   [AC_MSG_RESULT([... missing libpcre2-8, continuing])])]
+		                   , , [#define PCRE2_CODE_UNIT_WIDTH 8])
 
 fi
 if test -z "$REGEX_LIBS"; then
 	AC_CHECK_HEADER([tre/regex.h],
 		[PKG_CHECK_MODULES([REGEX], [tre],
-								 [AC_DEFINE([HAVE_TRE_REGEX_H], 1)],
-								 [AC_MSG_RESULT([... missing libtre, continuing])])])
+		                   [AC_DEFINE([HAVE_TRE_REGEX_H], 1)],
+		                   [AC_MSG_RESULT([... missing libtre, continuing])])])
 fi
 if test -z "$REGEX_LIBS"; then
 	AC_CHECK_HEADERS([regex.h],
@@ -928,9 +932,7 @@ WARN_CXXFLAGS="$link_cv_warn_cxxflags"
 AC_SUBST(WARN_CFLAGS)
 AC_SUBST(WARN_CXXFLAGS)
 
-LINK_CC_TRY_FLAG([-fno-strict-aliasing],
-		[LINK_CFLAGS="$LINK_CFLAGS -fno-strict-aliasing"])
-
+dnl No LINK_CFLAGS for now.
 AC_SUBST(LINK_CFLAGS)
 
 LINK_CC_TRY_FLAG([-Wmaybe-uninitialized -Werror], [AC_DEFINE(HAVE_MAYBE_UNINITIALIZED)])
@@ -1013,7 +1015,6 @@ $PACKAGE-$VERSION  build configuration settings
 	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
 	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
-	RegEx tokenizer:                ${enable_regex_tokenizer}
 	Definitions:                    ${DEFS}
 	Libraries:                      ${lglibs}
 "
