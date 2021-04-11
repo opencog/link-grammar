@@ -196,7 +196,7 @@ static const char *select_random_word(const Category *catlist,
 	unsigned int catnum = cc[catidx].num - 1;
 	if (verbosity_level >= 5)
 	{
-		printf("Word %zu: r=%08x category %d/%u \"%u\";", w, r,
+		printf("Word %zu: r=%08x category %u/%u \"%u\";", w, r,
 		       catidx, dj_num_cats, catnum);
 	}
 	unsigned int num_words = catlist[catnum].num_words;
@@ -207,7 +207,7 @@ static const char *select_random_word(const Category *catlist,
 	const char *word = catlist[catnum].word[dict_word_idx];
 	if (verbosity_level >= 5)
 	{
-		printf(" r=%08x word %d/%u \"%s\"\n",
+		printf(" r=%08x word %u/%u \"%s\"\n",
 		       r, dict_word_idx, num_words, word);
 	}
 
