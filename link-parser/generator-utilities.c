@@ -93,7 +93,7 @@ static void sent_odom(const Category* catlist,
 	}
 }
 
-void count_choices(void* data)
+static void count_choices(void* data)
 {
 	size_t* count = data;
 	(*count) ++;
@@ -107,7 +107,7 @@ typedef struct {
 	size_t nprinted;
 } sent_data;
 
-void print_word_choices(void* data)
+static void print_word_choices(void* data)
 {
 	sent_data* sd = data;
 
@@ -196,7 +196,7 @@ static const char *select_random_word(const Category *catlist,
 	unsigned int catnum = cc[catidx].num - 1;
 	if (verbosity_level >= 5)
 	{
-		printf("Word %zu: r=%08x category %d/%u \"%u\";", w, r,
+		printf("Word %zu: r=%08x category %u/%u \"%u\";", w, r,
 		       catidx, dj_num_cats, catnum);
 	}
 	unsigned int num_words = catlist[catnum].num_words;
@@ -207,7 +207,7 @@ static const char *select_random_word(const Category *catlist,
 	const char *word = catlist[catnum].word[dict_word_idx];
 	if (verbosity_level >= 5)
 	{
-		printf(" r=%08x word %d/%u \"%s\"\n",
+		printf(" r=%08x word %u/%u \"%s\"\n",
 		       r, dict_word_idx, num_words, word);
 	}
 
@@ -237,9 +237,6 @@ size_t print_sentences(const Category* catlist,
 		return print_several(catlist, linkage, nwords, words,
 		                     subscript, max_samples);
 	}
-
-	/* Otherwise, just select one word at random */
-	const char* selected_words[nwords];
 
 	for(WordIdx w = 0; w < nwords; w++)
 	{
