@@ -3065,7 +3065,7 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		x->word = w;
 		dn = dn->right;
 	}
-	if (0 != strcmp(w->subword, WILDCARD_WORD))
+	if (!IS_GENERATION(dict) || (0 != strcmp(w->subword, WILDCARD_WORD)))
 		free_lookup_list (dict, dn_head);
 	else
 		free(dn_head);
