@@ -10,6 +10,7 @@ Version 5.9.0 (XXX 2021)
  * Provide emscripten javascript wrapper for the command-line parser.
  * Public API shared library entry points exported automatically. #1182
  * Provide bindings for the Vala programming language.
+ * Increase number of allowed idiom expressions. #1187
 
 Version 5.8.1 (8 January 2021)
  * Fix macOS/SunOS build break.
