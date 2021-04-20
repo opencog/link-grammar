@@ -3073,6 +3073,26 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		free_lookup_list (dict, dn_head);
 	else
 		free(dn_head);
+
+	if (IS_GENERATION(dict) && (NULL == dn_head) &&
+	    (NULL != strstr(w->subword, WILDCARD_WORD)))
+	{
+		/* In case of a wild-card word ("\*" or "word\*"), a no-expression
+		 * result is valid (in case of "\*" it means an empty dict or a dict
+		 * only with walls that are not used).  Use a null-expression
+		 * instead, to prevent an error at the caller. */
+		static Exp null_exp =
+		{
+			.type = AND_type,
+			.operand_first = NULL,
+			.operand_next = NULL,
+		};
+
+		y = pool_alloc(sent->X_node_pool);
+		y->next = NULL;
+		y->exp = &null_exp;
+	}
+
 	return x;
 }
 
