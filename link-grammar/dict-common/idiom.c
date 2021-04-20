@@ -118,13 +118,11 @@ static long max_postfix_found(Dict_node * d)
  */
 static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
-	char buff[2*MAX_WORD];
-	long count;
-
 	Dict_node *dn = dictionary_lookup_list(dict, s);
-	count = max_postfix_found(dn) + 1;
+	long count = max_postfix_found(dn) + 1;
 	free_lookup_list(dict, dn);
 
+	char buff[2*MAX_WORD];
 	snprintf(buff, sizeof(buff), "%s%cI%ld", s, SUBSCRIPT_MARK, count);
 
 	return string_set_add(buff, dict->string_set);
@@ -165,7 +163,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 
 static void increment_current_name(Dictionary dict)
 {
-	long i = IDIOM_LINK_SZ-2;
+	short i = IDIOM_LINK_SZ-2;
 
 	do
 	{
@@ -184,7 +182,7 @@ static void increment_current_name(Dictionary dict)
 static const char * generate_id_connector(Dictionary dict)
 {
 	char buff[IDIOM_LINK_SZ+4];
-	unsigned long i;
+	short i;
 	char * t;
 
 	for (i=0; dict->current_idiom[i] == 'A'; i++)
