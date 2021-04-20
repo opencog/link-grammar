@@ -3025,15 +3025,19 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 
 	if (NULL != strstr(w->subword, WILDCARD_WORD))
 	{
-		char *t = alloca(strlen(w->subword) + 8); /* + room for multibyte copy */
-		const char *backslash = strchr(w->subword, '\\');
-
-		strcpy(t, w->subword);
-		strcpy(t+(backslash - w->subword), backslash+1);
 		if (0 == strcmp(w->subword, WILDCARD_WORD))
+		{
 			dn_head = dictionary_all_categories(dict);
+		}
 		else
+		{
+			char *t = alloca(strlen(w->subword) + 1);
+			const char *backslash = strchr(w->subword, '\\');
+
+			strcpy(t, w->subword);
+			strcpy(t+(backslash - w->subword), backslash+1);
 			dn_head = dictionary_lookup_wild(dict, t);
+		}
 	}
 	else
 	{
