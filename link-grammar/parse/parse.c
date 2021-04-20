@@ -65,7 +65,7 @@ static bool setup_linkages(Sentence sent, extractor_t* pex,
 	bool overflowed = build_parse_set(pex, sent, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
-	if (overflowed && (1 < opts->verbosity))
+	if (overflowed && (1 < opts->verbosity) && !IS_GENERATION(sent->dict))
 	{
 		err_ctxt ec = { sent };
 		err_msgc(&ec, lg_Warn, "Count overflow.\n"

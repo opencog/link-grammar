@@ -688,7 +688,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Finished parse");
 
-	if ((verbosity > 0) &&
+	if ((verbosity > 0) && !IS_GENERATION(sent->dict) &&
 	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
 	{
 		prt_error("Warning: Combinatorial explosion! nulls=%u cnt=%d\n"
