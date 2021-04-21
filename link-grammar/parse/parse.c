@@ -111,17 +111,46 @@ static void print_chosen_disjuncts_words(const Linkage lkg, bool prt_optword)
 		const char *djw; /* disjunct word - the chosen word */
 
 		if (NULL == cdj)
+		{
 			djw = (prt_optword && lkg->sent->word[i].optional) ? "{}" : "[]";
-		else if ('\0' == cdj->word_string[0])
-			djw = "\\0"; /* null string - something is wrong */
+		}
+		else if (0 == cdj->is_category)
+		{
+			if ('\0' == cdj->word_string[0])
+				djw = "\\0"; /* null string - something is wrong */
+			else
+				djw = cdj->word_string;
+		}
 		else
-			djw = cdj->word_string;
+		{
+			if ((NULL == cdj->category))
+			{
+				djw = "\\0"; /* something is wrong */
+			}
+			else
+			{
+				char *cbuf = alloca(32); /* much more space than needed */
+				snprintf(cbuf, 32, "Category[0]:%u", cdj->category[0].num);
+				djw = cbuf;
+			}
+		}
 
 		dyn_strcat(djwbuf, djw);
 		dyn_strcat(djwbuf, " ");
 	}
 	err_msg(lg_Debug, "%s\n", djwbuf->str);
 	dyn_str_delete(djwbuf);
+}
+
+/**
+ * Return \c true iff \p sent has an optional word.
+ */
+static bool optional_word_exists(Sentence sent)
+{
+	for (WordIdx w = 0; w < sent->length; w++)
+		if (sent->word[w].optional) return true;
+
+	return false;
 }
 
 #define D_PL 7
@@ -171,6 +200,8 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 		maxtries = sent->num_linkages_alloced;
 	}
 
+	bool need_sane_morphism = !IS_GENERATION(sent->dict) ||
+	                          optional_word_exists(sent);
 	bool need_init = true;
 	for (itry=0; itry<maxtries; itry++)
 	{
@@ -195,15 +226,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 			print_chosen_disjuncts_words(lkg, /*prt_opt*/true);
 		}
 
-		if (IS_GENERATION(sent->dict))
-		{
-			compute_generated_words(sent, lkg);
-
-			need_init = true;
-			in++;
-			if (in >= sent->num_linkages_alloced) break;
-		}
-		else
+		if (need_sane_morphism)
 		{
 			if (sane_linkage_morphism(sent, lkg, opts))
 			{
@@ -214,10 +237,6 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 					err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
 					print_chosen_disjuncts_words(lkg, /*prt_opt*/false);
 				}
-
-				need_init = true;
-				in++;
-				if (in >= sent->num_linkages_alloced) break;
 			}
 			else
 			{
@@ -226,8 +245,17 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 				lkg->num_words = sent->length;
 				// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
 				memset(lkg->chosen_disjuncts, 0, sent->length * sizeof(Disjunct *));
+
+				continue;
 			}
 		}
+
+		if (IS_GENERATION(sent->dict))
+			compute_generated_words(sent, lkg);
+
+		need_init = true;
+		in++;
+		if (in >= sent->num_linkages_alloced) break;
 	}
 
 	/* The last one was alloced, but never actually used. Free it. */
