@@ -3,7 +3,10 @@
 #
 
 # Directives to build the link-parser command-line application
-bin_PROGRAMS=link-parser link-generator
+bin_PROGRAMS = link-parser
+if HAVE_ARGP
+bin_PROGRAMS += link-generator
+endif
 
 link_parser_SOURCES = link-parser.c \
                       command-line.c \
