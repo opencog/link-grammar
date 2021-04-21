@@ -16,6 +16,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 #ifdef _MSC_VER
 #define LINK_GRAMMAR_DLL_EXPORT 0
