@@ -629,6 +629,20 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 {
 	int rc;
 
+	if (IS_GENERATION(sent->dict))
+	{
+		if (opts->use_sat_solver)
+		{
+			prt_error("Error: Cannot use the SAT parser in generation mode\n");
+			return -3;
+		}
+		if (opts->max_null_count > 0)
+		{
+			prt_error("Error: Cannot parse with nulls in generation mode\n");
+			return -3;
+		}
+	}
+
 	if (opts->disjunct_cost == UNINITIALIZED_MAX_DISJUNCT_COST)
 		opts->disjunct_cost = sent->dict->default_max_disjunct_cost;
 
