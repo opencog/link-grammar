@@ -393,7 +393,13 @@ bool sane_linkage_morphism(Sentence sent, Linkage lkg, Parse_Options opts)
 			break;
 		}
 
-		if (verbosity_level(D_SLM)) prt_error("%s", cdj->word_string);
+		if (verbosity_level(D_SLM))
+		{
+			if (cdj->is_category == 0)
+				prt_error("%s", cdj->word_string);
+			else
+				prt_error("Category[0]:%u", cdj->category[0].num);
+		}
 
 		match_found = false;
 		/* Proceed in all the paths in which the word is found. */

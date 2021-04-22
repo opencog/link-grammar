@@ -36,22 +36,22 @@ static Linkage linkage_array_new(int num_to_alloc)
 	return lkgs;
 }
 
-static void find_unused_disjuncts(extractor_t *pex, Linkage linkage)
+static void find_unused_disjuncts(Sentence sent, extractor_t *pex)
 {
-	Sentence sent = linkage->sent;
 	const size_t disjunct_used_sz =
 		sizeof(bool) * sent->wildcard_word_num_disjuncts;
-	linkage->sent->disjunct_used = malloc(disjunct_used_sz);
+	sent->disjunct_used = malloc(disjunct_used_sz);
 
-	memset(linkage->sent->disjunct_used, 0, disjunct_used_sz);
+	memset(sent->disjunct_used, 0, disjunct_used_sz);
 
-   mark_used_disjuncts(pex, linkage->sent->disjunct_used);
+	if (pex != NULL)
+		mark_used_disjuncts(pex, sent->disjunct_used);
 
 	if (verbosity_level(+D_PARSE))
 	{
 		unsigned int num_unused = 0;
 		for (unsigned int i = 0; i < sent->wildcard_word_num_disjuncts; i++)
-			if (!linkage->sent->disjunct_used[i]) num_unused++;
+			if (!sent->disjunct_used[i]) num_unused++;
 		prt_error("Info: Unused disjuncts %u/%u\n", num_unused,
 		          sent->wildcard_word_num_disjuncts);
 	}
@@ -65,7 +65,7 @@ static bool setup_linkages(Sentence sent, extractor_t* pex,
 	bool overflowed = build_parse_set(pex, sent, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
-	if (overflowed && (1 < opts->verbosity))
+	if (overflowed && (1 < opts->verbosity) && !IS_GENERATION(sent->dict))
 	{
 		err_ctxt ec = { sent };
 		err_msgc(&ec, lg_Warn, "Count overflow.\n"
@@ -111,17 +111,46 @@ static void print_chosen_disjuncts_words(const Linkage lkg, bool prt_optword)
 		const char *djw; /* disjunct word - the chosen word */
 
 		if (NULL == cdj)
+		{
 			djw = (prt_optword && lkg->sent->word[i].optional) ? "{}" : "[]";
-		else if ('\0' == cdj->word_string[0])
-			djw = "\\0"; /* null string - something is wrong */
+		}
+		else if (0 == cdj->is_category)
+		{
+			if ('\0' == cdj->word_string[0])
+				djw = "\\0"; /* null string - something is wrong */
+			else
+				djw = cdj->word_string;
+		}
 		else
-			djw = cdj->word_string;
+		{
+			if ((NULL == cdj->category))
+			{
+				djw = "\\0"; /* something is wrong */
+			}
+			else
+			{
+				char *cbuf = alloca(32); /* much more space than needed */
+				snprintf(cbuf, 32, "Category[0]:%u", cdj->category[0].num);
+				djw = cbuf;
+			}
+		}
 
 		dyn_strcat(djwbuf, djw);
 		dyn_strcat(djwbuf, " ");
 	}
 	err_msg(lg_Debug, "%s\n", djwbuf->str);
 	dyn_str_delete(djwbuf);
+}
+
+/**
+ * Return \c true iff \p sent has an optional word.
+ */
+static bool optional_word_exists(Sentence sent)
+{
+	for (WordIdx w = 0; w < sent->length; w++)
+		if (sent->word[w].optional) return true;
+
+	return false;
 }
 
 #define D_PL 7
@@ -171,6 +200,8 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 		maxtries = sent->num_linkages_alloced;
 	}
 
+	bool need_sane_morphism = !IS_GENERATION(sent->dict) ||
+	                          optional_word_exists(sent);
 	bool need_init = true;
 	for (itry=0; itry<maxtries; itry++)
 	{
@@ -195,15 +226,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 			print_chosen_disjuncts_words(lkg, /*prt_opt*/true);
 		}
 
-		if (IS_GENERATION(sent->dict))
-		{
-			compute_generated_words(sent, lkg);
-
-			need_init = true;
-			in++;
-			if (in >= sent->num_linkages_alloced) break;
-		}
-		else
+		if (need_sane_morphism)
 		{
 			if (sane_linkage_morphism(sent, lkg, opts))
 			{
@@ -214,10 +237,6 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 					err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
 					print_chosen_disjuncts_words(lkg, /*prt_opt*/false);
 				}
-
-				need_init = true;
-				in++;
-				if (in >= sent->num_linkages_alloced) break;
 			}
 			else
 			{
@@ -226,8 +245,17 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 				lkg->num_words = sent->length;
 				// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
 				memset(lkg->chosen_disjuncts, 0, sent->length * sizeof(Disjunct *));
+
+				continue;
 			}
 		}
+
+		if (IS_GENERATION(sent->dict))
+			compute_generated_words(sent, lkg);
+
+		need_init = true;
+		in++;
+		if (in >= sent->num_linkages_alloced) break;
 	}
 
 	/* The last one was alloced, but never actually used. Free it. */
@@ -459,7 +487,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
 			process_linkages(sent, pex, ovfl, opts);
 			if (IS_GENERATION(sent->dict))
-			    find_unused_disjuncts(pex, sent->lnkages);
+			    find_unused_disjuncts(sent, pex);
 			free_extractor(pex);
 
 			post_process_lkgs(sent, opts);
@@ -488,6 +516,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 		notify_no_complete_linkages(nl, max_null_count);
 	}
+	if ((sent->num_linkages_found == 0) && IS_GENERATION(sent->dict))
+		find_unused_disjuncts(sent, NULL);
+
 	sort_linkages(sent, opts);
 
 parse_end_cleanup:

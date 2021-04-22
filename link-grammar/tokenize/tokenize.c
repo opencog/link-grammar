@@ -3025,15 +3025,19 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 
 	if (NULL != strstr(w->subword, WILDCARD_WORD))
 	{
-		char *t = alloca(strlen(w->subword) + 8); /* + room for multibyte copy */
-		const char *backslash = strchr(w->subword, '\\');
-
-		strcpy(t, w->subword);
-		strcpy(t+(backslash - w->subword), backslash+1);
 		if (0 == strcmp(w->subword, WILDCARD_WORD))
+		{
 			dn_head = dictionary_all_categories(dict);
+		}
 		else
+		{
+			char *t = alloca(strlen(w->subword) + 1);
+			const char *backslash = strchr(w->subword, '\\');
+
+			strcpy(t, w->subword);
+			strcpy(t+(backslash - w->subword), backslash+1);
 			dn_head = dictionary_lookup_wild(dict, t);
+		}
 	}
 	else
 	{
@@ -3065,10 +3069,30 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		x->word = w;
 		dn = dn->right;
 	}
-	if (0 != strcmp(w->subword, WILDCARD_WORD))
+	if (!IS_GENERATION(dict) || (0 != strcmp(w->subword, WILDCARD_WORD)))
 		free_lookup_list (dict, dn_head);
 	else
 		free(dn_head);
+
+	if (IS_GENERATION(dict) && (NULL == dn_head) &&
+	    (NULL != strstr(w->subword, WILDCARD_WORD)))
+	{
+		/* In case of a wild-card word ("\*" or "word\*"), a no-expression
+		 * result is valid (in case of "\*" it means an empty dict or a dict
+		 * only with walls that are not used).  Use a null-expression
+		 * instead, to prevent an error at the caller. */
+		static Exp null_exp =
+		{
+			.type = AND_type,
+			.operand_first = NULL,
+			.operand_next = NULL,
+		};
+
+		y = pool_alloc(sent->X_node_pool);
+		y->next = NULL;
+		y->exp = &null_exp;
+	}
+
 	return x;
 }
 

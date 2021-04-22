@@ -16,6 +16,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <limits.h>
 
 #ifdef _MSC_VER
 #define LINK_GRAMMAR_DLL_EXPORT 0
@@ -120,7 +121,12 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 		case 5:
 			parse_options_set_dialect(gp->opts, arg); break;
 
-		case ARGP_KEY_ARG: return 0;
+		case ARGP_KEY_ARG:
+			prt_error("Fatal error: \"%s\":"
+			          "link-generator doesn't accept non-option arguments\n",
+			          arg);
+			exit(-1);
+
 		default: return ARGP_ERR_UNKNOWN;
 	}
 	return 0;

@@ -88,6 +88,8 @@ const Category_cost * disjunct_categories(Disjunct *d)
  */
 Disjunct ** sentence_unused_disjuncts(Sentence sent)
 {
+	if ((sent == NULL) || (sent->disjunct_used == NULL)) return NULL;
+
 	unsigned int n = 0;
 	for (unsigned int i = 0; i < sent->wildcard_word_num_disjuncts; i++)
 	{

@@ -6,5 +6,5 @@ DICTS=                         \
 	4.0.knowledge               \
 	4.0.regex
 
-# Do NOT install the files, but do disribute them.
+# Do NOT install the files, but do distribute them.
 EXTRA_DIST = $(DICTS)
