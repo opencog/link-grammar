@@ -1474,7 +1474,7 @@ you:
 
 thou: Sp+ & <CLAUSE>;
 
-y'all: (Sp+ & <CLAUSE>) or SIp-;
+y'all y’all yall you_all: (Sp+ & <CLAUSE>) or SIp-;
 
 % basilect you
 % Pg+: "yo leavin' already?" verb "are" is missing.
@@ -3191,7 +3191,7 @@ is.v:
     or ({Pp+} & Pg+)
     or Pv+
     or PP+))
-  or (SIs+ & (Qw- or Qp-) & <verb-wall>)
+  or (SIs+ & (Qw- or Qp-) & <verb-wall> & {Pa+})
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)];
 
@@ -11033,6 +11033,8 @@ git.#get: [[get.v]0.45]colloquial;
 y'.#you y’.#you: [[you]0.05]colloquial;
 y'.#your y’.#your: [[your]0.05]colloquial;
 
+yor.#your: [[your]0.05]colloquial;
+
 e.#he: [[he]0.05]colloquial;
 
 be.#by: [[by]0.85]colloquial;
@@ -11043,8 +11045,13 @@ de.#the: [[the]0.25]colloquial;
 carousin.#carousing-v carousin'.#carousing-v carousin’.#carousing-v: [[carousing.v]0.05]colloquial;
 drinkin.#drinking-v drinkin'.#drinking-v drinkin’.#drinking-v: [[drinking.v]0.05]colloquial;
 givin.#giving-v givin'.#giving-v givin’.#giving-v: [[giving.v]0.05]colloquial;
+goin.#going-v goin'.#going-v goin’.#going-v: [[going.v]0.05]colloquial;
 kidnappin.#kidnapping-v kidnappin'.#kidnapping-v kidnappin’.#kidnapping-v: [[kidnapping.v]0.05]colloquial;
 runnin.#running-v runnin'.#running-v runnin’.#running-v: [[running.v]0.05]colloquial;
+
+% Like above, but gerund
+hangin.#hanging-g hangin'.#hanging-g hangin’.#hanging-g: [[hanging.g]0.05]colloquial;
+singin.#singing-g singin'.#singing-g singin’.#singing-g: [[singing.g]0.05]colloquial;
 
 S'pose.#suppose s'pose.#suppose S’pose.#suppose s’pose.#suppose: [suppose.v]colloquial;
 
