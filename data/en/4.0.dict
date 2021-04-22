@@ -12930,7 +12930,8 @@ anyways honey.ij man.ij baby.ij hush.ij:
 % Vv-:  "I said, hello!"
 % Ds- & Jv-: "He greeted me with a loud hello"
 % Perhaps these should also appear as nouns? hello.n does ...
-hello.ij hello_there hallo halloo hollo hullo hillo hi
+hello.ij hallo halloo hollo hullo hillo hi
+hello_there hey_there hi_there
 ahoy ahoy_there ship_ahoy land_ahoy shh shhh:
   [<directive-opener> or <directive-adverb>]
   or Vv-
