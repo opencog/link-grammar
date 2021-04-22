@@ -96,7 +96,6 @@ struct count_context_s
 	bool    islands_ok;
 	bool    exhausted;
 	uint8_t num_growth;       /* Number of table growths, for debug */
-	bool    keep_table;
 	bool    is_short;
 	unsigned int checktimer;  /* Avoid excess system calls */
 	unsigned int table_size;
