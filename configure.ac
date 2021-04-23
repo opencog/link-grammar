@@ -832,7 +832,7 @@ fi
 # ===================================================================
 # argp is needed for link-generate.
 
-AC_CHECK_HEADER([argp.h], [AC_SEARCH_LIBS([argp_parse], [argp])], [no_argp=1])
+AC_CHECK_HEADER([argp.h], [AC_SEARCH_LIBS([argp_parse], [argp],, [no_argp=1])], [no_argp=1])
 
 if test -n "$no_argp"; then
 	AC_MSG_WARN([No argp library found - "link-generator" will not get built.])
