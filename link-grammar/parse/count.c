@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <limits.h>
+#include <inttypes.h>                 // PRIu64
 #if HAVE_THREADS_H
 #include <threads.h>
 #endif /* HAVE_THREADS_H */
@@ -37,7 +38,7 @@ struct Table_connector_s
 	int              l_id, r_id;
 	Count_bin        count;
 	unsigned int     null_count;
-	unsigned int     hash;
+	size_t           hash;
 };
 
 typedef uint8_t null_count_m;  /* Storage representation of null_count */
@@ -97,19 +98,19 @@ struct count_context_s
 	bool    exhausted;
 	uint8_t num_growth;       /* Number of table growths, for debug */
 	bool    is_short;
-	unsigned int checktimer;  /* Avoid excess system calls */
-	unsigned int table_size;
-	unsigned int table_mask;
-	unsigned int log2_table_size;
-	unsigned int table_available_count;
-	unsigned int table_lrcnt_size[2];
+	uint8_t log2_table_size;
+	uint32_t checktimer;  /* Avoid excess system calls */
+	size_t table_size;
+	size_t table_mask;
+	size_t table_available_count;
+	uint32_t table_lrcnt_size[2];
 	Table_connector ** table;
 	wordvecp *table_lrcnt[2];  /* Per dir wordvec, indexed by tracon_id */
 	Resources current_resources;
-	COUNT_COST(unsigned long long count_cost[3];)
+	COUNT_COST(uint64_t count_cost[3];)
 };
 #define MAX_TABLE_SIZE(s) (s / 10) /* Low load factor, for speed */
-#define MAX_LOG2_TABLE_SIZE 24     /* 128 on 64-bit systems */
+#define MAX_LOG2_TABLE_SIZE 34     /* 16G entries */
 
 static void free_table(count_context_t *ctxt)
 {
@@ -175,7 +176,7 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 	 * large memory blocks are allocated. Large block in Linux trigger
 	 * system calls to mmap/munmap that eat up a lot of time.
 	 * (Up to 20%, depending on the sentence and CPU.) */
-	ctxt->table_size = (1U << shift);
+	ctxt->table_size = (1ULL << shift);
 	if ((shift > log2_kept_table_size) || (kept_table == NULL))
 	{
 		log2_kept_table_size = shift;
@@ -307,7 +308,7 @@ static void init_table_lrcnt(count_context_t *ctxt, Sentence sent)
 
 //#define DEBUG_TABLE_STAT
 #if defined(DEBUG) || defined(DEBUG_TABLE_STAT)
-static size_t hit, miss;  /* Table value found/not found */
+static uint64_t hit, miss;  /* Table value found/not found */
 #define TABLE_STAT(...) __VA_ARGS__
 #else
 #define TABLE_STAT(...)
@@ -322,15 +323,15 @@ static void table_stat(count_context_t *ctxt)
 #ifdef DEBUG_TABLE_STAT
 	if (!verbosity_level(+D_COUNT)) return;
 
-	int z = 0, nz = 0;  /* Number of entries with zero and non-zero counts */
-	int c, total_c = 0; /* Chain length */
-	int N = 0;          /* NULL table slots */
-	int null_count[256] = { 0 };   /* null_count histogram */
-	int chain_length[64] = { 0 };  /* Chain length histogram */
+	size_t z = 0, nz = 0;  /* Number of entries with zero and non-zero counts */
+	size_t c, total_c = 0; /* Chain length */
+	size_t N = 0;          /* NULL table slots */
+	size_t null_count[256] = { 0 };   /* null_count histogram */
+	int chain_length[64] = { 0 };     /* Chain length histogram */
+	int n;                 /* For printf() pretty printing */
 	bool table_stat_entries = test_enabled("count-table-entries");
-	int n;              /* For printf() pretty printing */
 
-	for (unsigned int i = 0; i < ctxt->table_size; i++)
+	for (size_t i = 0; i < ctxt->table_size; i++)
 	{
 		Table_connector *t = ctxt->table[i];
 
@@ -368,11 +369,11 @@ static void table_stat(count_context_t *ctxt)
 		//if (c != 0) printf("Connector table [%d] c=%d\n", i, c);
 	}
 
-	int used_slots = ctxt->table_size-N;
+	size_t used_slots = ctxt->table_size-N;
 	/* The used= value is TotalValues/TableSize (not UsedSlots/TableSize). */
-	printf("Connector table: num_growth=%u msb=%u slots=%6d/%6u (%5.2f%%) "
-	       "avg-chain=%4.2f values=%6d (z=%5d nz=%5d N=%5d) used=%5.2f%% "
-	       "acc=%zu (hit=%zu miss=%zu) (sent_len=%zu dis=%u)\n",
+	printf("Connector table: num_growth=%u msb=%u slots=%6zu/%6zu (%5.2f%%) "
+	       "avg-chain=%4.2f values=%6zu (z=%5zu nz=%5zu N=%5zu) used=%5.2f%% "
+	       "acc=%"PRIu64" (hit=%"PRIu64" miss=%"PRIu64") (sent_len=%zu dis=%u)\n",
 	       ctxt->num_growth, ctxt->log2_table_size, used_slots, ctxt->table_size,
 			 100.0f*used_slots/ctxt->table_size, 1.0f*total_c/used_slots,
 	       z+nz, z, nz, N, 100.0f*(z+nz)/ctxt->table_size,
@@ -400,7 +401,7 @@ static void table_stat(count_context_t *ctxt)
 			if (0 == null_count[nc]) continue;
 
 			printf("Null count %u:\n", nc);
-			for (unsigned int i = 0; i < ctxt->table_size; i++)
+			for (size_t i = 0; i < ctxt->table_size; i++)
 			{
 				for (Table_connector *t = ctxt->table[i]; t != NULL; t = t->next)
 				{
@@ -426,7 +427,7 @@ static void table_grow(count_context_t *ctxt)
 	Pool_location loc = { 0 };
 	while ((oe = pool_next(ctxt->sent->Table_connector_pool, &loc)) != NULL)
 	{
-		unsigned int ni = oe->hash & ctxt->table_mask;
+		size_t ni = oe->hash & ctxt->table_mask;
 
 		if (ctxt->table[ni] == NULL) ctxt->table_available_count--;
 		oe->next = ctxt->table[ni];
@@ -443,13 +444,13 @@ static Count_bin table_store(count_context_t *ctxt,
                                      int lw, int rw,
                                      const Connector *le, const Connector *re,
                                      unsigned int null_count,
-                                     unsigned int hash, Count_bin c)
+                                     size_t hash, Count_bin c)
 {
 	if (ctxt->table_available_count == 0) table_grow(ctxt);
 
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
-	unsigned int i = hash & ctxt->table_mask;
+	size_t i = hash & ctxt->table_mask;
 	Table_connector *n = pool_alloc(ctxt->sent->Table_connector_pool);
 
 	if (ctxt->table[i] == NULL)
@@ -476,12 +477,12 @@ static Count_bin table_store(count_context_t *ctxt,
 Count_bin *
 table_lookup(count_context_t *ctxt, int lw, int rw,
                    const Connector *le, const Connector *re,
-                   unsigned int null_count, unsigned int *hash)
+                   unsigned int null_count, size_t *hash)
 {
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
 
-	unsigned int h = pair_hash(lw, rw, l_id, r_id, null_count);
+	size_t h = pair_hash(lw, rw, l_id, r_id, null_count);
 	Table_connector *t = ctxt->table[h & ctxt->table_mask];
 
 	for (; t != NULL; t = t->next)
@@ -822,7 +823,7 @@ static Count_bin do_count(
 	/* TODO: static_assert() that null_count is an unsigned int. */
 	assert (null_count < INT_MAX, "Bad null count %d", (int)null_count);
 
-	unsigned int h = 0; /* Initialized value only needed to prevent a warning. */
+	size_t h = 0; /* Initialized value only needed to prevent a warning. */
 	{
 		Count_bin* const c = table_lookup(ctxt, lw, rw, le, re, null_count, &h);
 		if (c != NULL) return *c;
@@ -1345,7 +1346,8 @@ void free_count_context(count_context_t *ctxt, Sentence sent)
 {
 	if (NULL == ctxt) return;
 	COUNT_COST(lgdebug(+D_COUNT,
-	           "Count cost per: word %llu, disjunct %llu, null_count %llu\n",
+	           "Count cost per: word %"PRIu64", "
+	           "disjunct %"PRIu64", null_count %"PRIu64"\n",
 	            ctxt->count_cost[0], ctxt->count_cost[1], ctxt->count_cost[2]);)
 
 	free_table(ctxt);
