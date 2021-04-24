@@ -110,7 +110,7 @@ struct count_context_s
 	COUNT_COST(uint64_t count_cost[3];)
 };
 #define MAX_TABLE_SIZE(s) (s / 10) /* Low load factor, for speed */
-#define MAX_LOG2_TABLE_SIZE 34     /* 16G entries */
+#define MAX_LOG2_TABLE_SIZE ((sizeof(size_t)==4) ? 25 : 34)
 
 static void free_table(count_context_t *ctxt)
 {
