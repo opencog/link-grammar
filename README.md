@@ -54,8 +54,8 @@ This generator is used in the
 [OpenCog Language Learning](https://github.com/opencog/learn)
 project, which aims to automatically learn Link Grammars from corpora,
 using brand-new and inovative information theoretic techniques,
-somewhat similar to those found in articifical neural nets (deep
-learning) but using explicitly symbolic representations.
+somewhat similar to those found in artificial neural nets (deep
+learning), but using explicitly symbolic representations.
 
 Quick Overview
 ---------------
