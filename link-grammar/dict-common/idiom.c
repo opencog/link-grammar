@@ -67,63 +67,19 @@ static bool is_idiom_string(const char * s)
 }
 
 /**
- * Return true if the string s is a sequence of digits.
- */
-static bool is_number(const char *s)
-{
-	while(*s != '\0') {
-		if (!isdigit(*s)) return false;
-		s++;
-	}
-	return true;
-}
-
-/**
- * If the string contains a SUBSCIPT_MARK, and ends in ".Ix" where
- * x is a number, return x.  Return -1 if not of this form.
- */
-static long numberfy(const char * s)
-{
-	s = strrchr(s, SUBSCRIPT_MARK);
-	if (NULL == s) return -1;
-	if (*++s != 'I') return -1;
-	if (!is_number(++s)) return -1;
-	return atol(s);
-}
-
-/**
- * Look for words that end in ".Ix" where x is a number.
- * Return the largest x found.
- */
-static long max_postfix_found(Dict_node * d)
-{
-	long i, j;
-	i = 0;
-	while(d != NULL) {
-		j = numberfy(d->string);
-		if (j > i) i = j;
-		d = d->right;
-	}
-	return i;
-}
-
-/**
  * build_idiom_word_name() -- return idiomized name of given string.
  *
  * Allocates string space and returns a pointer to it.
  * In this string is placed the idiomized name of the given string s.
- * This is the same as s, but with a postfix of ".Ix", where x is an
- * appropriate number.  x is the minimum number that distinguishes
- * this word from others in the dictionary.
- */
+ * This is the same as s, but with a postfix of ".I". */
 static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
-	Dict_node *dn = dictionary_lookup_list(dict, s);
-	long count = max_postfix_found(dn) + 1;
-	free_lookup_list(dict, dn);
-
 	char buff[2*MAX_WORD];
-	snprintf(buff, sizeof(buff), "%s%cI%ld", s, SUBSCRIPT_MARK, count);
+
+	size_t n = lg_strlcpy(buff, s, sizeof(buff));
+	buff[n] = SUBSCRIPT_MARK;
+	buff[n + 1] = 'I';
+	buff[n + 2] = '\0';
 
 	return string_set_add(buff, dict->string_set);
 }
@@ -205,11 +161,10 @@ static const char * generate_id_connector(Dictionary dict)
  * Takes as input a pointer to a Dict_node.
  * The string of this Dict_node is an idiom string.
  * This string is torn apart, and its components are inserted into the
- * dictionary as special idiom words (ending in .I*, where * is a number).
+ * dictionary as special idiom words (ending in .I).
  * The expression of this Dict_node (its node field) has already been
  * read and constructed.  This will be used to construct the special idiom
  * expressions.
- * The given dict node is freed.  The string is also freed.
  */
 void insert_idiom(Dictionary dict, Dict_node * dn)
 {
@@ -313,10 +268,40 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	while (dn_list != NULL)
 	{
 		xdn = dn_list->right;
-		dn_list->left = dn_list->right = NULL;
-		dn_list->string = build_idiom_word_name(dict, dn_list->string);
-		dict->root = insert_dict(dict, dict->root, dn_list);
-		dict->num_entries++;
+		const char *word_name = build_idiom_word_name(dict, dn_list->string);
+
+		Dict_node *t = dictionary_lookup_list(dict, word_name);
+		if (NULL == t)
+		{
+			/* The word doesn't participate yet in any idiom. Just insert it. */
+			dn_list->left = dn_list->right = NULL;
+			dn_list->string = word_name;
+			dict->root = insert_dict(dict, dict->root, dn_list);
+			dict->num_entries++;
+		}
+		else
+		{
+			/* OR the word's expression to the dict expression t->exp. */
+
+			if (t->exp->type != OR_type)
+			{
+				/* Prepend an OR element. */
+				Exp *or = Exp_create(dict->Exp_pool);
+				or->type = OR_type;
+				or->cost = 0.0;
+				or->operand_next = NULL;
+				or->operand_first = t->exp;
+				t->exp = or;
+			}
+
+			/* Prepend the word's expression to dict expression OR'ed elements. */
+			dn_list->exp = Exp_create_dup(dict->Exp_pool, dn_list->exp);
+			dn_list->exp->operand_next = t->exp->operand_first;
+			t->exp->operand_first = dn_list->exp;
+			t->left->exp = t->exp; /* Patch the dictionary */
+			free_lookup_list(dict, t);
+			free(dn_list);
+		}
 		dn_list = xdn;
 	}
 }
@@ -326,5 +311,9 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
  */
 bool is_idiom_word(const char * s)
 {
-	return (numberfy(s) != -1);
+	const char *sm = strchr(s, SUBSCRIPT_MARK);
+
+	if (NULL == sm) return false;
+	if ((sm[1] == 'I') && (sm[2] == '\0')) return true;
+	return false;
 }
