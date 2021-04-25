@@ -202,7 +202,6 @@ uninstall-hook:
 	-rmdir $(liblink_grammar_includedir)
 
 EXTRA_DIST=                         \
-	link-grammar.def                 \
 	README.md                        \
 	dict-sql/dict.sql                \
 	dict-sql/demo.sql                \

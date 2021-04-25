@@ -37,7 +37,6 @@ EXTRA_DIST =                              \
    js/link-parser/package.json            \
    js/link-parser/pre.js                  \
    js/install_emsdk.sh                    \
-   js/publish_packages.sh                 \
    node.js/.npmignore                     \
    node.js/README.md                      \
    node.js/package.json                   \
