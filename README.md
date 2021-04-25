@@ -247,8 +247,7 @@ successful, run (as a non-root user)
 make installcheck
 ```
 
-Optional system libraries
--------------------------
+### Optional system libraries
 The link-grammar library has optional features that are enabled automatically
 if `configure` detects certain libraries. These libraries are optional on most
 of the systems and if the feature they add is desired, corresponding libraries
@@ -265,16 +264,14 @@ be without it altogether. The library names may be without the prefix `lib`.
 * `libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
 implementation, and needed for correctness on FreeBSD and Cygwin)
 
-Editline
---------
+### Editline
 If `libedit-dev` is installed, then the arrow keys can be used to edit
 the input to the link-parser tool; the up and down arrow keys will
 recall previous entries.  You want this; it makes testing and
 editing much easier.
 
 
-Node.js Bindings
-----------------
+### Node.js Bindings
 Two versions of node.js bindings are included. One version wraps the
 library; the other uses emscripten to wrap the command-line tool. The
 library bindings are in `bindings/node.js` while the emscripten wrapper
@@ -298,8 +295,7 @@ For the command-line wrapper, do the following:
    ./build_packages.sh
 ```
 
-Python3 Bindings
-----------------
+### Python3 Bindings
 The Python3 bindings are built by default, providing that
 the corresponding Python development packages are installed.
 (Python2 bindings are no longer supported.)
@@ -334,8 +330,7 @@ The `linkgrammar.py` module provides a high-level interface in Python.
 The `example.py` and `sentence-check.py` scripts provide a demo,
 and `tests.py` runs unit tests.
 
-Java Bindings
--------------
+### Java Bindings
 By default, the `Makefile`s attempt to build the Java bindings.
 The use of the Java bindings is *OPTIONAL*; you do not need these if
 you do not plan to use link-grammar with Java.  You can skip building
@@ -376,8 +371,8 @@ standard GNU `configure --prefix` option; so, for example:
 By using `pkg-config` (see below), non-standard install locations
 can be automatically detected.
 
-Configure help
---------------
+Custom builds
+-------------
 Additional config options are printed by
 ```
 ./configure --help
@@ -387,8 +382,7 @@ The system has been tested and works well on 32 and 64-bit Linux
 systems, FreeBSD, macOS, as well as on Microsoft Windows systems.
 Specific OS-dependent notes follow.
 
-BUILDING from the [GitHub repository](https://github.com/opencog/link-grammar)
-------------------------------------------------------------------------------
+### BUILDING from the [GitHub repository](https://github.com/opencog/link-grammar)
 
 End users should download the tarball (see
 [UNPACKING and signature verification](#unpacking-and-signature-verification)).
@@ -400,7 +394,7 @@ as it is under development. It also needs installing of development tools
 that are not installed by default. Due to these reason the use of the GitHub
 version is discouraged for regular end users.
 
-### Installing from GitHub
+#### Installing from GitHub
 Clone it:
 `git clone https://github.com/opencog/link-grammar.git`<br>
 Or download it as a ZIP:<br>
@@ -438,7 +432,7 @@ cause strange and misleading errors.
 For more info about how to proceed, continue at the section
 [CREATING the system](#creating-the-system) and the relevant sections after it.
 
-### Additional notes for developers
+#### Additional notes for developers
 
 To configure **debug** mode, use:
 ```
@@ -453,8 +447,7 @@ it. For more details on this feature, see
 [Word-graph display](link-grammar/tokenize/README.md#word-graph-display).
 
 
-BUILDING on FreeBSD
--------------------
+### BUILDING on FreeBSD
 
 The current configuration has an apparent standard C++ library mixing problem
 when `gcc` is used (a fix is welcome). However, the common practice on FreeBSD
@@ -476,8 +469,7 @@ sections:
 `minisat` (minisat2)
 `pkgconf` (pkg-config)
 
-BUILDING on macOS
------------------
+### BUILDING on macOS
 Plain-vanilla Link Grammar should compile and run on Apple macOS
 just fine, as described above.  At this time, there are no reported
 issues.
@@ -501,8 +493,7 @@ If you would like to build from GitHub
 you can install the tools that are listed there using
 [HomeBrew](http://brew.sh/).
 
-BUILDING on Windows
--------------------
+### BUILDING on Windows
 There are three different ways in which link-grammar can be compiled
 on Windows.  One way is to use Cygwin, which provides a Linux
 compatibility layer for Windows. Another way is use the
@@ -531,8 +522,7 @@ http://gnuwin32.sourceforge.net/packages/regex.htm .<br>
 See also:
 http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README .
 
-BUILDING on Windows (Cygwin)
-----------------------------
+### BUILDING on Windows (Cygwin)
 The easiest way to have link-grammar working on MS Windows is to
 use Cygwin, a Linux-like environment for Windows making it possible
 to port software running on POSIX systems to Windows.  Download and
@@ -543,8 +533,7 @@ REGEX implementation is not capable enough.
 
 For more details See [mingw/README-Cygwin.md](mingw/README-Cygwin.md).
 
-BUILDING on Windows (MinGW)
----------------------------
+### BUILDING on Windows (MinGW)
 Another way to build link-grammar is to use MinGW, which uses the GNU
 toolset to compile POSIX-compliant programs for Windows. Using MinGW/MSYS2 is
 probably the easiest way to obtain workable Java bindings for Windows.
@@ -555,8 +544,7 @@ REGEX implementation is not capable enough.
 
 For more details see [mingw/README-MinGW64.md](mingw/README-MinGW64.md).
 
-BUILDING and RUNNING on Windows (MSVC)
---------------------------------------
+### BUILDING and RUNNING on Windows (MSVC)
 Microsoft Visual C/C++ project files can be found in the `msvc` directory.
 For directions see the [README.md](msvc/README.md) file there.
 
@@ -622,8 +610,8 @@ combinations or variants of these, depending on your operating
 system.
 
 
-TESTING the program
--------------------
+TESTING the system
+------------------
 There are several ways to test the resulting build.  If the Python
 bindings are built, then a test program can be found in the file
 `./bindings/python-examples/tests.py` -- When run, it should pass.
@@ -666,21 +654,19 @@ bindings. It also performs several basic checks that stress the
 link-grammar libraries.
 
 
-USING the parser in your own applications
------------------------------------------
+USING the system
+-----------------
 There is an API (application program interface) to the parser.  This
 makes it easy to incorporate it into your own applications.  The API
 is documented on the web site.
 
 
-USING CMake
------------
-The FindLinkGrammar.cmake file can be used to test for and set up
+### USING CMake
+The `FindLinkGrammar.cmake` file can be used to test for and set up
 compilation in CMake-based build environments.
 
 
-USING pkg-config
-----------------
+### USING pkg-config
 To make compiling and linking easier, the current release uses
 the pkg-config system. To determine the location of the link-grammar
 header files, say `pkg-config --cflags link-grammar`  To obtain
@@ -694,8 +680,7 @@ $(EXE): $(OBJS)
    cc -g -o $@ $^ `pkg-config --libs link-grammar`
 ```
 
-Using JAVA
-----------
+### Using JAVA
 This release provides java files that offer three ways of accessing
 the parser.  The simplest way is to use the org.linkgrammar.LinkGrammar
 class; this provides a very simple Java API to the parser.
@@ -713,8 +698,7 @@ back to results accessible via the ParseResult API.
 The above-described code will be built if Apache `ant` is installed.
 
 
-Using the Network Server
-------------------------
+### Using the JSON Network Server
 The network server can be started by saying:
 ```
 java -classpath linkgrammar.jar org.linkgrammar.LGService 9000
@@ -740,8 +724,7 @@ transmitted. This can be obtained by sending messages of the form:
 storeDiagramString:true, text: this is a test.
 ```
 
-Spell Guessing
---------------
+### Spell Guessing
 The parser will run a spell-checker at an early stage, if it
 encounters a word that it does not know, and cannot guess, based on
 morphology.  The configure script looks for the aspell or hunspell
@@ -752,14 +735,15 @@ Spell guessing may be disabled at runtime, in the link-parser client
 with the `!spell=0` flag.  Enter `!help` for more details.
 
 
-Multi-threading
----------------
+### Multi-threading
 It is safe to use link-grammar for parsing in multiple threads.
 Different threads may use different dictionaries, or the same dictionary.
 Parse options can be set on a per-thread basis, with the exception of
 verbosity, which is a global, shared by all threads.  It is the only
 global.
 
+Linguistic Commentary
+=====================
 
 Phonetics
 ---------
@@ -1696,20 +1680,6 @@ analysis. To quote Wikipedia:
 ### Morphology printing:
    Instead of hard-coding LL, declare which links are morpho links
    in the dict.
-
-### UTF-8 cleanup:
-   Hmm. Is this really needed? UTF-8 seems to work well, now. So maybe
-   leave it alone.
-
-   Replace the mbrtowc code with proper language support; it seems
-   that the correct solution is to use [ICU](http://site.icu-project.org/)
-   *  ICU pros: runs on windows.
-   *  ICU cons: big, complex.
-
-   Another alternative is [libunistring](http://www.gnu.org/software/libunistring/)
-   (which seems to be LGPL!?)
-   *  Pros: smaller, simpler than ICU.
-   *  Cons: might have problems with MS Windows.
 
 ### Assorted minor cleanup:
    * Should provide a query that returns compile-time consts,
