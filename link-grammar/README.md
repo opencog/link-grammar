@@ -144,3 +144,53 @@ errinfo.severity, errinfo.severity_label, errinfo.text # lg_errinfo fields
 `class LG_Error` is also used as a general exception.
 See [tests.py](../bindings/python-examples/tests.py) for usage of all of these
 bindings.
+
+SAT Solver
+==========
+The default Link Grammar parser constructs planar typed graphs from
+a collection (dictionary) of graph-sheaf components (the "jigsaw puzzle
+pieces") using an algorithm appropriate to this specific task. This
+can be seen as a kind of constraint satisfaction problem: select
+jigsaw puzzle pieces from the dictionary, such that they can be
+assembled into a consistent whole.
+
+The SAT solver was an experiment to see if performance could be
+improved by applying the principles and algorithms of Boolean
+Satisfiability Theory to this constraint satisfaction problem.
+
+The result of the experiment was ultimately negative: early results
+showed that the default parser is a bit faster for short sentences
+and that the SAT solver can be faster for long sentences. Subsequent
+enhancements to the original algorithm shows that it wins in all
+situtations.  Basically, the SAT solver cannot make effective use
+of the planarity constraints that the default parser leverages to
+discard impossible parses.
+
+As of version 5.9.0, the SAT solver parser is not just a little bit
+slower, it is a **LOT** slower than the default parser. The code can
+still be built by saying
+```
+configure --enable-sat-solver
+```
+but is now disabled by default. The SAT solver code may be removed in
+future versions.
+
+If the `minisat2` library package is installed in the system along with
+its header files (e.g. RPM package `minisat2-devel`, deb package
+`minisat2`), then it is used. Else, the bundled `minisat2` library code
+is used.
+
+One can force the bundled version to always be used by saying:
+```
+./configure --enable-sat-solver=bundled
+```
+
+Other problems with the SAT sover include:
+- Disjunct cost: Cost of null expressions is disregarded. Thus, it
+  still cannot rank sentences by cost, which is the most basic parse
+  ranking that we've got... In order not to show incorrect costs, the
+  DIS= field in the status message is always 0.
+- Connector order shown by the `!disjunct` link-parser command.
+  Currently it is just a "random" order.
+- Cannot parse with null links.
+- No panic timeout.

@@ -145,8 +145,6 @@ Contents
 | ------------- |-------------|
 | LICENSE     | The license describing terms of use |
 | link-grammar/*.c | The program.  (Written in ANSI-C) |
-| link-grammar/minisat/ | Optional SAT Solver. (Written in C++) |
-| link-grammar/sat-solver/ | Optional SAT Solver. (Written in C++) |
 | ---- | ---- |
 | bindings/autoit/  | Optional AutoIt language bindings. |
 | bindings/java/ | Optional Java language bindings. |
@@ -261,7 +259,6 @@ needed...).  For example, the names may include `-devel` instead of `-dev`, or
 be without it altogether. The library names may be without the prefix `lib`.
 
 * `libsqlite3-dev` (for SQLite-backed dictionary)<br>
-* `minisat2` (for the SAT solver)<br>
 * `libz1g-dev` or `libz-devel` (currently needed for the bundled `minisat2`)<br>
 * `libedit-dev` (see [Editline](#Editline))<br>
 * `libhunspell-dev` or `libaspell-dev` (and the corresponding English dictionary).<br>
@@ -415,7 +412,6 @@ Tools that may need installation before you can build link-grammar:
 `make` (the `gmake` variant may be needed)<br>
 `m4`<br>
 `gcc` or `clang`<br>
-`gcc-c++` or `clang++` (for the SAT solver)<br>
 `autoconf`<br>
 `libtool`<br>
 `autoconf-archive`<br>
@@ -518,7 +514,7 @@ The Cygwin way currently produces the best result, as it supports line editing
 with command completion and history and also supports word-graph displaying on
 X-windows. (MinGW currently doesn't  have `libedit`, and the MSVC port
 currently doesn't support command completion and history, spelling and
-X-Windows word-graph display, and the SAT-solver is untested on it).
+X-Windows word-graph display.)
 
 Link-grammar requires a working version of POSIX-standard regex
 libraries.  Since these are not provided by Microsoft, a copy must
@@ -763,58 +759,6 @@ Different threads may use different dictionaries, or the same dictionary.
 Parse options can be set on a per-thread basis, with the exception of
 verbosity, which is a global, shared by all threads.  It is the only
 global.
-
-
-SAT solver
-----------
-The default Link Grammar parser constructs planar typed graphs from
-a collection (dictionary) of graph-sheaf components (the "jigsaw puzzle
-pieces") using an algorithm appropriate to this specific task. This
-can be seen as a kind of constraint satisfaction problem: select
-jigsaw puzzle pieces from the dictionary, such that they can be
-assembled into a consistent whole.
-
-The SAT solver was an experiment to see if performance could be 
-improved by applying the principles and algorithms of Boolean
-Satisfiability Theory to this constraint satisfaction problem.
-
-The result of the experiment is a wash: the default parser is a bit
-faster for short and medium-length sentences; the SAT solver can be
-faster for long sentences. 
-
-The SAT solver aims to replace this parser with an algorithm based
-on Boolean Satisfiability Theory; specifically using the MiniSAT
-solver. The SAT solver has a bit more overhead for shorter sentences,
-but is faster for long sentences.  To work properly, it needs to be
-attached to a parse ranking system.  This work is incomplete,
-although the prototype works.  It is not yet well-integrated with
-the system, and needs cleanup.
-Still not handled (or handled incorrectly):
-- Disjunct cost: Cost of null expressions is disregarded. Thus, it
-  still cannot rank sentences by cost, which is the most basic parse
-  ranking that we've got... In order not to show incorrect costs, the
-  DIS= field in the status message is always 0.
-- Connector order shown by the `!disjunct` link-parser command.
-  Currently it is just a "random" order.
-- Parsing with null count.
-- No panic timeout.
-
-The SAT solver is enabled by default. If the minisat2 library package
-is installed in the system along with its header files (e.g. RPM
-package minisat2-devel, deb package minisat2) then it is used. Else,
-a bundled minisat2 library code is used.
-
-The following forces using the bundled minisat library:
-```
-./configure --enable-sat-solver=bundled
-```
-
-The SAT solver can be disabled by specifying:
-```
-./configure --disable-sat-solver
-```
-
-(Both are to be done prior to compiling.)
 
 
 Phonetics
