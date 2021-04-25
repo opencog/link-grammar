@@ -161,11 +161,10 @@ static const char * generate_id_connector(Dictionary dict)
  * Takes as input a pointer to a Dict_node.
  * The string of this Dict_node is an idiom string.
  * This string is torn apart, and its components are inserted into the
- * dictionary as special idiom words (ending in .I*, where * is a number).
+ * dictionary as special idiom words (ending in .I).
  * The expression of this Dict_node (its node field) has already been
  * read and constructed.  This will be used to construct the special idiom
  * expressions.
- * The given dict node is freed.  The string is also freed.
  */
 void insert_idiom(Dictionary dict, Dict_node * dn)
 {
