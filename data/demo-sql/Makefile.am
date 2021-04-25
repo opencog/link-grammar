@@ -10,7 +10,8 @@ dictdir=$(pkgdatadir)/demo-sql
 dict_DATA = $(DICTS)
 
 EXTRA_DIST = $(DICTS)            \
-      corpus-basic.batch
+      corpus-basic.batch         \
+      README.md
 
 # The make uninstall target should remove directories we created.
 uninstall-hook:
