@@ -147,7 +147,7 @@ Contents
 | link-grammar/*.c | The program.  (Written in ANSI-C) |
 | link-grammar/minisat/ | Optional SAT Solver. (Written in C++) |
 | link-grammar/sat-solver/ | Optional SAT Solver. (Written in C++) |
-|  |  |
+| ---- | ---- |
 | bindings/autoit/  | Optional AutoIt language bindings. |
 | bindings/java/ | Optional Java language bindings. |
 | bindings/js/ | Optional JavaScript language bindings. |
@@ -158,7 +158,7 @@ Contents
 | bindings/python-examples/ | Link-grammar test suite and Python language binding usage example. |
 | bindings/swig/ | SWIG interface file, for other FFI interfaces. |
 | bindings/vala/  | Optional Vala language bindings. |
-|  |  |
+| ---- | ---- |
 | data/en/ | English language dictionaries. |
 | data/en/4.0.dict | The file containing the dictionary definitions. |
 | data/en/4.0.knowledge | The post-processing knowledge file. |
@@ -167,8 +167,8 @@ Contents
 | data/en/4.0.regex | Regular expression-based morphology guesser. |
 | data/en/tiny.dict | A small example dictionary. |
 | data/en/words/ | A directory full of word lists. |
-| data/en/corpus*.batch | These files contain sentences (both grammatical and ungrammatical ones) that are used for testing the link-parser These can be run through the parser with the command `./link-parser < corpus.*.batch` |
-|  |  |
+| data/en/corpus*.batch | Example corpora used for testing. |
+| ---- | ---- |
 | data/ru/ | A full-fledged Russian dictionary |
 | data/ar/ | A fairly complete Arabic dictionary |
 | data/fa/ | A Persian (Farsi) dictionary |
@@ -179,23 +179,23 @@ Contents
 | data/he/ | An experimental Hebrew dictionary |
 | data/kz/ | An experimental Kazakh dictionary |
 | data/tr/ | An experimental Turkish dictionary |
-|  |  |
+| ---- | ---- |
 | morphology/ar/ | An Arabic morphology analyzer |
 | morphology/fa/ | An Persian morphology analyzer |
-|  |  |
-| COPYING | The license for this code and data |
+| ---- | ---- |
+| LICENSE | The license for this code and data |
 | ChangeLog | A compendium of recent changes. |
 | configure | The GNU configuration script |
 | autogen.sh | Developer's configure maintenance tool |
-| debug/ | Information for debugging the library |
+| debug/ | Information about debugging the library |
 | msvc/ | Microsoft Visual-C project files |
 | mingw/ | Information on using MinGW under MSYS or Cygwin |
 
 UNPACKING and signature verification
 ------------------------------------
-The system is distributed using the normal tar.gz format; it can be
-extracted using the `tar -zxf link-grammar.tar.gz` command at the
-command line.
+The system is distributed using the conventional `tar.gz` format;
+it can be extracted using the `tar -zxf link-grammar.tar.gz` command
+at the command line.
 
 A tarball of the latest version can be downloaded from:<br>
 http://www.abisource.com/downloads/link-grammar
@@ -205,7 +205,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.8.1.tar.gz.asc`
+`gpg --verify link-grammar-5.9.1.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
@@ -220,7 +220,7 @@ verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 Tags in `git` can be verified by performing the following:
 ```
 gpg --recv-keys --keyserver keyserver.ubuntu.com EB6AA534E0C0651C
-git tag -v link-grammar-5.8.1
+git tag -v link-grammar-5.9.1
 ```
 
 
@@ -240,9 +240,9 @@ make install
 ldconfig
 ```
 
-This will install the liblink-grammar.so library into /usr/local/lib,
-the header files in /usr/local/include/link-grammar, and the
-dictionaries into /usr/local/share/link-grammar.  Running 'ldconfig'
+This will install the `liblink-grammar.so` library into `/usr/local/lib`,
+the header files in `/usr/local/include/link-grammar`, and the
+dictionaries into `/usr/local/share/link-grammar`.  Running `ldconfig`
 will rebuild the shared library cache.  To verify that the install was
 successful, run (as a non-root user)
 ```
@@ -260,13 +260,13 @@ The library package names may vary on various systems (consult Google if
 needed...).  For example, the names may include `-devel` instead of `-dev`, or
 be without it altogether. The library names may be without the prefix `lib`.
 
-`libsqlite3-dev` (for SQLite-backed dictionary)<br>
-`minisat2` (for the SAT solver)<br>
-`libz1g-dev` or `libz-devel` (currently needed for the bundled `minisat2`)<br>
-`libedit-dev` (see [Editline](#Editline))<br>
-`libhunspell-dev` or `libaspell-dev` (and the corresponding English dictionary).<br>
-`libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
-implementation, but needed for correctness on FreeBSD and Cygwin)
+* `libsqlite3-dev` (for SQLite-backed dictionary)<br>
+* `minisat2` (for the SAT solver)<br>
+* `libz1g-dev` or `libz-devel` (currently needed for the bundled `minisat2`)<br>
+* `libedit-dev` (see [Editline](#Editline))<br>
+* `libhunspell-dev` or `libaspell-dev` (and the corresponding English dictionary).<br>
+* `libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
+implementation, and needed for correctness on FreeBSD and Cygwin)
 
 Editline
 --------
@@ -305,22 +305,22 @@ Python3 Bindings
 ----------------
 The Python3 bindings are built by default, providing that
 the corresponding Python development packages are installed.
-(Python2 bindings are not supported.)
+(Python2 bindings are no longer supported.)
 
 These packages are:
 - Linux:
- * Systems using 'rpm' packages: python3-devel
- * Systems using 'deb' packages: python3-dev
+   * Systems using 'rpm' packages: `python3-devel`
+   * Systems using 'deb' packages: `python3-dev`
 - Windows:
- * Install Python3 from https://www.python.org/downloads/windows/ .
-   You also have to install SWIG from http://www.swig.org/download.html .
+   * Install Python3 from https://www.python.org/downloads/windows/ .
+     You also have to install SWIG from http://www.swig.org/download.html .
 - macOS:
- * Install python3 using [HomeBrew](http://brew.sh/).
-	Note: With recent Anaconda Python versions, the build process succeeds, but
-	loading the resulted module causes a crash.  Help is needed to resolve that.
-	See the relevant issues in the GitHub repository (search there for
-	"anaconda").<br>
-	[Anaconda](https://conda.io/docs/user-guide/install/download.html).
+   * Install python3 using [HomeBrew](http://brew.sh/).
+	  Note: With recent Anaconda Python versions, the build process
+	  succeeds, but loading the resulted module causes a crash.  If you
+	  are a macOS developer, we need help with that.  See the relevant
+     issues in the GitHub repository (search there for "anaconda").<br>
+	  [Anaconda](https://conda.io/docs/user-guide/install/download.html).
 
 NOTE: Before issuing `configure` (see below) you have to validate that
 the required python versions can be invoked using your `PATH`.
@@ -333,13 +333,13 @@ Python bindings, use:
 ./configure --disable-python-bindings
 ```
 
-The linkgrammar.py module provides a high-level interface in Python.
-The example.py and sentence-check.py scripts provide a demo,
-and tests.py runs unit tests.
+The `linkgrammar.py` module provides a high-level interface in Python.
+The `example.py` and `sentence-check.py` scripts provide a demo,
+and `tests.py` runs unit tests.
 
 Java Bindings
 -------------
-By default, the Makefiles attempt to build the Java bindings.
+By default, the `Makefile`s attempt to build the Java bindings.
 The use of the Java bindings is *OPTIONAL*; you do not need these if
 you do not plan to use link-grammar with Java.  You can skip building
 the Java bindings by disabling as follows:
@@ -354,10 +354,10 @@ Notes about finding `jni.h`:<br>
 Some common java JVM distributions (most notably, the ones from Sun)
 place this file in unusual locations, where it cannot be
 automatically found.  To remedy this, make sure that environment variable
-JAVA_HOME is set. The configure script looks for jni.h in `$JAVA_HOME/Headers`
-and in `$JAVA_HOME/include`; it also examines corresponding locations
-for $JDK_HOME.  If `jni.h `still cannot be found, specify the location
-with the CPPFLAGS variable: so, for example,
+`JAVA_HOME` is set correctly. The configure script looks for `jni.h` in
+`$JAVA_HOME/Headers` and in `$JAVA_HOME/include`; it also examines
+corresponding locations for `$JDK_HOME`.  If `jni.h `still cannot be
+found, specify the location with the `CPPFLAGS` variable: so, for example,
 ```
 export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
 ```
@@ -370,13 +370,13 @@ tools will fail to find packages installed there.
 
 Install location
 ----------------
-The /usr/local install target can be over-ridden using the
-standard GNU configure --prefix option, so for example:
+The `/usr/local` install target can be over-ridden using the
+standard GNU `configure --prefix` option; so, for example:
 ```
 ./configure --prefix=/opt/link-grammar
 ```
 
-By using pkg-config (see below), non-standard install locations
+By using `pkg-config` (see below), non-standard install locations
 can be automatically detected.
 
 Configure help
@@ -581,7 +581,7 @@ directory in that order, directly or under a directory names `data`:
 
 1. Under your current directory.
 2. Unless compiled with MSVC or run under the Windows console:
-   At the installed location (typically in /usr/local/share/link-grammar).
+   At the installed location (typically in `/usr/local/share/link-grammar`).
 3. If compiled on Windows: In the directory of the link-parser
    executable (may be in a different location than the link-parser
    command, which may be a script).
@@ -598,9 +598,9 @@ link-parser ../path/to-my/modified/data/en
 ```
 
 When accessing dictionaries in non-standard locations, the standard
-file-names are still assumed (i.e. 4.0.dict, 4.0.affix, etc.).
+file-names are still assumed (*i.e.* `4.0.dict`, `4.0.affix`, *etc.*).
 
-The Russian dictionaries are in data/ru. Thus, the Russian parser
+The Russian dictionaries are in `data/ru`. Thus, the Russian parser
 can be started as:
 ```
 link-parser ru
@@ -619,7 +619,7 @@ This word will be ignored.
 ```
 
 then your UTF-8 locales are either not installed or not configured.
-The shell command `locale -a` should list en_US.utf8 as a locale.
+The shell command `locale -a` should list `en_US.utf8` as a locale.
 If not, then you need to `dpkg-reconfigure locales` and/or run
 `update-locale` or possibly `apt-get install locales`, or
 combinations or variants of these, depending on your operating
@@ -635,10 +635,10 @@ For more details see [README.md](bindings/python-examples/README.md)
 in the `bindings/python-examples` directory.
 
 There are also multiple batches of test/example sentences in the
-language data directories, generally having the names corpus-*.batch
+language data directories, generally having the names `corpus-*.batch`
 The parser program can be run in batch mode, for testing the system
 on a large number of sentences.  The following command runs the
-parser on a file called corpus-basic.batch;
+parser on a file called `corpus-basic.batch`;
 ```
 link-parser < corpus-basic.batch
 ```
@@ -660,8 +660,8 @@ The following numbers are subject to change, but, at this time, the
 number of errors one can expect to observe in each of these files
 are roughly as follows:
 ```
-en/corpus-basic.batch:      72 errors
-en/corpus-fixes.batch:     404 errors
+en/corpus-basic.batch:      82 errors
+en/corpus-fixes.batch:     383 errors
 lt/corpus-basic.batch:      15 errors
 ru/corpus-basic.batch:      47 errors
 ```
@@ -767,8 +767,20 @@ global.
 
 SAT solver
 ----------
-The current parser uses an algorithm that runs in O(N^3) time, for
-a sentence containing N words.
+The default Link Grammar parser constructs planar typed graphs from
+a collection (dictionary) of graph-sheaf components (the "jigsaw puzzle
+pieces") using an algorithm appropriate to this specific task. This
+can be seen as a kind of constraint satisfaction problem: select
+jigsaw puzzle pieces from the dictionary, such that they can be
+assembled into a consistent whole.
+
+The SAT solver was an experiment to see if performance could be 
+improved by applying the principles and algorithms of Boolean
+Satisfiability Theory to this constraint satisfaction problem.
+
+The result of the experiment is a wash: the default parser is a bit
+faster for short and medium-length sentences; the SAT solver can be
+faster for long sentences. 
 
 The SAT solver aims to replace this parser with an algorithm based
 on Boolean Satisfiability Theory; specifically using the MiniSAT
