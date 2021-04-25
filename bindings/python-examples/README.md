@@ -9,21 +9,19 @@ how the to use the Link Grammar Python bindings.
 A unit test for the Link Grammar Python bindings can be found in
 in `tests.py`.
 
+Python2 is no longer supported; the last version that contained python2
+bindings was version 5.7.0, released in September 2019.
+
 Configuring (if needed)
 -----------------------
 The python bindings will be built by default, if the required python
 system libraries are detected on the build system.  Thus, no special
-configuration should be needed. However, configure can be forced with
+configuration should be needed. However, `configure` can be forced with
 the following commands.
 
-### For Python2 and Python3
+### To explicitly enable Python bindings.
    `$ ./configure --enable-python-bindings`
 (This is the default if Python development packages are installed.)
-
-### For Python2 or Python3 only
-   `$ ./configure --enable-python-bindings=2`
-Or:<br>
-   `$ ./configure --enable-python-bindings=3`
 
 ### To disable the Python bindings
    `$ ./configure --disable-python-bindings`
@@ -40,7 +38,7 @@ the section **Testing the installation** .
 Parsing simple sentences:
 
 ```
-`$ python`
+`$ python3`
 
 >>> from linkgrammar import Sentence, ParseOptions, Dictionary
 >>> sent = Sentence("This is a simple sentence.", Dictionary(), ParseOptions())
@@ -58,7 +56,7 @@ Parsing simple sentences:
       |        |     |  |     |         |     |
   LEFT-WALL this.p is.v a simple.a sentence.n .
 ```
-Additional examples can be found in `examples.py` and `sentence-cehck.py`.
+Additional examples can be found in `examples.py` and `sentence-check.py`.
 
 Testing
 -------
@@ -102,7 +100,7 @@ PYTHONPATH=$SRC_DIR/bindings/python:$BUILD_DIR/bindings/python:$BUILD_DIR/bindin
 (Export it, or prepend it it the `make` command.)
 ```
 $ cd $SRC_DIR
-$ python tests.py [-v]
+$ ./tests.py [-v]
 ```
 
 ### Testing the installation
@@ -121,9 +119,9 @@ Set the `PYTHONPATH` environment variable to the location of the installed
 Python's **linkgrammar** module, e.g.:
 
 ```
-PYTHONPATH=/usr/local/lib/python2.7/dist-packages
+PYTHONPATH=/usr/local/lib/python3.7/site-packages
 ```
-(Export it, or prepend it to the `python` command.)
+(Export it, or prepend it to the `python3` command.)
 
 Setting the `PYTHONPATH` is not needed if the default package
 configuration is used.  The default configuration installs the python
@@ -136,5 +134,5 @@ directory is used. For example:
 
 ```
 $ cd $SRCDIR/binding/python-examples
-$ python tests.py
+$ ./tests.py
 ```
