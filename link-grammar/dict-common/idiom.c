@@ -116,7 +116,11 @@ static long max_postfix_found(Dict_node * d)
 static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
 	char buff[2*MAX_WORD];
-	snprintf(buff, sizeof(buff), "%s%cI%ld", s, SUBSCRIPT_MARK, count);
+
+	size_t n = lg_strlcpy(buff, s, sizeof(buff));
+	buff[n] = SUBSCRIPT_MARK;
+	buff[n + 1] = 'I';
+	buff[n + 2] = '\0';
 
 	return string_set_add(buff, dict->string_set);
 }
