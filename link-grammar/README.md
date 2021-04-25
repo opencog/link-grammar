@@ -171,7 +171,7 @@ slower, it is a **LOT** slower than the default parser. It is:
 * 5x slower on `corpus-basic.batch`.
 * 4x slower on `corpus-fixes.batch`.
 * More than 100x slower on `corpus-fix-long.batch`.
-* More than 15x slower on Jane Austen's *Pride and Prejudice*.
+* 21x slower on Jane Austen's *Pride and Prejudice*.
 
 The code can still be built by saying
 ```
