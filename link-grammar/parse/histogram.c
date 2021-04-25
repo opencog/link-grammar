@@ -154,7 +154,7 @@ void hist_muladdv(Count_bin* acc, const Count_bin* a, double cost, const Count_b
 double hist_cost_cutoff(Count_bin* hist, int count)
 {
 	int i;
-	s64 cnt = 0;
+	w_count_t cnt = 0;
 
 	for (i=0; i<NUM_BINS; i++)
 	{
@@ -165,10 +165,10 @@ double hist_cost_cutoff(Count_bin* hist, int count)
 	return 1.0e38;
 }
 
-s64 hist_cut_total(Count_bin* hist, int min_total)
+w_count_t hist_cut_total(Count_bin* hist, int min_total)
 {
 	int i;
-	s64 cnt = 0;
+	w_count_t cnt = 0;
 
 	for (i=0; i<NUM_BINS; i++)
 	{

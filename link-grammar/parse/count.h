@@ -14,16 +14,16 @@
 #define _COUNT_H
 
 #include "fast-match.h"                 // fast_matcher_t
-#include "histogram.h"                  // Count_bin
+#include "histogram.h"                  // linkage count definitions
 
 typedef struct count_context_s count_context_t;
 
-Count_bin* table_lookup(count_context_t *, int, int,
+count_t *table_lookup(count_context_t *, int, int,
                         const Connector *, const Connector *,
-                        unsigned int, unsigned int *);
+                        unsigned int, size_t *);
 int do_parse(Sentence, fast_matcher_t*, count_context_t*, Parse_Options);
 bool no_count(count_context_t *, int, Connector *, unsigned int, unsigned int);
 
-count_context_t* alloc_count_context(Sentence, Tracon_sharing*);
+count_context_t *alloc_count_context(Sentence, Tracon_sharing*);
 void free_count_context(count_context_t*, Sentence);
 #endif /* _COUNT_H */
