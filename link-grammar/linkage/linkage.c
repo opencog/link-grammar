@@ -16,6 +16,7 @@
 
 #include "api-structures.h"
 #include "connectors.h"
+#include "dict-common/dict-api.h"       // linkage_get_categories
 #include "dict-common/dict-affix.h"     // INFIX_MARK
 #include "dict-common/dict-defines.h"   // SUBSCRIPT_MARK
 #include "dict-common/idiom.h"
@@ -740,6 +741,39 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 }
 #undef D_CCW
 
+#define D_CGW 5
+void compute_generated_words(Sentence sent, Linkage linkage)
+{
+	Disjunct **cdjp = linkage->chosen_disjuncts;
+
+	linkage->word = malloc(linkage->num_words * sizeof(char *));
+
+	for (WordIdx i = 0; i < linkage->num_words; i++)
+	{
+		assert(cdjp[i] != NULL, "NULL disjunct in generated sentence");
+		const char *word;
+
+		Disjunct *cdj = cdjp[i];
+
+		if (cdj->is_category == 0)
+		{
+			word = cdj->word_string;
+		}
+		else
+		{
+			assert(cdj->num_categories > 0, "0 categories in disjunct");
+			word = linkage_get_disjunct_str(linkage, i);
+			size_t len = strlen(word) + sizeof("<>");
+			char *disjunct_string = alloca(len);
+			snprintf(disjunct_string, len, "<%s>", word);
+			word = string_set_add(disjunct_string, sent->string_set);
+		}
+
+		linkage->word[i] = word;
+	}
+}
+#undef D_CGW
+
 Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 {
 	Linkage linkage;
@@ -757,7 +791,8 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 	}
 
 	/* Perform remaining initialization we haven't done yet...*/
-	compute_chosen_words(sent, linkage, opts);
+	if (!IS_GENERATION(sent->dict))
+		compute_chosen_words(sent, linkage, opts);
 
 	linkage->is_sent_long = (linkage->num_words >= opts->twopass_length);
 
@@ -923,4 +958,14 @@ WordIdx linkage_get_word_char_end(const Linkage linkage, WordIdx w)
 	int pos = (int)(linkage->wg_path_display[w]->end - linkage->sent->orig_sentence);
 	char *sentchunk = strndupa(linkage->sent->orig_sentence, pos);
 	return utf8_strlen(sentchunk);
+}
+
+const Category_cost *linkage_get_categories(const Linkage linkage, WordIdx w)
+{
+	if (NULL == linkage) return NULL;
+	if (linkage->num_words <= w) return NULL; /* bounds-check */
+
+	Disjunct *dj = linkage->chosen_disjuncts[w];
+	if (dj->is_category == 0) return NULL;
+	return dj->category;
 }

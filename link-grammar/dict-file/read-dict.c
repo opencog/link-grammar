@@ -1655,6 +1655,70 @@ static void add_define(Dictionary dict, const char *name, const char *value)
 	dict->define.value[id - 1] = string_set_add(value, dict->string_set);
 }
 
+static bool is_directive(const char *s)
+{
+	return
+		(strcmp(s, UNLIMITED_CONNECTORS_WORD) == 0) ||
+		(strncmp(s, LIMITED_CONNECTORS_WORD, sizeof(LIMITED_CONNECTORS_WORD)-1) == 0);
+}
+
+static bool is_correction(const char *s)
+{
+	static const char correction_mark[] = { SUBSCRIPT_MARK, '#' , '\0'};
+	return strstr(s, correction_mark) != 0;
+}
+
+static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
+{
+	if (n == 1)
+	{
+		if (is_macro(dn->string)) return;
+		if (!dict->generate_walls && is_wall(dn->string)) return;
+		if (is_correction(dn->string)) return;
+		if (is_directive(dn->string)) return;
+	}
+
+	/* Add a category with a place for n words. */
+	dict->num_categories++;
+	if (dict->num_categories >= dict->num_categories_alloced)
+	{
+		dict->num_categories_alloced *= 2;
+		dict->category =
+			realloc(dict->category,
+			        sizeof(*dict->category) * dict->num_categories_alloced);
+	}
+	dict->category[dict->num_categories].word =
+		malloc(sizeof(dict->category[0].word) * n);
+
+	n = 0;
+	for (Dict_node *dnx = dn; dnx != NULL; dnx = dnx->left)
+	{
+		if (is_macro(dnx->string)) continue;
+		if (!dict->generate_walls && is_wall(dnx->string)) continue;
+		if (is_correction(dnx->string)) continue;
+		if (is_directive(dnx->string)) return;
+		dict->category[dict->num_categories].word[n] = dnx->string;
+		n++;
+	}
+
+	if (n == 0)
+	{
+		free(dict->category[dict->num_categories].word);
+		--dict->num_categories;
+	}
+	else
+	{
+		assert(dict->num_categories < 1024 * 1024, "Insane number of categories");
+		char category_string[16]; /* For the tokenizer - not used here */
+		snprintf(category_string, sizeof(category_string), " %x",
+		         dict->num_categories);
+		string_set_add(category_string, dict->string_set);
+		dict->category[dict->num_categories].exp = e;
+		dict->category[dict->num_categories].num_words = n;
+		dict->category[dict->num_categories].name = "";
+	}
+}
+
 /**
  * read_entry() -- read one dictionary entry
  * Starting with the current token, parse one dictionary entry.
@@ -1820,6 +1884,9 @@ static bool read_entry(Dictionary dict)
 		dnx->exp = n;
 		i++;
 	}
+	if (IS_GENERATION(dict))
+		add_category(dict, n, dn, i);
+
 	dict->insert_entry(dict, dn, i);
 
 	if (dict->suppress_warning)
@@ -1888,6 +1955,18 @@ bool read_dictionary(Dictionary dict)
 			return false;
 		}
 	}
+
+	if (dict->category != NULL)
+	{
+		/* Create a category element which contains 0 words, to signify the
+		 * end of the category array for the user API. The number of
+		 * categories will not get changed because macros are considered an
+		 * invalid word. */
+		Exp dummy_exp;
+		add_category(dict, &dummy_exp, NULL, 0);
+		dict->category[dict->num_categories + 1].num_words = 0;
+	}
+
 	dict->root = dsw_tree_to_vine(dict->root);
 	dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
 	return true;

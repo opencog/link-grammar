@@ -291,8 +291,27 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			*loc = n;         /* update the connector list */
 		}
 
-		ndis->word_string = string;
-		ndis->cost = cl->cost;
+		/* XXX add_category() starts category strings by ' '.
+		 * FIXME Replace it by a better indication. */
+		if (!IS_GENERATION(sent->dict) || (' ' != string[0]))
+		{
+			ndis->word_string = string;
+			ndis->cost = cl->cost;
+			ndis->is_category = 0;
+		}
+		else
+		{
+			ndis->num_categories_alloced = 4;
+			ndis->category =
+				malloc(sizeof(ndis->category) * ndis->num_categories_alloced);
+			ndis->num_categories = 1;
+			ndis->category[0].num = strtol(string, NULL, 16);
+			ndis->category[1].num = 0; /* API array terminator */
+			assert((ndis->category[0].num > 0) && (ndis->category[0].num < 64*1024),
+			       "Insane category %u", ndis->category[0].num);
+			ndis->category[0].cost = cl->cost;
+		}
+
 		ndis->originating_gword = (gword_set*)gs; /* XXX remove constness */
 		ndis->next = dis;
 		dis = ndis;

@@ -18,7 +18,7 @@
 
 typedef struct extractor_s extractor_t;
 
-extractor_t* extractor_new(int nwords, unsigned int rand_state);
+extractor_t* extractor_new(int nwords, unsigned int rand_state, bool generation);
 void free_extractor(extractor_t*);
 
 bool build_parse_set(extractor_t*, Sentence,
@@ -26,5 +26,7 @@ bool build_parse_set(extractor_t*, Sentence,
                      unsigned int null_count, Parse_Options);
 
 void extract_links(extractor_t*, Linkage);
+
+void mark_used_disjuncts(extractor_t *, bool *);
 
 #endif /* _EXTRACT_LINKS_H */

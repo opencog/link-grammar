@@ -124,8 +124,9 @@ dictionary_six_str(const char * lang,
 
 	if (NULL != affix_name)
 	{
-		/* To disable spell-checking, just set the checker to NULL */
-		dict->spell_checker = spellcheck_create(dict->lang);
+		if (!dictionary_generation_request(dict))
+			dict->spell_checker = spellcheck_create(dict->lang);
+
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
 		if (verbosity_level(D_USER_BASIC) && (NULL == dict->spell_checker))

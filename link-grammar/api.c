@@ -452,7 +452,10 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	/* Set the minimum length for tracon sharing.
 	 * In that case a tracon list is produced for the pruning step,
 	 * and disjunct/connector packing is done too. */
-	sent->min_len_encoding = SENTENCE_MIN_LENGTH_TRAILING_HASH;
+	if (IS_GENERATION(dict))
+		sent->min_len_encoding = 0;
+	else
+		sent->min_len_encoding = SENTENCE_MIN_LENGTH_TRAILING_HASH;
 	const char *min_len_encoding = test_enabled("min-len-encoding");
 	if (NULL != min_len_encoding)
 		sent->min_len_encoding = atoi(min_len_encoding+1);
@@ -523,7 +526,7 @@ static void free_sentence_words(Sentence sent)
 	{
 		free(sent->word[i].alternatives);
 	}
-	free_sentence_disjuncts(sent);
+	free_sentence_disjuncts(sent, /*categories_too*/true);
 	free((void *) sent->word);
 	sent->word = NULL;
 }
@@ -539,6 +542,7 @@ void sentence_delete(Sentence sent)
 	post_process_free(sent->postprocessor);
 	post_process_free(sent->constituent_pp);
 	lg_exp_stringify(NULL);
+	free(sent->disjunct_used);
 
 	global_rand_state = sent->rand_state;
 	pool_delete(sent->Match_node_pool);
@@ -552,6 +556,13 @@ void sentence_delete(Sentence sent)
 		condesc_reuse(sent->dict);
 #endif
 		pool_reuse(sent->dict->Exp_pool);
+	}
+
+	if (NULL != sent->wildcard_word_dc_memblock)
+	{
+		free_categories_from_disjunct_array(sent->wildcard_word_dc_memblock,
+		                                    sent->wildcard_word_num_disjuncts);
+		free(sent->wildcard_word_dc_memblock);
 	}
 
 	free(sent);
@@ -618,6 +629,20 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 {
 	int rc;
 
+	if (IS_GENERATION(sent->dict))
+	{
+		if (opts->use_sat_solver)
+		{
+			prt_error("Error: Cannot use the SAT parser in generation mode\n");
+			return -3;
+		}
+		if (opts->max_null_count > 0)
+		{
+			prt_error("Error: Cannot parse with nulls in generation mode\n");
+			return -3;
+		}
+	}
+
 	if (opts->disjunct_cost == UNINITIALIZED_MAX_DISJUNCT_COST)
 		opts->disjunct_cost = sent->dict->default_max_disjunct_cost;
 
@@ -638,7 +663,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		 * garbage. Free it. We really should make the code that is panicking
 		 * do this free, but right now, they have no API for it, so we do it
 		 * as a favor. XXX FIXME someday. */
-		free_sentence_disjuncts(sent);
+		free_sentence_disjuncts(sent, /*categories_too*/true);
 	}
 
 	/* Check for bad sentence length */
@@ -677,7 +702,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Finished parse");
 
-	if ((verbosity > 0) &&
+	if ((verbosity > 0) && !IS_GENERATION(sent->dict) &&
 	   (PARSE_NUM_OVERFLOW < sent->num_linkages_found))
 	{
 		prt_error("Warning: Combinatorial explosion! nulls=%u cnt=%d\n"

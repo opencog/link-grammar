@@ -80,6 +80,7 @@ struct Link_s
 	const char * link_name; /* Spelling of full link name */
 };
 
+void compute_generated_words(Sentence, Linkage);
 void partial_init_linkage(Sentence, Linkage, unsigned int N_words);
 void check_link_size(Linkage);
 void remove_empty_words(Linkage);

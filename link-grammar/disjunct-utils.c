@@ -14,6 +14,7 @@
 
 #include "api-structures.h"             // Sentence
 #include "connectors.h"
+#include "dict-common/dict-api.h"
 #include "dict-common/dict-structures.h"
 #include "dict-common/dict-utils.h"     // copy_Exp
 #include "dict-common/regex-morph.h"    // match_regex
@@ -21,10 +22,92 @@
 #include "memory-pool.h"
 #include "prepare/build-disjuncts.h"
 #include "print/print-util.h"
+#include "string-set.h"
 #include "tokenize/tok-structures.h"    // XXX TODO provide gword access methods!
 #include "tokenize/word-structures.h"
 #include "tracon-set.h"
 #include "utilities.h"
+
+/* Disjunct API ... */
+
+static char *connector_list_to_expression(const char *connector_list)
+{
+	dyn_str *e = dyn_str_new();
+	for (const char *p = connector_list; *p != '\0'; p++)
+	{
+		if (*p != ' ')
+		{
+			dyn_strcat(e, (char []){ *p, '\0' });
+			continue;
+		}
+		if (p[1] != '\0') dyn_strcat(e, " & ");
+	}
+
+	return dyn_str_take(e);
+}
+
+/**
+ * Return the expression of the given disjunct;
+ * The caller has to free the returned value.
+ */
+char * disjunct_expression(Disjunct *d)
+{
+	char *ls = print_connector_list_str(d->left, "-");
+	char *rs = print_connector_list_str(d->right, "+");
+
+	size_t lrs_sz = strlen(ls) + 1 + strlen(rs); /* ls " " rs */
+	char *lrs = alloca(lrs_sz + 1);
+	size_t n = lg_strlcpy(lrs, ls, lrs_sz);
+	if ((ls[0] != '\0') && (rs[0] != '\0'))
+	    n += lg_strlcpy(lrs + n, " ", lrs_sz);
+	lg_strlcpy(lrs + n, rs, lrs_sz);
+	lrs[lrs_sz] = '\0';
+
+	free(ls);
+	free(rs);
+
+	return connector_list_to_expression(lrs);
+}
+
+/**
+ * Return the Category_cost array (NULL terminated) of the given disjunct.
+ * It shouldn't be freed by the caller.
+ */
+const Category_cost * disjunct_categories(Disjunct *d)
+{
+	if (d->is_category == 0) return NULL;
+	return d->category;
+}
+
+/**
+ * Return a NULL terminated array of pointers to disjuncts which are
+ * unused in the current sentence-generation linkage.
+ * Note: Only wild-card words are considered (fixed words are currently
+ * ignored).
+ * The caller has to free the returned value.
+ */
+Disjunct ** sentence_unused_disjuncts(Sentence sent)
+{
+	if ((sent == NULL) || (sent->disjunct_used == NULL)) return NULL;
+
+	unsigned int n = 0;
+	for (unsigned int i = 0; i < sent->wildcard_word_num_disjuncts; i++)
+	{
+		if (!sent->disjunct_used[i]) n++;
+	}
+	const size_t unused_d_sz = sizeof(Disjunct *) * (n + 1); /* 1 for NULL */
+	Disjunct **unused_d = malloc(unused_d_sz);
+
+	n = 0;
+	for (unsigned int i = 0; i < sent->wildcard_word_num_disjuncts; i++)
+	{
+		if (!sent->disjunct_used[i])
+			unused_d[n++] = &((Disjunct *)sent->wildcard_word_dc_memblock)[i];
+	}
+	unused_d[n] = NULL;
+
+	return unused_d;
+}
 
 /* Disjunct utilities ... */
 
@@ -45,10 +128,41 @@ void free_disjuncts(Disjunct *c)
 	}
 }
 
-void free_sentence_disjuncts(Sentence sent)
+void free_categories_from_disjunct_array(Disjunct *dbase,
+                                         unsigned int num_disjuncts)
+{
+	for (Disjunct *d = dbase; d < &dbase[num_disjuncts]; d++)
+	{
+		if (d->is_category != 0)
+			free(d->category);
+	}
+}
+
+void free_categories(Sentence sent)
 {
 	if (NULL != sent->dc_memblock)
 	{
+		free_categories_from_disjunct_array(sent->dc_memblock,
+		                                    sent->num_disjuncts);
+	}
+	else
+	{
+		for (WordIdx w = 0; w < sent->length; w++)
+		{
+			for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
+			{
+				if (d->is_category != 0)
+					free(d->category);
+			}
+		}
+	}
+}
+
+void free_sentence_disjuncts(Sentence sent, bool category_too)
+{
+	if (NULL != sent->dc_memblock)
+	{
+		if (category_too) free_categories(sent);
 		free(sent->dc_memblock);
 		sent->dc_memblock = NULL;
 	}
@@ -118,7 +232,8 @@ struct disjunct_dup_table_s
  * This is the old version that doesn't check for domination, just
  * equality.
  */
-static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * d)
+static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt,
+                                             Disjunct * d, bool string_too)
 {
 	unsigned int i;
 	i = 0;
@@ -128,9 +243,8 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt, Disjunct * 
 	for (Connector *e = d->right; e != NULL; e = e->next) {
 		i = (41 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
 	}
-#if 0 /* Redundant - the connector hashing has enough entropy. */
-	i += string_hash(d->word_string);
-#endif
+	if (string_too)
+		i += string_hash(d->word_string);
 	i += (i>>10);
 
 	d->dup_hash = i;
@@ -146,7 +260,7 @@ static bool connectors_equal_prune(Connector *c1, Connector *c2)
 }
 
 /** returns TRUE if the disjuncts are exactly the same */
-static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
+static bool disjuncts_equal(Disjunct * d1, Disjunct * d2, bool ignore_string)
 {
 	Connector *e1, *e2;
 
@@ -167,6 +281,8 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
 		e2 = e2->next;
 	}
 	if ((e1 != NULL) || (e2 != NULL)) return false;
+
+	if (ignore_string) return true;
 
 	/* Save CPU time by comparing this last, since this will
 	 * almost always be true. Rarely, the strings are not from
@@ -294,7 +410,7 @@ static gword_set *gword_set_union(gword_set *kept, gword_set *eliminated)
  * Takes the list of disjuncts pointed to by d, eliminates all
  * duplicates, and returns a pointer to a new list.
  */
-Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
+Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 {
 	unsigned int count = 0;
 	disjunct_dup_table *dt;
@@ -309,24 +425,47 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 	for (Disjunct *d = dw; d != NULL; d = d->next)
 	{
 		Disjunct *dx;
-		unsigned int h = old_hash_disjunct(dt, d);
+		unsigned int h = old_hash_disjunct(dt, d, /*string_too*/!multi_string);
 
 		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->dup_table_next)
 		{
 			if (d->dup_hash != dx->dup_hash) continue;
-			if (disjuncts_equal(dx, d)) break;
+			if (disjuncts_equal(dx, d, multi_string)) break;
 		}
 
 		if (dx != NULL)
 		{
 			/* Discard the current disjunct. */
-			if (d->cost < dx->cost) dx->cost = d->cost;
 
-			dx->originating_gword =
-				gword_set_union(dx->originating_gword, d->originating_gword);
+			if (multi_string)
+			{
+				if (dx->num_categories == dx->num_categories_alloced - 1)
+				{
+					dx->num_categories_alloced *= 2;
+					dx->category = realloc(dx->category,
+					   sizeof(dx->category) * dx->num_categories_alloced);
+				}
+				dassert((d->category[0].num > 0) && (d->category[0].num < 64*1024),
+				        "Insane category %u", d->category[0].num);
+				dx->category[dx->num_categories].num = d->category[0].num;
+				dx->category[dx->num_categories].cost = d->cost;
+				dx->num_categories++;
+				dx->category[dx->num_categories].num = 0; /* API array terminator.*/
+			}
+			else
+			{
+				if (d->cost < dx->cost) dx->cost = d->cost;
+				dx->originating_gword =
+					gword_set_union(dx->originating_gword, d->originating_gword);
+			}
 
 			count++;
 			prev->next = d->next;
+			if (d->is_category != 0)
+			{
+				free(d->category);
+				d->is_category = 0; /* Save free() call on sentence delete. */
+			}
 		}
 		else
 		{
@@ -336,7 +475,9 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw)
 		}
 	}
 
-	lgdebug(+D_DISJ+(0==count)*1000, "Killed %u duplicates\n", count);
+	lgdebug(+D_DISJ+(0==count)*1000, "w%zu: Killed %u duplicates%s\n",
+	        dw->originating_gword->o_gword->sent_wordidx, count,
+	        multi_string ? " (different word-strings)" : "");
 
 	disjunct_dup_table_delete(dt);
 	return dw;
@@ -671,7 +812,9 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	newd = (ts->dblock)++;
 	newd->word_string = d->word_string;
 	newd->cost = d->cost;
+	newd->is_category = d->is_category;
 	newd->originating_gword = d->originating_gword;
+	newd->ordinal = d->ordinal;
 
 	if (NULL == ts->tracon_list)
 		 token = (uintptr_t)d->originating_gword;

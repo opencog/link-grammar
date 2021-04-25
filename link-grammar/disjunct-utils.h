@@ -30,9 +30,23 @@ struct Disjunct_struct
 	/* 48 bytes of common stuff. */
 	Disjunct *next;
 	Connector *left, *right;
-	double cost;
 	gword_set *originating_gword; /* Set of originating gwords */
-	const char *word_string;      /* Subscripted dictionary word */
+	union
+	{
+		struct
+		{
+			const char *word_string;  /* Subscripted dictionary word */
+			float cost;               /* Disjunct cost */
+			unsigned int is_category; /* Use the category field */
+		};
+		struct
+		{
+			/* Dictionary category & disjunct cost (for sentence generation). */
+			Category_cost *category;
+			unsigned int num_categories_alloced;
+			unsigned int num_categories;
+		};
+	};
 
 	/* Shared by different steps. For what | when. */
 	union
@@ -45,7 +59,7 @@ struct Disjunct_struct
 	union
 	{
 		uint32_t dup_hash;        /* Duplicate elimination | before pruning */
-		uint32_t unused2;         /* Unused now | before and during parsing */
+		int32_t ordinal;          /* Generation mode | after d. elimination */
 	}; /* 4 bytes */
 
 	struct
@@ -59,10 +73,12 @@ struct Disjunct_struct
 
 /* Disjunct utilities ... */
 void free_disjuncts(Disjunct *);
-void free_sentence_disjuncts(Sentence);
+void free_sentence_disjuncts(Sentence, bool);
+void free_categories(Sentence);
+void free_categories_from_disjunct_array(Disjunct *, unsigned int);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
-Disjunct * eliminate_duplicate_disjuncts(Disjunct *);
+Disjunct * eliminate_duplicate_disjuncts(Disjunct *, bool);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 

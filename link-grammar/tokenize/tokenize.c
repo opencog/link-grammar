@@ -2284,12 +2284,16 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		issue_word_alternative(sent, unsplit_word, "W", 0,NULL, 1,&word, 0,NULL);
 		unsplit_word->status |= WS_INDICT;
 		word_is_known = true;
+
+		if (IS_GENERATION(sent->dict) && is_macro(word))
+			unsplit_word->tokenizing_step = TS_DONE;
 	}
 
-	if (unsplit_word->status & (WS_SPELL|WS_RUNON))
+	if (unsplit_word->status & (WS_SPELL|WS_RUNON) ||
+	    (unsplit_word->tokenizing_step == TS_DONE))
 	{
-		/* The word is a result of spelling, so it doesn't need right/left
-		 * stripping. Skip it. */
+		/* The word is a result of spelling, or is a dictionary macro, so it
+		 * doesn't need right/left stripping. Skip it. */
 	}
 	else
 	{
@@ -2712,7 +2716,8 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	if (!word_can_lrmsplit && !word_is_known &&
 	    !contains_digits(word, dict->lctype) &&
 	    !is_proper_name(word, dict->lctype) &&
-	    opts->use_spell_guess && dict->spell_checker)
+	    opts->use_spell_guess && dict->spell_checker &&
+	    !strstr(word, WILDCARD_WORD))
 	{
 		bool spell_suggest = guess_misspelled_word(sent, unsplit_word, opts);
 		lgdebug(+D_SW, "Spell suggest=%d\n", spell_suggest);
@@ -2980,6 +2985,26 @@ bool word0_set(Sentence sent, char *w, Parse_Options opts)
 	return setup_dialect(sent->dict, opts);
 }
 
+static Dict_node *dictionary_all_categories(Dictionary dict)
+{
+	Dict_node * dn = malloc(sizeof(*dn) * dict->num_categories);
+
+	for (size_t i = 0; i < dict->num_categories; i++)
+	{
+		dn[i].exp = dict->category[i + 1].exp;
+		char category_string[16];
+		snprintf(category_string, sizeof(category_string), " %x",
+		         (unsigned int)i + 1);
+		dn[i].string = string_set_lookup(category_string, dict->string_set);
+		assert(dn[i].string != NULL, "Missing string for category %u",
+		       dict->num_categories);
+		dn[i].right = &dn[i + 1];
+	}
+	dn[dict->num_categories-1].right = NULL;
+
+	return dn;
+}
+
 /**
  * build_word_expressions() -- build list of expressions for a word.
  *
@@ -2998,7 +3023,27 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 	X_node * x, * y;
 	const Dictionary dict = sent->dict;
 
-	dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
+	if (NULL != strstr(w->subword, WILDCARD_WORD))
+	{
+		if (0 == strcmp(w->subword, WILDCARD_WORD))
+		{
+			dn_head = dictionary_all_categories(dict);
+		}
+		else
+		{
+			char *t = alloca(strlen(w->subword) + 1);
+			const char *backslash = strchr(w->subword, '\\');
+
+			strcpy(t, w->subword);
+			strcpy(t+(backslash - w->subword), backslash+1);
+			dn_head = dictionary_lookup_wild(dict, t);
+		}
+	}
+	else
+	{
+		dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
+	}
+
 	x = NULL;
 	dn = dn_head;
 	while (dn != NULL)
@@ -3024,7 +3069,30 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		x->word = w;
 		dn = dn->right;
 	}
-	free_lookup_list (dict, dn_head);
+	if (!IS_GENERATION(dict) || (0 != strcmp(w->subword, WILDCARD_WORD)))
+		free_lookup_list (dict, dn_head);
+	else
+		free(dn_head);
+
+	if (IS_GENERATION(dict) && (NULL == dn_head) &&
+	    (NULL != strstr(w->subword, WILDCARD_WORD)))
+	{
+		/* In case of a wild-card word ("\*" or "word\*"), a no-expression
+		 * result is valid (in case of "\*" it means an empty dict or a dict
+		 * only with walls that are not used).  Use a null-expression
+		 * instead, to prevent an error at the caller. */
+		static Exp null_exp =
+		{
+			.type = AND_type,
+			.operand_first = NULL,
+			.operand_next = NULL,
+		};
+
+		y = pool_alloc(sent->X_node_pool);
+		y->next = NULL;
+		y->exp = &null_exp;
+	}
+
 	return x;
 }
 
@@ -3084,9 +3152,18 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 #endif /* DEBUG */
 		if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-			we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
-			assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
-			w->status |= WS_UNKNOWN;
+			if (NULL == strstr(s, WILDCARD_WORD))
+			{
+				we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
+				assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
+				w->status |= WS_UNKNOWN;
+			}
+			else
+			{
+				lgdebug(+D_DWE, "Wildcard word %s\n", s);
+				we = build_word_expressions(sent, w, NULL, opts);
+				w->status = WS_INDICT; /* Prevent marking as "unknown word". */
+			}
 		}
 		else
 		{

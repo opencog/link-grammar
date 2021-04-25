@@ -264,6 +264,9 @@ be without it altogether. The library names may be without the prefix `lib`.
 * `libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
 implementation, and needed for correctness on FreeBSD and Cygwin)
 
+Note: BSD-derived operating systems (including macOS) need the
+`argp-standalone` library in order to build the `link-generator` program.
+
 ### Editline
 If `libedit-dev` is installed, then the arrow keys can be used to edit
 the input to the link-parser tool; the up and down arrow keys will

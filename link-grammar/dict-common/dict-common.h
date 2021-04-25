@@ -23,6 +23,7 @@
 #define EMPTY_CONNECTOR "ZZZ"
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
 #define LIMITED_CONNECTORS_WORD ("LENGTH-LIMIT-")
+#define IS_GENERATION(dict) (dict->category != NULL)
 
 /* Forward decls */
 typedef struct Afdict_class_struct Afdict_class;
@@ -137,6 +138,12 @@ struct Dictionary_s
 
 	Pool_desc  * Exp_pool;
 
+	/* Sentence generation */
+	unsigned int num_categories;
+	unsigned int num_categories_alloced;
+	Category * category;      /* Word lists - indexed by category number */
+	bool generate_walls;      /* Generate walls too for wildcard words */
+
 	/* Private data elements that come in play only while the
 	 * dictionary is being read, and are not otherwise used.
 	 */
@@ -150,14 +157,21 @@ struct Dictionary_s
 	char            current_idiom[IDIOM_LINK_SZ];
 	char            token[MAX_TOKEN_LENGTH];
 };
-/* The functions here are intended for use by the tokenizer, only,
- * and pretty much no one else. If you are not the tokenizer, you
- * probably don't need these. */
 
-bool dict_has_word(const Dictionary dict, const char *);
+bool is_stem(const char *);
+bool is_wall(const char *);
+bool is_macro(const char *);
+
 Exp *Exp_create(Pool_desc *);
 Exp *Exp_create_dup(Pool_desc *, Exp *);
 Exp *make_unary_node(Pool_desc *, Exp *);
+
+bool dictionary_generation_request(const Dictionary);
+
+/* The functions here are intended for use by the tokenizer, only,
+ * and pretty much no one else. If you are not the tokenizer, you
+ * probably don't need these. */
+bool dict_has_word(const Dictionary dict, const char *);
 void add_empty_word(Sentence, X_node *);
 
 #endif /* _LG_DICT_COMMON_H_ */

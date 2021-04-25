@@ -17,7 +17,8 @@
 #include "dict-api.h"
 #include "dict-common.h"
 #include "dict-defines.h"
-#include "file-utils.h"
+#include "disjunct-utils.h"
+#include "file-utils.h"                // free_categories_from_disjunct_array
 #include "post-process/pp_knowledge.h" // Needed only for pp_close !!??
 #include "regex-morph.h"
 #include "string-set.h"
@@ -35,7 +36,7 @@
 #define STEM_MARK '='
 
 /* ======================================================================== */
-/* Affix type finding */
+/* Identifying dictionary word formats */
 
 /**
  * Return TRUE if the word seems to be in stem form.
@@ -50,6 +51,32 @@ bool is_stem(const char* w)
 	if (subscrmark == w) return false;
 	if (STEM_MARK != subscrmark[1]) return false;
 	return true;
+}
+
+bool is_macro(const char *w)
+{
+	if (w[0] == '<')
+	{
+		char *end = strchr(w, '>');
+		if (end == NULL) return false;
+		if ((end[1] == '\0') || (end[1] == SUBSCRIPT_MARK)) return true;
+	}
+	return false;
+}
+
+bool is_wall(const char *s)
+{
+	if (0 == strncmp(s, LEFT_WALL_WORD, sizeof(LEFT_WALL_WORD)-1))
+	{
+		if (s[sizeof(LEFT_WALL_WORD)-1] == '\0' ||
+			(s[sizeof(LEFT_WALL_WORD)-1] == SUBSCRIPT_MARK)) return true;
+	}
+	if (0 == strncmp(s, RIGHT_WALL_WORD, sizeof(RIGHT_WALL_WORD)-1))
+	{
+		if (s[sizeof(RIGHT_WALL_WORD)-1] == '\0' ||
+			(s[sizeof(RIGHT_WALL_WORD)-1] == SUBSCRIPT_MARK)) return true;
+	}
+	return false;
 }
 
 /* ======================================================================== */
@@ -149,6 +176,15 @@ bool dictionary_word_is_known(const Dictionary dict, const char * word)
 	if (NULL == regex_name) return false;
 
 	return dict_has_word(dict, regex_name);
+}
+
+/**
+ * Return the dictionary Category array.
+ */
+const Category *dictionary_get_categories(const Dictionary dict)
+{
+	if (dict->category == NULL) return NULL;
+	return dict->category + 1; /* First entry is not used */
 }
 
 /* ======================================================================== */
@@ -306,8 +342,43 @@ void dictionary_delete(Dictionary dict)
 	free_regexs(dict->regex_root);
 	free_anysplit(dict);
 	free_dictionary(dict);
+
+	/* Free sentence generation stuff. */
+	for (unsigned int i = 1; i <= dict->num_categories; i++)
+		free(dict->category[i].word);
+	free(dict->category);
+
 	free(dict);
 	object_open(NULL, NULL, NULL); /* Free the directory path cache */
 }
 
 /* ======================================================================== */
+
+/**
+ * Initialize generation mode, if requested.
+ * Since the dictionary_create*() functions don't support Parse_Options as
+ * an argument, use the "test" parse-option, which is in a global variable:
+ * If it contains "generate", enable generation mode.
+ * If an argument "walls" is also supplied ("generate:walls"), then
+ * set a wall generation indication.
+ *
+ * @param dict Set the generation mode in this dictionary.
+ * @return \c true if generation mode has been set, \c false otherwise.
+ */
+bool dictionary_generation_request(const Dictionary dict)
+{
+	const char *generation_mode = test_enabled("generate");
+	if (generation_mode != NULL)
+	{
+		const size_t initial_allocation = 256;
+		dict->num_categories_alloced = initial_allocation;
+		dict->category = malloc(sizeof(*dict->category) *initial_allocation);
+		dict->generate_walls =
+			feature_enabled(generation_mode, "walls", NULL) != NULL;
+		dict->spell_checker = NULL; /* Disable spell-checking. */
+
+		return true;
+	}
+
+	return false;
+}

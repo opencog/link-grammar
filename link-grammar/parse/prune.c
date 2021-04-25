@@ -1091,6 +1091,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
+					if (d->is_category != 0) free(d->category);
 					pc->N_deleted[(int)bad]++;
 					continue;
 				}
@@ -1125,6 +1126,7 @@ static int power_prune(Sentence sent, prune_context *pc, Parse_Options opts)
 
 					/* Discard the current disjunct. */
 					*dd = d->next; /* NEXT - set current disjunct to the next one */
+					if (d->is_category != 0) free(d->category);
 					pc->N_deleted[(int)bad]++;
 					continue;
 				}

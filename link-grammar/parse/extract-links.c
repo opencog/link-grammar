@@ -158,7 +158,7 @@ static void record_choice(
  * table.  Probably should make use of the actual number of disjuncts,
  * rather than just the number of words.
  */
-extractor_t * extractor_new(int nwords, unsigned int ranstat)
+extractor_t * extractor_new(int nwords, unsigned int ranstat, bool generation)
 {
 	int log2_table_size;
 	extractor_t * pex;
@@ -168,7 +168,9 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat)
 	pex->rand_state = ranstat;
 
 	/* Alloc the x_table */
-	if (nwords >= 72) {
+	if (generation) {
+		log2_table_size = 28;
+	} else if (nwords >= 72) {
 		log2_table_size = 15 + nwords / 36;
 	} else if (nwords >= 10) {
 		log2_table_size = 14 + nwords / 24;
@@ -833,4 +835,27 @@ void extract_links(extractor_t * pex, Linkage lkg)
 	else {
 		list_links(lkg, pex->parse_set, index);
 	}
+}
+
+static void mark_used_disjunct(Parse_set *set, bool *disjunct_used)
+{
+	if (set == NULL || set->first == NULL) return;
+
+	for (Parse_choice *pc = set->first; pc != NULL; pc = pc->next)
+	{
+		if (pc->md->ordinal != -1)
+			disjunct_used[pc->md->ordinal] = true;
+	}
+}
+
+void mark_used_disjuncts(extractor_t *pex, bool *disjunct_used)
+{
+	assert(pex->x_table != NULL, "x_table==NULL");
+
+	for (unsigned int i = 0; i < pex->x_table_size; i++)
+	{
+		for (Pset_bucket *t = pex->x_table[i]; t != NULL; t = t->next)
+			mark_used_disjunct(&t->set, disjunct_used);
+	}
+
 }

@@ -21,6 +21,7 @@
 #include "api-structures.h"
 #include "connectors.h"
 #include "count.h"
+#include "dict-common/dict-common.h"    // IS_GENERATION
 #include "disjunct-utils.h"
 #include "fast-match.h"
 #include "resources.h"
@@ -1010,6 +1011,9 @@ static count_t do_count(
 		Connector *fml_re = re;       /* For form_match_list() only */
 #define S(c) (!c?"(nil)":connector_string(c))
 
+		if (!ctxt->is_short)
+		{
+
 		if (le != NULL)
 		{
 			lrcnt_cache =
@@ -1046,6 +1050,8 @@ static count_t do_count(
 			}
 		}
 		/* End of nonzero leftcount/rightcount range cache check. */
+
+		}
 
 		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw);
 
@@ -1300,7 +1306,8 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 	ctxt->checktimer = 0;
 	ctxt->islands_ok = opts->islands_ok;
 	ctxt->mchxt = mchxt;
-	ctxt->is_short = sent->length <= min_len_word_vector;
+	ctxt->is_short =
+		(sent->length <= min_len_word_vector) && !IS_GENERATION(ctxt->sent->dict);
 
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 

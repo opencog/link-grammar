@@ -8,7 +8,7 @@
  * other process (machine-learning algo) to dynamically update
  * the dictionary.
  *
- * Copyright (c) 2014 Linas Vepstas <linasvepstas@gmail.com>
+ * Copyright (c) 2014,2021 Linas Vepstas <linasvepstas@gmail.com>
  */
 
 #ifdef HAVE_SQLITE3
@@ -27,6 +27,7 @@
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-impl.h"
 #include "dict-common/dict-structures.h"
+#include "dict-common/dict-utils.h"      // patch_subscript()
 #include "dict-common/file-utils.h"
 #include "dict-file/read-dict.h"         // dictionary_six()
 #include "error.h"
@@ -147,7 +148,9 @@ typedef struct
 	Dictionary dict;
 	Dict_node* dn;
 	bool found;
+	int count;
 	Exp* exp;
+	char* classname;
 } cbdata;
 
 static void db_free_llist(Dictionary dict, Dict_node *llist)
@@ -391,6 +394,137 @@ static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
 }
 
 /* ========================================================= */
+/* Callbacks and functions to support lexical category loading. */
+
+/* Used for `SELECT count(*) FROM foo` type of queries */
+static int count_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
+
+	assert(1 == argc, "Bad column count");
+	bs->count = atol(argv[0]);
+
+	return 0;
+}
+
+/* Record the name of each lexical class */
+static int classname_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
+	Dictionary dict = bs->dict;
+
+	/* Assuming here that a class name of a wall is the same as the wall
+	 * name, and a class name of a macro is in macro format. */
+	if (!dict->generate_walls && is_wall(argv[0])) return 0;
+	if (is_macro(argv[0])) return 0;
+
+	/* Add a category. */
+	/* This is intentionally off-by-one, per design. */
+	dict->num_categories++;
+	dict->category[dict->num_categories].num_words = 0;
+	dict->category[dict->num_categories].word = NULL;
+	dict->category[dict->num_categories].name =
+		string_set_add(argv[0], dict->string_set);
+
+	char category_string[16];     /* For the tokenizer - not used here */
+	snprintf(category_string, sizeof(category_string), " %x",
+	         dict->num_categories); /* ' ': See comment in build_disjuncts() */
+	string_set_add(category_string, dict->string_set);
+
+	return 0;
+}
+
+/* Record the words in each lexical class */
+static int classword_cb(void *user_data, int argc, char **argv, char **colName)
+{
+	cbdata* bs = user_data;
+	Dictionary dict = bs->dict;
+
+	char *word = strdupa(argv[0]);
+	patch_subscript(word);
+
+	/* Add the word. */
+	dict->category[dict->num_categories].word[bs->count] =
+		string_set_add(word, dict->string_set);
+	bs->count++;
+
+	return 0;
+}
+
+/* The current design for generation requires that all word categories
+ * be loaded into RAM before generation starts. This is required because
+ * a wild-card appearing in the generator forces a loop over all
+ * categories, so we may as well have them instantly available.
+ */
+static void add_categories(Dictionary dict)
+{
+	sqlite3 *db = dict->db_handle;
+	cbdata bs;
+	bs.dict = dict;
+
+	/* How many lexical categories are there? Find out. */
+	sqlite3_exec(db, "SELECT count(DISTINCT classname) FROM Disjuncts;",
+		count_cb, &bs, NULL);
+
+	dict->num_categories = 0;
+	dict->num_categories_alloced = 1 + bs.count + 1; // skip slot 0 + terminator
+	dict->category = malloc(dict->num_categories_alloced *
+	                        sizeof(*dict->category));
+
+	sqlite3_exec(db, "SELECT DISTINCT classname FROM Disjuncts;",
+		classname_cb, &bs, NULL);
+
+	/* Category 0 is unused, intentionally. Not sure why. */
+	unsigned int ncat = dict->num_categories;
+	for (unsigned int i=1; i<=ncat; i++)
+	{
+		/* For each category, get the expression. */
+		dyn_str *qry = dyn_str_new();
+		dyn_strcat(qry,
+			"SELECT disjunct, cost FROM Disjuncts WHERE classname = \'");
+		dyn_strcat(qry, dict->category[i].name);
+		dyn_strcat(qry, "\';");
+
+		bs.exp = NULL;
+		sqlite3_exec(db, qry->str, exp_cb, &bs, NULL);
+		dyn_str_delete(qry);
+
+		dict->category[i].exp = bs.exp;
+
+		/* ------------------ */
+		/* For each category, get the number of words in the category */
+		qry = dyn_str_new();
+		dyn_strcat(qry,
+			"SELECT count(*) FROM Morphemes WHERE classname = \'");
+		dyn_strcat(qry, dict->category[i].name);
+		dyn_strcat(qry, "\';");
+
+		sqlite3_exec(db, qry->str, count_cb, &bs, NULL);
+		dyn_str_delete(qry);
+
+		dict->category[i].num_words = bs.count;
+		dict->category[i].word =
+			malloc(bs.count * sizeof(dict->category[0].word));
+
+		/* ------------------ */
+		/* For each category, get the (subscripted) words in the category */
+		qry = dyn_str_new();
+		dyn_strcat(qry,
+			"SELECT subscript FROM Morphemes WHERE classname = \'");
+		dyn_strcat(qry, dict->category[i].name);
+		dyn_strcat(qry, "\';");
+
+		dict->num_categories = i;
+		bs.count = 0;
+		sqlite3_exec(db, qry->str, classword_cb, &bs, NULL);
+		dyn_str_delete(qry);
+	}
+
+	/* Set the termination entry. */
+	dict->category[dict->num_categories + 1].num_words = 0;
+}
+
+/* ========================================================= */
 /* Dictionary creation, setup, open procedures */
 
 bool check_db(const char *lang)
@@ -501,6 +635,10 @@ Dictionary dictionary_create_from_db(const char *lang)
 
 	if (!dictionary_setup_defines(dict))
 		goto failure;
+
+	/* Initialize word categories, for text generation. */
+	if (!dictionary_generation_request(dict))
+		add_categories(dict);
 
 	return dict;
 
