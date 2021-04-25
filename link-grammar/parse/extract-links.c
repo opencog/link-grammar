@@ -540,7 +540,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 								              rset,  NULL /* d->right */,
 								              re,  /* the NULL indicates no link*/
 								              d, &xt->set, pex);
-								RECOUNT({xt->set.recount += ls[i]->recount * rset->recount;})
+								RECOUNT({xt->set.recount += (w_count_t)ls[i]->recount * rset->recount;})
 							}
 						}
 					}
@@ -629,7 +629,7 @@ static bool set_node_overflowed(Parse_set *set)
 
 	for (pc = set->first; pc != NULL; pc = pc->next)
 	{
-		n  += pc->set[0]->count * pc->set[1]->count;
+		n  += (w_count_t)pc->set[0]->count * pc->set[1]->count;
 		if (PARSE_NUM_OVERFLOW < n) return true;
 	}
 	return false;
