@@ -34,6 +34,7 @@ EXTRA_DIST =                            \
 	docker/docker-python/Dockerfile      \
 	docker/docker-server/Dockerfile      \
 	m4/lg_visibility.m4                  \
+	man/link-generator.1                 \
 	man/link-parser.1                    \
 	mingw/README-Cygwin.md               \
 	mingw/README-MinGW64.md              \
