@@ -8,9 +8,9 @@ of a half-dozen other languages. This structure is a graph of typed
 links (edges) between the words in a sentence. One may obtain the
 more conventional HPSG (constituent) and dependency style parses
 from Link Grammar by applying a collection of rules to convert to
-these differrent formats. This is possible because Link Grammar goes
+these different formats. This is possible because Link Grammar goes
 a bit "deeper" into the "syntactico-semantic" structure of a sentence:
-it provides consierably more fine-grained and detailed information
+it provides considerably more fine-grained and detailed information
 than what is commonly available in conventional parsers.
 
 The theory of Link Grammar parsing was originally developed in 1991
