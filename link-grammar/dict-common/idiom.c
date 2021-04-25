@@ -67,47 +67,6 @@ static bool is_idiom_string(const char * s)
 }
 
 /**
- * Return true if the string s is a sequence of digits.
- */
-static bool is_number(const char *s)
-{
-	while(*s != '\0') {
-		if (!isdigit(*s)) return false;
-		s++;
-	}
-	return true;
-}
-
-/**
- * If the string contains a SUBSCIPT_MARK, and ends in ".Ix" where
- * x is a number, return x.  Return -1 if not of this form.
- */
-static long numberfy(const char * s)
-{
-	s = strrchr(s, SUBSCRIPT_MARK);
-	if (NULL == s) return -1;
-	if (*++s != 'I') return -1;
-	if (!is_number(++s)) return -1;
-	return atol(s);
-}
-
-/**
- * Look for words that end in ".Ix" where x is a number.
- * Return the largest x found.
- */
-static long max_postfix_found(Dict_node * d)
-{
-	long i, j;
-	i = 0;
-	while(d != NULL) {
-		j = numberfy(d->string);
-		if (j > i) i = j;
-		d = d->right;
-	}
-	return i;
-}
-
-/**
  * build_idiom_word_name() -- return idiomized name of given string.
  *
  * Allocates string space and returns a pointer to it.
