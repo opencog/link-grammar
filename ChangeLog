@@ -12,6 +12,7 @@ Version 5.9.0 (XXX 2021)
  * Provide bindings for the Vala programming language.
  * Increase number of allowed idiom expressions. #1187
  * Disable SAT solver by default.
+ * New tool: Sentence generator! This is an experimental prototype.
 
 Version 5.8.1 (8 January 2021)
  * Fix macOS/SunOS build break.

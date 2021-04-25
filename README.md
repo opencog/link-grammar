@@ -36,6 +36,20 @@ Please see the
 for more information.  This version is a continuation of the
 [original CMU parser](http://www.link.cs.cmu.edu/link).
 
+### New!
+As of version 5.9.0, the system include an experimental system for
+generating sentences. These are specified using a "fill in the blanks"
+API, where words are substituted into wild-card locations, whenever the
+result is a grammatically valid sentence. Additional details are in
+the man page: `man link-generator` (in the `man` subdirectory).
+
+This generator is used in the
+[OpenCog Language Learning](https://github.com/opencog/learn)
+project, which aims to automatically learn Link Grammars from corpora,
+using brand-new and inovative information theoretic techniques,
+somewhat similar to those found in articifical neural nets (deep
+learning) but using explicitly symbolic representations.
+
 Quick Overview
 ---------------
 The parser includes API's in various different programming languages,
