@@ -1670,7 +1670,6 @@ static bool is_correction(const char *s)
 
 static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 {
-	e->category = 0;
 	if (n == 1)
 	{
 		if (is_macro(dn->string)) return;
@@ -1714,7 +1713,6 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 		snprintf(category_string, sizeof(category_string), " %x",
 		         dict->num_categories);
 		string_set_add(category_string, dict->string_set);
-		e->category = dict->num_categories;
 		dict->category[dict->num_categories].exp = e;
 		dict->category[dict->num_categories].num_words = n;
 		dict->category[dict->num_categories].name = "";

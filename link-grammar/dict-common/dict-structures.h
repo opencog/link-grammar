@@ -51,7 +51,7 @@ typedef enum { Exptag_none=0, Exptag_dialect, Exptag_macro } Exptag_type;
 struct Exp_struct
 {
 	Exp_type type:8;      /* One of three types: AND, OR, or connector. */
-	unsigned int category:24; /* Index into the category field of Dictionary. */
+	unsigned int unused:24;
 	union
 	{
 		struct /* For non-terminals. */

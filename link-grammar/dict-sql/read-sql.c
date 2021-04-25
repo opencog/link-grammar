@@ -489,7 +489,6 @@ static void add_categories(Dictionary dict)
 		sqlite3_exec(db, qry->str, exp_cb, &bs, NULL);
 		dyn_str_delete(qry);
 
-		bs.exp->category = i;
 		dict->category[i].exp = bs.exp;
 
 		/* ------------------ */

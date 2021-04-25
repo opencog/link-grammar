@@ -355,15 +355,15 @@ void dictionary_delete(Dictionary dict)
 /* ======================================================================== */
 
 /**
- * Set sentence generation indications if requested.
- * Since dictionary_create*() doesn't support options, use the "test"
- * parse_option, which is in a global variable:
+ * Initialize generation mode, if requested.
+ * Since the dictionary_create*() functions don't support Parse_Options as
+ * an argument, use the "test" parse-option, which is in a global variable:
  * If it contains "generate", enable generation mode.
  * If an argument "walls" is also supplied ("generate:walls"), then
  * set a wall generation indication.
  *
- * @param dict Set the indications in this dictionary.
- * @return \c true if in generation mode, \c false otherwise.
+ * @param dict Set the generation mode in this dictionary.
+ * @return \c true if generation mode has been set, \c false otherwise.
  */
 bool dictionary_generation_request(const Dictionary dict)
 {
