@@ -6900,8 +6900,8 @@ got.v-d:
 % "I gotta go now"
 % He said, "I gotta go now."
 gotta.v-d:
-  (I*t+ & <verb-x-pg>)
-  or ({@E-} & Sp*i- & <verb-wall> & I*t+);
+  ({@E-} & Sp*i- & <verb-wall> & (I*t+ or Os+))
+  or [I*t+ & <verb-x-pg>]0.05;
 
 gotten.v:
   

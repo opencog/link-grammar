@@ -5483,8 +5483,8 @@ got.v-d: VERB_SPPP_T(<vc-get>);
 % "I gotta go now"
 % He said, "I gotta go now."
 gotta.v-d:
-  (I*t+ & <verb-x-pg>)
-  or ({@E-} & Sp*i- & <verb-wall> & I*t+);
+  ({@E-} & Sp*i- & <verb-wall> & (I*t+ or Os+))
+  or [I*t+ & <verb-x-pg>]0.05;
 
 gotten.v:
   VERB_PP(<vc-get>) or
