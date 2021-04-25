@@ -20,11 +20,18 @@ University.  The three initial publications on this theory provide the
 best introduction and overview; since then, there have been hundreds
 of publications further exploring, examining and extending the ideas.
 
-The source code here is an updated and modernized version of the
-original CMU Link Parser source code. It contains a vast number of
-bug fixes and immense performance improvements (it is dozens of times
-faster than the original code; see the [ChangeLog](ChangeLog) for
-a list of fixes and enhancements.)
+Although based on the
+[original Carnegie-Mellon code base](https://www.link.cs.cmu.edu/link/)
+the current Link Grammar package has dramatically evolved and is
+profoundly different from earlier versions.  There have been innumerable
+bug fixes; performance has improved by more than an order of magnitude.
+The package is fully multi-threaded, fully UTF-8 enabled, and has been
+scrubbed for security, enabling cloud deployment.  Parse coverage of
+English has been dramatically improved; other languages have been added
+(most notably, Russian). There is a raft of new features, including support
+for morphology, log-likelihood semantic selection, and a sophisticated
+tokenizer that moves far beyond white-space-delimited sentence-splitting.
+Detailed lists can be found in the [ChangeLog](ChangeLog).
 
 This code is released under the LGPL license, making it freely
 available for both private and commercial use, with few restrictions.
