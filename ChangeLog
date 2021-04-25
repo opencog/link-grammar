@@ -1,4 +1,4 @@
-Version 5.9.0 (XXX 2021)
+Version 5.9.0 (25 April 2021)
  * Use #define for custom configuration in dictionaries. #1128
  * Panic-mode fixes and extensions. In link-parser see !help panic_variables.
  * English dict: fix silly mistake with "I love cats and dogs".
@@ -11,7 +11,7 @@ Version 5.9.0 (XXX 2021)
  * Public API shared library entry points exported automatically. #1182
  * Provide bindings for the Vala programming language.
  * Increase number of allowed idiom expressions. #1187
- * Speed up idiom loading. #1194
+ * Replace O(n^2) idiom loading algo by an O(n log n) algo. #1194
  * Disable SAT solver by default.
  * New tool: Sentence generator! This is an experimental prototype.
 
