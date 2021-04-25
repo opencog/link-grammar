@@ -2,11 +2,29 @@ Link Grammar Parser
 ===================
 ***Version 5.9.0***
 
-The Link Grammar Parser implements the Sleator/Temperley/Lafferty
-theory of natural language parsing. This version of the parser is
-an extended, expanded version of the last official CMU release, and
-includes many enhancements and fixes created by many different
-developers.
+The Link Grammar Parser exhibits the linguistic (natural language)
+structure of English, Russian, Arabic, Persian and limited subsets
+of a half-dozen other languages. This structure is a graph of typed
+links (edges) between the words in a sentence. One may obtain the
+more conventional HPSG (constituent) and dependency style parses
+from Link Grammar by applying a collection of rules to convert to
+these differrent formats. This is possible because Link Grammar goes
+a bit "deeper" into the "syntactico-semantic" structure of a sentence:
+it provides consierably more fine-grained and detailed information
+than what is commonly available in conventional parsers.
+
+The theory of Link Grammar parsing was originally developed in 1991
+by Davy Temperley, John Lafferty and Daniel Sleator, at the time
+professors of linguistics and computer science at the Carnegie Mellon
+University.  The three initial publications on this theory provide the
+best introduction and overview; since then, there have been hundreds
+of publications further exploring, examining and extending the ideas.
+
+The source code here is an updated and modernized version of the
+original CMU Link Parser source code. It contains a vast number of
+bug fixes and immense performance improvements (it is dozens of times
+faster than the original code; see the [ChangeLog](ChangeLog) for
+a list of fixes and enhancements.)
 
 This code is released under the LGPL license, making it freely
 available for both private and commercial use, with few restrictions.
@@ -61,7 +79,7 @@ The bottom of the display is a listing of the "disjuncts" used for
 each word. The disjuncts are simply a list of the connectors that
 were employed to form the links. They are particularly interesting
 because they serve as an extremely fine-grained form of a "part of
-speech".  This, for example: the disjunct `S- O+` indicates a
+speech".  Thus, for example: the disjunct `S- O+` indicates a
 transitive verb: its a verb that takes both a subject and an object.
 The additional markup above indicates that 'is' is not only being used
 as a transitive verb, but it also indicates finer details: a transitive
@@ -132,11 +150,14 @@ Contents
 |  |  |
 | bindings/autoit/  | Optional AutoIt language bindings. |
 | bindings/java/ | Optional Java language bindings. |
+| bindings/js/ | Optional JavaScript language bindings. |
 | bindings/lisp/ | Optional Common Lisp language bindings. |
+| bindings/node.js/ | Optional node.js language bindings. |
 | bindings/ocaml/ | Optional OCaML language bindings. |
 | bindings/python/  | Optional Python3 language bindings. |
 | bindings/python-examples/ | Link-grammar test suite and Python language binding usage example. |
 | bindings/swig/ | SWIG interface file, for other FFI interfaces. |
+| bindings/vala/  | Optional Vala language bindings. |
 |  |  |
 | data/en/ | English language dictionaries. |
 | data/en/4.0.dict | The file containing the dictionary definitions. |
