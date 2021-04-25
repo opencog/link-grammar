@@ -60,7 +60,7 @@ struct Afdict_class_struct
 };
 
 #define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
-#define IDIOM_LINK_SZ 5
+#define IDIOM_LINK_SZ 16
 
 #ifdef HAVE_SQLITE3
 #define IS_DB_DICT(dict) (NULL != dict->db_handle)

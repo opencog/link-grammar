@@ -304,22 +304,24 @@ AC_ARG_ENABLE( perl-bindings,
 )
 
 # ====================================================================
-# SAT solver now enabled by default
+# SAT solver is disabled by default. Its always slower than the
+# regular parser.
+#
 # First try to use the minisat system library.
 # If the library or the headers are not found, use the bundled library
 
 AC_ARG_ENABLE( sat-solver,
 	[  --disable-sat-solver    disable use of the Boolean SAT parser
-                          (default is enabled)
+                          (default is disabled)
   --enable-sat-solver[[=ARG]]
                           enable use of the Boolean SAT parser
-                          ARG=yes (default): Use the system minisat library
+                          ARG=yes: Use the system minisat library,
                           if possible
                           ARG=bundled: Use the bundled minisat library],
 	[if test "x$enableval" = xbundled; then
 		use_minisat_bundled_library=yes
 	   enable_sat_solver=yes
-	fi], [enable_sat_solver=yes])
+	fi], [enable_sat_solver=no])
 
 if test "x$enable_sat_solver" = xyes; then
 	# The sat-solver code is in C++; so the link-grammar library should now

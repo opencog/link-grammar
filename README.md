@@ -2,11 +2,29 @@ Link Grammar Parser
 ===================
 ***Version 5.9.0***
 
-The Link Grammar Parser implements the Sleator/Temperley/Lafferty
-theory of natural language parsing. This version of the parser is
-an extended, expanded version of the last official CMU release, and
-includes many enhancements and fixes created by many different
-developers.
+The Link Grammar Parser exhibits the linguistic (natural language)
+structure of English, Russian, Arabic, Persian and limited subsets
+of a half-dozen other languages. This structure is a graph of typed
+links (edges) between the words in a sentence. One may obtain the
+more conventional HPSG (constituent) and dependency style parses
+from Link Grammar by applying a collection of rules to convert to
+these different formats. This is possible because Link Grammar goes
+a bit "deeper" into the "syntactico-semantic" structure of a sentence:
+it provides considerably more fine-grained and detailed information
+than what is commonly available in conventional parsers.
+
+The theory of Link Grammar parsing was originally developed in 1991
+by Davy Temperley, John Lafferty and Daniel Sleator, at the time
+professors of linguistics and computer science at the Carnegie Mellon
+University.  The three initial publications on this theory provide the
+best introduction and overview; since then, there have been hundreds
+of publications further exploring, examining and extending the ideas.
+
+The source code here is an updated and modernized version of the
+original CMU Link Parser source code. It contains a vast number of
+bug fixes and immense performance improvements (it is dozens of times
+faster than the original code; see the [ChangeLog](ChangeLog) for
+a list of fixes and enhancements.)
 
 This code is released under the LGPL license, making it freely
 available for both private and commercial use, with few restrictions.
@@ -61,7 +79,7 @@ The bottom of the display is a listing of the "disjuncts" used for
 each word. The disjuncts are simply a list of the connectors that
 were employed to form the links. They are particularly interesting
 because they serve as an extremely fine-grained form of a "part of
-speech".  This, for example: the disjunct `S- O+` indicates a
+speech".  Thus, for example: the disjunct `S- O+` indicates a
 transitive verb: its a verb that takes both a subject and an object.
 The additional markup above indicates that 'is' is not only being used
 as a transitive verb, but it also indicates finer details: a transitive
@@ -127,17 +145,18 @@ Contents
 | ------------- |-------------|
 | LICENSE     | The license describing terms of use |
 | link-grammar/*.c | The program.  (Written in ANSI-C) |
-| link-grammar/minisat/ | Optional SAT Solver. (Written in C++) |
-| link-grammar/sat-solver/ | Optional SAT Solver. (Written in C++) |
-|  |  |
+| ---- | ---- |
 | bindings/autoit/  | Optional AutoIt language bindings. |
 | bindings/java/ | Optional Java language bindings. |
+| bindings/js/ | Optional JavaScript language bindings. |
 | bindings/lisp/ | Optional Common Lisp language bindings. |
+| bindings/node.js/ | Optional node.js language bindings. |
 | bindings/ocaml/ | Optional OCaML language bindings. |
 | bindings/python/  | Optional Python3 language bindings. |
 | bindings/python-examples/ | Link-grammar test suite and Python language binding usage example. |
 | bindings/swig/ | SWIG interface file, for other FFI interfaces. |
-|  |  |
+| bindings/vala/  | Optional Vala language bindings. |
+| ---- | ---- |
 | data/en/ | English language dictionaries. |
 | data/en/4.0.dict | The file containing the dictionary definitions. |
 | data/en/4.0.knowledge | The post-processing knowledge file. |
@@ -146,8 +165,8 @@ Contents
 | data/en/4.0.regex | Regular expression-based morphology guesser. |
 | data/en/tiny.dict | A small example dictionary. |
 | data/en/words/ | A directory full of word lists. |
-| data/en/corpus*.batch | These files contain sentences (both grammatical and ungrammatical ones) that are used for testing the link-parser These can be run through the parser with the command `./link-parser < corpus.*.batch` |
-|  |  |
+| data/en/corpus*.batch | Example corpora used for testing. |
+| ---- | ---- |
 | data/ru/ | A full-fledged Russian dictionary |
 | data/ar/ | A fairly complete Arabic dictionary |
 | data/fa/ | A Persian (Farsi) dictionary |
@@ -158,23 +177,23 @@ Contents
 | data/he/ | An experimental Hebrew dictionary |
 | data/kz/ | An experimental Kazakh dictionary |
 | data/tr/ | An experimental Turkish dictionary |
-|  |  |
+| ---- | ---- |
 | morphology/ar/ | An Arabic morphology analyzer |
 | morphology/fa/ | An Persian morphology analyzer |
-|  |  |
-| COPYING | The license for this code and data |
+| ---- | ---- |
+| LICENSE | The license for this code and data |
 | ChangeLog | A compendium of recent changes. |
 | configure | The GNU configuration script |
 | autogen.sh | Developer's configure maintenance tool |
-| debug/ | Information for debugging the library |
+| debug/ | Information about debugging the library |
 | msvc/ | Microsoft Visual-C project files |
 | mingw/ | Information on using MinGW under MSYS or Cygwin |
 
 UNPACKING and signature verification
 ------------------------------------
-The system is distributed using the normal tar.gz format; it can be
-extracted using the `tar -zxf link-grammar.tar.gz` command at the
-command line.
+The system is distributed using the conventional `tar.gz` format;
+it can be extracted using the `tar -zxf link-grammar.tar.gz` command
+at the command line.
 
 A tarball of the latest version can be downloaded from:<br>
 http://www.abisource.com/downloads/link-grammar
@@ -184,7 +203,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.8.1.tar.gz.asc`
+`gpg --verify link-grammar-5.9.1.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
@@ -199,7 +218,7 @@ verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 Tags in `git` can be verified by performing the following:
 ```
 gpg --recv-keys --keyserver keyserver.ubuntu.com EB6AA534E0C0651C
-git tag -v link-grammar-5.8.1
+git tag -v link-grammar-5.9.1
 ```
 
 
@@ -219,17 +238,16 @@ make install
 ldconfig
 ```
 
-This will install the liblink-grammar.so library into /usr/local/lib,
-the header files in /usr/local/include/link-grammar, and the
-dictionaries into /usr/local/share/link-grammar.  Running 'ldconfig'
+This will install the `liblink-grammar.so` library into `/usr/local/lib`,
+the header files in `/usr/local/include/link-grammar`, and the
+dictionaries into `/usr/local/share/link-grammar`.  Running `ldconfig`
 will rebuild the shared library cache.  To verify that the install was
 successful, run (as a non-root user)
 ```
 make installcheck
 ```
 
-Optional system libraries
--------------------------
+### Optional system libraries
 The link-grammar library has optional features that are enabled automatically
 if `configure` detects certain libraries. These libraries are optional on most
 of the systems and if the feature they add is desired, corresponding libraries
@@ -239,27 +257,24 @@ The library package names may vary on various systems (consult Google if
 needed...).  For example, the names may include `-devel` instead of `-dev`, or
 be without it altogether. The library names may be without the prefix `lib`.
 
-`libsqlite3-dev` (for SQLite-backed dictionary)<br>
-`minisat2` (for the SAT solver)<br>
-`libz1g-dev` or `libz-devel` (currently needed for the bundled `minisat2`)<br>
-`libedit-dev` (see [Editline](#Editline))<br>
-`libhunspell-dev` or `libaspell-dev` (and the corresponding English dictionary).<br>
-`libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
-implementation, but needed for correctness on FreeBSD and Cygwin)
+* `libsqlite3-dev` (for SQLite-backed dictionary)<br>
+* `libz1g-dev` or `libz-devel` (currently needed for the bundled `minisat2`)<br>
+* `libedit-dev` (see [Editline](#Editline))<br>
+* `libhunspell-dev` or `libaspell-dev` (and the corresponding English dictionary).<br>
+* `libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
+implementation, and needed for correctness on FreeBSD and Cygwin)
 
-Note: BSD-derived operating systems (including macOS) need the `argp-standalone`
-library in order to build the `link-generator` program.
+Note: BSD-derived operating systems (including macOS) need the
+`argp-standalone` library in order to build the `link-generator` program.
 
-Editline
---------
+### Editline
 If `libedit-dev` is installed, then the arrow keys can be used to edit
 the input to the link-parser tool; the up and down arrow keys will
 recall previous entries.  You want this; it makes testing and
 editing much easier.
 
 
-Node.js Bindings
-----------------
+### Node.js Bindings
 Two versions of node.js bindings are included. One version wraps the
 library; the other uses emscripten to wrap the command-line tool. The
 library bindings are in `bindings/node.js` while the emscripten wrapper
@@ -283,26 +298,25 @@ For the command-line wrapper, do the following:
    ./build_packages.sh
 ```
 
-Python3 Bindings
-----------------
+### Python3 Bindings
 The Python3 bindings are built by default, providing that
 the corresponding Python development packages are installed.
-(Python2 bindings are not supported.)
+(Python2 bindings are no longer supported.)
 
 These packages are:
 - Linux:
- * Systems using 'rpm' packages: python3-devel
- * Systems using 'deb' packages: python3-dev
+   * Systems using 'rpm' packages: `python3-devel`
+   * Systems using 'deb' packages: `python3-dev`
 - Windows:
- * Install Python3 from https://www.python.org/downloads/windows/ .
-   You also have to install SWIG from http://www.swig.org/download.html .
+   * Install Python3 from https://www.python.org/downloads/windows/ .
+     You also have to install SWIG from http://www.swig.org/download.html .
 - macOS:
- * Install python3 using [HomeBrew](http://brew.sh/).
-	Note: With recent Anaconda Python versions, the build process succeeds, but
-	loading the resulted module causes a crash.  Help is needed to resolve that.
-	See the relevant issues in the GitHub repository (search there for
-	"anaconda").<br>
-	[Anaconda](https://conda.io/docs/user-guide/install/download.html).
+   * Install python3 using [HomeBrew](http://brew.sh/).
+	  Note: With recent Anaconda Python versions, the build process
+	  succeeds, but loading the resulted module causes a crash.  If you
+	  are a macOS developer, we need help with that.  See the relevant
+     issues in the GitHub repository (search there for "anaconda").<br>
+	  [Anaconda](https://conda.io/docs/user-guide/install/download.html).
 
 NOTE: Before issuing `configure` (see below) you have to validate that
 the required python versions can be invoked using your `PATH`.
@@ -315,13 +329,12 @@ Python bindings, use:
 ./configure --disable-python-bindings
 ```
 
-The linkgrammar.py module provides a high-level interface in Python.
-The example.py and sentence-check.py scripts provide a demo,
-and tests.py runs unit tests.
+The `linkgrammar.py` module provides a high-level interface in Python.
+The `example.py` and `sentence-check.py` scripts provide a demo,
+and `tests.py` runs unit tests.
 
-Java Bindings
--------------
-By default, the Makefiles attempt to build the Java bindings.
+### Java Bindings
+By default, the `Makefile`s attempt to build the Java bindings.
 The use of the Java bindings is *OPTIONAL*; you do not need these if
 you do not plan to use link-grammar with Java.  You can skip building
 the Java bindings by disabling as follows:
@@ -336,10 +349,10 @@ Notes about finding `jni.h`:<br>
 Some common java JVM distributions (most notably, the ones from Sun)
 place this file in unusual locations, where it cannot be
 automatically found.  To remedy this, make sure that environment variable
-JAVA_HOME is set. The configure script looks for jni.h in `$JAVA_HOME/Headers`
-and in `$JAVA_HOME/include`; it also examines corresponding locations
-for $JDK_HOME.  If `jni.h `still cannot be found, specify the location
-with the CPPFLAGS variable: so, for example,
+`JAVA_HOME` is set correctly. The configure script looks for `jni.h` in
+`$JAVA_HOME/Headers` and in `$JAVA_HOME/include`; it also examines
+corresponding locations for `$JDK_HOME`.  If `jni.h `still cannot be
+found, specify the location with the `CPPFLAGS` variable: so, for example,
 ```
 export CPPFLAGS="-I/opt/jdk1.5/include/:/opt/jdk1.5/include/linux"
 ```
@@ -352,17 +365,17 @@ tools will fail to find packages installed there.
 
 Install location
 ----------------
-The /usr/local install target can be over-ridden using the
-standard GNU configure --prefix option, so for example:
+The `/usr/local` install target can be over-ridden using the
+standard GNU `configure --prefix` option; so, for example:
 ```
 ./configure --prefix=/opt/link-grammar
 ```
 
-By using pkg-config (see below), non-standard install locations
+By using `pkg-config` (see below), non-standard install locations
 can be automatically detected.
 
-Configure help
---------------
+Custom builds
+-------------
 Additional config options are printed by
 ```
 ./configure --help
@@ -372,8 +385,7 @@ The system has been tested and works well on 32 and 64-bit Linux
 systems, FreeBSD, macOS, as well as on Microsoft Windows systems.
 Specific OS-dependent notes follow.
 
-BUILDING from the [GitHub repository](https://github.com/opencog/link-grammar)
-------------------------------------------------------------------------------
+### BUILDING from the [GitHub repository](https://github.com/opencog/link-grammar)
 
 End users should download the tarball (see
 [UNPACKING and signature verification](#unpacking-and-signature-verification)).
@@ -385,7 +397,7 @@ as it is under development. It also needs installing of development tools
 that are not installed by default. Due to these reason the use of the GitHub
 version is discouraged for regular end users.
 
-### Installing from GitHub
+#### Installing from GitHub
 Clone it:
 `git clone https://github.com/opencog/link-grammar.git`<br>
 Or download it as a ZIP:<br>
@@ -397,7 +409,6 @@ Tools that may need installation before you can build link-grammar:
 `make` (the `gmake` variant may be needed)<br>
 `m4`<br>
 `gcc` or `clang`<br>
-`gcc-c++` or `clang++` (for the SAT solver)<br>
 `autoconf`<br>
 `libtool`<br>
 `autoconf-archive`<br>
@@ -424,7 +435,7 @@ cause strange and misleading errors.
 For more info about how to proceed, continue at the section
 [CREATING the system](#creating-the-system) and the relevant sections after it.
 
-### Additional notes for developers
+#### Additional notes for developers
 
 To configure **debug** mode, use:
 ```
@@ -439,8 +450,7 @@ it. For more details on this feature, see
 [Word-graph display](link-grammar/tokenize/README.md#word-graph-display).
 
 
-BUILDING on FreeBSD
--------------------
+### BUILDING on FreeBSD
 
 The current configuration has an apparent standard C++ library mixing problem
 when `gcc` is used (a fix is welcome). However, the common practice on FreeBSD
@@ -462,8 +472,7 @@ sections:
 `minisat` (minisat2)
 `pkgconf` (pkg-config)
 
-BUILDING on macOS
------------------
+### BUILDING on macOS
 Plain-vanilla Link Grammar should compile and run on Apple macOS
 just fine, as described above.  At this time, there are no reported
 issues.
@@ -487,8 +496,7 @@ If you would like to build from GitHub
 you can install the tools that are listed there using
 [HomeBrew](http://brew.sh/).
 
-BUILDING on Windows
--------------------
+### BUILDING on Windows
 There are three different ways in which link-grammar can be compiled
 on Windows.  One way is to use Cygwin, which provides a Linux
 compatibility layer for Windows. Another way is use the
@@ -500,7 +508,7 @@ The Cygwin way currently produces the best result, as it supports line editing
 with command completion and history and also supports word-graph displaying on
 X-windows. (MinGW currently doesn't  have `libedit`, and the MSVC port
 currently doesn't support command completion and history, spelling and
-X-Windows word-graph display, and the SAT-solver is untested on it).
+X-Windows word-graph display.)
 
 Link-grammar requires a working version of POSIX-standard regex
 libraries.  Since these are not provided by Microsoft, a copy must
@@ -517,8 +525,7 @@ http://gnuwin32.sourceforge.net/packages/regex.htm .<br>
 See also:
 http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README .
 
-BUILDING on Windows (Cygwin)
-----------------------------
+### BUILDING on Windows (Cygwin)
 The easiest way to have link-grammar working on MS Windows is to
 use Cygwin, a Linux-like environment for Windows making it possible
 to port software running on POSIX systems to Windows.  Download and
@@ -529,8 +536,7 @@ REGEX implementation is not capable enough.
 
 For more details See [mingw/README-Cygwin.md](mingw/README-Cygwin.md).
 
-BUILDING on Windows (MinGW)
----------------------------
+### BUILDING on Windows (MinGW)
 Another way to build link-grammar is to use MinGW, which uses the GNU
 toolset to compile POSIX-compliant programs for Windows. Using MinGW/MSYS2 is
 probably the easiest way to obtain workable Java bindings for Windows.
@@ -541,8 +547,7 @@ REGEX implementation is not capable enough.
 
 For more details see [mingw/README-MinGW64.md](mingw/README-MinGW64.md).
 
-BUILDING and RUNNING on Windows (MSVC)
---------------------------------------
+### BUILDING and RUNNING on Windows (MSVC)
 Microsoft Visual C/C++ project files can be found in the `msvc` directory.
 For directions see the [README.md](msvc/README.md) file there.
 
@@ -563,7 +568,7 @@ directory in that order, directly or under a directory names `data`:
 
 1. Under your current directory.
 2. Unless compiled with MSVC or run under the Windows console:
-   At the installed location (typically in /usr/local/share/link-grammar).
+   At the installed location (typically in `/usr/local/share/link-grammar`).
 3. If compiled on Windows: In the directory of the link-parser
    executable (may be in a different location than the link-parser
    command, which may be a script).
@@ -580,9 +585,9 @@ link-parser ../path/to-my/modified/data/en
 ```
 
 When accessing dictionaries in non-standard locations, the standard
-file-names are still assumed (i.e. 4.0.dict, 4.0.affix, etc.).
+file-names are still assumed (*i.e.* `4.0.dict`, `4.0.affix`, *etc.*).
 
-The Russian dictionaries are in data/ru. Thus, the Russian parser
+The Russian dictionaries are in `data/ru`. Thus, the Russian parser
 can be started as:
 ```
 link-parser ru
@@ -601,15 +606,15 @@ This word will be ignored.
 ```
 
 then your UTF-8 locales are either not installed or not configured.
-The shell command `locale -a` should list en_US.utf8 as a locale.
+The shell command `locale -a` should list `en_US.utf8` as a locale.
 If not, then you need to `dpkg-reconfigure locales` and/or run
 `update-locale` or possibly `apt-get install locales`, or
 combinations or variants of these, depending on your operating
 system.
 
 
-TESTING the program
--------------------
+TESTING the system
+------------------
 There are several ways to test the resulting build.  If the Python
 bindings are built, then a test program can be found in the file
 `./bindings/python-examples/tests.py` -- When run, it should pass.
@@ -617,10 +622,10 @@ For more details see [README.md](bindings/python-examples/README.md)
 in the `bindings/python-examples` directory.
 
 There are also multiple batches of test/example sentences in the
-language data directories, generally having the names corpus-*.batch
+language data directories, generally having the names `corpus-*.batch`
 The parser program can be run in batch mode, for testing the system
 on a large number of sentences.  The following command runs the
-parser on a file called corpus-basic.batch;
+parser on a file called `corpus-basic.batch`;
 ```
 link-parser < corpus-basic.batch
 ```
@@ -642,8 +647,8 @@ The following numbers are subject to change, but, at this time, the
 number of errors one can expect to observe in each of these files
 are roughly as follows:
 ```
-en/corpus-basic.batch:      72 errors
-en/corpus-fixes.batch:     404 errors
+en/corpus-basic.batch:      82 errors
+en/corpus-fixes.batch:     383 errors
 lt/corpus-basic.batch:      15 errors
 ru/corpus-basic.batch:      47 errors
 ```
@@ -652,21 +657,19 @@ bindings. It also performs several basic checks that stress the
 link-grammar libraries.
 
 
-USING the parser in your own applications
------------------------------------------
+USING the system
+-----------------
 There is an API (application program interface) to the parser.  This
 makes it easy to incorporate it into your own applications.  The API
 is documented on the web site.
 
 
-USING CMake
------------
-The FindLinkGrammar.cmake file can be used to test for and set up
+### USING CMake
+The `FindLinkGrammar.cmake` file can be used to test for and set up
 compilation in CMake-based build environments.
 
 
-USING pkg-config
-----------------
+### USING pkg-config
 To make compiling and linking easier, the current release uses
 the pkg-config system. To determine the location of the link-grammar
 header files, say `pkg-config --cflags link-grammar`  To obtain
@@ -680,8 +683,7 @@ $(EXE): $(OBJS)
    cc -g -o $@ $^ `pkg-config --libs link-grammar`
 ```
 
-Using JAVA
-----------
+### Using JAVA
 This release provides java files that offer three ways of accessing
 the parser.  The simplest way is to use the org.linkgrammar.LinkGrammar
 class; this provides a very simple Java API to the parser.
@@ -699,8 +701,7 @@ back to results accessible via the ParseResult API.
 The above-described code will be built if Apache `ant` is installed.
 
 
-Using the Network Server
-------------------------
+### Using the JSON Network Server
 The network server can be started by saying:
 ```
 java -classpath linkgrammar.jar org.linkgrammar.LGService 9000
@@ -726,8 +727,7 @@ transmitted. This can be obtained by sending messages of the form:
 storeDiagramString:true, text: this is a test.
 ```
 
-Spell Guessing
---------------
+### Spell Guessing
 The parser will run a spell-checker at an early stage, if it
 encounters a word that it does not know, and cannot guess, based on
 morphology.  The configure script looks for the aspell or hunspell
@@ -738,54 +738,15 @@ Spell guessing may be disabled at runtime, in the link-parser client
 with the `!spell=0` flag.  Enter `!help` for more details.
 
 
-Multi-threading
----------------
+### Multi-threading
 It is safe to use link-grammar for parsing in multiple threads.
 Different threads may use different dictionaries, or the same dictionary.
 Parse options can be set on a per-thread basis, with the exception of
 verbosity, which is a global, shared by all threads.  It is the only
 global.
 
-
-SAT solver
-----------
-The current parser uses an algorithm that runs in O(N^3) time, for
-a sentence containing N words.
-
-The SAT solver aims to replace this parser with an algorithm based
-on Boolean Satisfiability Theory; specifically using the MiniSAT
-solver. The SAT solver has a bit more overhead for shorter sentences,
-but is faster for long sentences.  To work properly, it needs to be
-attached to a parse ranking system.  This work is incomplete,
-although the prototype works.  It is not yet well-integrated with
-the system, and needs cleanup.
-Still not handled (or handled incorrectly):
-- Disjunct cost: Cost of null expressions is disregarded. Thus, it
-  still cannot rank sentences by cost, which is the most basic parse
-  ranking that we've got... In order not to show incorrect costs, the
-  DIS= field in the status message is always 0.
-- Connector order shown by the `!disjunct` link-parser command.
-  Currently it is just a "random" order.
-- Parsing with null count.
-- No panic timeout.
-
-The SAT solver is enabled by default. If the minisat2 library package
-is installed in the system along with its header files (e.g. RPM
-package minisat2-devel, deb package minisat2) then it is used. Else,
-a bundled minisat2 library code is used.
-
-The following forces using the bundled minisat library:
-```
-./configure --enable-sat-solver=bundled
-```
-
-The SAT solver can be disabled by specifying:
-```
-./configure --disable-sat-solver
-```
-
-(Both are to be done prior to compiling.)
-
+Linguistic Commentary
+=====================
 
 Phonetics
 ---------
@@ -1722,20 +1683,6 @@ analysis. To quote Wikipedia:
 ### Morphology printing:
    Instead of hard-coding LL, declare which links are morpho links
    in the dict.
-
-### UTF-8 cleanup:
-   Hmm. Is this really needed? UTF-8 seems to work well, now. So maybe
-   leave it alone.
-
-   Replace the mbrtowc code with proper language support; it seems
-   that the correct solution is to use [ICU](http://site.icu-project.org/)
-   *  ICU pros: runs on windows.
-   *  ICU cons: big, complex.
-
-   Another alternative is [libunistring](http://www.gnu.org/software/libunistring/)
-   (which seems to be LGPL!?)
-   *  Pros: smaller, simpler than ICU.
-   *  Cons: might have problems with MS Windows.
 
 ### Assorted minor cleanup:
    * Should provide a query that returns compile-time consts,

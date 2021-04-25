@@ -285,11 +285,11 @@ static inline uint32_t string_hash(const char *s)
 /**
  * Hash function for the classic parser linkage memoization.
  */
-static inline unsigned int pair_hash(int lw, int rw,
-                                     int l_id, const int r_id,
-                                     unsigned int null_count)
+static inline size_t pair_hash(int lw, int rw,
+                               int l_id, const int r_id,
+                               unsigned int null_count)
 {
-	unsigned int i;
+	size_t i;
 
 #if 0
 	/* hash function. Based on some tests, this seems to be

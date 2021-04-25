@@ -82,22 +82,22 @@ static bool is_number(const char *s)
  * If the string contains a SUBSCIPT_MARK, and ends in ".Ix" where
  * x is a number, return x.  Return -1 if not of this form.
  */
-static int numberfy(const char * s)
+static long numberfy(const char * s)
 {
 	s = strrchr(s, SUBSCRIPT_MARK);
 	if (NULL == s) return -1;
 	if (*++s != 'I') return -1;
 	if (!is_number(++s)) return -1;
-	return atoi(s);
+	return atol(s);
 }
 
 /**
  * Look for words that end in ".Ix" where x is a number.
  * Return the largest x found.
  */
-static int max_postfix_found(Dict_node * d)
+static long max_postfix_found(Dict_node * d)
 {
-	int i, j;
+	long i, j;
 	i = 0;
 	while(d != NULL) {
 		j = numberfy(d->string);
@@ -118,14 +118,12 @@ static int max_postfix_found(Dict_node * d)
  */
 static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
-	char buff[2*MAX_WORD];
-	int count;
-
 	Dict_node *dn = dictionary_lookup_list(dict, s);
-	count = max_postfix_found(dn) + 1;
+	long count = max_postfix_found(dn) + 1;
 	free_lookup_list(dict, dn);
 
-	snprintf(buff, sizeof(buff), "%s%cI%d", s, SUBSCRIPT_MARK, count);
+	char buff[2*MAX_WORD];
+	snprintf(buff, sizeof(buff), "%s%cI%ld", s, SUBSCRIPT_MARK, count);
 
 	return string_set_add(buff, dict->string_set);
 }
@@ -165,7 +163,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 
 static void increment_current_name(Dictionary dict)
 {
-	int i = IDIOM_LINK_SZ-2;
+	short i = IDIOM_LINK_SZ-2;
 
 	do
 	{
@@ -184,7 +182,7 @@ static void increment_current_name(Dictionary dict)
 static const char * generate_id_connector(Dictionary dict)
 {
 	char buff[IDIOM_LINK_SZ+4];
-	unsigned int i;
+	short i;
 	char * t;
 
 	for (i=0; dict->current_idiom[i] == 'A'; i++)

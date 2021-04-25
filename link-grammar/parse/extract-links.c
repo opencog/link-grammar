@@ -48,14 +48,14 @@ struct Parse_choice_struct
  * tracons l_id and r_id on words lw and rw, correspondingly. */
 struct Parse_set_struct
 {
-	short          lw, rw; /* left and right word index */
+	short          lw, rw;     /* left and right word index */
 	unsigned int   null_count; /* number of island words */
 	int            l_id, r_id; /* tracons on words lw, rw */
 
-	s64 count;      /* The number of ways to parse. */
+	count_t count;             /* The number of ways to parse. */
 #ifdef RECOUNT
-	s64 recount;  /* Exactly the same as above, but counted at a later stage. */
-	s64 cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
+	count_t recount;  /* Exactly the same as above, but counted at a later stage. */
+	count_t cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
 	//double cost_cutoff;
 #undef RECOUNT
 #define RECOUNT(X) X
@@ -77,7 +77,7 @@ struct extractor_s
 {
 	unsigned int   x_table_size;
 	unsigned int   log2_x_table_size; /* Not used */
-	Pset_bucket ** x_table;  /* Hash table */
+	Pset_bucket ** x_table;           /* Hash table */
 	Parse_set *    parse_set;
 	Word           *words;
 	Pool_desc *    Pset_bucket_pool;
@@ -352,7 +352,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 {
 	int start_word, end_word, w;
 	Pset_bucket *xt;
-	Count_bin * count;
+	count_t *count;
 
 	assert(null_count < 0x7fff, "mk_parse_set() called with null_count < 0.");
 
@@ -542,7 +542,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 								              rset,  NULL /* d->right */,
 								              re,  /* the NULL indicates no link*/
 								              d, &xt->set, pex);
-								RECOUNT({xt->set.recount += ls[i]->recount * rset->recount;})
+								RECOUNT({xt->set.recount += (w_count_t)ls[i]->recount * rset->recount;})
 							}
 						}
 					}
@@ -626,12 +626,12 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 static bool set_node_overflowed(Parse_set *set)
 {
 	Parse_choice *pc;
-	s64 n = 0;
+	w_count_t n = 0;
 	if (set == NULL || set->first == NULL) return false;
 
 	for (pc = set->first; pc != NULL; pc = pc->next)
 	{
-		n  += pc->set[0]->count * pc->set[1]->count;
+		n  += (w_count_t)pc->set[0]->count * pc->set[1]->count;
 		if (PARSE_NUM_OVERFLOW < n) return true;
 	}
 	return false;
@@ -765,7 +765,7 @@ static void issue_links_for_choice(Linkage lkg, Parse_choice *pc)
 static void list_links(Linkage lkg, const Parse_set * set, int index)
 {
 	Parse_choice *pc;
-	int n; /* No overflow here - see extract_links() and process_linkages() */
+	count_t n; /* No overflow - see extract_links() and process_linkages() */
 
 	if (set == NULL || set->first == NULL) return;
 	for (pc = set->first; pc != NULL; pc = pc->next) {
