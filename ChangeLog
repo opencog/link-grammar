@@ -11,6 +11,7 @@ Version 5.9.0 (XXX 2021)
  * Public API shared library entry points exported automatically. #1182
  * Provide bindings for the Vala programming language.
  * Increase number of allowed idiom expressions. #1187
+ * Speed up idiom loading. #1194
  * Disable SAT solver by default.
  * New tool: Sentence generator! This is an experimental prototype.
 
