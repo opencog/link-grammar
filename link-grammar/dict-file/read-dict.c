@@ -640,7 +640,7 @@ static bool subscr_match(const char *s, const Dict_node * dn)
  */
 static Dict_node *
 rdictionary_lookup(Dict_node * restrict llist,
-                   const Dict_node * restrict dn,
+                   Dict_node * restrict dn,
                    const char * restrict s,
                    bool match_idiom,
                    int (*dict_order)(const char *, const Dict_node *))
@@ -662,6 +662,7 @@ rdictionary_lookup(Dict_node * restrict llist,
 		dn_new = dict_node_new();
 		*dn_new = *dn;
 		dn_new->right = llist;
+		dn_new->left = dn; /* Currently only used for inserting idioms */
 		llist = dn_new;
 	}
 	if (m <= 0)
@@ -1572,7 +1573,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	if (is_idiom_word(dn->string))
 	{
 		prt_error("Warning: Word \"%s\" found near line %d of \"%s\".\n"
-		        "\tWords ending \".Ix\" (x a number) are reserved for idioms.\n"
+		        "\tWords ending \".I\" are reserved for idioms.\n"
 		        "\tThis word will be ignored.\n",
 		        dn->string, dict->line_number, dict->name);
 		free(dn);

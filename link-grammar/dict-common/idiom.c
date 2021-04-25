@@ -112,16 +112,9 @@ static long max_postfix_found(Dict_node * d)
  *
  * Allocates string space and returns a pointer to it.
  * In this string is placed the idiomized name of the given string s.
- * This is the same as s, but with a postfix of ".Ix", where x is an
- * appropriate number.  x is the minimum number that distinguishes
- * this word from others in the dictionary.
- */
+ * This is the same as s, but with a postfix of ".I". */
 static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
-	Dict_node *dn = dictionary_lookup_list(dict, s);
-	long count = max_postfix_found(dn) + 1;
-	free_lookup_list(dict, dn);
-
 	char buff[2*MAX_WORD];
 	snprintf(buff, sizeof(buff), "%s%cI%ld", s, SUBSCRIPT_MARK, count);
 
@@ -313,10 +306,40 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	while (dn_list != NULL)
 	{
 		xdn = dn_list->right;
-		dn_list->left = dn_list->right = NULL;
-		dn_list->string = build_idiom_word_name(dict, dn_list->string);
-		dict->root = insert_dict(dict, dict->root, dn_list);
-		dict->num_entries++;
+		const char *word_name = build_idiom_word_name(dict, dn_list->string);
+
+		Dict_node *t = dictionary_lookup_list(dict, word_name);
+		if (NULL == t)
+		{
+			/* The word doesn't participate yet in any idiom. Just insert it. */
+			dn_list->left = dn_list->right = NULL;
+			dn_list->string = word_name;
+			dict->root = insert_dict(dict, dict->root, dn_list);
+			dict->num_entries++;
+		}
+		else
+		{
+			/* OR the word's expression to the dict expression t->exp. */
+
+			if (t->exp->type != OR_type)
+			{
+				/* Prepend an OR element. */
+				Exp *or = Exp_create(dict->Exp_pool);
+				or->type = OR_type;
+				or->cost = 0.0;
+				or->operand_next = NULL;
+				or->operand_first = t->exp;
+				t->exp = or;
+			}
+
+			/* Prepend the word's expression to dict expression OR'ed elements. */
+			dn_list->exp = Exp_create_dup(dict->Exp_pool, dn_list->exp);
+			dn_list->exp->operand_next = t->exp->operand_first;
+			t->exp->operand_first = dn_list->exp;
+			t->left->exp = t->exp; /* Patch the dictionary */
+			free_lookup_list(dict, t);
+			free(dn_list);
+		}
 		dn_list = xdn;
 	}
 }
@@ -326,5 +349,9 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
  */
 bool is_idiom_word(const char * s)
 {
-	return (numberfy(s) != -1);
+	const char *sm = strchr(s, SUBSCRIPT_MARK);
+
+	if (NULL == sm) return false;
+	if ((sm[1] == 'I') && (sm[2] == '\0')) return true;
+	return false;
 }
