@@ -1107,7 +1107,7 @@ static bool synthetic_split(Sentence sent, Gword *unsplit_word)
 	/* Synthetic sentences are marked by a special initial character. */
 	if (SYNTHETIC_SENTENCE_MARK != sent->orig_sentence[0]) return false;
 
-	assert(0 != len, "synthetic_split(): empty-string word");
+	assert(0 != len, "Empty-string word");
 	if (')' != w[len-1]) return false; /* no split needed (syntax not checked) */
 
 	do
@@ -2809,11 +2809,11 @@ static void wordgraph_create(Sentence const sent)
 {
 	Gword *new_word;
 
-	assert(NULL==sent->last_word, "wordgraph_create(): wordgraph exists");
+	assert(NULL==sent->last_word, "wordgraph exists");
 	new_word = gword_new(sent, sent->orig_sentence);
 
-	assert(NULL!=sent->orig_sentence, "wordgraph_create()");
-	assert(NULL==sent->wordgraph, "wordgraph_create(): wordgraph exists");
+	assert(NULL!=sent->orig_sentence, "Sentence exists");
+	assert(NULL==sent->wordgraph, "wordgraph exists");
 
 	sent->wordgraph = sent->last_word = new_word;
 	new_word->label = "D"; /* dummy word */
@@ -2827,7 +2827,7 @@ static void wordgraph_create(Sentence const sent)
  * The unsplit_word field is NULL only for the margin words. */
 static void wordgraph_terminator(Sentence const sent)
 {
-	assert(NULL != sent->last_word, "wordgraph_terminator(): no wordgraph");
+	assert(NULL != sent->last_word, "No wordgraph");
 	add_gword(sent, "(T)", NULL, MT_INFRASTRUCTURE); /* cannot use "" */
 	sent->last_word->unsplit_word = NULL; /* no unsplit word */
 	sent->last_word->label = "D"; /* dummy word */
@@ -3269,7 +3269,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	bool right_wall_encountered = false;
 	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
 
-	assert(0 == sent->length, "flatten_wordgraph(): Word array already exists.");
+	assert(0 == sent->length, "Word array already exists.");
 
 	/* Establish an upper bound on the total number of words, to prevent an
 	 * infinite loop in case of a bug. At the same time, calculate the
