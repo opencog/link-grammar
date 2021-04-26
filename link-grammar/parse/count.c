@@ -45,10 +45,10 @@ struct Table_connector_s
 typedef uint8_t null_count_m;  /* Storage representation of null_count */
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
-/* Normally, do_count() yields a zero leftcount/rightcount when it parses a
- * word range in which one end is a certain tracon and the other end is a
- * word that is between the nearest_word and farthest_word of the first
- * connector of that tracon (words out of this range are not checked).
+/* Most of the time, do_count() yields a zero leftcount/rightcount when it
+ * parses a word range in which one end is a certain tracon and the other
+ * end is a word that is between the nearest_word and farthest_word of the
+ * first connector of that tracon (words out of this range are not checked).
  * Memoizing this results in a huge speedup for sentences that are not
  * short.
  *
@@ -120,7 +120,7 @@ static void free_table(count_context_t *ctxt)
 }
 
 #if HAVE_THREADS_H
-/* Each thread will geit it's own version of the `kept_table`.
+/* Each thread will get it's own version of the `kept_table`.
  * If the program creates zillions of threads, then there will
  * be a mem-leak if this table is not released when each thread
  * exists. This code arranges so that `free_tls_table` is called
