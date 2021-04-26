@@ -71,7 +71,7 @@ typedef struct
 {
 	null_count_m null_count; /* status==0 valid up to this null count */
 	int8_t status;         /* -1: Needs update; 0: No count; 1: Count possible */
-	uint8_t check_next;      /* Next word to check */
+	WordIdx_m check_next;    /* Next word to check */
 } Table_lrcnt;
 
 /* Using the word-vectors for very short sentences has too much overhead. */
