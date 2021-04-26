@@ -3180,7 +3180,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	if (NULL == we)
 	{
 		/* FIXME Change it to assert() when the Wordgraph version is mature. */
-		prt_error("Error: Word '%s': Internal error: NULL X_node", w->subword);
+		prt_error("Error: Word %zu '%s': Internal error: NULL X_node\n", wordpos, w->subword);
 		return false;
 	}
 #endif

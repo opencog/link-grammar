@@ -1380,13 +1380,13 @@ to the phrase, place a wall, and then step to the next part of the
 sentence.
 
 Caution: watch out for garden-path sentences:
-```text
+``` text
   The horse raced past the barn fell.
   The old man the boat.
   The cotton clothing is made of grows in Mississippi.
-  The current parser parses these perfectly; a viterbi parser could
-  trip on these.
 ```
+The current parser parses these perfectly; a viterbi parser could trip on these.
+
 Other benefits of a Viterbi decoder:
 * Less sensitive to sentence boundaries: this would allow longer,
   run-on sentences to be parsed far more quickly.
