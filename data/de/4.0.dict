@@ -501,7 +501,6 @@ CAPITALIZED-WORDS NAME: {G-} & (({@MX+} &
 
 LEFT-WALL: W+ & {Xp+ or RW+};
 RIGHT-WALL: RW- or (Xc- & {@Xc-});
-POSTPROCESS: BOGUS+;
 
 % These need to be implemented. See english for example.
 HMS-TIME:     BZZT+;
