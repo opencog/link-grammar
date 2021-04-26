@@ -112,6 +112,7 @@ test "$ac_cv_tls" != "none" && lg_tls=yes
 
 AX_PTHREAD
 CFLAGS="${CFLAGS} ${PTHREAD_CFLAGS}"
+LIBS="${LIBS} ${PTHREAD_LIBS}"
 
 dnl Check if we can use C11 threads functions
 AC_CHECK_HEADERS_ONCE([threads.h])
