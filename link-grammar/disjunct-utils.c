@@ -16,7 +16,6 @@
 #include "connectors.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-structures.h"
-#include "dict-common/dict-utils.h"     // copy_Exp
 #include "dict-common/regex-morph.h"    // match_regex
 #include "disjunct-utils.h"
 #include "memory-pool.h"
