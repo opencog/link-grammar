@@ -1402,12 +1402,6 @@ Other benefits of a Viterbi decoder:
   some alternate, higher-level logic, could disambiguate (e.g.
   by making use of semantic content).
 * Eliminate many of the hard-coded array sizes in the code.
-* Fixes the word-count problem during spell-guessing. So, for
-  example, if the mis-spelled word "dont" shows up in the input, it
-  could be issued as one word ("done") or two ("do n't") and the
-  current suffix-stripping/word-issuing algo cannot deal with this
-  correctly. By contrast, this should not be an issue for the
-  Viterbi algo, as it could explore both states at once.
 
 One may argue that Viterbi is a more natural, biological way of
 working with sequences.  Some experimental, psychological support
@@ -1448,11 +1442,13 @@ outside of the parsing loop.  Such formulas could be used to
 enable/disable parsing specific to different dialects/sociolects,
 simply by altering the network of link costs.
 
-Perhaps a simpler alternative would be to have labeled costs (a
-cost vector), so that different dialects assign different costs to
-various links.  A dialect would be specified during the parse,
-thus causing the costs for that dialect to be employed during
-parse ranking.
+A simpler alternative would be to have labeled costs (a cost vector),
+so that different dialects assign different costs to various links.
+A dialect would be specified during the parse, thus causing the costs
+for that dialect to be employed during parse ranking.
+
+This has been implemented; what's missing is a practical tutorial on
+how this might be used.
 
 ### Hand-refining verb patterns:
 A good reference for refining verb usage patterns is:
