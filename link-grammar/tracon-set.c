@@ -133,7 +133,7 @@ uint64_t fp_count;
 uint64_t coll_count;
 static void prt_stat(void)
 {
-	lgdebug(+5, "%"PRIu64" accesses, chain %.4f\n",
+	lgdebug(+5, "tracon_set: %"PRIu64" accesses, chain %.4f\n",
 	        fp_count, 1.*(fp_count+coll_count)/fp_count);
 }
 #define PRT_STAT(...) __VA_ARGS__

@@ -35,7 +35,7 @@
  * means that all the gword sets with one element are shared.  These gword
  * sets are part of the Gword structure. Copied and added element are
  * alloc'ed and chained. The result is that the chain_next of the gword
- * sets that are part of each gword contains the list of alloc'ed elements -
+ * sets that are part of each gword contain the list of alloc'ed elements -
  * to be used in gword_set_delete() called *only* in sentence_delete().
  * This ensures that the gword_set of connectors doesn't get stale when
  * their disjuncts are deleted and later restored in one-step parse when
@@ -90,7 +90,7 @@ typedef enum
 
 #define WS_GUESS (WS_SPELL|WS_RUNON|WS_REGEX)
 
-/*Only TS_DONE is actually used. */
+/* Only TS_DONE is actually used. */
 typedef enum
 {
 	TS_INITIAL,

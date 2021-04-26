@@ -407,10 +407,10 @@ Gword *wg_get_sentence_word(const Sentence sent, Gword *word)
 		while (!IS_SENTENCE_WORD(sent, word))
 		{
 			word = word->unsplit_word;
-			assert(NULL != word, "wg_get_sentence_word(): NULL unsplit word");
+			assert(NULL != word, "NULL unsplit word");
 		}
 
-		assert(NULL != word->subword, "wg_get_sentence_word(): NULL subword");
+		assert(NULL != word->subword, "NULL subword");
 		return word;
 }
 

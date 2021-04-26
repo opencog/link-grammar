@@ -61,7 +61,7 @@ void set_connector_farthest_word(Exp *e, int w, int sent_length,
 	{
 		assert(NULL != e->condesc, "NULL connector");
 		int length_limit = get_connector_length_limit(e->condesc, opts);
-		dassert(0 != length_limit, "Connector_new(): Zero length_limit");
+		dassert(0 != length_limit, "Zero length_limit");
 
 		if (e->dir == '-')
 			e->farthest_word = MAX(0, w - length_limit);

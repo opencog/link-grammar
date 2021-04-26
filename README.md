@@ -53,7 +53,7 @@ the man page: `man link-generator` (in the `man` subdirectory).
 This generator is used in the
 [OpenCog Language Learning](https://github.com/opencog/learn)
 project, which aims to automatically learn Link Grammars from corpora,
-using brand-new and inovative information theoretic techniques,
+using brand-new and innovative information theoretic techniques,
 somewhat similar to those found in artificial neural nets (deep
 learning), but using explicitly symbolic representations.
 
@@ -896,7 +896,7 @@ allow most links to cross over the down-links to conjunctions.
 The planarity-maintaining worked-around is to split the `Js` link into
 two: a `Jj` part and a `Jk` part; the two are used together to cross
 over the conjunction. This is currently implemented in the English
-doctionary, and it works.
+dictionary, and it works.
 
 This work-around is in fact completely generic, and can be extended
 to any kind of link crossing. For this to work, a better notation would
@@ -908,7 +908,7 @@ dictionary, not in the code.)
 Landmark Transitivity: Theory
 -----------------------------
 Given that non-planar parses can be enabled without any changes to the
-parser algrithm, all that is required is to understand what sort of
+parser algorithm, all that is required is to understand what sort of
 theory describes link-crossing in a coherent grounding. That theory is
 Dick Hudson's Landmark Transitivity, explained here.
 
@@ -1214,7 +1214,7 @@ Some complex phantom constructions:
 See also [github issue #224](https://github.com/opencog/link-grammar/issues/224).
 
 #### Elision of syllables
-Many (unstressed) sylables can be elided; in modern English, this occurs
+Many (unstressed) syllables can be elided; in modern English, this occurs
 most commonly in the initial unstressed syllable:
 * (a)'ccount (a)'fraid (a)'gainst (a)'greed (a)'midst (a)'mongst
 * (a)'noint (a)'nother (a)'rrest (at)'tend
@@ -1238,7 +1238,7 @@ wants the professor to write a brilliant review. At the end of the
 argument, the dean exclaims: "I want the review brilliant!"  This
 is a predicative adjective; clearly it means "I want the review
 [that you write to be] brilliant."  However, taken out of context,
-such a construction is ungrammatical, as the predicativeness is not
+such a construction is ungrammatical, as the predictiveness is not
 at all apparent, and it reads just as incorrectly as would
 "*Hey Joe, can you hand me that review brilliant?"
 
@@ -1269,26 +1269,26 @@ lengths.
 
 #### Handling zero/phantom words as re-write rules.
 A more principled approach to fixing the phantom-word issue is to
-borrow the diea of re-writing from the theory of
+borrow the idea of re-writing from the theory of
 [operator grammar](https://en.wikipedia.org/wiki/Operator_grammar).
 That is, certain phrases and constructions can be (should be)
-re-written into thier "proper form", prior to parsing. The re-writing
+re-written into their "proper form", prior to parsing. The re-writing
 step would insert the missing words, then the parsing proceeds. One
 appeal of such an approach is that re-writing can also handle other
 "annoying" phenomena, such as typos (missing apostrophes, e.g. "lets"
-vs. "let's", "its" vs. "its") as well as multi-word rewrites (e.g.
+vs. "let's", "its" vs. "it's") as well as multi-word rewrites (e.g.
 "let's" vs. "let us", or "it's" vs. "it is").
 
 Exactly how to implement this is unclear.  However, it seems to open
 the door to more abstract, semantic analysis. Thus, for example, in
-Meaning-Text Theory (MTT), one must move betweeen SSynt to DSynt
+Meaning-Text Theory (MTT), one must move between SSynt to DSynt
 structures.  Such changes require a graph re-write from the surface
 syntax parse (e.g. provided by link-grammar) to the deep-syntactic
 structure.  By contrast, handling phantom words by graph re-writing
 prior to parsing inverts the order of processing. This suggests that
 a more holistic approach is needed to graph rewriting: it must somehow
 be performed "during" parsing, so that parsing can both guide the
-insertion of the phantom words, and, simultanously guide the deep
+insertion of the phantom words, and, simultaneously guide the deep
 syntactic rewrites.
 
 Another interesting possibility arises with regards to tokenization.
@@ -1380,13 +1380,13 @@ to the phrase, place a wall, and then step to the next part of the
 sentence.
 
 Caution: watch out for garden-path sentences:
-```text
+``` text
   The horse raced past the barn fell.
   The old man the boat.
   The cotton clothing is made of grows in Mississippi.
-  The current parser parses these perfectly; a viterbi parser could
-  trip on these.
 ```
+The current parser parses these perfectly; a viterbi parser could trip on these.
+
 Other benefits of a Viterbi decoder:
 * Less sensitive to sentence boundaries: this would allow longer,
   run-on sentences to be parsed far more quickly.

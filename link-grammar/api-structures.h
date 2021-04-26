@@ -172,7 +172,7 @@ struct Sentence_s
 	Postprocessor * postprocessor;
 	Postprocessor * constituent_pp;
 
-	/* thread-safe random number state */
+	/* Thread-safe random number state. */
 	unsigned int rand_state;
 
 #ifdef USE_SAT_SOLVER

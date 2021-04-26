@@ -870,7 +870,7 @@ static Exp *make_op_Exp(Pool_desc *mp, Exp_type t)
 	n->operand_next = NULL;
 	n->cost = 0.0;
 
-	/* The caller is supposed to assign n->operand. */
+	/* The caller is supposed to assign n->operand->first. */
 	return n;
 }
 
