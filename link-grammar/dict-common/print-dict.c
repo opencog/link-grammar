@@ -524,7 +524,7 @@ static uint32_t make_flags(const char *flags)
  * Optional D: "-" / "+" (if dir != -1).
  * Optional <tracon_id>: (flag 't').
  * Optional [nearest_word, length_limit or farthest_word]: (flag 'l').
- * x: Shallow/deep indication as "s" / "d" (if shallow != -1)
+ * x: Shallow/deep indication as "s" / "d"
  */
 static void dyn_print_one_connector(dyn_str *s, const Connector *e, int dir,
                                     uint32_t flags)

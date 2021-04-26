@@ -226,7 +226,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 		/* eliminate_duplicate_disjuncts() is now very efficient and doesn't
 		 * take a significant time even for millions of disjuncts. If a very
 		 * large number of disjuncts per word or very large number of words
-		 * per sentence will ever be a problem, then a "checktimer" TLS
+		 * per sentence will ever be a problem, then a "checktimer"
 		 * counter can be used there. Old comment and code are retained
 		 * below for documentation. */
 
