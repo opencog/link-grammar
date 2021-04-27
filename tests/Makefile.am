@@ -16,9 +16,9 @@ check_PROGRAMS = dict-reopen multi-dict multi-thread mem-leak
 
 if HAVE_JAVA
 check_PROGRAMS += multi-java
-AM_CPPFLAGS += $(JAVA_CPPFLAGS)
+AM_CPPFLAGS += $(JAVA_CPPFLAGS) $(PTHREAD_CFLAGS)
 multi_java_SOURCES = multi-java.cc
-multi_java_LDADD = -L$(top_builddir)/bindings/java-jni/ -llink-grammar-java -lpthread $(LDADD)
+multi_java_LDADD = -L$(top_builddir)/bindings/java-jni/ -llink-grammar-java $(LDADD)
 endif
 
 TESTS = $(check_PROGRAMS)
@@ -32,8 +32,8 @@ mem_leak_SOURCES = mem-leak.cc
 
 LDADD = -L$(top_builddir)/link-grammar/ -llink-grammar
 
-multi_dict_LDADD = -lpthread $(LDADD)
-multi_thread_LDADD = -lpthread $(LDADD)
+multi_dict_LDADD = $(LDADD)
+multi_thread_LDADD = $(LDADD)
 
 if WITH_SAT_SOLVER
 if LIBMINISAT_BUNDLED
