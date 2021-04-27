@@ -111,6 +111,18 @@ AX_TLS(,:)
 test "$ac_cv_tls" != "none" && lg_tls=yes
 
 AX_PTHREAD
+if [ test -n "$ax_pthread_ok" ]; then
+	CC="${PTHREAD_CC:-CC}"
+	#CCX="${PTHREAD_CC:-CCX}"
+
+	dnl Currently, libtool uses --nostdlib when linking shared libraries,
+	dnl which causes the -pthread flag to be ignored. Try to work around that
+	dnl by explicitly specifying the pthread library unless it is already set.
+	if [ test -z "$PTHREAD_LIBS" ]; then
+		PTHREAD_LIBS=-lpthread
+		LIBS="$PTHREAD_LIBS $LIBS"
+	fi
+fi
 
 dnl Check if we can use C11 threads functions
 AC_CHECK_HEADERS_ONCE([threads.h])
@@ -1010,7 +1022,7 @@ $PACKAGE-$VERSION  build configuration settings
 
 	prefix:                         ${prefix}
 	datadir:                        $(eval "echo ${datadir}")
-	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS}
+	C compiler:                     ${CC} ${CPPFLAGS} ${CFLAGS} ${PTHREAD_CFLAGS}
 	C++ compiler:                   ${CXX} ${CPPFLAGS} ${CXXFLAGS}
 	Regex library:                  ${REGEX_LIBS}
 	TLS:                            ${lg_tls}
