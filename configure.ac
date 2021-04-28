@@ -120,7 +120,6 @@ if [ test -n "$ax_pthread_ok" ]; then
 	dnl by explicitly specifying the pthread library unless it is already set.
 	if [ test -z "$PTHREAD_LIBS" ]; then
 		PTHREAD_LIBS=-lpthread
-		LIBS="$PTHREAD_LIBS $LIBS"
 	fi
 fi
 
