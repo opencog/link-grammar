@@ -1,6 +1,6 @@
 Link Grammar Parser
 ===================
-***Version 5.9.0***
+***Version 5.9.1***
 
 The Link Grammar Parser exhibits the linguistic (natural language)
 structure of English, Russian, Arabic, Persian and limited subsets
