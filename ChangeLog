@@ -1,3 +1,6 @@
+Version 5.9.2 (XXX 2021)
+ * Nothing yet.
+
 Version 5.9.1 (28 April 2021)
  * Fix build break when SQLite3 is not installed. #1195
 
