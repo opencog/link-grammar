@@ -1,5 +1,5 @@
-Version 5.9.1 (XXX 2021)
- * Nothing here yet!
+Version 5.9.1 (27 April 2021)
+ * Fix build break when SQLite3 is not installed. #1195
 
 Version 5.9.0 (25 April 2021)
  * Use #define for custom configuration in dictionaries. #1128
