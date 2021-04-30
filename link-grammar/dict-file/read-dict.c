@@ -14,6 +14,7 @@
 #include <string.h>
 
 #include "api-structures.h"             // Sentence_s (add_empty_word)
+#include "connectors.h"
 #include "dict-common/dialect.h"
 #include "dict-common/dict-affix.h"     // is_stem
 #include "dict-common/dict-common.h"
