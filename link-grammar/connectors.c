@@ -303,7 +303,8 @@ static void calculate_connector_info(condesc_t * c)
 	}
 
 	c->uc_start = (uint8_t)(s - c->string);
-	while (isupper(*++s)) {} /* Skip the uppercase part. */
+	/* Skip the uppercase part. */
+	do { s++; } while (is_connector_name_char(*s));
 	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
 
 	connector_encode_lc(s, c);
@@ -321,7 +322,7 @@ static uint32_t connector_str_hash(const char *s)
 #ifdef USE_DJB2
 	/* djb2 hash. */
 	uint32_t i = 5381;
-	while (isupper(*s)) /* Connector tables cannot contain UTF8. */
+	while (is_connector_name_char(*s))
 	{
 		i = ((i << 5) + i) + *s;
 		s++;
@@ -333,7 +334,7 @@ static uint32_t connector_str_hash(const char *s)
 #ifdef USE_JENKINS
 	/* Jenkins one-at-a-time hash. */
 	uint32_t i = 0;
-	while (isupper(*s)) /* Connector tables cannot contain UTF8. */
+	while (is_connector_name_char(*s))
 	{
 		i += *s;
 		i += (i<<10);
@@ -349,7 +350,7 @@ static uint32_t connector_str_hash(const char *s)
 	/* sdbm hash. */
 	uint32_t i = 0;
 	c->uc_start = s - c->string;
-	while (isupper(*s))
+	while (is_connector_name_char(*s))
 	{
 		i = *s + (i << 6) + (i << 16) - i;
 		s++;

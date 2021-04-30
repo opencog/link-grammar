@@ -19,6 +19,7 @@
 #include "post-process.h"
 
 #include "api-structures.h"
+#include "connectors.h"
 #include "error.h"
 #include "linkage/linkage.h"
 #include "linkage/score.h"
@@ -53,13 +54,13 @@ bool post_process_match(const char *s, const char *t)
 {
 	if (NULL == t) return false;
 	if (islower(*t)) t++; /* Skip head-dependent indicator */
-	while (isupper(*s))
+	while (is_connector_name_char(*s))
 	{
 		if (*s != *t) return false;
 		s++;
 		t++;
 	}
-	if (isupper(*t)) return false;
+	if (is_connector_name_char(*t)) return false;
 	while (*t != '\0')
 	{
 		if (*s == '\0') return true;

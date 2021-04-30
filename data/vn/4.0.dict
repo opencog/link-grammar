@@ -12,10 +12,11 @@
 % DT = danh từ = noun
 % TVT=trước động từ=preceeding verb
 
-% Due clashes with the conventions of the library, the following
-% link characters are replaced:
+% Due to clashes with the conventions of the library, the following
+% connector characters are replaced:
+% 2_ is replaced by 2u.
 % _ is replaced by U.
-% Đ is replaced by V
+% Đ is replaced by V.
 
 % Danh từ
 bàn ghế giường áo quần sách quyển_sách báo nhà cửa

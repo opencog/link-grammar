@@ -398,10 +398,16 @@ static bool check_connector(Dictionary dict, const char * s)
 	}
 	if (*s == '@') s++;
 	if (('h' == *s) || ('d' == *s)) s++;
-	if (!isupper((unsigned char)*s)) {
+	if (!is_connector_name_char(*s)) {
 		dict_error2(dict, "Invalid character in connector "
 		            "(connectors must start with an uppercase letter "
 		            "after an optional \"h\" or \"d\"):", (char[]){*s, '\0'});
+		return false;
+	}
+	if (*s == '_')
+	{
+		dict_error(dict, "Invalid character in connector "
+		           "(an initial \"_\" is reserved for internal use).");
 		return false;
 	}
 	/* Note that IDx when x is a subscript is allowed (to allow e.g. ID4id+). */
@@ -410,24 +416,14 @@ static bool check_connector(Dictionary dict, const char * s)
 		return false;
 	}
 
-	bool connector_base = true;
-	s++; /* The first uppercase has been validated above. */
-	while (*(s+1)) {
-		if ((!isalnum((unsigned char)*s)) && (*s != WILD_TYPE)) {
-			dict_error(dict, "All letters of a connector must be ASCII alpha-numeric.");
+	/* The first uppercase has been validated above. */
+	do { s++; } while (is_connector_name_char(*s));
+	while (s[1]) {
+		if (!is_connector_subscript_char(*s) && (*s != WILD_TYPE)) {
+			dict_error2(dict, "Invalid character in connector subscript "
+			            "(only lowercase letters, digits, and \"*\" are allowed):",
+			            (char[]){*s, '\0'});
 			return false;
-		}
-		if (isupper((unsigned char)*s))
-		{
-			if (!connector_base)
-			{
-				dict_error(dict, "Connector subscript contains uppercase.");
-				return false;
-			}
-		}
-		else
-		{
-			connector_base = false;
 		}
 		s++;
 	}

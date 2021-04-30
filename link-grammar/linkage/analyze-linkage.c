@@ -69,7 +69,8 @@ const char *intersect_strings(String_set *sset, const Connector *c1,
 	const char *s2 =  &connector_string(c1)[d1->uc_start];
 	do
 	{
-		assert(isupper(*s1) == isupper(*s2), "Invalid uppercase part!");
+		assert(is_connector_name_char(*s1) == is_connector_name_char(*s2),
+		       "Invalid uppercase part!");
 		assert(*s1 == *s2 || *s1 == '*' || *s2 == '*', "Invalid intersection!");
 	}
 	while ((*s1++ != '0') && (*s2++ != 0));

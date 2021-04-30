@@ -20,6 +20,7 @@ to the caller to ensure that the pointers always point to something useful.
 
 #include <memory.h>
 
+#include "connectors.h"
 #include "post-process.h"
 #include "pp_linkset.h"
 #include "error.h"
@@ -50,7 +51,7 @@ static unsigned int compute_hash(pp_linkset *ls, const char *str)
 	hashval = LINKSET_SEED_VALUE;
 	i = 0;
 	if (islower((int)str[0])) i++; /* skip head-dependent indicator */
-	for (; isupper((int)str[i]); i++)
+	for (; is_connector_name_char(str[i]); i++)
 		hashval = str[i] + 31*hashval;
 	hashval %= ls->hash_table_size;
 	return hashval;

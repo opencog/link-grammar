@@ -1308,8 +1308,8 @@ static void cms_table_delete(multiset_table *mt)
 static unsigned int cms_hash(const char *s)
 {
 	unsigned int i = 5381;
-	if (islower((int) *s)) s++; /* skip head-dependent indicator */
-	while (isupper((int) *s))
+	if (islower((unsigned int)*s)) s++; /* skip head-dependent indicator */
+	while (is_connector_name_char(*s))
 	{
 		i = ((i << 5) + i) + *s;
 		s++;
@@ -1347,13 +1347,13 @@ static void reset_last_criterion(multiset_table *cmt, const char *ctiterion)
 static bool can_form_link(const char *s, const char *t, const char *e)
 {
 	if (islower(*t)) t++; /* Skip head-dependent indicator */
-	while (isupper(*s))
+	while (is_connector_name_char(*s))
 	{
 		if (*s != *t) return false;
 		s++;
 		t++;
 	}
-	if (isupper(*t)) return false;
+	if (is_connector_name_char(*t)) return false;
 	while (*t != '\0')
 	{
 		if (*s == '\0') return true;
@@ -1492,7 +1492,7 @@ static bool all_connectors_exist(multiset_table *cmt, const char *pp_link)
 	ppdebug("check PP-link=%s\n", pp_link);
 
 	const char *s;
-	for (s = pp_link; isupper(*s); s++) {}
+	for (s = pp_link; is_connector_name_char(*s); s++) {}
 
 	/* The first iteration of the next loop handles the special case
 	 * which occurs if there were 0 subscripts. */

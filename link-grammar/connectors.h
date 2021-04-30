@@ -60,7 +60,8 @@ static inline bool is_connector_name_char(unsigned char c)
 
 static inline bool is_connector_subscript_char(unsigned char c)
 {
-	if (isalnum(c)) return true;
+	if (islower(c)) return true;
+	if (isdigit(c)) return true;
 	if (c == '*') return true;
 
 	return false;

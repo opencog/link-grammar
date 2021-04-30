@@ -77,7 +77,7 @@ struct CNode_s
  */
 static bool uppercompare(const char * s, const char * t)
 {
-	while (isupper(*s) || isupper(*t))
+	while (is_connector_name_char(*s) || is_connector_name_char(*t))
 	{
 		if (*s++ != *t++) return false;
 	}
