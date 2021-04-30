@@ -3190,8 +3190,9 @@ is.v:
 %        "What John loves about this movie are the sound effects"
 % Qd- & (SIpx+ or SFIp+) & <vc-be-and> (no walls here:
 % for questions: "Are you insane?" "Are you the one?"
+% Spx- & <vc-be-no-obj-no-wall>: "They are getting hot"
 are.v:
-  ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & <vc-be-sp>)
+  ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & (<vc-be-sp> or <vc-be-no-obj-no-wall>))
   or ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>)
   or ({<verb-rq>} & SIpx+ & {<vc-be>})
   or ({<verb-rq>} & SFIp+ & {<vc-be-obj>});
@@ -3201,9 +3202,10 @@ are.v:
 %({N+} & (Pg+ or Pv+))) & <CLAUSE>;
 
 % they're we're
+% [Pg+ or Pv+]-0.05: slight preference for P+ over O+ if possible.
 ’re 're:
   Spx- & (({@EBm+} & ((((O*t+ & <verb-wall>) or K+ or BI+ or OF+ or Pp+) & <mv-coord>) or <to-verb> or (Pa+ & <verb-wall>) )) or
-    ({N+} & (Pg+ or Pv+)));
+    ({N+} & [Pg+ or Pv+]-0.05));
 
 % yisser: "you're" Irish English
 % Interesting -- no way to put a WV- link in here ...
@@ -3221,16 +3223,18 @@ was.v-d:
   or (<verb-rq> & (SFIs+ or SIs+ or SXI+) & {<vc-be>});
 
 % XXX probably should be verb-and-sp-i- etc !?
+% Spx- & no-wall: "They were getting hot"
 were.v-d:
-  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & <vc-be>)
+  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & (<vc-be> or <vc-be-no-wall>))
   or (<verb-rq> & (SIpx+ or SFIp+) & (<vc-be> or <verb-wall>))
   or (<verb-and-sp-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-sp+>)
   or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & dCOp+))]];
 
 % Ss*w-: allows Wh subjects: "Who am I?"
+% SX- & no-wall: "I am getting hot"
 am.v:
-  ({@E-} & SX- & <vc-be>)
+  ({@E-} & SX- & (<vc-be> or <vc-be-no-wall>))
   or (<verb-rq> & SXI+ & {<vc-be>})
   or (Ss*w- & <vc-be>)
   or (<verb-and-sp-> & <vc-be-and>)
