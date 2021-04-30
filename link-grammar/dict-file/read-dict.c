@@ -399,7 +399,9 @@ static bool check_connector(Dictionary dict, const char * s)
 	if (*s == '@') s++;
 	if (('h' == *s) || ('d' == *s)) s++;
 	if (!isupper((unsigned char)*s)) {
-		dict_error(dict, "Connectors must start with uppercase after an optional h or d.");
+		dict_error2(dict, "Invalid character in connector "
+		            "(connectors must start with an uppercase letter "
+		            "after an optional \"h\" or \"d\"):", (char[]){*s, '\0'});
 		return false;
 	}
 	/* Note that IDx when x is a subscript is allowed (to allow e.g. ID4id+). */
