@@ -114,6 +114,8 @@ dictionary_six_str(const char * lang,
 	dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
+	dict->line_number = 1;
+
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
 	t = find_last_dir_separator((char *)lang);
