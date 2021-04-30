@@ -9983,7 +9983,6 @@ spoons.n
 spores.n
 sporrans.n
 sportsmen.n
-sportsmen.n
 sports.n
 spotlights.n
 spots.n
