@@ -105,8 +105,10 @@ cantor.n
 capitalist.n
 captive.n
 captor.n
+cardiologist.n
 cardmember.n
 careerist.n
+caregiver.n
 caretaker.n
 caricaturist.n
 carpenter.n
@@ -124,6 +126,7 @@ celebrant.n
 cellist.n
 centenarian.n
 chairman.n
+chairperson.n
 chairwoman.n
 challenger.n
 chandler.n
@@ -161,6 +164,8 @@ clubber.n
 cobbler.n
 cocker.n
 codger.n
+co-founder.n
+cofounder.n
 collaborationist.n
 collaborator.n
 collector.n
@@ -173,7 +178,9 @@ comedienne.n
 comer.n
 comforter.n
 commentator.n
+commenter.n
 communicant.n
+communicator.n
 commuter.n
 competitor.n
 compiler.n
@@ -222,6 +229,7 @@ counterfeiter.n
 courier.n
 courtier.n
 cracker.n
+craftsman.n
 creator.n
 creditor.n
 creeper.n
@@ -274,6 +282,7 @@ dialectician.n
 diarist.n
 dictator.n
 dietician.n
+dietitian.n
 digger.n
 dignitary.n
 diner.n
@@ -367,6 +376,7 @@ founder.n
 fowler.n
 freebooter.n
 freeholder.n
+freelancer.n
 freshman.n
 frier.n
 fryer.n
@@ -425,6 +435,7 @@ hairdresser.n
 hairstylist.n
 halberdier.n
 handler.n
+handyman.n
 harbinger.n
 hardliner.n
 harper.n
@@ -444,6 +455,7 @@ highflier.n
 highflyer.n
 hijacker.n
 hiker.n
+hipster.n
 historian.n
 hitchhiker.n
 hitter.n
@@ -525,6 +537,7 @@ librettist.n
 lifer.n
 lighter.n
 linebacker.n
+lineman.n
 lingerer.n
 linguist.n
 liquidator.n
@@ -561,6 +574,7 @@ marauder.n
 marcher.n
 mariner.n
 marker.n
+marketer.n
 masochist.n
 matcher.n
 matchmaker.n
@@ -583,6 +597,7 @@ metallurgist.n
 metalworker.n
 meteorologist.n
 midfielder.n
+midwife.n-f
 migrant.n
 militant.n
 militarist.n
@@ -634,6 +649,7 @@ mutant.n
 mutineer.n
 mutterer.n
 mythologist.n
+narcissist.n
 narrator.n
 nationalist.n
 naturalist.n
@@ -667,6 +683,8 @@ panelist.n
 pantheist.n
 papist.n
 parachutist.n
+paralegal.n
+paramedic.n
 paratrooper.n
 parishioner.n
 parliamentarian.n
@@ -871,6 +889,7 @@ ruler.n
 runner.n
 sadist.n
 salesman.n
+salesperson.n
 sapper.n
 satirist.n
 savant.n
@@ -985,6 +1004,7 @@ spokesman.n
 spokesperson.n
 spokeswoman.n
 sponger.n
+sportsman.n
 spotter.n
 sprinter.n
 squatter.n
@@ -992,6 +1012,7 @@ squeaker.n
 squealer.n
 squeezer.n
 staffer.n
+stakeholder.n
 stalker.n
 stammerer.n
 stargazer.n
@@ -1029,6 +1050,7 @@ subscriber.n
 sucker.n
 sufferer.n
 suitor.n
+supermodel.n
 supplicant.n
 supplier.n
 supporter.n
@@ -1124,6 +1146,7 @@ vagrant.n
 vaulter.n
 vegetarian.n
 ventriloquist.n
+veterinarian.n
 viewer.n
 villager.n
 violinist.n

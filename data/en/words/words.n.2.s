@@ -2566,6 +2566,7 @@ crackpots.n
 cracks.n
 cradles.n
 crafts.n
+craftsmen.n
 cramps.n
 cranberries.n
 cranes.n
@@ -6555,6 +6556,7 @@ midges.n
 midgets.n
 midlands.n
 midriffs.n
+midwives.n
 miens.n
 miffs.n
 migraines.n
@@ -9963,6 +9965,7 @@ spoons.n
 spores.n
 sporrans.n
 sports.n
+sportsmen.n
 spotlights.n
 spots.n
 spotters.n
