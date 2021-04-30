@@ -284,6 +284,8 @@ static void connector_encode_lc(const char *lc_string, condesc_t *desc)
  * Calculate fixed connector information that only depend on its string.
  * This information is used to speed up the parsing stage. It is
  * calculated during the directory creation and doesn't change afterward.
+ *
+ * Note: check_connector() has already validated the connector string.
  */
 static void calculate_connector_info(condesc_t * c)
 {
