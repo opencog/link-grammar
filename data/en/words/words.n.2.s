@@ -1099,10 +1099,10 @@ boaters.n
 boathouses.n
 boats.n
 boatswains.n
-bobs.n
 bobbies.n
 bobsleds.n
 bobsleighs.n
+bobs.n
 bobtails.n
 bodegas.n
 bodices.n
@@ -1478,8 +1478,8 @@ cadres.n
 cads.n
 caesuras.n
 cafes.n
-cafés.n
 cafeterias.n
+cafés.n
 caftans.n
 cages.n
 cairns.n
@@ -1585,10 +1585,12 @@ carcasses.n
 carcinomas.n
 cardigans.n
 cardinals.n
+cardiologists.n
 cardmembers.n
 cards.n
 careerists.n
 careers.n
+caregivers.n
 cares.n
 caresses.n
 caretakers.n
@@ -1734,6 +1736,7 @@ cesspits.n
 cesspools.n
 chaffinches.n
 chains.n
+chairpersons.n
 chairs.n
 chaises.n
 chalets.n
@@ -1791,7 +1794,6 @@ chases.n
 chasms.n
 chassis.p
 chasubles.n
-châteaus.n
 chats.n
 chatterboxes.n
 chauffeurs.n
@@ -1894,6 +1896,7 @@ chronologies.n
 chronometers.n
 chrysalises.n
 chrysanthemums.n
+châteaus.n
 chuckles.n
 chucks.n
 chugs.n
@@ -2077,6 +2080,8 @@ coefficients.n
 coffees.n
 coffers.n
 coffins.n
+co-founders.n
+cofounders.n
 cognates.n
 cogs.n
 cogwheels.n
@@ -2150,6 +2155,7 @@ commencements.n
 commendations.n
 commentaries.n
 commentators.n
+commenters.n
 commercials.n
 commissariats.n
 commissaries.n
@@ -2168,6 +2174,7 @@ commotions.n
 communes.n
 communicants.n
 communications.n
+communicators.n
 communions.n
 communiques.n
 communists.n
@@ -2565,8 +2572,8 @@ crackers.n
 crackpots.n
 cracks.n
 cradles.n
-crafts.n
 craftsmen.n
+crafts.n
 cramps.n
 cranberries.n
 cranes.n
@@ -2943,7 +2950,6 @@ dents.n
 dentures.n
 denunciations.n
 deodorants.n
-départements.n
 departments.n
 departures.n
 dependants.n
@@ -3061,6 +3067,7 @@ didgeridoos.n
 dielectrics.n
 diesels.n
 dieticians.n
+dietitians.n
 diets.n
 differences.n
 differentials.n
@@ -3311,6 +3318,7 @@ dowries.n
 doyens.n
 doylies.n
 dozes.n
+départements.n
 drachmas.n
 draftees.n
 draftings.n
@@ -4292,6 +4300,7 @@ freebooters.n
 freedoms.n
 freeholders.n
 freeholds.n
+freelancers.n
 freeways.n
 freezers.n
 freezes.n
@@ -4858,6 +4867,7 @@ handsaws.n
 handshakes.n
 hands.n
 handstands.n
+handymen.n
 hangars.n
 hangers.n
 hangings.n
@@ -4920,12 +4930,12 @@ haystacks.n
 hazards.n
 hazels.n
 hazes.n
-head_boys
-head_girls
 headaches.n
 headbands.n
+head_boys
 headdresses.n
 headers.n
+head_girls
 headings.n
 headlamps.n
 headlights.n
@@ -5051,6 +5061,7 @@ hippodromes.n
 hippopotamuses.n
 hippos.n
 hips.n
+hipsters.n
 hisses.n
 histogrammes.n
 histograms.n
@@ -6055,6 +6066,7 @@ linchpins.n
 lindens.n
 lineages.n
 linebackers.n
+linemen.n
 liners.n
 lines.n
 lineups.n
@@ -6333,9 +6345,9 @@ maraschinos.n
 marathons.n
 marauders.n
 marbles.n
+maréchals.n
 marchers.n
 marches.n
-maréchals.n
 mares.n
 margins.n
 marigolds.n
@@ -6347,6 +6359,7 @@ marines.n
 marionettes.n
 markdowns.n
 markers.n
+marketers.n
 marketplaces.n
 markets.n
 markings.n
@@ -6557,6 +6570,7 @@ midgets.n
 midlands.n
 midriffs.n
 midwives.n
+midwives.n-f
 miens.n
 miffs.n
 migraines.n
@@ -6910,6 +6924,7 @@ napes.n
 napkins.n
 nappies.n
 naps.n
+narcissists.n
 narcotics.n
 narrations.n
 narratives.n
@@ -7415,9 +7430,11 @@ paragons.n
 paragraphs.n
 Paraguayans.n
 parakeets.n
+paralegals.n
 parallelisms.n
 parallelograms.n
 parallels.n
+paramedics.n
 parameters.n
 paramours.n
 paranoiacs.n
@@ -9082,6 +9099,7 @@ salamanders.n
 salaries.n
 salerooms.n
 sales.n
+salespersons.n
 salines.n
 sallies.n
 salons.n
@@ -9795,8 +9813,8 @@ sofas.n
 softeners.n
 softies.n
 soirees.n
-sojourns.n
 sojourners.n
+sojourns.n
 solaces.n
 soldiers.n
 soles.n
@@ -9964,8 +9982,9 @@ spoonfuls.n
 spoons.n
 spores.n
 sporrans.n
-sports.n
 sportsmen.n
+sportsmen.n
+sports.n
 spotlights.n
 spots.n
 spotters.n
@@ -10033,6 +10052,7 @@ stains.n
 staircases.n
 stairs.n
 stairways.n
+stakeholders.n
 stakes.n
 stalactites.n
 stalagmites.n
@@ -10351,6 +10371,7 @@ superintendents.n
 superiors.n
 superlatives.n
 supermarkets.n
+supermodels.n
 supernumeraries.n
 superpowers.n
 supersets.n
@@ -11326,6 +11347,7 @@ vestments.n
 vestries.n
 vests.n
 veterans.n
+veterinarians.n
 vetoes.n
 vetos.n
 vets.n
