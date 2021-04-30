@@ -152,7 +152,7 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	if (s2)
 	{
 		prt_error("Error: While parsing dictionary \"%s\":\n"
-		          "%s %s\n\t Line %d, next tokens: %s\n",
+		          "%s \"%s\"\n\t Line %d, next tokens: %s\n",
 		          dict->name, s, s2, dict->line_number, tokens);
 	}
 	else
