@@ -3253,15 +3253,17 @@ am.v:
 %   "What are the chances that Einstein could really be a genius?"
 % Ix- & <verb-wall>: "He is as smart as I expected him to be."
 % Ix- & <vc-be>: "I'm sure he'll still be popular."
+% Ix- & no-wall: "They will be getting hot"
 be.v:
   ({@E-} & ((<verb-co> & <verb-wall>) or <verb-why> or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
-  or ({@E-} & Ix- & <vc-be>)
+  or ({@E-} & Ix- & (<vc-be> or <vc-be-no-wall>))
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
   or (<vc-be> & <verb-and-sp-i+>)
   or ({@E-} & I- & B- & O+ & <verb-wall>);
 
-been.v: {@E-} & PPf- & <vc-be>;
+% no-wall: "They have been getting hot"
+been.v: {@E-} & PPf- & (<vc-be> or <vc-be-no-wall>);
 
 % S- & Pa+ & Xc+ & <embed-verb>: "The knife being dull, he ..."
 % (S- & Xd- & MVg- & Pa+) "..., the knife being dull."
@@ -3282,21 +3284,25 @@ isn't isn’t:
 
 % merge of isn't, aren't
 % "ain't you gonna go?"
+% no-wall: "They ain't gettin hot"
 ain't ain’t:
-  (<verb-x-sp> & <vc-be>)
+  (<verb-x-sp> & (<vc-be> or <vc-be-no-wall>))
   or (<verb-rq> & (SI+ or SFI+) & {<vc-be>});
 
+% no-wall: "It wasn't getting hot"
 wasn't.v-d wasn’t.v-d:
-  ({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)) & <vc-be>)
+  ({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)) & (<vc-be> or <vc-be-no-wall>))
   or (<verb-rq> & (SI*+ or SXI+ or SFIs+) & {<vc-be>});
 
+% no-wall: "They aren't getting hot"
 aren't aren’t:
-  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be>)
+  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & (<vc-be> or <vc-be-no-wall>))
   or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>});
 
 % [[Ss-]]: "If it weren't for Joe, ..."
+% no-wall: "They weren't getting hot"
 weren't.v-d weren’t.v-d:
-  (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & <vc-be>)
+  (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & (<vc-be> or <vc-be-no-wall>))
   or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>});
 
 % XXX probably should be verb-and-sp-i- etc !?
