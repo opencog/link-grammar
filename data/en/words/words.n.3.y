@@ -27,6 +27,7 @@ advocacy.n-u
 affability.n-u
 affinity.n-u
 affluence.n-u
+affordability.n-u
 agility.n-u
 alacrity.n-u
 allegiance.n-u
@@ -73,6 +74,7 @@ belligerency.n-u
 beneficence.n-u
 benevolence.n-u
 bestiality.n-u
+biodiversity.n-u
 bisexuality.n-u
 booty.n-u
 bounce.n-u
@@ -123,6 +125,7 @@ conductivity.n-u
 confidence.n-u
 confidentiality.n-u
 conformity.n-u
+connectivity.n-u
 connivance.n-u
 consanguinity.n-u
 consistency.n-u
@@ -144,6 +147,7 @@ corpulence.n-u
 correspondence.n-u
 countenance.n-u
 counterintelligence.n-u
+creativity.n-u
 credence.n-u
 credibility.n-u
 credulity.n-u
@@ -152,6 +156,7 @@ cruelty.n-u
 culpability.n-u
 curiosity.n-u
 currency.n-u
+cybersecurity.n-u
 dalliance.n-u
 dance.n-u
 debility.n-u
@@ -474,6 +479,7 @@ monstrosity.n-u
 morality.n-u
 morbidity.n-u
 mortality.n-u
+motility.n-u
 multiplicity.n-u
 munificence.n-u
 mutability.n-u
@@ -615,6 +621,7 @@ rapidity.n-u
 rarity.n-u
 rationality.n-u
 readability.n-u
+reactivity.n-u
 reality.n-u
 recalcitrance.n-u
 receptivity.n-u
@@ -634,6 +641,7 @@ remittance.n-u
 remonstrance.n-u
 repeatability.n-u
 repentance.n-u
+reproducibility.n-u
 repugnance.n-u
 resemblance.n-u
 residence.n-u
@@ -659,6 +667,7 @@ sanctity.n-u
 sanity.n-u
 satiety.n-u
 satisfiability.n-u
+scalability.n-u
 scarcity.n-u
 science.n-u
 secrecy.n-u
@@ -721,6 +730,7 @@ superiority.n-u
 supremacy.n-u
 surveillance.n-u
 susceptibility.n-u
+sustainability.n-u
 sustenance.n-u
 technocracy.n-u
 temerity.n-u
@@ -734,6 +744,7 @@ tolerance.n-u
 tonality.n-u
 totality.n-u
 toxicity.n-u
+traceability.n-u
 tranquility.n-u
 tranquillity.n-u
 transcendence.n-u
@@ -759,6 +770,7 @@ unreality.n-u
 unsuitability.n-u
 urbanity.n-u
 urgency.n-u
+usability.n-u
 utility.n-u
 utterance.n-u
 vacancy.n-u
