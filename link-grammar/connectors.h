@@ -53,7 +53,7 @@ typedef uint32_t connector_hash_t;
 static inline bool is_connector_name_char(unsigned char c)
 {
 	if (isupper(c)) return true;
-	if (c == '_') return true;
+	if (unlikely(c == '_')) return true;
 
 	return false;
 }
@@ -61,8 +61,8 @@ static inline bool is_connector_name_char(unsigned char c)
 static inline bool is_connector_subscript_char(unsigned char c)
 {
 	if (islower(c)) return true;
-	if (isdigit(c)) return true;
-	if (c == '*') return true;
+	if (unlikely(isdigit(c))) return true;
+	if (unlikely(c == '*')) return true;
 
 	return false;
 }
