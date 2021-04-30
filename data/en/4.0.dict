@@ -10,7 +10,7 @@
  %                                                                           %
  %***************************************************************************%
 
-#define dictionary-version-number 5.9.0;
+#define dictionary-version-number 5.9.2;
 #define dictionary-locale         en_US.UTF-8;
 
 % The default largest disjunct cost to consider during parsing.
@@ -3091,7 +3091,7 @@ rest.w: Ix- & Pv+;
 
 % Identical to above, but no wall.  This is used only in "and.j-v"
 % constructions, so that WV links to the "and.j-v" instead of "be".
-%
+% [Pg*b+]-0.05: "I was getting hot", prefer Pg+ over O+
 <vc-be-no-obj-no-wall>:
   ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PFb- or
       (Osi+ & R+ & Bs+) or
@@ -3102,7 +3102,7 @@ rest.w: Ix- & Pv+;
     <to-verb> or
     Pa+)) or
   ({N+} & (AF- or [Pv+].1 or I*v+)) or
-  (({N+} or {Pp+}) & Pg*b+);
+  (({N+} or {Pp+}) & [Pg*b+]-0.05);
 
 % O*m+ allows "If only there were more!"
 % THb+ allows "It is your fault that you're a failure."
@@ -3211,12 +3211,13 @@ yisser.v: (Pa+ & Wd-);
 
 % Q-: "How was the movie?"
 % Sa*a- & Pv+: "..., as was promised."
+% SX & no wall: "I was getting hot"
 was.v-d:
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
   or (Sa*a- & Pv+)
-  or ({@E-} & SX- & <vc-be> & <verb-wall>)
+  or ({@E-} & SX- & (<vc-be> or <vc-be-no-wall>))
   or (<verb-rq> & (SFIs+ or SIs+ or SXI+) & {<vc-be>});
 
 % XXX probably should be verb-and-sp-i- etc !?
@@ -6910,6 +6911,7 @@ gotten.v:
   ((<vc-get>) & <verb-and-had+>)) or
   (<verb-pv-b> & {K+ or Pp+} & <mv-coord>) or
   ({K+ or Pp+} & <verb-phrase-opener>);
+
 getting.v gettin'.v gettin.v: <verb-pg> & <verb-wall> & <vc-get>;
 getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
 
