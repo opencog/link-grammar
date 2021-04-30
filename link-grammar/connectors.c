@@ -290,11 +290,15 @@ static void calculate_connector_info(condesc_t * c)
 	const char *s;
 
 	s = c->string;
-	if (islower(*s)) s++; /* Ignore head-dependent indicator. */
-	if ((c->string[0] == 'h') || (c->string[0] == 'd'))
-		c->flags |= CD_HEAD_DEPENDENT;
-	if (c->string[0] == 'h')
-		c->flags |= CD_HEAD;
+	if (islower(*s))
+	{
+		dassert((c->string[0] == 'h') || (c->string[0] == 'd'),
+	        "\'%c\': Bad head/dependent character", c->string[0]);
+
+		if ((*s == 'h') || (*s == 'd')) c->flags |= CD_HEAD_DEPENDENT;
+		if (*s == 'h') c->flags |= CD_HEAD;
+		s++; /* Ignore head-dependent indicator. */
+	}
 
 	c->uc_start = (uint8_t)(s - c->string);
 	while (isupper(*++s)) {} /* Skip the uppercase part. */
