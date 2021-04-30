@@ -237,7 +237,7 @@ static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 			uc[i] = c;
 			i++;
 		}
-		dict_error(dict, "UTF8 char is too long");
+		dict_error(dict, "UTF8 char is too long.");
 		return false;
 	}
 	uc[0] = 0x0;
@@ -308,7 +308,7 @@ static bool link_advance(Dictionary dict)
 	for (;;)
 	{
 		if (i > MAX_TOKEN_LENGTH-3) {
-			dict_error(dict, "Token too long");
+			dict_error(dict, "Token too long.");
 			return false;
 		}
 		if (quote_mode) {
@@ -321,12 +321,12 @@ static bool link_advance(Dictionary dict)
 				return true;
 			}
 			if (lg_isspace(c[0])) {
-				dict_error(dict, "White space inside of token");
+				dict_error(dict, "White space inside of token.");
 				return false;
 			}
 			if (c[0] == '\0')
 			{
-				dict_error(dict, "EOF while reading quoted token");
+				dict_error(dict, "EOF while reading quoted token.");
 				return false;
 			}
 
@@ -412,7 +412,7 @@ static bool check_connector(Dictionary dict, const char * s)
 	}
 	/* Note that IDx when x is a subscript is allowed (to allow e.g. ID4id+). */
 	if ((*s == 'I') && (*(s+1) == 'D') && isupper((unsigned char)*(s+2))) {
-		dict_error(dict, "Connectors beginning with \"ID\" are forbidden");
+		dict_error(dict, "Connectors beginning with \"ID\" are forbidden.");
 		return false;
 	}
 
@@ -1303,7 +1303,7 @@ static Exp *make_expression(Dictionary dict)
 		{
 			if (e_head->type != op)
 			{
-				dict_error(dict, "\"and\" and \"or\" at the same level in an expression");
+				dict_error(dict, "\"and\" and \"or\" at the same level in an expression.");
 				return NULL;
 			}
 		}
