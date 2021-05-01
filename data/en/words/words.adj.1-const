@@ -9,6 +9,7 @@ baleful.a
 ballistic.a
 bally.a
 balmy.a
+balsamic.a
 banal.a
 baneful.a
 bankrupt.a
@@ -21,8 +22,8 @@ bare.a
 barefaced.a
 barefooted.a
 bareheaded.a
-bariatric.c
 barelegged.a
+bariatric.c
 barmy.a
 baronial.a
 baroque.a
@@ -37,8 +38,10 @@ basic.a
 bass.a
 basset.a
 batty.a
+bavarian.a
 bawdy.a
 bay.a
+bayesian.a
 bayside.a
 beachfront.a
 beady.a
@@ -125,12 +128,14 @@ biotic.a
 bipartisan.a
 bipedal.a
 biphasic.a
+bipolar.a
 birdlike.a
 bisexual.a
 bitchy.a
 biting.a
 bitmapped.a
 bitter.a
+bittersweet.a
 bituminous.a
 biweekly.a
 bizarre.a
@@ -166,8 +171,8 @@ bloody.a
 blotto.a
 blowzy.a
 bluespotted.a
-bluetooth.a
 bluesy.a
+bluetooth.a
 bluff.a
 bluish.a
 blunt.a
@@ -190,8 +195,8 @@ bonny.a
 bony.a
 bookended.a
 bookish.a
-Boolean.a
 boolean.a
+Boolean.a
 boon.a
 boorish.a
 bootable.a
@@ -252,6 +257,7 @@ bubonic.a
 bucolic.a
 Buddhist.a
 budgetary.a
+built-in.a
 bulbous.a
 bulky.a
 bulleted.a
@@ -271,6 +277,7 @@ busy.a
 butch.a
 buxom.a
 bygone.a
+byzantine.a
 cacophonous.a
 cadaverous.a
 cagey.a
@@ -323,6 +330,7 @@ carmine.a
 carnal.a
 carnatic.a
 carnivorous.a
+carotid.a
 carsick.a
 cartilaginous.a
 cartoonish.a
@@ -353,6 +361,7 @@ cautious.a
 cavalier.a
 cavernous.a
 ceaseless.a
+celebratory.a
 celestial.a
 celled.a
 cellular.a
@@ -374,6 +383,7 @@ ceremonial.a
 ceremonious.a
 certifiable.a
 cervical.a
+cesarean.a
 chafflike.a
 chalky.a
 challenging.a
@@ -504,6 +514,7 @@ clumsy.a
 coarse.a
 coastal.a
 coaxial.a
+cochlear.a
 cockeyed.a
 cockney.a
 cocksure.a
@@ -529,6 +540,7 @@ collapsable.a
 collapsible.a
 collateral.a
 collected.a
+collectible.a
 collective.a
 collegiate.a
 colloidal.a
@@ -536,6 +548,7 @@ colloquial.a
 colonial.a
 colonic.a
 colonnaded.a
+colorectal.a
 colorful.a
 colorless.a
 colossal.a
@@ -549,12 +562,12 @@ combative.a
 combinatorial.a
 combinatoric.a
 combustible.a
+comedic.a
 comely.a
 comfortable.a
 comfy.a
 comic.a
 comical.a
-comedic.a
 commanding.a
 commemorative.a
 commensurable.a
@@ -735,6 +748,7 @@ cosmic.a
 cosmological.a
 cosmopolitan.a
 costal.a
+cost-effective.a
 costumed.a
 cosy.a
 coterminous.a
@@ -781,6 +795,7 @@ crosscountry.a
 crosseyed.a
 crosshead.a
 cross-legged.a
+cross-sectional.a
 crowded.a
 crowning.a
 cruciate.a
@@ -830,6 +845,7 @@ cutaneous.a
 cute.a
 cutthroat.a
 cutting.a
+cutting-edge.a
 cyanuric.a
 cyber.a
 cybernetic.a
@@ -862,6 +878,8 @@ daunting.a
 dauntless.a
 d’Avant-Garde.a
 daylong.a
+day-to-day.a
+début.a
 deadlocked.a
 deadly.a
 deadpan.a
@@ -869,7 +887,6 @@ deaf.a
 dear.a
 deathly.a
 debonair.a
-début.a
 decadent.a
 deceitful.a
 decennial.a
@@ -906,8 +923,8 @@ deflationary.a
 deft.a
 defunct.a
 degenerate.a
+degenerative.a
 dehiscent.a
-déjà.a
 delectable.a
 deleterious.a
 deliberate.a
@@ -926,7 +943,6 @@ demented.a
 dementia.a
 demiurgic.a
 democratic.a
-démocratique.a
 demographic.a
 demoniac.a
 demonic.a
@@ -1127,6 +1143,8 @@ divisible.a
 divisional.a
 divisive.a
 dizzy.a
+déjà.a
+démocratique.a
 docile.a
 docosahexaenoic.a
 doctoral.a
@@ -1214,8 +1232,10 @@ dynamic.a
 dynamical.a
 dynastic.a
 dynastical.a
+dysfunctional.a
 dyslexic.a
 dyspeptic.a
+dystopian.a
 fab.a
 fabled.a
 fabless.a
@@ -1282,6 +1302,7 @@ feline.a
 felonious.a
 female.a
 feminine.a
+femoral.a
 feral.a
 ferocious.a
 ferric.a
@@ -1380,6 +1401,7 @@ foamy.a
 focal.a
 foetal.a
 foggy.a
+foldable.a
 folic.a
 folkloric.a
 folksy.a
@@ -1424,6 +1446,7 @@ fragile.a
 fragmentary.a
 fragrant.a
 frail.a
+franciscan.a
 frantic.a
 fraternal.a
 fratricidal.a
@@ -1503,10 +1526,12 @@ garish.a
 garrulous.a
 gaseous.a
 gastric.a
+gastrointestinal.a
 gastronomic.a
 gauche.a
 gaudy.a
 gaunt.a
+gaussian.a
 gay.a
 geeky.a
 gelatinous.a
@@ -1514,6 +1539,7 @@ geminal.a
 gemological.a
 genealogical.a
 general.a
+generational.a
 generative.a
 generic.a
 genericized.a
@@ -1540,6 +1566,7 @@ geometric.a
 geometrical.a
 geophysical.a
 geopolitical.a
+geothermal.a
 geriatric.a
 germane.a
 germinal.a
@@ -1776,13 +1803,19 @@ hierarchical.a
 hieroglyphic.a
 high.a
 highbrow.a
-highflying.a
 high-end.a
+highflying.a
+high-flying.a
+high-level.a
 high-pitched.a
 high-quality.a
+high-risk.a
 high-sounding.a
+high-speed.a
 high-spirited.a
+high-tech.a
 hilly.a
+himilayan.a
 hind.a
 hindmost.a
 Hindu.a
@@ -1802,6 +1835,7 @@ hoary.a
 hobnailed.a
 holistic.a
 hollow.a
+holographic.a
 holomorphic.a
 holonomic.a
 holy.a
@@ -1893,6 +1927,7 @@ hydropathic.a
 hydrophilic.a
 hydrophobic.a
 hydroponic.a
+hydrostatic.a
 hygienic.a
 hygroscopic.a
 hyperbaric.a
@@ -1908,6 +1943,9 @@ hypoglycemic.a
 hypolipidemic.a
 hypothetical.a
 hysterical.a
+integrative.a
+intracranial.a
+invariant.a
 jaded.a
 jagged.a
 janitorial.a
@@ -1942,6 +1980,8 @@ jumbo.a
 jumpy.a
 junctional.a
 junior.a
+jurassic.a
+Jurassic.a
 juridical.a
 juried.a
 jurisdictional.a
@@ -2001,6 +2041,7 @@ lanky.a
 laparoscopic.a
 large.a
 largemouth.a
+large-scale.a
 larval.a
 laryngeal.a
 lascivious.a
@@ -2126,6 +2167,7 @@ longing.a
 longitudinal.a
 long-lived.a
 longstanding.a
+long-term.a
 longtime.a
 lookup.a
 loony.a
@@ -2148,10 +2190,11 @@ low.a
 lowborn.a
 lowbred.a
 lowbrow.a
+low-cost.a
 lowercase.a
+low-income.a
 lowland.a
 lowly.a
-low-income.a
 low-pitched.a
 loyal.a
 lucid.a
@@ -2172,6 +2215,7 @@ lush.a
 lustful.a
 lustrous.a
 lusty.a
+lutheran.a
 luxuriant.a
 luxurious.a
 lymphatic.a
@@ -2184,6 +2228,7 @@ macabre.a
 machiavellian.a
 macho.a
 macrobiotic.a
+macroeconomic.a
 macroscopic.a
 macular.a
 mafic.a
@@ -2250,6 +2295,7 @@ maroon.a
 marriageable.a
 marshy.a
 martial.a
+martian.a
 marvellous.a
 marvelous.a
 masculine.a
@@ -2294,7 +2340,6 @@ mechanical.a
 mechanistic.a
 meddlesome.a
 mediaeval.a
-mediæval.a
 medial.a
 median.a
 medical.a
@@ -2303,7 +2348,9 @@ medieaval.a
 medieval.a
 mediocre.a
 meditative.a
+mediterranean.a
 medium.a
+mediæval.a
 medullary.a
 meek.a
 megalithic.a
@@ -2350,10 +2397,12 @@ metamorphic.a
 metaphoric.a
 metaphorical.a
 metaphysical.a
+metastatic.a
 meteoric.a
 meteorogical.a
 meteorological.a
 methodical.a
+methodist.a
 methodological.a
 methylated.a
 meticulous.a
@@ -2515,6 +2564,8 @@ multicolored.a
 multicolour.a
 multi-coloured.a
 multicoloured.a
+multicultural.a
+multidimensional.a
 multiethnic.a
 multi-faceted.a
 multifaceted.a
@@ -2544,6 +2595,7 @@ multi-tiered.a
 multitiered.a
 multitrack.a
 multitudinous.a
+multivariate.a
 multiwell.a
 mundane.a
 muni.a
@@ -2553,6 +2605,7 @@ murderous.a
 murky.a
 muscarinic.a
 muscular.a
+musculoskeletal.a
 mushy.a
 musical.a
 musicological.a
@@ -2578,9 +2631,9 @@ mythical.a
 mythological.a
 nagging.a
 naive.a
-naïve.a
 naked.a
 nameless.a
+narcissistic.a
 narcotic.a
 narrow.a
 narrow-waisted.a
@@ -2599,16 +2652,17 @@ naughty.a
 nauseous.a
 nautical.a
 naval.a
+naïve.a
 navicular.a
 navigable.a
 navigational.a
+née.a
 near.a
 nearshore.a
 neat.a
 nebular.a
 nebulous.a
 necrotic.a
-née.a
 needless.a
 needy.a
 nefarious.a
@@ -2621,6 +2675,7 @@ neighbourly.a
 neocritical.a
 neogenic.a
 neolithic.a
+neonatal.a
 nerdy.a
 nervous.a
 nervy.a
@@ -2634,6 +2689,7 @@ neurogenic.a
 neuroleptic.a
 neurologic.a
 neurological.a
+neuromuscular.a
 neuronal.a
 neurotic.a
 neuter.a
@@ -2679,8 +2735,8 @@ nondistinctive.a
 nonfat.a
 nonflammable.a
 nonfunctional.a
-nongovernmental.a
 non-governmental.a
+nongovernmental.a
 nonhomologous.a
 nonlinear.a
 nonprofit.a
@@ -2712,8 +2768,8 @@ nosey.a
 nostalgic.a
 nostre.a
 nosy.a
-not_far
 noteworthy.a
+not_far
 noticeable.a
 notifiable.a
 notional.a
@@ -2758,6 +2814,7 @@ pale.a
 paleohispanic.a
 paleolithic.a
 paleontological.a
+palestinian.a
 pallid.a
 palpable.a
 palpebral.a
@@ -2777,6 +2834,7 @@ parabolic.a
 paracrine.a
 parallel.a
 paralytic.a
+parametric.a
 paramilitary.a
 paramount.a
 paranoid.a
@@ -2791,6 +2849,7 @@ parenteral.a
 parenthetical.a
 parian.a
 parietal.a
+parisian.a
 parkland.a
 parliamentary.a
 parlous.a
@@ -2835,6 +2894,7 @@ paunchy.a
 payable.a
 peaceable.a
 peaceful.a
+peacekeeping.a
 pearlescent.a
 pearly.a
 peaty.a
@@ -2873,6 +2933,7 @@ perceptible.a
 perceptive.a
 perceptual.a
 percussive.a
+percutaneous.a
 peremptory.a
 perennial.a
 perfect.a
@@ -2880,6 +2941,7 @@ perfectible.a
 perfidious.a
 perfunctory.a
 perilous.a
+perinatal.a
 perineal.a
 periodic.a
 periodical.a
@@ -2944,6 +3006,7 @@ photoelectric.a
 photogenic.a
 photographic.a
 photonic.a
+photovoltaic.a
 phrasal.a
 phylogenetic.a
 physical.a
@@ -3004,6 +3067,7 @@ pleasurable.a
 plebeian.a
 plenary.a
 plentiful.a
+pleural.a
 pliable.a
 pliant.a
 plucky.a
@@ -3073,8 +3137,11 @@ postdoctoral.a
 posterior.a
 postgraduate.a
 posthumous.a
+postmenopausal.a
 postmodern.a
 postmodernist.a
+postnatal.a
+postoperative.a
 postpartum.a
 postseason.a
 posttraumatic.a
@@ -3097,13 +3164,14 @@ praetorian.a
 pragmatic.a
 praiseworthy.a
 prayerful.a
+précédé.a
 precarious.a
 precautionary.a
-précédé.a
 precious.a
 precipitate.a
 precipitous.a
 precise.a
+preclinical.a
 precocious.a
 preconditioned.a
 predatory.a
@@ -3115,6 +3183,7 @@ prefatory.a
 prefectural.a
 preferential.a
 preformed.a
+prefrontal.a
 pregnant.a
 prehensile.a
 prehistoric.a
@@ -3127,6 +3196,7 @@ premolar.a
 premotor.a
 prenatal.a
 prenominal.a
+preoperative.a
 prepacked.a
 preparatory.a
 preponderant.a
@@ -3157,6 +3227,7 @@ pretentious.a
 pretty.a
 prevalent.a
 preventable.a
+preventative.a
 preventive.a
 prewar.a
 priceless.a
@@ -3182,6 +3253,7 @@ pristine.a
 private.a
 privileged.a
 privy.a
+proactive.a
 probabilistic.a
 probationary.a
 probiotic.a
@@ -3267,6 +3339,7 @@ psychoanalytic.a
 psychoanalytical.a
 psychogenic.a
 psychological.a
+psychometric.a
 psychopathic.a
 psychosomatic.a
 psychotropic.a
@@ -3318,8 +3391,8 @@ quarrelsome.a
 quarterly.a
 quartic.a
 quaternary.a
-queasy.a
 Québécois.a
+queasy.a
 queer.a
 querulous.a
 quick.a
@@ -3349,6 +3422,7 @@ radical.a
 radicalized.a
 radioactive.a
 radiocarpal.a
+radiographic.a
 radiological.a
 raffish.a
 ragged.a
@@ -3387,13 +3461,15 @@ r/c.a
 rc.a
 R/C.a
 RC.a
+reactive.a
 readable.a
 ready-made.a
 real.a
-real-life.a
-real-world.a
 realistic.a
+real-life.a
+real-time.a
 realtime.a
+real-world.a
 rearmost.a
 rearward.a
 rebadged.a
@@ -3421,7 +3497,9 @@ rectangular.a
 rectilinear.a
 recumbent.a
 recurrent.a
+recursive.a
 recusant.a
+recyclable.a
 reddish.a
 redeemable.a
 redemptive.a
@@ -3582,8 +3660,8 @@ riparian.a
 ripe.a
 ripened.a
 risible.a
-risque.a
 risqué.a
+risque.a
 ritual.a
 ritualistic.a
 ritzy.a
@@ -3610,6 +3688,7 @@ rootsy.a
 rostral.a
 rosy.a
 rotary.a
+rotatable.a
 rotational.a
 rotten.a
 rotund.a
@@ -3649,6 +3728,7 @@ sadistic.a
 sagacious.a
 sage.a
 sagittal.a
+saharan.a
 saintly.a
 salacious.a
 salaried.a
@@ -3690,6 +3770,7 @@ scalable.a
 scalar.a
 scaly.a
 scandalous.a
+scandinavian.a
 scant.a
 scanty.a
 scapular.a
@@ -3840,12 +3921,14 @@ shorthaired.a
 shorthanded.a
 short-lived.a
 shortlived.a
+short-term.a
 showy.a
 shrewd.a
 shrewish.a
 shrill.a
 shrubby.a
 shy.a
+siberian.a
 sickening.a
 sickly.a
 sidelong.a
@@ -3859,6 +3942,7 @@ silver.a
 silvery.a
 similar.a
 simple-minded.a
+simplex.a
 simplistic.a
 simultaneous.a
 sincere.a
@@ -3942,8 +4026,8 @@ social.a
 socialist.a
 socialistic.a
 societal.a
-socioeconomic.a
 socio-economic.a
+socioeconomic.a
 sociological.a
 sociopathic.a
 sodden.a
@@ -3997,7 +4081,9 @@ spacious.a
 spanish.a
 Spanish.a
 spare.a
+sparkly.a
 sparse.a
+spartan.a
 spasmodic.a
 spastic.a
 spatial.a
@@ -4076,6 +4162,7 @@ starlit.a
 starry.a
 stateless.a
 stately.a
+state-of-the-art.a
 statesmanlike.a
 statewide.a
 static.a
@@ -4095,6 +4182,7 @@ steep.a
 stellar.a
 stellate.a
 stentorian.a
+step-by-step.a
 stepwise.a
 stereogenic.a
 stereophonic.a
@@ -4128,6 +4216,7 @@ straight.a
 straightforward.a
 strained.a
 strait.a
+strapless.a
 strapping.a
 strategic.a
 strategical.a
@@ -4179,6 +4268,7 @@ submissive.a
 subnational.a
 subnormal.a
 subordinate.a
+sub-saharan.a
 subsea.a
 subsequent.a
 subservient.a
@@ -4187,6 +4277,7 @@ subsonic.a
 substandard.a
 substantial.a
 substantive.a
+subsurface.a
 subterranean.a
 subtle.a
 subtropical.a
@@ -4244,6 +4335,7 @@ superstitious.a
 supervisory.a
 supine.a
 supple.a
+supplemental.a
 supplementary.a
 supportive.a
 suppressant.a
@@ -4432,6 +4524,7 @@ thoughtful.a
 thoughtless.a
 threadbare.a
 threadlike.a
+three-dimensional.a
 threonine.a
 thriftless.a
 thrifty.a
@@ -4579,6 +4672,7 @@ twinlobed.a
 twin-masted.a
 twinmasted.a
 twisty.a
+two-year.a
 typewritten.a
 typographic.a
 typological.a
@@ -4619,6 +4713,7 @@ velvety.a
 venal.a
 venerable.a
 venereal.a
+venetian.a
 vengeful.a
 venial.a
 venomous.a
@@ -4639,6 +4734,7 @@ versed.a
 vertebral.a
 vertical.a
 vestal.a
+vestibular.a
 vestigial.a
 veterinary.a
 vexatious.a
@@ -4686,6 +4782,7 @@ volcanic.a
 volitional.a
 voltaic.a
 voluble.a
+volumetric.a
 voluminous.a
 voluntary.a
 voluptuous.a
@@ -4729,8 +4826,8 @@ wearing.a
 wearisome.a
 weary.a
 weatherproof.a
-webbed.a
 web-based.a
+webbed.a
 wee.a
 weedy.a
 weeklong.a
@@ -4810,6 +4907,7 @@ workable.a
 workaday.a
 workaholic.a
 workmanlike.a
+world-class.a
 worldly.a
 world-wide.a
 worldwide.a
@@ -4840,6 +4938,7 @@ zany.a
 zealous.a
 zeroary.a
 zestful.a
+zionist.a
 zombified.a
 zoological.a
 zoomorphic.a

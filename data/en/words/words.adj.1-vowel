@@ -50,6 +50,7 @@ acrocentric.a
 actionable.a
 active.a
 actual.a
+actuarial.a
 acute.a
 adagio.a
 adamant.a
@@ -62,6 +63,7 @@ adequate.a
 adhesive.a
 adiabatic.a
 adipic.a
+adipose.a
 adjacent.a
 adjectival.a
 adjustable.a
@@ -144,6 +146,7 @@ allogeneic.a
 allophonic.a
 allosteric.a
 allowable.a
+all-time.a
 alluvial.a
 almighty.a
 aloof.a
@@ -179,6 +182,7 @@ amorous.a
 amorphous.a
 amphibious.a
 ample.a
+amyloid.a
 anabolic.a
 anachronistic.a
 anaemic.a
@@ -230,6 +234,7 @@ anthropological.a
 anthropomorphic.a
 anti.a
 antiandrogenic.a
+antibacterial.a
 antibiotic.a
 anticholinergic.a
 anticipatory.a
@@ -259,6 +264,7 @@ antitank.a
 antithetical.a
 antitrust.a
 antitumor.a
+antiviral.a
 antivirus.a
 anxiolytic.a
 aortic.a
@@ -273,6 +279,7 @@ apoplectic.a
 apostolic.a
 appalling.a
 appealing.a
+appellate.a
 appetizing.a
 applicable.a
 apposite.a
@@ -348,7 +355,9 @@ astronomical.a
 astute.a
 asymmetric.a
 asymmetrical.a
+asymptomatic.a
 asymptotic.a
+asynchronous.a
 atavistic.a
 ataxic.a
 atheistic.a
@@ -370,6 +379,7 @@ attributive.a
 atypical.a
 audacious.a
 audible.a
+audiovisual.a
 auditory.a
 august.a
 aural.a
@@ -384,6 +394,7 @@ autocephalous.a
 autochthonous.a
 autocratic.a
 autofocus.a
+autoimmune.a
 autologous.a
 automagical.a
 automatic.a
@@ -554,6 +565,7 @@ epicurean.a
 epicyclic.a
 epidemic.a
 epidemiological.a
+epidermal.a
 epidural.a
 epigenetic.a
 epigrammatic.a
@@ -566,6 +578,7 @@ epistemic.a
 epistemological.a
 epistolary.a
 epitaxial.a
+epithelial.a
 eponymous.a
 equal.a
 equatorial.a
@@ -578,6 +591,7 @@ equivalent.a
 equivariant.a
 equivocal.a
 erect.a
+erectile.a
 ergodic.a
 ergonomic.a
 erogenous.a
@@ -642,16 +656,19 @@ exclusive.a
 excruciating.a
 excusable.a
 execrable.a
+executable.a
 executive.a
 exempt.a
 exhaustive.a
 existent.a
+existential.a
 exocrine.a
 exogenous.a
 exonuclease.a
 exorbitant.a
 exothermic.a
 exotic.a
+expandable.a
 expansionist.a
 expansionistic.a
 expansive.a
@@ -684,6 +701,7 @@ exterior.a
 external.a
 extinct.a
 extra.a
+extracellular.a
 extrachromosomal.a
 extracurricular.a
 extramarital.a
@@ -798,9 +816,6 @@ imprudent.a
 impudent.a
 impulsive.a
 impure.a
-in_personam
-in_re
-in_rem
 inaccessible.a
 inaccurate.a
 inactive.a
@@ -962,8 +977,8 @@ informational.a
 informative.a
 infrared.a
 infrequent.a
-in_gel
 in-gel
+in_gel
 ingenious.a
 ingenuous.a
 inglorious.a
@@ -1004,8 +1019,11 @@ inopportune.a
 inordinate.a
 inorganic.a
 inotropic.a
+in_personam
 inquisitive.a
 inquisitorial.a
+in_re
+in_rem
 insanitary.a
 insatiable.a
 inscrutable.a
@@ -1048,6 +1066,7 @@ insurmountable.a
 intact.a
 intangible.a
 integral.a
+integrative.a
 intellectual.a
 intelligible.a
 intemperate.a
@@ -1108,6 +1127,7 @@ intimate.a
 intimidating.a
 intolerable.a
 intolerant.a
+intracranial.a
 intractable.a
 intrafamilial.a
 intrahepatic.a
@@ -1128,6 +1148,7 @@ intuitive.a
 invalid.a
 invaluable.a
 invariable.a
+invariant.a
 invasive.a
 inventive.a
 inverse.a
@@ -1255,10 +1276,15 @@ onboard.a
 oncoming.a
 onerous.a
 one-sided.a
+one-time.a
+one-way.a
+one-year.a
 ongoing.a
+on-line.a
 onomatopoeic.a
 onscreen.a
 onshore.a
+on-site.a
 onsite.a
 onstage.a
 ontological.a
@@ -1296,6 +1322,7 @@ orderly.a
 ordinal.a
 ordinary.a
 organic.a
+organisational.a
 organizational.a
 organized.a
 organometallic.a
@@ -2082,6 +2109,7 @@ urethral.a
 urinary.a
 usable.a
 useless.a
+user-friendly.a
 usurious.a
 uterine.a
 utilitarian.a

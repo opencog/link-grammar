@@ -7,6 +7,7 @@ barbarian.n
 barmaid.n-f
 baroness.n-f
 Baroness.n-f
+Bavarian.s
 Belarusian.s
 Belgian.s
 Belizian.s
@@ -108,6 +109,7 @@ Fijian.s
 Filipino.s
 Finn.n
 forefather.n-m
+Franciscan.s
 Gabonian.s
 Gambian.s
 general.n
@@ -151,6 +153,7 @@ heiress.n-f
 heir.n-m
 highness.s
 Highness.s
+Himalayan.s
 Hindu.n
 Honduran.s
 horse.n-m
@@ -184,6 +187,7 @@ lieutenant.n
 lioness.n-f
 lion.n-m
 Lithuanian.s
+Lutheran.s
 Luxembourian.s
 Macedonian.s
 Madagascan.s
@@ -221,8 +225,10 @@ Mauritian.s
 mayoress.n-f
 mayor.n
 Mayor.n
+Mediterranean.s
 mermaid.n-f
 Messiah.n
+Methodist.s
 Mexican.s
 Micronesian.s
 milkmaid.n-f
@@ -257,10 +263,12 @@ nursemaid.n-f
 pacifist.n
 packhorse.n-m
 Pakistani.s
+Palestinian.s
 pamphleteer.n
 Panamanian.s
 papa.n-m
 Paraguayan.s
+Parisian.s
 pastor.n
 Pastor.n
 peeress.n-f
@@ -316,6 +324,7 @@ rustler.n
 Rwandan.s
 saboteur.n
 safecracker.n
+Saharan.s
 sahib.n
 sailor.n
 Sainte.n
@@ -329,6 +338,7 @@ Samoan.s
 sargent.n
 Sargent.n
 Saudi.s
+Scandinavian.s
 Scot.n
 scoundrel.n
 scoutmaster.n
@@ -349,6 +359,7 @@ shepherdess.n-f
 shepherd.n
 sheriff.n
 Sheriff.n
+Siberian.s
 Sicilian.s
 sir.n
 sissy.n-f
@@ -363,7 +374,8 @@ Solicitor.n
 Somalian.s
 sorceress.n-f
 Sorceress.n-f
-Spaniard.n
+Spaniard.s
+Spartan.s
 speaker.n
 Speaker.n
 spinster.n-f
@@ -390,6 +402,7 @@ Treasurer.n
 Trinidadian.s
 Tunisian.s
 Turk.n
+Venetian.s
 Venezuelan.s
 vicar.n
 vice-admiral.n
@@ -418,3 +431,4 @@ Yugoslavian.s
 Yugoslav.s
 yuppie.n
 zealot.n
+Zionist.s
