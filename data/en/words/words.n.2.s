@@ -360,6 +360,7 @@ antagonists.n
 antecedents.n
 antechambers.n
 antelopes.n
+antennae.n
 antennas.n
 anterooms.n
 antes.n
@@ -1111,6 +1112,7 @@ blows.n
 blowtorches.n
 bludgeons.n
 bluebells.n
+blueberries.n
 bluebottles.n
 blueprints.n
 blues.n
@@ -1536,10 +1538,10 @@ calculators.n
 caldrons.n
 calendars.n
 calfs.n
-calibers.n
 calibrations.n
 calibres.n
 califs.n
+calipers.n
 caliphates.n
 caliphs.n
 callbacks.n
@@ -3324,6 +3326,7 @@ doctorates.n
 doctors.n
 doctrinaires.n
 doctrines.n
+documentaries.n
 documents.n
 dodderers.n
 dodecahedrons.n
@@ -3821,6 +3824,7 @@ etas.n
 etchings.n
 eternities.n
 ethanols.n
+ethernets.n
 ethics.p
 Ethiopians.n
 ethnographers.n
@@ -4507,6 +4511,7 @@ gallantries.n
 gallants.n
 gallbladders.n
 galleons.n
+gallerias.n
 galleries.n
 galleys.n
 gallicisms.n
@@ -5466,6 +5471,8 @@ imps.n
 impulses.n
 impurities.n
 imputations.n
+immunodeficiencies.n
+immunotherapies.n
 inaccuracies.n
 inadequacies.n
 inanities.n
@@ -6267,6 +6274,7 @@ locals.n
 locations.n
 locators.n
 lochs.n
+lockdowns.n
 lockers.n
 lockets.n
 lockouts.n
@@ -6669,6 +6677,7 @@ metalwares.s
 metalworkers.n
 metalworks.n
 metaphors.n
+metastases.n
 metatarsals.n
 meteorites.n
 meteorologists.n
@@ -6806,6 +6815,7 @@ miscounts.n
 miscreants.n
 misdeals.n
 misdeeds.n
+misdemeanors.n
 misdemeanours.n
 misdiagnoses.n
 misdoings.n
@@ -7613,6 +7623,7 @@ parcels.n
 parchments.n
 pardons.n
 parens.n
+parentheses.n
 parents.n
 pariahs.n
 parishes.n
@@ -7801,6 +7812,8 @@ perforations.n
 performances.n
 performers.n
 perfumes.n
+perfusions.n
+pergolas.n
 perils.n
 perimeters.n
 periodicals.n
@@ -8448,6 +8461,7 @@ pros.n
 prospectors.n
 prospectuses.n
 prostates.n
+prostheses.n
 prostitutes.n
 protagonists.n
 protectionists.n
@@ -8495,6 +8509,7 @@ psychics.n
 psychoanalysts.n
 psychologists.n
 psychopaths.n
+psychoses.n
 psychotics.n
 pterodactyls.n
 publications.n
@@ -9390,6 +9405,7 @@ scares.n
 scarfs.n
 scarlets.n
 scars.n
+scarves.n
 scatterbrains.n
 scatters.n
 scavengers.n
@@ -9493,6 +9509,7 @@ seaboards.n
 seafarers.n
 seafronts.n
 seagulls.n
+sealants.n
 seals.n
 seams.n
 seamstresses.n
@@ -11319,6 +11336,7 @@ truths.n
 trychels.n
 trysts.n
 tsetses.n
+tsunamis.n
 t-shirts.n
 tubas.n
 tubaxes.n
@@ -11582,7 +11600,7 @@ vertecies.n
 vertexes.n
 vertexes.s
 verticals.n
-verticies.s
+vertices.s
 vesicles.n
 vessels.n
 vestibules.n

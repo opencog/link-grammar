@@ -759,13 +759,13 @@ calculator.n
 caldron.n
 calendar.n
 calf.n
-caliber.n
 calibration.s
 calibre.s
 calif.n
 caliphate.n
 caliph.n
 callback.n
+caliper.n
 calliope.s
 call.n
 call-out.n
@@ -2296,6 +2296,7 @@ doctorate.n
 doctrinaire.n
 doctrine.s
 document.n
+documentary.n
 dodecahedron.n
 dodge.n
 dodo.n
@@ -2969,6 +2970,7 @@ gallant.n
 gallantry.s
 gallbladder.n
 galleon.n
+galleria.n
 gallery.n
 galley.n
 gallicism.n
@@ -4141,6 +4143,7 @@ local.n
 location.n
 locator.n
 loch.n
+lockdown.n
 locker.n
 locket.n
 lock.n
@@ -4470,6 +4473,7 @@ metal.s
 metalware.s
 metalwork.n
 metaphor.s
+metastasis.n
 metatarsal.n
 meteorite.n
 meteor.n
@@ -4578,6 +4582,7 @@ misconfiguration.n
 miscount.n
 misdeal.n
 misdeed.n
+misdemeanor.n
 misdemeanour.n
 misdiagnosis.n
 misdoing.n
@@ -5061,6 +5066,7 @@ parchment.s
 pardon.s
 paren.n
 parent.n
+parenthesis.n
 pariah.n
 parish.n
 parka.n
@@ -5218,6 +5224,8 @@ perennial.n
 perforation.s
 performance.s
 perfume.s
+perfusion.n
+pergola.n
 peril.s
 perimeter.n
 periodical.n
@@ -5753,6 +5761,7 @@ proscription.s
 prosecution.s
 prospectus.n
 prostate.n
+prosthesis.n
 prostitute.n
 protection.s
 protectorate.n
@@ -5784,6 +5793,7 @@ pseudo.n
 pseudonym.n
 psi.s
 psyche.n
+psychosis.n
 psychotic.n
 pterodactyl.n
 publication.n
@@ -6643,6 +6653,7 @@ seaboard.n
 seafront.n
 seagull.n
 seal.n
+sealant.n
 seam.n
 seance.n
 seaplane.n
@@ -8206,6 +8217,7 @@ trychel.s
 try.n
 tryst.n
 tsetse.n
+tsunami.n
 t-shirt.n
 tuba.s
 tubax.s
