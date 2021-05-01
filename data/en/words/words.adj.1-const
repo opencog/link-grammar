@@ -21,6 +21,7 @@ bare.a
 barefaced.a
 barefooted.a
 bareheaded.a
+bariatric.c
 barelegged.a
 barmy.a
 baronial.a
@@ -118,6 +119,7 @@ biological.a
 bioluminescent.a
 biomedical.a
 biometric.a
+biotech.a
 biotechnological.a
 biotic.a
 bipartisan.a
@@ -164,6 +166,7 @@ bloody.a
 blotto.a
 blowzy.a
 bluespotted.a
+bluetooth.a
 bluesy.a
 bluff.a
 bluish.a
@@ -191,6 +194,7 @@ Boolean.a
 boolean.a
 boon.a
 boorish.a
+bootable.a
 borderless.a
 bored.a
 boric.a
@@ -221,6 +225,7 @@ brawny.a
 brazen.a
 breakable.a
 breakneck.a
+breathable.a
 breathless.a
 breathtaking.a
 breezy.a
@@ -322,6 +327,7 @@ carsick.a
 cartilaginous.a
 cartoonish.a
 cartoony.a
+cashback.a
 casted.a
 castellated.a
 casual.a
@@ -548,6 +554,7 @@ comfortable.a
 comfy.a
 comic.a
 comical.a
+comedic.a
 commanding.a
 commemorative.a
 commensurable.a
@@ -581,6 +588,7 @@ composite.a
 comprehending.a
 comprehensible.a
 comprehensive.a
+compressive.a
 compulsive.a
 compulsory.a
 computable.a
@@ -609,7 +617,9 @@ conducive.a
 conductive.a
 confederate.a
 confidential.a
+configurable.a
 confined.a
+confocal.a
 conformational.a
 confounded.a
 confrontational.a
@@ -803,6 +813,7 @@ cunning.a
 curable.a
 curative.a
 curatorial.a
+curbside.a
 curly.a
 current.a
 curricular.a
@@ -814,6 +825,7 @@ curt.a
 curvy.a
 cushy.a
 custodial.a
+customizable.a
 cutaneous.a
 cute.a
 cutthroat.a
@@ -1660,6 +1672,7 @@ hairy.a
 halcyon.a
 hale.a
 half-hearted.a
+halftime.a
 halftone.a
 halfway.a
 halfwitted.a
@@ -1764,7 +1777,9 @@ hieroglyphic.a
 high.a
 highbrow.a
 highflying.a
+high-end.a
 high-pitched.a
+high-quality.a
 high-sounding.a
 high-spirited.a
 hilly.a
@@ -1864,6 +1879,7 @@ hungry.a
 hurtful.a
 husky.a
 hyaenid.a
+hyaluronic.a
 hybrid.a
 hydration.a
 hydraulic.a
@@ -1939,6 +1955,7 @@ kaput.a
 karmic.a
 karstic.a
 keratinous.a
+ketogenic.a
 keyless.a
 khaki.a
 kibbutz.a
@@ -2134,6 +2151,7 @@ lowbrow.a
 lowercase.a
 lowland.a
 lowly.a
+low-income.a
 low-pitched.a
 loyal.a
 lucid.a
@@ -2355,6 +2373,7 @@ midfield.a
 midseason.a
 midsize.a
 midterm.a
+midwest.a
 miffed.a
 mighty.a
 migratory.a
@@ -2660,6 +2679,8 @@ nondistinctive.a
 nonfat.a
 nonflammable.a
 nonfunctional.a
+nongovernmental.a
+non-governmental.a
 nonhomologous.a
 nonlinear.a
 nonprofit.a
@@ -3163,6 +3184,7 @@ privileged.a
 privy.a
 probabilistic.a
 probationary.a
+probiotic.a
 probit.a
 problematic.a
 procedural.a
@@ -3368,6 +3390,8 @@ RC.a
 readable.a
 ready-made.a
 real.a
+real-life.a
+real-world.a
 realistic.a
 realtime.a
 rearmost.a
@@ -3637,6 +3661,7 @@ saltmarsh.a
 salty.a
 salubrious.a
 salutary.a
+same-sex.a
 sanctimonious.a
 sandy.a
 sanguine.a
@@ -3918,6 +3943,7 @@ socialist.a
 socialistic.a
 societal.a
 socioeconomic.a
+socio-economic.a
 sociological.a
 sociopathic.a
 sodden.a
@@ -4471,6 +4497,7 @@ trademarked.a
 tragicomic.a
 traitorous.a
 tranquil.a
+transactional.a
 transalpine.a
 transatlantic.a
 transcendent.a
@@ -4479,6 +4506,7 @@ transcontinental.a
 transcriptional.a
 transferable.a
 transformational.a
+transformative.a
 transgendered.a
 transgenic.a
 transient.a
@@ -4702,6 +4730,7 @@ wearisome.a
 weary.a
 weatherproof.a
 webbed.a
+web-based.a
 wee.a
 weedy.a
 weeklong.a

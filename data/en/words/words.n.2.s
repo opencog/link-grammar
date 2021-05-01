@@ -4940,6 +4940,7 @@ Haitians.n
 halberdiers.n
 halberds.n
 halfbacks.n
+halftones.n
 half-breeds.n
 half-hours.n
 halfwits.n
@@ -5553,6 +5554,7 @@ inflows.n
 influencers.n
 influences.n
 influxes.n
+infographics.n
 informalities.n
 informants.n
 informers.n
