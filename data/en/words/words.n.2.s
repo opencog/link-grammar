@@ -10541,6 +10541,7 @@ subsets.n
 subsidiaries.n
 subsidies.n
 subs.n
+subspecies.p
 substances.n
 substantives.n
 substitutes.n
