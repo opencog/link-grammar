@@ -371,6 +371,7 @@ cement.n-u
 censure.n-u
 centralization.n-u
 centrex.n-u
+centrifugation.n-u
 ceramic.n-u
 cereal.n-u
 ceremonial.n-u
@@ -473,6 +474,7 @@ citation.n-u
 citizenship.n-u
 citrus.n-u
 cittern.n-u
+civilisation.n-u
 civilization.n-u
 clamour.n-u
 claptrap.n-u
@@ -544,6 +546,7 @@ collusion.n-u
 colonialism.n-u
 colonization.n-u
 color.n-u
+coloration.n-u
 coloratura.n-u
 colour.n-u
 colouring.n-u
@@ -558,6 +561,7 @@ commendation.n-u
 commentary.n-u
 commerce.n-u
 commercialism.n-u
+commercialization.n-u
 commiseration.n-u
 commission.n-u
 commotion.n-u
@@ -566,6 +570,7 @@ communion.n-u
 communism.n-u
 commutation.n-u
 compactness.n-u
+compaction.n-u
 companionship.n-u
 company.n-u
 comparison.n-u
@@ -784,6 +789,7 @@ curvature.n-u
 custard.n-u
 custody.n-u
 custom.n-u
+customization.n-u
 cutlass.n-u
 cutlery.n-u
 cuttlefish.n-u
@@ -856,11 +862,13 @@ definition.n-u
 deflation.n-u
 deflection.n-u
 defoliation.n-u
+deforestation.n-u
 deformation.n-u
 deftness.n-u
 degeneration.n-u
 deglobalization.n-u
 degradation.n-u
+dehydration.n-u
 deification.n-u
 deism.n-u
 dejection.n-u
@@ -1008,9 +1016,11 @@ disbursement.n-u
 discernment.n-u
 discharge.n-u
 discipline.n-u
+discoloration.n-u
 discomfiture.n-u
 discomfort.n-u
 discontent.n-u
+discontinuation.n-u
 discord.n-u
 discouragement.n-u
 discourse.n-u
@@ -1157,6 +1167,7 @@ dysprosium.n-u
 fable.n-u
 fabric.n-u
 fabrication.n-u
+facilitation.n-u
 faction.n-u
 faglong.n-u
 faintness.n-u
@@ -1175,6 +1186,7 @@ family.n-u
 famine.n-u
 fanaticism.n-u
 fanfare.n-u
+fanfiction.n-u
 fantasy.n-u
 farce.n-u
 fare.n-u
@@ -1216,6 +1228,7 @@ fiber.n-u
 fibre.n-u
 fibreboard.n-u
 fibreglass.n-u
+fibrillation.n-u
 fiction.n-u
 fiddle.n-u
 fieldwork.n-u
@@ -1648,6 +1661,7 @@ holly.n-u
 holmium.n-u
 homage.n-u
 home.n-u
+homelessness.n-u
 homesickness.n-u
 homework.n-u
 homicide.n-u
@@ -1701,6 +1715,7 @@ hunting.n-u
 hurdy_gurdy
 hurry.n-u
 husbandry.n-u
+hybridization.n-u
 hydraulophone.n-u
 hydrogen.n-u
 hydrolysis.n-u
@@ -1788,6 +1803,7 @@ lace.n-u
 lack.n-u
 lacquer.n-u
 lacrosse.n-u
+lactation.n-u
 lager.n-u
 laissez-faire.n-u
 lamb.n-u
@@ -2125,6 +2141,7 @@ mimicry.n-u
 mimosa.n-u
 mincemeat.n-u
 mind.n-u
+mindfulness.n-u
 mineralogy.n-u
 minestrone.n-u
 minesweeping.n-u
@@ -2222,6 +2239,7 @@ mutilation.n-u
 mutiny.n-u
 mutton.n-u
 myelitis.n-u
+methylation.n-u
 myopia.n-u
 myrrh.n-u
 myrtle.n-u
@@ -2430,6 +2448,7 @@ perpetration.n-u
 perpetuation.n-u
 persecution.n-u
 persimmon.n-u
+personalization.n-u
 personification.n-u
 perspective.n-u
 perspiration.n-u
@@ -2544,8 +2563,14 @@ pollution.n-u
 polonium.n-u
 polo.n-u
 polska_kielbasa
+polycarbonate.n-u
+polyester.n-u
+polyethylene.n-u
 polygamy.n-u
+polymerization.n-u
 polyphony.n-u
+polystyrene.n-u
+polyurethane.n-u
 polytheism.n-u
 polythene.n-u
 pomp.n-u
@@ -2598,6 +2623,7 @@ prejudice.n-u
 premeditation.n-u
 preoccupation.n-u
 prep.n-u
+preparedness.n-u
 preparation.n-u
 prescription.n-u
 presentation.n-u
@@ -2653,6 +2679,7 @@ propellent.n-u
 prophylaxis.n-u
 proportion.n-u
 propulsion.n-u
+polypropylene.n-u
 proscription.n-u
 prose.n-u
 prosecution.n-u
@@ -2704,6 +2731,7 @@ pus.n-u
 puzzlement.n-u
 quackery.n-u
 qualification.n-u
+quantification.n-u
 quarantine.n-u
 quartz.n-u
 quatro.n-u
@@ -2763,6 +2791,7 @@ reading.n-u
 readjustment.n-u
 readmission.n-u
 realignment.n-u
+realisation.n-u
 realism.n-u
 reallocation.n-u
 rearmament.n-u
@@ -2783,6 +2812,7 @@ recklessness.n-u
 reclamation.n-u
 recognition.n-u
 recollection.n-u
+recombination.n-u
 recompense.n-u
 reconciliation.n-u
 reconsideration.n-u
@@ -2854,6 +2884,7 @@ religion.n-u
 relish.n-u
 relocation.n-u
 remarriage.n-u
+remediation.n-u
 remilitarization.n-u
 remission.n-u
 remorse.n-u
@@ -2892,6 +2923,7 @@ requisition.n-u
 resale.n-u
 rescue.n-u
 research.n-u
+resection.n-u
 resentment.n-u
 reservation.n-u
 reserve.n-u
@@ -2903,6 +2935,7 @@ resort.n-u
 respect.n-u
 respiration.n-u
 respite.n-u
+responsiveness.n-u
 rest.n-u
 restitution.n-u
 restlessness.n-u
@@ -2974,6 +3007,7 @@ ritual.n-u
 rivalry.n-u
 roast.n-u
 robbery.n-u
+robustness.n-u
 rock.n-u
 roe.n-u
 romanticism.n-u
@@ -2989,6 +3023,7 @@ rotgut.n-u
 rotini.n-u
 rouge.n-u
 roughage.n-u
+roughness.n-u
 roulette.n-u
 routine.n-u
 rubber.n-u
@@ -3183,6 +3218,7 @@ shampoo.n-u
 shandy.n-u
 shape.n-u
 share.n-u
+sharpness.n-u
 sheen.n-u
 sheepskin.n-u
 sheet.n-u
@@ -3276,6 +3312,7 @@ smalt.n-u
 smog.n-u
 smoke.n-u
 smoking.n-u
+smoothness.n-u
 smuggling.n-u
 smut.n-u
 snail.n-u
@@ -3480,6 +3517,7 @@ superego.n-u
 superstition.n-u
 supervision.n-u
 supper.n-u
+supplementation.n-u
 supplication.n-u
 supply.n-u
 support.n-u
@@ -3690,6 +3728,7 @@ training.n-u
 transaction.n-u
 transcendentalism.n-u
 transcription.n-u
+transduction.n-u
 transfer.n-u
 transfiguration.n-u
 transformation.n-u
@@ -3777,6 +3816,7 @@ vaccination.n-u
 vaccine.n-u
 vacillation.n-u
 vainglory.n-u
+validation.n-u
 valour.n-u
 valuation.n-u
 value.n-u
@@ -3812,6 +3852,7 @@ vermin.n-u
 vermouth.n-u
 verse.n-u
 versification.n-u
+vertebrae.n-u
 vertex.n-u
 vertigo.n-u
 verve.n-u
@@ -3842,9 +3883,13 @@ violoncello.n-u
 violotta.n-u
 viridian.n-u
 virology.n-u
+virtualisation.n-u
+virtualization.n-u
 virtue.n-u
 virus.n-u
 vision.n-u
+visualisation.n-u
+visualization.n-u
 vitriol.n-u
 vivisection.n-u
 vocabulary.n-u
@@ -3884,6 +3929,8 @@ weedkiller.n-u
 weight.n-u
 weightlifting.n-u
 welfare.n-u
+wellness.n-u
+wellbeing.n-u
 well-being.n-u
 westernization.n-u
 whalebone.n-u

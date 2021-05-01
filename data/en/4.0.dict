@@ -11079,7 +11079,7 @@ or.j-n:
 % XXX FIXME: there should be a (SJr- & Mp+) here, to allow this:
 % "There is no ham in the hamburger, and neither pine nor apple in the pineapple."
 % However, it needs to be configured so that it accepts the SJr- from the
-% "and" only when there is no J link, as otherwise, i links at teh wrong
+% "and" only when there is no J link, as otherwise, i links at the wrong
 % location. Ugh. what a big headache.
 nor.j-n:
   hSJl- & (XJn- or [()]) & hSJr+
@@ -13412,6 +13412,8 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 % These perform a kind-of poor-man's rewriting. A more principled,
 % elevated design would define and use an "operator grammar" type
 % approach. See https://en.wikipedia.org/wiki/Operator_grammar
+
+teh.#the: [[the]0.05]bad-spelling;
 
 then.#than: [[than.e]0.65]bad-spelling;
 than.#then-i: [[then.i]1.65]bad-spelling;

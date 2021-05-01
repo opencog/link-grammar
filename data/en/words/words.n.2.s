@@ -8812,6 +8812,7 @@ rescuers.n
 rescues.n
 researchers.n
 researches.n
+resellers.n
 resemblances.n
 reservations.n
 reserves.n
