@@ -2560,6 +2560,7 @@ cowhands.n
 cowherds.n
 cowhides.n
 cowls.n
+coworkers.n
 cowslips.n
 cows.n
 coxcombs.n
@@ -5421,6 +5422,7 @@ inflammations.n
 inflections.n
 inflictions.n
 inflows.n
+influencers.n
 influences.n
 influxes.n
 informalities.n
@@ -8838,6 +8840,7 @@ respirations.n
 respirators.n
 respites.n
 respondents.n
+responders.n
 responses.n
 restatements.n
 restauranteurs.n
@@ -9101,6 +9104,7 @@ salaries.n
 salerooms.n
 sales.n
 salespersons.n
+salespeople.n
 salines.n
 sallies.n
 salons.n
@@ -11769,6 +11773,7 @@ yokes.n
 yolks.n
 youngsters.n
 youths.n
+youtubers.n
 yuans.n
 Yugoslavians.n
 Yugoslavs.n

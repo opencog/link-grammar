@@ -691,6 +691,7 @@ USMC.y USN.y:
 /en/words/entities.prof :
   <marker-common-entity> or <common-const-noun>;
 
+% XXX FIXME this is nearly identical to words.n.t !?
 /en/words/entities.people.vowel :
   <marker-common-entity> or <common-vowel-noun> or <directive-subject>;
 
@@ -879,6 +880,7 @@ reason_of_selection carte_blanche:
 % title nouns (president, chairman)
 % auditor.t bailiff.t broker.t buyer.t candidate.t captain.t cardinal.t
 % Ou-: "He was made knight by the crown"
+% XXX this is nearly identical to entities.people !?
 /en/words/words.n.t:
   <noun-modifiers> & {@M+}
     & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or Ou- or TI-);
