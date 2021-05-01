@@ -5924,11 +5924,11 @@ delivered.w-d:
     or ([[@MV+ & O*n+]])
   } & <mv-coord>;
 
-give.v send.v bring.v lend.v issue.v hand.v pour.v:
+give.v send.v bring.v lend.v issue.v hand.v pour.v text.v:
   VERB_PLI(<vc-give>);
 
 gives.v sends.v brings.v lends.v
-issues.v hands.v pours.v:
+issues.v hands.v pours.v texts.v:
   VERB_S_T(<vc-give>);
 
 sent.v-d brought.v-d lent.v-d handed.v-d:
@@ -5936,7 +5936,7 @@ sent.v-d brought.v-d lent.v-d handed.v-d:
   (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & <mv-coord>) or
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
-issued.v-d poured.v-d:
+issued.v-d poured.v-d texted.v-d:
   VERB_SPPP_T(<vc-give>) or
   <verb-adj> or
   (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & <mv-coord>) or
@@ -5950,11 +5950,11 @@ given.v:
   ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
 
 giving.g sending.g bringing.g
-lending.g issuing.g handing.g pouring.g:
+lending.g issuing.g handing.g pouring.g texting.g:
   (<vc-give> & <verb-ge>) or <verb-ge-d>;
 
 giving.v sending.v bringing.v
-lending.v issuing.v handing.v pouring.v:
+lending.v issuing.v handing.v pouring.v texting.v:
   <verb-pg> & <vc-give>;
 
 % ditransitive, but everything is optional. For example:
