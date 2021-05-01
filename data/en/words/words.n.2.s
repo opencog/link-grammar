@@ -1467,6 +1467,7 @@ Burundians.n
 buses.n
 bushels.n
 bushes.n
+bushings.n
 businesses.n
 buskers.n
 busters.n
