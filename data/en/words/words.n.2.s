@@ -1,4 +1,5 @@
 abacuses.n
+abatements.n
 abbes.n
 abbesses.n
 abbeys.n
@@ -25,6 +26,7 @@ absences.n
 absentees.n
 ABs.n
 absorbents.n
+absorbers.n
 abstentions.n
 abstractions.n
 abstracts.n
@@ -89,6 +91,8 @@ adagios.n
 adaptations.n
 adapters.n
 adaptors.n
+addenda.n
+addendums.n
 adders.n
 addictions.n
 addicts.n
@@ -246,6 +250,7 @@ allocators.n
 allotments.n
 allowances.n
 alloys.n
+all-stars.n
 allures.n
 allusions.n
 almanacs.n
@@ -260,6 +265,7 @@ altercations.n
 alternates.n
 alternations.n
 alternatives.n
+alternators.n
 altimeters.n
 altitudes.n
 altos.n
@@ -286,6 +292,7 @@ amperes.n
 ampersands.n
 amphetamines.n
 amphibians.n
+amphitheaters.n
 amphitheatres.n
 amphoras.n
 amplifications.n
@@ -305,6 +312,7 @@ analogs.n
 analogues.n
 analyses.n
 analysts.n
+analyzers.n
 anapaests.n
 anarchists.n
 anatomists.n
@@ -320,6 +328,7 @@ anecdotes.n
 aneroids.n
 anesthetics.n
 anesthetists.n
+aneurysms.n
 angels.n
 Angentinians.n
 anglers.n
@@ -360,16 +369,20 @@ anthropoids.n
 anthropologists.n
 antibiotics.n
 antibodies.n
+antichrists.n
 anticlimaxes.n
 antics.n
 antidepressants.n
 antidotes.n
 Antiguans.n
+anti-inflammatories.n
+antioxidants.n
 antipathies.n
 antiquarians.n
 antiquaries.n
 antiques.n
 antiquities.n
+antiretrovirals.n
 antiseptics.n
 antitoxins.n
 antlers.n
@@ -432,6 +445,7 @@ aqualungs.n
 aquaplanes.n
 aquariums.n
 aqueducts.n
+aquifers.n
 arabesques.n
 Arabs.n
 arachnids.n
@@ -439,8 +453,11 @@ arbiters.n
 arbitragers.n
 arbitrations.n
 arbitrators.n
+arboreta.n
+arboretums.n
 arbours.n
 arcades.n
+arcadias.n
 archaeologists.n
 archaisms.n
 archangels.n
@@ -482,6 +499,7 @@ armouries.n
 armpits.n
 arms.n
 aromas.n
+aromatherapies.n
 arpeggiones.n
 arpeggios.n
 arraignments.n
@@ -568,6 +586,7 @@ attackers.n
 attacks.n
 attainments.n
 attendants.n
+attendees.n
 attics.n
 attitudes.n
 attorneys.n
@@ -579,6 +598,7 @@ aubergines.n
 auctioneers.n
 auctions.n
 audiences.n
+audiobooks.n
 auditions.n
 auditoriums.n
 auditors.n
@@ -5417,6 +5437,7 @@ impalements.n
 impasses.n
 impeachments.n
 impediments.n
+impellers.n
 imperfections.n
 imperialists.n
 impersonations.n
@@ -5535,6 +5556,7 @@ ingenues.n
 ingots.n
 ingredients.n
 inhabitants.n
+inhalers.n
 inheritances.n
 inheritors.n
 inhibitions.n
@@ -5547,6 +5569,7 @@ initials.n
 initiates.n
 initiatives.n
 injections.n
+injectors.n
 injunctions.n
 injuries.n
 injustices.n
@@ -5564,6 +5587,7 @@ innovators.n
 inns.n
 innuendoes.n
 inoculations.n
+inpatients.n
 inputs.n
 inquests.n
 inquirers.n
@@ -5588,6 +5612,7 @@ inspections.n
 inspectors.n
 inspirations.n
 installations.n
+installers.n
 installments.n
 instalments.n
 instances.n
@@ -5642,6 +5667,7 @@ internationales.n
 internationalists.n
 internationals.n
 internes.n
+internships.n
 interns.n
 interpolations.n
 interpositions.n
@@ -5666,6 +5692,7 @@ intimacies.n
 intimates.n
 intimations.n
 intoxicants.n
+intranets.n
 intricacies.n
 intrigues.n
 introductions.n
@@ -5683,6 +5710,7 @@ inventories.n
 inventors.n
 inversions.n
 invertebrates.n
+inverters.n
 investigations.n
 investigators.n
 investments.n
@@ -7272,11 +7300,13 @@ obstructions.n
 obverses.n
 ocarinas.n
 occasions.n
+occlusions.n
 occupancies.n
 occupants.n
 occupations.n
 occupiers.n
 occurrences.n
+oceanfronts.n
 oceans.n
 octagons.n
 octapads.n
@@ -7316,6 +7346,7 @@ oligarchies.n
 oligopolies.n
 olives.n
 Omanis.n
+ombudsmen.n
 omegas.n
 omelets.n
 omelettes.n
@@ -11456,6 +11487,7 @@ urinals.n
 urns.n
 Uruguayans.n
 usages.n
+usernames.n
 users.n
 uses.n
 ushers.n

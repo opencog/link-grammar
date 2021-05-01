@@ -1,4 +1,5 @@
 abacus.n
+abatement.n
 abbey.n
 abbreviation.n
 abdication.s
@@ -21,6 +22,7 @@ abscess.s
 absence.n
 absentee.n
 absorbent.n
+absorber.n
 abstention.s
 abstraction.s
 abstract.n
@@ -80,6 +82,7 @@ adagio.n
 adaptation.s
 adapter.n
 adaptor.n
+addendum.n
 adder.n
 addiction.s
 addict.n
@@ -212,6 +215,7 @@ allocator.n
 allotment.s
 allowance.n
 alloy.s
+all-star.n
 allure.s
 allusion.n
 ally.n
@@ -226,6 +230,7 @@ altercation.n
 alternate.n
 alternation.s
 alternative.n
+alternator.n
 altimeter.n
 altitude.s
 alto.s
@@ -248,6 +253,7 @@ ampere.n
 ampersand.n
 amphetamine.s
 amphibian.n
+amphitheater.n
 amphitheatre.n
 amphora.n
 amplification.s
@@ -266,6 +272,7 @@ analogue.n
 analogy.s
 analysis.s
 analyst.n
+analyzer.n
 anapaest.n
 ancestry.n
 anchorage.n
@@ -276,6 +283,7 @@ andante.n
 anecdote.n
 aneroid.n
 anesthetic.s
+aneurysm.n
 angel.s
 angle.n
 anglicism.n
@@ -310,14 +318,18 @@ anthology.n
 anthropoid.n
 antibiotic.n
 antibody.n
+antichrist.n
 anticlimax.n
 antic.n
 antidepressant.n
 antidote.n
+anti-inflammatory.n
+antioxidant.n
 antipathy.s
 antiquary.n
 antique.n
 antiquity.s
+antiretroviral.n
 antiseptic.n
 antitoxin.n
 antler.n
@@ -375,11 +387,14 @@ aqualung.n
 aquaplane.n
 aquarium.n
 aqueduct.n
+aquifer.n
 arabesque.n
 arachnid.n
 arbitration.s
+arboretum.n
 arbour.n
 arcade.n
+arcadia.n
 archaism.n
 archangel.s
 archbishopric.n
@@ -413,6 +428,7 @@ armor.s
 armoury.n
 armpit.n
 aroma.n
+aromatherapy.n
 arpeggio.n
 arpeggione.s
 arraignment.n
@@ -484,6 +500,7 @@ attache.n
 attachment.s
 attack.s
 attainment.s
+attendee.n
 attic.n
 attitude.s
 attraction.n
@@ -492,6 +509,7 @@ attribution.s
 aubergine.n
 auction.s
 audience.n
+audiobook.n
 audio.n
 audition.s
 audit.n
@@ -637,6 +655,7 @@ emergence.n
 emergency.s
 emirate.n
 emission.s
+emitter.n
 em.n
 emoticon.n
 emotion.s
@@ -644,6 +663,7 @@ emphasis.s
 empire.n
 employee.n
 emporium.n
+emulator.n
 emulsifier.n
 emulsion.s
 emu.n
@@ -655,6 +675,7 @@ enchilada_ranchero
 enchilada_verde
 enclave.n
 enclosure.s
+encoder.n
 encoding.n
 encomium.n
 encounter.n
@@ -673,6 +694,7 @@ end.n
 endorsement.s
 endoscope.n
 endowment.s
+endpoint.n
 enema.n
 enemy.n
 engagement.s
@@ -702,6 +724,7 @@ entrepot.n
 entrepreneur.n
 entropy.n
 entry.s
+entryway.n
 envelope.n
 envelopment.n
 environment.n
@@ -725,6 +748,7 @@ epiphyte.n
 episode.n
 epistle.n
 epitaph.n
+epithelium.n
 epithet.n
 epitome.n
 epoch.n
@@ -768,6 +792,7 @@ ester.n
 esthete.n
 esthetic.n
 estimate.n
+estimator.n
 estrangement.s
 estuary.n
 eta.s
@@ -784,6 +809,7 @@ evacuation.s
 evacuee.n
 evaluation.n
 evaporation.s
+evaporator.n
 eve.n
 evening.s
 event.n
@@ -803,6 +829,7 @@ excavator.n
 exception.n
 excerpt.n
 excess.s
+exchanger.n
 exchange.s
 exciter.n
 exclamation.s
@@ -854,11 +881,13 @@ expression.s
 express.s
 expressway.n
 expulsion.s
+extender.n
 extension.s
 extent.s
 exterior.n
 extern.n
 extinguisher.n
+extractor.n
 extract.s
 extradition.s
 extra.n
@@ -928,6 +957,7 @@ impalement.n
 impasse.n
 impeachment.s
 impediment.n
+impeller.n
 imperfection.n
 impersonation.s
 impertinence.s
@@ -1029,6 +1059,7 @@ infusion.s
 ingenue.n
 ingot.n
 ingredient.n
+inhaler.n
 inheritance.s
 inhibition.s
 inhibitor.n
@@ -1040,6 +1071,7 @@ initial.n
 initiate.n
 initiative.s
 injection.s
+injector.n
 injunction.n
 injury.n
 injustice.s
@@ -1054,6 +1086,7 @@ inn.n
 innovation.s
 innuendo.s
 inoculation.s
+inpatient.n
 input.s
 inquest.n
 inquiry.s
@@ -1072,6 +1105,7 @@ insolvency.s
 inspection.s
 inspiration.s
 installation.s
+installer.n
 installment.n
 instalment.n
 instance.n
@@ -1119,6 +1153,7 @@ internationale.n
 international.n
 interne.n
 intern.n
+internship.n
 interpolation.s
 interposition.s
 interpretation.s
@@ -1138,6 +1173,7 @@ intimacy.s
 intimate.n
 intimation.s
 intoxicant.n
+intranet.n
 intricacy.s
 intrigue.s
 introduction.s
@@ -1152,6 +1188,7 @@ invention.s
 inventory.s
 inversion.s
 invertebrate.n
+inverter.n
 investigation.s
 investment.s
 invitation.n
@@ -1209,9 +1246,11 @@ obstruction.s
 obverse.n
 ocarina.s
 occasion.n
+occlusion.n
 occupancy.n
 occupation.n
 occurrence.s
+oceanfront.n
 ocean.s
 octagon.n
 octapad.s
@@ -1246,6 +1285,7 @@ oligarchy.s
 oligopoly.n
 olive.s
 olivine.s
+ombudsman.n
 omega.s
 omelet.s
 omelette.s
@@ -1439,6 +1479,7 @@ urchin.n
 urinal.n
 urn.n
 usage.s
+username.n
 use.s
 usurpation.s
 utensil.n
