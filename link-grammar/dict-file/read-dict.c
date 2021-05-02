@@ -1408,6 +1408,41 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
 
 /* ======================================================================== */
 /**
+ * Notify about a duplicate word, unless it is an idiom definition.
+ * Idioms are exempt because historically they couldn't be
+ * differentiated using a subscript if duplicate definitions were
+ * convenience (and also they were not inserted into the dictionary so
+ * their duplicate check got neglected).
+ *
+ * An idiom duplicate check can be requested using the test "dup-idioms".
+ */
+static bool dup_word_error(Dictionary dict, Dict_node *newnode)
+{
+	static int dup_idioms = -1;
+	if (dup_idioms == -1) dup_idioms = (int)!!test_enabled("dup-idioms");
+
+	static Exp null_exp =
+	{
+		.type = AND_type,
+		.operand_first = NULL,
+		.operand_next = NULL,
+	};
+
+	/* Suppress reporting duplicate idioms unless requested. */
+	if (dup_idioms && !contains_underbar(newnode->string))
+	{
+		dict_error2(dict, "Ignoring word which has been multiply defined:",
+		            newnode->string);
+		/* Too late to skip insertion - insert it with a null expression. */
+		newnode->exp = &null_exp;
+
+		return true;
+	}
+
+	return false;
+}
+
+/**
  * Insert the new node into the dictionary below node n.
  * "newnode" left and right fields are NULL, and its string is already
  * there.  If the string is already found in the dictionary, give an error
@@ -1421,27 +1456,10 @@ Dict_node *insert_dict(Dictionary dict, Dict_node *n, Dict_node *newnode)
 {
 	if (NULL == n) return newnode;
 
-	static Exp null_exp =
-	{
-		.type = AND_type,
-		.operand_first = NULL,
-		.operand_next = NULL,
-	};
 	int comp = dict_order_strict(newnode->string, n);
 
-	if (0 == comp &&
-	    /* Suppress reporting duplicate idioms until they are fixed. */
-	    (!contains_underbar(newnode->string) || test_enabled("dup-idioms")))
-	{
-		char t[80+MAX_TOKEN_LENGTH];
-		snprintf(t, sizeof(t),
-		         "Ignoring word \"%s\", which has been multiply defined:",
-		         newnode->string);
-		dict_error(dict, t);
-		/* Too late to skip insertion - insert it with a null expression. */
-		newnode->exp = &null_exp;
-		comp = -1;
-	}
+	if ((0 == comp) && dup_word_error(dict, newnode))
+	    comp = -1;
 
 	if (comp < 0)
 	{
