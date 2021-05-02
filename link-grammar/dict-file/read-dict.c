@@ -193,16 +193,6 @@ static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 		/* Skip over all comments */
 		if ((c == '%') && (!quote_mode))
 		{
-			if (0 == strncmp(dict->pin, SUPPRESS, sizeof(SUPPRESS)-1))
-			{
-				const char *nl = strchr(dict->pin + sizeof(SUPPRESS)-1, '\n');
-				if (NULL != nl)
-				{
-					dict->suppress_warning =
-						strndup(dict->pin + sizeof(SUPPRESS)-1,
-					           nl - dict->pin - sizeof(SUPPRESS) + 1);
-				}
-			}
 			while ((c != 0x0) && (c != '\n')) c = *(dict->pin++);
 			if (c == 0x0) break;
 			dict->line_number++;
@@ -767,6 +757,7 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 	return llist;
 }
 
+#if 0
 /**
  * strict_lookup_list() - return exact match in the dictionary
  *
@@ -788,6 +779,7 @@ static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 	llist = prune_lookup_list(llist, s);
 	return llist;
 }
+#endif
 
 /* ======================================================================== */
 /**
@@ -1475,17 +1467,6 @@ Dict_node *insert_dict(Dictionary dict, Dict_node *n, Dict_node *newnode)
 }
 
 /**
- * Find if a warning symbol exists in the currently suppress list.
- * The warning symbols are constructed in a way that disallow overlap
- * matching.
- */
-static bool is_warning_suppressed(Dictionary dict, const char *warning_symbol)
-{
-	if (NULL == dict->suppress_warning) return false;
-	return (NULL != strstr(dict->suppress_warning, warning_symbol));
-}
-
-/**
  * Remember the length_limit definitions in a list according to their order.
  * The order is kept to allow later more specific definitions to override
  * already applied ones.
@@ -1554,7 +1535,7 @@ static void insert_length_limit(Dictionary dict, Dict_node *dn)
  */
 void insert_list(Dictionary dict, Dict_node * p, int l)
 {
-	Dict_node * dn, *dn_head, *dn_second_half;
+	Dict_node * dn, *dn_second_half;
 	int k, i; /* length of first half */
 
 	if (l == 0) return;
@@ -1588,44 +1569,6 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 		dict->root = insert_dict(dict, dict->root, dn);
 		insert_length_limit(dict, dn);
 		dict->num_entries++;
-
-		if ((verbosity_level(D_DICT+0) && !is_warning_suppressed(dict, DUP_BASE)) ||
-		    verbosity_level(D_SPEC+3))
-		{
-			/* Warn if there are words with a subscript that match a bare word. */
-			const char *sm = strchr(dn->string, SUBSCRIPT_MARK);
-			char *bareword;
-
-			if (NULL != sm)
-			{
-				bareword = strdupa(dn->string);
-				bareword[sm - dn->string] = '\0';
-			}
-			else
-			{
-				bareword = (char *)dn->string;
-			}
-
-			if ((dn_head = strict_lookup_list(dict, bareword)) != NULL)
-			{
-				bool match_found = false;
-				for (Dict_node *dnx = dn_head; dnx != NULL; dnx = dnx->right) {
-					if (0 != strcmp(dnx->string, dn->string))
-					{
-						if (!match_found)
-						{
-							prt_error("Warning: The word \"%s\" found near line "
-										 "%d of \"%s\"\n\t matches the following words:",
-										 dn->string, dict->line_number, dict->name);
-							match_found = true;
-						}
-						prt_error("\t%s", dnx->string);
-					}
-				}
-				if (match_found) prt_error("\n");
-				file_free_lookup(dn_head);
-			}
-		}
 	}
 
 	insert_list(dict, p, k);
