@@ -13416,6 +13416,7 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 % approach. See https://en.wikipedia.org/wiki/Operator_grammar
 
 teh.#the: [[the]0.05]bad-spelling;
+u.#you: [[you]0.05]bad-spelling;
 
 then.#than: [[than.e]0.65]bad-spelling;
 than.#then-i: [[then.i]1.65]bad-spelling;
