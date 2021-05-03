@@ -41,16 +41,6 @@ static const double DEFAULT_MAX_DISJUNCT_COST = 2.7;
 #define SUBSCRIPT_MARK '\3'
 #define SUBSCRIPT_DOT '.'
 
-/* A dictionary directive to suppress dictionary check warnings.
- * For example:
- * %suppress: DUP-BARE SOME-OTHER ... optional comment
- * The chosen symbols for warning suppression should not overlap,
- * e.g. if there is a symbol DUP-BARE, there should no symbol "DUP".
- * Their effect is until the ending ';' of the following expression.
- */
-#define SUPPRESS "suppress: "
-#define DUP_BASE "DUP-BASE" /* Allow a base-word + subscripted-same-word. */
-
 static inline const char *subscript_mark_str(void)
 {
 	static const char sm[] = { SUBSCRIPT_MARK, '\0' };
