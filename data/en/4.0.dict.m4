@@ -4381,12 +4381,15 @@ go.v: VERB_PLI(<vc-go>);
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
 % However, prefer Pg over O*t when possible...
+% Wg-: "Went shopping"
 goes.v:
   (<verb-y-s> & (<vc-go> or ({[[O*t+]]} & {@MV+} & <verb-wall>)))
+  or (Wg- & <vc-go>)
   or (<verb-and-s-> & <vc-go>)
   or (<vc-go> & <verb-and-s+>);
 went.v-d:
   (<verb-y-sp> & (<vc-go> or ({[[O*t+]]} & {@MV+} & <verb-wall>)))
+  or (Wg- & <vc-go>)
   or (<verb-and-sp-i-> & <vc-go>)
   or (<vc-go> & <verb-and-sp-i+>)
   or <verb-si>;
