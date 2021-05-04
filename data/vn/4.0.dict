@@ -1,6 +1,6 @@
 % Vietnamese Dictionary
 
-#define dictionary-version-number 5.9.0;
+#define dictionary-version-number 5.9.2;
 #define dictionary-locale         vi_VN.UTF-8;
 
 % See https://bitbucket.org/ngocminh/lienkate for the master
@@ -63,12 +63,12 @@ giới khoa_học lũ con_cháu vật thí_nghiệm :
      & {GTUDT- or VTUDT- or DTUVT+ or DTUTT+ or DTUTHI+});
 
 % Tên riêng
-NAME Tbilisi Nga Saakashvili Gruzia Arsenal MU NouUCamp
-Fabregas Seoul BìnhUNhưỡng Bảo_an LiênUHợpUQuốc Kaka
-CarloUAncelotti Chelsea DavidUBeckham PaoloUMaldini
-Ancelotti RomanUAbramovich SanUSiro Man City ManUCity
-Milan Y SRY Trochilidae châuUMỹ protein virus
-HideyukiUOkano Okano :
+NAME Tbilisi Nga Saakashvili Gruzia Arsenal MU Nou_Camp
+Fabregas Seoul Bình_Nhưỡng Bảo_an Liên_Hợp_Quốc Kaka
+Carlo_Ancelotti Chelsea David_Beckham Paolo_Maldini
+Ancelotti Roman_Abramovich San_Siro Man City Man_City
+Milan Y SRY Trochilidae châu_Mỹ protein virus
+Hideyuki_Okano Okano :
   (SDT1- & {SDT1+})
   or ({SDT1+} & {@SDT2+} & {SDT4+}
      & {{{MA+} & SDT5+} & (SSUDT- or DTULA+)}
