@@ -480,7 +480,7 @@ static inline int dict_order_strict(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
 	while (*s != '\0' && *s == *t) {s++; t++;}
-	return ((*s == SUBSCRIPT_MARK)?(1):(*s))  -  ((*t == SUBSCRIPT_MARK)?(1):(*t));
+	return (*s - *t);
 }
 
 /**
