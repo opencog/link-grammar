@@ -6,6 +6,15 @@
 % See https://bitbucket.org/ngocminh/lienkate for the master
 % project; this includes a version of the link-grammar parser
 % written in Java.
+%
+% The overall structure is defined in the article:
+% Nguyễn Thị Thu Hương, Nguyễn Thúc HảiNguyễn Thúc Hải, Nguyễn Thanh Thủy
+% Parsing complex - compound sentences with an extension of Vietnamese
+% link parser combined with discourse segmenter
+% January 2013Journal of Computer Science and Cybernetics 28(4)
+% DOI: 10.15625/1813-9663/28/4/1451
+% https://www.researchgate.net/publication/287444370_Parsing_complex_-_compound_sentences_with_an_extension_of_Vietnamese_link_parser_combined_with_discourse_segmenter
+%
 
 % Guide to links:
 % VT = động từ = verb
