@@ -479,7 +479,7 @@ NO_SAN_DICT
 static inline int dict_order_strict(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
-	while (*s != '\0' && *s == *t) {s++; t++;}
+	while ((*s == *t) && (*s != '\0')) { s++; t++; }
 	return (*s - *t);
 }
 
@@ -502,7 +502,7 @@ NO_SAN_DICT
 static inline int dict_order_bare(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
-	while (*s != '\0' && *s == *t) {s++; t++;}
+	while ((*s == *t) && (*s != '\0')) { s++; t++; }
 	return (*s)  -  ((*t == SUBSCRIPT_MARK)?(0):(*t));
 }
 
