@@ -4940,12 +4940,12 @@ go.v:
 % Wg-: "Went shopping"
 goes.v:
   (<verb-y-s> & (<vc-go> or ({[[O*t+]]} & {@MV+} & <verb-wall>)))
-  or (Wg- & <vc-go>)
+  or ({@E-} & Wg- & <vc-go>)
   or (<verb-and-s-> & <vc-go>)
   or (<vc-go> & <verb-and-s+>);
 went.v-d:
   (<verb-y-sp> & (<vc-go> or ({[[O*t+]]} & {@MV+} & <verb-wall>)))
-  or (Wg- & <vc-go>)
+  or ({@E-} & Wg- & <vc-go>)
   or (<verb-and-sp-i-> & <vc-go>)
   or (<vc-go> & <verb-and-sp-i+>)
   or <verb-si>;
@@ -4954,7 +4954,7 @@ went.v-d:
 gone.v: 
   ((<verb-pp> & (<vc-go>)) or
   (<verb-and-had-> & ([<vc-go>] or ())) or
-  ((<vc-go>) & <verb-and-had+>)) or (Wg- & <vc-go>);
+  ((<vc-go>) & <verb-and-had+>)) or ({@E-} & Wg- & <vc-go>);
 
 % The keys are gone.  The popcorn is all gone.
 gone.a:
@@ -4966,7 +4966,7 @@ gone.a:
 % <tof-verb>: "there is going to be a meeting"
 going.v goin'.v:
   ((<tof-verb> or ({K+ or [[{Xc+} & Pa+]]} & <mv-coord>)) & <verb-x-pg,ge>)
-  or (Wg- & <vc-go>)
+  or ({@E-} & Wg- & <vc-go>)
   or <verb-adj>
   or <verb-ge-d>;
 
