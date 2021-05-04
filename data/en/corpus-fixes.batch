@@ -4966,10 +4966,13 @@ John, that's enough!
 
 % Participle statements
 % Typically short notes about some situation or activity.
+% May be answers to a question: "What are you doing?"
 Walking the dog
 Continuing
 ignoring Foo which was previously defined
 just being real.
+Sticking with the program, Sir!
+going shopping!
 
 goes shopping
 walks the dog
@@ -4980,6 +4983,7 @@ rode a bike today!
 really rode a bike today!
 walked the dog
 sang for the first time at church today.
+gone fishin'
 
 
 % "To be" constructions

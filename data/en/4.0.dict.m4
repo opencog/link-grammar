@@ -4396,7 +4396,8 @@ went.v-d:
   or (<vc-go> & <verb-and-sp-i+>)
   or <verb-si>;
 
-gone.v: VERB_PP(<vc-go>);
+% Wg-: "Gone fishin"
+gone.v: VERB_PP(<vc-go>) or (Wg- & <vc-go>);
 
 % The keys are gone.  The popcorn is all gone.
 gone.a:
@@ -4407,9 +4408,10 @@ gone.a:
 % XXX TODO maybe need VJ and-able links for going etc. ???
 % <tof-verb>: "there is going to be a meeting"
 going.v goin'.v:
-  ((<tof-verb> or ({K+ or [[{Xc+} & Pa+]]} & <mv-coord>)) & <verb-x-pg,ge>) or
-  <verb-adj> or
-  <verb-ge-d>;
+  ((<tof-verb> or ({K+ or [[{Xc+} & Pa+]]} & <mv-coord>)) & <verb-x-pg,ge>)
+  or (Wg- & <vc-go>)
+  or <verb-adj>
+  or <verb-ge-d>;
 
 % like "going to", except can't have both the IV ant I*t links at the
 % same time...
@@ -11060,10 +11062,12 @@ de.#the: [[the]0.25]colloquial;
 % XXX FIXME, this should probably be handled by a regex...
 carousin.#carousing-v carousin'.#carousing-v carousin’.#carousing-v: [[carousing.v]0.05]colloquial;
 drinkin.#drinking-v drinkin'.#drinking-v drinkin’.#drinking-v: [[drinking.v]0.05]colloquial;
+fishin.#fishing-v fishin'.#fishing-v fishin’.#fishing-v: [[fishing.v]0.05]colloquial;
 givin.#giving-v givin'.#giving-v givin’.#giving-v: [[giving.v]0.05]colloquial;
 goin.#going-v goin'.#going-v goin’.#going-v: [[going.v]0.05]colloquial;
 kidnappin.#kidnapping-v kidnappin'.#kidnapping-v kidnappin’.#kidnapping-v: [[kidnapping.v]0.05]colloquial;
 runnin.#running-v runnin'.#running-v runnin’.#running-v: [[running.v]0.05]colloquial;
+shoppin.#shopping-v shoppin'.#shopping-v shoppin’.#shopping-v: [[shopping.v]0.05]colloquial;
 
 % Like above, but gerund
 hangin.#hanging-g hangin'.#hanging-g hangin’.#hanging-g: [[hanging.g]0.05]colloquial;
