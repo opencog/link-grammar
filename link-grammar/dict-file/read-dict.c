@@ -554,7 +554,7 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
  */
 static bool dict_match(const char * s, const char * t)
 {
-	while ((*s != '\0') && (*s == *t)) { s++; t++; }
+	while ((*s == *t) && (*s != '\0')) { s++; t++; }
 
 	if (*s == *t) return true; /* both are '\0' */
 	if ((*s == 0) && (*t == SUBSCRIPT_MARK)) return true;
