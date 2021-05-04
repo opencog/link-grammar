@@ -266,12 +266,20 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #define NO_SAN_DICT
 #endif
 
+#ifndef DONT_EXPECT
+#define likely(x)      __builtin_expect(!!(x), 1)
+#define unlikely(x)    __builtin_expect(!!(x), 0)
+#endif
+
 #else
 #define UNREACHABLE(x)
 #define GNUC_MALLOC
 #define GNUC_UNUSED
 #define GNUC_NORETURN
 #define NO_SAN_DICT
+
+#define likely(x)
+#define unlikely(x)
 #endif
 
 

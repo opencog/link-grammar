@@ -48,6 +48,26 @@ typedef uint32_t connector_hash_t;
 #define CD_HEAD              (1<<1) /* 0: dependent; 1: head; */
 #define CD_PERMANENT         (1<<2) /* For SQL dict: Do not clear (future). */
 
+/* Validate connector string characters.
+ * Note that only ASCII characters are allowed. */
+static inline bool is_connector_name_char(unsigned char c)
+{
+	if (isupper(c)) return true;
+	if (unlikely(c == '_')) return true;
+
+	return false;
+}
+
+static inline bool is_connector_subscript_char(unsigned char c)
+{
+	if (islower(c)) return true;
+	if (unlikely(isdigit(c))) return true;
+	if (unlikely(c == '*')) return true;
+
+	return false;
+}
+/* End of connector string character validation. */
+
 /* The size of the following struct on a 64-bit machine is 32 bytes.
  * It should be kept at this size. If needed, head_dependent, uc_length
  * and uc_start can be eliminate or moved out. Also, there not enough

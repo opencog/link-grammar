@@ -14,7 +14,8 @@
 
 % Due clashes with the conventions of the library, the following
 % link characters are replaced:
-% _ is replaced by U.
+% 2_ is replaced by 2u
+% _ is replaced by U
 % Đ is replaced by V
 
 % Danh từ
@@ -79,14 +80,14 @@ cái chiếc tấm bộ con : TDT3+;
 
 % Trước danh từ 2
 những các mỗi mọi : TDT2+;
-% từng : TDT2+ or TVT2U1+ or TTT2U1+ or TST2U1+;
+% từng : TDT2+ or TVT2u1+ or TTT2u1+ or TST2u1+;
 
 % Trước danh từ 1
 toàn_thể tất_thảy tất_cả toàn_bộ bất_kỳ : TDT1+;
 
 % Số từ
 một hai ba 22 200 40 3 vài phần_lớn 9 5 :
-  (({TST2U1- or TST2U2-} & {{TST4-} & TST3-}
+  (({TST2u1- or TST2u2-} & {{TST4-} & TST3-}
       & {TST4-}) & {TST-}) & {DTUVT-} & STUDT+;
 
 khoảng chừng : TST+;
@@ -104,7 +105,7 @@ từ bởi cùng khỏi : GTUDT+ & (TTUGT- or VTUGT- or ({PH+} & CL+));
 
 ra vào theo sang :
   (GTUDT+ & (TTUGT- or VTUGT- or ({PH+} & CL+)))
-  or (((({TVT1-} & {TVT2U1-} & {{TVT4-} & TVT3-} & {TVT4-})
+  or (((({TVT1-} & {TVT2u1-} & {{TVT4-} & TVT3-} & {TVT4-})
       or {TTUVT-} or ({TTUVT-} & TVT5-))
     & {DTUVT- or VTUVT- or THIUVT- or LTUVT-}
     & {VTUXONG+} & {VTUDT+} & {VTUTT+}
@@ -120,7 +121,7 @@ này : GTUDT- or SDT6-;
 
 % Từ "là"
 là :
-  (({TVT1-} & {TVT2U1-} & {TVT3-} & {TVT4-})
+  (({TVT1-} & {TVT2u1-} & {TVT3-} & {TVT4-})
     or TVT5- or TTUVT-)
   & {DTULA- or THIUVT-} & {LAUDT+ or VTUTT+};
 
@@ -130,7 +131,7 @@ mơ.w đi_làm ngủ đi_ngủ ăn_nói đồng_ý trò_chuyện
 nấu_ăn gắng đứng_dậy hành_xử giao_kèo ở_lại tiến_hóa
 sinh_sản vật_lộn tắt_thở rơi_xuống thụ_phấn phát_quang :
 % [v]
-  ((({TVT1-} & {TVT2U1-} & {{TVT4-} & TVT3-} & {TVT4-})
+  ((({TVT1-} & {TVT2u1-} & {{TVT4-} & TVT3-} & {TVT4-})
       or TTUVT- or ({TTUVT-} & TVT5-))
     & {DTUVT- or VTUVT- or THIUVT- or LTUVT-}
     & {VTUXONG+} & {VTUTT+} & {VTUGT+} & {VTULT+}
@@ -146,7 +147,7 @@ nhìn_thấy chống_cự lấy chụp xếp thuộc săn_đuổi
 giúp sản_xuất phát_ra sử_dụng đưa sinh_hạ tìm_ra
 điều_trị đối_phó truyền tạo hy_vọng :
 % [v]
-  ((({TVT1-} & {TVT2U1-} & {TVT3-} & {TVT4-})
+  ((({TVT1-} & {TVT2u1-} & {TVT3-} & {TVT4-})
       or TTUVT-
       or ({TTUVT-} & TVT5-))
    & {DTUVT- or VTUVT- or THIUVT- or LTUVT- or BI-}
@@ -157,7 +158,7 @@ giúp sản_xuất phát_ra sử_dụng đưa sinh_hạ tìm_ra
 nói biết hỏi.v xác_nhận bác_bỏ bảo cho_rằng khẳng_định
 cho_biết trả lời.v :
 % [v]
-  ((({TVT1-} & {TVT2U1-} & {{TVT4-} & TVT3-} & {TVT4-})
+  ((({TVT1-} & {TVT2u1-} & {{TVT4-} & TVT3-} & {TVT4-})
       or TTUVT-
       or ({TTUVT-} & TVT5-)) & {DTUVT- or VTUVT- or THIUVT- or LTUVT-}
   & {VTUXONG+} & {VTUTT+} & {VTUGT+}
@@ -169,7 +170,7 @@ cho_biết trả lời.v :
 ra_lệnh bắt bắt_buộc ép nài_ép hỏi.w đòi_hỏi cấm cho_phép
 yêu_cầu đề_nghị kêu_gọi quyết_định cân_nhắc cảm_thấy :
 % [v]
-  ((({TVT1-} & {TVT2U1-} & {{TVT4-} & TVT3-} & {TVT4-})
+  ((({TVT1-} & {TVT2u1-} & {{TVT4-} & TVT3-} & {TVT4-})
      or TTUVT-
      or ({TTUVT-} & TVT5-)) & {DTUVT- or THIUVT- or LTUVT-}
    & {VTUXONG+} & {CL+} & {VTULT+ or VTUSS+}
@@ -178,7 +179,7 @@ yêu_cầu đề_nghị kêu_gọi quyết_định cân_nhắc cảm_thấy :
 % Động từ tình thái
 phải dám nỡ nên.v có_thể không_thể định :
 % [v]
-  (({TVT1-} & {TVT2U1- or TVT2U2-} & {{TVT4-} & TVT3-} & {TVT4-})
+  (({TVT1-} & {TVT2u1- or TVT2u2-} & {{TVT4-} & TVT3-} & {TVT4-})
       or TTUVT-
       or ({TTUVT-} & TVT5-)) & {DTUVT- or THIUVT- or LTUVT-}
     & VTUVT+ & {VTULT+ or VTUSS+} & {THT- or THS+}
@@ -187,7 +188,7 @@ phải dám nỡ nên.v có_thể không_thể định :
 muốn cần thích sợ mong mong_chờ tiếc hối_tiếc
 lo_lắng nhớ mơ.v ước quên kiên_nhẫn giận :
 % [v]
-  ((({TVT1-} & {TVT2U1- or TVT2U2-} & {{TVT4-} & TVT3-} & {TVT4-})
+  ((({TVT1-} & {TVT2u1- or TVT2u2-} & {{TVT4-} & TVT3-} & {TVT4-})
       or TTUVT-
       or ({TTUVT-} & TVT5-)) & {DTUVT- or THIUVT- or LTUVT-}
     & {VTUDT+ or VTUVT+ or VTUTT+} & {SVT+} & {THT- or THS+}
@@ -196,7 +197,7 @@ lo_lắng nhớ mơ.v ước quên kiên_nhẫn giận :
 % Động từ chỉ sự bắt đầu, tiếp diễn
 bắt_đầu tiếp_tục thôi dừng kết_thúc :
 % [v]
-  ((({TVT1-} & {TVT2U1-} & {{TVT4-} & TVT3-} & {TVT4-})
+  ((({TVT1-} & {TVT2u1-} & {{TVT4-} & TVT3-} & {TVT4-})
       or TTUVT-
       or ({TTUVT-} & TVT5-)) & {DTUVT- or VTUVT- or THIUVT- or LTUVT-}
   & {VTUXONG+} & {VTUDT+ or @VTUVT+} & {VTUTT+}
@@ -207,10 +208,10 @@ bắt_đầu tiếp_tục thôi dừng kết_thúc :
 thường hay luôn : TVT1+ or TTT1+ or TST1+;
 
 % Trước động từ 2.1 và tính từ 2.1
-không chẳng chưa chưa_từng : TVT2U1+ or TTT2U1+ or TST2U1+;
+không chẳng chưa chưa_từng : TVT2u1+ or TTT2u1+ or TST2u1+;
 
 % Trước động từ 2.2 và tính từ 2.2
-rất hơi khá chỉ : TVT2U2+ or TTT2U2+ or TST2U2+;
+rất hơi khá chỉ : TVT2u2+ or TTT2u2+ or TST2u2+;
 
 % Trước động từ 3 và tính từ 3
 đã đang sẽ vừa mới sắp sắp_sửa : TVT3+ or TTT3+ or TST3+;
@@ -222,9 +223,9 @@ cũng vẫn còn cứ : TVT4+ or TTT4+ or TST4+;
 đừng chớ : TVT5+ or TTT5+;
 
 % Từ "bị", "được"
-bị : (({TVT1-} & {TVT2U1- or TVT2U2-} & {TVT3-} & {TVT4-}) or TVT5-) & {DTUVT- or SDT5- or THIUVT- or LTUVT- or VTUVT-} & BI+ & {VTULT+} & ({THT-} or {THS+} or ({EV+} & {CL-} & {CO-}));
+bị : (({TVT1-} & {TVT2u1- or TVT2u2-} & {TVT3-} & {TVT4-}) or TVT5-) & {DTUVT- or SDT5- or THIUVT- or LTUVT- or VTUVT-} & BI+ & {VTULT+} & ({THT-} or {THS+} or ({EV+} & {CL-} & {CO-}));
 
-được : ((({TVT1-} & {TVT2U1- or TVT2U2-} & {TVT3-} & {TVT4-}) or TVT5-) & {DTUVT- or SDT5- or THIUVT- or LTUVT- or VTUVT-} & BI+ & {VTULT+} & ({THT-} or {THS+} or ({EV+} & {CL-} & {CO-}))) or VTUXONG-;
+được : ((({TVT1-} & {TVT2u1- or TVT2u2-} & {TVT3-} & {TVT4-}) or TVT5-) & {DTUVT- or SDT5- or THIUVT- or LTUVT- or VTUVT-} & BI+ & {VTULT+} & ({THT-} or {THS+} or ({EV+} & {CL-} & {CO-}))) or VTUXONG-;
 
 % Tính từ
 tốt đẹp xấu sạch bẩn đỏ xanh vàng đen trắng
@@ -235,10 +236,10 @@ hạnh_phúc gần cuối_cùng chuyên_nghiệp lập_tức gay_gắt
 riêng muộn đắt chăm thấp tuyệt_vời rõ_ràng chính_thức
 hoàn_toàn có_thật chung đơn_tính quan_trọng có_ích
 hiện_đại hiệu_quả lùn :
-(({TTT1-} & {TTT2U1- or TTT2U2-} & {{TTT4-} & TTT3-} & {TTT4-}) or TTT5- or TTUTT-) & {TTUTT+} & {DTUTT- or SDT2- or TT- or VTUTT- or THIUTT- or BI-} & {TTUVT+ or TTUGT+ or TTULT+} & {STT+ or TTUSS+} & {THT- or THS+} & {EV+} & {CL-} & {CO-};
+(({TTT1-} & {TTT2u1- or TTT2u2-} & {{TTT4-} & TTT3-} & {TTT4-}) or TTT5- or TTUTT-) & {TTUTT+} & {DTUTT- or SDT2- or TT- or VTUTT- or THIUTT- or BI-} & {TTUVT+ or TTUGT+ or TTULT+} & {STT+ or TTUSS+} & {THT- or THS+} & {EV+} & {CL-} & {CO-};
 
 nhiều ít tân :
-(({TTT1-} & {TTT2U1- or TTT2U2-} & {{TTT4-} & TTT3-} & {TTT4-}) or TTT5- or TTUTT-) & (({TTUTT+} & {DTUTT- or SDT2- or VTUTT- or THIUTT- or BI-} & {TTUVT+ or TTUGT+} & {STT+ or TTUSS+} & {THT- or THS+} & ({EV+} & {CL-} & {CO-})) or STUDT-);
+(({TTT1-} & {TTT2u1- or TTT2u2-} & {{TTT4-} & TTT3-} & {TTT4-}) or TTT5- or TTUTT-) & (({TTUTT+} & {DTUTT- or SDT2- or VTUTT- or THIUTT- or BI-} & {TTUVT+ or TTUGT+} & {STT+ or TTUSS+} & {THT- or THS+} & ({EV+} & {CL-} & {CO-})) or STUDT-);
 
 % Sau tính từ
 lắm quá : STT- or SVT-;

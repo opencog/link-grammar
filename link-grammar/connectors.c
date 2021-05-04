@@ -284,20 +284,27 @@ static void connector_encode_lc(const char *lc_string, condesc_t *desc)
  * Calculate fixed connector information that only depend on its string.
  * This information is used to speed up the parsing stage. It is
  * calculated during the directory creation and doesn't change afterward.
+ *
+ * Note: check_connector() has already validated the connector string.
  */
 static void calculate_connector_info(condesc_t * c)
 {
 	const char *s;
 
 	s = c->string;
-	if (islower(*s)) s++; /* Ignore head-dependent indicator. */
-	if ((c->string[0] == 'h') || (c->string[0] == 'd'))
-		c->flags |= CD_HEAD_DEPENDENT;
-	if (c->string[0] == 'h')
-		c->flags |= CD_HEAD;
+	if (islower(*s))
+	{
+		dassert((c->string[0] == 'h') || (c->string[0] == 'd'),
+	        "\'%c\': Bad head/dependent character", c->string[0]);
+
+		if ((*s == 'h') || (*s == 'd')) c->flags |= CD_HEAD_DEPENDENT;
+		if (*s == 'h') c->flags |= CD_HEAD;
+		s++; /* Ignore head-dependent indicator. */
+	}
 
 	c->uc_start = (uint8_t)(s - c->string);
-	while (isupper(*++s)) {} /* Skip the uppercase part. */
+	/* Skip the uppercase part. */
+	do { s++; } while (is_connector_name_char(*s));
 	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
 
 	connector_encode_lc(s, c);
@@ -315,7 +322,7 @@ static uint32_t connector_str_hash(const char *s)
 #ifdef USE_DJB2
 	/* djb2 hash. */
 	uint32_t i = 5381;
-	while (isupper(*s)) /* Connector tables cannot contain UTF8. */
+	while (is_connector_name_char(*s))
 	{
 		i = ((i << 5) + i) + *s;
 		s++;
@@ -327,7 +334,7 @@ static uint32_t connector_str_hash(const char *s)
 #ifdef USE_JENKINS
 	/* Jenkins one-at-a-time hash. */
 	uint32_t i = 0;
-	while (isupper(*s)) /* Connector tables cannot contain UTF8. */
+	while (is_connector_name_char(*s))
 	{
 		i += *s;
 		i += (i<<10);
@@ -343,7 +350,7 @@ static uint32_t connector_str_hash(const char *s)
 	/* sdbm hash. */
 	uint32_t i = 0;
 	c->uc_start = s - c->string;
-	while (isupper(*s))
+	while (is_connector_name_char(*s))
 	{
 		i = *s + (i << 6) + (i << 16) - i;
 		s++;

@@ -14,6 +14,7 @@
 #include <string.h>
 
 #include "api-structures.h"             // Sentence_s (add_empty_word)
+#include "connectors.h"
 #include "dict-common/dialect.h"
 #include "dict-common/dict-affix.h"     // is_stem
 #include "dict-common/dict-common.h"
@@ -151,7 +152,7 @@ static void dict_error2(Dictionary dict, const char * s, const char *s2)
 	if (s2)
 	{
 		prt_error("Error: While parsing dictionary \"%s\":\n"
-		          "%s %s\n\t Line %d, next tokens: %s\n",
+		          "%s \"%s\"\n\t Line %d, next tokens: %s\n",
 		          dict->name, s, s2, dict->line_number, tokens);
 	}
 	else
@@ -226,7 +227,7 @@ static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 			uc[i] = c;
 			i++;
 		}
-		dict_error(dict, "UTF8 char is too long");
+		dict_error(dict, "UTF8 char is too long.");
 		return false;
 	}
 	uc[0] = 0x0;
@@ -297,7 +298,7 @@ static bool link_advance(Dictionary dict)
 	for (;;)
 	{
 		if (i > MAX_TOKEN_LENGTH-3) {
-			dict_error(dict, "Token too long");
+			dict_error(dict, "Token too long.");
 			return false;
 		}
 		if (quote_mode) {
@@ -310,12 +311,12 @@ static bool link_advance(Dictionary dict)
 				return true;
 			}
 			if (lg_isspace(c[0])) {
-				dict_error(dict, "White space inside of token");
+				dict_error(dict, "White space inside of token.");
 				return false;
 			}
 			if (c[0] == '\0')
 			{
-				dict_error(dict, "EOF while reading quoted token");
+				dict_error(dict, "EOF while reading quoted token.");
 				return false;
 			}
 
@@ -387,34 +388,32 @@ static bool check_connector(Dictionary dict, const char * s)
 	}
 	if (*s == '@') s++;
 	if (('h' == *s) || ('d' == *s)) s++;
-	if (!isupper((unsigned char)*s)) {
-		dict_error(dict, "Connectors must start with uppercase after an optional h or d.");
+	if (!is_connector_name_char(*s)) {
+		dict_error2(dict, "Invalid character in connector "
+		            "(connectors must start with an uppercase letter "
+		            "after an optional \"h\" or \"d\"):", (char[]){*s, '\0'});
+		return false;
+	}
+	if (*s == '_')
+	{
+		dict_error(dict, "Invalid character in connector "
+		           "(an initial \"_\" is reserved for internal use).");
 		return false;
 	}
 	/* Note that IDx when x is a subscript is allowed (to allow e.g. ID4id+). */
 	if ((*s == 'I') && (*(s+1) == 'D') && isupper((unsigned char)*(s+2))) {
-		dict_error(dict, "Connectors beginning with \"ID\" are forbidden");
+		dict_error(dict, "Connectors beginning with \"ID\" are forbidden.");
 		return false;
 	}
 
-	bool connector_base = true;
-	s++; /* The first uppercase has been validated above. */
-	while (*(s+1)) {
-		if ((!isalnum((unsigned char)*s)) && (*s != WILD_TYPE)) {
-			dict_error(dict, "All letters of a connector must be ASCII alpha-numeric.");
+	/* The first uppercase has been validated above. */
+	do { s++; } while (is_connector_name_char(*s));
+	while (s[1]) {
+		if (!is_connector_subscript_char(*s) && (*s != WILD_TYPE)) {
+			dict_error2(dict, "Invalid character in connector subscript "
+			            "(only lowercase letters, digits, and \"*\" are allowed):",
+			            (char[]){*s, '\0'});
 			return false;
-		}
-		if (isupper((unsigned char)*s))
-		{
-			if (!connector_base)
-			{
-				dict_error(dict, "Connector subscript contains uppercase.");
-				return false;
-			}
-		}
-		else
-		{
-			connector_base = false;
 		}
 		s++;
 	}
@@ -1296,7 +1295,7 @@ static Exp *make_expression(Dictionary dict)
 		{
 			if (e_head->type != op)
 			{
-				dict_error(dict, "\"and\" and \"or\" at the same level in an expression");
+				dict_error(dict, "\"and\" and \"or\" at the same level in an expression.");
 				return NULL;
 			}
 		}
