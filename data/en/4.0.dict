@@ -2512,7 +2512,7 @@ per "/.per": Us+ & Mp-;
 <verb-pl>:   {@E-} & ((Sp- & {hPFt-} & <verb-wall>) or (RS- & Bp-));
 <verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-));
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
-<verb-pg>:   {@E-} & (({[Sg-]-0.2} & Pg-) or Mg-);
+<verb-pg>:   {@E-} & (({[Sg-]-0.2} & Pg-) or Mg- or Wg-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % Pv- & OFj+: "knowledge was gained of the activities"
@@ -9266,7 +9266,7 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % Wv+ with a wall: why-verb questions: "whey even go there?"
 %
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
-<wo-wall>: hWa+ or hWb+ or hWi+ or hWn+ or hWw+ or hWx+ or hQd+;
+<wo-wall>: hWa+ or hWb+ or hWg+ or hWi+ or hWn+ or hWw+ or hWx+ or hQd+;
 <wi-wall>: (hWd+ or hWp+ or hWr+ or hWq+ or hWs+ or hWj+ or hWc+ or hWe+
    or hWt+ or hWo+ or hWv+ or hQd+) & <WALL>;
 
