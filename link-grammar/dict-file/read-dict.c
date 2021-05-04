@@ -1428,8 +1428,7 @@ static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 		.operand_next = NULL,
 	};
 
-	/* Suppress reporting duplicate idioms unless requested. */
-	if (dup_idioms && !contains_underbar(newnode->string))
+	if (!contains_underbar(newnode->string) || dup_idioms)
 	{
 		dict_error2(dict, "Ignoring word which has been multiply defined:",
 		            newnode->string);
