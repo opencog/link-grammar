@@ -7305,6 +7305,8 @@ flat_out: K-;
 % EN- & Pp-: "you are halfway out"
 % EN- & J-: "We stopped, about halfway up"
 % {J+} & <fronted>: "Down the stairs came the dog", "Down came the dog".
+% Wl- & MVp+: "out to lunch"
+% Wl- & Pg+: "out walking the dog"
 out.r up.r down.r:
   ({Yd-} & {JQ+} & ([J+] or [[MVp+]]) & (({Xd- & Xc+} & <adv-as>) or FM-))
   or K-
@@ -7312,6 +7314,7 @@ out.r up.r down.r:
   or (EN- & (Pp- or J-))
   or ({J+} & <fronted>)
   or <locative>
+  or (Wl- & (MVp+ or Pg+))
   or [MVp- & B-];
 
 
