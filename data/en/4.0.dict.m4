@@ -2643,7 +2643,8 @@ per "/.per": Us+ & Mp-;
     or [DP- & J-]
     or [<fronted> & {@MV+}]
     or Mg-
-    or Pg-);
+    or Pg-
+    or Wg-);
 
 <verb-phrase-opener>:
   {@E-} & {@MV+} & (
@@ -2689,9 +2690,9 @@ per "/.per": Us+ & Mp-;
 <verb-x-s>: {@E-} & (Ss- or SFs- or (RS- & Bs-));
 <verb-x-s,u>: {@E-} & (Ss- or SFs- or SFu- or (RS- & Bs-));
 <verb-x-sp,pp>: {@E-} & (Ss- or Sp- or SF- or PPf- or (RS- & B-));
-<verb-x-sp>: {@E-} & (Ss- or Sp- or SF- or (RS- & B-));
+<verb-x-sp>: {@E-} & (Ss- or Sp- or SF- or (RS- & B-) or Wg-);
 <verb-x-pp>: {@E-} & PPf- & <verb-wall>;
-<verb-x-pg>: {@E-} & (Pgf- or Mg-);
+<verb-x-pg>: {@E-} & (Pgf- or Mg- or Wg-);
 
 % No verb-wall for <verb-x-pg>: "Is there going to be a problem?"
 <verb-x-pg,ge>:
