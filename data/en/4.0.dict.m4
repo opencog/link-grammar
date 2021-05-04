@@ -2513,6 +2513,7 @@ per "/.per": Us+ & Mp-;
 % <verb-pp>: PP- & WV-: "I have seen it".
 % <verb-pg>: Pg- is naked, no verb-wall: "I like eating bass."
 % <verb-pg>: Sg- & Pg-: "I feel him breathing down my back"
+% Wg-: "Rode a bike today"
 %
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
@@ -2522,7 +2523,7 @@ per "/.per": Us+ & Mp-;
 <verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-));
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
 <verb-pg>:   {@E-} & (({[Sg-]-0.2} & Pg-) or Mg- or Wg-);
-<verb-sp,pp>: <verb-sp> or <verb-pp>;
+<verb-sp,pp>: <verb-sp> or <verb-pp> or ({@E-} & Wg-);
 
 % Pv- & OFj+: "knowledge was gained of the activities"
 <verb-pv>:
