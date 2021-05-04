@@ -2518,12 +2518,12 @@ per "/.per": Us+ & Mp-;
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
 %
-<verb-s>:    {@E-} & ((Ss- & {hPFt-} & <verb-wall>) or (RS- & Bs-));
-<verb-pl>:   {@E-} & ((Sp- & {hPFt-} & <verb-wall>) or (RS- & Bp-));
-<verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-));
+<verb-s>:    {@E-} & ((Ss- & {hPFt-} & <verb-wall>) or (RS- & Bs-) or Wg-);
+<verb-pl>:   {@E-} & ((Sp- & {hPFt-} & <verb-wall>) or (RS- & Bp-) or Wg-);
+<verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-) or Wg-);
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
 <verb-pg>:   {@E-} & (({[Sg-]-0.2} & Pg-) or Mg- or Wg-);
-<verb-sp,pp>: <verb-sp> or <verb-pp> or ({@E-} & Wg-);
+<verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % Pv- & OFj+: "knowledge was gained of the activities"
 <verb-pv>:
