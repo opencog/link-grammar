@@ -534,7 +534,7 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
 	const char * t = dn->string;
 
 	lgdebug(+D_DOW, "search-word='%s' dict-word='%s'\n", s, t);
-	while((*s != '\0') && (*s != SUBSCRIPT_MARK) && (*s == *t)) {s++; t++;}
+	while((*s == *t) && (*s != SUBSCRIPT_MARK) && (*s != '\0')) { s++; t++; }
 
 	if (*s == WILD_TYPE) return 0;
 
