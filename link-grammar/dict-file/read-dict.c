@@ -544,6 +544,13 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
 }
 #undef D_DOW
 
+static inline Dict_node * dict_node_new(void)
+{
+	return (Dict_node*) malloc(sizeof(Dict_node));
+}
+
+/* ======================================================================== */
+#if 0
 /**
  * dict_match --  return true if strings match, else false.
  * A "bare" string (one without a subscript) will match any corresponding
@@ -561,13 +568,6 @@ static bool dict_match(const char * s, const char * t)
 	if ((*s == SUBSCRIPT_MARK) && (*t == 0)) return true;
 
 	return false;
-}
-
-/* ======================================================================== */
-
-static inline Dict_node * dict_node_new(void)
-{
-	return (Dict_node*) malloc(sizeof(Dict_node));
 }
 
 /**
@@ -606,6 +606,7 @@ static Dict_node * prune_lookup_list(Dict_node * restrict llist, const char * re
 	}
 	return llist;
 }
+#endif
 
 /* ======================================================================== */
 static bool subscr_match(const char *s, const Dict_node * dn)
@@ -675,10 +676,7 @@ rdictionary_lookup(Dict_node * restrict llist,
  */
 Dict_node * file_lookup_list(const Dictionary dict, const char *s)
 {
-	Dict_node * llist =
-		rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);
-	llist = prune_lookup_list(llist, s);
-	return llist;
+	return rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);
 }
 
 bool file_boolean_lookup(Dictionary dict, const char *s)
@@ -750,10 +748,7 @@ Dict_node * file_lookup_wild(Dictionary dict, const char *s)
  */
 static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 {
-	Dict_node *llist;
-	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
-	llist = prune_lookup_list(llist, s);
-	return llist;
+	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
 }
 
 #if 0
@@ -773,10 +768,7 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
  */
 static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 {
-	Dict_node *llist;
-	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
-	llist = prune_lookup_list(llist, s);
-	return llist;
+	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
 }
 #endif
 
