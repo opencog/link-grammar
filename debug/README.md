@@ -56,9 +56,6 @@ messages of the lower ones.
 
 * 102: Print all disjuncts before and after pruning.
 
-* 103: Show unsubscripted dictionary words and subscripted ones which share
-       the same base word.
-
 * 104: Memory pool statistics.
 
 (These level descriptions appear also in the command-help file `command-help-en.txt`

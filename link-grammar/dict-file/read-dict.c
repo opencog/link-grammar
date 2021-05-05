@@ -1407,19 +1407,32 @@ static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
 
 /* ======================================================================== */
 /**
- * Notify about a duplicate word, unless it is an idiom definition.
+ * Notify about a duplicate word, unless allowed or it is an idiom definition.
  * Idioms are exempt because historically they couldn't be
  * differentiated using a subscript if duplicate definitions were
  * convenience (and also they were not inserted into the dictionary so
  * their duplicate check got neglected).
  *
+ * The following dictionary definition allows duplicate words:
+ * #define allow-duplicate-words true
  * An idiom duplicate check can be requested using the test "dup-idioms".
  */
 static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 {
 	static int dup_idioms = -1;
-	if (dup_idioms == -1) dup_idioms = (int)!!test_enabled("dup-idioms");
+	static int allow_duplicate_words = -1;
 
+	if (allow_duplicate_words == 1) return false;
+	if (allow_duplicate_words == -1)
+	{
+		const char *s = linkgrammar_get_dict_define(dict, "allow-duplicate-words");
+
+		allow_duplicate_words = ((s != NULL) && (0 == strcasecmp(s, "true")));
+		if (allow_duplicate_words) return false;
+		if (dup_idioms == -1) dup_idioms = !!test_enabled("dup-idioms");
+	}
+
+	/* FIXME: Make central. */
 	static Exp null_exp =
 	{
 		.type = AND_type,
@@ -1427,8 +1440,7 @@ static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 		.operand_next = NULL,
 	};
 
-	/* Suppress reporting duplicate idioms unless requested. */
-	if (dup_idioms && !contains_underbar(newnode->string))
+	if (!contains_underbar(newnode->string) || dup_idioms)
 	{
 		dict_error2(dict, "Ignoring word which has been multiply defined:",
 		            newnode->string);
