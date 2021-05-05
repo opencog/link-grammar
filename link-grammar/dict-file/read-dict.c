@@ -970,9 +970,10 @@ static Exp * make_connector(Dictionary dict)
 		if (dn == NULL)
 		{
 			file_free_lookup(dn_head);
-			dict_error(dict, "Perhaps missing + or - in a connector.\n"
+			dict_error2(dict, "Perhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the subscript on a word.\n"
-			                 "Or perhaps a word is used before it is defined.");
+			                 "Or perhaps the word is used before it is defined:",
+			                 dict->token);
 			return NULL;
 		}
 
