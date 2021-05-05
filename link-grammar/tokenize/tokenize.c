@@ -3152,7 +3152,10 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 #endif /* DEBUG */
 		if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-			if (NULL == strstr(s, WILDCARD_WORD))
+			bool is_wildcard = !IS_GENERATION(dict) &&
+				(NULL == strstr(s, WILDCARD_WORD));
+
+			if (!IS_GENERATION(dict) || !is_wildcard)
 			{
 				we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
 				assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
