@@ -2716,8 +2716,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	if (!word_can_lrmsplit && !word_is_known &&
 	    !contains_digits(word, dict->lctype) &&
 	    !is_proper_name(word, dict->lctype) &&
-	    opts->use_spell_guess && dict->spell_checker &&
-	    !strstr(word, WILDCARD_WORD))
+	    opts->use_spell_guess && dict->spell_checker)
 	{
 		bool spell_suggest = guess_misspelled_word(sent, unsplit_word, opts);
 		lgdebug(+D_SW, "Spell suggest=%d\n", spell_suggest);
