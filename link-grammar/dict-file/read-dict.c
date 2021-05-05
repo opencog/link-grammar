@@ -635,7 +635,6 @@ rdictionary_lookup(Dict_node * restrict llist,
                    bool match_idiom,
                    int (*dict_order)(const char *, const Dict_node *))
 {
-	/* see comment in dictionary_lookup below */
 	int m;
 	Dict_node * dn_new;
 	if (dn == NULL) return llist;
