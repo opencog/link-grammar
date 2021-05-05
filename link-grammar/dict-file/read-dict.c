@@ -612,10 +612,13 @@ static Dict_node * prune_lookup_list(Dict_node * restrict llist, const char * re
 static bool subscr_match(const char *s, const Dict_node * dn)
 {
 	const char * s_sub = strrchr(s, SUBSCRIPT_MARK);
-	const char * t_sub;
+	const char * t_sub = strrchr(dn->string, SUBSCRIPT_MARK);
 
-	if (NULL == s_sub) return true;
-	t_sub = strrchr(dn->string, SUBSCRIPT_MARK);
+	if (NULL == s_sub)
+	{
+		if (NULL == t_sub) return true;
+		return !is_idiom_word(t_sub);
+	}
 	if (NULL == t_sub) return false;
 	if (0 == strcmp(s_sub, t_sub)) return true;
 
@@ -714,7 +717,6 @@ void free_insert_list(Dict_node *ilist)
  */
 Dict_node * file_lookup_wild(Dictionary dict, const char *s)
 {
-	bool lookup_idioms = test_enabled("lookup-idioms");
 	char * ds = strrchr(s, SUBSCRIPT_DOT); /* Only the rightmost dot is a
 	                                          candidate for SUBSCRIPT_DOT */
 	char * ws = strrchr(s, WILD_TYPE);     /* A SUBSCRIPT_DOT can only appear
@@ -727,8 +729,7 @@ Dict_node * file_lookup_wild(Dictionary dict, const char *s)
 	if ((NULL != ds) && ('\0' != ds[1]) && ((NULL == ws) || (ds > ws)))
 		stmp[ds-s] = SUBSCRIPT_MARK;
 
-	result =
-	 rdictionary_lookup(NULL, dict->root, stmp, lookup_idioms, dict_order_wild);
+	result = rdictionary_lookup(NULL, dict->root, stmp, true, dict_order_wild);
 	free(stmp);
 	return result;
 }
