@@ -400,11 +400,6 @@ static bool check_connector(Dictionary dict, const char * s)
 		           "(an initial \"_\" is reserved for internal use).");
 		return false;
 	}
-	/* Note that IDx when x is a subscript is allowed (to allow e.g. ID4id+). */
-	if ((*s == 'I') && (*(s+1) == 'D') && isupper((unsigned char)*(s+2))) {
-		dict_error(dict, "Connectors beginning with \"ID\" are forbidden.");
-		return false;
-	}
 
 	/* The first uppercase has been validated above. */
 	do { s++; } while (is_connector_name_char(*s));
