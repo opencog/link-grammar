@@ -3022,7 +3022,7 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 	X_node * x, * y;
 	const Dictionary dict = sent->dict;
 
-	if (NULL != strstr(w->subword, WILDCARD_WORD))
+	if (IS_GENERATION(dict) && (NULL != strstr(w->subword, WILDCARD_WORD)))
 	{
 		if (0 == strcmp(w->subword, WILDCARD_WORD))
 		{
