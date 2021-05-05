@@ -733,6 +733,7 @@ Dict_node * file_lookup_wild(Dictionary dict, const char *s)
 	return result;
 }
 
+#if 0
 /**
  * abridged_lookup_list() - return lookup list of words in the dictionary
  *
@@ -749,13 +750,12 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 {
 	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
 }
+#endif
 
-#if 0
 /**
  * strict_lookup_list() - return exact match in the dictionary
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
- * Excludes any idioms that contain the word.
  *
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
@@ -767,9 +767,8 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
  */
 static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 {
-	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
+	return rdictionary_lookup(NULL, dict->root, s, true, dict_order_strict);
 }
-#endif
 
 /* ======================================================================== */
 /**
@@ -951,7 +950,7 @@ static unsigned int exptag_macro_add(Dictionary dict, const char *tag)
 static Exp * make_connector(Dictionary dict)
 {
 	Exp * n;
-	Dict_node *dn, *dn_head;
+	Dict_node *dn;
 	int i;
 
 	i = strlen(dict->token) - 1;  /* this must be +, - or $ if a connector */
@@ -961,19 +960,21 @@ static Exp * make_connector(Dictionary dict)
 	{
 		/* If we are here, token is a word */
 		patch_subscript(dict->token);
-		dn_head = abridged_lookup_list(dict, dict->token);
-		dn = dn_head;
-		while ((dn != NULL) && (strcmp(dn->string, dict->token) != 0))
-		{
-			dn = dn->right;
-		}
+		dn = strict_lookup_list(dict, dict->token);
 		if (dn == NULL)
 		{
-			file_free_lookup(dn_head);
+			file_free_lookup(dn);
 			dict_error2(dict, "Perhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the subscript on a word.\n"
 			                 "Or perhaps the word is used before it is defined:",
 			                 dict->token);
+			return NULL;
+		}
+		if (dn->right != NULL)
+		{
+			file_free_lookup(dn);
+			dict_error2(dict, "Referencing a duplicate word:", dict->token);
+			/* Note: A word which becomes duplicate latter evades this check. */
 			return NULL;
 		}
 
@@ -982,7 +983,7 @@ static Exp * make_connector(Dictionary dict)
 		n->tag_id = exptag_macro_add(dict, dn->string);
 		if (n->tag_id != 0) n->tag_type = Exptag_macro;
 
-		file_free_lookup(dn_head);
+		file_free_lookup(dn);
 	}
 	else
 	{
