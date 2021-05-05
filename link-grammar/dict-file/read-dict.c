@@ -722,7 +722,7 @@ Dict_node * file_lookup_wild(Dictionary dict, const char *s)
 	char * ws = strrchr(s, WILD_TYPE);     /* A SUBSCRIPT_DOT can only appear
                                              after a wild-card */
 	Dict_node * result;
-	char * stmp = strdup(s);
+	char * stmp = strdupa(s);
 
 	/* It is not a SUBSCRIPT_DOT if it is at the end or before the wild-card.
 	 * E.g: "Dr.", "i.*", "." */
@@ -730,7 +730,6 @@ Dict_node * file_lookup_wild(Dictionary dict, const char *s)
 		stmp[ds-s] = SUBSCRIPT_MARK;
 
 	result = rdictionary_lookup(NULL, dict->root, stmp, true, dict_order_wild);
-	free(stmp);
 	return result;
 }
 
