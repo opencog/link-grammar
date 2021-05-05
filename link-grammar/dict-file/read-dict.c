@@ -635,7 +635,7 @@ static Dict_node *
 rdictionary_lookup(Dict_node * restrict llist,
                    Dict_node * restrict dn,
                    const char * restrict s,
-                   bool match_idiom,
+						 bool boolean_lookup,
                    int (*dict_order)(const char *, const Dict_node *))
 {
 	int m;
@@ -646,11 +646,11 @@ rdictionary_lookup(Dict_node * restrict llist,
 
 	if (m >= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, dict_order);
+		llist = rdictionary_lookup(llist, dn->right, s, boolean_lookup, dict_order);
 	}
-	if ((m == 0) && (match_idiom || !is_idiom_word(dn->string)) &&
-		 (dict_order != dict_order_wild || subscr_match(s, dn)))
+	if ((m == 0) && (dict_order != dict_order_wild || subscr_match(s, dn)))
 	{
+		if (boolean_lookup) return dn;
 		dn_new = dict_node_new();
 		*dn_new = *dn;
 		dn_new->right = llist;
@@ -659,7 +659,7 @@ rdictionary_lookup(Dict_node * restrict llist,
 	}
 	if (m <= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, dict_order);
+		llist = rdictionary_lookup(llist, dn->left, s, boolean_lookup, dict_order);
 	}
 	return llist;
 }
@@ -668,8 +668,6 @@ rdictionary_lookup(Dict_node * restrict llist,
  * file_lookup_list() - return list of words in the file-backed dictionary.
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
- * Matches include words that appear in idioms.  To exclude idioms, use
- * abridged_lookup_list() to obtain matches.
  *
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
@@ -678,15 +676,12 @@ rdictionary_lookup(Dict_node * restrict llist,
  */
 Dict_node * file_lookup_list(const Dictionary dict, const char *s)
 {
-	return rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);
+	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
 }
 
 bool file_boolean_lookup(Dictionary dict, const char *s)
 {
-	Dict_node *llist = file_lookup_list(dict, s);
-	bool boool = (llist != NULL);
-	file_free_lookup(llist);
-	return boool;
+	return !!rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);
 }
 
 void file_free_lookup(Dict_node *llist)
@@ -729,7 +724,7 @@ Dict_node * file_lookup_wild(Dictionary dict, const char *s)
 	if ((NULL != ds) && ('\0' != ds[1]) && ((NULL == ws) || (ds > ws)))
 		stmp[ds-s] = SUBSCRIPT_MARK;
 
-	result = rdictionary_lookup(NULL, dict->root, stmp, true, dict_order_wild);
+	result = rdictionary_lookup(NULL, dict->root, stmp, false, dict_order_wild);
 	return result;
 }
 
@@ -767,7 +762,7 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
  */
 static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 {
-	return rdictionary_lookup(NULL, dict->root, s, true, dict_order_strict);
+	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
 }
 
 /* ======================================================================== */
