@@ -94,7 +94,9 @@ Parse_Options parse_options_create(void)
 	po->min_null_count = 0;
 	po->max_null_count = 0;
 	po->islands_ok = false;
+#if USE_SAT_SOLVER
 	po->use_sat_solver = false;
+#endif
 	po->linkage_limit = 100;
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 	po->use_spell_guess = 7;
@@ -269,7 +271,11 @@ void parse_options_set_use_sat_parser(Parse_Options opts, bool dummy) {
 }
 
 bool parse_options_get_use_sat_parser(Parse_Options opts) {
+#if USE_SAT_SOLVER
 	return opts->use_sat_solver;
+#else
+	return false;
+#endif
 }
 
 void parse_options_set_linkage_limit(Parse_Options opts, int dummy)
@@ -631,11 +637,13 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	if (IS_GENERATION(sent->dict))
 	{
+#if USE_SAT_SOLVER
 		if (opts->use_sat_solver)
 		{
 			prt_error("Error: Cannot use the SAT parser in generation mode\n");
 			return -3;
 		}
+#endif
 		if (opts->max_null_count > 0)
 		{
 			prt_error("Error: Cannot parse with nulls in generation mode\n");
@@ -692,11 +700,13 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	 */
 	expression_prune(sent, opts);
 	print_time(opts, "Finished expression pruning");
+#if USE_SAT_SOLVER
 	if (opts->use_sat_solver)
 	{
 		sat_parse(sent, opts);
 	}
 	else
+#endif
 	{
 		classic_parse(sent, opts);
 	}
