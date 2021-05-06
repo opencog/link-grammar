@@ -37,7 +37,7 @@ typedef enum
 
 #ifndef SWIG
 static const int cost_max_dec_places = 3;
-static const double cost_epsilon = 1E-5;
+static const float cost_epsilon = 1E-5;
 
 #define EXPTAG_SZ 100 /* Initial size for the Exptag array. */
 typedef enum { Exptag_none=0, Exptag_dialect, Exptag_macro } Exptag_type;
@@ -95,8 +95,8 @@ typedef struct
 } Category_cost;
 
 #ifndef SWIG
-bool cost_eq(double cost1, double cost2);
-const char *cost_stringify(double cost);
+bool cost_eq(float cost1, float cost2);
+const char *cost_stringify(float cost);
 #endif /* !SWIG */
 
 /* API to access the above structure. */

@@ -194,8 +194,8 @@ static Exp* purge_Exp(exprune_context *ctxt, int, Exp *, char);
 static bool or_purge_operands(exprune_context *ctxt, int w, Exp *e, char dir)
 {
 #if NOTYET
-	const double nullexp_nonexistence = -9999;
-	double nullexp_mincost = nullexp_nonexistence;
+	const float nullexp_nonexistence = -9999;
+	float nullexp_mincost = nullexp_nonexistence;
 	int nullexp_count = 0;
 #endif
 

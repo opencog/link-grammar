@@ -30,7 +30,7 @@
 #include "utilities.h"                  // GNU_UNUSED
 /* ======================================================================== */
 
-bool cost_eq(double cost1, double cost2)
+bool cost_eq(float cost1, float cost2)
 {
 	return (fabs(cost1 - cost2) < cost_epsilon);
 }
@@ -38,7 +38,7 @@ bool cost_eq(double cost1, double cost2)
 /**
  * Convert cost to a string with at most cost_max_dec_places decimal places.
  */
-const char *cost_stringify(double cost)
+const char *cost_stringify(float cost)
 {
 	static TLS char buf[16];
 
@@ -119,7 +119,7 @@ static void print_expression_tag_end(Dictionary dict, dyn_str *e, const Exp *n,
 	}
 }
 
-static void get_expression_cost(const Exp *e, unsigned int *icost, double *dcost)
+static void get_expression_cost(const Exp *e, unsigned int *icost, float *dcost)
 {
 	if (e->cost < -cost_epsilon)
 	{
@@ -170,7 +170,7 @@ static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
                                     bool need_parens, int *indent)
 {
 	unsigned int icost;
-	double dcost;
+	float dcost;
 	get_expression_cost(n, &icost, &dcost);
 	for (unsigned int i = 0; i < icost; i++) dyn_strcat(e, "[");
 	print_expression_tag_start(dict, e, n, indent);
@@ -784,7 +784,7 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 	const Regex_node *rn = arg[0];
 	const char *flags = arg[1];
 	const Parse_Options opts = (Parse_Options)arg[2];
-	double max_cost = opts->disjunct_cost;
+	float max_cost = opts->disjunct_cost;
 	uint32_t int_flags = make_flags(flags);;
 
 	/* build_disjuncts_for_exp() needs memory pools for efficiency. */

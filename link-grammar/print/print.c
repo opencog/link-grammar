@@ -251,7 +251,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 	for (w = 0; w < nwords; w++)
 	{
 		int pad = 21;
-		double cost;
+		float cost;
 		const char *infword;
 		Disjunct *disj = linkage->chosen_disjuncts[w];
 		if (NULL == disj) continue;
@@ -269,7 +269,7 @@ char * linkage_print_disjuncts(const Linkage linkage)
 
 		dj = linkage_get_disjunct_str(linkage, w);
 		if (NULL == dj) dj = "";
-		cost = linkage_get_disjunct_cost(linkage, w);
+		cost = (float)linkage_get_disjunct_cost(linkage, w);
 
 		append_string(s, "%*s    % 4.3f  %s\n", pad, infword, cost, dj);
 	}

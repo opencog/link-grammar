@@ -121,7 +121,7 @@ static void section_add(Dialect *di, const char *token, unsigned int *size,
 * @return Table index of the added entry.
 */
 static unsigned int dialect_table_add(Dialect *di, const char *token,
-                                      unsigned int *size, double cost)
+                                      unsigned int *size, float cost)
 {
 	if (di->num_table_tags == *size)
 	{

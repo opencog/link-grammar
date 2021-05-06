@@ -33,16 +33,16 @@ typedef struct clause_struct Clause;
 struct clause_struct
 {
 	Clause * next;
-	double cost;
-	double maxcost;
+	float cost;
+	float maxcost;
 	Tconnector * c;
 };
 
 typedef struct
 {
-	double cost_cutoff;
 	Pool_desc *Tconnector_pool;
 	Pool_desc *Clause_pool;
+	float cost_cutoff;
 	int exp_pos;
 } clause_context;
 
@@ -175,7 +175,7 @@ static Clause * build_clause(Exp *e, clause_context *ct)
 			{
 				for (c4 = c2; c4 != NULL; c4 = c4->next)
 				{
-					double maxcost = MAX(c3->maxcost,c4->maxcost);
+					float maxcost = MAX(c3->maxcost,c4->maxcost);
 					if (maxcost + e->cost > ct->cost_cutoff) continue;
 
 					c = pool_alloc(ct->Clause_pool);
@@ -256,7 +256,7 @@ static Clause * build_clause(Exp *e, clause_context *ct)
  */
 static Disjunct *
 build_disjunct(Sentence sent, Clause * cl, const char * string,
-               const gword_set *gs, double cost_cutoff, Parse_Options opts)
+               const gword_set *gs, float cost_cutoff, Parse_Options opts)
 {
 	Disjunct *dis, *ndis;
 	Pool_desc *connector_pool = NULL;
@@ -328,7 +328,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 }
 
 Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
-                                  const gword_set *gs, double cost_cutoff,
+                                  const gword_set *gs, float cost_cutoff,
                                   Parse_Options opts)
 {
 	Clause *c;

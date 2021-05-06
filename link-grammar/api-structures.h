@@ -96,7 +96,7 @@ struct Parse_Options_s
 #endif
 
 	/* Options governing the parser internals operation */
-	double disjunct_cost;  /* Max disjunct cost to allow */
+	float disjunct_cost;  /* Max disjunct cost to allow */
 	short min_null_count;  /* The minimum number of null links to allow */
 	short max_null_count;  /* The maximum number of null links to allow */
 	bool islands_ok;       /* If TRUE, then linkages with islands

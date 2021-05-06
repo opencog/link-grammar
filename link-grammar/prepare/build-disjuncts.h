@@ -18,6 +18,6 @@
 #include "link-includes.h"
 
 Disjunct *build_disjuncts_for_exp(Sentence sent, Exp *, const char *,
-                                  const gword_set *, double cost_cutoff,
+                                  const gword_set *, float cost_cutoff,
                                   Parse_Options opts);
 #endif /* _LINKGRAMMAR_BUILD_DISJUNCTS_H */

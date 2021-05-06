@@ -55,16 +55,16 @@ typedef Count_bin w_Count_bin;
 Count_bin hist_zero(void);
 Count_bin hist_one(void);
 
-void hist_accum(Count_bin* sum, double, const Count_bin*);
-void hist_accumv(Count_bin* sum, double, const Count_bin);
+void hist_accum(Count_bin* sum, float, const Count_bin*);
+void hist_accumv(Count_bin* sum, float, const Count_bin);
 void hist_prod(Count_bin* prod, const Count_bin*, const Count_bin*);
-void hist_muladd(Count_bin* prod, const Count_bin*, double, const Count_bin*);
-void hist_muladdv(Count_bin* prod, const Count_bin*, double, const Count_bin);
+void hist_muladd(Count_bin* prod, const Count_bin*, float, const Count_bin*);
+void hist_muladdv(Count_bin* prod, const Count_bin*, float, const Count_bin);
 
 static inline w_count_t hist_total(Count_bin* tot) { return tot->total; }
 w_count_t hist_cut_total(Count_bin* tot, count_t min_total);
 
-double hist_cost_cutoff(Count_bin*, count_t count);
+float hist_cost_cutoff(Count_bin*, count_t count);
 
 #else
 
@@ -84,7 +84,7 @@ static inline count_t hist_one(void) { return 1; }
 #define hist_total(tot) (*tot)
 
 #define hist_cut_total(tot, min_total) (*tot)
-static inline double hist_cost_cutoff(count_t* tot, count_t count) { return 1.0e38; }
+static inline float hist_cost_cutoff(count_t* tot, count_t count) { return 1.0e38; }
 
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
 

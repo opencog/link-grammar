@@ -37,7 +37,7 @@ Count_bin hist_one(void)
  * That is, the bins are shifted over by the integer part of the cost
  * (scaled to the bin-width).
  */
-void hist_accum(Count_bin* sum, double cost, const Count_bin* a)
+void hist_accum(Count_bin* sum, float cost, const Count_bin* a)
 {
 	unsigned int i;
 	unsigned int start;
@@ -68,7 +68,7 @@ void hist_accum(Count_bin* sum, double cost, const Count_bin* a)
 }
 
 /** Same as above */
-void hist_accumv(Count_bin* sum, double cost, const Count_bin a)
+void hist_accumv(Count_bin* sum, float cost, const Count_bin a)
 {
 	hist_accum(sum, cost, &a);
 }
@@ -139,19 +139,19 @@ void hist_prod(Count_bin* prod, const Count_bin* a, const Count_bin* b)
  * Multiply two histograms 'a' and 'b', and accumulate them into 'acc'.
  * The accumulated histogram is first shifted by 'cost'.
  */
-void hist_muladd(Count_bin* acc, const Count_bin* a, double cost, const Count_bin* b)
+void hist_muladd(Count_bin* acc, const Count_bin* a, float cost, const Count_bin* b)
 {
 	Count_bin tmp = hist_zero();
 	hist_prod(&tmp, a, b);
 	hist_accum(acc, cost, &tmp);
 }
 
-void hist_muladdv(Count_bin* acc, const Count_bin* a, double cost, const Count_bin b)
+void hist_muladdv(Count_bin* acc, const Count_bin* a, float cost, const Count_bin b)
 {
 	hist_muladd(acc, a, cost, &b);
 }
 
-double hist_cost_cutoff(Count_bin* hist, int count)
+float hist_cost_cutoff(Count_bin* hist, int count)
 {
 	int i;
 	w_count_t cnt = 0;
@@ -160,7 +160,7 @@ double hist_cost_cutoff(Count_bin* hist, int count)
 	{
 		cnt += hist->bin[i];
 		if (count <= cnt)
-			return ((double) i + hist->base) * BIN_WIDTH;
+			return ((float) i + hist->base) * BIN_WIDTH;
 	}
 	return 1.0e38;
 }
