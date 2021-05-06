@@ -84,7 +84,7 @@ static inline count_t hist_one(void) { return 1; }
 #define hist_total(tot) (*tot)
 
 #define hist_cut_total(tot, min_total) (*tot)
-static inline float hist_cost_cutoff(count_t* tot, count_t count) { return 1.0e38; }
+static inline float hist_cost_cutoff(count_t* tot, count_t count) { return 1.0e38f; }
 
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
 

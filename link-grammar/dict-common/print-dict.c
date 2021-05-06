@@ -146,7 +146,7 @@ static void get_expression_cost(const Exp *e, unsigned int *icost, float *dcost)
 			if (*icost > 4)
 			{
 				/* don't print too many [] levels */
-				*dcost = *icost;
+				*dcost = (float)*icost;
 				*icost = 1;
 			}
 			else
