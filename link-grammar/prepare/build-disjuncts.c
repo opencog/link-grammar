@@ -264,7 +264,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 	dis = NULL;
 	for (; cl != NULL; cl = cl->next)
 	{
-		if (NULL == cl->c) continue; /* no connectors */
+		if (unlikely(NULL == cl->c)) continue; /* no connectors */
 		if (cl->maxcost > cost_cutoff) continue;
 
 #if USE_SAT_SOLVER
