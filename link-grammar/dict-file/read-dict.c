@@ -1578,10 +1578,11 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	dn_second_half = dn->left;
 	dn->left = dn->right = NULL;
 
-	if (is_idiom_word(dn->string))
+	const char *sm = strchr(dn->string, SUBSCRIPT_MARK);
+	if ((NULL != sm) && ('_' == sm[1]))
 	{
 		prt_error("Warning: Word \"%s\" found near line %d of \"%s\".\n"
-		        "\tWords ending \".I\" are reserved for idioms.\n"
+		        "\tWords ending \"._\" are reserved for internal use.\n"
 		        "\tThis word will be ignored.\n",
 		        dn->string, dict->line_number, dict->name);
 		free(dn);
