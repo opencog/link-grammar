@@ -78,8 +78,9 @@ static const char * build_idiom_word_name(Dictionary dict, const char * s)
 
 	size_t n = lg_strlcpy(buff, s, sizeof(buff));
 	buff[n] = SUBSCRIPT_MARK;
-	buff[n + 1] = 'I';
-	buff[n + 2] = '\0';
+	buff[n + 1] = '_';
+	buff[n + 2] = 'I';
+	buff[n + 3] = '\0';
 
 	return string_set_add(buff, dict->string_set);
 }
@@ -146,9 +147,9 @@ static const char * generate_id_connector(Dictionary dict)
 	/* i is now the number of characters of current_name to skip */
 	t = buff;
 
-	/* All idiom connector names start with the two letters "ID" */
+	/* All idiom connector names start with the two characters "_D" */
+	*t++ = '_';
 	*t++ = 'I';
-	*t++ = 'D';
 	for (; i < IDIOM_LINK_SZ; i++)
 	{
 		*t++ = dict->current_idiom[i];
@@ -314,6 +315,6 @@ bool is_idiom_word(const char * s)
 	const char *sm = strchr(s, SUBSCRIPT_MARK);
 
 	if (NULL == sm) return false;
-	if ((sm[1] == 'I') && (sm[2] == '\0')) return true;
+	if ((sm[1] == '_') && (sm[2] == 'I') && (sm[3] == '\0')) return true;
 	return false;
 }

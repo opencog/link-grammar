@@ -100,8 +100,8 @@
   used.
 
   The dictionary writer is not allowed to use connectors that begin in
-  "ID".  This is reserved for the connectors automatically
-  generated for idioms.
+  "_".  This is reserved for connectors that are automatically
+  generated (currently only for idioms).
 
   Dictionary words may be followed by a dot (period, "."), and a "subscript"
   identifying the word type. The subscript may be one or more letters or
@@ -109,6 +109,9 @@
   (mostly?) subscripts consisting of a single letter, and these serve mostly
   to identify the part-of-speech. In general, subscripts can also be used
   to distinguish different word senses.
+
+  Subscripts that start with "_" are reserved for words that are
+  automatically generated (currently only for idioms).
 */
 
 static bool link_advance(Dictionary dict);
@@ -398,11 +401,6 @@ static bool check_connector(Dictionary dict, const char * s)
 	{
 		dict_error(dict, "Invalid character in connector "
 		           "(an initial \"_\" is reserved for internal use).");
-		return false;
-	}
-	/* Note that IDx when x is a subscript is allowed (to allow e.g. ID4id+). */
-	if ((*s == 'I') && (*(s+1) == 'D') && isupper((unsigned char)*(s+2))) {
-		dict_error(dict, "Connectors beginning with \"ID\" are forbidden.");
 		return false;
 	}
 
@@ -1568,10 +1566,11 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	dn_second_half = dn->left;
 	dn->left = dn->right = NULL;
 
-	if (is_idiom_word(dn->string))
+	const char *sm = strchr(dn->string, SUBSCRIPT_MARK);
+	if ((NULL != sm) && ('_' == sm[1]))
 	{
 		prt_error("Warning: Word \"%s\" found near line %d of \"%s\".\n"
-		        "\tWords ending \".I\" are reserved for idioms.\n"
+		        "\tWords ending \"._\" are reserved for internal use.\n"
 		        "\tThis word will be ignored.\n",
 		        dn->string, dict->line_number, dict->name);
 		free(dn);
