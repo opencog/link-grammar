@@ -2716,8 +2716,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 	if (!word_can_lrmsplit && !word_is_known &&
 	    !contains_digits(word, dict->lctype) &&
 	    !is_proper_name(word, dict->lctype) &&
-	    opts->use_spell_guess && dict->spell_checker &&
-	    !strstr(word, WILDCARD_WORD))
+	    opts->use_spell_guess && dict->spell_checker)
 	{
 		bool spell_suggest = guess_misspelled_word(sent, unsplit_word, opts);
 		lgdebug(+D_SW, "Spell suggest=%d\n", spell_suggest);
@@ -3023,7 +3022,7 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 	X_node * x, * y;
 	const Dictionary dict = sent->dict;
 
-	if (NULL != strstr(w->subword, WILDCARD_WORD))
+	if (IS_GENERATION(dict) && (NULL != strstr(w->subword, WILDCARD_WORD)))
 	{
 		if (0 == strcmp(w->subword, WILDCARD_WORD))
 		{
@@ -3152,7 +3151,10 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 #endif /* DEBUG */
 		if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-			if (NULL == strstr(s, WILDCARD_WORD))
+			bool is_wildcard = !IS_GENERATION(dict) &&
+				(NULL == strstr(s, WILDCARD_WORD));
+
+			if (!IS_GENERATION(dict) || !is_wildcard)
 			{
 				we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
 				assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");

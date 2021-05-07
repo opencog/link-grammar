@@ -56,3 +56,11 @@ O    +--->Wd---+------Sp------+
 O    |         |              |
 OLEFT-WALL thieves.n [rob] bank.v
 O
+
+% No special interpretation should be done for \* when not in generation mode.
+Itest\* \*
+O
+O    +--->Wa----+----Os---+
+O    |          |         |
+OLEFT-WALL test\*[?].v \*[?].n
+O
