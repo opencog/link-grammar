@@ -479,8 +479,8 @@ NO_SAN_DICT
 static inline int dict_order_strict(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
-	while (*s != '\0' && *s == *t) {s++; t++;}
-	return ((*s == SUBSCRIPT_MARK)?(1):(*s))  -  ((*t == SUBSCRIPT_MARK)?(1):(*t));
+	while ((*s == *t) && (*s != '\0')) { s++; t++; }
+	return (*s - *t);
 }
 
 /**
@@ -502,7 +502,7 @@ NO_SAN_DICT
 static inline int dict_order_bare(const char *s, const Dict_node * dn)
 {
 	const char * t = dn->string;
-	while (*s != '\0' && *s == *t) {s++; t++;}
+	while ((*s == *t) && (*s != '\0')) { s++; t++; }
 	return (*s)  -  ((*t == SUBSCRIPT_MARK)?(0):(*t));
 }
 
@@ -534,7 +534,7 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
 	const char * t = dn->string;
 
 	lgdebug(+D_DOW, "search-word='%s' dict-word='%s'\n", s, t);
-	while((*s != '\0') && (*s != SUBSCRIPT_MARK) && (*s == *t)) {s++; t++;}
+	while((*s == *t) && (*s != SUBSCRIPT_MARK) && (*s != '\0')) { s++; t++; }
 
 	if (*s == WILD_TYPE) return 0;
 
@@ -544,6 +544,13 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
 }
 #undef D_DOW
 
+static inline Dict_node * dict_node_new(void)
+{
+	return (Dict_node*) malloc(sizeof(Dict_node));
+}
+
+/* ======================================================================== */
+#if 0
 /**
  * dict_match --  return true if strings match, else false.
  * A "bare" string (one without a subscript) will match any corresponding
@@ -554,20 +561,13 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
  */
 static bool dict_match(const char * s, const char * t)
 {
-	while ((*s != '\0') && (*s == *t)) { s++; t++; }
+	while ((*s == *t) && (*s != '\0')) { s++; t++; }
 
 	if (*s == *t) return true; /* both are '\0' */
 	if ((*s == 0) && (*t == SUBSCRIPT_MARK)) return true;
 	if ((*s == SUBSCRIPT_MARK) && (*t == 0)) return true;
 
 	return false;
-}
-
-/* ======================================================================== */
-
-static inline Dict_node * dict_node_new(void)
-{
-	return (Dict_node*) malloc(sizeof(Dict_node));
 }
 
 /**
@@ -606,15 +606,19 @@ static Dict_node * prune_lookup_list(Dict_node * restrict llist, const char * re
 	}
 	return llist;
 }
+#endif
 
 /* ======================================================================== */
 static bool subscr_match(const char *s, const Dict_node * dn)
 {
 	const char * s_sub = strrchr(s, SUBSCRIPT_MARK);
-	const char * t_sub;
+	const char * t_sub = strrchr(dn->string, SUBSCRIPT_MARK);
 
-	if (NULL == s_sub) return true;
-	t_sub = strrchr(dn->string, SUBSCRIPT_MARK);
+	if (NULL == s_sub)
+	{
+		if (NULL == t_sub) return true;
+		return !is_idiom_word(t_sub);
+	}
 	if (NULL == t_sub) return false;
 	if (0 == strcmp(s_sub, t_sub)) return true;
 
@@ -631,10 +635,9 @@ static Dict_node *
 rdictionary_lookup(Dict_node * restrict llist,
                    Dict_node * restrict dn,
                    const char * restrict s,
-                   bool match_idiom,
+						 bool boolean_lookup,
                    int (*dict_order)(const char *, const Dict_node *))
 {
-	/* see comment in dictionary_lookup below */
 	int m;
 	Dict_node * dn_new;
 	if (dn == NULL) return llist;
@@ -643,11 +646,11 @@ rdictionary_lookup(Dict_node * restrict llist,
 
 	if (m >= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->right, s, match_idiom, dict_order);
+		llist = rdictionary_lookup(llist, dn->right, s, boolean_lookup, dict_order);
 	}
-	if ((m == 0) && (match_idiom || !is_idiom_word(dn->string)) &&
-		 (dict_order != dict_order_wild || subscr_match(s, dn)))
+	if ((m == 0) && (dict_order != dict_order_wild || subscr_match(s, dn)))
 	{
+		if (boolean_lookup) return dn;
 		dn_new = dict_node_new();
 		*dn_new = *dn;
 		dn_new->right = llist;
@@ -656,7 +659,7 @@ rdictionary_lookup(Dict_node * restrict llist,
 	}
 	if (m <= 0)
 	{
-		llist = rdictionary_lookup(llist, dn->left, s, match_idiom, dict_order);
+		llist = rdictionary_lookup(llist, dn->left, s, boolean_lookup, dict_order);
 	}
 	return llist;
 }
@@ -665,8 +668,6 @@ rdictionary_lookup(Dict_node * restrict llist,
  * file_lookup_list() - return list of words in the file-backed dictionary.
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
- * Matches include words that appear in idioms.  To exclude idioms, use
- * abridged_lookup_list() to obtain matches.
  *
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
@@ -675,18 +676,12 @@ rdictionary_lookup(Dict_node * restrict llist,
  */
 Dict_node * file_lookup_list(const Dictionary dict, const char *s)
 {
-	Dict_node * llist =
-		rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);
-	llist = prune_lookup_list(llist, s);
-	return llist;
+	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
 }
 
 bool file_boolean_lookup(Dictionary dict, const char *s)
 {
-	Dict_node *llist = file_lookup_list(dict, s);
-	bool boool = (llist != NULL);
-	file_free_lookup(llist);
-	return boool;
+	return !!rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);
 }
 
 void file_free_lookup(Dict_node *llist)
@@ -717,25 +712,23 @@ void free_insert_list(Dict_node *ilist)
  */
 Dict_node * file_lookup_wild(Dictionary dict, const char *s)
 {
-	bool lookup_idioms = test_enabled("lookup-idioms");
 	char * ds = strrchr(s, SUBSCRIPT_DOT); /* Only the rightmost dot is a
 	                                          candidate for SUBSCRIPT_DOT */
 	char * ws = strrchr(s, WILD_TYPE);     /* A SUBSCRIPT_DOT can only appear
                                              after a wild-card */
 	Dict_node * result;
-	char * stmp = strdup(s);
+	char * stmp = strdupa(s);
 
 	/* It is not a SUBSCRIPT_DOT if it is at the end or before the wild-card.
 	 * E.g: "Dr.", "i.*", "." */
 	if ((NULL != ds) && ('\0' != ds[1]) && ((NULL == ws) || (ds > ws)))
 		stmp[ds-s] = SUBSCRIPT_MARK;
 
-	result =
-	 rdictionary_lookup(NULL, dict->root, stmp, lookup_idioms, dict_order_wild);
-	free(stmp);
+	result = rdictionary_lookup(NULL, dict->root, stmp, false, dict_order_wild);
 	return result;
 }
 
+#if 0
 /**
  * abridged_lookup_list() - return lookup list of words in the dictionary
  *
@@ -750,18 +743,14 @@ Dict_node * file_lookup_wild(Dictionary dict, const char *s)
  */
 static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 {
-	Dict_node *llist;
-	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
-	llist = prune_lookup_list(llist, s);
-	return llist;
+	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
 }
+#endif
 
-#if 0
 /**
  * strict_lookup_list() - return exact match in the dictionary
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
- * Excludes any idioms that contain the word.
  *
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
@@ -773,12 +762,8 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
  */
 static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 {
-	Dict_node *llist;
-	llist = rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
-	llist = prune_lookup_list(llist, s);
-	return llist;
+	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
 }
-#endif
 
 /* ======================================================================== */
 /**
@@ -960,7 +945,7 @@ static unsigned int exptag_macro_add(Dictionary dict, const char *tag)
 static Exp * make_connector(Dictionary dict)
 {
 	Exp * n;
-	Dict_node *dn, *dn_head;
+	Dict_node *dn;
 	int i;
 
 	i = strlen(dict->token) - 1;  /* this must be +, - or $ if a connector */
@@ -970,18 +955,21 @@ static Exp * make_connector(Dictionary dict)
 	{
 		/* If we are here, token is a word */
 		patch_subscript(dict->token);
-		dn_head = abridged_lookup_list(dict, dict->token);
-		dn = dn_head;
-		while ((dn != NULL) && (strcmp(dn->string, dict->token) != 0))
-		{
-			dn = dn->right;
-		}
+		dn = strict_lookup_list(dict, dict->token);
 		if (dn == NULL)
 		{
-			file_free_lookup(dn_head);
-			dict_error(dict, "Perhaps missing + or - in a connector.\n"
+			file_free_lookup(dn);
+			dict_error2(dict, "Perhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the subscript on a word.\n"
-			                 "Or perhaps a word is used before it is defined.");
+			                 "Or perhaps the word is used before it is defined:",
+			                 dict->token);
+			return NULL;
+		}
+		if (dn->right != NULL)
+		{
+			file_free_lookup(dn);
+			dict_error2(dict, "Referencing a duplicate word:", dict->token);
+			/* Note: A word which becomes duplicate latter evades this check. */
 			return NULL;
 		}
 
@@ -990,7 +978,7 @@ static Exp * make_connector(Dictionary dict)
 		n->tag_id = exptag_macro_add(dict, dn->string);
 		if (n->tag_id != 0) n->tag_type = Exptag_macro;
 
-		file_free_lookup(dn_head);
+		file_free_lookup(dn);
 	}
 	else
 	{
