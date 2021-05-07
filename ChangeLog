@@ -1,6 +1,10 @@
-Version 5.9.2 (XXX 2021)
+Version 5.10.0 (XXX 2021)
  * Expanded English vocabulary
  * Support dictionary "#define allow-duplicate-words true".
+ * Connector names starting with "ID" are no longer reserved. #1208
+ * Connector names starting with underbar are reserved for internal use.
+ * ".I" subscripts are no longer reserved; "._" subscripts are reserved.
+   These last three changes introduce linkage incompatibilities.
 
 Version 5.9.1 (28 April 2021)
  * Fix build break when SQLite3 is not installed. #1195
