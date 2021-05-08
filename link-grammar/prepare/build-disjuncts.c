@@ -155,7 +155,7 @@ static Tconnector * build_terminal(Exp *e, clause_context *ct)
 /**
  * Build the clause for the expression e.  Does not change e
  */
-static Clause * build_clause(Exp *e, clause_context *ct)
+static Clause * build_clause(Exp *e, clause_context *ct, Clause *c_last)
 {
 	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
 
@@ -169,7 +169,7 @@ static Clause * build_clause(Exp *e, clause_context *ct)
 		c1->maxcost = 0.0;
 		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 		{
-			c2 = build_clause(opd, ct);
+			c2 = build_clause(opd, ct, NULL);
 			c_head = NULL;
 			for (c3 = c1; c3 != NULL; c3 = c3->next)
 			{
@@ -196,11 +196,11 @@ static Clause * build_clause(Exp *e, clause_context *ct)
 	}
 	else if (e->type == OR_type)
 	{
-		c = build_clause(e->operand_first, ct);
+		c = build_clause(e->operand_first, ct, NULL);
 		/* we'll catenate the lists of clauses */
 		for (Exp *opd = e->operand_first->operand_next; opd != NULL; opd = opd->operand_next)
 		{
-			c1 = build_clause(opd, ct);
+			c1 = build_clause(opd, ct, c_last);
 			if (c1 == NULL) continue;
 			if (c == NULL)
 			{
@@ -343,8 +343,8 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	                   /*num_elements*/32768, sizeof(Tconnector),
 	                   /*zero_out*/false, /*align*/false, /*exact*/false);
 
-	// printf("%s\n", exp_stringify(exp));
-	c = build_clause(exp, &ct);
+	// printf("%s\n", lg_exp_stringify(exp));
+	c = build_clause(exp, &ct, NULL);
 	// print_clause_list(c);
 	dis = build_disjunct(sent, c, word, gs, cost_cutoff, opts);
 	// print_disjunct_list(dis);
