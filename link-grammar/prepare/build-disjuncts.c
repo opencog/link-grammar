@@ -152,10 +152,25 @@ static Tconnector * build_terminal(Exp *e, clause_context *ct)
 	return c;
 }
 
+static void debug_last(Clause *c, Clause **c_last, const char *type)
+{
+#ifdef DEBUG
+	if ((c == NULL) || (c_last == NULL)) return;
+	do
+	{
+		if (c->next == NULL)
+		{
+			assert(c == *c_last, "%s", type);
+			return;
+		}
+	} while ((c = c->next));
+#endif
+}
+
 /**
  * Build the clause for the expression e.  Does not change e
  */
-static Clause * build_clause(Exp *e, clause_context *ct, Clause *c_last)
+static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 {
 	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
 
@@ -179,6 +194,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause *c_last)
 					if (maxcost + e->cost > ct->cost_cutoff) continue;
 
 					c = pool_alloc(ct->Clause_pool);
+					if ((c_head == NULL) && (c_last != NULL)) *c_last = c;
 					c->cost = c3->cost + c4->cost;
 					c->maxcost = maxcost;
 					c->c = catenate(c3->c, c4->c, ct->Tconnector_pool);
@@ -193,31 +209,29 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause *c_last)
 			c1 = c_head;
 		}
 		c = c1;
+		if ((c != NULL) && (c->next == NULL) && (c_last != NULL)) *c_last = c;
+		debug_last(c, c_last, "AND_type");
 	}
 	else if (e->type == OR_type)
 	{
-		c = build_clause(e->operand_first, ct, NULL);
+		Clause *or_last = NULL;;
+		Clause *last;
+
+		c = build_clause(e->operand_first, ct, &or_last);
 		/* we'll catenate the lists of clauses */
 		for (Exp *opd = e->operand_first->operand_next; opd != NULL; opd = opd->operand_next)
 		{
-			c1 = build_clause(opd, ct, c_last);
+			c1 = build_clause(opd, ct, &last);
 			if (c1 == NULL) continue;
 			if (c == NULL)
-			{
 				c = c1;
-			}
 			else
-			{
-				for (c2 = c; ; c2 = c2->next)
-				{
-					if (NULL == c2->next)
-					{
-						c2->next = c1;
-						break;
-					}
-				}
-			}
+				or_last->next = c1;
+			or_last = last;
 		}
+
+		if (c_last != NULL) *c_last = (or_last == NULL) ? last : or_last;
+		debug_last(c, c_last, "OR_type");
 	}
 	else if (e->type == CONNECTOR_type)
 	{
@@ -226,6 +240,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause *c_last)
 		c->cost = 0.0;
 		c->maxcost = 0.0;
 		c->next = NULL;
+		if (c_last != NULL) *c_last = c;
 	}
 	else
 	{
