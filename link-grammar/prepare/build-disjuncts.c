@@ -75,40 +75,6 @@ static void free_clause_list(Clause *c, clause_context *ct)
 }
 #endif
 
-#if 0 /* old stuff */
-/**
- * reverse the order of the list e.  destructive
- */
-static Tconnector * Treverse(Tconnector *e)
-{
-	Tconnector * head, *x;
-	head = NULL;
-	while (e != NULL) {
-		x = e->next;
-		e->next = head;
-		head = e;
-		e = x;
-	}
-	return head;
-}
-
-/**
- * reverse the order of the list e.  destructive
- */
-static Connector * reverse(Connector *e)
-{
-	Connector * head, *x;
-	head = NULL;
-	while (e != NULL) {
-		x = e->next;
-		e->next = head;
-		head = e;
-		e = x;
-	}
-	return head;
-}
-#endif
-
 /**
  * Builds a new list of connectors that is the catenation of e1 with e2.
  * does not effect lists e1 or e2.   Order is maintained.
