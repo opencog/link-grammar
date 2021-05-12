@@ -225,8 +225,8 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 		 */
 		c1->maxcost += e->cost;
 		/* Note: The above computation is used as a saving shortcut in
-		 * build_clause(). If it is changed here, it needs to be changed
-		 * there too. */
+		 * the inner loop of AND_type. If it is changed here, it needs to be
+		 * changed there too. */
 	}
 	return c;
 }
