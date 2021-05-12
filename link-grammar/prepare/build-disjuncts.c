@@ -249,7 +249,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 		if (cl->maxcost > cost_cutoff) continue;
 
 #if USE_SAT_SOLVER
-		if (NULL == sent) /* For the SAT-parser, until fixed. */
+		if (opts->use_sat_solver) /* For the SAT-parser, until fixed. */
 		{
 			ndis = xalloc(sizeof(Disjunct));
 		}
