@@ -84,8 +84,7 @@
 
   A number following a square bracket over-rides the cost of that bracket.
   Thus, [...].5 has a cost of 0.5 while [...]2.0 has a cost of 2; that
-  is it is the same as [[...]].  Any floating point number (including
-  exponents!) is allowed.
+  is it is the same as [[...]].  Any floating point number is allowed.
 
   The expression "(A+ or ())" means that you can choose either "A+" or
   the empty expression "()", that is, that the connector "A+" is
