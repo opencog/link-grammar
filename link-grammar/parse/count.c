@@ -1318,7 +1318,7 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 /* sent_length is used only as a hint for the hash table size ... */
 count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 {
-	count_context_t *ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
+	count_context_t *ctxt = malloc (sizeof(count_context_t));
 	memset(ctxt, 0, sizeof(count_context_t));
 
 	ctxt->sent = sent;
@@ -1359,5 +1359,5 @@ void free_count_context(count_context_t *ctxt, Sentence sent)
 
 	free_table(ctxt);
 	free_table_lrcnt(ctxt);
-	xfree(ctxt, sizeof(count_context_t));
+	free(ctxt);
 }
