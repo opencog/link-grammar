@@ -982,6 +982,9 @@ class YGenerationTestCase(unittest.TestCase):
         linkages = Sentence(r'\* ' * 5, Dictionary(lang='lt'), ParseOptions()).parse()
         self.assertTrue(len(linkages) > 0, "No linkages")
 
+    def test_getting_linkages_sql_dict(self):
+        linkages = Sentence(r'\* ' * 4, Dictionary(lang='demo-sql'), ParseOptions()).parse()
+        self.assertTrue(len(linkages) > 0, "No linkages")
 
 class ZENConstituentsCase(unittest.TestCase):
     @classmethod
