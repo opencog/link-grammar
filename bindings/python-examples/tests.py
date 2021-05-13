@@ -969,6 +969,20 @@ class JBDictCostReadingTestCase(unittest.TestCase):
         linkage = Sentence('Is the bed white?', self.d, self.po).parse().next()
         self.assertEqual(list(linkage.words())[4], 'white.a')
 
+
+class YGenerationTestCase(unittest.TestCase):
+    """
+    Generation mode tests.
+    """
+    @classmethod
+    def setUpClass(cls):
+        ParseOptions(test='generate')  # Must be set before Dictionary()
+
+    def test_getting_linkages_file_dict(self):
+        linkages = Sentence(r'\* ' * 5, Dictionary(lang='lt'), ParseOptions()).parse()
+        self.assertTrue(len(linkages) > 0, "No linkages")
+
+
 class ZENConstituentsCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
