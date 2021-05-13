@@ -637,7 +637,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 		goto failure;
 
 	/* Initialize word categories, for text generation. */
-	if (!dictionary_generation_request(dict))
+	if (dictionary_generation_request(dict))
 		add_categories(dict);
 
 	return dict;
