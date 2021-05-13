@@ -556,6 +556,16 @@ void sentence_delete(Sentence sent)
 	pool_delete(sent->wordvec_pool);
 	pool_delete(sent->Exp_pool);
 	pool_delete(sent->X_node_pool);
+
+	/* Usually the memory pools created in build_disjuncts_for_exp() are
+	 * deleted in build_sentence_disjuncts(). Delete them here inn case
+	 * build_disjuncts_for_exp() is directly called. */
+	if (sent->Clause_pool != NULL)
+	{
+		pool_delete(sent->Clause_pool);
+		pool_delete(sent->Tconnector_pool);
+	}
+
 	if (IS_DB_DICT(sent->dict))
 	{
 #if 0 /* Cannot reuse in case a previous sentence is not deleted yet. */

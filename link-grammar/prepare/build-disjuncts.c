@@ -317,20 +317,31 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	clause_context ct = { 0 };
 
 	ct.cost_cutoff = cost_cutoff;
-	ct.Clause_pool = pool_new(__func__, "Clause",
-	                   /*num_elements*/4096, sizeof(Clause),
-	                   /*zero_out*/false, /*align*/false, /*exact*/false);
-	ct.Tconnector_pool = pool_new(__func__, "Tconnector",
-	                   /*num_elements*/32768, sizeof(Tconnector),
-	                   /*zero_out*/false, /*align*/false, /*exact*/false);
+	if (sent->Clause_pool == NULL)
+	{
+		ct.Clause_pool = pool_new(__func__, "Clause",
+		                          /*num_elements*/4096, sizeof(Clause),
+		                          /*zero_out*/false, /*align*/false, /*exact*/false);
+		ct.Tconnector_pool = pool_new(__func__, "Tconnector",
+		                              /*num_elements*/32768, sizeof(Tconnector),
+		                              /*zero_out*/false, /*align*/false, /*exact*/false);
+		/* Keep for freeing at the caller. */
+		sent->Clause_pool = ct.Clause_pool;
+		sent->Tconnector_pool = ct.Tconnector_pool;
+	}
+	else
+	{
+		ct.Clause_pool = sent->Clause_pool;
+		ct.Tconnector_pool = sent->Tconnector_pool;
+	}
 
 	// printf("%s\n", lg_exp_stringify(exp));
 	c = build_clause(exp, &ct, NULL);
 	// print_clause_list(c);
 	dis = build_disjunct(sent, c, word, gs, cost_cutoff, opts);
 	// print_disjunct_list(dis);
-	pool_delete(ct.Tconnector_pool);
-	pool_delete(ct.Clause_pool);
+	pool_reuse(ct.Clause_pool);
+	pool_reuse(ct.Tconnector_pool);
 	return dis;
 }
 

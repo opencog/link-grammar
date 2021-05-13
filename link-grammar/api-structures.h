@@ -141,6 +141,8 @@ struct Sentence_s
 	Pool_desc * X_node_pool;
 	Pool_desc * Disjunct_pool;
 	Pool_desc * Connector_pool;
+	Pool_desc * Clause_pool;
+	Pool_desc * Tconnector_pool;
 
 	/* Connector encoding, packing & sharing. */
 	size_t min_len_encoding;     /* Encode from this sentence length. */

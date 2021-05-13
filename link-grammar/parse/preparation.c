@@ -121,6 +121,11 @@ static void build_sentence_disjuncts(Sentence sent, float cost_cutoff,
 		}
 		sent->word[w].d = d;
 	}
+
+	/* Delete the memory pools created in build_disjuncts_for_exp(). */
+	pool_delete(sent->Clause_pool);
+	pool_delete(sent->Tconnector_pool);
+	sent->Clause_pool = NULL;
 }
 
 
