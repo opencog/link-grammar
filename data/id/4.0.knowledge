@@ -294,7 +294,7 @@ CONTAINS_ONE_RULES:
 			                    , "Bad use of adjective65"    ,
 
 ; There's no ZZZ connector, which means that Ixd and Oxn
-; are prohibited from ever occuring. 4.0.batch covers this.
+; are prohibited from ever occurring. 4.0.batch covers this.
  Ixd   ,  ZZZ                               , "Can't use 'do' with that verb" ,
  Oxn   ,  ZZZ                               , "Bad use of pronoun66" ,
  MVh   ,  EExk   EAxk   D##k                , "Incorrect use of that67" ,

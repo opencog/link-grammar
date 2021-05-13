@@ -27,7 +27,7 @@ INSERT INTO Disjuncts VALUES ('<dictionary-locale>', 'EN4us+', 0.0);
 -- The <UNKNOWN-WORD> device is needed in order to allow the wild-card
 -- query of dictionary contents to work. That is, the user can use the
 -- command-line client to type in `!!blah*` and this will search the
--- dictionary for all words whos first four letters are `blah`. You
+-- dictionary for all words whose first four letters are `blah`. You
 -- are free to replace `XXXBOGUS+` by something useful, for example,
 -- If you use `Ds- & Os-`, than any word will be accepted as the object!
 INSERT INTO Morphemes VALUES ('<UNKNOWN-WORD>', '<UNKNOWN-WORD>', '<UNKNOWN-WORD>');

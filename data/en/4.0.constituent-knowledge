@@ -16,7 +16,7 @@ LEFT_DOMAIN_STARTER_LINKS: A EA E CO#s CO* COd* YS YP Yt Yd GN DTie CO#n COp D##
 ;-----------------------------------------------------------------
 ; The lower-case letter that follows the link-type is the "domain".
 ; Domains are roughly equivalent to constituent phrase types; so, for
-; example, a domain 'v' corresonds to a VP, 'n' is NP, 'a' is ADJP,
+; example, a domain 'v' corresponds to a VP, 'n' is NP, 'a' is ADJP,
 ; 'p' is PP, 's' is S, and so on.  For the complete list, see the
 ; cons_of_domain() function in constituents.c.
 ;

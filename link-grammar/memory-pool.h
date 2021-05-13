@@ -57,7 +57,7 @@ typedef union
 		char *next;     /* Next allocation. */
 		size_t size;    /* Allocation payload size. */
 	};
-	max_align_t dymmy; /* Align the payload properly for all payload sizes. */
+	max_align_t dummy; /* Align the payload properly for all payload sizes. */
 } alloc_attr;
 #endif
 

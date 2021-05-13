@@ -610,7 +610,7 @@ dnl AC_CHECK_HEADERS defines HAVE_FILENAME_H if found.
 
 AC_ARG_WITH([regexlib],
 	[AS_HELP_STRING([--with-regexlib=pcre2|tre|regex|c],
-	[Use the pecified regex library (default=first found)])],
+	[Use the specified regex library (default=first found)])],
 	[], with_regexlib=)
 
 lgregexlib=--with-regexlib="$with_regexlib"
@@ -692,7 +692,7 @@ JNIfound=no
 if test "x$enable_java_bindings" = "xyes"; then
 
 	if test x${apple_osx} = xyes; then
-		# Java on Apple OSX requies a 64-bit build. However, even
+		# Java on Apple OSX requires a 64-bit build. However, even
 		# modern 64-bit Apple machines build 32-bit binaries by default.
 		# So force a 64-bit build if a 64-bit CPU is found.
 		CFLAGS="${CFLAGS} -arch x86_64"
@@ -836,7 +836,7 @@ popdef([AC_MSG_ERROR])
 if test x$enable_python_bindings = xyes; then
 	if test x$PythonFound = xno; then
 		AC_MSG_NOTICE(
-			[Python binding is enabled, but an approprite Python version
+			[Python binding is enabled, but an appropriate Python version
                   could not be configured (minimum version: PYTHON3_REQUIRED).])
 	fi
 fi
