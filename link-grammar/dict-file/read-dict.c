@@ -86,6 +86,10 @@
   Thus, [...].5 has a cost of 0.5 while [...]2.0 has a cost of 2; that
   is it is the same as [[...]].  Any floating point number is allowed.
 
+  Instead of a numerical cost, a symbolic cost can be used, a.k.a. a
+  "dialect component name".  The file "4.0.dialect" defines dialect names
+  (in square brackets) and their component names and values.
+
   The expression "(A+ or ())" means that you can choose either "A+" or
   the empty expression "()", that is, that the connector "A+" is
   optional.  This is more compactly expressed as "{A+}".  In other words,
