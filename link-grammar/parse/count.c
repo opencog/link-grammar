@@ -239,6 +239,9 @@ static void free_table_lrcnt(count_context_t *ctxt)
 		Pool_location loc = { 0 };
 		Table_lrcnt *t;
 
+		/* Note: Due to a current pool_next() problem for vector elements,
+		 * the stats results here may be slightly skewed.  See the comment
+		 * on that in memory-pool.h. */
 		while ((t = pool_next(ctxt->sent->wordvec_pool, &loc)) != NULL)
 		{
 			if (t->status == -1) continue;

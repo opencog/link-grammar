@@ -112,6 +112,12 @@ static inline void *pool_alloc(Pool_desc *mp)
  * (Pool_location)0 before starting the iteration.
  * @return The next element on each call, \c NULL when there are no
  * more.
+ *
+ * FIXME: When used on a pool with vector allocations, it may return
+ * unallocated elements at the end of pool blocks. So it shouldn't be
+ * used on pools with vector allocations (unless this is for stats only
+ * and skewed results are tolerable, as currently done in
+ * free_table_lrcnt()).
  */
 static inline void *pool_next(Pool_desc *mp, Pool_location *l)
 {
