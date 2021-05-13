@@ -2,7 +2,7 @@
 # Dockerfile for the basic link-grammar source download.
 # No compilation is performed.
 #
-FROM ubuntu:14.04
+FROM ubuntu:trusty-20190425
 MAINTAINER Linas Vepstas linasvepstas@gmail.com
 
 RUN apt-get update
