@@ -646,7 +646,7 @@ finish:
 #else
 bool sentence_display_wordgraph(Sentence sent, const char *modestr)
 {
-		prt_error("Error: Library not configured with wordgraph-display\n");
-		return false;
+	prt_error("Error: Library not configured with wordgraph-display\n");
+	return false;
 }
 #endif /* USE_WORDGRAPH_DISPLAY */

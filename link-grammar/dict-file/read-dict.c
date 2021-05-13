@@ -636,7 +636,7 @@ static Dict_node *
 rdictionary_lookup(Dict_node * restrict llist,
                    Dict_node * restrict dn,
                    const char * restrict s,
-						 bool boolean_lookup,
+                   bool boolean_lookup,
                    int (*dict_order)(const char *, const Dict_node *))
 {
 	int m;
