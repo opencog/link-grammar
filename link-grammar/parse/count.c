@@ -233,6 +233,8 @@ static void init_table(count_context_t *ctxt, Sentence sent)
 
 static void free_table_lrcnt(count_context_t *ctxt)
 {
+	if (ctxt->is_short) return;
+
 	if (verbosity_level(D_COUNT))
 	{
 		unsigned int nonzero = 0, any_null = 0, zero = 0, non_max_null = 0;
@@ -283,6 +285,8 @@ static void free_table_lrcnt(count_context_t *ctxt)
 
 static void init_table_lrcnt(count_context_t *ctxt, Sentence sent)
 {
+	if (ctxt->is_short) return;
+
 	for (unsigned int dir = 0; dir < 2; dir++)
 	{
 		const size_t sz = sizeof(wordvecp) * ctxt->table_lrcnt_size[dir];
@@ -1318,7 +1322,7 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 /* sent_length is used only as a hint for the hash table size ... */
 count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 {
-	count_context_t *ctxt = (count_context_t *) xalloc (sizeof(count_context_t));
+	count_context_t *ctxt = malloc (sizeof(count_context_t));
 	memset(ctxt, 0, sizeof(count_context_t));
 
 	ctxt->sent = sent;
@@ -1359,5 +1363,5 @@ void free_count_context(count_context_t *ctxt, Sentence sent)
 
 	free_table(ctxt);
 	free_table_lrcnt(ctxt);
-	xfree(ctxt, sizeof(count_context_t));
+	free(ctxt);
 }
