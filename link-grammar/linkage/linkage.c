@@ -258,7 +258,7 @@ void remove_empty_words(Linkage lkg)
 
 /**
  * This takes the Wordgraph path array and uses it to
- * compute the chosen_words array.  "I.xx" suffixes are eliminated.
+ * compute the chosen_words array.  "I" suffixes are eliminated.
  *
  * Input:
  *
@@ -474,7 +474,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 			}
 			else
 			{
-				/* Get rid of those ugly ".Ixx" */
+				/* Get rid of those ugly "I" */
 				if (is_idiom_word(t))
 				{
 					s = strdupa(t);

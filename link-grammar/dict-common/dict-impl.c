@@ -769,12 +769,12 @@ bool afdict_init(Dictionary dict)
 		for (ac = afdict->afdict_class;
 		     ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
 		{
-				if (0 == ac->length) continue;
-				lgdebug(+0, "Class %s, %zu items:",
-				        afdict_classname[ac-afdict->afdict_class], ac->length);
-				for (l = 0; l < ac->length; l++)
-					lgdebug(0, " '%s'", ac->string[l]);
-				lgdebug(0, "\n\\");
+			if (0 == ac->length) continue;
+			lgdebug(+0, "Class %s, %zu items:",
+			        afdict_classname[ac-afdict->afdict_class], ac->length);
+			for (l = 0; l < ac->length; l++)
+				lgdebug(0, " '%s'", ac->string[l]);
+			lgdebug(0, "\n\\");
 		}
 		lg_error_flush();
 	}

@@ -84,8 +84,11 @@
 
   A number following a square bracket over-rides the cost of that bracket.
   Thus, [...].5 has a cost of 0.5 while [...]2.0 has a cost of 2; that
-  is it is the same as [[...]].  Any floating point number (including
-  exponents!) is allowed.
+  is it is the same as [[...]].  Any floating point number is allowed.
+
+  Instead of a numerical cost, a symbolic cost can be used, a.k.a. a
+  "dialect component name".  The file "4.0.dialect" defines dialect names
+  (in square brackets) and their component names and values.
 
   The expression "(A+ or ())" means that you can choose either "A+" or
   the empty expression "()", that is, that the connector "A+" is
@@ -633,7 +636,7 @@ static Dict_node *
 rdictionary_lookup(Dict_node * restrict llist,
                    Dict_node * restrict dn,
                    const char * restrict s,
-						 bool boolean_lookup,
+                   bool boolean_lookup,
                    int (*dict_order)(const char *, const Dict_node *))
 {
 	int m;

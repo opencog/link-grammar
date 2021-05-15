@@ -1,6 +1,6 @@
 
-% This file containes test sentences, and the expected parses, for the
-% current Lituanian dictionary.
+% This file contains test sentences, and the expected parses, for the
+% current Lithuanian dictionary.
 
 -display_morphology = False
 IAš skaitau knygą.

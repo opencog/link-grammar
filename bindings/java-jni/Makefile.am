@@ -39,7 +39,7 @@ liblink_grammar_java_la_LIBADD  += ${MINISAT_LIBS}
 endif !LIBMINISAT_BUNDLED
 endif
 
-# Math libraries are needed for floorf, etc.
+# It seems no mathematical function is used now. Keep it to be on the safe side.
 liblink_grammar_java_la_LIBADD  += -lm
 
 liblink_grammar_java_la_SOURCES =   \

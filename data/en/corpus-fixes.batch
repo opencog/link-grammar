@@ -582,7 +582,7 @@ They were both in their early teens
 Just use the wash basin
 There was a bucket of liquid in the middle of the room
 
-% Misc mass nouns, and thier interactions with the regex subsystem
+% Misc mass nouns, and their interactions with the regex subsystem
 % for handling unknown words.
 Vitamin D has a crucial role for bone metabolism.
 Dry eye syndrome is a common irritating eye disease.
@@ -3001,7 +3001,7 @@ it is unclear as worded
 Questionable as it may be, we will proceed.
 Questionable though it may be, we will proceed.
 
-% Also, lots and lots ot present-participles...
+% Also, lots and lots of present-participles...
 the man, as acquiescing as he was, was ill-suited to guard the hen-house
 the man, as acquiescing as he was, set a bad precedent
 
@@ -4163,7 +4163,7 @@ Mary wentshopping atthe store.
 Its broken.
 It's broken.
 
-% In repsonse to "So, did you do it?"
+% In response to "So, did you do it?"
 I sure wish I ...
 I sure wish I had.
 I sure wish I did.
@@ -4454,7 +4454,7 @@ She will think it to be an act of kindness.
 She will think it true.
 She will think it common.
 
-% Phantom verbs -- the second sentance has an implicit verb...
+% Phantom verbs -- the second sentence has an implicit verb...
 an examination conducted when it happened revealed chicanery.
 an examination when it happened revealed chicanery
 
@@ -6500,7 +6500,7 @@ You are as sweet as sugar.
 He was so foolish as to lie.
 Ridiculous as it seems, the tale is true.
 If you love Mr. Darcy half as well as I do my dear Wickham, you must be very happy.
-% This parses, but incorectly ...
+% This parses, but incorrectly ...
 *the hotel is quite comfortable as such establishments go
 
 % "as" as synonym for "while"

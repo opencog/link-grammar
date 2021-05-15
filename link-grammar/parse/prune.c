@@ -185,8 +185,8 @@ GNUC_UNUSED static void print_power_table(Sentence sent, power_table *pt)
  *     nearer and nearer words.
  *
  *  2) Two deep connectors cannot attach to each other; i.e. a deep
- *     connector can only attache to a shallow one, and a shallow
- *     connector can attache to any connector.
+ *     connector can only attach to a shallow one, and a shallow
+ *     connector can attach to any connector.
  *     (A connectors is deep if it is not the first in its list; it
  *     is shallow if it is the first in its list; it is deepest if it
  *     is the last on its list.)

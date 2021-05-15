@@ -5,7 +5,7 @@
  %                                                                           %
  %***************************************************************************%
 
-% Want to match apostrophes, for abreviations (I'm I've, etc.) since these
+% Want to match apostrophes, for abbreviations (I'm I've, etc.) since these
 % cannot be auto-split with the current splitter.  Also want to accept
 % hyphenated words, and word with underbars in them.
 %#ANY-WORD:  /^[[:alnum:]_'-]+$/

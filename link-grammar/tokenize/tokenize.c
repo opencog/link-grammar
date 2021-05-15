@@ -3151,8 +3151,8 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 #endif /* DEBUG */
 		if (dict->unknown_word_defined && dict->use_unknown_word)
 		{
-			bool is_wildcard = !IS_GENERATION(dict) &&
-				(NULL == strstr(s, WILDCARD_WORD));
+			bool is_wildcard = IS_GENERATION(dict) &&
+				(NULL != strstr(s, WILDCARD_WORD));
 
 			if (!IS_GENERATION(dict) || !is_wildcard)
 			{

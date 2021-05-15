@@ -10974,7 +10974,7 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 "’":
   YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
 
-% Possesive or quote
+% Possessive or quote
 "'":
   (YP- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+))
   or QUc- or QUd+;
@@ -11301,7 +11301,7 @@ ample.#amply: [[amply]0.5]colloquial;
     ({EI-} & Wa- & <verb-wall>))
   & {O+ or <b-minus>} & <mv-coord>;
 
-% Add a miniscule cost, so that the noun-form is preferred, when
+% Add a minuscule cost, so that the noun-form is preferred, when
 % available.
 <UNKNOWN-WORD>.a <QUOTED-WORD>.a:
   [<ordinary-adj> or <adj-phone>]0.04;
