@@ -74,7 +74,7 @@ endif WITH_SAT_SOLVER
 # Needed for tss_create and tss_set
 liblink_grammar_la_LIBADD  += ${PTHREAD_LIBS}
 
-# Math libraries are needed for floorf, etc.
+# It seems no mathematical function is used now. Keep it to be on the safe side.
 liblink_grammar_la_LIBADD  += -lm
 
 liblink_grammar_la_SOURCES =        \

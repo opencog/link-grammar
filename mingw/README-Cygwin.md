@@ -15,7 +15,7 @@ and `ant` is the `PATH`.
 
 Building
 --------
-Install all the prerequisit tools,
+Install all the prerequisite tools,
 Also install the desired optional libraries
 
 Note: Installing the library `pcre2` is **required** for correct operation
@@ -24,7 +24,7 @@ since the default REGEX implementation (in libc) is not capable enough.
 Use the `configure` command as outlined in the main [README](/README.md#creating-the-system).
 Note that compiling with more than one concurrent process may be extremely slow.
 To make sure only a single process is used supply `make ` with `-j 1`.
-Also, the `make` build-in rules cause a lot of I/O and are not needed here, so
+Also, the `make` built-in rules cause a lot of I/O and are not needed here, so
 supplying `make` with the `-r` argument makes it much faster.
 
 `$ make -r -j 1`

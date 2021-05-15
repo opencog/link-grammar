@@ -1,5 +1,5 @@
 %= A link-parser.exe wrapper for MinGW64 =%
-%- This wraper can be invoked from MINGW64 or from a the Windows console. =%
+%- This wrapper can be invoked from MINGW64 or from a the Windows console. =%
 @echo off
 setlocal
 if defined ProgramW6432 set ProgramFiles=%ProgramW6432%

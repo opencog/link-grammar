@@ -79,7 +79,7 @@ REM echo END configuration variables 1>&2
 	)
 :skipos
 
-%= Process the ".in" file, preserving blank lines and exlamation marks =%
+%= Process the ".in" file, preserving blank lines and exclamation marks =%
 for /f "tokens=1* delims=]" %%i in ('find /v /n ""') do (
 	set "line=%%j"
 	if "%%j"=="" (echo.) else (

@@ -1473,7 +1473,7 @@ http://www.corpus.bham.ac.uk/publications/index.shtml
    unclear how to handle this within link-grammar. This is somewhat
    related to the problem of morphology (parsing words as if they
    were "mini-sentences",) idioms (phrases that are treated as if
-   they were singe words), set-phrase structures (if ... then ... not
+   they were single words), set-phrase structures (if ... then ... not
    only... but also ...) which have a long-range structure similar to
    quoted text (he said ...).
 

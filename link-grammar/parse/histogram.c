@@ -89,7 +89,7 @@ void hist_prod(Count_bin* prod, const Count_bin* a, const Count_bin* b)
 // #define SLOW_BUT_SIMPLE 1
 #ifdef SLOW_BUT_SIMPLE
 	/* The below implements the straight-forward concept of the product.
-	 * Its not quite optimal, because the intialization loop, and the
+	 * Its not quite optimal, because the initialization loop, and the
 	 * if check can be eliminated by re-writing j = k-i.
 	 */
 	for (i = 0; i < NUM_BINS; i++) prod->bin[i] = 0;

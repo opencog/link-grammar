@@ -2,7 +2,7 @@
 # Dockerfile for the link-grammar parse server.
 #
 # The parse server is currently written so that it requires the Java
-# bindings to run. So this has to pull down thw whole fatso JDK.
+# bindings to run. So this has to pull down the whole fatso JDK.
 #
 # XXX TODO -- actually start and run the parse server ... 
 # ... and make sure it works.

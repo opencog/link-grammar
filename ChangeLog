@@ -1090,7 +1090,7 @@ Version 4.3.0 (30 January 2008) includes the following changes:
    relative clauses: "John is bigger than Dave is", "John wants more
    cookies than Dave wants". The Rw link is used to link question words
    to the relative clauses that follow them.
- * Dictionary Fixes for "Expresso is a coffee drink", "Teach me fetch",
+ * Dictionary Fixes for "Espresso is a coffee drink", "Teach me fetch",
    "I am pooped" as synonym for "I am tired", "Mother likes her",
    "Mommy loves me" and related. Also, directives involving "go":
    "Go play ball", "Go take a walk", "You and Rover go play with the
