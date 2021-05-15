@@ -370,9 +370,6 @@ bool dictionary_generation_request(const Dictionary dict)
 	const char *generation_mode = test_enabled("generate");
 	if (generation_mode != NULL)
 	{
-		const size_t initial_allocation = 256;
-		dict->num_categories_alloced = initial_allocation;
-		dict->category = malloc(sizeof(*dict->category) *initial_allocation);
 		dict->generate_walls =
 			feature_enabled(generation_mode, "walls", NULL) != NULL;
 		dict->spell_checker = NULL; /* Disable spell-checking. */

@@ -17,3 +17,12 @@ O    +---Wd---+-Ss*b+     +---Ds--+
 O    |        |     |     |       |
 OLEFT-WALL this.p is.v another test.n
 O
+
+-max_null_count=1
+IThis is a a test
+O
+O    +------WV------+----Osm----+
+O    +---Wd---+-Ss*b+      +-Ds-+
+O    |        |     |      |    |
+OLEFT-WALL this.p is.v [a] a test.n
+O

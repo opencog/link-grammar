@@ -126,8 +126,16 @@ dictionary_six_str(const char * lang,
 
 	if (NULL != affix_name)
 	{
-		if (!dictionary_generation_request(dict))
+		if (dictionary_generation_request(dict))
+		{
+			const size_t initial_allocation = 256;
+			dict->num_categories_alloced = initial_allocation;
+			dict->category = malloc(sizeof(*dict->category) * initial_allocation);
+		}
+		else
+		{
 			dict->spell_checker = spellcheck_create(dict->lang);
+		}
 
 #if defined HAVE_HUNSPELL || defined HAVE_ASPELL
 		/* FIXME: Move to spellcheck-*.c */
