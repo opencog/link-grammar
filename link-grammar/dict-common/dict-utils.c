@@ -43,12 +43,83 @@ void patch_subscript(char * s)
 	*ds = SUBSCRIPT_MARK;
 }
 
+static size_t exp_memory_size(const Exp * e)
+{
+	size_t size;
+
+	if (e == NULL) return 0;
+	if (e->type == CONNECTOR_type) return 1;
+	size = 1;
+
+	for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+		size += exp_memory_size(opd);
+
+	return size;
+}
+
+/**
+ * Resolve dialect cost in the given expression.
+ *
+ * This function is very similar to copy_EXP(), and could be unified with
+ * it (with a slight more overhead).
+ */
+static Exp *create_external_exp(const Exp *e, Exp **exp_mem, Parse_Options opts)
+{
+	if (e == NULL) return NULL;
+	Exp *new_e = (*exp_mem)++;
+
+	*new_e = *e;
+	if (opts != NULL)
+	{
+		if ((e->type != CONNECTOR_type) && (Exptag_dialect == e->tag_type))
+			new_e->cost += opts->dialect.cost_table[new_e->tag_id];
+	}
+
+	if (CONNECTOR_type == e->type) return new_e;
+
+	/* Iterate operands to avoid a deep recursion due to a lot of operands. */
+	Exp **tmp_e_a = &new_e->operand_first;
+	for(Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
+	{
+		*tmp_e_a = create_external_exp(opd, exp_mem, opts);
+		tmp_e_a = &(*tmp_e_a)->operand_next;
+	}
+	*tmp_e_a = NULL;
+
+	return new_e;
+}
+
 /* ======================================================== */
 /* Public API ... */
 
 const char * lg_exp_get_string(const Exp* exp)
 {
 	return exp->condesc->string;
+}
+
+/**
+ * Copy the given expression, optionally resolving dialect costs.
+ *
+ * @param Dict Dictionary of expression \p e;
+ * @param e Expression as read from dictionary \p dict.
+ * @param opts Parse-options in which the dialect definition has been set.
+ * If \c NULL, the original expression is just copied and may be given to
+ * this function letter. Else the dialect costs are resolved and the
+ * expression is not appropriate any more for using in this function.
+ * @return An expression which is optionally dialect-resolved. Should be
+ * freed using free().
+ */
+Exp *lg_exp_resolve(Dictionary dict, const Exp *e, Parse_Options opts)
+{
+	if (opts != NULL)
+	{
+		if (!setup_dialect(dict, opts)) return NULL;
+	}
+
+	size_t elen = exp_memory_size(e);
+	Exp *exp_mem = malloc(elen * sizeof(Exp));
+
+	return create_external_exp(e, &exp_mem, opts);
 }
 
 /* ======================================================== */
