@@ -46,7 +46,7 @@ if HAVE_SWIG
 # Swig builds these ....
 $(built_c_sources) $(built_py_sources): $(SWIG_INCLUDES)
 $(built_c_sources) $(built_py_sources): $(SWIG_SOURCES)
-	$(SWIG) -python -py3 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
+	$(AM_V_GEN) $(SWIG) -python -py3 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 else
 $(built_c_sources) $(built_py_sources):
 	touch $(built_c_sources) $(built_py_sources)
