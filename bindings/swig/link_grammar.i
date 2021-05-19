@@ -68,6 +68,7 @@
 }
 %rename("%s")  linkage_print_disjuncts;
 
+%newobject linkage_print_pp_msgs;
 %typemap(newfree) char * {
    linkage_free_pp_msgs($1);
 }
