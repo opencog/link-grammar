@@ -7,7 +7,9 @@
 SWIG_SOURCES = $(top_srcdir)/bindings/swig/link_grammar.i
 SWIG_INCLUDES =                                               \
    $(top_srcdir)/link-grammar/link-includes.h                 \
-   $(top_srcdir)/link-grammar/dict-common/dict-defines.h
+   $(top_srcdir)/link-grammar/dict-common/dict-defines.h      \
+   $(top_srcdir)/link-grammar/dict-common/dict-api.h          \
+   $(top_srcdir)/link-grammar/dict-common/dict-structures.h
 
 built_c_sources = lg_python_wrap.cc
 built_py_sources = $(top_builddir)/bindings/python/clinkgrammar.py

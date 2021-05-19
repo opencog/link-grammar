@@ -9,6 +9,8 @@
 
 #include "link-includes.h"
 #include "dict-common/dict-defines.h"
+#include "dict-common/dict-api.h"
+#include "dict-common/dict-structures.h"
 
 %}
 
@@ -23,6 +25,7 @@
 %nodefaultdtor lg_errinfo;
 
 #define link_public_api(x) x
+#define link_experimental_api(x) x
 #ifndef bool                         /* Prevent syntax errors if no bool. */
 #define bool int
 #endif /* bool */
