@@ -1313,8 +1313,6 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 	ctxt->checktimer = 0;
 	ctxt->islands_ok = opts->islands_ok;
 	ctxt->mchxt = mchxt;
-	ctxt->is_short =
-		(sent->length <= min_len_word_vector) && !IS_GENERATION(ctxt->sent->dict);
 
 	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 
@@ -1329,6 +1327,8 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	memset(ctxt, 0, sizeof(count_context_t));
 
 	ctxt->sent = sent;
+	ctxt->is_short =
+		(sent->length <= min_len_word_vector) && !IS_GENERATION(ctxt->sent->dict);
 
 	/* next_id keeps the last tracon_id used, so we need +1 for array size.  */
 	for (unsigned int dir = 0; dir < 2; dir++)
