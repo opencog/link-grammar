@@ -113,12 +113,6 @@ struct count_context_s
 #define MAX_TABLE_SIZE(s) (s / 10) /* Low load factor, for speed */
 #define MAX_LOG2_TABLE_SIZE ((sizeof(size_t)==4) ? 25 : 34)
 
-static void free_table(count_context_t *ctxt)
-{
-	ctxt->table = NULL;
-	ctxt->table_size = 0;
-}
-
 #if HAVE_THREADS_H
 /* Each thread will get it's own version of the `kept_table`.
  * If the program creates zillions of threads, then there will
@@ -208,8 +202,6 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 static void init_table(count_context_t *ctxt)
 {
 	Sentence sent = ctxt->sent;
-
-	if (ctxt->table) free_table(ctxt);
 
 	/* A piecewise exponential function determines the size of the
 	 * hash table. Probably should make use of the actual number of
@@ -1367,7 +1359,6 @@ void free_count_context(count_context_t *ctxt, Sentence sent)
 	           "disjunct %"PRIu64", null_count %"PRIu64"\n",
 	            ctxt->count_cost[0], ctxt->count_cost[1], ctxt->count_cost[2]);)
 
-	free_table(ctxt);
 	free_table_lrcnt(ctxt);
 	free(ctxt);
 }
