@@ -205,8 +205,10 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
  * sent->length as a hint for the initial table size. Usually, this
  * saves on dynamic table growth, which is costly.
  * */
-static void init_table(count_context_t *ctxt, Sentence sent)
+static void init_table(count_context_t *ctxt)
 {
+	Sentence sent = ctxt->sent;
+
 	if (ctxt->table) free_table(ctxt);
 
 	/* A piecewise exponential function determines the size of the
@@ -286,9 +288,10 @@ static void free_table_lrcnt(count_context_t *ctxt)
 	}
 }
 
-static void init_table_lrcnt(count_context_t *ctxt, Sentence sent)
+static void init_table_lrcnt(count_context_t *ctxt)
 {
 	if (ctxt->is_short) return;
+	Sentence sent = ctxt->sent;
 
 	for (unsigned int dir = 0; dir < 2; dir++)
 	{
@@ -1334,7 +1337,7 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	for (unsigned int dir = 0; dir < 2; dir++)
 		ctxt->table_lrcnt_size[dir] = ts->next_id[!dir] + 1;
 
-	init_table_lrcnt(ctxt, sent);
+	init_table_lrcnt(ctxt);
 
 	/* consecutive blocks of this many words are considered as
 	 * one null link. */
@@ -1352,7 +1355,7 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 			         /*zero_out*/false, /*align*/false, /*exact*/false);
 	}
 
-	init_table(ctxt, sent);
+	init_table(ctxt);
 	return ctxt;
 }
 
