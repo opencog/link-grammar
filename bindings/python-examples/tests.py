@@ -970,21 +970,25 @@ class JBDictCostReadingTestCase(unittest.TestCase):
         self.assertEqual(list(linkage.words())[4], 'white.a')
 
 
+# Currently, The dictionary creating function sets the generation mode if
+# the "test" parse-option has "generate" in its value list. So it must be
+# set so before the call to Dictionary(). When the second argument of
+# Sentence is evaluated, it initializes the test parse-option to a null
+# string.
 class YGenerationTestCase(unittest.TestCase):
     """
     Generation mode tests.
     """
-    @classmethod
-    def setUpClass(cls):
-        ParseOptions(test='generate')  # Must be set before Dictionary()
-
     def test_getting_linkages_file_dict(self):
+        ParseOptions(test='generate')
         linkages = Sentence(r'\* ' * 5, Dictionary(lang='lt'), ParseOptions()).parse()
         self.assertTrue(len(linkages) > 0, "No linkages")
 
     def test_getting_linkages_sql_dict(self):
+        ParseOptions(test='generate')
         linkages = Sentence(r'\* ' * 4, Dictionary(lang='demo-sql'), ParseOptions()).parse()
         self.assertTrue(len(linkages) > 0, "No linkages")
+
 
 class ZENConstituentsCase(unittest.TestCase):
     @classmethod
