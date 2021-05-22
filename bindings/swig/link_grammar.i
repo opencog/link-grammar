@@ -46,6 +46,20 @@
 %free_returned_value(linkage_print_constituent_tree);
 %free_returned_value(linkage_print_disjuncts);
 %free_returned_value(linkage_print_pp_msgs);
+// End of functions that need a special memory-freeing function.
+
+// These functions need free() for their returned value.
+%define %free_returned_value_by_free(func, ret_type)
+%newobject func;
+%typemap(newfree) ret_type { free($1); }
+%ignore free;
+%enddef
+
+%free_returned_value_by_free(dictionary_get_data_dir, char *);
+%free_returned_value_by_free(lg_exp_stringify, char *);
+%free_returned_value_by_free(sentence_unused_disjuncts, Disjunct **);
+%free_returned_value_by_free(disjunct_expression, char *);
+// End of functions that need free().
 
 // Reset to default.
 %typemap(newfree) char * {
