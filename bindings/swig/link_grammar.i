@@ -21,27 +21,12 @@
 
 %newobject dictionary_get_data_dir;
 
-/**********************************************************************
-*
-* Functions that create and manipulate Linkages.
-* When a Linkage is requested, the user is given a
-* copy of all of the necessary information, and is responsible
-* for freeing up the storage when he/she is finished, using
-* the routines provided below.
-*
-***********************************************************************/
-
-/**********************************************************************
-*
-* These functions allocate strings to be returned, so need to be
-* newobject'd to avoid memory leaks
-*
-***********************************************************************/
-
+/* For functions returning (char *), free the returned result
+   after it gets converted to a Python object. */
 %define %free_returned_value(func)
 %newobject func;
 %typemap(newfree) char * { free##func($1); }
-%ignore free##func;
+%ignore free##func; /* They are not a part of the API here. */
 %enddef
 
 %free_returned_value(linkage_print_diagram);
