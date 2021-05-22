@@ -16,7 +16,9 @@
 
 #include "link-includes.h"
 
+#ifndef SWIG
 LINK_BEGIN_DECLS
+#endif /* !SWIG */
 
 /* Forward decls */
 typedef struct Dict_node_struct Dict_node;
@@ -34,6 +36,7 @@ typedef enum
 	CONNECTOR_type
 } Exp_type;
 
+#ifndef SWIG
 static const int cost_max_dec_places = 3;
 static const double cost_epsilon = 1E-5;
 
@@ -74,6 +77,7 @@ struct Exp_struct
 	};
 	Exp *operand_next;     /* Next same-level operand. */
 };
+#endif /* !SWIG */
 
 /* List of words in a dictionary category. */
 typedef struct
@@ -91,8 +95,10 @@ typedef struct
 	float cost;          /* Corresponding disjunct cost. */
 } Category_cost;
 
+#ifndef SWIG
 bool cost_eq(double cost1, double cost2);
 const char *cost_stringify(double cost);
+#endif /* !SWIG */
 
 /* API to access the above structure. */
 static inline Exp_type lg_exp_get_type(const Exp* exp) { return exp->type; }
@@ -121,6 +127,8 @@ struct Dict_node_struct
 	Dict_node *left, *right;
 };
 
+#ifndef SWIG
 LINK_END_DECLS
+#endif /* !SWIG */
 
 #endif /* _LG_DICT_STRUCTURES_H_ */

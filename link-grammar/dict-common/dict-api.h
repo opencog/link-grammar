@@ -17,7 +17,9 @@
 #include "dict-structures.h"
 #include "link-includes.h"
 
+#ifndef SWIG
 LINK_BEGIN_DECLS
+#endif /* !SWIG */
 
 /**
  * Declaration of dictionary-related functions that link-grammar users
@@ -73,6 +75,7 @@ link_experimental_api(const Category_cost *)
 link_public_api(bool)
 	dictionary_word_is_known(const Dictionary dict, const char *word);
 
+#ifndef SWIG
 /* This was exported and used by mistake! */
 bool boolean_dictionary_lookup(const Dictionary dict, const char *word);
 
@@ -80,5 +83,6 @@ bool boolean_dictionary_lookup(const Dictionary dict, const char *word);
 Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
 
 LINK_END_DECLS
+#endif /* !SWIG */
 
 #endif /* _LG_DICT_API_H_ */

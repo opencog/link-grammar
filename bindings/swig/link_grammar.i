@@ -84,6 +84,8 @@ int prt_error(const char *, const char *);
 %immutable;                          /* Future-proof for const definitions. */
 %include link-includes.h
 %include dict-common/dict-defines.h
+%include dict-common/dict-api.h
+%include dict-common/dict-structures.h
 %mutable;
 
 #ifdef SWIGPYTHON
