@@ -38,41 +38,18 @@
 *
 ***********************************************************************/
 
-%newobject linkage_print_diagram;
-%typemap(newfree) char * {
-   linkage_free_diagram($1);
-}
-%rename("%s") linkage_print_diagram;
+%define %free_returned_value(func)
+%newobject func;
+%typemap(newfree) char * { free##func($1); }
+%ignore free##func;
+%enddef
 
-%newobject linkage_print_postscript;
-%typemap(newfree) char * {
-   linkage_free_postscript($1);
-}
-%rename("%s")  linkage_print_postscript;
-
-%newobject linkage_print_links_and_domains;
-%typemap(newfree) char * {
-   linkage_free_links_and_domains($1);
-}
-%rename("%s")  linkage_print_links_and_domains;
-
-%newobject linkage_print_constituent_tree;
-%typemap(newfree) char * {
-   linkage_free_constituent_tree_str($1);
-}
-%rename("%s")  linkage_print_constituent_tree;
-
-%newobject linkage_print_disjuncts;
-%typemap(newfree) char * {
-   linkage_free_disjuncts($1);
-}
-%rename("%s")  linkage_print_disjuncts;
-
-%newobject linkage_print_pp_msgs;
-%typemap(newfree) char * {
-   linkage_free_pp_msgs($1);
-}
-%rename("%s")  linkage_print_pp_msgs;
+%free_returned_value(linkage_print_diagram);
+%free_returned_value(linkage_print_postscript);
+%free_returned_value(linkage_print_links_and_domains);
+%free_returned_value(linkage_print_constituent_tree);
+%free_returned_value(linkage_print_disjuncts);
+%free_returned_value(linkage_print_pp_msgs);
 
 // Reset to default.
 %typemap(newfree) char * {
