@@ -79,6 +79,63 @@ class Parse_Options {};
 }
 %ignore Parse_Options;
 
+/* ===================== Dictionary lookup support ========================= */
+%newobject dictionary_lookup_list;
+%newobject dictionary_lookup_wild;
+%typemap(newfree) Dict_node * {
+   free_lookup_list(arg1, $1);
+}
+
+%ignore Dict_node_struct::left;
+%ignore Dict_node_struct::right;
+
+%{
+unsigned int lookup_list_len(Dict_node *dn)
+{
+        unsigned int n = 0;
+        for (; dn != NULL; dn = dn->right)
+        {
+           n++;
+        }
+        return n;
+}
+%}
+
+#ifdef SWIGPYTHON
+%typemap(out) Dict_node *
+{
+   unsigned int n = lookup_list_len($1);
+
+   if (n == 0)
+   {
+      $result = Py_None;
+   }
+   else
+   {
+      $result = PyTuple_New(n);
+      if ($result == NULL)
+      {
+         PyErr_Print();
+      }
+      else
+      {
+         n = 0;
+         for (Dict_node *dn = $1; dn != NULL; dn = dn->right)
+         {
+            Dict_node *new_dn = (Dict_node_struct *)new Dict_node_struct();
+            *new_dn = *dn;
+
+            PyObject *pdn = SWIG_NewPointerObj(SWIG_as_voidptr(new_dn),
+                               SWIGTYPE_p_Dict_node_struct, SWIG_POINTER_OWN);
+            PyTuple_SET_ITEM($result, n, pdn);
+            n++;
+         }
+      }
+   }
+}
+#endif /* SWIGPYTHON */
+/* ========================================================================= */
+
 /* Error-handling facility calls. */
 %rename(_lg_error_formatmsg) lg_error_formatmsg;
 %newobject lg_error_formatmsg;
