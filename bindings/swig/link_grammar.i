@@ -94,11 +94,6 @@ int prt_error(const char *, const char *);
  */
 %ignore lg_error_set_handler_data;
 
-// Set a default newfree typemap.
-%typemap(newfree) char * {
-   free($1);
-}
-
 %immutable;                          /* Future-proof for const definitions. */
 %include ../link-grammar/link-includes.h
 %include ../link-grammar/dict-common/dict-defines.h
