@@ -23,7 +23,6 @@ LINK_BEGIN_DECLS
 /* Forward decls */
 typedef struct Dict_node_struct Dict_node;
 typedef struct Exp_struct Exp;
-typedef struct Word_file_struct Word_file;
 typedef struct condesc_struct condesc_t;
 
 /**
@@ -122,7 +121,7 @@ link_public_api(char *)
 struct Dict_node_struct
 {
 	const char * string;  /* The word itself */
-	Word_file * file;     /* The file the word came from (NULL if dict file) */
+	const char * file;    /* The file the word came from (NULL if dict file) */
 	Exp       * exp;
 	Dict_node *left, *right;
 };

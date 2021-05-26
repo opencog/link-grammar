@@ -90,7 +90,7 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 		dn_new->left = dn;
 		dn = dn_new;
 		dn->string = s;
-		dn->file = wf;
+		dn->file = wf->file;
 	}
 	fclose(fp);
 	return dn;

@@ -1199,7 +1199,7 @@ static char *display_counts(const char *word, Dict_node *dn)
 
 		if (dn->file != NULL)
 		{
-			append_string(s, " <%s>", dn->file->file);
+			append_string(s, " <%s>", dn->file);
 		}
 		dyn_strcat(s, "\n\n");
 	}
