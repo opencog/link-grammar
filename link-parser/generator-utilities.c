@@ -7,12 +7,9 @@
 #endif /* _MSC_VER */
 
 #include <dict-api.h>
+#include <dict-defines.h>
 
 #include "generator-utilities.h"
-
-#define SUBSCRIPT_MARK '\3'
-#define SUBSCRIPT_DOT '.'
-#define MAX_WORD 180
 
 /**
  * Patch a subscript to SUBSCRIPT_DOT, or remove it iff

@@ -24,11 +24,11 @@
 
 #include <link-includes.h>
 #include <dict-api.h>
+#include <dict-defines.h>               // WILDCARD_WORD
 
 #include "generator-utilities.h"
 
 #define MAX_SENTENCE 254
-#define WILDCARD_WORD "\\*"
 
 int verbosity_level;
 
