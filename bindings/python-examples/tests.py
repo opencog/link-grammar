@@ -969,6 +969,82 @@ class JBDictCostReadingTestCase(unittest.TestCase):
         self.assertEqual(list(linkage.words())[4], 'white.a')
 
 
+def sm(s):
+    """
+    Naive '.' replacement by SUBSCRIPT_MARK (enough for the tests here).
+    """
+    SUBSCRIPT_MARK = '\3'
+    return s.replace('.', SUBSCRIPT_MARK)
+
+
+class XLookupListTestCase(unittest.TestCase):
+    """
+    Lookup-list related tests.
+    Note: In case of test errors, the subscript mark in words may be mis-printed.
+    """
+    @classmethod
+    def setUpClass(cls):
+        cls.d_en, cls.d_sql, cls.po = Dictionary(lang='en'), Dictionary(lang='demo-sql'), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d_en, cls.d_sql, cls.po
+
+    def test_file_lookup_list_none(self):
+        self.assertIsNone(clg.dictionary_lookup_list(self.d_en._obj, 'NoSuchWord'))
+
+    def test_file_lookup_wild_none(self):
+        self.assertIsNone(clg.dictionary_lookup_wild(self.d_en._obj, 'NoSuch*'))
+
+    def test_sql_lookup_list_none(self):
+        self.assertIsNone(clg.dictionary_lookup_list(self.d_sql._obj, 'NoSuchWord'))
+
+    def test_sql_lookup_wild_none(self):
+        self.assertIsNone(clg.dictionary_lookup_wild(self.d_sql._obj, 'NoSuch*'))
+
+    def test_file_lookup_list_subscr(self):
+        dictnode = clg.dictionary_lookup_list(self.d_en._obj, sm('test.n'))
+        self.assertEqual(dictnode[0].string, sm('test.n'))
+
+    def test_file_lookup_list_no_subscr(self):
+        dictnode = clg.dictionary_lookup_list(self.d_en._obj, 'test')
+        self.assertEqual(sorted([dictnode[i].string for i in range(len(dictnode))]), [sm('test.n'), sm('test.v')])
+        for i in range(len(dictnode)):
+            self.assertIn("(", str(dictnode[i].exp), "Missing expression")
+            if dictnode[i].string == sm('test.n'):
+                self.assertEqual(dictnode[i].file, 'en/words/words.n.1-const')
+            elif dictnode[i].string == sm('test.v'):
+                self.assertIsNone(dictnode[i].file)
+
+    @unittest.skip("FIXME: Cannot lookup with SUBSCRIPT_MARK")
+    def test_sql_lookup_list_subscr(self):
+        dictnode = clg.dictionary_lookup_list(self.d_en._obj, sm('test.n'))
+        self.assertEqual(dictnode[0].string, sm('test.n'))
+
+    @unittest.skip("FIXME: It returns a dot subscript instead of SUBSCRIPT_MARK")
+    def test_sql_lookup_list_no_subscr(self):
+        dictnode = clg.dictionary_lookup_list(self.d_sql._obj, 'test')
+        self.assertEqual(sorted([dictnode[i].string for i in range(len(dictnode))]), [sm('test.n')])
+
+    def test_file_lookup_wild_any_subscript(self):
+        dictnode = clg.dictionary_lookup_wild(self.d_en._obj, 'test*')
+        self.assertTrue(len(dictnode) > 40, 'Missing words (only {} found)'.format(len(dictnode)))
+        for dn in dictnode:
+            self.assertIsNotNone(re.search('test.*', dn.string), 'Bad word {}'.format(dn.string))
+
+    def test_file_lookup_wild_n_subscript(self):
+        dictnode = clg.dictionary_lookup_wild(self.d_en._obj, 'test*.n')
+        self.assertTrue(len(dictnode) > 10, 'Missing words (only {} found)'.format(len(dictnode)))
+        for dn in dictnode:
+            self.assertIsNotNone(re.search('test.*' + sm('.') + 'n', dn.string), 'Bad word {}'.format(dn.string))
+
+    def test_sql_lookup_wild_any_subscript(self):
+        dictnode = clg.dictionary_lookup_wild(self.d_en._obj, 't*')
+        self.assertTrue(len(dictnode) > 40, 'Missing words (only {} found)'.format(len(dictnode)))
+        for dn in dictnode:
+            self.assertIsNotNone(re.search('t.*', dn.string), 'Bad word {}'.format(dn.string))
+
+
 # Currently, the dictionary creating function sets the generation mode if
 # the "test" parse-option has "generate" in its value list. So it must be
 # set so before the call to Dictionary(). When the second argument of
