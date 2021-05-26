@@ -19,6 +19,9 @@
 #define RIGHT_WALL_WORD  "RIGHT-WALL"
 #define UNKNOWN_WORD     "<UNKNOWN-WORD>"
 
+/* The following is for using in generation-mode sentence template. */
+#define WILDCARD_WORD    "\\*"    /* Any dictionary word. */
+
 /* MAX_WORD is large, because Unicode entries can use a lot of space. */
 #define MAX_WORD 180              /* Maximum number of bytes in a word. */
 
