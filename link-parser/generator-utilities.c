@@ -6,7 +6,7 @@
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif /* _MSC_VER */
 
-#include "link-grammar/dict-common/dict-api.h"
+#include <dict-api.h>
 
 #include "generator-utilities.h"
 
