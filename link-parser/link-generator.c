@@ -22,13 +22,13 @@
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif /* _MSC_VER */
 
-#include "link-grammar/link-includes.h"
-#include "link-grammar/dict-common/dict-api.h"
+#include <link-includes.h>
+#include <dict-api.h>
+#include <dict-defines.h>               // WILDCARD_WORD
 
 #include "generator-utilities.h"
 
 #define MAX_SENTENCE 254
-#define WILDCARD_WORD "\\*"
 
 int verbosity_level;
 

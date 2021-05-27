@@ -112,7 +112,6 @@ typedef enum
 } Guess_mark;
 
 #define MAX_SPLITS 10   /* See split_counter below */
-#define WILDCARD_WORD "\\*" /* All the dict words (generation mode) */
 
 struct Gword_struct
 {

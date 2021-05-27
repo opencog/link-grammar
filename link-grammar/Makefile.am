@@ -196,6 +196,7 @@ liblink_grammar_include_HEADERS =   \
 	link-features.h                  \
 	link-includes.h                  \
 	dict-common/dict-api.h           \
+	dict-common/dict-defines.h           \
 	dict-common/dict-structures.h
 
 uninstall-hook:

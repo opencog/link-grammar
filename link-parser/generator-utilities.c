@@ -6,13 +6,10 @@
 #define LINK_GRAMMAR_DLL_EXPORT 0
 #endif /* _MSC_VER */
 
-#include "link-grammar/dict-common/dict-api.h"
+#include <dict-api.h>
+#include <dict-defines.h>
 
 #include "generator-utilities.h"
-
-#define SUBSCRIPT_MARK '\3'
-#define SUBSCRIPT_DOT '.'
-#define MAX_WORD 180
 
 /**
  * Patch a subscript to SUBSCRIPT_DOT, or remove it iff

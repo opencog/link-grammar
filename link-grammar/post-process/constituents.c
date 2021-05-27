@@ -15,9 +15,8 @@
 #include <string.h>
 
 #include "api-structures.h"
-#include "dict-common/dict-defines.h"    // For RIGHT_WALL_WORD
-#include "dict-common/dict-common.h"     // For Dictionary_s
-#include "dict-common/dict-defines.h"    // For MAX_WORD
+#include "dict-common/dict-common.h"    // Dictionary_s
+#include "dict-common/dict-defines.h"   // RIGHT_WALL_WORD, MAX_WORD
 #include "error.h"
 #include "linkage/linkage.h"
 #include "post-process/post-process.h"

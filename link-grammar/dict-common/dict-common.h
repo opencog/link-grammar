@@ -16,6 +16,7 @@
 
 #include "api-types.h"                  // pp_knowledge
 #include "connectors.h"                 // ConTable
+#include "dict-defines.h"
 #include "dict-structures.h"
 #include "memory-pool.h"                // Pool_desc
 #include "utilities.h"                  // locale_t
@@ -24,6 +25,15 @@
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
 #define LIMITED_CONNECTORS_WORD ("LENGTH-LIMIT-")
 #define IS_GENERATION(dict) (dict->category != NULL)
+
+/* If the maximum disjunct cost is yet uninitialized, the value defined in the
+ * dictionary (or if not defined then DEFAULT_MAX_DISJUNCT_COST) is used. */
+static const double UNINITIALIZED_MAX_DISJUNCT_COST = -10000.0;
+static const double DEFAULT_MAX_DISJUNCT_COST = 2.7;
+/* We need some of these as literal strings. */
+#define LG_DISJUNCT_COST                        "max-disjunct-cost"
+#define LG_DICTIONARY_VERSION_NUMBER            "dictionary-version-number"
+#define LG_DICTIONARY_LOCALE                    "dictionary-locale"
 
 /* Forward decls */
 typedef struct Afdict_class_struct Afdict_class;
@@ -174,4 +184,9 @@ bool dictionary_generation_request(const Dictionary);
 bool dict_has_word(const Dictionary dict, const char *);
 void add_empty_word(Sentence, X_node *);
 
+static inline const char *subscript_mark_str(void)
+{
+	static const char sm[] = { SUBSCRIPT_MARK, '\0' };
+	return sm;
+}
 #endif /* _LG_DICT_COMMON_H_ */

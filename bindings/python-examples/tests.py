@@ -981,12 +981,12 @@ class YGenerationTestCase(unittest.TestCase):
     """
     def test_getting_linkages_file_dict(self):
         ParseOptions(test='generate')
-        linkages = Sentence(r'\* ' * 5, Dictionary(lang='lt'), ParseOptions()).parse()
+        linkages = Sentence((clg.WILDCARD_WORD + ' ') * 5, Dictionary(lang='lt'), ParseOptions()).parse()
         self.assertTrue(len(linkages) > 0, "No linkages")
 
     def test_getting_linkages_sql_dict(self):
         ParseOptions(test='generate')
-        linkages = Sentence(r'\* ' * 4, Dictionary(lang='demo-sql'), ParseOptions()).parse()
+        linkages = Sentence((clg.WILDCARD_WORD + ' ') * 4, Dictionary(lang='demo-sql'), ParseOptions()).parse()
         self.assertTrue(len(linkages) > 0, "No linkages")
 
 
