@@ -68,6 +68,7 @@ static void print_expression_tag_start(Dictionary dict, dyn_str *e, const Exp *n
                                  int *indent)
 {
 	if (n->type == CONNECTOR_type) return;
+	if (NULL == dict) return;
 
 	switch (n->tag_type)
 	{
@@ -95,7 +96,6 @@ static void print_expression_tag_end(Dictionary dict, dyn_str *e, const Exp *n,
                                  int *indent)
 {
 	if (n->type == CONNECTOR_type) return;
-
 	if (NULL == dict) return;
 
 	switch (n->tag_type)
