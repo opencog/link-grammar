@@ -671,7 +671,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
     # -- the one that is in the dict is not the grammatically appropriate word.
     #
     # Let's is NOT split into two! It's in the dict as one word, lower-case only.
-    def test_f_captilization(self):
+    def test_f_capitalization(self):
         self.assertEqual(list(self.parse_sent('Let\'s eat.')[0].words()),
              ['LEFT-WALL', 'let\'s', 'eat.v', '.', 'RIGHT-WALL'])
 
@@ -969,7 +969,7 @@ class JBDictCostReadingTestCase(unittest.TestCase):
         self.assertEqual(list(linkage.words())[4], 'white.a')
 
 
-# Currently, The dictionary creating function sets the generation mode if
+# Currently, the dictionary creating function sets the generation mode if
 # the "test" parse-option has "generate" in its value list. So it must be
 # set so before the call to Dictionary(). When the second argument of
 # Sentence is evaluated, it initializes the test parse-option to a null
