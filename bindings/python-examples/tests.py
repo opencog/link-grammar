@@ -352,7 +352,7 @@ class DBasicParsingTestCase(unittest.TestCase):
     def test_that_parse_returns_empty_iterator_on_no_linkage_sat(self):
         """Parsing a bad sentence with no null-links shouldn't give any linkage (sat)"""
         self.po = ParseOptions(use_sat=True)
-        if self.po.use_sat != True:
+        if not self.po.use_sat:
             raise unittest.SkipTest("Library not configured with SAT parser")
         result = self.parse_sent("This this doesn't parse", self.po)
         linkage_exists = False
@@ -600,7 +600,7 @@ class FSATsolverTestCase(unittest.TestCase):
     def setUp(self):
         self.d, self.po = Dictionary(lang='en'), ParseOptions()
         self.po = ParseOptions(use_sat=True)
-        if self.po.use_sat != True:
+        if not self.po.use_sat:
             raise unittest.SkipTest("Library not configured with SAT parser")
 
     def test_SAT_getting_links(self):
