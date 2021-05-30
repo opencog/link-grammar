@@ -40,7 +40,7 @@ class ParseOptions(object):
                  spell_guess=False,
                  use_sat=False,
                  max_parse_time=-1,
-                 disjunct_cost=2.7,
+                 disjunct_cost=None,
                  repeatable_rand=True,
                  test='',
                  debug='',
@@ -59,7 +59,8 @@ class ParseOptions(object):
         self.spell_guess = spell_guess
         self.use_sat = use_sat
         self.max_parse_time = max_parse_time
-        self.disjunct_cost = disjunct_cost
+        if disjunct_cost is not None:
+            self.disjunct_cost = disjunct_cost
         self.repeatable_rand = repeatable_rand
         self.test = test
         self.debug = debug
