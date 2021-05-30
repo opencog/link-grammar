@@ -170,7 +170,7 @@ class BParseOptionsTestCase(unittest.TestCase):
 
     def test_setting_verbosity_to_not_allow_value_raises_value_error(self):
         po = ParseOptions()
-        self.assertRaises(ValueError, setattr, po, "verbosity", 121)
+        self.assertRaises(ValueError, setattr, po, "verbosity", -1)
 
     def test_setting_verbosity_to_non_integer_raises_type_error(self):
         po = ParseOptions()
