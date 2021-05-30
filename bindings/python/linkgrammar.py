@@ -73,11 +73,6 @@ class ParseOptions(object):
             raise TypeError('Unknown parse option "{}".'.format(name))
         super(ParseOptions, self).__setattr__(name, value)
 
-    def __del__(self):
-        if hasattr(self, '_obj'):
-            clg.parse_options_delete(self._obj)
-            del self._obj
-
     @property
     def test(self):
         return clg.parse_options_get_test(self._obj)

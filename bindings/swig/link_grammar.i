@@ -41,6 +41,19 @@
    free($1);
 }
 
+%newobject parse_options_create;
+%delobject destroy_Parse_Options&;
+class Parse_Options {};
+%extend Parse_Options
+{
+   ~Parse_Options()
+   {
+      parse_options_delete(*$self);
+      delete($self);
+   }
+}
+%ignore Parse_Options;
+
 /* Error-handling facility calls. */
 %rename(_lg_error_formatmsg) lg_error_formatmsg;
 %newobject lg_error_formatmsg;
