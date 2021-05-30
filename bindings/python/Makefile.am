@@ -68,6 +68,7 @@ _clinkgrammar_la_CPPFLAGS =       \
    $(SWIG_PYTHON_CPPFLAGS)        \
    $(PYTHON_CPPFLAGS)            \
    -I$(top_srcdir)                \
+   -I$(top_srcdir)/link-grammar   \
    -I$(top_builddir)
 
 # On Cygwin and MinGW, a DLL with version is named name-major.EXT with no

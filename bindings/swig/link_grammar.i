@@ -7,8 +7,8 @@
 %module clinkgrammar
 %{
 
-#include "link-grammar/link-includes.h"
-#include "link-grammar/dict-common/dict-defines.h"
+#include "link-includes.h"
+#include "dict-common/dict-defines.h"
 
 %}
 
@@ -58,8 +58,8 @@ int prt_error(const char *, const char *);
 %ignore lg_error_set_handler_data;
 
 %immutable;                          /* Future-proof for const definitions. */
-%include ../link-grammar/link-includes.h
-%include ../link-grammar/dict-common/dict-defines.h
+%include link-includes.h
+%include dict-common/dict-defines.h
 %mutable;
 
 #ifdef SWIGPYTHON
