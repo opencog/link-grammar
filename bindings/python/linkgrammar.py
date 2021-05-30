@@ -94,14 +94,14 @@ class ParseOptions(object):
     @debug.setter
     def debug(self, value):
         if not isinstance(value, str):
-            raise TypeError("dialect must be set to a string")
+            raise TypeError("debug must be set to a string")
         return clg.parse_options_set_debug(self._obj, value)
 
     @property
     def dialect(self):
         return clg.parse_options_get_dialect(self._obj)
 
-    @debug.setter
+    @dialect.setter
     def dialect(self, value):
         if not isinstance(value, str):
             raise TypeError("dialect must be set to a string")
