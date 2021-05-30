@@ -583,7 +583,6 @@ class EErrorFacilityTestCase(unittest.TestCase):
 
     def test_50_set_orig_error_handler(self):
         # Set the error handler back to the default handler.
-        # The error message is now visible (but we cannot test that).
         self.__class__.handler["previous"] = LG_Error.set_handler(self.__class__.handler["default"])
         self.assertIsNone(self.__class__.handler["previous"])
         for _ in range(0, 1 + self.testleaks):
