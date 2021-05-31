@@ -99,12 +99,14 @@ static inline Exp_type lg_exp_get_type(const Exp* exp) { return exp->type; }
 static inline char lg_exp_get_dir(const Exp* exp) { return exp->dir; }
 static inline bool lg_exp_get_multi(const Exp* exp) { return exp->multi; }
 static inline double lg_exp_get_cost(const Exp* exp) { return exp->cost; }
-static inline Exp* lg_exp_operand_first(Exp* exp) { return exp->operand_first; }
-static inline Exp* lg_exp_operand_next(Exp* exp) { return exp->operand_next; }
+static inline const Exp* lg_exp_operand_first(const Exp* exp)
+                                             { return exp->operand_first; }
+static inline const Exp* lg_exp_operand_next(const Exp* exp)
+                                            { return exp->operand_next; }
 link_public_api(const char *)
 	lg_exp_get_string(const Exp*);
 link_public_api(const char *)
-	lg_exp_stringify(const Exp *); /* Result is in static variable. */
+	lg_exp_stringify(const Exp *); /* To be freed by the caller. */
 
 /**
  * The dictionary is stored as a binary tree comprised of the following
