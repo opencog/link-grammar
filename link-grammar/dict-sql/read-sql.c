@@ -262,7 +262,7 @@ db_lookup_exp(Dictionary dict, const char *s, cbdata* bs)
 	if (es != s) free(es);
 
 	lgdebug(D_SQL+1, "Found expression for class %s: %s\n",
-	        s, lg_exp_stringify(bs->exp));
+	        s, exp_stringify(bs->exp));
 }
 
 
@@ -356,7 +356,7 @@ static Dict_node * db_lookup_list(Dictionary dict, const char *s)
 		if (bs.dn)
 		{
 			printf("Found expression for word %s: %s\n",
-	        s, lg_exp_stringify(bs.dn->exp));
+	        s, exp_stringify(bs.dn->exp));
 		}
 		else
 		{
@@ -383,7 +383,7 @@ static Dict_node * db_lookup_wild(Dictionary dict, const char *s)
 		if (bs.dn)
 		{
 			printf("Found expression for glob %s: %s\n",
-			       s, lg_exp_stringify(bs.dn->exp));
+			       s, exp_stringify(bs.dn->exp));
 		}
 		else
 		{

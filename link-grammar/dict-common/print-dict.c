@@ -323,23 +323,16 @@ static void print_connector_macros(cmacro_context *cmc, const Exp *n)
 		print_expression_tag_end(cmc->dict, cmc->e, n, &cmc->indent);
 }
 
-static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n,
-                                              bool show_macros)
+static char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n,
+                                        bool show_macros)
 {
-	static TLS char *e_str;
-	int indent = show_macros ? 0 : -1;
+	if (n == NULL) return strdup("(null)");
 
-	if (e_str != NULL) free(e_str);
-	if (n == NULL)
-	{
-		e_str = NULL;
-		return "(null)";
-	}
+	int indent = show_macros ? 0 : -1;
 
 	dyn_str *e = dyn_str_new();
 	print_expression_parens(dict, e, n, false, &indent);
-	e_str = dyn_str_take(e);
-	return e_str;
+	return dyn_str_take(e);
 }
 
 /**
@@ -348,6 +341,18 @@ static const char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n,
 const char *lg_exp_stringify(const Exp *n)
 {
 	return lg_exp_stringify_with_tags(NULL, n, false);
+}
+
+/* For usage convenience when assigning to a temporary variable + free() is
+ * cumbersome. Care should be taken due to the static memory of the result. */
+const char *exp_stringify(const Exp *n)
+{
+	static TLS char *s;
+
+	free(s);
+	if (n == NULL) return ("null");
+	s = strdup(lg_exp_stringify(n));
+	return s;
 }
 
 #ifdef DEBUG
