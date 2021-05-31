@@ -12,6 +12,14 @@
 
 %}
 
+// The following C API calls don't need user callability.
+%ignore dictionary_create_default_lang;
+%ignore parse_options_memory_exhausted(Parse_Options opts); // Obsolete
+%ignore parse_options_resources_exhausted(Parse_Options opts);
+%ignore parse_options_set_max_memory(Parse_Options  opts, int mem); // No-Op
+%ignore parse_options_get_max_memory(Parse_Options opts);
+// End of ignored API calls.
+
 %nodefaultdtor lg_errinfo;
 
 #define link_public_api(x) x
