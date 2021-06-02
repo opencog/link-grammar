@@ -79,6 +79,18 @@ class Parse_Options {};
 }
 %ignore Parse_Options;
 
+%newobject lg_exp_resolve;
+%delobject destroy_Exp;
+class Exp {};
+%extend Exp
+{
+   ~Exp()
+   {
+      free($self);
+   }
+}
+%ignore Exp;
+
 /* ===================== Dictionary lookup support ========================= */
 %newobject dictionary_lookup_list;
 %newobject dictionary_lookup_wild;
