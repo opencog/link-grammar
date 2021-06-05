@@ -88,6 +88,12 @@ class Exp {};
    {
       free($self);
    }
+
+   %pythoncode
+   {
+      def __repr__(self):
+         return lg_exp_stringify(self)
+   }
 }
 %ignore Exp;
 
