@@ -5,7 +5,10 @@
 #
 #
 SWIG_SOURCES = $(top_srcdir)/bindings/swig/link_grammar.i
-SWIG_INCLUDES = $(top_srcdir)/link-grammar/link-includes.h
+SWIG_INCLUDES =                                               \
+   $(top_srcdir)/link-grammar/link-includes.h                 \
+   $(top_srcdir)/link-grammar/dict-common/dict-defines.h
+
 built_c_sources = lg_python_wrap.cc
 built_py_sources = $(top_builddir)/bindings/python/clinkgrammar.py
 
@@ -46,7 +49,7 @@ if HAVE_SWIG
 # Swig builds these ....
 $(built_c_sources) $(built_py_sources): $(SWIG_INCLUDES)
 $(built_c_sources) $(built_py_sources): $(SWIG_SOURCES)
-	$(SWIG) -python -py3 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
+	$(AM_V_GEN) $(SWIG) -python -py3 -module clinkgrammar -I$(top_srcdir)/link-grammar -o $@ $<
 else
 $(built_c_sources) $(built_py_sources):
 	touch $(built_c_sources) $(built_py_sources)
@@ -65,6 +68,7 @@ _clinkgrammar_la_CPPFLAGS =       \
    $(SWIG_PYTHON_CPPFLAGS)        \
    $(PYTHON_CPPFLAGS)            \
    -I$(top_srcdir)                \
+   -I$(top_srcdir)/link-grammar   \
    -I$(top_builddir)
 
 # On Cygwin and MinGW, a DLL with version is named name-major.EXT with no

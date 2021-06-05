@@ -40,7 +40,7 @@ class ParseOptions(object):
                  spell_guess=False,
                  use_sat=False,
                  max_parse_time=-1,
-                 disjunct_cost=2.7,
+                 disjunct_cost=None,
                  repeatable_rand=True,
                  test='',
                  debug='',
@@ -59,7 +59,8 @@ class ParseOptions(object):
         self.spell_guess = spell_guess
         self.use_sat = use_sat
         self.max_parse_time = max_parse_time
-        self.disjunct_cost = disjunct_cost
+        if disjunct_cost is not None:
+            self.disjunct_cost = disjunct_cost
         self.repeatable_rand = repeatable_rand
         self.test = test
         self.debug = debug
@@ -71,11 +72,6 @@ class ParseOptions(object):
             # TypeError for consistency. It maybe should have been NameError.
             raise TypeError('Unknown parse option "{}".'.format(name))
         super(ParseOptions, self).__setattr__(name, value)
-
-    def __del__(self):
-        if hasattr(self, '_obj'):
-            clg.parse_options_delete(self._obj)
-            del self._obj
 
     @property
     def test(self):
@@ -94,14 +90,14 @@ class ParseOptions(object):
     @debug.setter
     def debug(self, value):
         if not isinstance(value, str):
-            raise TypeError("dialect must be set to a string")
+            raise TypeError("debug must be set to a string")
         return clg.parse_options_set_debug(self._obj, value)
 
     @property
     def dialect(self):
         return clg.parse_options_get_dialect(self._obj)
 
-    @debug.setter
+    @dialect.setter
     def dialect(self, value):
         if not isinstance(value, str):
             raise TypeError("dialect must be set to a string")
@@ -118,9 +114,9 @@ class ParseOptions(object):
     @verbosity.setter
     def verbosity(self, value):
         if not isinstance(value, int):
-            raise TypeError("verbosity must be set to an integer")
-        if value not in range(0,120):
-            raise ValueError("Verbosity levels can be any integer between 0 and 120 inclusive")
+            raise TypeError("verbosity must be set to a nonnegative integer")
+        if value < 0:
+            raise ValueError("verbosity must be set to a nonnegative integer")
         clg.parse_options_set_verbosity(self._obj, value)
 
     @property

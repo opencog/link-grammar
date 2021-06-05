@@ -170,7 +170,7 @@ class BParseOptionsTestCase(unittest.TestCase):
 
     def test_setting_verbosity_to_not_allow_value_raises_value_error(self):
         po = ParseOptions()
-        self.assertRaises(ValueError, setattr, po, "verbosity", 121)
+        self.assertRaises(ValueError, setattr, po, "verbosity", -1)
 
     def test_setting_verbosity_to_non_integer_raises_type_error(self):
         po = ParseOptions()
@@ -352,7 +352,7 @@ class DBasicParsingTestCase(unittest.TestCase):
     def test_that_parse_returns_empty_iterator_on_no_linkage_sat(self):
         """Parsing a bad sentence with no null-links shouldn't give any linkage (sat)"""
         self.po = ParseOptions(use_sat=True)
-        if self.po.use_sat != True:
+        if not self.po.use_sat:
             raise unittest.SkipTest("Library not configured with SAT parser")
         result = self.parse_sent("This this doesn't parse", self.po)
         linkage_exists = False
@@ -583,7 +583,6 @@ class EErrorFacilityTestCase(unittest.TestCase):
 
     def test_50_set_orig_error_handler(self):
         # Set the error handler back to the default handler.
-        # The error message is now visible (but we cannot test that).
         self.__class__.handler["previous"] = LG_Error.set_handler(self.__class__.handler["default"])
         self.assertIsNone(self.__class__.handler["previous"])
         for _ in range(0, 1 + self.testleaks):
@@ -601,7 +600,7 @@ class FSATsolverTestCase(unittest.TestCase):
     def setUp(self):
         self.d, self.po = Dictionary(lang='en'), ParseOptions()
         self.po = ParseOptions(use_sat=True)
-        if self.po.use_sat != True:
+        if not self.po.use_sat:
             raise unittest.SkipTest("Library not configured with SAT parser")
 
     def test_SAT_getting_links(self):
@@ -672,7 +671,7 @@ class HEnglishLinkageTestCase(unittest.TestCase):
     # -- the one that is in the dict is not the grammatically appropriate word.
     #
     # Let's is NOT split into two! It's in the dict as one word, lower-case only.
-    def test_f_captilization(self):
+    def test_f_capitalization(self):
         self.assertEqual(list(self.parse_sent('Let\'s eat.')[0].words()),
              ['LEFT-WALL', 'let\'s', 'eat.v', '.', 'RIGHT-WALL'])
 
@@ -970,7 +969,7 @@ class JBDictCostReadingTestCase(unittest.TestCase):
         self.assertEqual(list(linkage.words())[4], 'white.a')
 
 
-# Currently, The dictionary creating function sets the generation mode if
+# Currently, the dictionary creating function sets the generation mode if
 # the "test" parse-option has "generate" in its value list. So it must be
 # set so before the call to Dictionary(). When the second argument of
 # Sentence is evaluated, it initializes the test parse-option to a null

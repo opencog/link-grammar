@@ -7,10 +7,18 @@
 %module clinkgrammar
 %{
 
-#include "link-grammar/link-includes.h"
-#include "link-grammar/dict-common/dict-defines.h"
+#include "link-includes.h"
+#include "dict-common/dict-defines.h"
 
 %}
+
+// The following C API calls don't need user callability.
+%ignore dictionary_create_default_lang;
+%ignore parse_options_memory_exhausted(Parse_Options opts); // Obsolete
+%ignore parse_options_resources_exhausted(Parse_Options opts);
+%ignore parse_options_set_max_memory(Parse_Options  opts, int mem); // No-Op
+%ignore parse_options_get_max_memory(Parse_Options opts);
+// End of ignored API calls.
 
 %nodefaultdtor lg_errinfo;
 
@@ -21,62 +29,38 @@
 
 %newobject dictionary_get_data_dir;
 
-/**********************************************************************
-*
-* Functions that create and manipulate Linkages.
-* When a Linkage is requested, the user is given a
-* copy of all of the necessary information, and is responsible
-* for freeing up the storage when he/she is finished, using
-* the routines provided below.
-*
-***********************************************************************/
+/* For functions returning (char *), free the returned result
+   after it gets converted to a Python object. */
+%define %free_returned_value(func)
+%newobject func;
+%typemap(newfree) char * { free##func($1); }
+%ignore free##func; /* They are not a part of the API here. */
+%enddef
 
-/**********************************************************************
-*
-* These functions allocate strings to be returned, so need to be
-* newobject'd to avoid memory leaks
-*
-***********************************************************************/
-
-%newobject linkage_print_diagram;
-%typemap(newfree) char * {
-   linkage_free_diagram($1);
-}
-%rename("%s") linkage_print_diagram;
-
-%newobject linkage_print_postscript;
-%typemap(newfree) char * {
-   linkage_free_postscript($1);
-}
-%rename("%s")  linkage_print_postscript;
-
-%newobject linkage_print_links_and_domains;
-%typemap(newfree) char * {
-   linkage_free_links_and_domains($1);
-}
-%rename("%s")  linkage_print_links_and_domains;
-
-%newobject linkage_print_constituent_tree;
-%typemap(newfree) char * {
-   linkage_free_constituent_tree_str($1);
-}
-%rename("%s")  linkage_print_constituent_tree;
-
-%newobject linkage_print_disjuncts;
-%typemap(newfree) char * {
-   linkage_free_disjuncts($1);
-}
-%rename("%s")  linkage_print_disjuncts;
-
-%typemap(newfree) char * {
-   linkage_free_pp_msgs($1);
-}
-%rename("%s")  linkage_print_pp_msgs;
+%free_returned_value(linkage_print_diagram);
+%free_returned_value(linkage_print_postscript);
+%free_returned_value(linkage_print_links_and_domains);
+%free_returned_value(linkage_print_constituent_tree);
+%free_returned_value(linkage_print_disjuncts);
+%free_returned_value(linkage_print_pp_msgs);
 
 // Reset to default.
 %typemap(newfree) char * {
    free($1);
 }
+
+%newobject parse_options_create;
+%delobject destroy_Parse_Options&;
+class Parse_Options {};
+%extend Parse_Options
+{
+   ~Parse_Options()
+   {
+      parse_options_delete(*$self);
+      delete($self);
+   }
+}
+%ignore Parse_Options;
 
 /* Error-handling facility calls. */
 %rename(_lg_error_formatmsg) lg_error_formatmsg;
@@ -94,14 +78,9 @@ int prt_error(const char *, const char *);
  */
 %ignore lg_error_set_handler_data;
 
-// Set a default newfree typemap.
-%typemap(newfree) char * {
-   free($1);
-}
-
 %immutable;                          /* Future-proof for const definitions. */
-%include ../link-grammar/link-includes.h
-%include ../link-grammar/dict-common/dict-defines.h
+%include link-includes.h
+%include dict-common/dict-defines.h
 %mutable;
 
 #ifdef SWIGPYTHON
