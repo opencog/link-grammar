@@ -100,7 +100,12 @@ int compile_regexs(Regex_node *rn, Dictionary dict)
 #ifndef REG_ENHANCED
 #define REG_ENHANCED 0
 #endif
-			rc = regcomp(re, rn->pattern, REG_NOSUB|REG_EXTENDED|REG_ENHANCED);
+			/* REG_GNU is needed for NetBSD to support \w etc. */
+#ifndef REG_GNU
+#define REG_GNU 0
+#endif
+			rc = regcomp(re, rn->pattern,
+			             REG_NOSUB|REG_EXTENDED|REG_ENHANCED|REG_GNU);
 #endif
 
 			if (rc)
