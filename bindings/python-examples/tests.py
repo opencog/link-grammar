@@ -1045,6 +1045,52 @@ class XLookupListTestCase(unittest.TestCase):
             self.assertIsNotNone(re.search('t.*', dn.string), 'Bad word {}'.format(dn.string))
 
 
+# Noun expressions currently contain only a dialect component "headline".
+# It controls the cost of a null expression in 2 places.
+class XExp_resolving_test(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.d = Dictionary(lang='en')
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+
+    def test_exp_copying(self):
+        dictnode = clg.dictionary_lookup_list(self.d._obj, sm('test.n'))
+        exp_old = dictnode[0].exp
+        exp_new = clg.lg_exp_resolve(self.d._obj, exp_old)
+        self.assertEqual(str(exp_old), str(exp_new))
+
+    # When a zero cost is assigned to "headline", the expression should remain the same.
+    def test_no_op_resolving(self):
+        dictnode = clg.dictionary_lookup_list(self.d._obj, sm('test.n'))
+        exp_old = dictnode[0].exp
+        exp_new = clg.lg_exp_resolve(self.d._obj, exp_old, ParseOptions(dialect="headline:0")._obj)
+        self.assertEqual(str(exp_old), str(exp_new))
+
+    def test_resolving(self):
+        """
+        Test expression resolving using the default headline:4 setting from
+        data/en/4.0.dialect.
+        """
+        dictnode = clg.dictionary_lookup_list(self.d._obj, sm('test.n'))
+        exp_old = dictnode[0].exp
+        exp_new = clg.lg_exp_resolve(self.d._obj, exp_old, ParseOptions()._obj)  # headline:4
+
+        # Find the 2 locations with a difference when comparing
+        # exp_old to exp_new and validate them.
+        # Locations 2 and 4 are in exp_old. Locations 6 and 7 are in exp_new.
+        # () is the null expression that is controlled by "headline".
+        str_comb = str(exp_old) + '%' + str(exp_new)
+        diff = re.search(r'^([^%]*)(\(Ds\*\*x- or \([^%]*?\)\)\)\))([^%]*)(\(Ds\*\*c- or \([^%]*?\)\)\)\))([^%]*)%\1(.*)\3(.*)\5$', str_comb)
+        #                      1                2                     3                4                     5        6     7
+        self.assertEqual(diff.group(2), '(Ds**x- or (())))')
+        self.assertEqual(diff.group(4), '(Ds**c- or (())))')
+        self.assertEqual(diff.group(6), '(Ds**x- or ([[[[()]]]])))')
+        self.assertEqual(diff.group(7), '(Ds**c- or ([[[[()]]]])))')
+
+
 # Currently, the dictionary creating function sets the generation mode if
 # the "test" parse-option has "generate" in its value list. So it must be
 # set so before the call to Dictionary(). When the second argument of
