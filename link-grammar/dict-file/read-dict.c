@@ -1887,7 +1887,7 @@ static void rprint_dictionary_data(Dict_node * n)
 {
 	if (n == NULL) return;
 	rprint_dictionary_data(n->left);
-	printf("%s: %s\n", n->string, lg_exp_stringify(n->exp));
+	printf("%s: %s\n", n->string, exp_stringify(n->exp));
 	rprint_dictionary_data(n->right);
 }
 
