@@ -105,7 +105,7 @@ static inline const Exp* lg_exp_operand_next(const Exp* exp)
                                             { return exp->operand_next; }
 link_public_api(const char *)
 	lg_exp_get_string(const Exp*);
-link_public_api(const char *)
+link_public_api(char *)
 	lg_exp_stringify(const Exp *); /* To be freed by the caller. */
 
 /**

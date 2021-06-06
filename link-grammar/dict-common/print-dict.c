@@ -338,7 +338,7 @@ static char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n,
 /**
  * Stringify the given expression, ignoring tags.
  */
-const char *lg_exp_stringify(const Exp *n)
+char *lg_exp_stringify(const Exp *n)
 {
 	return lg_exp_stringify_with_tags(NULL, n, false);
 }
@@ -350,8 +350,8 @@ const char *exp_stringify(const Exp *n)
 	static TLS char *s;
 
 	free(s);
-	if (n == NULL) return ("null");
-	s = strdup(lg_exp_stringify(n));
+	if (n == NULL) return ("(null)");
+	s = strdup(lg_exp_stringify_with_tags(NULL, n, false));
 	return s;
 }
 
