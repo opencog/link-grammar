@@ -9,6 +9,8 @@
 
 #include "link-includes.h"
 #include "dict-common/dict-defines.h"
+#include "dict-common/dict-api.h"
+#include "dict-common/dict-structures.h"
 
 %}
 
@@ -23,6 +25,7 @@
 %nodefaultdtor lg_errinfo;
 
 #define link_public_api(x) x
+#define link_experimental_api(x) x
 #ifndef bool                         /* Prevent syntax errors if no bool. */
 #define bool int
 #endif /* bool */
@@ -43,6 +46,20 @@
 %free_returned_value(linkage_print_constituent_tree);
 %free_returned_value(linkage_print_disjuncts);
 %free_returned_value(linkage_print_pp_msgs);
+// End of functions that need a special memory-freeing function.
+
+// These functions need free() for their returned value.
+%define %free_returned_value_by_free(func, ret_type)
+%newobject func;
+%typemap(newfree) ret_type { free($1); }
+%ignore free;
+%enddef
+
+%free_returned_value_by_free(dictionary_get_data_dir, char *);
+%free_returned_value_by_free(lg_exp_stringify, char *);
+%free_returned_value_by_free(sentence_unused_disjuncts, Disjunct **);
+%free_returned_value_by_free(disjunct_expression, char *);
+// End of functions that need free().
 
 // Reset to default.
 %typemap(newfree) char * {
@@ -61,6 +78,81 @@ class Parse_Options {};
    }
 }
 %ignore Parse_Options;
+
+%newobject lg_exp_resolve;
+%delobject destroy_Exp;
+class Exp {};
+%extend Exp
+{
+   ~Exp()
+   {
+      free($self);
+   }
+
+   %pythoncode
+   {
+      def __repr__(self):
+         return lg_exp_stringify(self)
+   }
+}
+%ignore Exp;
+
+/* ===================== Dictionary lookup support ========================= */
+%newobject dictionary_lookup_list;
+%newobject dictionary_lookup_wild;
+%typemap(newfree) Dict_node * {
+   free_lookup_list(arg1, $1);
+}
+
+%ignore Dict_node_struct::left;
+%ignore Dict_node_struct::right;
+
+%{
+unsigned int lookup_list_len(Dict_node *dn)
+{
+        unsigned int n = 0;
+        for (; dn != NULL; dn = dn->right)
+        {
+           n++;
+        }
+        return n;
+}
+%}
+
+#ifdef SWIGPYTHON
+%typemap(out) Dict_node *
+{
+   unsigned int n = lookup_list_len($1);
+
+   if (n == 0)
+   {
+      $result = Py_None;
+   }
+   else
+   {
+      $result = PyTuple_New(n);
+      if ($result == NULL)
+      {
+         PyErr_Print();
+      }
+      else
+      {
+         n = 0;
+         for (Dict_node *dn = $1; dn != NULL; dn = dn->right)
+         {
+            Dict_node *new_dn = (Dict_node_struct *)new Dict_node_struct();
+            *new_dn = *dn;
+
+            PyObject *pdn = SWIG_NewPointerObj(SWIG_as_voidptr(new_dn),
+                               SWIGTYPE_p_Dict_node_struct, SWIG_POINTER_OWN);
+            PyTuple_SET_ITEM($result, n, pdn);
+            n++;
+         }
+      }
+   }
+}
+#endif /* SWIGPYTHON */
+/* ========================================================================= */
 
 /* Error-handling facility calls. */
 %rename(_lg_error_formatmsg) lg_error_formatmsg;
@@ -81,6 +173,8 @@ int prt_error(const char *, const char *);
 %immutable;                          /* Future-proof for const definitions. */
 %include link-includes.h
 %include dict-common/dict-defines.h
+%include dict-common/dict-api.h
+%include dict-common/dict-structures.h
 %mutable;
 
 #ifdef SWIGPYTHON
