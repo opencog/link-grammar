@@ -970,6 +970,7 @@ bibs.n
 bicentenaries.n
 bicentennials.n
 biceps.p
+bickerings.n
 bicycles.n
 bidders.n
 bidets.n
