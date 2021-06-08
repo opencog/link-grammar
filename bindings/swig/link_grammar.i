@@ -97,6 +97,11 @@ class Exp {};
 }
 %ignore Exp;
 
+/* lg_exp_resolve() 2-arguments support. */
+%feature("compactdefaultargs") lg_exp_resolve;
+Exp *lg_exp_resolve(Dictionary dict, const Exp *e, Parse_Options opts = NULL);
+
+
 /* ===================== Dictionary lookup support ========================= */
 %newobject dictionary_lookup_list;
 %newobject dictionary_lookup_wild;
