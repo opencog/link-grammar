@@ -110,21 +110,28 @@ lg_tls=no
 AX_TLS(,:)
 test "$ac_cv_tls" != "none" && lg_tls=yes
 
-AX_PTHREAD
-if [ test -n "$ax_pthread_ok" ]; then
-	CC="${PTHREAD_CC:-CC}"
-	#CCX="${PTHREAD_CC:-CCX}"
-
-	dnl Currently, libtool uses --nostdlib when linking shared libraries,
-	dnl which causes the -pthread flag to be ignored. Try to work around that
-	dnl by explicitly specifying the pthread library unless it is already set.
-	if [ test -z "$PTHREAD_LIBS" ]; then
-		PTHREAD_LIBS=-lpthread
-	fi
+dnl Don't use thread functions with Emscripten.
+if test "$EMSCRIPTEN" != ''; then
+	AC_CHECK_DEFINE(__EMSCRIPTEN__, [emscripten=yes],
+						 [AC_MSG_ERROR([EMSCRIPTION environment variable found, but emcc is not used])])
 fi
+if test "$emscripten" != yes; then
+	AX_PTHREAD
+	if [ test -n "$ax_pthread_ok" ]; then
+		CC="${PTHREAD_CC:-CC}"
+		#CCX="${PTHREAD_CC:-CCX}"
 
-dnl Check if we can use C11 threads functions
-AC_CHECK_HEADERS_ONCE([threads.h])
+		dnl Currently, libtool uses --nostdlib when linking shared libraries,
+		dnl which causes the -pthread flag to be ignored. Try to work around that
+		dnl by explicitly specifying the pthread library unless it is already set.
+		if [ test -z "$PTHREAD_LIBS" ]; then
+			PTHREAD_LIBS=-lpthread
+		fi
+	fi
+
+	dnl Check if we can use C11 threads functions
+	AC_CHECK_HEADERS_ONCE([threads.h])
+fi
 
 dnl If the visibility __attribute__  is supported, define HAVE_VISIBILITY
 dnl and a variable a CFLAG_VISIBILITY, to be added to CFLAGS/CXXFLAGS.
