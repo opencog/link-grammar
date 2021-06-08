@@ -67,7 +67,7 @@
 }
 
 %newobject parse_options_create;
-%delobject destroy_Parse_Options&;
+%delobject *destroy_Parse_Options;
 class Parse_Options {};
 %extend Parse_Options
 {
