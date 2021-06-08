@@ -1852,12 +1852,6 @@ static bool read_entry(Dictionary dict)
 
 	dict->insert_entry(dict, dn, i);
 
-	if (dict->suppress_warning)
-	{
-		free((void *)dict->suppress_warning);
-		dict->suppress_warning = NULL;
-	}
-
 	/* pass the ; */
 	if (!link_advance(dict))
 	{
