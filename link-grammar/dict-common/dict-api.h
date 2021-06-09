@@ -44,10 +44,6 @@ link_public_api(Dict_node *)
 link_public_api(void)
 	free_lookup_list(const Dictionary, Dict_node *);
 
-/* Return true if word can be found. */
-link_public_api(bool)
-	dictionary_word_is_known(const Dictionary, const char *);
-
 /**********************************************************************
  *
  * Generation mode. Experimental and subject to changes.
