@@ -56,7 +56,7 @@ link_experimental_api(const Category *)
 link_experimental_api(const Category_cost *)
 	linkage_get_categories(const Linkage linkage, WordIdx w);
 
-link_experimental_api(Disjunct **)              /* To be freed by the caller */
+link_experimental_api(Disjunct **)        /* To be freed by the caller */
 	sentence_unused_disjuncts(Sentence);
 
 link_experimental_api(char *)

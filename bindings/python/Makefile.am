@@ -68,7 +68,7 @@ _clinkgrammar_la_SOURCES = $(built_c_sources) $(SWIG_SOURCES)
 # $(top_builddir) to pick up autogen'ed link-grammar/link-features.h
 _clinkgrammar_la_CPPFLAGS =       \
    $(SWIG_PYTHON_CPPFLAGS)        \
-   $(PYTHON_CPPFLAGS)            \
+   $(PYTHON_CPPFLAGS)             \
    -I$(top_srcdir)                \
    -I$(top_srcdir)/link-grammar   \
    -I$(top_builddir)
