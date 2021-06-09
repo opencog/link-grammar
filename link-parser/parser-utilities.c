@@ -410,7 +410,7 @@ void initialize_screen_width(Command_Options *copts)
 {
 #ifdef SIGWINCH
 #if HAVE_SIGACTION
-	struct sigaction winch_act = { 0 };
+	struct sigaction winch_act = { { 0 } };
 	winch_act.sa_handler = get_screen_width;
 	sigemptyset(&winch_act.sa_mask);
 	winch_act.sa_flags = 0;

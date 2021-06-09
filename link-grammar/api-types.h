@@ -37,12 +37,11 @@ typedef struct gword_set gword_set;
 typedef struct tracon_sharing_s Tracon_sharing;
 typedef struct Dialect_s Dialect;
 typedef struct Word_file_struct Word_file;
+typedef struct Wordgraph_pathpos_s Wordgraph_pathpos;
 
 /* Post-processing structures */
 typedef struct pp_knowledge_s pp_knowledge;
 typedef struct pp_linkset_s pp_linkset;
 typedef struct PP_domains_s PP_domains;
-
-typedef struct Wordgraph_pathpos_s Wordgraph_pathpos;
 
 #endif

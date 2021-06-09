@@ -82,12 +82,14 @@ Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc,
 {
 	Connector *c;
 
+#if USE_SAT_SOLVER
 	if (NULL == connector_pool) /* For the SAT-parser, until fixed. */
 	{
 		c = malloc(sizeof(Connector));
 		memset(c, 0, sizeof(Connector));
 	}
 	else
+#endif
 		c = pool_alloc(connector_pool); /* Memory-pool has zero_out attribute.*/
 
 	c->desc = desc;

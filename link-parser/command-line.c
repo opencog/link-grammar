@@ -36,7 +36,9 @@ static struct
 	int batch_mode;
 	int panic_mode;
 	int allow_null;
+#if USE_SAT_SOLVER
 	int use_sat_solver;
+#endif
 	int echo_on;
 	Cost_Model_type cost_model;
 	double max_cost;
@@ -1007,8 +1009,9 @@ static void put_opts_in_local_vars(Command_Options* copts)
 	local.short_length = parse_options_get_short_length(opts);
 	local.cost_model = parse_options_get_cost_model_type(opts);
 	local.max_cost = parse_options_get_disjunct_cost(opts);
+#if USE_SAT_SOLVER
 	local.use_sat_solver = parse_options_get_use_sat_parser(opts);
-
+#endif
 	local.screen_width = (int)copts->screen_width;
 	local.echo_on = copts->echo_on;
 	local.batch_mode = copts->batch_mode;
@@ -1046,7 +1049,7 @@ void put_local_vars_in_opts(Command_Options* copts)
 	parse_options_set_short_length(opts, local.short_length);
 	parse_options_set_cost_model_type(opts, local.cost_model);
 	parse_options_set_disjunct_cost(opts, local.max_cost);
-#ifdef USE_SAT_SOLVER
+#if USE_SAT_SOLVER
 	parse_options_set_use_sat_parser(opts, local.use_sat_solver);
 #endif
 	parse_options_set_display_morphology(opts, local.display_morphology);

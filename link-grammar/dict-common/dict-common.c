@@ -338,7 +338,6 @@ void dictionary_delete(Dictionary dict)
 	string_id_delete(dict->define.set);
 	free(dict->define.name);
 	free(dict->define.value);
-	free((void *)dict->suppress_warning);
 	free_regexs(dict->regex_root);
 	free_anysplit(dict);
 	free_dictionary(dict);

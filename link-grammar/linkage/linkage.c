@@ -240,9 +240,13 @@ void remove_empty_words(Linkage lkg)
 			continue;
 		}
 
+#if USE_SAT_SOLVER
 		Disjunct *cdtmp = cdj[j];
+#endif
 		cdj[j] = cdj[i];
+#if USE_SAT_SOLVER
 		cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
+#endif
 		remap[i] = j;
 		j++;
 		wgp++;
@@ -718,9 +722,13 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 			linkage->word[j] = chosen_words[i];
 			//chosen_words[i] = cwtmp;
 
+#if USE_SAT_SOLVER
 			Disjunct *cdtmp = cdj[j];
+#endif
 			cdj[j] = cdj[i];
+#if USE_SAT_SOLVER
 			cdj[i] = cdtmp; /* The SAT parser frees chosen_disjuncts elements. */
+#endif
 
 			remap[i] = j;
 			j++;
@@ -778,12 +786,14 @@ Linkage linkage_create(LinkageIdx k, Sentence sent, Parse_Options opts)
 {
 	Linkage linkage;
 
+#if USE_SAT_SOLVER
 	if (opts->use_sat_solver)
 	{
 		linkage = sat_create_linkage(k, sent, opts);
 		if (!linkage) return NULL;
 	}
 	else
+#endif
 	{
 		/* Cannot create a Linkage for a discarded linkage. */
 		if (sent->num_linkages_post_processed <= k) return NULL;

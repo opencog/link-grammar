@@ -267,11 +267,13 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 		if (NULL == cl->c) continue; /* no connectors */
 		if (cl->maxcost > cost_cutoff) continue;
 
+#if USE_SAT_SOLVER
 		if (NULL == sent) /* For the SAT-parser, until fixed. */
 		{
 			ndis = xalloc(sizeof(Disjunct));
 		}
 		else
+#endif
 		{
 			ndis = pool_alloc(sent->Disjunct_pool);
 			connector_pool = sent->Connector_pool;

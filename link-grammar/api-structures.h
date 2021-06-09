@@ -91,7 +91,9 @@ struct Parse_Options_s
 	short use_spell_guess; /* Up to this many spell-guesses per unknown word 7 */
 
 	/* Choice of the parser to use */
+#if USE_SAT_SOLVER
 	bool use_sat_solver;   /* Use the Boolean SAT based parser */
+#endif
 
 	/* Options governing the parser internals operation */
 	double disjunct_cost;  /* Max disjunct cost to allow */
