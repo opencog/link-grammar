@@ -312,7 +312,7 @@ static bool dialect_read_from_str(Dictionary dict, Dialect *di,
 						next = end + 1;
 						*end = '\0';
 					}
-					if (!strtodC(dfile->pin, &cost))
+					if (!strtofC(dfile->pin, &cost))
 					{
 						prt_error("Error: %s:%s After \"%s\": Invalid cost \"%s\".\n",
 						          dfile->fname, suppress_0(dfile->line_number, buf),

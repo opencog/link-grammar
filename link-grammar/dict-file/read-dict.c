@@ -713,7 +713,7 @@ static Exp *make_expression(Dictionary dict)
 			{
 				float cost;
 
-				if (strtodC(dict->token, &cost))
+				if (strtofC(dict->token, &cost))
 				{
 					nl->cost += cost;
 				}

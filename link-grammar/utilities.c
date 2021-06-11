@@ -747,7 +747,7 @@ char * get_default_locale(void)
  * @return \c true iff \p s is valid.
  */
 #define D_SITOF 5
-bool strtodC(const char *s, float *r)
+bool strtofC(const char *s, float *r)
 {
 #define DFP(n) (1.0f * n)
 #define FP_BY_POS(p) \
