@@ -728,32 +728,6 @@ char * get_default_locale(void)
 	return safe_strdup(locale);
 }
 
-#ifdef HAVE_LOCALE_T
-static void free_C_LC_NUMERIC(void);
-
-static locale_t get_C_LC_NUMERIC(void)
-{
-	static locale_t locobj;
-
-	if ((locale_t)0 != locobj) return locobj;
-
-#ifdef _WIN32
-	locobj = _create_locale(LC_NUMERIC, "C");
-#else
-	locobj = newlocale(LC_NUMERIC_MASK, "C", (locale_t)0);
-#endif /* _WIN32 */
-
-	atexit(free_C_LC_NUMERIC);
-
-	return locobj;
-}
-
-static void free_C_LC_NUMERIC(void)
-{
-	freelocale(get_C_LC_NUMERIC());
-}
-#endif /* HAVE_LOCALE_T */
-
 /**
  * Convert to float a scaled integer string in the format:
  * ([-+])?0*\d{,1}(\.\d*)?
