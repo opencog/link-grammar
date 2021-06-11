@@ -754,23 +754,116 @@ static void free_C_LC_NUMERIC(void)
 }
 #endif /* HAVE_LOCALE_T */
 
-/* FIXME: Rewrite to directly convert scaled integer strings (only). */
+/**
+ * Convert to float a scaled integer string in the format:
+ * ([-+])?0*\d{,1}(\.\d*)?
+ * The string should contain at least one digit.
+ *
+ * Digits which are more than 4 positions after the decimal point are
+ * validated but are otherwise ignored.
+ *
+ * This format is also documented in the comment at the dictionary format
+ * comment at the start of read-dict.c - change it there if this function
+ * gets changed.
+ *
+ * @param s A string starting with an optional '+' or '-', then at most
+ * 2 decimal digits (leading zeros are not counted), then an optional
+ * point and optional decimal digits after it.
+ * @param[out] r If s is valid, this is its conversion to float.
+ * @return \c true iff \p s is valid.
+ */
+#define D_SITOF 5
 bool strtodC(const char *s, float *r)
 {
-	char *err;
+#define DFP(n) (1.0f * n)
+#define FP_BY_POS(p) \
+	{ \
+		p*DFP(0), p*DFP(1), p*DFP(2), p*DFP(3), p*DFP(4), \
+		p*DFP(5), p*DFP(6), p*DFP(7), p*DFP(8), p*DFP(9)  \
+	}
 
-#if defined(HAVE_LOCALE_T) && !defined(__sun__) && !defined(__OpenBSD__)
-	float val = strtof_l(s, &err, get_C_LC_NUMERIC());
-#else
-	/* dictionary_setup_locale() invokes setlocale(LC_NUMERIC, "C") */
-	float val = strtof(s, &err);
-#endif /* HAVE_LOCALE_T */
+	static float fpconv[][10] =
+	{
+		FP_BY_POS(10), FP_BY_POS(1), FP_BY_POS(0.1f), FP_BY_POS(0.01f),
+		FP_BY_POS(0.001f), FP_BY_POS(0.0001f)
+	};
+	static const unsigned int max_int_digits = 2;
+	static const unsigned int max_frac_digits = 4;
+	static const char max_str[] = "99.9999";
 
-	if ('\0' != *err) return false; /* *r unaffected */
+	const char *si = s;
+	bool minus = false;
 
-	*r = (float)val;
+	if ((*si == '-') || (*si == '+'))
+	{
+		if (*si == '-') minus = true;
+		si++;
+	}
+	while (*si == '0') si++; /* Skip leading zeros. */
+
+	const char *decpoint = strchr(si, '.');
+	const size_t len = strlen(si);
+	if (decpoint == NULL)
+	{
+		decpoint = &si[len];
+	}
+	else
+	{
+		if (strchr(decpoint+1, '.'))
+		{
+			lgdebug(+D_SITOF, "\"%s\": Extra decimal point\n", s);
+			return false;
+		}
+	}
+
+	int pos = max_int_digits - (int)(decpoint - si);
+	if (pos < 0)
+	{
+		lgdebug(+D_SITOF, "\"%s\" is too big (max %s)\n", s, max_str);
+		return false;
+	}
+
+	if ((si[0] == '\0') || ((si[0] == '.') && (si[1] == '\0')))
+	{
+		if ((si == s) || (si[-1] != '0'))
+		{
+			lgdebug(+D_SITOF, "\"%s\": No decimal digits found\n", s);
+			return false;
+		}
+		*r = 0.0f;
+		//printf("Converted \"%s\" to: 0\n", s);
+		return true;
+	}
+
+	float total = 0.0f;
+	do
+	{
+		if (*si == '.')
+		{
+			si++;
+			if (*si == '\0') break;
+		}
+		unsigned int d = (unsigned int)(*si - '0');
+
+		if (d > 9)
+		{
+			lgdebug(+D_SITOF, "\"%s\": Invalid digit \"%c\"\n", s, *si);
+			return false;
+		}
+		if ((int)(decpoint - si) >= (int)-max_frac_digits)
+			total += fpconv[pos][d];
+		pos++;
+	}
+	while (*++si != '\0');
+
+	if (minus)
+		*r = -total;
+	else
+		*r = total;
+	//printf("Converted \"%s\" to: %.4f\n", s, *r);
 	return true;
 }
+#undef D_SITOF
 
 /* ============================================================= */
 /* Alternatives utilities */

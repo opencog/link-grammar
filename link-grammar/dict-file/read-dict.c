@@ -85,7 +85,10 @@
 
   A number following a square bracket over-rides the cost of that bracket.
   Thus, [...].5 has a cost of 0.5 while [...]2.0 has a cost of 2; that
-  is it is the same as [[...]].  Any floating point number is allowed.
+  is it is the same as [[...]]. Only a sign, decimal digits and a point
+  are allowed. The maximum recognized number is "99.9999". Digits which
+  are more than 4 positions to the right of the decimal point are
+  ignored.
 
   Instead of a numerical cost, a symbolic cost can be used, a.k.a. a
   "dialect component name".  The file "4.0.dialect" defines dialect names
