@@ -406,7 +406,7 @@ static bool dictionary_setup_max_disjunct_cost(Dictionary dict)
 		float disjunct_cost_value;
 		if (!strtofC(disjunct_cost_str, &disjunct_cost_value))
 		{
-			prt_error("Error: %s: Invalid cost \"%s\"", LG_DISJUNCT_COST,
+			prt_error("Error: %s: Invalid cost \"%s\"\n", LG_DISJUNCT_COST,
 			          disjunct_cost_str);
 			return false;
 		}
