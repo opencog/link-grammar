@@ -750,11 +750,14 @@ USMC.y USN.y:
 % be fixed up as well.
 % [Wa-]0.02: give a very mild preference to words that could be verbs
 %            (and thus imperatives) e.g. Worry!
+% Jd- & Dmu- & Wa-: "A lot of money!"
+% Jd- & Dmu- & Wa- & Mp+: "A lot of money!"
 <mass-phonetic>:
   <noun-modifiers> &
     ((GN+ & (DD- or [()]))
     or Up-
     or ({Dm-} & [Wa-]0.02)
+    or (Jd- & Dmu- & Wa- & {Mp+})
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
     or (YS+ & {Dmu-})
@@ -1205,12 +1208,14 @@ propension.n:
     or Us-
     );
 
+% Jd- & Dmu- & Wa- & Mp+: "A lot of effort for so little"
 failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
 responsibility.n intent.n temptation.n readiness.n effort.n
 determination.n capacity.n unwillingness.n need.n will.n eagerness.n
 opportunity.n commitment.n ambition.n ability.n order.n obligation.n
 incentive.n panache.n balls.n-u cojones.n-u:
-  <noun-to>;
+  <noun-to>
+  or (Jd- & Dmu- & Wa- & {Mp+});
 
 % Regex-based guessing of unknown words, ending in -ity -acy -ance
 <NOUN-TO-WORDS>.n:
@@ -1341,6 +1346,8 @@ spot.n:
 
 
 % NMa+: "It all happens at time T."
+% Jd- & Dmu- & Wa-: "A lot of time!"
+% Jd- & Dmu- & Wa- & Mp+: "A lot of time for so little!"
 time.n:
   (<noun-modifiers> &
     (({D*u-} & {@M+} & {<ton-verb> or WN+ or TH+ or <embed-verb> or (R+ & Bs+)} & {@MXs+} &
@@ -1349,6 +1356,7 @@ time.n:
       <rel-clause-s>)) or
     ({D*u-} & <noun-and-x>) or
     Us- or
+    (Jd- & Dmu- & Wa- & {Mp+}) or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])))) or
   AN+;
