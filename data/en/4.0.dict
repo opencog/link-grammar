@@ -10403,6 +10403,7 @@ day.n night.n:
 % {Dmc- or @M+}: avoid used Dmc together with M when parsing sentences like
 % "She is two years older than me"
 % ND- & A- & D- & Jp-: "we walked for a further three hours"
+% Dmc- & Wa-: "Many years!" "How many years?"
 days.n weeks.n moments.n hours.n minutes.n years.n instants.n
 periods.n months.n nights.n seconds.n decades.n centuries.n:
   ({NM+} & ((<noun-modifiers> &
@@ -10413,8 +10414,9 @@ periods.n months.n nights.n seconds.n decades.n centuries.n:
       Up- or
       (YP+ & {Dmc-}) or
       (GN+ & (DD- or [()])))) or
-    [[AN+]])) or
-  (ND- & A- & D- & Jp-);
+    [[AN+]]))
+  or (ND- & A- & D- & Jp-)
+  or (Dmc- & Wa-);
 
 % XXX A major problem here is that the dict entries for miles.n, feet.n
 % create a bunch of parses that are wrong & interfere with the below.
@@ -10493,14 +10495,17 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
   ((NIm- or NIn- or NIe-) & AN+)
   or ((NIm- or NIn- or NIe- or Ds-) & (Op- or Jp-) & {Mp+})
   or ((NIm- or NIn-) & {NJ-} & (EC+ or Yd+ or OD-))
+  or (Dmc- & Wa-)
   or Us-;
 
 % {NI-} & Jp-: "a purseful of dollars"
+% Dmc- & Wa-: "How many dollars?"
 /en/words/currency.p:
   ((NIn- or NIe-) & AN+)
   or ({NIn- or NIe-} & (Op- or Jp-) & {Mp+})
   or ((NIn-) & {NJ-} & (EC+ or Yd+ or OD-))
-  or Us-;
+  or (Dmc- & Wa-)
+  or Up-;
 
 % number-and-unit combinations, such as "50-kDa". The linking requirements
 % should largely follow those for units except not allowing a numeric

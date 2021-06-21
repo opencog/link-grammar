@@ -40,3 +40,6 @@ Sovereigns.c sovereigns.c
 Złoty.cp złoty.cp
 Złotych.cp złotych.cp
 Złotys.c złotys.c
+Zloty.cp zloty.cp
+Zlotych.cp zlotych.cp
+Zlotys.c zlotys.c

@@ -37,6 +37,7 @@ Dirham.c درهم.c dirham.c
 Dobra.c dobra.c
 Dollar.c dollar.c
 Đồng.c đồng.c
+Dong.c dong.c
 Drachma.c Δραχμή.c drachma.c
 Dram.c Դրամ.c dram.c
 Ducat.c ducat.c
@@ -213,3 +214,5 @@ yuan.c 元.c 圆.c
 Zaïre.c zaïre.c
 Złoty.c złoty.c
 Złotych.c złotych.c
+Zloty.c zloty.c
+Zlotych.c zlotych.c
