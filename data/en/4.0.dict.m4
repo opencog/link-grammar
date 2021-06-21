@@ -3875,14 +3875,14 @@ running.g beating.g catching.g driving.g striking.g:
 %
 % ({@E-} & B- & O+):
 %    "What are the chances Sherlock could really solve a crime?"
-% unfortunately:
+% The (Os+ or Op+) is used to block:
 %    *This is the man we love him
 %    *I still remember the room I kissed him
 <vc-trans>:
   (O+
    or <b-minus>
    or [[@MV+ & O*n+]]
-   or ({@E-} & <b-minus> & O+)
+   or ({@E-} & <b-minus> & (Os+ or Op+))
   ) & <mv-coord>;
 
 /en/words/words.v.4.1 : VERB_PLI(<vc-trans>);
