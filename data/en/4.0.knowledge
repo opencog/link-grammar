@@ -335,7 +335,9 @@ CONTAINS_NONE_RULES:
  Qd    ,  MX                               , "Bad subject inversion",
 
 ; H, O blocks "How many people you (noun)"
- H     ,  O                                , "Bad how-question",
+; But it wrecks "how much money did you give her?"
+; so this is too crude a fix.
+; H     ,  O                                , "Bad how-question",
 
 ; I don't understand domains, this doesn't do what I expected.
 ; (It fails to block J- & Rn+ which is what I want it to do.)
