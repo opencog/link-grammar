@@ -2900,6 +2900,8 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 %    *how many years did you do it
 % but, I dunno, both seem like valid sentences to me...
 % Hey, wait: using R & B here is wrong, should have Qe maybe?
+% Hang on, this is another zero-word:
+% "what are the chances [that] Sherlock could do it?"
 %
 do.v:
   ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co> or <verb-why>) & <vc-do>)
