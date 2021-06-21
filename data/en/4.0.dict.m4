@@ -1377,6 +1377,7 @@ places.n:
     (GN+ & (DD- or [()])))) or
   [[AN+]];
 
+% Dmc- & Wa-: "Many times!" "How many times?"
 times.n:
   (<noun-modifiers> &
     (({{Jd-} & Dmc-} & {@M+} & {<ton-verb> or WN+ or TH+ or <embed-verb> or (R+ & Bp+)} & {@MXp+} &
@@ -1386,8 +1387,9 @@ times.n:
     ({Dmc-} & <noun-and-p>) or
     Up- or
     (YP+ & {Dmc-}) or
-    (GN+ & (DD- or [()])))) or
-  [[AN+]];
+    (GN+ & (DD- or [()]))))
+  or (Dmc- & Wa-)
+  or [[AN+]];
 
 % ====================================================================
 %PRONOUNS
@@ -7240,6 +7242,7 @@ although.c though.c but.c yet.c:
 
 % cost on MVa- to give preference to MVl-
 % {EP-} & dWl-: "Just about now."
+% cost on Wl- & MV+: "about five times"
 about:
   ({JQ+} & (J+ or Mgp+ or QI+) & <prep-main-a>)
   or EN+
@@ -7248,7 +7251,7 @@ about:
   or [MVp- & B-]
   or (<tof-verb> & (Mp- or MVp- or Pp-))
   or [<adv-as>]
-  or ({EP-} & dWl- & (MVp+ or MVa+ or MVs+))
+  or [{EP-} & dWl- & (MVp+ or MVa+ or MVs+)]0.5
   or <comp-prep>;
 
 
@@ -7930,10 +7933,12 @@ ago:
   Yt- & (<prep-main-e> or <advcl-verb> or Qe+ or JT-);
 
 every.i: {EN-} & Ye+ & <prep-main-t>;
+
+% cost on MVp-: "about five times".
 times.i x.i:
   (ND- & (({Xc+ & {Xd-}} & dCOa+) or MVp- or EC+ or EZ+ or <advcl-verb> or Qe+)) or
   (((({ND-} & DG-) & {<subcl-verb>}) or (ND- & Ys+)) &
-    (({Xc+ & {Xd-}} & dCO+) or MVp- or (Xd- & Xc+ & MVx-)));
+    (({Xc+ & {Xd-}} & dCO+) or [MVp-]0.1 or (Xd- & Xc+ & MVx-)));
 
 time.i:
   {TT- or NR-} & DG- & {<subcl-verb>} &
