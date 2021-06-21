@@ -485,6 +485,12 @@ An.f In.f So.f: [[<given-names>]];
 Hallowe'en:
   <marker-entity> or <entity-singular>;
 
+% Jd- & Dmu- & Wa-: "A lot of money!"
+% Jd- & Dmu- & Wa- & Mp+: "A lot of money for so little!"
+<noun-assert>:
+    ({Dm-} & Wa-)
+    or (Jd- & Dmu- & Wa- & {Mp+});
+
 % words.n.4: nouns that can be mass or countable
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n
 % piano.n flute.n belong here, because of "He plays piano"
@@ -501,7 +507,7 @@ Hallowe'en:
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
     or Us-
-	 or ({D*u-} & Wa-));
+	 or <noun-assert>);
 
 <GREEK-LETTER-AND-NUMBER> pH.i x.n: <noun-mass-count>;
 
@@ -524,7 +530,7 @@ Hallowe'en:
     or (YP+ & {Dmc-})
     or (GN+ & (DD- or [()]))
     or Up-
-    or ({Dmc-} & Wa-));
+    or <noun-assert>);
 
 % Number abbreviations: no.x No.x
 % pp. paragraph, page -- art: article
@@ -750,14 +756,11 @@ USMC.y USN.y:
 % be fixed up as well.
 % [Wa-]0.02: give a very mild preference to words that could be verbs
 %            (and thus imperatives) e.g. Worry!
-% Jd- & Dmu- & Wa-: "A lot of money!"
-% Jd- & Dmu- & Wa- & Mp+: "A lot of money!"
 <mass-phonetic>:
   <noun-modifiers> &
     ((GN+ & (DD- or [()]))
     or Up-
-    or ({Dm-} & [Wa-]0.02)
-    or (Jd- & Dmu- & Wa- & {Mp+})
+    or [<noun-assert>]0.02
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
     or (YS+ & {Dmu-})
@@ -1208,14 +1211,13 @@ propension.n:
     or Us-
     );
 
-% Jd- & Dmu- & Wa- & Mp+: "A lot of effort for so little"
 failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
 responsibility.n intent.n temptation.n readiness.n effort.n
 determination.n capacity.n unwillingness.n need.n will.n eagerness.n
 opportunity.n commitment.n ambition.n ability.n order.n obligation.n
 incentive.n panache.n balls.n-u cojones.n-u:
   <noun-to>
-  or (Jd- & Dmu- & Wa- & {Mp+});
+  or <noun-assert>;
 
 % Regex-based guessing of unknown words, ending in -ity -acy -ance
 <NOUN-TO-WORDS>.n:
@@ -1346,8 +1348,6 @@ spot.n:
 
 
 % NMa+: "It all happens at time T."
-% Jd- & Dmu- & Wa-: "A lot of time!"
-% Jd- & Dmu- & Wa- & Mp+: "A lot of time for so little!"
 time.n:
   (<noun-modifiers> &
     (({D*u-} & {@M+} & {<ton-verb> or WN+ or TH+ or <embed-verb> or (R+ & Bs+)} & {@MXs+} &
@@ -1356,7 +1356,7 @@ time.n:
       <rel-clause-s>)) or
     ({D*u-} & <noun-and-x>) or
     Us- or
-    (Jd- & Dmu- & Wa- & {Mp+}) or
+    <noun-assert> or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])))) or
   AN+;
@@ -5697,6 +5697,10 @@ refusing.v: <verb-pg> & <vc-refuse>;
 want.v:
   VERB_PLI(<vc-want>);
 
+% A touch of common Spanglish.
+quiero.v:
+  VERB_PLI(<vc-want>);
+
 % SI+ & <verb-rq-aux> & I+: "Need you use so much flour?"
 need.v:
   VERB_PLI(<vc-want>)
@@ -8076,7 +8080,8 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
   ((NIm- or NIn- or NIe-) & AN+)
   or ((NIm- or NIn- or NIe- or Ds-) & (Op- or Jp-) & {Mp+})
   or ((NIm- or NIn-) & {NJ-} & (EC+ or Yd+ or OD-))
-  or (Dmc- & Wa-)
+  or <noun-assert>
+  or Ou-
   or Us-;
 
 % {NI-} & Jp-: "a purseful of dollars"
@@ -8085,7 +8090,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
   ((NIn- or NIe-) & AN+)
   or ({NIn- or NIe-} & (Op- or Jp-) & {Mp+})
   or ((NIn-) & {NJ-} & (EC+ or Yd+ or OD-))
-  or (Dmc- & Wa-)
+  or <noun-assert>
   or Up-;
 
 % number-and-unit combinations, such as "50-kDa". The linking requirements
@@ -9687,6 +9692,8 @@ much:
   ))
   or (AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-))
   or EZ+;
+
+mucho: Dm+;
 
 slightly somewhat: EC+ or EA+ or MVa- or Em+;
 far.c infinitely: EC+;

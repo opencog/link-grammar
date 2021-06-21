@@ -4,6 +4,7 @@ Argentinos.c argentinos.c
 Australs.c australs.c
 Bolívars.c bolívars.c
 cents.c
+Centavos.c centavos.c
 Dollars.c dollars.c
 Ducats.c ducats.c
 Euros.c euros.c
