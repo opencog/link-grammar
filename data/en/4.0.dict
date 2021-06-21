@@ -9270,10 +9270,13 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 % The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
 %     insane?", "Are you the one?"
 % The Qd+ with a WV+, for questions: "did you do that?"
-% Wv+ with a wall: why-verb questions: "whey even go there?"
+% Wv+ with a wall: why-verb questions: "why even go there?"
+% Wh+ & Wa+: "How much money?"
 %
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
-<wo-wall>: hWa+ or hWb+ or hWg+ or hWi+ or hWn+ or hWw+ or hWx+ or hQd+;
+<wo-wall>:
+  hWa+ or hWb+ or hWg+ or hWi+ or hWn+ or hWw+ or hWx+ or hQd+
+  or (hWh+ & hWa+);
 <wi-wall>: (hWd+ or hWp+ or hWr+ or hWq+ or hWs+ or hWj+ or hWc+ or hWe+
    or hWt+ or hWo+ or hWv+ or hQd+) & <WALL>;
 
@@ -10696,10 +10699,12 @@ whether_or_not:
 % EL+: "How else would you say that?"
 % (EAh+ or EEh+) & Wq-: "How big?" "How quickly?"
 %    Unfortunately, this is blocked by "S-V inversion required7"
+% Wh- & H+: "How much money?"
 how:
   ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
   or [[{EW-} & Ww-]]
+  or ({EW-} & Wh- & H+)
   or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
   or [QI-]0.5
   or ({EW-} & (QJ- or QJ+))

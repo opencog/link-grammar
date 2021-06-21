@@ -2304,7 +2304,9 @@ How important might you say it was?
 How necessary might you say it was?
 How practical might you say this is?
 
-
+How much money?
+How much more money?
+about how much money?
 
 Who?
 who else?
@@ -6514,7 +6516,7 @@ I don't know as I can answer your question.
 % --------------------------------------------------------------------
 % This should parse with the TQ/BT link (see OT page)
 % but that requires links crossing to head-word, so its screwed.
-*How many years did it last
+How many years did it last
 
 % --------------------------------------------------------------------
 % assorted unclassified breakages, waiting for a fix:
