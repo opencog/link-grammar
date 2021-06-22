@@ -3743,8 +3743,9 @@ rising.v falling.v:
 
 % <verb-si>: "Above him hung a lamp"
 %  However, not every verb listed would be used like that.
+% QN+: "you biked how many miles?"
 /en/words/words.v.6.3:
-  VERB_SPPP_T(<vc-fill>) or
+  VERB_SPPP_T(<vc-fill> or QN+) or
   (<verb-pv-b> & {K+} & <mv-coord>) or
   <verb-adj> or
   <verb-si> or
@@ -3757,6 +3758,7 @@ split.v-d spread.v-d fit.v-d shut.v-d cast.v-d:
   or <verb-adj>
   or ({K+} & <verb-phrase-opener>);
 
+% QN+: "you ate how many cookies?"
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
 flew.v-d froze.v-d hid.v-d stole.v-d
 rang.v-d rode.v-d sprang.v-d stalked.v-d woke.v-d
@@ -3768,7 +3770,7 @@ befell.v-d outrode.v-d betrode.v-d outdid.v-d ridded.v-d
 deep-froze.v-d forbad.v-d deep-freezed.v-d retook.v-d interwove.v-d
 bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d
 outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
-  VERB_SPPP_T(<vc-fill>);
+  VERB_SPPP_T(<vc-fill> or QN+);
 
 bitten.v blown.v broken.v drunk.v
 eaten.v flown.v frozen.v hidden.v ridden.v rung.v
@@ -4071,8 +4073,9 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
 % this, the other half clearly should not. I'm too lazy to sort it out,
 % right now.
 % Pa+: "it washed up unbroken"
+% QN+: "you kicked how many balls?"
 /en/words/words.v.8.3:
-  VERB_SPPP_T(<vc-kick>) or
+  VERB_SPPP_T(<vc-kick> or QN+) or
   (<verb-pv-b> & {K+} & <mv-coord>) or
   <verb-adj> or
   ({K+} & <verb-phrase-opener>);
