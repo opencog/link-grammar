@@ -3733,9 +3733,11 @@ rising.v falling.v:
 %
 % [A+]0.5: He was xxx'ed there  should have xxx as verb not adjective.
 %
+% QN+: "you bike how many miles?"
 <vc-fill>:
   ((K+ & {[[@MV+]]} & (O*n+ or ({Xc+} & (Pa+ or Pv+))))
     or ({O+ or <b-minus>} & {K+})
+    or ({K+} & QN+)
     or [[@MV+ & O*n+]]
   ) & <mv-coord>;
 
@@ -3761,7 +3763,6 @@ split.v-d spread.v-d fit.v-d shut.v-d cast.v-d:
   or <verb-adj>
   or ({K+} & <verb-phrase-opener>);
 
-% QN+: "you ate how many cookies?"
 ate.v-d bit.v-d blew.v-d broke.v-d drank.v-d
 flew.v-d froze.v-d hid.v-d stole.v-d
 rang.v-d rode.v-d sprang.v-d stalked.v-d woke.v-d
@@ -3773,7 +3774,7 @@ befell.v-d outrode.v-d betrode.v-d outdid.v-d ridded.v-d
 deep-froze.v-d forbad.v-d deep-freezed.v-d retook.v-d interwove.v-d
 bespoke.v-d underwent.v-d slew.v-d overdrew.v-d overcame.v-d
 outwore.v-d foreknew.v-d wove.v-d trod.v-d outwent.v-d:
-  VERB_SPPP_T(<vc-fill> or QN+);
+  VERB_SPPP_T(<vc-fill>);
 
 bitten.v blown.v broken.v drunk.v
 eaten.v flown.v frozen.v hidden.v ridden.v rung.v
@@ -3903,6 +3904,7 @@ running.g beating.g catching.g driving.g striking.g:
 <vc-trans>:
   (O+
    or <b-minus>
+   or QN+
    or [[@MV+ & O*n+]]
    or ({@E-} & <b-minus> & (Os+ or Op+))
   ) & <mv-coord>;
