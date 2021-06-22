@@ -8319,6 +8319,7 @@ whether_or_not:
   or (<subcl-verb> & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & dCO*s+)));
 
 % QI- & (): "I do not know how"
+% QI- & H+: "it happened how many times?"
 % EL+: "How else would you say that?"
 % (EAh+ or EEh+) & Wq-: "How big?" "How quickly?"
 %    Unfortunately, this is blocked by "S-V inversion required7"
@@ -8330,6 +8331,7 @@ how:
   or ({EW-} & Wh- & H+)
   or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
   or [QI-]0.5
+  or (QI- & H+)
   or ({EW-} & (QJ- or QJ+))
   or [dSJl+ or dSJr-]0.5
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
