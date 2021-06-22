@@ -1664,12 +1664,11 @@ half:
     or EZ+
     or [(({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+)) & <noun-main-x>]);
 
-% "How many years" -- prefer TQ+ over Dmc+
 % OFd+ & Dmc+: "I drank many of the beers"
 % Naked H-: "How many?"
 % H- & EC+: "How many more?"
 many:
-  (H- & (Dmc+ or ND+ or NIn+ or TQ+ or EC+ or [()]))
+  (H- & (Dmc+ or ND+ or NIn+ or EC+ or [()]))
   or (AM- & (Dmcy+ or Oy- or Jy-))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
@@ -4529,7 +4528,7 @@ dying.v: (<vc-die> & <verb-pg,ge>) or <verb-ge-d>;
 
 % I- & Bt- & WV-: "How many yars did it last?"
 % Negative cost to discourage bad linkage with last.a
-<vc-last>: {({[[@MV+]]} & OT+) or BT- or Bt-} & <mv-coord>;
+<vc-last>: {({[[@MV+]]} & OT+) or Bt-} & <mv-coord>;
 last.v wait.v: VERB_PLI(<vc-last>) or [I- & Bt- & WV-]-0.1;
 lasts.v waits.v: VERB_S_I(<vc-last>);
 lasted.v-d waited.v-d: VERB_SPPP_I(<vc-last>);
@@ -5428,7 +5427,7 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
 % <vc-trans> plus particle and Vt
 <vc-take>:
   (((K+ & {[[@MV+]]} & O*n+) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & <mv-coord>) or
-  ({O+} & (OT+ or BT-) & {@MV+} & {<tot-verb> or <toi-verb>}) or
+  ({O+} & OT+ & {@MV+} & {<tot-verb> or <toi-verb>}) or
   (OXii+ & Vtg+ & {@MV+} & TH+) or
   @MV+;
 take.v: VERB_S_PLI(<vc-take>);
@@ -7924,8 +7923,7 @@ fall.i spring.i winter.i summer.i:
 weeks.i days.i hours.i minutes.i seconds.i months.i years.i decades.i
 centuries.i semesters.i terms.i nights.i:
   ((ND- or (Jd- & Dmc-) or [[EN-]] or [()]) & (Yt+ or (OT- & {Mp+})))
-  or (ND- & Ye-)
-  or (TQ- & BT+);
+  or (ND- & Ye-);
 
 week.i day.i hour.i minute.i second.i month.i year.i decade.i century.i
 semester.i term.i night.u:
@@ -9054,7 +9052,7 @@ long.a:
   <ordinary-adj>
   or <adj-consn>
   or ((Ya- or Yt-) & (Pa- or Ma- or dMJra- or dMJla+))
-  or (H- & (BT+ or Yt+));
+  or (H- & Yt+);
 
 % Hmm does distant really belong here?
 % "The river is a mile wide here": Ya- & Pa- & MVp+
