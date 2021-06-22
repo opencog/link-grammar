@@ -9866,14 +9866,14 @@ to.r:
   or ({@E-} & {NT-} & I+ &
     (<MX-PHRASE>
     or (SFsx+ & <S-CLAUSE>)
-    or [{Xd- & Xc+} & MVi-]
+    or [{Xd- & Xc+} & MVi-]0.9
     or [<OPENER>]
     or [[R-]] ))
   or ({NT-} & TO- & Xc+)
   or I*a+
   or ({JQ+} & ([J+] or Mgp+) & <prep-main-a>)
   or <locative>
-  or [MVp- & B-]
+  or [MVp- & B-]1.1
   or <null-prep-qu>;
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-;
