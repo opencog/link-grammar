@@ -2890,6 +2890,7 @@ do.v:
     (<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) &
     <mv-coord> &
     (<verb-wall> or VJrpi-))
+  or ({@E-} & I*d- & <b-minus> & <verb-wall> & O+)
   or ({@E-} & I*d- & <verb-wall>);
 
 % Ss- & <verb-wall>: "so it does!"

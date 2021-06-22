@@ -2341,6 +2341,11 @@ Many times!
 About five times!
 Almost five times!
 
+How many years did it last
+how many years did you do it?
+how many years did you abuse drugs?
+How long did you take?
+
 Who?
 who else?
 who else not?
@@ -6545,11 +6550,6 @@ I slipped on the ice as I ran home.
 
 % "as" as a colloquial form of "that"
 I don't know as I can answer your question.
-
-% --------------------------------------------------------------------
-% This should parse with the TQ/BT link (see OT page)
-% but that requires links crossing to head-word, so its screwed.
-How many years did it last
 
 % --------------------------------------------------------------------
 % assorted unclassified breakages, waiting for a fix:
