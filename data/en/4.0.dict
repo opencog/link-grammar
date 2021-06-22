@@ -290,6 +290,9 @@
   ({[@M+]0.4 or Mp+} & dSJlp+) or ({[@M+]1.4 or [Mp+]} & dSJrp-) or
   ({[@M+]0.4 or Mp+} & dSJlu+) or ({[@M+]1.4 or [Mp+]} & dSJru-);
 
+% It might be a good idea to change these to be {Rw+ or Qe+} since
+% there are many how-questions that are relativized in this same way.
+%
 % Btm is used for time expressions.  It is used to constrain the verb
 % "last.v" which only makes sense for time.
 <rel-clause-x>: {Rw+} & B*m+;
@@ -10379,8 +10382,9 @@ ago:
 every.i: {EN-} & Ye+ & <prep-main-t>;
 
 % cost on MVp-: "about five times".
+% cost on Qe-: prefer R & B in "how many times did you do it?"
 times.i x.i:
-  (ND- & (({Xc+ & {Xd-}} & dCOa+) or MVp- or EC+ or EZ+ or <advcl-verb> or Qe+)) or
+  (ND- & (({Xc+ & {Xd-}} & dCOa+) or MVp- or EC+ or EZ+ or <advcl-verb> or [Qe+])) or
   (((({ND-} & DG-) & {<subcl-verb>}) or (ND- & Ys+)) &
     (({Xc+ & {Xd-}} & dCO+) or [MVp-]0.1 or (Xd- & Xc+ & MVx-)));
 
