@@ -2898,14 +2898,8 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % naked SIp+: "do you?"
 % Wi- & I*d+ & Xc+ & SI*i+: "please do tell, John"; comma is required!
 %
-% Things we'd like to have, but can't:
-% <b-minus> & O+: "what are the chances Sherlock could do it?"
-% Unfortunately, adding this breaks corpus-basic.batch:
-%    *how many more times did you do it
-%    *how many years did you do it
-% but, I dunno, both seem like valid sentences to me...
-% Hey, wait: using R & B here is wrong, should have Qe maybe?
-% Hang on, this is another zero-word:
+% I*d- & <b-minus> & O+: "How many years did you do it?"
+% Hang on, the above also enables a zero-word parse ...
 % "what are the chances [that] Sherlock could do it?"
 %
 do.v:
