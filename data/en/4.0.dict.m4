@@ -3933,13 +3933,15 @@ forsook.v-d overrode.v-d overtook.v-d rewrote.v-d undid.v-d
 overran.v-d mistook.v-d underwrote.v-d:
   VERB_SP_T(<vc-trans>);
 
+% I*d- & <b-minus> & O+: "how many more times did you hit her?"
 hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d
 overrun.v-d upset.v-d undercut.v-d:
-  VERB_SPPP_T(<vc-trans>) or
-  (<verb-ico> & <vc-trans>) or
-  <verb-pv> or
-  <verb-adj> or
-  <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-trans>)
+  or (<verb-ico> & <vc-trans>)
+  or ({@E-} & I*d- & <b-minus> & O+)
+  or <verb-pv>
+  or <verb-adj>
+  or <verb-phrase-opener>;
 
 forsaken.v overridden.v overtaken.v rewritten.v undone.v
 beset.v mistaken.v underwritten.v:

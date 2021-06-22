@@ -4149,17 +4149,19 @@ overran.v-d mistook.v-d underwrote.v-d:
   ((<vc-trans>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
 
+% I*d- & <b-minus> & O+: "how many more times did you hit her?"
 hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d
 overrun.v-d upset.v-d undercut.v-d:
   
   ((<verb-sp,pp> & (<vc-trans>)) or
   (<verb-and-sp-i-> & ([<vc-trans>]0.2 or ())) or
   ((<vc-trans>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>) or
-  (<verb-ico> & <vc-trans>) or
-  <verb-pv> or
-  <verb-adj> or
-  <verb-phrase-opener>;
+  <verb-and-sp-t>)
+  or (<verb-ico> & <vc-trans>)
+  or ({@E-} & I*d- & <b-minus> & O+)
+  or <verb-pv>
+  or <verb-adj>
+  or <verb-phrase-opener>;
 
 forsaken.v overridden.v overtaken.v rewritten.v undone.v
 beset.v mistaken.v underwritten.v:
