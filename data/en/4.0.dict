@@ -10385,9 +10385,10 @@ every.i: {EN-} & Ye+ & <prep-main-t>;
 % cost on MVp-: "about five times".
 % cost on Qe-: prefer R & B in "how many times did you do it?"
 times.i x.i:
-  (ND- & (({Xc+ & {Xd-}} & dCOa+) or MVp- or EC+ or EZ+ or <advcl-verb> or [Qe+])) or
-  (((({ND-} & DG-) & {<subcl-verb>}) or (ND- & Ys+)) &
-    (({Xc+ & {Xd-}} & dCO+) or [MVp-]0.1 or (Xd- & Xc+ & MVx-)));
+  (ND- & (({Xc+ & {Xd-}} & dCOa+)
+       or MVp- or EC+ or EZ+ or <advcl-verb> or [Qe+]0.5))
+  or (((({ND-} & DG-) & {<subcl-verb>}) or (ND- & Ys+)) &
+       (({Xc+ & {Xd-}} & dCO+) or [MVp-]0.1 or (Xd- & Xc+ & MVx-)));
 
 time.i:
   {TT- or NR-} & DG- & {<subcl-verb>} &
