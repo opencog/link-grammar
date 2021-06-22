@@ -4528,7 +4528,7 @@ dying.v: (<vc-die> & <verb-pg,ge>) or <verb-ge-d>;
 
 % I- & Bt- & WV-: "How many yars did it last?"
 % Negative cost to discourage bad linkage with last.a
-<vc-last>: {({[[@MV+]]} & OT+) or Bt-} & <mv-coord>;
+<vc-last>: {({[[@MV+]]} & Ot+) or Bt-} & <mv-coord>;
 last.v wait.v: VERB_PLI(<vc-last>) or [I- & Bt- & WV-]-0.1;
 lasts.v waits.v: VERB_S_I(<vc-last>);
 lasted.v-d waited.v-d: VERB_SPPP_I(<vc-last>);
@@ -5427,7 +5427,7 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
 % <vc-trans> plus particle and Vt
 <vc-take>:
   (((K+ & {[[@MV+]]} & O*n+) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & <mv-coord>) or
-  ({O+} & OT+ & {@MV+} & {<tot-verb> or <toi-verb>}) or
+  ({O+} & Ot+ & {@MV+} & {<tot-verb> or <toi-verb>}) or
   (OXii+ & Vtg+ & {@MV+} & TH+) or
   @MV+;
 take.v: VERB_S_PLI(<vc-take>);
@@ -7922,27 +7922,27 @@ fall.i spring.i winter.i summer.i:
 % Jd- & Dmc-: "Millions of years ago..."
 weeks.i days.i hours.i minutes.i seconds.i months.i years.i decades.i
 centuries.i semesters.i terms.i nights.i:
-  ((ND- or (Jd- & Dmc-) or [[EN-]] or [()]) & (Yt+ or (OT- & {Mp+})))
+  ((ND- or (Jd- & Dmc-) or [[EN-]] or [()]) & (Yt+ or (Ot- & {Mp+})))
   or (ND- & Ye-);
 
 week.i day.i hour.i minute.i second.i month.i year.i decade.i century.i
 semester.i term.i night.u:
-  (NS- & (({NJ-} & {EN-} & (Yt+ or OT-)) or (EN- & J-)))
+  (NS- & (({NJ-} & {EN-} & (Yt+ or Ot-)) or (EN- & J-)))
   or (NSa- & [[Mp- or Ys-]])
   or ({NR- or TT-} & DG- & ((<subcl-verb> & (({Xc+ & {Xd-}} & dCO+) or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
 
-year_and_a_half: NSa- & {EN-} & (Yt+ or OT-);
+year_and_a_half: NSa- & {EN-} & (Yt+ or Ot-);
 moment.u:
-  (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-)))
+  (NS- & (({EN-} & (Yt+ or Ot-)) or (EN- & J-)))
   or ({NR- or TT-} & DG- & ((<subcl-verb> & (({Xc+ & {Xd-}} & dCO+) or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
 
-a_while: J- or Yt+ or OT- or <adv-as>;
+a_while: J- or Yt+ or Ot- or <adv-as>;
 now.i then.i: JT- or FM-;
 now_on then_on there_on: FM-;
 from_now: Yt- & <prep-main-t>;
 
 a_long_time some_time a_few_moments moments.u:
-  Yt+ or OT-;
+  Yt+ or Ot-;
 
 % I can't figure out what the Js- would be for... ??
 % ago: Yt- & (<prep-main-e> or <advcl-verb> or Qe+ or JT- or Js-);
@@ -8074,7 +8074,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 /en/words/units.1.dot: {Xi+} & <units-suffix>;
 
 % Time unit abbreviations:
-<time-units>: <units-suffix> or ((ND- or NS-) & {NJ-} & OT-);
+<time-units>: <units-suffix> or ((ND- or NS-) & {NJ-} & Ot-);
 /en/words/units.4: <time-units>;
 /en/words/units.4.dot: {Xi+} & <time-units>;
 
@@ -9775,7 +9775,7 @@ longer.a-c:
     or MVb-
     or Qe+
     or <advcl-verb>
-    or OT-
+    or Ot-
     or FL-
   ))
   or (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
@@ -10212,7 +10212,7 @@ voluntarily flatly purposely jointly universally thickly widely:
     or [[EA+]]);
 
 respectively: ({Xd- & Xc+} & <adv-as>) or ({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
-long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or OT- or FL- or Yt+));
+long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or Ot- or FL- or Yt+));
 daily.e nightly.e weekly.e monthly.e yearly.e hourly.e
 partially: ({Xd- & Xc+} & <adv-as>) or E+ or EB-;
 
