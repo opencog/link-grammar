@@ -1669,7 +1669,7 @@ half:
 % Naked H-: "How many?"
 % H- & EC+: "How many more?"
 many:
-  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+ or EC+ or [()]))
+  (H- & (Dmc+ or ND+ or NIn+ or TQ+ or EC+ or [()]))
   or (AM- & (Dmcy+ or Oy- or Jy-))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
@@ -4527,8 +4527,10 @@ dies.v: VERB_S_I(<vc-die>);
 died.v-d: VERB_SPPP_I(<vc-die>);
 dying.v: (<vc-die> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-last>: {({[[@MV+]]} & OT+) or BT- or (Bt- & WV-)} & <mv-coord>;
-last.v wait.v: VERB_PLI(<vc-last>);
+% I- & Bt- & WV-: "How many yars did it last?"
+% Negative cost to discourage bad linkage with last.a
+<vc-last>: {({[[@MV+]]} & OT+) or BT- or Bt-} & <mv-coord>;
+last.v wait.v: VERB_PLI(<vc-last>) or [I- & Bt- & WV-]-0.1;
 lasts.v waits.v: VERB_S_I(<vc-last>);
 lasted.v-d waited.v-d: VERB_SPPP_I(<vc-last>);
 lasting.v waiting.v: <verb-pg> & <vc-last>;

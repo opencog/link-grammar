@@ -1660,7 +1660,7 @@ half:
 % Naked H-: "How many?"
 % H- & EC+: "How many more?"
 many:
-  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+ or EC+ or [()]))
+  (H- & (Dmc+ or ND+ or NIn+ or TQ+ or EC+ or [()]))
   or (AM- & (Dmcy+ or Oy- or Jy-))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
@@ -5215,13 +5215,15 @@ died.v-d:
   ((<vc-die>) & <verb-and-sp-i+>));
 dying.v: (<vc-die> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-last>: {({[[@MV+]]} & OT+) or BT- or (Bt- & WV-)} & <mv-coord>;
+% I- & Bt- & WV-: "How many yars did it last?"
+% Negative cost to discourage bad linkage with last.a
+<vc-last>: {({[[@MV+]]} & OT+) or BT- or Bt-} & <mv-coord>;
 last.v wait.v: 
   ((<verb-pl,i> & (<vc-last>)) or
   ({@E-} & {([Sp-] or (Xd- & EI-))} & dWi- & (<vc-last>) & Xc+ & SI*i+ & {Xc+} & {@MV+}) or
   ({@E-} & hXd- & dWi- & (<vc-last>) & hXc+) or
   (<verb-and-pl-> & ((<vc-last>) or ())) or
-  (([<vc-last>]0.1 or [()]) & <verb-and-pl+>));
+  (([<vc-last>]0.1 or [()]) & <verb-and-pl+>)) or [I- & Bt- & WV-]-0.1;
 lasts.v waits.v: 
   ((<verb-s> & (<vc-last>)) or
   (<verb-and-s-> & ([<vc-last>] or ())) or
