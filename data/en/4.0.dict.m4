@@ -299,9 +299,12 @@ changecom(`%')
   ({[@M+]0.4 or Mp+} & dSJlp+) or ({[@M+]1.4 or [Mp+]} & dSJrp-) or
   ({[@M+]0.4 or Mp+} & dSJlu+) or ({[@M+]1.4 or [Mp+]} & dSJru-);
 
+% Btm is used for time expressions.  It is used to constrain the verb
+% "last.v" which only makes sense for time.
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
 <rel-clause-p>: {Rw+} & Bpm+;
+<rel-clause-t>: {Rw+} & Btm+;
 
 % TOf+ & IV+:  "there is going to be a meeting", "there appears to be a bug"
 % TOn+ & IV+:  "there are plots to hatch", "there is a bill to sign"
@@ -4524,7 +4527,7 @@ dies.v: VERB_S_I(<vc-die>);
 died.v-d: VERB_SPPP_I(<vc-die>);
 dying.v: (<vc-die> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-last>: {({[[@MV+]]} & OT+) or BT-} & <mv-coord>;
+<vc-last>: {({[[@MV+]]} & OT+) or BT- or (Bt- & WV-)} & <mv-coord>;
 last.v wait.v: VERB_PLI(<vc-last>);
 lasts.v waits.v: VERB_S_I(<vc-last>);
 lasted.v-d waited.v-d: VERB_SPPP_I(<vc-last>);
@@ -7995,6 +7998,7 @@ periods.n months.n nights.n seconds.n decades.n centuries.n:
       (({Dmc- or @M+} & {WN+ or TH+ or <embed-verb> or (R+ & Bp+)}  & {@MXp+} &
         (<noun-main-p> or
         <rel-clause-p> or
+        <rel-clause-t> or
         <noun-and-p>)) or
       Up- or
       (YP+ & {Dmc-}) or
