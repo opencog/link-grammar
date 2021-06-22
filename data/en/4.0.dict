@@ -2527,7 +2527,7 @@ per "/.per": Us+ & Mp-;
 <verb-s>:    {@E-} & ((Ss- & {hPFt-} & <verb-wall>) or (RS- & Bs-) or Wg-);
 <verb-pl>:   {@E-} & ((Sp- & {hPFt-} & <verb-wall>) or (RS- & Bp-) or Wg-);
 <verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-) or Wg-);
-<verb-pp>:   {@E-} & PP- & {<verb-wall>};
+<verb-pp>:   {@E-} & PP- & (<verb-wall> or [()]);
 <verb-pg>:   {@E-} & (({[Sg-]-0.2} & Pg-) or Mg- or Wg-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
@@ -2660,12 +2660,17 @@ per "/.per": Us+ & Mp-;
 
 % Relative clause, or question.
 % Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
+%      ([<verb-wall>]-0.1 or ()): prefer wall to participle.
 % Qe-: "How many times did you do it?"
 % Qd-: "Does he drink?" -- Qd connects directly to wall.
 % {CO-} & Qd-: "By the way, does he drink?"
 % Iq-: "The big question is did he do it?"
 % Xd- & Iq-: "The big question is, did he do it?"
-<verb-rq>: Rw- or ({{Xd-} & Iq-} & (Qd- or Qp- or ((Qw- or Qe-) & <verb-wall>))) or [()];
+<verb-rq>:
+  Rw-
+  or ({{Xd-} & Iq-}
+      & (Qd- or Qp- or ((Qw- or Qe-) & ([<verb-wall>]-0.1 or ()))))
+  or [()];
 % Just like above, but no aux, should always be anded with I+.
 % The idea here is that the verb on the other end of the I+ will
 % connect to the wall.
