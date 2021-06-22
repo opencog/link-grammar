@@ -3751,7 +3751,7 @@ rising.v falling.v:
 %  However, not every verb listed would be used like that.
 % QN+: "you biked how many miles?"
 /en/words/words.v.6.3:
-  VERB_SPPP_T(<vc-fill> or QN+) or
+  VERB_SPPP_T(<vc-fill>) or
   (<verb-pv-b> & {K+} & <mv-coord>) or
   <verb-adj> or
   <verb-si> or
@@ -4053,10 +4053,12 @@ buttering.g:
 %    what are the chances she will TRACK him down to the farm?
 % Pa+: "he cut out after fifth period"
 % K+ & Pa+: "it washed up, unbroken"
+% QN+: "you kicked how many balls?"
 <vc-kick>:
   ((K+ & {[[@MV+]]} & O*n+)
   or ((O+ or <b-minus>) & {K+})
   or (<b-minus> & O+ & {K+})
+  or ({K+} & QN+)
   or ({K+} & {Xc+} & Pa+)
   or [[@MV+ & O*n+]]) & <mv-coord>;
 
@@ -4079,9 +4081,8 @@ forgone.v curretted.v forsworn.v oversewn.v over-eaten.v
 % this, the other half clearly should not. I'm too lazy to sort it out,
 % right now.
 % Pa+: "it washed up unbroken"
-% QN+: "you kicked how many balls?"
 /en/words/words.v.8.3:
-  VERB_SPPP_T(<vc-kick> or QN+) or
+  VERB_SPPP_T(<vc-kick>) or
   (<verb-pv-b> & {K+} & <mv-coord>) or
   <verb-adj> or
   ({K+} & <verb-phrase-opener>);
