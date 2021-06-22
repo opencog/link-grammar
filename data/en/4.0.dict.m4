@@ -1710,6 +1710,7 @@ all_this: (<noun-rel-s> & <noun-main-s>) or <noun-and-s>;
 
 all_those all_these: [[<noun-rel-p> & <noun-main-p>]] or <noun-and-p>;
 
+% Ds*w-: "you want which one?"
 % ({Ds-} & Wa-): "That one."
 one:
   NA+ or
@@ -1720,6 +1721,7 @@ one:
     (YS+ or
     (<noun-rel-s> & (<noun-main-s> or <rel-clause-s>)) or
     <noun-and-s>))))
+  or Ds*w-
   or NIm+
   or NSn+
   or (NA- & ND+)
@@ -3611,7 +3613,9 @@ coming.v:
 % --------------------------------------------------------------
 % optionally transitive verbs
 % abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v
-<vc-tr,intr>: {O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>;
+<vc-tr,intr>:
+  ({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>)
+  or QN+;
 
 /en/words/words.v.2.1: VERB_PLI(`<vc-tr,intr>');
 /en/words/words.v.2.2: VERB_S_T(`<vc-tr,intr>');
@@ -5717,11 +5721,13 @@ refusing.v: <verb-pg> & <vc-refuse>;
 % Pa**j+: predicative adjective -- "I want it green", "I want it very shiny."
 % TO+ & Xc+: allows null-infinitive: "Because I want to."
 % intransitive: "Try it if you want"
+% QN+: "you want which one?"
 <vc-want>:
-  (<mv-coord> & ({<to-verb>} or <null-verb>)) or
-  ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+ or Pa**j+}) or
-  ([[@MV+ & O*n+]]) or
-  [[CX- & <mv-coord>]];
+  (<mv-coord> & ({<to-verb>} or <null-verb>))
+  or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+ or Pa**j+})
+  or QN+
+  or [[@MV+ & O*n+]]
+  or [[CX- & <mv-coord>]];
 
 want.v:
   VERB_PLI(<vc-want>);
@@ -8188,13 +8194,14 @@ what:
 
 % [QI-]: "I do not know which"
 % (R+ & B*w+ & (QJ+ or QJ-)): "... which to pick and which to leave behind."
+% QN- & D+: "you ate which one?"
 which:
   ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
   or (JQ- & D+)
   or ({MVp+ or MVx+} & (S**w+ or B*w+) & ((Xc+ or <costly-null>) & Xd- & MX*r-))
   or [QI-]
-  or QN-
+  or (QN- & {D+})
   or (R+ & B*w+ & (QJ+ or QJ-))
   or Jw-;
 
