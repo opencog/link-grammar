@@ -8000,7 +8000,7 @@ periods.n months.n nights.n seconds.n decades.n centuries.n:
   ({NM+} & ((<noun-modifiers> &
       (({Dmc- or @M+} & {WN+ or TH+ or <embed-verb> or (R+ & Bp+)}  & {@MXp+} &
         (<noun-main-p> or
-        <rel-clause-p> or
+        % <rel-clause-p> or
         <rel-clause-t> or
         <noun-and-p>)) or
       Up- or
