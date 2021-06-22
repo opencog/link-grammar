@@ -299,9 +299,15 @@ changecom(`%')
   ({[@M+]0.4 or Mp+} & dSJlp+) or ({[@M+]1.4 or [Mp+]} & dSJrp-) or
   ({[@M+]0.4 or Mp+} & dSJlu+) or ({[@M+]1.4 or [Mp+]} & dSJru-);
 
+% It might be a good idea to change these to be {Rw+ or Qe+} since
+% there are many how-questions that are relativized in this same way.
+%
+% Btm is used for time expressions.  It is used to constrain the verb
+% "last.v" which only makes sense for time.
 <rel-clause-x>: {Rw+} & B*m+;
 <rel-clause-s>: {Rw+} & Bsm+;
 <rel-clause-p>: {Rw+} & Bpm+;
+<rel-clause-t>: {Rw+} & Btm+;
 
 % TOf+ & IV+:  "there is going to be a meeting", "there appears to be a bug"
 % TOn+ & IV+:  "there are plots to hatch", "there is a bill to sign"
@@ -1661,12 +1667,11 @@ half:
     or EZ+
     or [(({DD-} & {@Mp+ or (R+ & B+)}) or (AL+ & J+)) & <noun-main-x>]);
 
-% "How many years" -- prefer TQ+ over Dmc+
 % OFd+ & Dmc+: "I drank many of the beers"
 % Naked H-: "How many?"
 % H- & EC+: "How many more?"
 many:
-  (H- & ([[Dmc+]] or ND+ or NIn+ or TQ+ or EC+ or [()]))
+  (H- & (Dmc+ or ND+ or NIn+ or EC+ or [()]))
   or (AM- & (Dmcy+ or Oy- or Jy-))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
@@ -2531,7 +2536,7 @@ per "/.per": Us+ & Mp-;
 <verb-s>:    {@E-} & ((Ss- & {hPFt-} & <verb-wall>) or (RS- & Bs-) or Wg-);
 <verb-pl>:   {@E-} & ((Sp- & {hPFt-} & <verb-wall>) or (RS- & Bp-) or Wg-);
 <verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-) or Wg-);
-<verb-pp>:   {@E-} & PP- & {<verb-wall>};
+<verb-pp>:   {@E-} & PP- & (<verb-wall> or [()]);
 <verb-pg>:   {@E-} & (({[Sg-]-0.2} & Pg-) or Mg- or Wg-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
@@ -2664,12 +2669,17 @@ per "/.per": Us+ & Mp-;
 
 % Relative clause, or question.
 % Qw- & <verb-wall>: "Where are they?" -- verb must connect to wall.
+%      ([<verb-wall>]-0.1 or ()): prefer wall to participle.
 % Qe-: "How many times did you do it?"
 % Qd-: "Does he drink?" -- Qd connects directly to wall.
 % {CO-} & Qd-: "By the way, does he drink?"
 % Iq-: "The big question is did he do it?"
 % Xd- & Iq-: "The big question is, did he do it?"
-<verb-rq>: Rw- or ({{Xd-} & Iq-} & (Qd- or Qp- or ((Qw- or Qe-) & <verb-wall>))) or [()];
+<verb-rq>:
+  Rw-
+  or ({{Xd-} & Iq-}
+      & (Qd- or Qp- or ((Qw- or Qe-) & ([<verb-wall>]-0.1 or ()))))
+  or [()];
 % Just like above, but no aux, should always be anded with I+.
 % The idea here is that the verb on the other end of the I+ will
 % connect to the wall.
@@ -2893,14 +2903,8 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % naked SIp+: "do you?"
 % Wi- & I*d+ & Xc+ & SI*i+: "please do tell, John"; comma is required!
 %
-% Things we'd like to have, but can't:
-% <b-minus> & O+: "what are the chances Sherlock could do it?"
-% Unfortunately, adding this breaks corpus-basic.batch:
-%    *how many more times did you do it
-%    *how many years did you do it
-% but, I dunno, both seem like valid sentences to me...
-% Hey, wait: using R & B here is wrong, should have Qe maybe?
-% Hang on, this is another zero-word:
+% I*d- & <b-minus> & O+: "How many years did you do it?"
+% Hang on, the above also enables a zero-word parse ...
 % "what are the chances [that] Sherlock could do it?"
 %
 do.v:
@@ -2915,6 +2919,7 @@ do.v:
     (<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) &
     <mv-coord> &
     (<verb-wall> or VJrpi-))
+  or ({@E-} & I*d- & <b-minus> & O+)
   or ({@E-} & I*d- & <verb-wall>);
 
 % Ss- & <verb-wall>: "so it does!"
@@ -3933,13 +3938,15 @@ forsook.v-d overrode.v-d overtook.v-d rewrote.v-d undid.v-d
 overran.v-d mistook.v-d underwrote.v-d:
   VERB_SP_T(<vc-trans>);
 
+% I*d- & <b-minus> & O+: "how many more times did you hit her?"
 hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d
 overrun.v-d upset.v-d undercut.v-d:
-  VERB_SPPP_T(<vc-trans>) or
-  (<verb-ico> & <vc-trans>) or
-  <verb-pv> or
-  <verb-adj> or
-  <verb-phrase-opener>;
+  VERB_SPPP_T(<vc-trans>)
+  or (<verb-ico> & <vc-trans>)
+  or ({@E-} & I*d- & <b-minus> & O+)
+  or <verb-pv>
+  or <verb-adj>
+  or <verb-phrase-opener>;
 
 forsaken.v overridden.v overtaken.v rewritten.v undone.v
 beset.v mistaken.v underwritten.v:
@@ -4138,7 +4145,11 @@ endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 
 % QI+ "it happened when?"
 <vc-happen>: {@MV+} & {<to-verb> or THi+ or QI+} & {VC+};
-happen.v occur.v: VERB_Y_PLI(<vc-happen>);
+
+% I*d- & <b-minus>: "how many more times will it happen"
+happen.v occur.v:
+   VERB_Y_PLI(<vc-happen>)
+   or (I*d- & <b-minus>);
 happens.v occurs.v: VERB_Y_S(<vc-happen>);
 happened.v-d occured.v-d occurred.v-d: VERB_Y_SPPP(<vc-happen>);
 happening.v occuring.v occurring.v: (<vc-happen> & <verb-pg,ge>) or <verb-ge-d>;
@@ -4524,8 +4535,10 @@ dies.v: VERB_S_I(<vc-die>);
 died.v-d: VERB_SPPP_I(<vc-die>);
 dying.v: (<vc-die> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-last>: {({[[@MV+]]} & OT+) or BT-} & <mv-coord>;
-last.v wait.v: VERB_PLI(<vc-last>);
+% I- & Bt- & WV-: "How many yars did it last?"
+% Negative cost to discourage bad linkage with last.a
+<vc-last>: {({[[@MV+]]} & Ot+) or Bt-} & <mv-coord>;
+last.v wait.v: VERB_PLI(<vc-last>) or [I- & Bt- & WV-]-0.1;
 lasts.v waits.v: VERB_S_I(<vc-last>);
 lasted.v-d waited.v-d: VERB_SPPP_I(<vc-last>);
 lasting.v waiting.v: <verb-pg> & <vc-last>;
@@ -5422,11 +5435,13 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
 
 % <vc-trans> plus particle and Vt
 <vc-take>:
-  (((K+ & {[[@MV+]]} & O*n+) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & <mv-coord>) or
-  ({O+} & (OT+ or BT-) & {@MV+} & {<tot-verb> or <toi-verb>}) or
-  (OXii+ & Vtg+ & {@MV+} & TH+) or
-  @MV+;
-take.v: VERB_S_PLI(<vc-take>);
+  (((K+ & {[[@MV+]]} & O*n+) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & <mv-coord>)
+  or ({O+} & Ot+ & {@MV+} & {<tot-verb> or <toi-verb>})
+  or (OXii+ & Vtg+ & {@MV+} & TH+)
+  or @MV+;
+
+% If- & WV-: "How long did it take?"
+take.v: VERB_S_PLI(<vc-take>) or (If- & <verb-wall>);
 % conjoin: "He takes cookies and eats them."
 takes.v: VERB_S_S(<vc-take>);
 took.v-d: VERB_S_SP(<vc-take>);
@@ -6101,7 +6116,7 @@ writing.g reading.g charging.g drawing.g:
 % mandatory: '*she sang me'
 % but then: 'she sang soprano'
 <vc-sing>:
-  ({(B- & {O+ or K+}) or
+  ({(<b-minus> & {O+ or K+}) or
     <vc-opt-ditrans> or
     (O+ & K+) or
     <of-coord> or
@@ -7438,14 +7453,14 @@ to.r:
   or ({@E-} & {NT-} & I+ &
     (<MX-PHRASE>
     or (SFsx+ & <S-CLAUSE>)
-    or [{Xd- & Xc+} & MVi-]
+    or [{Xd- & Xc+} & MVi-]0.9
     or [<OPENER>]
     or [[R-]] ))
   or ({NT-} & TO- & Xc+)
   or I*a+
   or ({JQ+} & ([J+] or Mgp+) & <prep-main-a>)
   or <locative>
-  or [MVp- & B-]
+  or [MVp- & B-]1.1
   or <null-prep-qu>;
 
 so_as_to: I+ & {Xd- & Xc+} & MVi-;
@@ -7918,28 +7933,27 @@ fall.i spring.i winter.i summer.i:
 % Jd- & Dmc-: "Millions of years ago..."
 weeks.i days.i hours.i minutes.i seconds.i months.i years.i decades.i
 centuries.i semesters.i terms.i nights.i:
-  ((ND- or (Jd- & Dmc-) or [[EN-]] or [()]) & (Yt+ or (OT- & {Mp+})))
-  or (ND- & Ye-)
-  or (TQ- & BT+);
+  ((ND- or (Jd- & Dmc-) or [[EN-]] or [()]) & (Yt+ or (Ot- & {Mp+})))
+  or (ND- & Ye-);
 
 week.i day.i hour.i minute.i second.i month.i year.i decade.i century.i
 semester.i term.i night.u:
-  (NS- & (({NJ-} & {EN-} & (Yt+ or OT-)) or (EN- & J-)))
+  (NS- & (({NJ-} & {EN-} & (Yt+ or Ot-)) or (EN- & J-)))
   or (NSa- & [[Mp- or Ys-]])
   or ({NR- or TT-} & DG- & ((<subcl-verb> & (({Xc+ & {Xd-}} & dCO+) or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
 
-year_and_a_half: NSa- & {EN-} & (Yt+ or OT-);
+year_and_a_half: NSa- & {EN-} & (Yt+ or Ot-);
 moment.u:
-  (NS- & (({EN-} & (Yt+ or OT-)) or (EN- & J-)))
+  (NS- & (({EN-} & (Yt+ or Ot-)) or (EN- & J-)))
   or ({NR- or TT-} & DG- & ((<subcl-verb> & (({Xc+ & {Xd-}} & dCO+) or MVp- or (Xd- & Xc+ & MVx-))) or Yt+));
 
-a_while: J- or Yt+ or OT- or <adv-as>;
+a_while: J- or Yt+ or Ot- or <adv-as>;
 now.i then.i: JT- or FM-;
 now_on then_on there_on: FM-;
 from_now: Yt- & <prep-main-t>;
 
 a_long_time some_time a_few_moments moments.u:
-  Yt+ or OT-;
+  Yt+ or Ot-;
 
 % I can't figure out what the Js- would be for... ??
 % ago: Yt- & (<prep-main-e> or <advcl-verb> or Qe+ or JT- or Js-);
@@ -7949,10 +7963,12 @@ ago:
 every.i: {EN-} & Ye+ & <prep-main-t>;
 
 % cost on MVp-: "about five times".
+% cost on Qe-: prefer R & B in "how many times did you do it?"
 times.i x.i:
-  (ND- & (({Xc+ & {Xd-}} & dCOa+) or MVp- or EC+ or EZ+ or <advcl-verb> or Qe+)) or
-  (((({ND-} & DG-) & {<subcl-verb>}) or (ND- & Ys+)) &
-    (({Xc+ & {Xd-}} & dCO+) or [MVp-]0.1 or (Xd- & Xc+ & MVx-)));
+  (ND- & (({Xc+ & {Xd-}} & dCOa+)
+       or MVp- or EC+ or EZ+ or <advcl-verb> or [Qe+]0.5))
+  or (((({ND-} & DG-) & {<subcl-verb>}) or (ND- & Ys+)) &
+       (({Xc+ & {Xd-}} & dCO+) or [MVp-]0.1 or (Xd- & Xc+ & MVx-)));
 
 time.i:
   {TT- or NR-} & DG- & {<subcl-verb>} &
@@ -7994,7 +8010,8 @@ periods.n months.n nights.n seconds.n decades.n centuries.n:
   ({NM+} & ((<noun-modifiers> &
       (({Dmc- or @M+} & {WN+ or TH+ or <embed-verb> or (R+ & Bp+)}  & {@MXp+} &
         (<noun-main-p> or
-        <rel-clause-p> or
+        % <rel-clause-p> or
+        <rel-clause-t> or
         <noun-and-p>)) or
       Up- or
       (YP+ & {Dmc-}) or
@@ -8070,7 +8087,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 /en/words/units.1.dot: {Xi+} & <units-suffix>;
 
 % Time unit abbreviations:
-<time-units>: <units-suffix> or ((ND- or NS-) & {NJ-} & OT-);
+<time-units>: <units-suffix> or ((ND- or NS-) & {NJ-} & Ot-);
 /en/words/units.4: <time-units>;
 /en/words/units.4.dot: {Xi+} & <time-units>;
 
@@ -8302,6 +8319,7 @@ whether_or_not:
   or (<subcl-verb> & (({Xd- & Xc+} & MVs-) or ({Xc+ & {Xd-}} & dCO*s+)));
 
 % QI- & (): "I do not know how"
+% QI- & H+: "it happened how many times?"
 % EL+: "How else would you say that?"
 % (EAh+ or EEh+) & Wq-: "How big?" "How quickly?"
 %    Unfortunately, this is blocked by "S-V inversion required7"
@@ -8313,6 +8331,7 @@ how:
   or ({EW-} & Wh- & H+)
   or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
   or [QI-]0.5
+  or (QI- & H+)
   or ({EW-} & (QJ- or QJ+))
   or [dSJl+ or dSJr-]0.5
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
@@ -9048,7 +9067,7 @@ long.a:
   <ordinary-adj>
   or <adj-consn>
   or ((Ya- or Yt-) & (Pa- or Ma- or dMJra- or dMJla+))
-  or (H- & (BT+ or Yt+));
+  or (H- & Yt+);
 
 % Hmm does distant really belong here?
 % "The river is a mile wide here": Ya- & Pa- & MVp+
@@ -9771,7 +9790,7 @@ longer.a-c:
     or MVb-
     or Qe+
     or <advcl-verb>
-    or OT-
+    or Ot-
     or FL-
   ))
   or (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
@@ -10208,7 +10227,7 @@ voluntarily flatly purposely jointly universally thickly widely:
     or [[EA+]]);
 
 respectively: ({Xd- & Xc+} & <adv-as>) or ({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
-long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or OT- or FL- or Yt+));
+long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or Ot- or FL- or Yt+));
 daily.e nightly.e weekly.e monthly.e yearly.e hourly.e
 partially: ({Xd- & Xc+} & <adv-as>) or E+ or EB-;
 

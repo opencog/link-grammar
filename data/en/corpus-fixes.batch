@@ -2341,6 +2341,28 @@ Many times!
 About five times!
 Almost five times!
 
+How many years did it last
+how many years did you do it?
+how many years did you abuse drugs?
+How long did you take?
+
+How many years ago did you do it
+How many years ago did you smoke pot?
+
+How many more times did you do it
+how many more times did you sing to her
+how many more times did you hit her
+how many more times will you hit her
+how many more times are you going to hit her
+
+how many more times did it happen?
+how many more times will it happen?
+
+% Question inversion
+it happened when?
+it happened how many times?
+
+
 Who?
 who else?
 who else not?
@@ -6545,11 +6567,6 @@ I slipped on the ice as I ran home.
 
 % "as" as a colloquial form of "that"
 I don't know as I can answer your question.
-
-% --------------------------------------------------------------------
-% This should parse with the TQ/BT link (see OT page)
-% but that requires links crossing to head-word, so its screwed.
-How many years did it last
 
 % --------------------------------------------------------------------
 % assorted unclassified breakages, waiting for a fix:
