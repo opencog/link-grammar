@@ -5426,11 +5426,13 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
 
 % <vc-trans> plus particle and Vt
 <vc-take>:
-  (((K+ & {[[@MV+]]} & O*n+) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & <mv-coord>) or
-  ({O+} & Ot+ & {@MV+} & {<tot-verb> or <toi-verb>}) or
-  (OXii+ & Vtg+ & {@MV+} & TH+) or
-  @MV+;
-take.v: VERB_S_PLI(<vc-take>);
+  (((K+ & {[[@MV+]]} & O*n+) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & <mv-coord>)
+  or ({O+} & Ot+ & {@MV+} & {<tot-verb> or <toi-verb>})
+  or (OXii+ & Vtg+ & {@MV+} & TH+)
+  or @MV+;
+
+% If- & WV-: "How long did it take?"
+take.v: VERB_S_PLI(<vc-take>) or (If- & <verb-wall>);
 % conjoin: "He takes cookies and eats them."
 takes.v: VERB_S_S(<vc-take>);
 took.v-d: VERB_S_SP(<vc-take>);
