@@ -3834,6 +3834,7 @@ and.v-fill:
 %   "What are the chances she will really DRIVE him crazy?"
 % ({@E-} & B- & O+ & K+):
 %   "What are the chances she will DRIVE him up to the farm?"
+% QN+: you run how many miles?
 %
 <vc-run>:
   ((K+ & {[[@MV+]]} & O*n+)
@@ -3841,6 +3842,7 @@ and.v-fill:
     or ({O+ or <b-minus>} & {K+})
     or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
     or ({@E-} & <b-minus> & O+ & {Pa**j+ or K+})
+    or ({K+} & QN+)
     or [[@MV+ & O*n+]]
   ) & <mv-coord>;
 
