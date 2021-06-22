@@ -6192,7 +6192,7 @@ showing.v: <verb-pg> & <vc-show>;
 
 % ditransitive
 <vc-teach>:
-  ((O+ or <b-minus>) & ({@MV+} & (QN+ or <embed-verb> or TH+ or RSe+ or Zs- or B- or <too-verb>)))
+  ((O+ or <b-minus>) & ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs- or B- or <too-verb>)))
   or ({
     <vc-opt-ditrans>
     or (B- & {[[@MV+]]} & O*n+)
@@ -6205,9 +6205,9 @@ taught.v-d:
   VERB_SPPP_T(<vc-teach>) or
   (<verb-pv-b> &
     (({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>) or
-    ({@MV+} & (QN+ or <embed-verb> or TH+ or RSe+ or Zs- or <to-verb>)))) or
+    ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs- or <to-verb>)))) or
   (<verb-sp,pp> & @MV+ & QN+) or
-  ({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QN+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
+  ({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
 
