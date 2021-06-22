@@ -10456,11 +10456,14 @@ periods.n months.n nights.n seconds.n decades.n centuries.n:
 % create a bunch of parses that are wrong & interfere with the below.
 % Jp-: "we walked for three kilometers"
 % ND- & A- & D- & Jp-: "we walked for a further three kilometers"
+% ND- & Rw+ & Bpm+: "how many miles did you bike?"
+% ND-: "you biked how many miles?"
 <units-funky-plural>:
   ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-))
   or ((ND- or [()]) & Jp-)
   or (ND- & A- & D- & Jp-)
   or (ND- & Rw+ & Bpm+) % <rel-clause-p>
+  or ND-
   or (ND- & (NIfu+ or NItu- or EQt+ or EQt-));
 
 % AU is abbreviation for "astronomical units"
