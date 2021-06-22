@@ -531,6 +531,7 @@ Hallowe'en:
     ([[AN+]]
     or ({NM+ or ({{Dmc-} & Jd-} & Dmc-)} &
       <noun-rel-p> & (<noun-main-p> or <rel-clause-p>))
+    or ND-
     or ({NM+ or Dmc-} & <noun-and-p>)
     or dSJrp-
     or (YP+ & {Dmc-})
@@ -3901,10 +3902,11 @@ running.g beating.g catching.g driving.g striking.g:
 % The (Os+ or Op+) is used to block:
 %    *This is the man we love him
 %    *I still remember the room I kissed him
+% O+ & QN+: "you hit the shot how many times?"
 <vc-trans>:
   (O+
    or <b-minus>
-   or QN+
+   or ({O+} & QN+)
    or [[@MV+ & O*n+]]
    or ({@E-} & <b-minus> & (Os+ or Op+))
   ) & <mv-coord>;
@@ -3946,10 +3948,9 @@ overran.v-d mistook.v-d underwrote.v-d:
   VERB_SP_T(<vc-trans>);
 
 % I*d- & <b-minus> & O+: "how many more times did you hit her?"
-% O+ & QN+: "you hit her how many times?"
 hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d
 overrun.v-d upset.v-d undercut.v-d:
-  VERB_SPPP_T(<vc-trans> or (O+ & QN+))
+  VERB_SPPP_T(<vc-trans>)
   or (<verb-ico> & <vc-trans>)
   or ({@E-} & I*d- & <b-minus> & O+)
   or <verb-pv>
