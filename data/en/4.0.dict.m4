@@ -6105,7 +6105,7 @@ writing.g reading.g charging.g drawing.g:
 % mandatory: '*she sang me'
 % but then: 'she sang soprano'
 <vc-sing>:
-  ({(B- & {O+ or K+}) or
+  ({(<b-minus> & {O+ or K+}) or
     <vc-opt-ditrans> or
     (O+ & K+) or
     <of-coord> or
