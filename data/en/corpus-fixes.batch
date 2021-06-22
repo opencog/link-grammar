@@ -2358,10 +2358,6 @@ how many more times are you going to hit her
 how many more times did it happen?
 how many more times will it happen?
 
-% Question inversion
-it happened when?
-it happened how many times?
-
 
 Who?
 who else?
@@ -2453,6 +2449,9 @@ You helped her when?
 
 You will come when?
 You will go when?
+
+it happened when?
+it happened how many times?
 
 % Statements of the same form.
 I am not certain where

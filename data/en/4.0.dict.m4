@@ -8291,6 +8291,7 @@ why:
     ({hCO-} & {EW-} & (Ww- or Wq-) & {Qw+ or N+})
     or (Wv- & Qa+)
     or (QI- & (<subcl-verb> or <ton-verb> or [()]0.5))
+    or QN-
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or dCOa+
     or [dSJl+ or dSJr-]0.5
@@ -8307,6 +8308,7 @@ where:
     & (
       ({hCO-} & {EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
       or [QI-]0.5
+      or QN-
       or [dSJl+ or dSJr-]0.5
       or ({EW-} & (QJ- or QJ+))
       or (<subcl-verb> & Bsw+ & QI-)
