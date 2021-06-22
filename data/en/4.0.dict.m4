@@ -3939,9 +3939,10 @@ overran.v-d mistook.v-d underwrote.v-d:
   VERB_SP_T(<vc-trans>);
 
 % I*d- & <b-minus> & O+: "how many more times did you hit her?"
+% O+ & QN+: "you hit her how many times?"
 hit.v-d misread.v-d shed.v-d rid.v-d overcome.v-d
 overrun.v-d upset.v-d undercut.v-d:
-  VERB_SPPP_T(<vc-trans>)
+  VERB_SPPP_T(<vc-trans> or (O+ & QN+))
   or (<verb-ico> & <vc-trans>)
   or ({@E-} & I*d- & <b-minus> & O+)
   or <verb-pv>
