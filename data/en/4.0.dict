@@ -2585,7 +2585,10 @@ per "/.per": Us+ & Mp-;
 <verb-why>:  Qa- & <verb-wall>;
 
 % Sj- & I*j-: subject of bare infinitive: "you should hear him talk!"
-<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
+% <verb-wall> or [()]0.5: This is used with <b-minus> which already
+%                         has a <verb-wall> in it (maybe) so we don't
+%                         need a second one. So don't be harsh.
+<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]0.5)) or
                       (Sj- & I*j-) or
                       <verb-why> or
                       ({(Xd- & (EI- or S**i-)) or [{Xd-} & hCO-]} & Wi- & {NM+}) or
@@ -10457,6 +10460,7 @@ periods.n months.n nights.n seconds.n decades.n centuries.n:
   ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-))
   or ((ND- or [()]) & Jp-)
   or (ND- & A- & D- & Jp-)
+  or (ND- & Rw+ & Bpm+) % <rel-clause-p>
   or (ND- & (NIfu+ or NItu- or EQt+ or EQt-));
 
 % AU is abbreviation for "astronomical units"
