@@ -10582,7 +10582,7 @@ what:
       or Ss*w+
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
-    & {hCO-} & {EW-} & (Wb- or Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
+    & {hCO-} & {EW-} & (Wb- or Wq- or Ws- or QI*d- or QN- or BIqd- or QJ+ or QJ-))
   or ({EL+} & Ww-)
   or (Wn- & O+)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
