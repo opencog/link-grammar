@@ -4486,10 +4486,14 @@ endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 
 % QI+ "it happened when?"
 <vc-happen>: {@MV+} & {<to-verb> or THi+ or QI+} & {VC+};
-happen.v occur.v: 
+
+% I*d- & <b-minus>: "how many more times will it happen"
+happen.v occur.v:
+   
   ((<verb-y-pl,i> & (<vc-happen>)) or
   (<verb-and-sp-i-> & ([<vc-happen>] or ())) or
-  ((<vc-happen>) & <verb-and-sp-i+>));
+  ((<vc-happen>) & <verb-and-sp-i+>))
+   or (I*d- & <b-minus>);
 happens.v occurs.v: 
   ((<verb-y-s> & (<vc-happen>)) or
   (<verb-and-s-> & ([<vc-happen>] or ())) or
