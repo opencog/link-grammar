@@ -3614,9 +3614,10 @@ coming.v:
 % --------------------------------------------------------------
 % optionally transitive verbs
 % abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v
+% O+ & QN+: "he anchors the bolts how?"
 <vc-tr,intr>:
   ({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>)
-  or QN+;
+  or ({O+} & QN+);
 
 /en/words/words.v.2.1: VERB_PLI(`<vc-tr,intr>');
 /en/words/words.v.2.2: VERB_S_T(`<vc-tr,intr>');
@@ -3755,7 +3756,6 @@ rising.v falling.v:
 
 % <verb-si>: "Above him hung a lamp"
 %  However, not every verb listed would be used like that.
-% QN+: "you biked how many miles?"
 /en/words/words.v.6.3:
   VERB_SPPP_T(<vc-fill>) or
   (<verb-pv-b> & {K+} & <mv-coord>) or
@@ -3840,15 +3840,15 @@ and.v-fill:
 %   "What are the chances she will really DRIVE him crazy?"
 % ({@E-} & B- & O+ & K+):
 %   "What are the chances she will DRIVE him up to the farm?"
-% QN+: you run how many miles?
-%
+% QN+: "you run how many miles?"
+% QN+ & MV+: "you ran to her, when?"
 <vc-run>:
   ((K+ & {[[@MV+]]} & O*n+)
     or Pa+
     or ({O+ or <b-minus>} & {K+})
     or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
     or ({@E-} & <b-minus> & O+ & {Pa**j+ or K+})
-    or ({K+} & QN+)
+    or ({O+} & {K+} & {@MV+} & {Xc+} & QN+)
     or [[@MV+ & O*n+]]
   ) & <mv-coord>;
 
@@ -4162,8 +4162,9 @@ endeavoured.v-d condescended.v-d deigned.v-d: VERB_SPPP_I(<vc-deign>);
 endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 <verb-ge-d>;
 
-% QN+ "it happened when?"
-<vc-happen>: {@MV+} & {<to-verb> or THi+ or QN+} & {VC+};
+% QN+: "it happened when?"
+% MV+ & QN+: "That happened to her, when?"
+<vc-happen>: {@MV+} & {<to-verb> or THi+ or ({Xc+} & QN+)} & {VC+};
 
 % I*d- & <b-minus>: "how many more times will it happen"
 happen.v occur.v:
@@ -4273,9 +4274,9 @@ seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 % "I do not care where you put it"
 % "I wonder when he will come"
 <QI+pref>: [QI+]-0.05;
-<QN+pref>: [QN+]-0.05;
+<QN+pref>: [QN+]-0.10;
 
-<vc-care>: {@MV+} & {<to-verb> or <QI+pref>};
+<vc-care>: {@MV+} & {<to-verb> or <QI+pref> or <QN+pref>};
 care.v: VERB_PLI(<vc-care>);
 cares.v: VERB_S_I(<vc-care>);
 cared.v-d: VERB_SPPP_I(<vc-care>);
@@ -4421,7 +4422,8 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % B-: "which way did it go?"
 % QN+: "you will go when?"
 <vc-go>:
-  {K+ or [[{Xc+} & Pa+]] or [Pg+] or I*g+ or <b-minus> or QN+} & <mv-coord>;
+  ({K+ or [[{Xc+} & Pa+]] or [Pg+] or I*g+ or <b-minus>} & <mv-coord>)
+  or QN+;
 go.v: VERB_PLI(<vc-go>);
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
@@ -4724,6 +4726,7 @@ deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
   or (<mv-coord> & <null-verb>)
   or ({@MV+} & (<QN+pref> or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
 
+
 remember.v forget.v: VERB_PLI(<vc-forget>);
 remembers.v forgets.v: VERB_S_T(<vc-forget>);
 remembered.v-d: VERB_SPPP_T(<vc-forget>) or <verb-pv> or <verb-phrase-opener>;
@@ -4736,11 +4739,13 @@ forgotten.v:
 remembering.g forgetting.g: (<vc-forget> & <verb-ge>) or <verb-ge-d>;
 remembering.v forgetting.v: <verb-pg> & <vc-forget>;
 
-% OF+ & QN+: "you learned of this when?
+% OF+ & QN+: "you learned of this when?"
 <vc-learn>:
-  {<vc-trans>} or
-  ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or
-      <QN+pref> or (OF+ & {{Xc+} & QN+} & <mv-coord>)));
+  {<vc-trans>}
+  or ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs-
+     or <of-coord>))
+  or QN+;
+
 learn.v: VERB_PLI(<vc-learn>);
 learns.v: VERB_S_T(<vc-learn>);
 learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {THi+}) or <verb-phrase-opener>;
@@ -4748,12 +4753,13 @@ learning.g: (<vc-learn> & <verb-ge>) or <verb-ge-d>;
 learning.v: <verb-pg> & <vc-learn>;
 
 % TO+ & Xc+: allows null-infinitive: "I did not propose to"
+% O+ & MV+ & QN+: "You proposed to her when?"
 <vc-propose>:
   <vc-trans>
   or (<mv-coord> & <null-verb>)
-  or ({@MV+} & (<to-verb> or
-    TH+ or <embed-verb> or RSe+ or QN+ or
-    Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
+  or ({@MV+} & (<to-verb>
+    or TH+ or <embed-verb> or RSe+ or QN+
+    or Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
 propose.v: VERB_PLI(<vc-propose>);
 proposes.v: VERB_S_T(<vc-propose>);
 
@@ -4770,7 +4776,7 @@ proposing.v: <verb-pg> & <vc-propose>;
 % <vc-trans> & QN+: "You demand this why?"
 % O+ & <of-coord>: "You demanded this of him why?"
 <vc-demand>:
-  (<vc-trans> & {{Xc+} & QN+})
+  (<vc-trans>)
   or ({O+} & <of-coord>)
   or (<mv-coord> & <null-verb>)
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
@@ -5726,10 +5732,11 @@ refusing.v: <verb-pg> & <vc-refuse>;
 % TO+ & Xc+: allows null-infinitive: "Because I want to."
 % intransitive: "Try it if you want"
 % QN+: "you want which one?"
+% O+ & QN+: "you want it when?"
 <vc-want>:
   (<mv-coord> & ({<to-verb>} or <null-verb>))
   or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+ or Pa**j+})
-  or QN+
+  or ({O+} & QN+)
   or [[@MV+ & O*n+]]
   or [[CX- & <mv-coord>]];
 
