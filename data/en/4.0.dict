@@ -3470,7 +3470,8 @@ mean.eq avg.eq avg..eq average.eq sum.eq difference.eq total.eq:
 
 % -----------------------------------------------------------
 % common intransitive verbs
-<vc-intrans>: <mv-coord>;
+% QN+: "you arrived how?"
+<vc-intrans>: <mv-coord> or QN+;
 
 % XXX Hmmm. There is a fair number of verbs in here that are "weakly"
 % transitive, i.e. are transitive in various rare usages:
