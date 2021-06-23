@@ -531,6 +531,7 @@ Hallowe'en:
     ([[AN+]]
     or ({NM+ or ({{Dmc-} & Jd-} & Dmc-)} &
       <noun-rel-p> & (<noun-main-p> or <rel-clause-p>))
+    or ND-
     or ({NM+ or Dmc-} & <noun-and-p>)
     or dSJrp-
     or (YP+ & {Dmc-})
@@ -1709,6 +1710,7 @@ all_this: (<noun-rel-s> & <noun-main-s>) or <noun-and-s>;
 
 all_those all_these: [[<noun-rel-p> & <noun-main-p>]] or <noun-and-p>;
 
+% Ds*w-: "you want which one?"
 % ({Ds-} & Wa-): "That one."
 one:
   NA+ or
@@ -1719,6 +1721,7 @@ one:
     (YS+ or
     (<noun-rel-s> & (<noun-main-s> or <rel-clause-s>)) or
     <noun-and-s>))))
+  or Ds*w-
   or NIm+
   or NSn+
   or (NA- & ND+)
@@ -2512,7 +2515,7 @@ per "/.per": Us+ & Mp-;
 <mv-coord>: {@MV+} & {VC+};
 
 % <of-coord>: "You were informed of this when?"
-<of-coord>: OF+ & {{Xc+} & QI+} & <mv-coord>;
+<of-coord>: OF+ & {{Xc+} & QN+} & <mv-coord>;
 
 % When we are done, remove the option costly NULL below.
 <WALL>: hWV+ or [[()]];
@@ -2594,7 +2597,10 @@ per "/.per": Us+ & Mp-;
 <verb-why>:  Qa- & <verb-wall>;
 
 % Sj- & I*j-: subject of bare infinitive: "you should hear him talk!"
-<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
+% <verb-wall> or [()]0.5: This is used with <b-minus> which already
+%                         has a <verb-wall> in it (maybe) so we don't
+%                         need a second one. So don't be harsh.
+<verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]0.5)) or
                       (Sj- & I*j-) or
                       <verb-why> or
                       ({(Xd- & (EI- or S**i-)) or [{Xd-} & hCO-]} & Wi- & {NM+}) or
@@ -2882,12 +2888,12 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % AUXILIARY VERBS
 
 % O+ & <verb-wall>: "did" is not an auxiliary, and so needs the wall.
-% O+ & QI+: "you did that when?"
-% QI+: "you did what?"
+% O+ & QN+: "you did that when?"
+% QN+: "you did what?"
 <vc-do>:
   ((<b-minus>
-    or (O+ & {@MV+} & <verb-wall> & {{Xc+} & QI+})
-    or ({@MV+} & <verb-wall> & QI+)
+    or (O+ & {@MV+} & <verb-wall> & {{Xc+} & QN+})
+    or ({@MV+} & <verb-wall> & QN+)
     or [[@MV+ & O*n+]]
     or Vd+
     or ({N+} & (CX- or [[()]]))) & <mv-coord>)
@@ -3479,7 +3485,8 @@ mean.eq avg.eq avg..eq average.eq sum.eq difference.eq total.eq:
 
 % -----------------------------------------------------------
 % common intransitive verbs
-<vc-intrans>: <mv-coord>;
+% QN+: "you arrived how?"
+<vc-intrans>: <mv-coord> or QN+;
 
 % XXX Hmmm. There is a fair number of verbs in here that are "weakly"
 % transitive, i.e. are transitive in various rare usages:
@@ -3587,7 +3594,7 @@ listening.v:
 
 % I*g: "Come walk with me".
 <vc-come>:
-  ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or I*g+ or <b-minus> or QI+} & <mv-coord>)
+  ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or I*g+ or <b-minus> or QN+} & <mv-coord>)
   or ({@MV+} & Pa+);
 come.v:
   VERB_PLI(<vc-come>)
@@ -3607,7 +3614,10 @@ coming.v:
 % --------------------------------------------------------------
 % optionally transitive verbs
 % abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v
-<vc-tr,intr>: {O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>;
+% O+ & QN+: "he anchors the bolts how?"
+<vc-tr,intr>:
+  ({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>)
+  or ({O+} & QN+);
 
 /en/words/words.v.2.1: VERB_PLI(`<vc-tr,intr>');
 /en/words/words.v.2.2: VERB_S_T(`<vc-tr,intr>');
@@ -3730,11 +3740,14 @@ rising.v falling.v:
 %
 % [A+]0.5: He was xxx'ed there  should have xxx as verb not adjective.
 %
+% QN+: "you bike how many miles?"
+% O+ & QN+: "you saw it when?"
 <vc-fill>:
-  ((K+ & {[[@MV+]]} & (O*n+ or ({Xc+} & (Pa+ or Pv+))))
+  (((K+ & {[[@MV+]]} & (O*n+ or ({Xc+} & (Pa+ or Pv+))))
     or ({O+ or <b-minus>} & {K+})
     or [[@MV+ & O*n+]]
-  ) & <mv-coord>;
+  ) & <mv-coord>)
+  or ({O+} & {K+} & QN+);
 
 /en/words/words.v.6.1:
   VERB_PLI(<vc-fill>);
@@ -3827,13 +3840,15 @@ and.v-fill:
 %   "What are the chances she will really DRIVE him crazy?"
 % ({@E-} & B- & O+ & K+):
 %   "What are the chances she will DRIVE him up to the farm?"
-%
+% QN+: "you run how many miles?"
+% QN+ & MV+: "you ran to her, when?"
 <vc-run>:
   ((K+ & {[[@MV+]]} & O*n+)
     or Pa+
     or ({O+ or <b-minus>} & {K+})
     or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
     or ({@E-} & <b-minus> & O+ & {Pa**j+ or K+})
+    or ({O+} & {K+} & {@MV+} & {Xc+} & QN+)
     or [[@MV+ & O*n+]]
   ) & <mv-coord>;
 
@@ -3895,12 +3910,14 @@ running.g beating.g catching.g driving.g striking.g:
 % The (Os+ or Op+) is used to block:
 %    *This is the man we love him
 %    *I still remember the room I kissed him
+% O+ & QN+: "you hit the shot how many times?"
 <vc-trans>:
-  (O+
+  ((O+
    or <b-minus>
    or [[@MV+ & O*n+]]
    or ({@E-} & <b-minus> & (Os+ or Op+))
-  ) & <mv-coord>;
+  ) & <mv-coord>)
+  or ({O+} & QN+);
 
 /en/words/words.v.4.1 : VERB_PLI(<vc-trans>);
 /en/words/words-medical.v.4.1: VERB_PLI(<vc-trans>);
@@ -4044,12 +4061,14 @@ buttering.g:
 %    what are the chances she will TRACK him down to the farm?
 % Pa+: "he cut out after fifth period"
 % K+ & Pa+: "it washed up, unbroken"
+% QN+: "you kicked how many balls?"
 <vc-kick>:
-  ((K+ & {[[@MV+]]} & O*n+)
-  or ((O+ or <b-minus>) & {K+})
-  or (<b-minus> & O+ & {K+})
-  or ({K+} & {Xc+} & Pa+)
-  or [[@MV+ & O*n+]]) & <mv-coord>;
+  (((K+ & {[[@MV+]]} & O*n+)
+    or ((O+ or <b-minus>) & {K+})
+    or (<b-minus> & O+ & {K+})
+    or ({K+} & {Xc+} & Pa+)
+    or [[@MV+ & O*n+]]) & <mv-coord>)
+  or ({K+} & QN+);
 
 /en/words/words.v.8.1: VERB_PLI(<vc-kick>);
 /en/words/words.v.8.2: VERB_S_T(<vc-kick>);
@@ -4143,8 +4162,9 @@ endeavoured.v-d condescended.v-d deigned.v-d: VERB_SPPP_I(<vc-deign>);
 endeavouring.v condescending.v deigning.v: (<vc-deign> & <verb-pg,ge>) or
 <verb-ge-d>;
 
-% QI+ "it happened when?"
-<vc-happen>: {@MV+} & {<to-verb> or THi+ or QI+} & {VC+};
+% QN+: "it happened when?"
+% MV+ & QN+: "That happened to her, when?"
+<vc-happen>: {@MV+} & {<to-verb> or THi+ or ({Xc+} & QN+)} & {VC+};
 
 % I*d- & <b-minus>: "how many more times will it happen"
 happen.v occur.v:
@@ -4254,8 +4274,9 @@ seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 % "I do not care where you put it"
 % "I wonder when he will come"
 <QI+pref>: [QI+]-0.05;
+<QN+pref>: [QN+]-0.10;
 
-<vc-care>: {@MV+} & {<to-verb> or <QI+pref>};
+<vc-care>: {@MV+} & {<to-verb> or <QI+pref> or <QN+pref>};
 care.v: VERB_PLI(<vc-care>);
 cares.v: VERB_S_I(<vc-care>);
 cared.v-d: VERB_SPPP_I(<vc-care>);
@@ -4399,9 +4420,10 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 % go.w: {E-} & (Wi- or S-) & I+;
 
 % B-: "which way did it go?"
-% QI+: "you will go when?"
+% QN+: "you will go when?"
 <vc-go>:
-  {K+ or [[{Xc+} & Pa+]] or [Pg+] or I*g+ or <b-minus> or QI+} & <mv-coord>;
+  ({K+ or [[{Xc+} & Pa+]] or [Pg+] or I*g+ or <b-minus>} & <mv-coord>)
+  or QN+;
 go.v: VERB_PLI(<vc-go>);
 
 % SFs-: "There goes the cutest guy ever!", needs O*t to survive PP.
@@ -4682,10 +4704,10 @@ planned.v-d confessed.v-d:
 planning.g confessing.g: (<vc-plan> & <verb-ge>) or <verb-ge-d>;
 planning.v confessing.v: <verb-pg> & <vc-plan>;
 
-% <vc-trans> & QI+: "you decided that when?"
+% <vc-trans> & QN+: "you decided that when?"
 <vc-decide>:
-  (<vc-trans> & {{Xc+} & QI+}) or
-  ({@MV+} & {TH+ or {<QI+pref>} or
+  (<vc-trans> & {{Xc+} & QN+}) or
+  ({@MV+} & {TH+ or {<QN+pref>} or
     <to-verb> or <embed-verb> or RSe+ or Zs-});
 
 decide.v resolve.v: VERB_PLI(<vc-decide>);
@@ -4702,7 +4724,8 @@ deciding.g resolving.g: (<vc-decide> & <verb-ge>) or <verb-ge-d>;
 <vc-forget>:
   {<vc-trans>}
   or (<mv-coord> & <null-verb>)
-  or ({@MV+} & (<QI+pref> or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
+  or ({@MV+} & (<QN+pref> or TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or Pg+));
+
 
 remember.v forget.v: VERB_PLI(<vc-forget>);
 remembers.v forgets.v: VERB_S_T(<vc-forget>);
@@ -4716,11 +4739,13 @@ forgotten.v:
 remembering.g forgetting.g: (<vc-forget> & <verb-ge>) or <verb-ge-d>;
 remembering.v forgetting.v: <verb-pg> & <vc-forget>;
 
-% OF+ & QI+: "you learned of this when?
+% OF+ & QN+: "you learned of this when?"
 <vc-learn>:
-  {<vc-trans>} or
-  ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs- or
-      <QI+pref> or (OF+ & {{Xc+} & QI+} & <mv-coord>)));
+  {<vc-trans>}
+  or ({@MV+} & (TH+ or <to-verb> or <embed-verb> or RSe+ or Zs-
+     or <of-coord>))
+  or QN+;
+
 learn.v: VERB_PLI(<vc-learn>);
 learns.v: VERB_S_T(<vc-learn>);
 learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {THi+}) or <verb-phrase-opener>;
@@ -4728,18 +4753,19 @@ learning.g: (<vc-learn> & <verb-ge>) or <verb-ge-d>;
 learning.v: <verb-pg> & <vc-learn>;
 
 % TO+ & Xc+: allows null-infinitive: "I did not propose to"
+% O+ & MV+ & QN+: "You proposed to her when?"
 <vc-propose>:
   <vc-trans>
   or (<mv-coord> & <null-verb>)
-  or ({@MV+} & (<to-verb> or
-    TH+ or <embed-verb> or RSe+ or QI+ or
-    Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
+  or ({@MV+} & (<to-verb>
+    or TH+ or <embed-verb> or RSe+ or QN+
+    or Z- or Pg+ or TS+ or (SI*j+ & I*j+)));
 propose.v: VERB_PLI(<vc-propose>);
 proposes.v: VERB_S_T(<vc-propose>);
 
-% <vc-propose> & QI+: "You proposed this to her when?"
+% <vc-propose> & QN+: "You proposed this to her when?"
 proposed.v-d:
-  VERB_SPPP_T(<vc-propose> & {{Xc+} & QI+})
+  VERB_SPPP_T(<vc-propose> & {{Xc+} & QN+})
   or (<verb-s-pv> & {THi+ or TSi+ or Z-})
   or <verb-adj>
   or <verb-phrase-opener>;
@@ -4747,10 +4773,10 @@ proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
 proposing.v: <verb-pg> & <vc-propose>;
 
 % TO+ & Xc+: allows null-infinitive: "I did not demand to"
-% <vc-trans> & QI+: "You demand this why?"
+% <vc-trans> & QN+: "You demand this why?"
 % O+ & <of-coord>: "You demanded this of him why?"
 <vc-demand>:
-  (<vc-trans> & {{Xc+} & QI+})
+  (<vc-trans>)
   or ({O+} & <of-coord>)
   or (<mv-coord> & <null-verb>)
   or ({@MV+} & ((<to-verb> or TH+ or Z- or TS+ or ((SI*j+ or SFI**j+) & I*j+))));
@@ -4833,12 +4859,12 @@ continuing.g: (<vc-begin> & <verb-ge>) or <verb-ge-d> or <verb-adj>;
 beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
 
 % <vc-trans> with particle
-% <vc-trans> & QI+: "you started this when?"
+% <vc-trans> & QN+: "you started this when?"
 <vc-start>:
-  ((({O+ or <b-minus>} & {K+ or QI+}) or
+  ((({O+ or <b-minus>} & {K+ or QN+}) or
     (K+ & {[[@MV+]]} & O*n+) or
     [[@MV+ & O*n+]]) & <mv-coord>) or
-  ({@MV+} & ((<to-verb> & {{Xc+} & QI+}) or Pg+));
+  ({@MV+} & ((<to-verb> & {{Xc+} & QN+}) or Pg+));
 
 start.v stop.v try.v: VERB_PLI(<vc-start>);
 starts.v stops.v tries.v: VERB_S_T(<vc-start>);
@@ -5098,10 +5124,10 @@ figuring.g: (<vc-figure> & <verb-ge>) or <verb-ge-d>;
 figuring.v: <verb-pg> & <vc-figure>;
 
 % (QI+ & {MV+}): "I did not say why until recently"
-% <vc-trans> & QI+: "you said this to her where?"
+% <vc-trans> & QN+: "you said this to her where?"
 %    "you indicate this why?"
 <vc-predict>:
-  (<vc-trans> & {{Xc+} & QI+})
+  (<vc-trans> & {{Xc+} & QN+})
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs- or VC+))
   or ({@MV+} & (<QI+pref> & {MV+}));
 
@@ -5200,8 +5226,8 @@ known.v well-known.v:
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
 knowing.v: <verb-pg> & <vc-know>;
 
-% <vc-trans> & QI+: "You requested these favors why?"
-<vc-request>: (<vc-trans> & {{Xc+} & QI+}) or
+% <vc-trans> & QN+: "You requested these favors why?"
+<vc-request>: (<vc-trans> & {{Xc+} & QN+}) or
   ({@MV+} & (TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 request.v: VERB_PLI(<vc-request>);
 requests.v: VERB_S_T(<vc-request>);
@@ -5237,26 +5263,26 @@ minded.v-d: VERB_SPPP_T(<vc-mind>) or <verb-pv> or <verb-phrase-opener>;
 minding.g: (<vc-mind> & <verb-ge>) or <verb-ge-d>;
 minding.v: <verb-pg> & <vc-mind>;
 
-% <verb-pv> & QI+: "Anesthesiology is studied where?"
-<vc-study>: {<vc-trans>} or ({@MV+} & <QI+pref>);
+% <verb-pv> & QN+: "Anesthesiology is studied where?"
+<vc-study>: {<vc-trans>} or ({@MV+} & <QN+pref>);
 study.v: VERB_PLI(<vc-study>);
 studies.v: VERB_S_T(<vc-study>);
 studied.v-d:
   VERB_SPPP_T(<vc-study>) or
-  (<verb-pv> & {QI+}) or
+  (<verb-pv> & {QN+}) or
   <verb-adj> or
   <verb-phrase-opener>;
 studying.g: (<vc-study> & <verb-ge>) or <verb-ge-d>;
 studying.v: <verb-pg> & <vc-study>;
 
 % QI+ link: "I will discuss which vitamins I take"
-% <verb-pv> & QI+: "It was discussed where?"
+% <verb-pv> & QN+: "It was discussed where?"
 <vc-discuss>: <vc-trans> or ({@MV+} & (Pg+ or QI+));
 discuss.v: VERB_PLI(<vc-discuss>);
 discusses.v: VERB_S_T(<vc-discuss>);
 discussed.v-d:
   VERB_SPPP_T(<vc-discuss>)
-  or (<verb-pv> & {QI+})
+  or (<verb-pv> & {QN+})
   or <verb-adj>
   or <verb-phrase-opener>;
 discussing.g: (<vc-discuss> & <verb-ge>) or <verb-ge-d>;
@@ -5274,7 +5300,7 @@ justifies.v risks.v avoids.v involves.v favors.v:
 opposed.v-d enjoyed.v-d advocated.v-d contemplated.v-d entailed.v-d
 necessitated.v-d justified.v-d risked.v-d avoided.v-d involved.v-d favored.v-d:
   VERB_SPPP_T(<vc-oppose>) or
-  (<verb-pv> & {QI+}) or
+  (<verb-pv> & {QN+}) or
   <verb-adj> or
   <verb-phrase-opener>;
 
@@ -5295,7 +5321,7 @@ finishes.v practices.v resists.v quits.v: VERB_S_T(<vc-finish>);
 % <verb-pv>: "I want it finished"
 finished.v-d practiced.v-d resisted.v-d quitted.v-d:
   VERB_SPPP_T(<vc-finish> or ({Xc+} & Pa+))
-  or (<verb-pv> & {QI+})
+  or (<verb-pv> & {QN+})
   or <verb-adj>
   or <verb-phrase-opener>;
 quit.v-d:
@@ -5336,7 +5362,7 @@ turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 % <vc-trans> plus TI
 <vc-become>:
   ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or Pv+) & <mv-coord>)
-   or ({@MV+} & (AF- or Pa+) & {QI+});
+   or ({@MV+} & (AF- or Pa+) & {QN+});
 become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
 becomes.v: VERB_S_S(<vc-become>);
 became.v-d: VERB_S_SP(<vc-become>);
@@ -5364,8 +5390,8 @@ remaining.v: <verb-pg> & <vc-remain>;
     or (K+ & {[[@MV+]]} & O*n+)
     or [[@MV+ & O*n+]]) & <mv-coord>);
 
-% <verb-i> & QI+: "The crime rate began to grow when?"
-grow.v: VERB_PLI(<vc-grow>) or <verb-sip> or (<verb-i> & QI+);
+% <verb-i> & QN+: "The crime rate began to grow when?"
+grow.v: VERB_PLI(<vc-grow>) or <verb-sip> or (<verb-i> & QN+);
 grows.v: VERB_S_T(<vc-grow>) or <verb-si>;
 grew.v-d: VERB_SP_T(<vc-grow>) or <verb-si>;
 grown.v:
@@ -5434,10 +5460,12 @@ reeking.g smelling.g: (<vc-smell> & <verb-ge>) or <verb-ge-d>;
 reeking.v smelling.v: <verb-pg> & <vc-smell>;
 
 % <vc-trans> plus particle and Vt
+% QN+: "you took which one?"
 <vc-take>:
   (((K+ & {[[@MV+]]} & O*n+) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & <mv-coord>)
   or ({O+} & Ot+ & {@MV+} & {<tot-verb> or <toi-verb>})
   or (OXii+ & Vtg+ & {@MV+} & TH+)
+  or QN+
   or @MV+;
 
 % If- & WV-: "How long did it take?"
@@ -5459,10 +5487,10 @@ for_granted: Vtg-;
 % VERBS TAKING [OBJ] + [OTHER COMPLEMENT]
 % basically, all these are <vc-trans> plus mess
 % I think the WR- here is dead and not used. See other WR- below
-% O+ & QI+: "You put it where?"
+% O+ & QN+: "You put it where?"
 <vc-put>:
   ((K+ & {[[@MV+]]} & O*n+) or
-  ((O+ or <b-minus>) & (K+ or Pp+ or WR- or QI+)) or
+  ((O+ or <b-minus>) & (K+ or Pp+ or WR- or QN+)) or
   (Vp+ & (Zs- or MVa+))) & <mv-coord>;
 
 
@@ -5703,11 +5731,14 @@ refusing.v: <verb-pg> & <vc-refuse>;
 % Pa**j+: predicative adjective -- "I want it green", "I want it very shiny."
 % TO+ & Xc+: allows null-infinitive: "Because I want to."
 % intransitive: "Try it if you want"
+% QN+: "you want which one?"
+% O+ & QN+: "you want it when?"
 <vc-want>:
-  (<mv-coord> & ({<to-verb>} or <null-verb>)) or
-  ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+ or Pa**j+}) or
-  ([[@MV+ & O*n+]]) or
-  [[CX- & <mv-coord>]];
+  (<mv-coord> & ({<to-verb>} or <null-verb>))
+  or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+ or Pa**j+})
+  or ({O+} & QN+)
+  or [[@MV+ & O*n+]]
+  or [[CX- & <mv-coord>]];
 
 want.v:
   VERB_PLI(<vc-want>);
@@ -6168,7 +6199,7 @@ promising.v: <verb-pg> & <vc-promise>;
 
 % ditransitive
 <vc-show>:
-  ({O+ or <b-minus>} & ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs- or B-))) or
+  ({O+ or <b-minus>} & ({@MV+} & (QN+ or <embed-verb> or TH+ or RSe+ or Zs- or B-))) or
   ((
     <vc-opt-ditrans> or
     (O+ & K+) or
@@ -6184,8 +6215,8 @@ shown.v:
   <verb-manner> or
   (<verb-s-pv-b> &
     (({O+ or K+ or B- or [[@MV+ & O*n+]]} & <mv-coord>) or
-    ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs-)))) or
-  ({O+ or K+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
+    ({@MV+} & (QN+ or <embed-verb> or TH+ or RSe+ or Zs-)))) or
+  ({O+ or K+ or [[@MV+ & O*n+]] or ({@MV+} & (QN+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
 showing.g: (<vc-show> & <verb-ge>) or <verb-ge-d>;
 showing.v: <verb-pg> & <vc-show>;
 
@@ -6199,13 +6230,13 @@ showing.v: <verb-pg> & <vc-show>;
 
 teach.v: VERB_PLI(<vc-teach>);
 teaches.v: VERB_S_T(<vc-teach>);
-% (<verb-sp,pp> & @MV+ & QI+): "You taught there when?"
+% (<verb-sp,pp> & @MV+ & QN+): "You taught there when?"
 taught.v-d:
   VERB_SPPP_T(<vc-teach>) or
   (<verb-pv-b> &
     (({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>) or
     ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs- or <to-verb>)))) or
-  (<verb-sp,pp> & @MV+ & QI+) or
+  (<verb-sp,pp> & @MV+ & QN+) or
   ({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
@@ -6397,7 +6428,7 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % K+ is for "tell him off"
 % bare MVp+ for "Today, we will tell about ..."
 % OF+ for "They have told of the soldiers' fear"
-% (QI+ & {MV+}): "I did not tell why until recently"
+% (QN+ & {MV+}): "I did not tell why until recently"
 % <embed-verb>: "He told me that Fred is dead."
 % {O+} & <embed-verb>: "He told me Fred is dead."
 % O+ & OF+: "tell me of that ingenious hero"
@@ -8024,10 +8055,14 @@ periods.n months.n nights.n seconds.n decades.n centuries.n:
 % create a bunch of parses that are wrong & interfere with the below.
 % Jp-: "we walked for three kilometers"
 % ND- & A- & D- & Jp-: "we walked for a further three kilometers"
+% ND- & Rw+ & Bpm+: "how many miles did you bike?"
+% ND-: "you biked how many miles?"
 <units-funky-plural>:
   ((ND- or [()] or [[EN-]]) & (Yd+ or Ya+ or EC+ or [[MVp-]] or OD-))
   or ((ND- or [()]) & Jp-)
   or (ND- & A- & D- & Jp-)
+  or (ND- & Rw+ & Bpm+) % <rel-clause-p>
+  or ND-
   or (ND- & (NIfu+ or NItu- or EQt+ or EQt-));
 
 % AU is abbreviation for "astronomical units"
@@ -8136,6 +8171,7 @@ tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
 who:
   (R- & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or [QI-]
+  or QN-
   or dSJl+ or dSJr-
   or Jw-
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
@@ -8156,7 +8192,7 @@ what:
       or Ss*w+
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
-    & {hCO-} & {EW-} & (Wb- or Wq- or Ws- or QI*d- or BIqd- or QJ+ or QJ-))
+    & {hCO-} & {EW-} & (Wb- or Wq- or Ws- or QI*d- or QN- or BIqd- or QJ+ or QJ-))
   or ({EL+} & Ww-)
   or (Wn- & O+)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
@@ -8164,16 +8200,19 @@ what:
   or (D+ & JQ-)
   or Jw-
   or [QI-]0.5
+  or QN-
   or dSJl+ or dSJr-;
 
 % [QI-]: "I do not know which"
 % (R+ & B*w+ & (QJ+ or QJ-)): "... which to pick and which to leave behind."
+% QN- & D+: "you ate which one?"
 which:
   ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
   or (JQ- & D+)
   or ({MVp+ or MVx+} & (S**w+ or B*w+) & ((Xc+ or <costly-null>) & Xd- & MX*r-))
   or [QI-]
+  or (QN- & {D+})
   or (R+ & B*w+ & (QJ+ or QJ-))
   or Jw-;
 
@@ -8269,6 +8308,7 @@ when:
   or ((<ton-verb> or <subcl-verb>) & (BIq- or QI- or (SFsx+ & <S-CLAUSE>)))
   or (Mv- & <subcl-verb>)
   or [QI-]0.5
+  or QN-
   or [dSJl+ or dSJr-]0.5
   or [dMJl+]0.5
   or ({JT-} & dMJr- & Qw+)
@@ -8286,6 +8326,7 @@ why:
     ({hCO-} & {EW-} & (Ww- or Wq-) & {Qw+ or N+})
     or (Wv- & Qa+)
     or (QI- & (<subcl-verb> or <ton-verb> or [()]0.5))
+    or QN-
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or dCOa+
     or [dSJl+ or dSJr-]0.5
@@ -8302,6 +8343,7 @@ where:
     & (
       ({hCO-} & {EW-} & Wq- & ((Rw+ & WR+) or (R+ & Bsw+) or Qw+))
       or [QI-]0.5
+      or QN-
       or [dSJl+ or dSJr-]0.5
       or ({EW-} & (QJ- or QJ+))
       or (<subcl-verb> & Bsw+ & QI-)
@@ -8331,7 +8373,7 @@ how:
   or ({EW-} & Wh- & H+)
   or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
   or [QI-]0.5
-  or (QI- & H+)
+  or (QN- & {H+})
   or ({EW-} & (QJ- or QJ+))
   or [dSJl+ or dSJr-]0.5
   or ((<subcl-verb> or <ton-verb>) & (QI- or BIq- or (SFsx+ & <S-CLAUSE>)));
