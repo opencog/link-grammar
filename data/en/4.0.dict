@@ -3863,10 +3863,11 @@ rising.v falling.v:
 % [A+]0.5: He was xxx'ed there  should have xxx as verb not adjective.
 %
 % QN+: "you bike how many miles?"
+% O+ & QN+: "you saw it when?"
 <vc-fill>:
   ((K+ & {[[@MV+]]} & (O*n+ or ({Xc+} & (Pa+ or Pv+))))
     or ({O+ or <b-minus>} & {K+})
-    or ({K+} & QN+)
+    or ({O+} & {K+} & QN+)
     or [[@MV+ & O*n+]]
   ) & <mv-coord>;
 
@@ -6807,10 +6808,12 @@ reeking.g smelling.g: (<vc-smell> & <verb-ge>) or <verb-ge-d>;
 reeking.v smelling.v: <verb-pg> & <vc-smell>;
 
 % <vc-trans> plus particle and Vt
+% QN+: "you took which one?"
 <vc-take>:
   (((K+ & {[[@MV+]]} & O*n+) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & <mv-coord>)
   or ({O+} & Ot+ & {@MV+} & {<tot-verb> or <toi-verb>})
   or (OXii+ & Vtg+ & {@MV+} & TH+)
+  or QN+
   or @MV+;
 
 % If- & WV-: "How long did it take?"
