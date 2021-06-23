@@ -3866,11 +3866,11 @@ rising.v falling.v:
 % QN+: "you bike how many miles?"
 % O+ & QN+: "you saw it when?"
 <vc-fill>:
-  ((K+ & {[[@MV+]]} & (O*n+ or ({Xc+} & (Pa+ or Pv+))))
+  (((K+ & {[[@MV+]]} & (O*n+ or ({Xc+} & (Pa+ or Pv+))))
     or ({O+ or <b-minus>} & {K+})
-    or ({O+} & {K+} & QN+)
     or [[@MV+ & O*n+]]
-  ) & <mv-coord>;
+  ) & <mv-coord>)
+  or ({O+} & {K+} & QN+);
 
 /en/words/words.v.6.1:
   
@@ -4332,12 +4332,12 @@ buttering.g:
 % K+ & Pa+: "it washed up, unbroken"
 % QN+: "you kicked how many balls?"
 <vc-kick>:
-  ((K+ & {[[@MV+]]} & O*n+)
-  or ((O+ or <b-minus>) & {K+})
-  or (<b-minus> & O+ & {K+})
-  or ({K+} & QN+)
-  or ({K+} & {Xc+} & Pa+)
-  or [[@MV+ & O*n+]]) & <mv-coord>;
+  (((K+ & {[[@MV+]]} & O*n+)
+    or ((O+ or <b-minus>) & {K+})
+    or (<b-minus> & O+ & {K+})
+    or ({K+} & {Xc+} & Pa+)
+    or [[@MV+ & O*n+]]) & <mv-coord>)
+  or ({K+} & QN+);
 
 /en/words/words.v.8.1: 
   ((<verb-pl,i> & (<vc-kick>)) or
