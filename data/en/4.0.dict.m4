@@ -3912,12 +3912,12 @@ running.g beating.g catching.g driving.g striking.g:
 %    *I still remember the room I kissed him
 % O+ & QN+: "you hit the shot how many times?"
 <vc-trans>:
-  (O+
+  ((O+
    or <b-minus>
-   or ({O+} & QN+)
    or [[@MV+ & O*n+]]
    or ({@E-} & <b-minus> & (Os+ or Op+))
-  ) & <mv-coord>;
+  ) & <mv-coord>)
+  or ({O+} & QN+);
 
 /en/words/words.v.4.1 : VERB_PLI(<vc-trans>);
 /en/words/words-medical.v.4.1: VERB_PLI(<vc-trans>);
