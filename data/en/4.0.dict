@@ -2924,9 +2924,10 @@ did.v-d:
 % XXX why not <vc-do> here ?
 % <verb-pv-b>: "I want it done." "I want the job done"
 % Os+ & @MV+: "I've done that chore many times"
+% O+ & I*j+: "I would have done that, had you been there"
 <vc-done>:
   <b-minus>
-  or (O+ & <mv-coord>)
+  or (O+ & <mv-coord> & {I*j+})
   or [[@MV+ & O*n+]]
   or Vd+;
 
