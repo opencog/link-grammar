@@ -2472,7 +2472,8 @@ per "/.per": Us+ & Mp-;
 
 %VERBS
 
-<MX-PHRASE>: Xd- & (Xc+ or <costly-null>) & (MX*p- or MVg-);
+% Xd- & (Xp+ or RW+) & MVg-: "John left, carrying a dog"
+<MX-PHRASE>: Xd- & (Xc+ or Xp+ or RW+ or <costly-null>) & (MX*p- or MVg-);
 <OPENER>: {Xd-} & Xc+ & [dCOp+]0.2;
 
 % <coord>: connects to coordinating conjunction.
@@ -4107,8 +4108,8 @@ cut.v-d:
 % <verb-ge-nos>: <vc-kick> has O+ in it; so must not have S+ in <verb-ge>
 %            "Carrying the box was a small child"
 /en/words/words.v.8.5:
-  (<vc-kick> & <verb-ge-nos>) or
-   <verb-ge-d>;
+  (<vc-kick> & <verb-ge-nos>)
+  or <verb-ge-d>;
 
 % --------------------------------------------------------------
 <vc-raise>: (((O+ or <b-minus>) & {OD+}) or [[@MV+ & O*n+]]) & <mv-coord>;
