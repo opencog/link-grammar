@@ -329,10 +329,6 @@ There was wind and rain.
 It adjusts for errors
 It corrects for errors
 
-% watch: take "out" as a particle
-Watch out!
-I watch out for you.
-
 % verb: come was missing B-
 Which way did you come?
 
@@ -349,12 +345,6 @@ I read a report on sitcoms.
 % "with" should modify verb with MVp, not object with Mp
 I have a date with Ben.
 I read a report with Ben.
-
-% "saw" w/ particle
-He tried to saw the wood.
-He tried to saw up the wood.
-We were sawing wood when it happened.
-We were sawing up the wood when it happened.
 
 % Assorted adverbial modifiers
 It has been unbelievably poorly managed.
@@ -2002,6 +1992,17 @@ He is acting out his fantasies.
 % go_out
 We went out drinking beer
 She goes out shopping a lot
+
+% watch: take "out" as a particle
+Watch out!
+I watch out for you.
+
+% "saw" w/ particle
+He tried to saw the wood.
+He tried to saw up the wood.
+We were sawing wood when it happened.
+We were sawing up the wood when it happened.
+
 
 % beckon
 She beckoned to him.
