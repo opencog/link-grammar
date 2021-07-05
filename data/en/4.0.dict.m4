@@ -4431,8 +4431,12 @@ wondering.v inquiring.v: (<vc-wonder> & <verb-pg,ge>) or <verb-ge-d>;
 
 % B-: "which way did it go?"
 % QN+: "you will go when?"
+% K+ & Pg+: "she went out shopping"
+% K+ & Pa+: "she went out happy"
+%      The above two could also be handled with <vc-keep-on>
+%      Alternately, we could set up Ko+ here, and Ko- on "out.r".
 <vc-go>:
-  ({K+ or [[{Xc+} & Pa+]] or [Pg+] or I*g+ or <b-minus>} & <mv-coord>)
+  ({K+ or (K+ & (Pg+ or Pa+)) or [Pg+] or [[{Xc+} & Pa+]] or I*g+ or <b-minus>} & <mv-coord>)
   or QN+;
 go.v: VERB_PLI(<vc-go>);
 
@@ -6831,6 +6835,8 @@ portraying.v depicting.v regarding.v viewing.v characterizing.v:
 
 % -------------------------------------------------------------------------------
 % IDIOMATIC VERBS
+% Some of these might be better handled by using a K+ for the particle,
+% but then limiting which particle is allowed.
 
 do_so take_place show_up take_office do_battle give_way make_way
 take_part catch_up catch_on file_suit pick_up take_off break_free
@@ -6925,6 +6931,10 @@ gave_up went_around: VERB_S_SP(<vc-keep-on>);
 given_up gone_around: <verb-s-pp> & <vc-keep-on>;
 keeping_on giving_up going_around: (<vc-keep-on> & <verb-pg,ge>) or <verb-ge-d>;
 
+% An alternate solution to this, and the above, is to give each
+% particle a unique subscript, e.g "up.r: Ku-" and then force the
+% particle match by using Ku+ on "end". For example: "go_out" could
+% be handled in this way, or as <vc-end-up>.
 <vc-end-up>: Pg+ or Pa+ or ({AF-} & <mv-coord>);
 end_up: VERB_S_PLI(<vc-end-up>);
 ends_up: VERB_S_S(<vc-end-up>);
