@@ -3238,6 +3238,10 @@ are.v:
 % Interesting -- no way to put a WV- link in here ...
 yisser.v: (Pa+ & Wd-);
 
+% prefer a wall, if we can find it.
+<vc-be-opt-wall>:
+  <vc-be> or [<vc-be-no-wall>]0.03;
+
 % Q-: "How was the movie?"
 % Sa*a- & Pv+: "..., as was promised."
 % SX & no wall: "I was getting hot"
@@ -3246,13 +3250,13 @@ was.v-d:
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
   or (Sa*a- & Pv+)
-  or ({@E-} & SX- & (<vc-be> or <vc-be-no-wall>))
+  or ({@E-} & SX- & <vc-be-opt-wall>)
   or (<verb-rq> & (SFIs+ or SIs+ or SXI+) & {<vc-be>});
 
 % XXX probably should be verb-and-sp-i- etc !?
 % Spx- & no-wall: "They were getting hot"
 were.v-d:
-  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & (<vc-be> or <vc-be-no-wall>))
+  (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & <vc-be-opt-wall>)
   or (<verb-rq> & (SIpx+ or SFIp+) & (<vc-be> or <verb-wall>))
   or (<verb-and-sp-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-sp+>)
@@ -3261,7 +3265,7 @@ were.v-d:
 % Ss*w-: allows Wh subjects: "Who am I?"
 % SX- & no-wall: "I am getting hot"
 am.v:
-  ({@E-} & SX- & (<vc-be> or <vc-be-no-wall>))
+  ({@E-} & SX- & <vc-be-opt-wall>)
   or (<verb-rq> & SXI+ & {<vc-be>})
   or (Ss*w- & <vc-be>)
   or (<verb-and-sp-> & <vc-be-and>)
@@ -3284,13 +3288,13 @@ am.v:
 be.v:
   ({@E-} & ((<verb-co> & <verb-wall>) or <verb-why> or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
-  or ({@E-} & Ix- & (<vc-be> or <vc-be-no-wall>))
+  or ({@E-} & Ix- & <vc-be-opt-wall>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
   or (<vc-be> & <verb-and-sp-i+>)
   or ({@E-} & I- & B- & O+ & <verb-wall>);
 
 % no-wall: "They have been getting hot"
-been.v: {@E-} & PPf- & (<vc-be> or <vc-be-no-wall>);
+been.v: {@E-} & PPf- & <vc-be-opt-wall>;
 
 % S- & Pa+ & Xc+ & <embed-verb>: "The knife being dull, he ..."
 % (S- & Xd- & MVg- & Pa+) "..., the knife being dull."
@@ -3313,23 +3317,23 @@ isn't isn’t:
 % "ain't you gonna go?"
 % no-wall: "They ain't gettin hot"
 ain't ain’t:
-  (<verb-x-sp> & (<vc-be> or <vc-be-no-wall>))
+  (<verb-x-sp> & <vc-be-opt-wall>)
   or (<verb-rq> & (SI+ or SFI+) & {<vc-be>});
 
 % no-wall: "It wasn't getting hot"
 wasn't.v-d wasn’t.v-d:
-  ({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)) & (<vc-be> or <vc-be-no-wall>))
+  ({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)) & <vc-be-opt-wall>)
   or (<verb-rq> & (SI*+ or SXI+ or SFIs+) & {<vc-be>});
 
 % no-wall: "They aren't getting hot"
 aren't aren’t:
-  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & (<vc-be> or <vc-be-no-wall>))
+  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be-opt-wall>)
   or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>});
 
 % [[Ss-]]: "If it weren't for Joe, ..."
 % no-wall: "They weren't getting hot"
 weren't.v-d weren’t.v-d:
-  (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & (<vc-be> or <vc-be-no-wall>))
+  (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & <vc-be-opt-wall>)
   or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>});
 
 % XXX probably should be verb-and-sp-i- etc !?
