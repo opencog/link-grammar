@@ -3270,10 +3270,13 @@ was.v-d:
 
 % XXX probably should be verb-and-sp-i- etc !?
 % Spx- & no-wall: "They were getting hot"
+% [<verb-and-sp-> & <vc-be-and>]0.6: cost, so that other things are
+%                                    tried, before VJ kicks in.
+%       Example: I would have done that were he with me.
 were.v-d:
   (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & <vc-be-opt-wall>)
-  or (<verb-rq> & (SIpx+ or SFIp+) & (<vc-be> or <verb-wall>))
-  or (<verb-and-sp-> & <vc-be-and>)
+  or (<verb-rq> & (SIpx+ or SFIp+) & (<vc-be-opt-wall> or <verb-wall>))
+  or [<verb-and-sp-> & <vc-be-and>]0.6
   or (<vc-be-and> & <verb-and-sp+>)
   or [[(SI*j+ or SFI**j+) & <vc-be> & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & dCOp+))]];
 
