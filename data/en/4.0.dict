@@ -6219,8 +6219,11 @@ figuring.v: <verb-pg> & <vc-figure>;
 % (QI+ & {MV+}): "I did not say why until recently"
 % <vc-trans> & QN+: "you said this to her where?"
 %    "you indicate this why?"
+% O+ & I*j+: "I would have said so, were he there"
+%            Could also have solved this with <vc-trans> & {I*j+}
 <vc-predict>:
   (<vc-trans> & {{Xc+} & QN+})
+  or (O+ & <mv-coord> & I*j+)
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs- or VC+))
   or ({@MV+} & (<QI+pref> & {MV+}));
 
