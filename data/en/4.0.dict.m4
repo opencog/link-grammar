@@ -1410,8 +1410,9 @@ times.n:
 %PRONOUNS
 
 % MXs+: "he, the shop owner, ..."
+% SIpx-: "I would have done that were he with me"
 she he:
-  {[[R+ & Bs+]]} & (({MXs+} & Ss+ & <CLAUSE>) or SIs- or dSJls+);
+  {[[R+ & Bs+]]} & (({MXs+} & Ss+ & <CLAUSE>) or SIs- or SIpx- or dSJls+);
 
 % subject of bare infinitive:
 % "You should hear him sing" -- sing is the bare infinitive,
