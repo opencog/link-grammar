@@ -7364,11 +7364,13 @@ past.p:
   or <locative>
   or [MVp- & B-];
 
+% Pp-: preposition
 around:
   <alter-preps>
   or ({JQ+} & (J+ or Mgp+) & (<prep-main-a> or FM-))
   or <locative>
   or K-
+  or Pp-
   or <adv-as>
   or <fronted>
   or [MVp- & B-]
