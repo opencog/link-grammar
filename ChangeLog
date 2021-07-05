@@ -8,6 +8,7 @@ Version 5.10.0 (XXX 2021)
  * Fix parsing with nulls when using an sqlite3 dictionary.
  * Fix regexes for NetBSD when using libc regexes. #1223
  * English dict: fix many "how?" questions.
+ * English dict: fix conditional sentences #1240
 
 Version 5.9.1 (28 April 2021)
  * Fix build break when SQLite3 is not installed. #1195
