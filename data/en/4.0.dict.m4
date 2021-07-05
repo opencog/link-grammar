@@ -75,12 +75,14 @@ changecom(`%')
 % often dropped).  The costly-null is used during panic parsing.
 % Currently, both have the same cost: using a less costly null results
 % in too many sentences being parsed incorrectly.  Oh well.
+% XXX FIXME: we almost never land in panic parsing any longer. I think
+% the costly-null can be removed.
 
 % Default cost=4.  This allows the Russian dicts to use a cost of 3 for
 % various things, including regex matches for unknown words. (i.e. panic
 % parsing is set to 4 at this time.)
 
-<costly-null>: [[[[()]]]];
+<costly-null>: [()]40;
 
 % A definition according to the comments above.
 % <no-det-null>: [[[[()]]]];
@@ -2473,8 +2475,13 @@ per "/.per": Us+ & Mp-;
 
 %VERBS
 
+% The Xd- link to the comma is strongly required, here. Making the comma
+% optional will lead to a broad variety of bad/insane linkages, simply
+% because @MV+ is soe widely used.
+%
 % Xd- & (Xp+ or RW+) & MVg-: "John left, carrying a dog"
 <MX-PHRASE>: Xd- & (Xc+ or Xp+ or RW+ or <costly-null>) & (MX*p- or MVg-);
+
 <OPENER>: {Xd-} & Xc+ & [dCOp+]0.2;
 
 % <coord>: connects to coordinating conjunction.
