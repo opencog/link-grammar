@@ -8513,10 +8513,12 @@ no_wonder: (Wd+ or Wp+ or Wr+) & Wc-;
 
 % Pa+: "it can be pressed into shape while cold"
 % dWl- & Mp+: "while in transit"
+% (Xc+ or Xp+ or RW+): avoid cost when parsing
+%            "He cheered, while lifting his glass".
 while whilst:
   ((<subcl-verb> or Mgp+ or Mp+ or Pa+) &
     (({Xc+ & {Xd-}} & dCO*s+) or
-       ({Xd- & Xc+} & MVs-) or
+       ({Xd- & (Xc+ or Xp+ or RW+)} & MVs-) or
        (Xd- & Xc+ & E+)))
   or ({EP-} & dWl- & (J+ or Mp+))
   or <COMP-OPENER>;
