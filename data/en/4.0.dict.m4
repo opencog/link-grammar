@@ -66,26 +66,10 @@ changecom(`%')
 <nonCAP>: ZZZ-;
 
 % Null links. These are used to drop the requirement for certain words
-% to appear during parsing. Basically, if a parse fails at a given cost,
-% it is retried at a higher cost (by raising the disjunct_cost).
-% Currently, two different nulls are defined: a no-det-null, and a
-% costly null.  The no-det-null is used to make determiners optional;
-% this allows for the parsing of newspaper headlines and clipped
-% technical speech (e.g. medical, engineering, where determiners are
-% often dropped).  The costly-null is used during panic parsing.
-% Currently, both have the same cost: using a less costly null results
-% in too many sentences being parsed incorrectly.  Oh well.
-% XXX FIXME: we almost never land in panic parsing any longer. I think
-% the costly-null can be removed.
-
-% Default cost=4.  This allows the Russian dicts to use a cost of 3 for
-% various things, including regex matches for unknown words. (i.e. panic
-% parsing is set to 4 at this time.)
-
-<costly-null>: [()]40;
-
-% A definition according to the comments above.
-% <no-det-null>: [[[[()]]]];
+% to appear during parsing. Currently, only one null is defined: the
+% no-det-null. It is used to make determiners optional; this allows for
+% the parsing of newspaper headlines and clipped technical speech
+% (e.g. medical, engineering, where determiners are often dropped).
 
 % A definition using the "headline" dialect.
 <no-det-null>: [()]headline;
@@ -123,22 +107,21 @@ changecom(`%')
 % complements (i.e. so that "blah blah blah, he said" doesn't
 % get the MX link at lower cost than the CP link...)
 <post-nominal-x>:
-  [{[B*j+]} & Xd- & (Xc+ or <costly-null>) & MX-]0.1;
+  [{[B*j+]} & Xd- & Xc+ & MX-]0.1;
 
 <post-nominal-s>:
-  [{[Bsj+]} & Xd- & (Xc+ or <costly-null>) & MX-]0.1;
+  [{[Bsj+]} & Xd- & Xc+ & MX-]0.1;
 
 <post-nominal-p>:
-  [{[Bpj+]} & Xd- & (Xc+ or <costly-null>) & MX-]0.1;
+  [{[Bpj+]} & Xd- & Xc+ & MX-]0.1;
 
 <post-nominal-u>:
-  [{[Buj+]} & Xd- & (Xc+ or <costly-null>) & MX-]0.1;
+  [{[Buj+]} & Xd- & Xc+ & MX-]0.1;
 
 % noun-main-x -- singular or plural or mass.
 <noun-main-x>:
   (S+ & <CLAUSE>) or SI- or J- or O-
-  or <post-nominal-x>
-  or <costly-null>;
+  or <post-nominal-x>;
 
 % noun-main-s -- singular
 % XXX FIXME: <noun-main-?> is often used with <noun-rel-?> and noun-rel
@@ -171,31 +154,27 @@ changecom(`%')
 %
 <noun-main-s>:
   (Ss*s+ & <CLAUSE>) or SIs- or (Js- & ({Jk-} or {Mf+})) or Os-
-  or <post-nominal-s>
-  or <costly-null>;
+  or <post-nominal-s>;
 
 % noun-main-e: used for proper names (named entities)
 % Os*e- is used to allow certain adjectival uses.
 % Os*e- & Sj+: subject of bare infinitive. "You should hear John sing"
 <noun-main-e>:
   (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or (Os*e- & {Sg+ or Sj+})
-  or <post-nominal-s>
-  or <costly-null>;
+  or <post-nominal-s>;
 
 % noun-main-p -- plural
 <noun-main-p>:
   (Sp+ & <CLAUSE>) or SIp- or Jp-
   or Op-
-  or <post-nominal-p>
-  or <costly-null>;
+  or <post-nominal-p>;
 
 % noun-main-u -- u == uncountable
 % TODO: alter this to use Su+, SIu- someday. likewise Buj+
 % Doing this requires adding Su- links to many entries
 <noun-main-u>:
   (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
-  or <post-nominal-s>
-  or <costly-null>;
+  or <post-nominal-s>;
 
 % noun-main-m -- m == mass
 % TODO: get rid of this someday.
@@ -204,8 +183,7 @@ changecom(`%')
 % uncountable form, which will use <noun-main-u>
 <noun-main-m>:
   (Ss+ & <CLAUSE>) or SIs- or Jp- or Os-
-  or <post-nominal-s>
-  or <costly-null>;
+  or <post-nominal-s>;
 
 % Used only for this.p, that.j-p
 % (Jd- & Dmu- & Os-): they have plenty of this
@@ -220,35 +198,29 @@ changecom(`%')
   or Js-
   or [Os-]0.5
   or (ALx- & Os-)
-  or <post-nominal-x>
-  or <costly-null>;
+  or <post-nominal-x>;
 
 <noun-main2-x>:
   J- or O-
-  or <post-nominal-x>
-  or <costly-null>;
+  or <post-nominal-x>;
 
 <noun-main2-s>:
   Js- or Os-
-  or <post-nominal-s>
-  or <costly-null>;
+  or <post-nominal-s>;
 
 % Xd- or [[()]] allows parsing of "I have no idea what that is."
 % without requiring comma after "idea"
 <noun-main2-s-no-punc>:
   Js- or Os-
-  or ({[Bsj+]} & (Xd- or [[()]]) & (Xc+ or <costly-null>) & MX-)
-  or <costly-null>;
+  or ({[Bsj+]} & (Xd- or [[()]]) & Xc+ & MX-);
 
 <noun-main2-p>:
   Jp- or Op-
-  or <post-nominal-p>
-  or <costly-null>;
+  or <post-nominal-p>;
 
 <noun-main2-m>:
   Jp- or Os-
-  or <post-nominal-s>
-  or <costly-null>;
+  or <post-nominal-s>;
 
 % @M+: "The disability of John means he is slow"
 <noun-rel-x>: {@M+} & {R+ & B+ & {[[@M+]]}} & {@MX+};
@@ -898,7 +870,7 @@ reason_of_selection carte_blanche:
 % XXX this is nearly identical to entities.people !?
 /en/words/words.n.t:
   <noun-modifiers> & {@M+}
-    & (BIt- or (Xd- & (Xc+ or <costly-null>) & MX-) or Ou- or TI-);
+    & (BIt- or (Xd- & Xc+  & MX-) or Ou- or TI-);
 
 % Almost identical to below.
 % Ds- & {NM+} & <noun-rel-x> &..: "the number 12 is a lucky number"
@@ -2480,7 +2452,7 @@ per "/.per": Us+ & Mp-;
 % because @MV+ is soe widely used.
 %
 % Xd- & (Xp+ or RW+) & MVg-: "John left, carrying a dog"
-<MX-PHRASE>: Xd- & (Xc+ or Xp+ or RW+ or <costly-null>) & (MX*p- or MVg-);
+<MX-PHRASE>: Xd- & (Xc+ or Xp+ or RW+) & (MX*p- or MVg-);
 
 <OPENER>: {Xd-} & Xc+ & [dCOp+]0.2;
 
@@ -2645,7 +2617,7 @@ per "/.per": Us+ & Mp-;
   {@E-} & (
     <MX-PHRASE>
     or <OPENER>
-    or ({[DP-]} & (SIs*g- or <costly-null>))
+    or ({[DP-]} & SIs*g-)
     or [DP- & J-]
     or [<fronted>]);
 
@@ -2669,7 +2641,7 @@ per "/.per": Us+ & Mp-;
   {@E-} & (
     <MX-PHRASE>
     or <OPENER>
-    or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
+    or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g-))
     or [DP- & J-]
     or [<fronted> & {@MV+}]
     or Mg-
@@ -2735,7 +2707,7 @@ per "/.per": Us+ & Mp-;
   or ({@E-} & (
     <MX-PHRASE>
     or <OPENER>
-    or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g- or <costly-null>))
+    or ({[DP-]} & ((Ss*g+ & <CLAUSE>) or SIs*g-))
     or [DP- & J-]
     or [<fronted> & {@MV+}]) & <verb-wall>);
 
@@ -3452,7 +3424,7 @@ is_less_than_or_equal_to is_greater_than_or_equal_to:
 % these occur in "simple" expressions
 *.v "/.v" +.v -.v x.v:
   ([S- & <verb-wall>] or EQ-) &  ([O+] or EQ+) &
-  (Xd- & (Xc+ or <costly-null>) & (MX- or MVa-));
+  (Xd- & Xc+ & (MX- or MVa-));
 
 % Binary operators, strict:
 % Here EQt attaches only to terms, which may be numbers or letters.
@@ -8125,8 +8097,9 @@ one_cent a_cent: {NJ-} & (EC+ or Yd+ or OD-);
 share.i pound.i ounce.i gallon.i barrel.i head.x: NSa- & Mp-;
 
 twofold threefold fourfold fivefold sixfold sevenfold eightfold ninefold
-tenfold a_hundredfold a_thousandfold: {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+ or
-(Xd- & (Xc+ or <costly-null>) & MX-) or NIfn+ or NItn-);
+tenfold a_hundredfold a_thousandfold:
+  {EN-} & (MVp- or Em+ or EC+ or [Pa-] or A+
+     or (Xd- & Xc+ & MX-) or NIfn+ or NItn-);
 
 % Add cost to Op-, try to use any other linkage before making
 % a unit be a plain-old object.
@@ -8210,7 +8183,7 @@ who:
   or ({EL+ & {N+}} & Wd-)
   or (<clause-q> & Qw+)
   or ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+))
-     & (Xd- & (Xc+ or <costly-null>) & MX*r-));
+     & (Xd- & Xc+ & MX*r-));
 
 % Sp+: "what are the answers?"
 % Ww-: Dr. Who: "What!"
@@ -8242,7 +8215,7 @@ which:
   ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
   or (JQ- & D+)
-  or ({MVp+ or MVx+} & (S**w+ or B*w+) & ((Xc+ or <costly-null>) & Xd- & MX*r-))
+  or ({MVp+ or MVx+} & (S**w+ or B*w+) & (Xc+ & Xd- & MX*r-))
   or [QI-]
   or (QN- & {D+})
   or (R+ & B*w+ & (QJ+ or QJ-))
@@ -8255,7 +8228,7 @@ which_way:
 % Jw-: "From whom did you run?"
 whom:
   (R- & <porcl-verb>)
-  or (R+ & B*w+ & {EW-} & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
+  or (R+ & B*w+ & {EW-} & (Wq- or QI*d- or BIqd- or (Xc+ & Xd- & MX*r-)))
   or (Jr- & (RS+ or <porcl-verb>))
   or Jw-;
 
@@ -8266,7 +8239,7 @@ whose:
     or Ws-
     or QI*d-
     or BIqd-
-    or ((Xc+ or <costly-null>) & Xd- & MX*d-)))
+    or (Xc+ & Xd- & MX*d-)))
   or (JQ- & D+)
   or (U+ & Jr- & (RS+ or <porcl-verb>));
 
@@ -8275,7 +8248,7 @@ whose:
 % ({EL+} & Os- & Bsd+): Bring whomever else you care to.
 whomever:
   (R- & <porcl-verb>)
-  or (B*w+ & (Wq- or QI*d- or BIqd- or ((Xc+ or <costly-null>) & Xd- & MX*r-)))
+  or (B*w+ & (Wq- or QI*d- or BIqd- or (Xc+ & Xd- & MX*r-)))
   or ({EL+} & dSJr-)
   or ({EL+} & (Ss*d+ or Bsd+ or {[[]]}) & Os-)
   or (Jr- & (RS+ or <porcl-verb>))
@@ -10535,7 +10508,7 @@ that_is that_is_to_say to_wit namely.r in_other_words:
      ((MX*tn- & {Xc+} & O+) or
       (MX*ta- & {Xc+} & P+) or
       (MVx- & {Xc+} & P+))
-    & (Xc+ or <costly-null>));
+    & Xc+);
 
 
 % -----------------------------------------------------------
