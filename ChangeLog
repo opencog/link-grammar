@@ -1,4 +1,4 @@
-Version 5.10.0 (XXX 2021)
+Version 5.10.0 (4 September 2021)
  * Expanded English vocabulary
  * Support dictionary "#define allow-duplicate-words true". #1204
  * Fix crash for sentences containing wildcard words. #1206

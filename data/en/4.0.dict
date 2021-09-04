@@ -10,7 +10,7 @@
  %                                                                           %
  %***************************************************************************%
 
-#define dictionary-version-number 5.10.1;
+#define dictionary-version-number 5.10.0;
 #define dictionary-locale         en_US.UTF-8;
 
 % The default largest disjunct cost to consider during parsing.
@@ -10935,7 +10935,8 @@ no_wonder: (Wd+ or Wp+ or Wr+) & Wc-;
 
 % Pa+: "it can be pressed into shape while cold"
 % dWl- & Mp+: "while in transit"
-%
+% (Xc+ or Xp+ or RW+): avoid cost when parsing
+%            "He cheered, while lifting his glass".
 while whilst:
   ((<subcl-verb> or Mgp+ or Mp+ or Pa+) &
     (({Xc+ & {Xd-}} & dCO*s+) or
