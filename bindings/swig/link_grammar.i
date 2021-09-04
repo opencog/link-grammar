@@ -89,11 +89,13 @@ class Exp {};
       free($self);
    }
 
+#ifdef SWIGPYTHON
    %pythoncode
    {
       def __repr__(self):
          return lg_exp_stringify(self)
    }
+#endif /* SWIGPYTHON */
 }
 %ignore Exp;
 
