@@ -152,7 +152,7 @@ static size_t print_several(const Category* catlist,
 	          cclist, cclen, selected_words,
 	          count_choices, &num_word_choices, 0);
 	double chance = fraction / ((double) num_word_choices);
-	printf("# num possible word choices for linkage = %lu chance to print=%f\n",
+	printf("# num possible word choices for linkage = %zu chance to print=%f\n",
 		num_word_choices, chance);
 
 	/* Now, print those choices */
