@@ -58,6 +58,6 @@ endif
 
 
 EXTRA_DIST =     \
-   README        \
+   README.md     \
    example.pl    \
    test.pl
