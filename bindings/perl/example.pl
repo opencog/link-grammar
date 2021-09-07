@@ -25,7 +25,7 @@ sub prtdiag
 
     for (my $i=0; $i<$num_parses; $i++) {
         my $linkage = clinkgrammar::linkage_create($i, $sent, $po);
-        my $diagram = clinkgrammar::linkage_print_diagram($linkage);
+        my $diagram = clinkgrammar::linkage_print_diagram($linkage, 1, 80);
         print "Parse $i:\n$diagram";
     }
 }
@@ -38,5 +38,4 @@ my $ru_dict = clinkgrammar::dictionary_create_lang("ru");
 prtdiag("это большой тест", $ru_dict);
 
 my $tr_dict = clinkgrammar::dictionary_create_lang("tr");
-prtdiag("adam ve kadın geldi", $tr_dict);
-
+prtdiag("Onların ne istediğini bilmiyorum", $tr_dict);
