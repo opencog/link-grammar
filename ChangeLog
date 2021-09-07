@@ -1,4 +1,4 @@
-Version 5.10.1 (XXX 2021)
+Version 5.10.1 (7 Sept 2021)
  * Fix perl bindings build fail. #1248
 
 Version 5.10.0 (4 September 2021)
