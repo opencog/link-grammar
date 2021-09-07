@@ -1,5 +1,5 @@
 Version 5.10.1 (XXX 2021)
- * No changes yet!
+ * Fix perl bindings build fail. #1248
 
 Version 5.10.0 (4 September 2021)
  * Expanded English vocabulary

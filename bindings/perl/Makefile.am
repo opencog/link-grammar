@@ -9,7 +9,7 @@ SWIG_INCLUDES = ../../link-grammar/link-includes.h
 # BUILT_SOURCES = $(top_builddir)/bindings/perl/lg_perl_wrap.cc
 BUILT_SOURCES = ../../bindings/perl/lg_perl_wrap.cc
 
-# PERL_EXT_LIB become /usr/local/share/perl/5.14.2 or something like that...
+# PERL_EXT_LIB expands to /usr/local/share/perl/5.14.2 or similar.
 pkgperldir = @PERL_EXT_LIB@
 
 dist_pkgperl_SCRIPTS = \
@@ -39,10 +39,10 @@ pkgperl_LTLIBRARIES = clinkgrammar.la
 
 clinkgrammar_la_SOURCES = $(BUILT_SOURCES) $(SWIG_SOURCES)
 
-clinkgrammar_la_CPPFLAGS = \
-   $(SWIG_PERL_CPPFLAGS)   \
-   $(PERL_CFLAGS)          \
-   -I$(top_srcdir)         \
+clinkgrammar_la_CPPFLAGS =      \
+   $(SWIG_PERL_CPPFLAGS)        \
+   $(PERL_CFLAGS)               \
+   -I$(top_srcdir)/link-grammar \
    -I$(top_builddir)
 
 clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PERL_LDFLAGS) -module -no-undefined
