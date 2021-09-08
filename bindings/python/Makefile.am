@@ -19,7 +19,7 @@ built_py_sources = $(top_builddir)/bindings/python/clinkgrammar.py
 # Thus, typically, it will install into
 # /usr/local/lib/python2.7/dist-packages/linkgrammar (without the dash)
 pkgpythondir=$(pythondir)/linkgrammar
-pkgpyexecdir=$(pythondir)/linkgrammar
+pkgpyexecdir=$(pyexecdir)/linkgrammar
 
 # Files that get installed in $pkgpythondir
 pkgpython_PYTHON =                                 \

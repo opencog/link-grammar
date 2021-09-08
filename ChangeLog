@@ -1,5 +1,5 @@
 Version 5.10.2 (XXX 2021)
- * Nothing yet!
+ * Fix python install path.
 
 Version 5.10.1 (7 Sept 2021)
  * Fix perl bindings build fail. #1248
