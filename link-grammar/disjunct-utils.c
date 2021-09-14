@@ -442,7 +442,7 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 				{
 					dx->num_categories_alloced *= 2;
 					dx->category = realloc(dx->category,
-					   sizeof(dx->category) * dx->num_categories_alloced);
+					   sizeof(*(dx->category)) * dx->num_categories_alloced);
 				}
 				dassert((d->category[0].num > 0) && (d->category[0].num < 64*1024),
 				        "Insane category %u", d->category[0].num);
