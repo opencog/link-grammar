@@ -35,16 +35,16 @@ struct Disjunct_struct
 	{
 		struct
 		{
-			const char *word_string;  /* Subscripted dictionary word */
-			float cost;               /* Disjunct cost */
 			unsigned int is_category; /* Use the category field */
+			float cost;               /* Disjunct cost */
+			const char *word_string;  /* Subscripted dictionary word */
 		};
 		struct
 		{
 			/* Dictionary category & disjunct cost (for sentence generation). */
-			Category_cost *category;
-			unsigned int num_categories_alloced;
 			unsigned int num_categories;
+			unsigned int num_categories_alloced;
+			Category_cost *category;
 		};
 	};
 
