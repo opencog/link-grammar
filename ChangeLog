@@ -1,3 +1,6 @@
+Version 5.10.3 (XXX 2021)
+ * Nothing yet!
+
 Version 5.10.2 (16 Sept 2021)
  * Fix python install path.
  * Fix size in brand-new `link-generator` (hits 32-bit & ARM) #1247

@@ -821,12 +821,11 @@ class IWordPositionTestCase(unittest.TestCase):
     def test_en_word_positions(self):
         linkage_testfile(self, self.d_en, ParseOptions(), 'pos')
 
-# Temporarily stub out spell checking. See issue #1249 for status.
-#    def test_en_spell_word_positions(self):
-#        po = ParseOptions(spell_guess=1)
-#        if po.spell_guess == 0:
-#            raise unittest.SkipTest("Library is not configured with spell guess")
-#        linkage_testfile(self, self.d_en, po, 'pos-spell')
+    def test_en_spell_word_positions(self):
+        po = ParseOptions(spell_guess=1)
+        if po.spell_guess == 0:
+            raise unittest.SkipTest("Library is not configured with spell guess")
+        linkage_testfile(self, self.d_en, po, 'pos-spell')
 
     def test_ru_word_positions(self):
         linkage_testfile(self, Dictionary(lang='ru'), ParseOptions(), 'pos')
