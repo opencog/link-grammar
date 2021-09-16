@@ -305,7 +305,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 		{
 			ndis->num_categories_alloced = 4;
 			ndis->category =
-				malloc(sizeof(ndis->category) * ndis->num_categories_alloced);
+				malloc(sizeof(*ndis->category) * ndis->num_categories_alloced);
 			ndis->num_categories = 1;
 			ndis->category[0].num = strtol(string, NULL, 16);
 			ndis->category[1].num = 0; /* API array terminator */
