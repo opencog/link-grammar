@@ -1,6 +1,6 @@
-Version 5.10.2 (XXX 2021)
+Version 5.10.2 (16 Sept 2021)
  * Fix python install path.
- * Fix bad size calculation in brand-new `link-generator` code #1247
+ * Fix size in brand-new `link-generator` (hits 32-bit & ARM) #1247
 
 Version 5.10.1 (7 Sept 2021)
  * Fix perl bindings build fail. #1248

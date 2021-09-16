@@ -1,6 +1,6 @@
 Link Grammar Parser
 ===================
-***Version 5.10.1***
+***Version 5.10.2***
 
 The Link Grammar Parser exhibits the linguistic (natural language)
 structure of English, Russian, Arabic, Persian and limited subsets
@@ -224,7 +224,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.10.1.tar.gz.asc`
+`gpg --verify link-grammar-5.10.2.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
@@ -239,7 +239,7 @@ verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 Tags in `git` can be verified by performing the following:
 ```
 gpg --recv-keys --keyserver keyserver.ubuntu.com EB6AA534E0C0651C
-git tag -v link-grammar-5.10.1
+git tag -v link-grammar-5.10.2
 ```
 
 
@@ -333,11 +333,6 @@ These packages are:
      You also have to install SWIG from http://www.swig.org/download.html .
 - macOS:
    * Install python3 using [HomeBrew](http://brew.sh/).
-	  Note: With recent Anaconda Python versions, the build process
-	  succeeds, but loading the resulted module causes a crash.  If you
-	  are a macOS developer, we need help with that.  See the relevant
-     issues in the GitHub repository (search there for "anaconda").<br>
-	  [Anaconda](https://conda.io/docs/user-guide/install/download.html).
 
 NOTE: Before issuing `configure` (see below) you have to validate that
 the required python versions can be invoked using your `PATH`.
@@ -353,6 +348,12 @@ Python bindings, use:
 The `linkgrammar.py` module provides a high-level interface in Python.
 The `example.py` and `sentence-check.py` scripts provide a demo,
 and `tests.py` runs unit tests.
+
+- macOS:
+   * Due to file permissions settings, macOS users may need to install
+     python bindindings into custom directory locations. This can be
+     done by saying
+     `make install pythondir=/where/to/install`
 
 ### Java Bindings
 By default, the `Makefile`s attempt to build the Java bindings.
