@@ -46,7 +46,6 @@ EXTRA_DIST =                              \
    node.js/src/test/build/spec.js         \
    node.js/src/test/spec.coffee           \
    node.js/src/index.litcoffee            \
-   node.js/package-lock.json              \
    node.js/examples                       \
    node.js/examples/simple.js             \
    swig/link_grammar.i
