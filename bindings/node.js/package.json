@@ -31,7 +31,7 @@
     "underscore": "latest"
   },
   "devDependencies": {
-    "coffee-script": "latest",
+    "coffeescript": "latest",
     "mocha": "latest",
     "should": "latest"
   },
@@ -39,7 +39,7 @@
   "bugs": "https://github.com/rompetoto/link-grammar/issues",
   "scripts": {
     "clean": "rm -f -R build",
-    "compile": "node node_modules/coffee-script/bin/coffee -l -o build src",
+    "compile": "node node_modules/coffeescript/bin/coffee -l -o build src",
     "test": "node node_modules/mocha/bin/mocha -R spec -b build/test/",
     "make": "npm run clean && npm run compile && npm run test"
   }
