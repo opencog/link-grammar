@@ -1,4 +1,4 @@
-name: Main link-grammar package CI
+name: Main link-grammar CI
 
 on:
   push:
