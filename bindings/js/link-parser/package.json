@@ -13,5 +13,5 @@
   "bugs": {
     "url": "https://github.com/opencog/link-grammar/issues"
   },
-  "homepage": "https://github.com/opencog/link-grammar/tree/master/js/link-parser#readme"
+  "homepage": "https://github.com/opencog/link-grammar/tree/master/bindings/js/link-parser#readme"
 }
