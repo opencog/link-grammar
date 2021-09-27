@@ -2,7 +2,7 @@
 
 CLI for the CMU Link Grammar natural language parser, compiled for node with emscripten
 
-**See [main README for link-grammar project](https://github.com/opencog/link-grammar#readme)**
+**See the [main README for link-grammar project.](https://github.com/opencog/link-grammar#readme)**
 
 ## Installing
 
