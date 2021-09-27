@@ -2,6 +2,9 @@ Link Grammar Parser
 ===================
 ***Version 5.10.2***
 
+![Main](https://github.com/opencog/link-grammar/actions/workflows/main.yml/badge.svg)
+![node.js](https://github.com/opencog/link-grammar/actions/workflows/bindings-js.yml/badge.svg)
+
 The Link Grammar Parser exhibits the linguistic (natural language)
 structure of English, Russian, Arabic, Persian and limited subsets
 of a half-dozen other languages. This structure is a graph of typed
