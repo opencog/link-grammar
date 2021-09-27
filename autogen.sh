@@ -1,36 +1,46 @@
-asdfasdf
+#!/bin/sh
+#
+# Run this before configure
+#
+# This file blatantly ripped off from subversion.
+#
+# Note: this dependency on Perl is fine: only developers use autogen.sh
+#       and we can state that dev people need Perl on their machine
+#
+# TODO: make sure that ac_pkg_swig.m4 gets installed in m4 directory ...
+
 rm -f autogen.err
 
 automake --version | perl -ne 'if (/\(GNU automake\) (([0-9]+).([0-9]+))/) {print; if ($2 < 1 || ($2 == 1 && $3 < 4)) {exit 1;}}'
-asdfasdf
-if [ $? asdf-ne 0 ]; then
-    echo "Error: you need automake 1.4 or later.  Please upgrade."
-    exit 1asdf
-fiasdf
 
-if tessdat ! -d `aclocal --print-ac-dir 2>> autogen.err`; then
-  echo "Bfdad aclocal (automake) installation"
-  exit 1asdf
-fia
-sdf
-# Pasdroduce aclocal.m4, so autoconf gets the automake macros it needs
-#f
-caasdfse `uname` in
+if [ $? -ne 0 ]; then
+    echo "Error: you need automake 1.4 or later.  Please upgrade."
+    exit 1
+fi
+
+if test ! -d `aclocal --print-ac-dir 2>> autogen.err`; then
+  echo "Bad aclocal (automake) installation"
+  exit 1
+fi
+
+# Produce aclocal.m4, so autoconf gets the automake macros it needs
+#
+case `uname` in
     CYGWIN*)
-      asdf  include_dir='-I m4' # Needed for Cygwin only.
-        ;;a
-    Darwin)sdf
-        [ "$LIasBTOOLIZE" = "" ] && LIBTOOLIZE=glibtoolize
+        include_dir='-I m4' # Needed for Cygwin only.
         ;;
-esacsdf
-asd
-   f ${LIBTOOLIZE:=libtoolize} --force --copy || {
-    asdfecho "error: libtoolize failed"
-    exitas 1
-}df
-asd
-echfaso "Creating aclocal.m4: aclocal $include_dir $ACLOCAL_FLAGS"
-df
+    Darwin)
+        [ "$LIBTOOLIZE" = "" ] && LIBTOOLIZE=glibtoolize
+        ;;
+esac
+
+    ${LIBTOOLIZE:=libtoolize} --force --copy || {
+    echo "error: libtoolize failed"
+    exit 1
+}
+
+echo "Creating aclocal.m4: aclocal $include_dir $ACLOCAL_FLAGS"
+
 aclocal $include_dir $ACLOCAL_FLAGS 2>> autogen.err
 
 # Produce all the `GNUmakefile.in's and create neat missing things
