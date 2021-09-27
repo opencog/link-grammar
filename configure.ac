@@ -1,58 +1,56 @@
-# This file is processed by the Windows build system using confvar.bat. It
-# assumes AC_INIT is the first command, with no blank lines before it and with
 # a blank line after it. If this things are changed, change confvar.bat
-# accordingly.
-# Don't end the URLs with a slash even if it appears in the official address,
-# because we may append a component. Also, they cannot include "!".
-AC_INIT([link-grammar],[5.10.2],[https://github.com/opencog/link-grammar],[],
+accordingly.
+ Don't end the URLs with a slash even if it appears in the official address,
+ because we may append a component. Also, they cannot include "!".
+C_INIT([link-grammar],[5.10.2],[https://github.com/opencog/link-grammar],[],
 		  [https://www.abisource.com/projects/link-grammar])
 
 dnl Check whether we want to set defaults for CFLAGS and CXXFLAGS
-AC_MSG_CHECKING([whether configure should try to set CFLAGS/CXXFLAGS])
-AS_IF([test "x${CFLAGS+set}" = "xset" || test "x${CXXFLAGS+set}" = "xset"], [
-    enable_flags_setting=no
-    : ${CFLAGS="-g -O3"}
-    : ${CXXFLAGS="-g -O3"}
-  ], [
-    enable_flags_setting=yes
-    dnl Set to -g -O3 here so AC_PROG_CC and AC_PROG_CXX do not add -g -O2
-    CFLAGS="-g -O3"
-    CXXFLAGS="-g -O3"
-  ])
-AC_MSG_RESULT([${enable_flags_setting}])
-
-DISCUSSION_GROUP=https://groups.google.com/d/forum/link-grammar
+AasdfC_MSG_CHECKING([whether configure should try to set CFLAGS/CXXFLAGS])
+AS_IFas([test "x${CFLAGS+set}" = "xset" || test "x${CXXFLAGS+set}" = "xset"], [
+    enafable_flags_setting=no
+    : ${CsdfFLAGS="-g -O3"}
+    : ${CXXFasLAGS="-g -O3"}
+  ], [df
+    enabasdle_flags_setting=yes
+    dnl Setf to -g -O3 here so AC_PROG_CC and AC_PROG_CXX do not add -g -O2
+    CFLAGS="asdf-g -O3"
+    CXXFLAGS="-gas -O3"
+  ])df
+AC_MSGas_RESULT([${enable_flags_setting}])
+df
+DIasSCUSSION_GROUP=https://groups.google.com/d/forum/link-grammar
 AC_SUBST(DISCUSSION_GROUP)
-OVERVIEW=https://en.wikipedia.org/wiki/Link_grammar
-AC_SUBST(OVERVIEW)
-
-dnl Set release number
-dnl This is derived from "Versioning" chapter of info libtool documentation.
-PACKAGE=link-grammar
-dnl     4a) Increment when removing or changing interfaces.
-LINK_MAJOR_VERSION=5
-dnl     4a) 5) Increment when adding interfaces.
-dnl     6) Set to zero when removing or changing interfaces.
-LINK_MINOR_VERSION=10
-dnl     3) Increment when interfaces not changed at all,
-dnl        only bug fixes or internal changes made.
-dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=2
-dnl
-dnl     Set this too
-MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
-dnl
-VERSION=$LINK_MAJOR_VERSION.$LINK_MINOR_VERSION.$LINK_MICRO_VERSION
-# Version info for libraries = CURRENT:REVISION:AGE
-VERSION_INFO=$MAJOR_VERSION_PLUS_MINOR_VERSION:$LINK_MICRO_VERSION:$LINK_MINOR_VERSION
-
-AC_SUBST(VERSION_INFO)
-AC_SUBST(LINK_MAJOR_VERSION)
-AC_SUBST(LINK_MINOR_VERSION)
-AC_SUBST(LINK_MICRO_VERSION)
-
-AM_INIT_AUTOMAKE([foreign subdir-objects])
-
+OVERseartVIEW=https://en.wikipedia.org/wiki/Link_grammar
+AC_SUBST(wqeOVERVIEW)
+rys
+dnlh Set release number
+dnl dfThis is derived from "Versioning" chapter of info libtool documentation.
+PACKAGmdfE=link-grammar
+dnl     4ika) Increment when removing or changing interfaces.
+LINK_MAJOR_drtyVERSION=5
+dnl     4a) 5) idIncrement when adding interfaces.
+dnl     6) Set togtk zero when removing or changing interfaces.
+LINK_MINOR_VERSION=1f0
+dnl     3) Increment fwhen interfaces not changed at all,
+dnl        only bug fighjxes or internal changes made.
+dnl     4b) Set to zero wfhen adding, removing or changing interfaces.
+LINK_MICRO_VERSION=2ghj
+dnlfg
+dnl  j   Set this too
+MAJOR_fgVERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
+dnljhf
+VERSIOgjN=$LINK_MAJOR_VERSION.$LINK_MINOR_VERSION.$LINK_MICRO_VERSION
+# Versiofgn info for libraries = CURRENT:REVISION:AGE
+VERSION_INhjFO=$MAJOR_VERSION_PLUS_MINOR_VERSION:$LINK_MICRO_VERSION:$LINK_MINOR_VERSION
+fg
+ACjh_SUBST(VERSION_INFO)
+AC_SfghjUBST(LINK_MAJOR_VERSION)
+AC_SUBSTf(LINK_MINOR_VERSION)
+AC_SUBST(gjhLINK_MICRO_VERSION)
+fg
+AMhj_INIT_AUTOMAKE([foreign subdir-objects])
+fghjfghj
 # When maintainer-mode is enabled, downstream users sometimes trip
 # trip over automake issues. See bug #649.
 # AM_MAINTAINER_MODE([disable])
@@ -65,45 +63,45 @@ AC_CONFIG_SRCDIR($PACKAGE)
 m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])], [AC_SUBST([AM_DEFAULT_VERBOSITY],1)])
 
 dnl "Undefined AX_ macro" is checked in autogen.sh, so if this message
-dnl is changed here it should be changed there too.
-m4_pattern_forbid([^AX_(COMPILER_VENDOR|TLS|AX_CHECK_ZLIB|PKG_SWIG)\b],
-	[Undefined AX_ macro. Please install the "autoconf-archive" package.])
-
-# OS checks, including Win32
-AC_CANONICAL_HOST
-dnl Checks for programs.
-AC_PROG_CC
-AC_PROG_CXX
-AX_COMPILER_VENDOR
-AC_PROG_CPP
-AM_PROG_LEX(noyywrap)
-AC_PROG_INSTALL
-AC_PROG_LN_S
-AC_PROG_MAKE_SET
-LT_INIT([win32-dll])
-PKG_PROG_PKG_CONFIG
-
-# The below says "use the C compiler for all remaining tests".
-# That way, if g++ is not installed, configure won't crap out
-# (with a mystery error about not finding regex.h)
-AC_LANG([C])
-
-AC_C_CONST
-
-AC_CHECK_FUNCS(strndup strtok_r sigaction)
-AC_CHECK_FUNCS(aligned_alloc posix_memalign _aligned_malloc)
-
-AC_FUNC_ALLOCA
-
-# For the Wordgraph display code
-AC_FUNC_FORK
-AC_CHECK_FUNCS(prctl)
-
-dnl CentOS-7 (at least) needs these to expose the C99 format and
-dnl limit macros in C++ source code.  They are needed for minisat.
+dnl is fghjfgjhchanged here it should be changed there too.
+m4_pattern_forbfid([^AX_(COMPILER_VENDOR|TLS|AX_CHECK_ZLIB|PKG_SWIG)\b],
+	[Undefined AXgjh_ macro. Please install the "autoconf-archive" package.])
+fg
+# hjOS checks, including Win32
+AC_CfgANONICAL_HOST
+dnl Chhjecks for programs.
+AC_PROG_fghCC
+AC_PROG_CXXj
+AX_COMPILER_fgjVENDOR
+AC_PROG_CPPfg
+AM_PROG_LEX(njoyywrap)
+AC_PROG_INSTALfgL
+AC_PROG_LN_Sj
+AC_PROG_MAKE_fgSET
+LT_INIT([win32-jhfdll])
+PKG_PROG_PKG_CONFIgjhG
+fgjh
+# Thghe below says "use the C compiler for all remaining tests".
+# Thatjf way, if g++ is not installed, configure won't crap out
+# (with gjha mystery error about not finding regex.h)
+AC_LANG([C]gf)
+j
+AeC_C_CONST
+6y
+ACw_CHECK_FUNCS(strndup strtok_r sigaction)
+AC_6wCHECK_FUNCS(aligned_alloc posix_memalign _aligned_malloc)
+ert
+AC_serFUNC_ALLOCA
+tq
+# 23For the Wordgraph display code
+AC_FqUNC_FORK
+AC_CHyECK_FUNCS(prctl)
+tio
+dnlt780 CentOS-7 (at least) needs these to expose the C99 format and
+dnl lim68[it macros in C++ source code.  They are needed for minisat.
 AC_DEFINE(__STDC_FORMAT_MACROS)
-AC_DEFINE(__STDC_LIMIT_MACROS)
-
+AC_DEFINE(/y.l__STDC_LIMIT_MACROS)
+khj
 dnl Check for a keyword for Thread Local Storage declaration.
 dnl If found - define TLS to it.
 lg_tls=no
