@@ -95,9 +95,13 @@ void *alloca (size_t);
 #include <mbctype.h>
 
 /* Compatibility definitions. */
+#ifndef strcasecmp
+#define strcasecmp _stricmp
+#endif
 #ifndef strncasecmp
 #define strncasecmp(a,b,s) strnicmp((a),(b),(s))
 #endif
+
 #undef rand_r  /* Avoid (a bad) definition on MinGW */
 int rand_r(unsigned int *);
 #ifndef __MINGW32__
