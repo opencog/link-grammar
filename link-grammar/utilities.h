@@ -278,8 +278,8 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #define GNUC_NORETURN
 #define NO_SAN_DICT
 
-#define likely(x)
-#define unlikely(x)
+#define likely(x) x
+#define unlikely(x) x
 #endif
 
 
