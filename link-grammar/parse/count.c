@@ -504,6 +504,11 @@ table_lookup(count_context_t *ctxt, int lw, int rw,
 	return NULL;
 }
 
+extern  count_t *
+table_lookup(count_context_t *, int, int,
+             const Connector *, const Connector *,
+             unsigned int, size_t *);
+
 /**
  * Generate a word skip vector.
  * This implements an idea similar to the Boyer-Moore algo for searches.
