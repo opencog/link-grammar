@@ -99,7 +99,7 @@ void *alloca (size_t);
 #define strcasecmp _stricmp
 #endif
 #ifndef strncasecmp
-#define strncasecmp(a,b,s) strnicmp((a),(b),(s))
+#define strncasecmp _strnicmp
 #endif
 
 #undef rand_r  /* Avoid (a bad) definition on MinGW */
