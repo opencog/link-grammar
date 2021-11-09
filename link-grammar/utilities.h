@@ -95,9 +95,13 @@ void *alloca (size_t);
 #include <mbctype.h>
 
 /* Compatibility definitions. */
-#ifndef strncasecmp
-#define strncasecmp(a,b,s) strnicmp((a),(b),(s))
+#ifndef strcasecmp
+#define strcasecmp _stricmp
 #endif
+#ifndef strncasecmp
+#define strncasecmp _strnicmp
+#endif
+
 #undef rand_r  /* Avoid (a bad) definition on MinGW */
 int rand_r(unsigned int *);
 #ifndef __MINGW32__
@@ -278,8 +282,8 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #define GNUC_NORETURN
 #define NO_SAN_DICT
 
-#define likely(x)
-#define unlikely(x)
+#define likely(x) x
+#define unlikely(x) x
 #endif
 
 

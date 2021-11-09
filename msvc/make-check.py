@@ -80,7 +80,9 @@ def get_prop(prop, default=NODEFAULT):
 #---
 #print('Running by:', sys.executable)
 
-rundir = os.path.dirname(sys.argv[0])
+rundir = os.path.dirname(sys.argv[0]) or '.'
+if rundir == '':
+    rundir = '.'
 local_prop_file = rundir + '\\' + local_prop_file
 read_props(local_prop_file)
 
@@ -116,7 +118,7 @@ if pyscript != '':
 
 args = ''
 if len(sys.argv) >= 2:
-    args = ' '.join(sys.argv[1:])
+    args = ' '.join(sys.argv[2:])
 
 path = os.environ["PATH"]
 dllpath = get_prop('LG_DLLPATH')
