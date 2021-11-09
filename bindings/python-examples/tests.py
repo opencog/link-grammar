@@ -26,6 +26,11 @@ from linkgrammar import (Sentence, Linkage, ParseOptions, Link, Dictionary,
                          Clinkgrammar as clg)
 
 print(clg.linkgrammar_get_configuration())
+NO_SQLITE_ERROR = ''
+# USE_SQLITE is currently not use in the MSVC build.
+if re.search(r'_MSC_FULL_VER', clg.linkgrammar_get_configuration()) and \
+   not re.search(r'USE_SQLITE', clg.linkgrammar_get_configuration()):
+    NO_SQLITE_ERROR = 'Library is not configures with SQLite support'
 
 # Show the location and version of the bindings modules
 for imported_module in 'linkgrammar$', 'clinkgrammar', '_clinkgrammar', 'lg_testutils':
@@ -786,13 +791,11 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 "\nLEFT-WALL we are.v from the planet.n Gorpon[!]"
 "\n\n")
 
+
+@unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
 class GSQLDictTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        if os.name == 'nt' and \
-                -1 == clg.linkgrammar_get_configuration().lower().find('mingw'):
-            raise unittest.SkipTest("No SQL dict support yet on the MSVC build")
-
         #clg.parse_options_set_verbosity(clg.parse_options_create(), 3)
         cls.d, cls.po = Dictionary(lang='demo-sql'), ParseOptions()
 
@@ -984,11 +987,11 @@ class XLookupListTestCase(unittest.TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.d_en, cls.d_sql, cls.po = Dictionary(lang='en'), Dictionary(lang='demo-sql'), ParseOptions()
+        cls.d_en, cls.po = Dictionary(lang='en'), ParseOptions()
 
     @classmethod
     def tearDownClass(cls):
-        del cls.d_en, cls.d_sql, cls.po
+        del cls.d_en, cls.po
 
     def test_file_lookup_list_none(self):
         self.assertIsNone(clg.dictionary_lookup_list(self.d_en._obj, 'NoSuchWord'))
@@ -996,11 +999,13 @@ class XLookupListTestCase(unittest.TestCase):
     def test_file_lookup_wild_none(self):
         self.assertIsNone(clg.dictionary_lookup_wild(self.d_en._obj, 'NoSuch*'))
 
+    @unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
     def test_sql_lookup_list_none(self):
-        self.assertIsNone(clg.dictionary_lookup_list(self.d_sql._obj, 'NoSuchWord'))
+        self.assertIsNone(clg.dictionary_lookup_list(Dictionary(lang='demo-sql')._obj, 'NoSuchWord'))
 
+    @unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
     def test_sql_lookup_wild_none(self):
-        self.assertIsNone(clg.dictionary_lookup_wild(self.d_sql._obj, 'NoSuch*'))
+        self.assertIsNone(clg.dictionary_lookup_wild(Dictionary(lang='demo-sql')._obj, 'NoSuch*'))
 
     def test_file_lookup_list_subscr(self):
         dictnode = clg.dictionary_lookup_list(self.d_en._obj, sm('test.n'))
@@ -1016,14 +1021,16 @@ class XLookupListTestCase(unittest.TestCase):
             elif dictnode[i].string == sm('test.v'):
                 self.assertIsNone(dictnode[i].file)
 
+    @unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
     @unittest.skip("FIXME: Cannot lookup with SUBSCRIPT_MARK")
     def test_sql_lookup_list_subscr(self):
         dictnode = clg.dictionary_lookup_list(self.d_en._obj, sm('test.n'))
         self.assertEqual(dictnode[0].string, sm('test.n'))
 
+    @unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
     @unittest.skip("FIXME: It returns a dot subscript instead of SUBSCRIPT_MARK")
     def test_sql_lookup_list_no_subscr(self):
-        dictnode = clg.dictionary_lookup_list(self.d_sql._obj, 'test')
+        dictnode = clg.dictionary_lookup_list(Dictionary(lang='demo-sql')._obj, 'test')
         self.assertEqual(sorted([dictnode[i].string for i in range(len(dictnode))]), [sm('test.n')])
 
     def test_file_lookup_wild_any_subscript(self):
@@ -1038,6 +1045,7 @@ class XLookupListTestCase(unittest.TestCase):
         for dn in dictnode:
             self.assertIsNotNone(re.search('test.*' + sm('.') + 'n', dn.string), 'Bad word {}'.format(dn.string))
 
+    @unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
     def test_sql_lookup_wild_any_subscript(self):
         dictnode = clg.dictionary_lookup_wild(self.d_en._obj, 't*')
         self.assertTrue(len(dictnode) > 40, 'Missing words (only {} found)'.format(len(dictnode)))
@@ -1113,6 +1121,7 @@ class YGenerationTestCase(unittest.TestCase):
         linkages = Sentence((clg.WILDCARD_WORD + ' ') * 5, Dictionary(lang='lt'), self.po).parse()
         self.assertTrue(len(linkages) > 0, "No linkages")
 
+    @unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
     def test_getting_linkages_sql_dict(self):
         linkages = Sentence((clg.WILDCARD_WORD + ' ') * 4, Dictionary(lang='demo-sql'), self.po).parse()
         self.assertTrue(len(linkages) > 0, "No linkages")
