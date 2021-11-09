@@ -441,6 +441,19 @@ FILE *linkgrammar_open_data_file(const char *filename)
 
 /* ======================================================== */
 
+bool check_db(const char *lang)
+{
+	char *dbname = join_path (lang, "dict.db");
+	bool retval = file_exists(dbname);
+	free(dbname);
+#if !HAVE_SQLITE3
+	if (retval)
+		prt_error("Error: Could not open dictionary \"%s\" "
+		          "(not configured with SQLite support)\n", dbname);
+#endif /* !HAVE_SQLITE3 */
+	return retval;
+}
+
 /**
  * Check to see if a file exists.
  */
