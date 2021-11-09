@@ -1093,21 +1093,28 @@ class XExp_resolving_test(unittest.TestCase):
 
 # Currently, the dictionary creating function sets the generation mode if
 # the "test" parse-option has "generate" in its value list. So it must be
-# set so before the call to Dictionary(). When the second argument of
-# Sentence is evaluated, it initializes the test parse-option to a null
-# string.
+# set so before the call to Dictionary(). tearDownClass() takes care to
+# get out of generation mode.
 class YGenerationTestCase(unittest.TestCase):
     """
     Generation mode tests.
     """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.po = ParseOptions(test='generate')
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.po = ParseOptions() # Reset the "test" parse option
+        del cls.po
+
     def test_getting_linkages_file_dict(self):
-        ParseOptions(test='generate')
-        linkages = Sentence((clg.WILDCARD_WORD + ' ') * 5, Dictionary(lang='lt'), ParseOptions()).parse()
+        linkages = Sentence((clg.WILDCARD_WORD + ' ') * 5, Dictionary(lang='lt'), self.po).parse()
         self.assertTrue(len(linkages) > 0, "No linkages")
 
     def test_getting_linkages_sql_dict(self):
-        ParseOptions(test='generate')
-        linkages = Sentence((clg.WILDCARD_WORD + ' ') * 4, Dictionary(lang='demo-sql'), ParseOptions()).parse()
+        linkages = Sentence((clg.WILDCARD_WORD + ' ') * 4, Dictionary(lang='demo-sql'), self.po).parse()
         self.assertTrue(len(linkages) > 0, "No linkages")
 
 
