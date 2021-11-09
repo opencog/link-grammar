@@ -1,5 +1,6 @@
 Version 5.10.3 (XXX 2021)
  * Remove `node.js/package-lock.json` from tarball distribution. #1251
+ * Fix Windows MSVC build break. #1253
 
 Version 5.10.2 (16 Sept 2021)
  * Fix python install path.
