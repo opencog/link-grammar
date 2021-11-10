@@ -13,10 +13,11 @@ Version 5.10.0 (4 September 2021)
  * Expanded English vocabulary
  * Support dictionary "#define allow-duplicate-words true". #1204
  * Fix crash for sentences containing wildcard words. #1206
+ * Add the ability to use underbars in connector names.
+   Connector names starting with underbar are reserved for internal use.
  * Connector names starting with "ID" are no longer reserved. #1208
- * Connector names starting with underbar are reserved for internal use.
  * ".I" subscripts are no longer reserved; "._" subscripts are reserved.
-   These last three changes introduce linkage incompatibilities.
+   These last two changes introduce linkage incompatibilities.
  * Fix parsing with nulls when using an sqlite3 dictionary.
  * Fix regexes for NetBSD when using libc regexes. #1223
  * English dict: fix many "how?" questions.
