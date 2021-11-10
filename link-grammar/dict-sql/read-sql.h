@@ -17,12 +17,7 @@
 #include "link-includes.h"
 
 #ifdef HAVE_SQLITE3
-bool check_db(const char *lang);
 Dictionary dictionary_create_from_db(const char *lang);
-#else
-
-static inline bool check_db(const char *lang) { return false; }
-static inline Dictionary dictionary_create_from_db(const char *lang) { return NULL; }
 #endif /* HAVE_SQLITE3 */
 
 #endif /* READ_SQL_H */

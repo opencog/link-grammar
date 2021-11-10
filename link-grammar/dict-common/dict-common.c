@@ -111,7 +111,11 @@ Dictionary dictionary_create_lang(const char * lang)
 	/* If an sql database exists, try to read that. */
 	if (check_db(lang))
 	{
+#if HAVE_SQLITE3
 		dictionary = dictionary_create_from_db(lang);
+#else
+		return NULL;
+#endif /* HAVE_SQLITE3 */
 	}
 
 	/* Fallback to a plain-text dictionary */

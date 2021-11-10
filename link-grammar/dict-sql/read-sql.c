@@ -527,14 +527,6 @@ static void add_categories(Dictionary dict)
 /* ========================================================= */
 /* Dictionary creation, setup, open procedures */
 
-bool check_db(const char *lang)
-{
-	char *dbname = join_path (lang, "dict.db");
-	bool retval = file_exists(dbname);
-	free(dbname);
-	return retval;
-}
-
 static void* db_open(const char * fullname, const void * user_data)
 {
 	int fd;
