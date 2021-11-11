@@ -1236,12 +1236,13 @@ static char *display_expr(Dictionary dict, const char *word, Dict_node *dn,
 			dyn_strcat(s, "\n\n");
 		}
 
-		const char *expstr = lg_exp_stringify_with_tags(dict, e, show_macros);
+		char *expstr = lg_exp_stringify_with_tags(dict, e, show_macros);
 
 		append_string(s, "    %-*s %s",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
 		              expstr);
 		dyn_strcat(s, "\n\n");
+		free(expstr);
 	}
 
 	if (Exp_pool != NULL) pool_delete(Exp_pool);
