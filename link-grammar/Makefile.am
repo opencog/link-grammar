@@ -77,6 +77,11 @@ liblink_grammar_la_LIBADD  += ${PTHREAD_LIBS}
 # It seems no mathematical function is used now. Keep it to be on the safe side.
 liblink_grammar_la_LIBADD  += -lm
 
+if WITH_CXXREGEX
+dict-common/regex-morph.lo: AM_CFLAGS = -x c++ $(CXXFLAGS) $(WARN_CXXFLAGS)
+dict-common/regex-morph.lo: CFLAGS =
+endif
+
 liblink_grammar_la_SOURCES =        \
 	api.c                            \
 	connectors.c                     \
