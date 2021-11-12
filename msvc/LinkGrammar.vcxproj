@@ -301,7 +301,12 @@
     <ClCompile Include="..\link-grammar\dict-common\file-utils.c" />
     <ClCompile Include="..\link-grammar\dict-common\idiom.c" />
     <ClCompile Include="..\link-grammar\dict-common\print-dict.c" />
-    <ClCompile Include="..\link-grammar\dict-common\regex-morph.c" />
+    <ClCompile Include="..\link-grammar\dict-common\regex-morph.c">
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">CompileAsCpp</CompileAs>
+      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CompileAsCpp</CompileAs>
+    </ClCompile>
     <ClCompile Include="..\link-grammar\dict-file\dictionary.c" />
     <ClCompile Include="..\link-grammar\dict-file\read-dialect.c" />
     <ClCompile Include="..\link-grammar\dict-file\read-dict.c" />
