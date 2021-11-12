@@ -15,7 +15,7 @@
 #include "dict-common.h"
 
 LINK_BEGIN_DECLS
-int compile_regexs(Regex_node *, Dictionary);
+bool compile_regexs(Regex_node *, Dictionary);
 const char *match_regex(const Regex_node *, const char *);
 void free_regexs(Regex_node *);
 LINK_END_DECLS

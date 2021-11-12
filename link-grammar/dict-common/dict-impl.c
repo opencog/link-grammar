@@ -693,8 +693,6 @@ bool afdict_init(Dictionary dict)
 	ac = AFCLASS(afdict, AFDICT_SANEMORPHISM);
 	if (0 != ac->length)
 	{
-		int rc;
-
 		Regex_node *sm_re = malloc(sizeof(*sm_re));
 		dyn_str *rebuf = dyn_str_new();
 
@@ -720,11 +718,11 @@ bool afdict_init(Dictionary dict)
 		sm_re->re = NULL;
 		sm_re->next = NULL;
 		sm_re->neg = false;
-		rc = compile_regexs(afdict->regex_root, afdict);
-		if (rc) {
+		if (!compile_regexs(afdict->regex_root, afdict))
+		{
 			prt_error("Error: afdict_init: Failed to compile "
-			          "regex '%s' in file %s, return code %d\n",
-			          afdict_classname[AFDICT_SANEMORPHISM], afdict->name, rc);
+			          "regex /%s/ in file \"%s\"\n",
+			          afdict_classname[AFDICT_SANEMORPHISM], afdict->name);
 			return false;
 		}
 		lgdebug(+D_AI, "%s regex %s\n",

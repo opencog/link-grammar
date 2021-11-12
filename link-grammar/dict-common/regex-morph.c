@@ -221,9 +221,9 @@ static void reg_free(Regex_node *rn)
 
 /**
  * Compile all the given regexs.
- * Return 0 on success, else an error code.
+ * Return \c true on success, else \c false.
  */
-int compile_regexs(Regex_node *rn, Dictionary dict)
+bool compile_regexs(Regex_node *rn, Dictionary dict)
 {
 	while (rn != NULL)
 	{
@@ -246,7 +246,7 @@ int compile_regexs(Regex_node *rn, Dictionary dict)
 		}
 		rn = rn->next;
 	}
-	return 0;
+	return true;
 }
 
 /**
