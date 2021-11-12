@@ -270,7 +270,7 @@ const char *match_regex(const Regex_node *rn, const char *s)
 			/* Negative match - skip this regex name. */
 			for (const char *nre_name = rn->name; rn->next != NULL; rn = rn->next)
 			{
-				if (strcmp(nre_name, rn->next->name) != 0) break;
+				if (!string_set_cmp(nre_name, rn->next->name)) break;
 			}
 		}
 
