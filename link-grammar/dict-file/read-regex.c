@@ -158,7 +158,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 
 		/* Create new Regex_node and add to dict list. */
 		new_re = (Regex_node *) malloc(sizeof(Regex_node));
-		new_re->name    = strdup(name);
+		new_re->name    = string_set_add(name, dict->string_set);
 		new_re->pattern = strdup(regex);
 		new_re->neg     = neg;
 		new_re->re      = NULL;

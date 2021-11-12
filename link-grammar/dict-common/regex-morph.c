@@ -290,8 +290,11 @@ void free_regexs(Regex_node *rn)
 	{
 		Regex_node *next = rn->next;
 
-		if (rn->re != NULL) reg_free(rn);
-		rn->re = NULL;
+		if (rn->re != NULL)
+		{
+			reg_free(rn);
+			rn->re = NULL;
+		}
 		free(rn->pattern);
 		free(rn);
 

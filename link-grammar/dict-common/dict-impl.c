@@ -714,7 +714,8 @@ bool afdict_init(Dictionary dict)
 		dyn_str_delete(rebuf);
 
 		afdict->regex_root = sm_re;
-		sm_re->name = strdup(afdict_classname[AFDICT_SANEMORPHISM]);
+		sm_re->name = string_set_add(afdict_classname[AFDICT_SANEMORPHISM],
+		                             afdict->string_set);
 		sm_re->re = NULL;
 		sm_re->next = NULL;
 		sm_re->neg = false;

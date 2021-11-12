@@ -51,7 +51,7 @@ struct X_node_struct
 /* The regexes are stored as a linked list of the following nodes. */
 struct Regex_node_s
 {
-	char *name;      /* The identifying name of the regex */
+	const char *name;/* The identifying name of the regex */
 	char *pattern;   /* The regular expression pattern */
 	bool neg;        /* Negate the match */
 	void *re;        /* The compiled regex. void * to avoid

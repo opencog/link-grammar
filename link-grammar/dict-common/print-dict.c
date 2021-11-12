@@ -873,7 +873,7 @@ static Regex_node *new_disjunct_regex_node(Regex_node *current, char *regpat)
 {
 	Regex_node *rn = malloc(sizeof(Regex_node));
 
-	rn->name = strdup("Disjunct regex");
+	rn->name = "Disjunct regex";
 	rn->pattern = strdup(regpat);
 	rn->re = NULL;
 	rn->neg = false;
