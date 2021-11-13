@@ -264,7 +264,7 @@ void dump_categories(Dictionary dict, const Category *catlist)
 	printf(TAB"\"categories\": [\n");
 	for (unsigned int n = 0; catlist[n].num_words != 0; n++)
 	{
-		printf(TAB"\{\n");
+		printf(TAB"{\n");
 		if (catlist[n].name[0] != '\0')
 			printf(TAB TAB"\"name\": %s,\n", catlist[n].name);
 		printf(TAB TAB"\"category_num\": %u,\n", n + 1);
