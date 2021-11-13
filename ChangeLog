@@ -1,6 +1,8 @@
 Version 5.10.3 (XXX 2021)
  * Remove `node.js/package-lock.json` from tarball distribution. #1251
  * Fix Windows MSVC build break. #1253
+ * Fix memory leak in the "!" link-parser command. #1256
+ * Add C++ regex support. It is now the default for MSVC builds. #1258
 
 Version 5.10.2 (16 Sept 2021)
  * Fix python install path.
