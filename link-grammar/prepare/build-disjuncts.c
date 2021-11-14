@@ -293,9 +293,14 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			*loc = n;         /* update the connector list */
 		}
 
+		bool sat_solver = false;
+#if USE_SAT_SOLVER
+		sat_solver = opts->use_sat_solver;
+#endif /* USE_SAT_SOLVER */
+
 		/* XXX add_category() starts category strings by ' '.
 		 * FIXME Replace it by a better indication. */
-		if (!IS_GENERATION(sent->dict) || (' ' != string[0]))
+		if (sat_solver || (!IS_GENERATION(sent->dict) || (' ' != string[0])))
 		{
 			ndis->word_string = string;
 			ndis->cost = cl->cost;
