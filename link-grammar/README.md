@@ -162,7 +162,7 @@ The result of the experiment was ultimately negative: early results
 showed that the default parser is a bit faster for short sentences
 and that the SAT solver can be faster for long sentences. Subsequent
 enhancements to the original algorithm shows that it wins in all
-situtations.  Basically, the SAT solver cannot make effective use
+situations.  Basically, the SAT solver cannot make effective use
 of the planarity constraints that the default parser leverages to
 discard impossible parses.
 
@@ -190,7 +190,7 @@ One can force the bundled version to always be used by saying:
 ./configure --enable-sat-solver=bundled
 ```
 
-Other problems with the SAT sover include:
+Other problems with the SAT solver include:
 - Disjunct cost: Cost of null expressions is disregarded. Thus, it
   still cannot rank sentences by cost, which is the most basic parse
   ranking that we've got... In order not to show incorrect costs, the
