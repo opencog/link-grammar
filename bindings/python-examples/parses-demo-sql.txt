@@ -19,6 +19,9 @@ OLEFT-WALL this.p is.v another test.n
 O
 
 -max_null_count=1
+% A hack: The SAT parser cannot parse with nulls yet,
+% so change back to classic parser.
+-use_sat=False
 IThis is a a test
 O
 O    +------WV------+----Osm----+

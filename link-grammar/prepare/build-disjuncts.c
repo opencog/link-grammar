@@ -293,9 +293,14 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			*loc = n;         /* update the connector list */
 		}
 
+		bool sat_solver = false;
+#if USE_SAT_SOLVER
+		sat_solver = opts->use_sat_solver;
+#endif /* USE_SAT_SOLVER */
+
 		/* XXX add_category() starts category strings by ' '.
 		 * FIXME Replace it by a better indication. */
-		if (!IS_GENERATION(sent->dict) || (' ' != string[0]))
+		if (sat_solver || (!IS_GENERATION(sent->dict) || (' ' != string[0])))
 		{
 			ndis->word_string = string;
 			ndis->cost = cl->cost;
@@ -309,7 +314,8 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			ndis->num_categories = 1;
 			ndis->category[0].num = strtol(string, NULL, 16);
 			ndis->category[1].num = 0; /* API array terminator */
-			assert((ndis->category[0].num > 0) && (ndis->category[0].num < 64*1024),
+			assert(sat_solver || ((ndis->category[0].num > 0) &&
+			       (ndis->category[0].num < 64*1024)),
 			       "Insane category %u", ndis->category[0].num);
 			ndis->category[0].cost = cl->cost;
 		}

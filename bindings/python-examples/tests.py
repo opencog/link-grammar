@@ -808,9 +808,10 @@ class GSQLDictTestCase(unittest.TestCase):
 
     def test_getting_links_sat(self):
         sat_po = ParseOptions(use_sat=True)
-        if sat_po.use_sat != True:
+        if not sat_po.use_sat:
             raise unittest.SkipTest("Library not configured with SAT parser")
         linkage_testfile(self, self.d, sat_po)
+
 
 class IWordPositionTestCase(unittest.TestCase):
     @classmethod
