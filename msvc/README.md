@@ -252,8 +252,8 @@ For using the library independently of the build directory:
 3) Copy the `data` directory to the location of the DLL so it will get found.
 
 
-Implementation notes:
----------------------
+Implementation notes
+--------------------
 
 - The file `link-grammar/link-features.h.in` has a Custom Build Tool definition
   which invokes `mk-link-features-h` to generate
@@ -263,6 +263,9 @@ Implementation notes:
 - The project file `LinkGrammarExe` has a Post-Build-Event definition for
   generating `link-parser.bat`.
 
+  The file `regex-morph.c` has a compiler setting of C++ in its property sheet:
+  **View->Solution Explorer->Source Files->regex-morph.c->Right Click->
+      Properties->C/C++->CompileAS->CompileAsCpp**
 
 Using a remote network share
 ----------------------------
@@ -284,7 +287,7 @@ The second one needs administrator privileges.<br>
 Then use the repository through `src`.
 
 Debugging hints
---------------
+---------------
 If, when starting the program under the debugger (by "Local Windows Debugger",
 "Debug->Start Debugging" (F5), etc.), `regex.dll` is not found, it can be
 added to the search `PATH` as follows:<br>
@@ -292,7 +295,7 @@ Enter to LinkGrammarExe's Property Pages:<br>
  `Solution Explorer->LinkGrammarExe->Properties`<br>
 Click on the writable location of:<br>
  `Debugging->Environment`<br>
-Put there (LG_DLLPATH is defined in the `Local` Property pages):<br>
+Put there (LG_DLLPATH is defined in the `Local` Property page):<br>
 `PATH=$(LG_DLLPATH)`<br>
 Make sure "Merge Environment" there is `Yes`.
 
