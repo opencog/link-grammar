@@ -14,9 +14,9 @@
 % be attempted in the order in which the regexs appear in this file,
 % and only the first match will be used.
 %
-% Regex'es that are preceded by !, if they match a token, stop
-% further match tries of the same regex name. Thus, they can serve
-% as a kind of a negative look-ahead.
+% Regexs that are preceded by ! (i.e. !/pattern/), if they match a token,
+% stop further match tries until a different regex name is encountered.
+% Thus, they can serve as a kind of a negative look-ahead.
 
 % Numbers.
 % XXX, we need to add utf8 U+00A0 "no-break space"

@@ -15,7 +15,7 @@
 #include "read-regex.h"
 
 /*
-  Function for reading regular expression name:pattern combinations
+  Function for reading regular expression name:regex combinations
   into the Dictionary from a given file.
 
   The format of the regex file is as follows:
@@ -25,7 +25,7 @@
 
       REGEX_NAME:  /pattern/
 
-  here REGEX_NAME is an identifying unique name for the regex.
+  Here REGEX_NAME is an identifying unique name for the regex.
   This name is used to determine the disjuncts that will be assigned to
   tokens matching the pattern, so in the dictionary file (e.g. 4.0.dict)
   you must have something like
@@ -34,6 +34,11 @@
 
   using the same name. The pattern itself must be surrounded by slashes.
   Extra whitespace is ignored.
+
+  Regexs that are preceded by ! (i.e. !/pattern/) if they match a token,
+  stop further match tries until a different regex name is encountered.
+  Thus, they can serve as a kind of a negative look-ahead.
+
 */
 
 #define MAX_REGEX_NAME_LENGTH 50
@@ -158,7 +163,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 
 		/* Create new Regex_node and add to dict list. */
 		new_re = (Regex_node *) malloc(sizeof(Regex_node));
-		new_re->name    = strdup(name);
+		new_re->name    = string_set_add(name, dict->string_set);
 		new_re->pattern = strdup(regex);
 		new_re->neg     = neg;
 		new_re->re      = NULL;

@@ -7,74 +7,57 @@ This directory contains project files for building Link Grammar with the
 Microsoft Visual Studio 2019 IDE (MSVC 16). They were created and tested with
 the Community Edition of that product.
 
+SQLite dictionaries are not currently supported. Patches are welcome!
+
 **!!!WARNING!!!**<br>
 In the examples below, "console-prompt>" at start of line means the console
 prompt.  Don't type it because the result could be destructive!
 
 Supported target versions
 -------------------------
-The intention is to support versions from Vista on (some WIN32
-functions which are used are not supported in earlier versions.)
-
 The system compatibility definitions:
 In each project file - Target Platform version: 8.1
 In the `MSVC-common` property sheet - **Common properties->User Macros/CFLAGS**:
 
 `NTDDI_VERSION=NTDDI_VISTA;_WIN32_WINNT=_WIN32_WINNT_VISTA;`
 
-Dependencies
-------------
-The regex package, which includes libraries and header files, must be
-separately downloaded. Also see GNUREGEX_DIR below.
+However, the package is tested only on Windows 10.
 
-For Python bindings, install the desired Python distributions from
-[Python Releases for Windows](https://www.python.org/downloads/windows/).
-You also have to install [SWIG](http://www.swig.org/download.html).
-
-The bindings were testes using swigwin-3.0.10 with Python 3.4.4.
+Regular-expression (regex) support
+----------------------------------
+The default configuration uses the C++ regex library. An external regex package can be
+used instead, but this option is only for special needs and you can safely ignore it.
+More details are in [Using an external regex package](/msvc/LIBREGEX-README.md).
 
 Setup
 -----
-The build files make use of User Macros, defined in the property
-sheet "Local", as follows:
+The build files use directory locations as defined in the property sheet `Local`:
 
-- GNUREGEX_DIR must be pointing to an unzipped POSIX regex distribution
-   (which has the subdirectories `include` and `lib`). Its default is
-   `%HOMEDRIVE%%HOMEPATH%\Libraries\gnuregex`.
-   If the environment variable GNUREGEX exists, its value is used instead.
-   The library file name is assumed to be "regex.lib" and needs to be
-   generated from the DLL if it is not included in the distribution (see
-   http://stackoverflow.com/questions/9946322).
-
-   A tested library can be downloaded from
-   [Tre for Windows](http://gnuwin32.sourceforge.net/packages/tre.htm).
-   If your system is 64-bits, use the provided 64-bits library.
-
-   The corresponding lib file is missing there. If you have Cygwin
-   installed, you can generate it as follows (console command):
-
-```
-dlltool -l regex.lib -d libtre/win32/tre.def -D regex.dll libtre/win32/bin/x64_release/libtre_dll.dll
-```
-
-- LG_DLLPATH should include the directory of the regex DLL, which is
-   normally under GNUREGEX_DIR (or it can be a central DLL directory etc.).
-   The default is `$(GNUREGEX_DIR)\lib`.
-
-- JAVA_HOME, if used, must be pointing to a locally installed SDK/JDK,
+- The User Macro JAVA_HOME, if used, must be pointing to a locally installed SDK/JDK,
    which has the subdirectories "include" and `include/win32` (defined in
    the LinkGrammarJava project under **Common properties->C/C++->General->
    Additional Include Directories**.
    If your JAVA SDK/JDK installation has defined the JAVA_HOME environment
    variable (check it) then there is no need to define this User Macro.
 
-- WINFLEXBISON should be the directory of the "Win flex-bison" project,
+- The User Macro WINFLEXBISON should be the directory of the "Win flex-bison" project,
   as downloaded from its [Web site](https://winflexbison.sourceforge.io/).
   Tested with version 2.5.9.
   Leave it blank if would like to use a ready **pp_lexer.c** file.
   The default is **C:\win_flex_bison**.
 
-### Definitions for Python bindings
+-  The User Macros GNUREGEX_DIR and LG_DLLPATH are related to the optional external
+   regex library mentioned above. You can safely ignore them.
+
+Python bindings
+---------------
+Install the desired Python3 distributions from
+[Python Releases for Windows](https://www.python.org/downloads/windows/).
+You also have to install [SWIG](http://www.swig.org/download.html).
+
+The bindings were testes using swigwin-4.0.2 with Python 3.4.4.
+
+### Related macros ion property sheet `Local`.
 
  Macro | Default value |
 ---|---|
@@ -83,9 +66,8 @@ PYTHON3_INCLUDE | $(PYTHON3)\include |
 PYTHON3_LIB     | $(PYTHON3)\lib |
 PYTHON3_EXE     | $(PYTHON3)\python.exe |
 
-If you want to build any of the bindings, make sure it is marked for build
-in the configuration manager, or select "build" for the desired bindings in
-Solution Explorer.
+Make sure the `python3` project is marked for build in the configuration
+manager, or select "build" for it in Solution Explorer.
 
 Compiling
 ---------
@@ -101,7 +83,7 @@ Compiling
 
 - The wordgraph-display feature is enabled when compiled with
   USE_WORDGRAPH_DISPLAY (already defined in the `LGlib-features` property sheet
-  - **Common properties->C/User Macros/DEFS**).
+  in **Common properties->C/User Macros/DEFS**).
 
 - By default, the library is configured to create a DLL. If you want
   to instead build a static library, the macro LINK_GRAMMAR_STATIC must
@@ -270,8 +252,8 @@ For using the library independently of the build directory:
 3) Copy the `data` directory to the location of the DLL so it will get found.
 
 
-Implementation notes:
----------------------
+Implementation notes
+--------------------
 
 - The file `link-grammar/link-features.h.in` has a Custom Build Tool definition
   which invokes `mk-link-features-h` to generate
@@ -281,6 +263,9 @@ Implementation notes:
 - The project file `LinkGrammarExe` has a Post-Build-Event definition for
   generating `link-parser.bat`.
 
+  The file `regex-morph.c` has a compiler setting of C++ in its property sheet:
+  **View->Solution Explorer->Source Files->regex-morph.c->Right Click->
+      Properties->C/C++->CompileAS->CompileAsCpp**
 
 Using a remote network share
 ----------------------------
@@ -302,7 +287,7 @@ The second one needs administrator privileges.<br>
 Then use the repository through `src`.
 
 Debugging hints
---------------
+---------------
 If, when starting the program under the debugger (by "Local Windows Debugger",
 "Debug->Start Debugging" (F5), etc.), `regex.dll` is not found, it can be
 added to the search `PATH` as follows:<br>
@@ -310,7 +295,7 @@ Enter to LinkGrammarExe's Property Pages:<br>
  `Solution Explorer->LinkGrammarExe->Properties`<br>
 Click on the writable location of:<br>
  `Debugging->Environment`<br>
-Put there (LG_DLLPATH is defined in the `Local` Property pages):<br>
+Put there (LG_DLLPATH is defined in the `Local` Property page):<br>
 `PATH=$(LG_DLLPATH)`<br>
 Make sure "Merge Environment" there is `Yes`.
 

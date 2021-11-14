@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
     <PKGDATADIR>"..\\..\\..\\data"</PKGDATADIR>
-    <DEFS>USE_WORDGRAPH_DISPLAY;</DEFS>
+    <DEFS>USE_WORDGRAPH_DISPLAY;USE_CXXREGEX</DEFS>
   </PropertyGroup>
   <PropertyGroup>
     <_PropertySheetDisplayName>LGlib-features</_PropertySheetDisplayName>

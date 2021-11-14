@@ -9,7 +9,7 @@
     <ClCompile>
       <PreprocessorDefinitions>$(CFLAGS);WIN32_LEAN_AND_MEAN;_CRT_NONSTDC_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4068</DisableSpecificWarnings>
-      <AdditionalIncludeDirectories>..;..\link-grammar;.</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;..\link-grammar;.;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

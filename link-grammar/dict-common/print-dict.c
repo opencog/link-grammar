@@ -873,7 +873,7 @@ static Regex_node *new_disjunct_regex_node(Regex_node *current, char *regpat)
 {
 	Regex_node *rn = malloc(sizeof(Regex_node));
 
-	rn->name = strdup("Disjunct regex");
+	rn->name = "Disjunct regex";
 	rn->pattern = strdup(regpat);
 	rn->re = NULL;
 	rn->neg = false;
@@ -991,7 +991,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 	if (NULL == rn)
 		rn = new_disjunct_regex_node(NULL, regpat);
 
-	if (compile_regexs(rn, NULL) != 0)
+	if (!compile_regexs(rn, NULL))
 		return NULL; /* compile_regexs() issues the error message */
 
 	return rn;

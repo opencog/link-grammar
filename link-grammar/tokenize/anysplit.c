@@ -385,9 +385,9 @@ bool anysplit_init(Dictionary afdict)
 	as->regmid = regbuild(regmid->string, regmid->length, AFDICT_REGMID);
 	as->regsuf = regbuild(regsuf->string, regsuf->length, AFDICT_REGSUF);
 
-	if (compile_regexs(as->regpre, NULL) != 0) return false;
-	if (compile_regexs(as->regmid, NULL) != 0) return false;
-	if (compile_regexs(as->regsuf, NULL) != 0) return false;
+	if (!compile_regexs(as->regpre, NULL) != 0) return false;
+	if (!compile_regexs(as->regmid, NULL) != 0) return false;
+	if (!compile_regexs(as->regsuf, NULL) != 0) return false;
 
 	as->nparts = atoi(regparts->string[0]);
 	if (as->nparts < 0)

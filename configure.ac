@@ -612,11 +612,11 @@ else
 fi
 
 # ====================================================================
-# Configure a regex library that supports UTF-8 and a POSIX interface.
+# Configure a regex library that supports UTF-8 and a POSIX features.
 dnl AC_CHECK_HEADERS defines HAVE_FILENAME_H if found.
 
 AC_ARG_WITH([regexlib],
-	[AS_HELP_STRING([--with-regexlib=pcre2|tre|regex|c],
+	[AS_HELP_STRING([--with-regexlib=pcre2|tre|regex|c|c++],
 	[Use the specified regex library (default=first found)])],
 	[], with_regexlib=)
 
@@ -647,10 +647,16 @@ case $with_regexlib in
 		AC_CHECK_FUNCS(regexec, [REGEX_LIBS=-lc],
 		               [AC_MSG_ERROR([$lgregexlib: regexec() not found])])
 		;;
+	c++|C++)
+		regexlib_cxx=1
+		AC_DEFINE(USE_CXXREGEX, 1)
+		;;
 	*)
 		AC_MSG_ERROR([$lgregexlib: Library not configurable (see configure --help)])
 		;;
 esac
+
+AM_CONDITIONAL(WITH_CXXREGEX, test -n "$regexlib_cxx")
 
 if test -z "$REGEX_LIBS"; then
 	AC_MSG_NOTICE([Checking for REGEX implementation:])
@@ -658,34 +664,38 @@ fi
 dnl Find the first regex library according to this order:
 dnl libpcre2-8, libtre, libregex, libc.
 
-if test -z "$REGEX_LIBS"; then
-	AC_CHECK_HEADER([pcre2.h],
-		[PKG_CHECK_MODULES([REGEX], [libpcre2-8],
-		                   [AC_DEFINE([HAVE_PCRE2_H], 1)],
-		                   [AC_MSG_RESULT([... missing libpcre2-8, continuing])])]
-		                   , , [#define PCRE2_CODE_UNIT_WIDTH 8])
-
-fi
-if test -z "$REGEX_LIBS"; then
-	AC_CHECK_HEADER([tre/regex.h],
-		[PKG_CHECK_MODULES([REGEX], [tre],
-		                   [AC_DEFINE([HAVE_TRE_REGEX_H], 1)],
-		                   [AC_MSG_RESULT([... missing libtre, continuing])])])
-fi
-if test -z "$REGEX_LIBS"; then
-	AC_CHECK_HEADERS([regex.h],
-		[AC_CHECK_LIB([regex], [regex], [REGEX_LIBS=-lregex],
-		              [AC_MSG_RESULT([... libregex not found, continuing])]
-		              [AC_CHECK_FUNCS([regexec], [REGEX_LIBS=-lc])])],
-		[AC_MSG_ERROR([No regex.h header found])])
-fi
-
-if test -n "$REGEX_LIBS"; then
-	AC_MSG_RESULT([... found REGEX implementation: $REGEX_LIBS])
-	test "x$REGEX_LIBS" = x-lc && REGEX_LIBS=
-	test -n "$REGEX_CFLAGS" && CFLAGS="$CFLAGS $REGEX_CFLAGS"
+if test -n "$regexlib_cxx"; then
+	AC_MSG_RESULT([... using C++ regex])
 else
-	AC_MSG_ERROR([No REGEX implementation found])
+	if test -z "$REGEX_LIBS"; then
+		AC_CHECK_HEADER([pcre2.h],
+			[PKG_CHECK_MODULES([REGEX], [libpcre2-8],
+									 [AC_DEFINE([HAVE_PCRE2_H], 1)],
+									 [AC_MSG_RESULT([... missing libpcre2-8, continuing])])]
+									 , , [#define PCRE2_CODE_UNIT_WIDTH 8])
+
+	fi
+	if test -z "$REGEX_LIBS"; then
+		AC_CHECK_HEADER([tre/regex.h],
+			[PKG_CHECK_MODULES([REGEX], [tre],
+									 [AC_DEFINE([HAVE_TRE_REGEX_H], 1)],
+									 [AC_MSG_RESULT([... missing libtre, continuing])])])
+	fi
+	if test -z "$REGEX_LIBS"; then
+		AC_CHECK_HEADERS([regex.h],
+			[AC_CHECK_LIB([regex], [regex], [REGEX_LIBS=-lregex],
+							  [AC_MSG_RESULT([... libregex not found, continuing])]
+							  [AC_CHECK_FUNCS([regexec], [REGEX_LIBS=-lc])])],
+			[AC_MSG_ERROR([No regex.h header found])])
+	fi
+
+	if test -n "$REGEX_LIBS"; then
+		AC_MSG_RESULT([... found REGEX implementation: $REGEX_LIBS])
+		test "x$REGEX_LIBS" = x-lc && REGEX_LIBS=
+		test -n "$REGEX_CFLAGS" && CFLAGS="$CFLAGS $REGEX_CFLAGS"
+	else
+		AC_MSG_ERROR([No REGEX implementation found])
+	fi
 fi
 
 AC_SUBST(REGEX_LIBS)
@@ -1022,6 +1032,7 @@ AC_OUTPUT
 
 # ====================================================================
 lglibs=`${ECHO} "$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS $REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
+test -n "$regexlib_cxx" && REGEX_LIBS='C++'
 
 echo "
 $PACKAGE-$VERSION  build configuration settings

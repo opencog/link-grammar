@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup Condition=" '$(GNUREGEX)' == '' " Label="UserMacros" />
   <PropertyGroup Label="UserMacros">
     <GNUREGEX_DIR>$(HOMEDRIVE)$(HOMEPATH)\Libraries\gnuregex</GNUREGEX_DIR>
     <LG_DLLPATH>$(GNUREGEX_DIR)\lib</LG_DLLPATH>
@@ -10,11 +9,18 @@
     <PYTHON3_EXE>$(PYTHON3)\python.exe</PYTHON3_EXE>
     <WINFLEXBISON>C:\win_flex_bison</WINFLEXBISON>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(GNUREGEX)' != '' " />
   <ItemDefinitionGroup>
     <ClCompile>
-      <PreprocessorDefinitions>HAVE_REGEX_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(GNUREGEX_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
+    <Link>
+      <PerUserRedirection>true</PerUserRedirection>
+    </Link>
+    <Link>
+      <AdditionalLibraryDirectories>$(GNUREGEX_DIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <BuildMacro Include="GNUREGEX_DIR">

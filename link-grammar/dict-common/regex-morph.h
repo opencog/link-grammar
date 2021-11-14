@@ -14,7 +14,10 @@
 
 #include "dict-common.h"
 
-int compile_regexs(Regex_node *, Dictionary);
+LINK_BEGIN_DECLS
+bool compile_regexs(Regex_node *, Dictionary);
 const char *match_regex(const Regex_node *, const char *);
 void free_regexs(Regex_node *);
+LINK_END_DECLS
+
 #endif /* _REGEX_MORPH_H */
