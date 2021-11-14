@@ -173,6 +173,25 @@ slower, it is a **LOT** slower than the default parser. It is:
 * More than 100x slower on `corpus-fix-long.batch`.
 * 21x slower on Jane Austen's *Pride and Prejudice*.
 
+The SAT solver speed can be significantly increased by these changes:
+- Improve the XOR encoding. It has been tested, yielding a ~2x speedup for
+  long sentences.
+- Use connector sharing. This change alone has sped up the classic parser
+  on batch parsing of `data/en/corpus-fix-long.batch` by 15x, but has less
+  speedup potential for the SAT solver because it doesn't use connectors
+  when it solves the SAT equations.
+- Use the `power_prune()` function of the classic parser instead of its own
+  `power_prune()`. This needs a tricky addition to delete connectors in the
+  word expressions according the discarded disjuncts. It has been
+  tested.
+- Use "tracons". See `disjunct-utils.c` for what they are.
+- Use memory pools.
+- Improve and add hashing.
+- Improve the postprocessing efficiency. For short sentences (also in
+  the classic parser) this has a potential for maybe 10% speedup.
+  However, for getting several parsings for long sentences a huge speedup
+  is expected.
+
 The code can still be built by saying
 ```
 configure --enable-sat-solver
@@ -190,12 +209,6 @@ One can force the bundled version to always be used by saying:
 ./configure --enable-sat-solver=bundled
 ```
 
-Other problems with the SAT solver include:
-- Disjunct cost: Cost of null expressions is disregarded. Thus, it
-  still cannot rank sentences by cost, which is the most basic parse
-  ranking that we've got... In order not to show incorrect costs, the
-  DIS= field in the status message is always 0.
-- Connector order shown by the `!disjunct` link-parser command.
-  Currently it is just a "random" order.
-- Cannot parse with null links.
-- No panic timeout.
+Other problems with the SAT sover include:
+- Cannot parse with null links (can be fixed but it is not trivial).
+- No panic timeout (trivial to fix).
