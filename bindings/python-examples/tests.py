@@ -27,7 +27,7 @@ from linkgrammar import (Sentence, Linkage, ParseOptions, Link, Dictionary,
 
 print(clg.linkgrammar_get_configuration())
 NO_SQLITE_ERROR = ''
-# USE_SQLITE is currently not use in the MSVC build.
+# USE_SQLITE is currently not used in the MSVC build.
 if re.search(r'_MSC_FULL_VER', clg.linkgrammar_get_configuration()) and \
    not re.search(r'USE_SQLITE', clg.linkgrammar_get_configuration()):
     NO_SQLITE_ERROR = 'Library is not configures with SQLite support'

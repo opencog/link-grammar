@@ -6009,7 +6009,7 @@ They had no sooner arrived but they turned around and left.
 % conjoined verbs
 He tried and failed.
 He tried but failed.
-He tried but failed to acheive his goal.
+He tried but failed to achieve his goal.
 
 Oscar Peterson played piano and wrote music.
 
@@ -6665,6 +6665,13 @@ This is a TEST
 
 % The example for defect 28 from issue #50.
 The remarks--made off the cuff--were wrong.
+
+% Issue 404: Words that are classified by a regex (like "acheive") are
+% currently not spell-corrected.
+!spell=1
+He tried but failed to acheive his goal.
+*Therefo, I declare I love Computer Science.
+!spell=0
 
 % The very long sentences that take forever to  parse are now in the
 % file 4.0.fix-long.batch

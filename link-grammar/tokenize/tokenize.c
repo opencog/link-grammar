@@ -1553,7 +1553,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
  * -- if its the first word of a sentence
  * -- if its the first word following a colon, a period, a question mark,
  *    or any bullet (For example:  VII. Ancient Rome)
- * -- if its the first word following an elipsis
+ * -- if its the first word following an ellipsis
  * -- if its the first word of a quote
  *
  * XXX FIXME: These rules are rather English-centric.  Someone should

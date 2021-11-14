@@ -134,7 +134,7 @@ if test "$emscripten" != yes; then
 fi
 
 dnl If the visibility __attribute__  is supported, define HAVE_VISIBILITY
-dnl and a variable a CFLAG_VISIBILITY, to be added to CFLAGS/CXXFLAGS.
+dnl and a variable CFLAG_VISIBILITY, to be added to CFLAGS/CXXFLAGS.
 LG_C_ATTRIBUTE_VISIBILITY
 
 dnl Check for specific OSs
