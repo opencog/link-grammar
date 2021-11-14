@@ -988,10 +988,14 @@ class XLookupListTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.d_en, cls.po = Dictionary(lang='en'), ParseOptions()
+        if NO_SQLITE_ERROR == '':
+           cls.d_sql = Dictionary(lang='demo-sql')
 
     @classmethod
     def tearDownClass(cls):
         del cls.d_en, cls.po
+        if NO_SQLITE_ERROR == '':
+           del cls.d_sql
 
     def test_file_lookup_list_none(self):
         self.assertIsNone(clg.dictionary_lookup_list(self.d_en._obj, 'NoSuchWord'))
@@ -1001,11 +1005,11 @@ class XLookupListTestCase(unittest.TestCase):
 
     @unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
     def test_sql_lookup_list_none(self):
-        self.assertIsNone(clg.dictionary_lookup_list(Dictionary(lang='demo-sql')._obj, 'NoSuchWord'))
+        self.assertIsNone(clg.dictionary_lookup_list(self.d_sql._obj, 'NoSuchWord'))
 
     @unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
     def test_sql_lookup_wild_none(self):
-        self.assertIsNone(clg.dictionary_lookup_wild(Dictionary(lang='demo-sql')._obj, 'NoSuch*'))
+        self.assertIsNone(clg.dictionary_lookup_wild(self.d_sql._obj, 'NoSuch*'))
 
     def test_file_lookup_list_subscr(self):
         dictnode = clg.dictionary_lookup_list(self.d_en._obj, sm('test.n'))
@@ -1030,7 +1034,7 @@ class XLookupListTestCase(unittest.TestCase):
     @unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
     @unittest.skip("FIXME: It returns a dot subscript instead of SUBSCRIPT_MARK")
     def test_sql_lookup_list_no_subscr(self):
-        dictnode = clg.dictionary_lookup_list(Dictionary(lang='demo-sql')._obj, 'test')
+        dictnode = clg.dictionary_lookup_list(self.d_sql._obj, 'test')
         self.assertEqual(sorted([dictnode[i].string for i in range(len(dictnode))]), [sm('test.n')])
 
     def test_file_lookup_wild_any_subscript(self):
