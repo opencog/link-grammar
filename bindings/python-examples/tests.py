@@ -826,7 +826,7 @@ class IWordPositionTestCase(unittest.TestCase):
         linkage_testfile(self, self.d_en, ParseOptions(), 'pos')
 
     def test_en_spell_word_positions(self):
-        po = ParseOptions(spell_guess=1)
+        po = ParseOptions(spell_guess=99)
         if po.spell_guess == 0:
             raise unittest.SkipTest("Library is not configured with spell guess")
         linkage_testfile(self, self.d_en, po, 'pos-spell')
@@ -1255,6 +1255,12 @@ class ZXDictDialectTestCase(unittest.TestCase):
 
 #############################################################################
 
+# Note on the linkage order of next(linkage):
+# tests.py uses add_eqcost_linkage_order(), which sorts linkages with
+# identical metrics according to their diagram character values. Thus the
+# order of linkages with the identical metrics doesn't depend on their
+# linkage order of the LG library, which may vary across releases.
+
 def linkage_testfile(self, lgdict, popt, desc=''):
     """
     Reads sentences and their corresponding
@@ -1346,6 +1352,12 @@ def linkage_testfile(self, lgdict, popt, desc=''):
         # It ends with an empty line
         elif line[0] == 'P':
             if line[1] == '\n' and len(wordpos) > 1:
+                # Spell guesses may vary between spell packages. We assume
+                # here that those that we test here always exist (and thus know
+                # their relative order) and skip the rest.
+                if '~' in wordpos or '&' in wordpos:
+                    while getwordpos(linkage) != wordpos:
+                        linkage = next(linkages, None)
                 self.assertEqual(getwordpos(linkage), wordpos, "at {}:{}".format(testfile, lineno))
                 wordpos = None
             else:
