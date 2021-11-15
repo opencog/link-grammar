@@ -24,6 +24,7 @@
 #endif /* HAVE_PTHREAD */
 
 #include "link-includes.h"
+#include "error.h"                      // lgdebug
 #include "spellcheck.h"
 
 #define ASPELL_LANG_KEY  "lang"
@@ -78,7 +79,16 @@ void * spellcheck_create(const char * lang)
 		spell_err = new_aspell_speller(aspell->config);
 		if (aspell_error_number(spell_err) != 0)
 		{
-			prt_error("Error: Aspell: %s\n", aspell_error_message(spell_err));
+			if (strstr(aspell_error_message(spell_err), "No word lists") == 0)
+			{
+				prt_error("Error: new_aspell_speller: %s\n",
+				          aspell_error_message(spell_err));
+			}
+			else
+			{
+				lgdebug(D_USER_FILES, "Warning: new_aspell_speller: %s\n",
+				        aspell_error_message(spell_err));
+			}
 			delete_aspell_can_have_error(spell_err);
 			delete_aspell_config(aspell->config);
 			free(aspell);
