@@ -1640,13 +1640,15 @@ static bool is_known_word(Sentence sent, const char *word)
  *
  * Return true if corrections have been issued, else false.
  *
- * Note: spellcheck_suggest(), which is invoked by this function, returns
- * guesses for words containing numbers (including words consisting of digits
- * only). Hence this function should not be called for such words.
+ * Notes:
+ * 1. spellcheck_suggest(), which is invoked by this function, returns
+ * guesses for words containing digits (including words consisting of digits
+ * only). However, this doesn't cause a problem because this function is not
+ * invoked for such words (since they are consider a proper name).
  *
- * Note that a lowercase word can be spell-corrected to an uppercase word.
- * FIXME? Should we allow that only if the lc version of the corrected word
- * is the same?
+ * 2. A lowercase word can be spell-corrected to an uppercase word.
+ * FIXME? Should we allow that only if the lowercase version of the
+ * corrected word is the same?
  */
 static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
                                   Parse_Options opts)
@@ -1683,60 +1685,68 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 				lgdebug(0, "- %s\n", alternates[j]);
 		}
 	}
-	/* Word split for run-on and guessed words.
-	 * Note: We suppose here, for the purpose of checking the use_spell_guess
-	 * limit, that spellcheck_suggest() returns the run-on splits before the
-	 * spell corrections. */
-	for (j=0; j<n; j++)
+	/* The spell-checker guess list may include a mix of run-on and single
+	 * word corrections. We use all the run-on splits first, then we use
+	 * up to opts->use_spell_guess single-word guesses. */
+	for (int runon = 1; runon >=0; runon--)
 	{
-		Gword *altp;
-
-		/* The word might be a run-on of two or more words. */
-		sp = strchr(alternates[j], ' ');
-		if (sp)
+		for (j=0; j<n; j++)
 		{
-			/* Run-on words.
-			 * It may be 2 run-on words or more. Loop over all.
-			 */
-			const char **runon_word = NULL;
-			bool unknown = false;
+			Gword *altp;
 
-			wp = alternates[j];
-			do
+			if (alternates[j][0] == '\0') continue; /* Already handled. */
+			sp = strchr(alternates[j], ' ');
+			if (sp)
 			{
-				*sp = '\0';
+				/* Run-on words.
+				 * It may be 2 run-on words or more. Loop over all.
+				 */
+				const char **runon_word = NULL;
+				bool unknown = false;
+
+				wp = alternates[j];
+				do
+				{
+					*sp = '\0';
+					unknown |= !is_known_word(sent, wp);
+					altappend(sent, &runon_word, wp);
+					wp = sp+1;
+					sp = strchr(wp, ' ');
+				} while (sp);
 				unknown |= !is_known_word(sent, wp);
 				altappend(sent, &runon_word, wp);
-				wp = sp+1;
-				sp = strchr(wp, ' ');
-			} while (sp);
-			unknown |= !is_known_word(sent, wp);
-			altappend(sent, &runon_word, wp);
-			if (!unknown)
-			{
-				altp = issue_word_alternative(sent, unsplit_word, "RO",
-				          0,NULL, altlen(runon_word),runon_word, 0,NULL);
-				for_word_alt(sent, altp, set_word_status, (unsigned int []){WS_RUNON});
-				runon_word_corrections++;
+				if (!unknown)
+				{
+					altp =
+						issue_word_alternative(sent, unsplit_word, "RO", 0,NULL,
+						                       altlen(runon_word),runon_word, 0,NULL);
+					for_word_alt(sent, altp, set_word_status,
+					             (unsigned int []){WS_RUNON});
+					runon_word_corrections++;
+				}
+				free(runon_word);
+				alternates[j][0] = '\0'; /* Mark it as already handled. */
 			}
-			free(runon_word);
-		}
-		else
-		{
-			/* A spell guess.
-			 */
-			if (is_known_word(sent, alternates[j]))
+			else
 			{
-				wp = alternates[j];
-				altp = issue_word_alternative(sent, unsplit_word, REPLACEMENT_MARK "SP",
-				                              0,NULL, 1,&wp, 0,NULL);
-				for_word_alt(sent, altp, set_word_status, (unsigned int[]){WS_SPELL});
-				num_guesses++;
-			}
-			//else prt_error("Debug: Spell guess '%s' ignored\n", alternates[j]);
-		}
+				if (runon == 1) continue;
+				/* A spell guess.
+				*/
+				if (is_known_word(sent, alternates[j]))
+				{
+					wp = alternates[j];
+					altp = issue_word_alternative(sent, unsplit_word,
+					                              REPLACEMENT_MARK "SP", 0,NULL,
+					                              1,&wp, 0,NULL);
+					for_word_alt(sent, altp, set_word_status,
+					             (unsigned int[]){WS_SPELL});
+					num_guesses++;
+				}
+				//else prt_error("Debug: Spell guess '%s' ignored\n", alternates[j]);
 
-		if (num_guesses >= opts->use_spell_guess) break;
+				if (num_guesses >= opts->use_spell_guess) break;
+			}
+		}
 	}
 	if (alternates) spellcheck_free_suggest(dict->spell_checker, alternates, n);
 
