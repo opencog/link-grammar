@@ -24,6 +24,7 @@
 #endif /* HAVE_PTHREAD */
 
 #include "link-includes.h"
+#include "error.h"                      // lgdebug
 #include "spellcheck.h"
 
 #define ASPELL_LANG_KEY  "lang"
@@ -59,8 +60,7 @@ void * spellcheck_create(const char * lang)
 		aspell = (struct linkgrammar_aspell *)malloc(sizeof(struct linkgrammar_aspell));
 		if (!aspell)
 		{
-			prt_error("Error: out of memory. Aspell not used.\n");
-			aspell = NULL;
+			prt_error("Error: Out of memory - aspell not used.\n");
 			break;
 		}
 		aspell->config = NULL;
@@ -69,7 +69,7 @@ void * spellcheck_create(const char * lang)
 		if (aspell_config_replace(aspell->config, ASPELL_LANG_KEY,
 					spellcheck_lang_mapping[i]) == 0)
 		{
-			prt_error("Error: failed to set language in aspell: %s\n", lang);
+			prt_error("Error: Failed to set language in aspell: %s\n", lang);
 			delete_aspell_config(aspell->config);
 			free(aspell);
 			aspell = NULL;
@@ -78,7 +78,16 @@ void * spellcheck_create(const char * lang)
 		spell_err = new_aspell_speller(aspell->config);
 		if (aspell_error_number(spell_err) != 0)
 		{
-			prt_error("Error: Aspell: %s\n", aspell_error_message(spell_err));
+			if (strstr(aspell_error_message(spell_err), "No word lists") == 0)
+			{
+				prt_error("Error: new_aspell_speller: %s\n",
+				          aspell_error_message(spell_err));
+			}
+			else
+			{
+				lgdebug(D_USER_FILES, "Warning: new_aspell_speller: %s\n",
+				        aspell_error_message(spell_err));
+			}
 			delete_aspell_can_have_error(spell_err);
 			delete_aspell_config(aspell->config);
 			free(aspell);
@@ -133,7 +142,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
 	if (!sug)
 	{
-		prt_error("Error: Aspell. Corrupt pointer.\n");
+		prt_error("Error: spellcheck_suggest: Corrupt pointer.\n");
 		return 0;
 	}
 
@@ -154,7 +163,7 @@ int spellcheck_suggest(void * chk, char ***sug, const char * word)
 		array = (char **)malloc(sizeof(char *) * size);
 		if (!array)
 		{
-			prt_error("Error: Aspell. Out of memory.\n");
+			prt_error("Error: spellcheck_suggest: Out of memory.\n");
 			delete_aspell_string_enumeration(elem);
 			pthread_mutex_unlock(&aspell_lock);
 			return 0;
