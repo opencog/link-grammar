@@ -826,7 +826,7 @@ class IWordPositionTestCase(unittest.TestCase):
         linkage_testfile(self, self.d_en, ParseOptions(), 'pos')
 
     def test_en_spell_word_positions(self):
-        po = ParseOptions(spell_guess=1)
+        po = ParseOptions(spell_guess=99)
         if po.spell_guess == 0:
             raise unittest.SkipTest("Library is not configured with spell guess")
         linkage_testfile(self, self.d_en, po, 'pos-spell')
