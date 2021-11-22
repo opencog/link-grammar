@@ -243,39 +243,29 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts,
 
 /**
  * Check whether the given feature is enabled. It is considered
- * enabled if it is found in the comma delimited list of features.
- * This list, if not empty, has a leading and a trailing commas.
- * Return NULL if not enabled, else ",". If the feature appears
- * as "feature:param", return a pointer to the ":".
+ * enabled if it is exactly found in the comma delimited \p list of features.
+ * Return NULL if not enabled, else "," or ":" (iff \p feature appears
+ * as "feature:param", return a pointer to the ":").
  *
- * This function is similar to feature_enabled() of the library (which
- * is not exported) besides not including filename matching.
+ * This function is similar in its functionality to feature_enabled() of the
+ * library (which is not exported) besides not including filename matching.
+ *
+ * Note: \p feature should not be \c NULL.
  */
-static const char *test_enabled(const char *feature, const char *test_name)
+static const char *test_enabled(const char *list, const char *feature)
 {
 
-	if ('\0' == feature[0]) return NULL;
-	size_t len = strlen(test_name);
-	char *buff = malloc(len + 2 + 1); /* leading comma + comma/colon + NUL */
-	const char *r = NULL;
+	const char *pos = strstr(list, feature);
+	if (pos == NULL) return NULL;
 
-	buff[0] = ',';
-	strcpy(buff+1, test_name);
-	strcat(buff, ",");
-
-	if (NULL != strstr(feature, buff))
+	const char *check_end = pos + strlen(feature);
+	if ((pos == list) || (pos[-1] == ','))
 	{
-		r = ",";
-	}
-	else
-	{
-		buff[len+1] = ':'; /* check for "feature:param" */
-		if (NULL != strstr(feature, buff))
-			r = strstr(feature, buff) + len + 1;
+		if ((*check_end == ',') || (*check_end == ':')) return check_end;
+		if (*check_end == '\0') return ",";
 	}
 
-	free(buff);
-	return r;
+	return test_enabled(check_end, feature);
 }
 
 /**
