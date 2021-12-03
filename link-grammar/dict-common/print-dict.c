@@ -323,6 +323,7 @@ static void print_connector_macros(cmacro_context *cmc, const Exp *n)
 		print_expression_tag_end(cmc->dict, cmc->e, n, &cmc->indent);
 }
 
+/* Note: The returned value is to be freed by the caller. */
 static char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n,
                                         bool show_macros)
 {
@@ -337,6 +338,7 @@ static char *lg_exp_stringify_with_tags(Dictionary dict, const Exp *n,
 
 /**
  * Stringify the given expression, ignoring tags.
+ * Note: The returned value is to be freed by the caller.
  */
 char *lg_exp_stringify(const Exp *n)
 {
@@ -351,7 +353,7 @@ const char *exp_stringify(const Exp *n)
 
 	free(s);
 	if (n == NULL) return ("(null)");
-	s = strdup(lg_exp_stringify_with_tags(NULL, n, false));
+	s = lg_exp_stringify_with_tags(NULL, n, false);
 	return s;
 }
 
