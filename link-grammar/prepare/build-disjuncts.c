@@ -15,7 +15,7 @@
 
 #include "build-disjuncts.h"
 #include "connectors.h"
-#include "dict-common/dict-structures.h"  // Exp_struct, lg_exp_stringify
+#include "dict-common/dict-structures.h"  // Exp_struct, exp_stringify
 #include "dict-common/dict-common.h"      // Dictionary
 #include "disjunct-utils.h"
 #include "utilities.h"
@@ -343,7 +343,7 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	                   /*num_elements*/32768, sizeof(Tconnector),
 	                   /*zero_out*/false, /*align*/false, /*exact*/false);
 
-	// printf("%s\n", lg_exp_stringify(exp));
+	// printf("%s\n", exp_stringify(exp));
 	c = build_clause(exp, &ct);
 	// print_clause_list(c);
 	dis = build_disjunct(sent, c, word, gs, cost_cutoff, opts);

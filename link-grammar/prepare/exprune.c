@@ -54,7 +54,7 @@
 	if (verbosity_level(+D_EXPRUNE))\
 	{\
 		err_msg(lg_Trace, "pass%d w%zu: ", p, w);\
-		err_msg(lg_Trace, X ": %s\n", lg_exp_stringify(x->exp));\
+		err_msg(lg_Trace, X ": %s\n", exp_stringify(x->exp));\
 	}
 #else /* !DEBUG */
 #define DBG(p, w, X)
