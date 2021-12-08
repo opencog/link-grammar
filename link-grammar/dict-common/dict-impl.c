@@ -304,8 +304,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 		return dict->version;
 	}
 
-	/* Original code is left for backward compatibility. Note that the
-	 * check for now version should be moved up if it is ever removed. */
+	/* Original code is left for backward compatibility. */
 
 	char * ver;
 	char * p;

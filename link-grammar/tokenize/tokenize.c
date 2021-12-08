@@ -3179,8 +3179,6 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 		}
 		else
 		{
-			/* The word is unknown, but UNKNOWN_WORD cannot be used.
-			 * An error message will eventually be printed. */
 			prt_error("Error: Word '%s': word is unknown\n", w->subword);
 			return false;
 		}
