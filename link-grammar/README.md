@@ -209,6 +209,6 @@ One can force the bundled version to always be used by saying:
 ./configure --enable-sat-solver=bundled
 ```
 
-Other problems with the SAT sover include:
+Other problems with the SAT solver include:
 - Cannot parse with null links (can be fixed but it is not trivial).
 - No panic timeout (trivial to fix).

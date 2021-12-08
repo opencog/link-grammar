@@ -1644,7 +1644,7 @@ static bool is_known_word(Sentence sent, const char *word)
  * 1. spellcheck_suggest(), which is invoked by this function, returns
  * guesses for words containing digits (including words consisting of digits
  * only). However, this doesn't cause a problem because this function is not
- * invoked for such words (since they are consider a proper name).
+ * invoked for such words (since they are considered a proper name).
  *
  * 2. A lowercase word can be spell-corrected to an uppercase word.
  * FIXME? Should we allow that only if the lowercase version of the
