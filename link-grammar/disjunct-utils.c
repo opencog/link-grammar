@@ -298,12 +298,12 @@ static void disjuncts_equal_stat(void)
 		fprintf(stderr, "disjuncts_equal FP %d/%d\n", de_fp, de_total);
 }
 
-static bool disjuncts_equal(Disjunct * d1, Disjunct * d2)
+static bool disjuncts_equal(Disjunct * d1, Disjunct * d2, bool ignore_string)
 {
 	if (de_total == 0) atexit(disjuncts_equal_stat);
 	de_total++;
 
-	bool rc = disjuncts_equal1(d1, d2);
+	bool rc = disjuncts_equal1(d1, d2, bool ignore_string);
 	if (!rc) de_fp++;
 
 	return rc;
@@ -474,7 +474,7 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 		}
 	}
 
-	lgdebug(+D_DISJ+(0==count)*1000, "w%zu: Killed %u duplicates%s\n",
+	lgdebug(+D_DISJ+(0==count)*1024, "w%zu: Killed %u duplicates%s\n",
 	        dw->originating_gword->o_gword->sent_wordidx, count,
 	        multi_string ? " (different word-strings)" : "");
 
