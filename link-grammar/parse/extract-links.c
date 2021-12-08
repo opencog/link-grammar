@@ -857,5 +857,4 @@ void mark_used_disjuncts(extractor_t *pex, bool *disjunct_used)
 		for (Pset_bucket *t = pex->x_table[i]; t != NULL; t = t->next)
 			mark_used_disjunct(&t->set, disjunct_used);
 	}
-
 }

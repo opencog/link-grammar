@@ -823,7 +823,7 @@ static count_t do_count(
                           Connector *le, Connector *re,
                           unsigned int null_count)
 {
-	w_count_t total = hist_zero();;
+	w_count_t total = hist_zero();
 	int start_word, end_word, w;
 
 	if (is_panic(ctxt)) return hist_zero();
