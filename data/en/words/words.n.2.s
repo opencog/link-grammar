@@ -11269,6 +11269,7 @@ trices.n
 trickles.n
 tricks.n
 tricksters.n
+tricolors.n
 tricolours.n
 tricycles.n
 tridents.n
@@ -11800,6 +11801,7 @@ watches.n
 watchmakers.n
 watchtowers.n
 watchwords.n
+watercolors.n
 watercolours.n
 waterfalls.n
 waterfowls.n
