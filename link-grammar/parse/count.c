@@ -347,7 +347,7 @@ static void table_stat(count_context_t *ctxt)
 		{
 			assert(t->hash != 0, "Invalid hash value: 0");
 			assert((hist_total(&t->count)>=0)&&(hist_total(&t->count) <= INT_MAX),
-			       "Invalid count %lld", hist_total(&t->count));
+			       "Invalid count %"COUNT_FMT, hist_total(&t->count));
 			assert(t->l_id < (int)ctxt->sent->length ||
 			       ((t->l_id >= 255)&&(t->l_id < (int)ctxt->table_lrcnt_size[0])),
 			       "invalid l_id %d", t->l_id);
@@ -393,7 +393,7 @@ static void table_stat(count_context_t *ctxt)
 		for (unsigned int nc = 0; nc < ARRAY_SIZE(null_count); nc++)
 		{
 			if (0 != null_count[nc])
-				printf("%u: %d\n", nc, null_count[nc]);
+				printf("%u: %zu\n", nc, null_count[nc]);
 		}
 	}
 
@@ -410,8 +410,8 @@ static void table_stat(count_context_t *ctxt)
 				{
 					if (t->null_count != nc) continue;
 
-					printf("[%u]%n", i, &n);
-					printf("%*d %5d c=%lld\n",  15-n, t->l_id, t->r_id, t->count);
+					printf("[%zu]%n", i, &n);
+					printf("%*d %5d c=%"COUNT_FMT"\n",  15-n, t->l_id, t->r_id, t->count);
 				}
 			}
 		}
