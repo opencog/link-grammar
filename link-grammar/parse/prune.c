@@ -2187,7 +2187,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 	if ((num_deleted > 0) && !no_mlink)
 	{
 		pc.ml = build_mlink_table(sent, ml);
-		print_time(opts, "Built_mlink_table%s", pc.ml ? "" : " (empty)");
+		print_time(opts, "Built mlink_table%s", pc.ml ? "" : " (empty)");
 		if (pc.ml != NULL)
 		{
 			if (null_count == 0)
@@ -2204,7 +2204,7 @@ unsigned int pp_and_power_prune(Sentence sent, Tracon_sharing *ts,
 		if ((num_deleted > 0) && !no_mlink)
 		{
 			pc.ml = build_mlink_table(sent, ml);
-			print_time(opts, "Built_mlink_table%s", pc.ml ? "" : " (empty)");
+			print_time(opts, "Built mlink_table%s", pc.ml ? "" : " (empty)");
 			if (pc.ml != NULL)
 			{
 				if (null_count == 0)
