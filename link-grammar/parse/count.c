@@ -826,6 +826,11 @@ static count_t do_count(
 	w_count_t total = hist_zero();
 	int start_word, end_word, w;
 
+	/* This check is not necessary for correctness. It typically saves
+	 * significant CPU and Table_connector memory because in many cases a
+	 * linkage is not possible due to nearest_word restrictions. */
+	if (!valid_nearest_words(le, re, lw, rw)) return hist_zero();
+
 	if (is_panic(ctxt)) return hist_zero();
 
 	/* TODO: static_assert() that null_count is an unsigned int. */
