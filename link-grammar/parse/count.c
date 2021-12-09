@@ -725,6 +725,14 @@ static count_t pseudocount(count_context_t * ctxt,
                            int lw, int rw, Connector *le, Connector *re,
                            unsigned int null_count)
 {
+	/* This check is not necessary for correctness, but it saves CPU time.
+	 * If a cross link would result, immediatly return 0. Note that there is
+	 * no need to check here if the nearest_word fields are in the range
+	 * [lw, rw] due to the way start_word/end_word are computed, and due to
+	 * nearest_word checks in form_match_list(). */
+	if ((le != NULL) && (re != NULL) && (le->nearest_word > re->nearest_word))
+		return hist_zero();
+
 	count_t *count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	if (NULL == count) return count_unknown;
 	return *count;
