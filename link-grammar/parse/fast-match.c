@@ -73,7 +73,6 @@ static void push_match_list_element(fast_matcher_t *ctxt, Disjunct *d)
 	if (ctxt->match_list_end >= ctxt->match_list_size)
 	{
 		ctxt->match_list_size *= MATCH_LIST_SIZE_INC;
-		/* XXX the realloc clobbers xalloc count */
 		ctxt->match_list = realloc(ctxt->match_list,
 		                      ctxt->match_list_size * sizeof(*ctxt->match_list));
 	}

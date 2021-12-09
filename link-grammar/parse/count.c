@@ -601,7 +601,7 @@ static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
  * skipped because the cache indicates they yield a zero count.)
  * @return Cache entry for the given range. Possible values:
  *    NULL - A nonzero count may be encountered for \c null_count>=lnull_start.
- *    Table_lrcnt_zero - A zero count would result.
+ *    lrcnt_cache_zero - A zero count would result.
  *    Cache pointer - An update for \c null_count>=lnull_start is needed.
  */
 static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
@@ -823,7 +823,7 @@ static count_t do_count(
                           Connector *le, Connector *re,
                           unsigned int null_count)
 {
-	w_count_t total = hist_zero();;
+	w_count_t total = hist_zero();
 	int start_word, end_word, w;
 
 	if (is_panic(ctxt)) return hist_zero();
