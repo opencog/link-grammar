@@ -17,17 +17,17 @@
 
 #define PARSE_NUM_OVERFLOW (1<<24)  // We always assume sizeof(int)>=4
 
+typedef int32_t count_t;
 typedef int64_t w_count_t;          // For overflow detection
 
 /*
  * Count Histogramming is currently not required for anything, and the
  * code runs about 6% faster when it is disabled.
- *
-#define PERFORM_COUNT_HISTOGRAMMING 1
  */
-#ifdef PERFORM_COUNT_HISTOGRAMMING
+#define PERFORM_COUNT_HISTOGRAMMING 0
 
-typedef int64_t count_t;
+#if PERFORM_COUNT_HISTOGRAMMING
+
 #define COUNT_FMT PRId64
 
 /**
@@ -42,36 +42,37 @@ typedef int64_t count_t;
  *     total == sum_i bin[i] + overrun
  */
 #define NUM_BINS 12
-struct count_t_s
+typedef struct
 {
 	short base;
-	count_t total;
-	count_t bin[NUM_BINS];
-	count_t overrun;
-};
+	w_count_t total;
+	w_count_t bin[NUM_BINS];
+	w_count_t overrun;
+} Count_bin;
 
-typedef struct count_t_s count_t;
+typedef Count_bin w_Count_bin;
 
-count_t hist_zero(void);
-count_t hist_one(void);
+Count_bin hist_zero(void);
+Count_bin hist_one(void);
 
-void hist_accum(count_t* sum, double, const count_t*);
-void hist_accumv(count_t* sum, double, const count_t);
-void hist_prod(count_t* prod, const count_t*, const count_t*);
-void hist_muladd(count_t* prod, const count_t*, double, const count_t*);
-void hist_muladdv(count_t* prod, const count_t*, double, const count_t);
+void hist_accum(Count_bin* sum, double, const Count_bin*);
+void hist_accumv(Count_bin* sum, double, const Count_bin);
+void hist_prod(Count_bin* prod, const Count_bin*, const Count_bin*);
+void hist_muladd(Count_bin* prod, const Count_bin*, double, const Count_bin*);
+void hist_muladdv(Count_bin* prod, const Count_bin*, double, const Count_bin);
 
-static inline count_t hist_total(count_t* tot) { return tot->total; }
-count_t hist_cut_total(count_t* tot, int min_total);
+static inline w_count_t hist_total(Count_bin* tot) { return tot->total; }
+w_count_t hist_cut_total(Count_bin* tot, count_t min_total);
 
-double hist_cost_cutoff(count_t*, int count);
+double hist_cost_cutoff(Count_bin*, count_t count);
 
 #else
 
 typedef int32_t count_t;
 #define COUNT_FMT PRId32
 
-typedef count_t count_t;
+typedef count_t Count_bin;
+typedef w_count_t w_Count_bin;
 
 static inline count_t hist_zero(void) { return 0; }
 static inline count_t hist_one(void) { return 1; }
@@ -84,7 +85,7 @@ static inline count_t hist_one(void) { return 1; }
 #define hist_total(tot) (*tot)
 
 #define hist_cut_total(tot, min_total) (*tot)
-static inline double hist_cost_cutoff(count_t* tot, int count) { return 1.0e38; }
+static inline double hist_cost_cutoff(count_t* tot, count_t count) { return 1.0e38; }
 
 #endif /* PERFORM_COUNT_HISTOGRAMMING */
 
