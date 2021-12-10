@@ -37,16 +37,16 @@ static inline bool valid_nearest_words(const Connector *le, const Connector *re,
 {
 	int r_limit;
 
-	if (re != NULL)
+	if (likely(re != NULL))
 	{
-		if (re->nearest_word < lw) return false;
+		if (unlikely(re->nearest_word < lw)) return false;
 		r_limit = re->nearest_word;
 	}
 	else
 	{
 		r_limit = rw;
 	}
-	if ((le != NULL) && (le->nearest_word > r_limit)) return false;
+	if (likely(le != NULL) && unlikely(le->nearest_word > r_limit)) return false;
 
 	return true;
 }
