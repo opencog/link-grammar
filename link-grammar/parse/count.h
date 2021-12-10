@@ -35,12 +35,18 @@ void free_count_context(count_context_t*, Sentence);
 static inline bool valid_nearest_words(const Connector *le, const Connector *re,
                                        int lw, int rw)
 {
-	if (le != NULL)
+	int r_limit;
+
+	if (re != NULL)
 	{
-		if ((re != NULL) && (le->nearest_word > re->nearest_word)) return false;
-		if (le->nearest_word > rw) return false;
+		if (re->nearest_word < lw) return false;
+		r_limit = re->nearest_word;
 	}
-	if ((re != NULL) && (re->nearest_word < lw)) return false;
+	else
+	{
+		r_limit = rw;
+	}
+	if ((le != NULL) && (le->nearest_word > r_limit)) return false;
 
 	return true;
 }
