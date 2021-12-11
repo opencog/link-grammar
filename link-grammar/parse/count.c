@@ -347,7 +347,7 @@ static void table_stat(count_context_t *ctxt)
 		{
 			assert(t->hash != 0, "Invalid hash value: 0");
 			assert((hist_total(&t->count)>=0)&&(hist_total(&t->count) <= INT_MAX),
-			       "Invalid count %lld", hist_total(&t->count));
+			       "Invalid count %"COUNT_FMT, hist_total(&t->count));
 			assert(t->l_id < (int)ctxt->sent->length ||
 			       ((t->l_id >= 255)&&(t->l_id < (int)ctxt->table_lrcnt_size[0])),
 			       "invalid l_id %d", t->l_id);
@@ -393,7 +393,7 @@ static void table_stat(count_context_t *ctxt)
 		for (unsigned int nc = 0; nc < ARRAY_SIZE(null_count); nc++)
 		{
 			if (0 != null_count[nc])
-				printf("%u: %d\n", nc, null_count[nc]);
+				printf("%u: %zu\n", nc, null_count[nc]);
 		}
 	}
 
@@ -410,8 +410,8 @@ static void table_stat(count_context_t *ctxt)
 				{
 					if (t->null_count != nc) continue;
 
-					printf("[%u]%n", i, &n);
-					printf("%*d %5d c=%lld\n",  15-n, t->l_id, t->r_id, t->count);
+					printf("[%zu]%n", i, &n);
+					printf("%*d %5d c=%"COUNT_FMT"\n",  15-n, t->l_id, t->r_id, t->count);
 				}
 			}
 		}
@@ -725,6 +725,14 @@ static count_t pseudocount(count_context_t * ctxt,
                            int lw, int rw, Connector *le, Connector *re,
                            unsigned int null_count)
 {
+	/* This check is not necessary for correctness, but it saves CPU time.
+	 * If a cross link would result, immediatly return 0. Note that there is
+	 * no need to check here if the nearest_word fields are in the range
+	 * [lw, rw] due to the way start_word/end_word are computed, and due to
+	 * nearest_word checks in form_match_list(). */
+	if ((le != NULL) && (re != NULL) && (le->nearest_word > re->nearest_word))
+		return hist_zero();
+
 	count_t *count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	if (NULL == count) return count_unknown;
 	return *count;
@@ -825,6 +833,11 @@ static count_t do_count(
 {
 	w_count_t total = hist_zero();
 	int start_word, end_word, w;
+
+	/* This check is not necessary for correctness. It typically saves
+	 * significant CPU and Table_connector memory because in many cases a
+	 * linkage is not possible due to nearest_word restrictions. */
+	if (!valid_nearest_words(le, re, lw, rw)) return hist_zero();
 
 	if (is_panic(ctxt)) return hist_zero();
 

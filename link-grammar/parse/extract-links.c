@@ -354,6 +354,8 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	Pset_bucket *xt;
 	count_t *count;
 
+	if (!valid_nearest_words(le, re, lw, rw)) return NULL;
+
 	assert(null_count < 0x7fff, "Called with null_count < 0.");
 
 	count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
