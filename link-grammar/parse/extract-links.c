@@ -352,7 +352,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 {
 	int start_word, end_word, w;
 	Pset_bucket *xt;
-	count_t *count;
+	Count_bin *count;
 
 	if (!valid_nearest_words(le, re, lw, rw)) return NULL;
 

@@ -12,7 +12,7 @@
 #include <math.h>
 #include "histogram.h"
 
-#ifdef PERFORM_COUNT_HISTOGRAMMING
+#if PERFORM_COUNT_HISTOGRAMMING
 /* A histogram distribution of the parse counts. */
 
 Count_bin hist_zero(void)
