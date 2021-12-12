@@ -352,6 +352,7 @@ const char *exp_stringify(const Exp *n)
 	static TLS char *s;
 
 	free(s);
+	s = NULL;
 	if (n == NULL) return ("(null)");
 	s = lg_exp_stringify_with_tags(NULL, n, false);
 	return s;
