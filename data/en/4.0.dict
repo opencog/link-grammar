@@ -3536,6 +3536,8 @@ arisen.v: {@E-} & PP- & {@MV+} & <verb-wall>;
 
 % --------------------------------------------------------------
 % intransitive verbs that can take particles like "up" and "out"
+% FYI, "bulge" is actually in words.v.6, because one can say
+% "the tank bulged out 6 inches on one side"
 
 <vc-bulge>: {K+} & <mv-coord>;
 
