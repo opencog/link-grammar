@@ -1,0 +1,377 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                                               %
+%       Thai Link Grammar                                       %
+%                                                               %
+%       Copyright (C) 2021  Prachya Boonkwan                    %
+%       National Electronics and Computer Technology Center     %
+%       Thailand                                                %
+%                                                               %
+%       License: Creative Commons, Attribution (CC-BY)          %
+%                                                               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+#define dictionary-version-number 0.0.1;
+#define dictionary-locale th_TH.UTF-8;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   DEPENDENCY LINKS
+%
+%   LW = left wall
+%   RW = right wall
+%   VS = serial verb
+%   NS = serial noun
+%   S  = subject
+%   O  = object
+%   AJ = adjective
+%   AX = auxiliary
+%   AV = adverb
+%   PT = particle
+%   IJ = interjection
+%   NU = number
+%   CL = classifier
+%   PO = prepositional object (noun)
+%   PC = prepositional complement (verb)
+%   RL = relative clause
+%   JN = conjoined noun
+%   JV = conjoined verb
+%   TP = topicalization
+%   RI = implicit relative clause
+%   AT = attribute
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                       %
+%   COMMON MACROS                       %
+%                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+<left-wall> :
+    {@IJ-}
+    & LW-;
+
+<right-wall> :
+    {@PT+} 
+    & RW+;
+
+<utterance> :
+    <left-wall>
+    & <right-wall>;
+
+<num-cl> :
+    hNUn- or hNUn+;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%                                       %
+%   GRAMMAR                             %
+%                                       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%
+% Noun
+%%%%%%%%%%%%%%%%%%%%
+
+<noun-start> :
+    {NS+ or hAT+}
+    & {@hAJ+}
+    & {PUp+ or PUy+}
+    & {<num-cl>}
+    & {@hAJ+};
+
+<noun-serial> :
+    NS-
+    & {NS+};
+
+<noun-imprel> :
+    hRI+
+    & {@hAJ+};
+
+<noun-attribute> :
+    dAT-
+    & (@hAJ+ or hPO+);
+
+<noun-element> :
+    dS+
+    or dO-
+    or [<utterance>]
+    or dPO-
+    or JNl+ 
+    or JNr- 
+    or ({PUst+} & TP+);
+
+<noun-simple> :
+    (<noun-start> & <noun-element>)
+    or <noun-serial>
+    or (<noun-imprel> & <noun-element>);
+
+%%%% Common Noun %%%%
+
+/th/words/words.n.common:
+    <noun-simple>;
+
+%%%% Attributive Noun %%%%
+
+/th/words/words.n.attribute:
+    (<noun-start> & <noun-element>)
+    or <noun-attribute>;
+
+%%%% Prefix Noun %%%%
+
+/th/words/words.n.prefix:
+    <noun-imprel> & <noun-element>;
+
+%%%%%%%%%%%%%%%%%%%%
+%   Pronoun
+%%%%%%%%%%%%%%%%%%%%
+
+/th/words/words.pr.common:
+    {hAJr+}
+    & {<num-cl>}
+    & <noun-element>;
+
+%%%%%%%%%%%%%%%%%%%%
+% Classifier
+%%%%%%%%%%%%%%%%%%%%
+
+<cls-n> :
+    dCLn+ or dCLn-;
+
+<cls-v> :
+    dCLv+ or dCLv-;
+
+/th/words/words.cl.noun:
+    <cls-n>;
+
+/th/words/words.cl.verb:
+    <cls-v>;
+
+%%%%%%%%%%%%%%%%%%%%
+% Verb
+%%%%%%%%%%%%%%%%%%%%
+
+<verb-start> :
+    {@hAX-}
+    & (
+        (hS- & ([TP-] or ()))
+        or [()]
+    )
+    & {hAVpl-}
+    & (<left-wall> or JVr-)
+    & (hO+ or [()])
+    & {@hAV+}
+    & (<right-wall> or [VS+] or JVl+);
+
+<verb-intrans> :
+    {@hAX-}
+    & (
+        (hS- & ([TP-] or ()))
+        or [()]
+    )
+    & {hAVpl-}
+    & (<left-wall> or JVr-)
+    & (
+        ({@hAV+} & {@hAV-} & <right-wall>)
+        or [VS+]
+        or ({@hAV+} & JVl+)
+    );
+
+<verb-serial> :
+    VS-
+    & (hO+ or [()])
+    & {@hAV+}
+    & (<right-wall> or VS+);
+
+<verb-comp> :
+    {@hAX-}
+    & {hS- & ([TP-] or ())}
+    & {hAVpl-}
+    & {dPC- or dRC-}
+    & (hO+ or [()])
+    & {@hAV+}
+    & {[VS+]};
+
+<verb-imprel> :
+    dRI-
+    & (hO+ or [()])
+    & {[hAV+]};
+
+<verb-simple> :
+    (
+        {PUsl-}
+        & {PUsr+}
+        & (<verb-start> or <verb-serial> or <verb-comp>)
+    )
+    or [<verb-imprel>];
+
+<verb-simple-intrans> :
+    {PUsl-}
+    & {PUsr+}
+    & <verb-intrans>;
+
+%%%% Common Verb %%%%
+
+/th/words/words.v.common:
+    <verb-simple>;
+
+%%%%%%%%%%%%%%%%%%%%
+% Adjective
+%%%%%%%%%%%%%%%%%%%%
+
+<adj-simple> :
+    {hCL-}
+    & dAJ-
+    & {hAV+};
+
+%%%% Simple Adjective %%%%
+
+/th/words/words.adj.common:
+    <adj-simple>;
+
+%%%% Attributive Verb %%%%
+
+/th/words/words.v.attribute:
+    <adj-simple>
+    or [<verb-simple-intrans> or <verb-comp>];
+
+%%%%%%%%%%%%%%%%%%%%
+% Number
+%%%%%%%%%%%%%%%%%%%%
+
+/th/words/words.num.common
+NUMBERS.nu FRACTION.nu :
+    (dNUn- & hCLn+)
+    or [dAVn- & hCLn+]
+    or [dAVv- & hCLv+]
+    or dNUn+;
+
+/th/words/words.num.movable:
+    (hCLn- & (dNUn- or [dAVn-]))
+    or (hCLv- & (dNUv- or [dAVv-]));
+
+%%%%%%%%%%%%%%%%%%%%
+% Auxiliary
+%%%%%%%%%%%%%%%%%%%%
+
+/th/words/words.aux.common:
+    dAX+;
+
+%%%%%%%%%%%%%%%%%%%%
+% Adverb
+%%%%%%%%%%%%%%%%%%%%
+
+/th/words/words.adv.common:
+    dAVw-;
+
+%%%%%%%%%%%%%%%%%%%%
+% Preposition
+%%%%%%%%%%%%%%%%%%%%
+
+/th/words/words.prep.noun:
+    (([dAVpr-] or dAJpr-) & hPO+)
+    or
+    (hPO+ & {PUsr+} & dAVpl+);
+
+/th/words/words.prep.verb:
+    (([dAVpr-] or dAJpr-) & hPC+)
+    or (hPC+ & {PUsr+} & dAVpl+);
+
+/th/words/words.prep.nv:
+    (([dAVpr-] or dAJpr-) & (hPO+ or hPC+))
+    or
+    ((hPO+ or hPC+) & {PUsr+} & dAVpl+);
+
+%%%%%%%%%%%%%%%%%%%%
+% Relative Pronoun
+%%%%%%%%%%%%%%%%%%%%
+
+<relcls> :
+    dAJr- & hPC+;
+
+<relsent> :
+    (dAVr- or hRC+)
+    & <left-wall>
+    & <right-wall>;
+
+/th/words/words.relpro.common:
+    <relcls> or <relsent>;
+
+%%%%%%%%%%%%%%%%%%%%
+% Conjunction
+%%%%%%%%%%%%%%%%%%%%
+
+/th/words/words.conj.noun:
+    {PUs-}
+    & {PUs+}
+    & JNl-
+    & JNr+
+    & <noun-start>
+    & <noun-element>;
+
+_.cn :
+    [[
+        JNl-
+        & JNr+
+    ]]
+    & <noun-start>
+    & <noun-element>;
+
+/th/words/words.conj.verb:
+    {PUs-}
+    & {PUs+}
+    & JVl-
+    & JVr+;
+
+_.cv :
+    [[
+        JVl-
+        & JVr+
+    ]];
+
+%%%%%%%%%%%%%%%%%%%%
+% Particle
+%%%%%%%%%%%%%%%%%%%%
+
+/th/words/words.part.common:
+    PT-;
+
+%%%%%%%%%%%%%%%%%%%%
+% Interjection
+%%%%%%%%%%%%%%%%%%%%
+
+/th/words/words.intj.common
+EMOTICON:
+    {PUs-}
+    & {PUs+}
+    & (IJ+ or PT-);
+
+%%%%%%%%%%%%%%%%%%%%
+% Punctuation
+%%%%%%%%%%%%%%%%%%%%
+
+_.pu :
+    PUs+ or PUs-;
+
+ๆ.pu :
+    {PUs-}
+    & dPUy-
+    & {PUs+};
+
+ฯ.pu :
+    {PUs-}
+    & dPUp-
+    & {PUs+};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+LEFT-WALL :
+    LW+;
+
+RIGHT-WALL :
+    RW-;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+<UNKNOWN-WORD> : XXXXXXXX+;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

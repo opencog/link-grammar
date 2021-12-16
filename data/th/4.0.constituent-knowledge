@@ -1,0 +1,47 @@
+DOMAIN_STARTER_LINKS:
+LWs LWn LWp
+O
+NUnr AT RI PO
+AJp AJn AJr AJv AVn AVv AVpr AVr IJ JNr JVl JVr AVtr
+
+DOMAIN_CONTAINS_LINKS:
+
+URFL_ONLY_DOMAIN_STARTER_LINKS:
+
+LEFT_DOMAIN_STARTER_LINKS:
+S TP AVpl JNl AVtl NUnl
+
+STARTING_LINK_TYPE_TABLE:
+LWs	s
+LWn	n
+LWp p
+S	y
+O	n
+W	s
+AT	a
+AJp	p
+AJn	i
+AJr	b
+AJv a
+AVpl	g
+AVpr	p
+AVtl    e
+AVtr    i
+AVn	i
+AVv	i
+AVr	b
+RI	b
+PO	n
+TP	y
+NUnr	a
+NUnl	u
+NUv	i
+IJ	s
+JNl y
+JNr n
+JVl i
+JVr v
+
+IGNORE_THESE_LINKS:
+
+RESTRICTED_LINKS:
