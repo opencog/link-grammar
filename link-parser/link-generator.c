@@ -82,6 +82,10 @@ static struct argp_option
 	{"debug", 1, "debug_specification", 0, 0},
 	{"verbosity", 2, "level"},
 	{"test", 3, "test_list"},
+	{0, 0, 0, 0, "Standard options:", -1},
+	/* These options are default in argparse but are needed for getopt. */
+	{"help", '?', 0, 0, "Give this help list."},
+	{"usage",'u'+128, 0, 0, "Give a short usage message."},
 	{ 0 }
 };
 
@@ -240,12 +244,23 @@ static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
 			case 4:   parse_options_set_disjunct_cost(gp->opts, atof(optarg)); break;
 			case 5:   parse_options_set_dialect(gp->opts, optarg); break;
 
-			// Error handling.
-			case '?': prt_error("Fatal error: Unknown %s option \"%s\"\n",
-									 program_basename(av[0]), av[optind-1]);
+			// Standard GNU options.
+			case 'u'+128:
+			          usage(av[0]);
+			          exit(0);
+			case '?': if ((strncmp(av[optind-1], "--help",
+			                      strlen(av[optind-1])) == 0) ||
+			              (strcmp(av[optind-1], "-?") == 0))
+			          {
+				          help(av[0], options);
+				          exit(0);
+			          }
 
+			// Error handling.
+			          prt_error("Fatal error: Unknown %s option \"%s\"\n",
+			                    program_basename(av[0]), av[optind-1]);
 			          try_help(av[0]);
-						 exit(-1);
+			          exit(-1);
 			case ':': prt_error("Fatal error: %s: "
 			                    "Missing argument to option \"%s\"\n",
 			                    program_basename(av[0]), av[optind-1]);
@@ -279,7 +294,6 @@ int main (int argc, char* argv[])
 	Parse_Options   opts = parse_options_create();
 	Sentence        sent = NULL;
 
-	/* Process options used by GNU programs. */
 	gen_parameters parms;
 	parms.language = "lt";
 	parms.sentence_length = 6;
