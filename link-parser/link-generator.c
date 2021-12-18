@@ -189,8 +189,16 @@ static void usage(const char *path)
 
 static void try_help(char *path)
 {
+	/* Flag errors are printed to stderr. Arrange that the following
+	 * prt_error will be printed to stderr too. */
+	void *default_handler = lg_error_set_handler(NULL, NULL);
+	lg_error_set_handler(default_handler, (int []){0});
+
 	prt_error("Try \"%s --help\" or \"%s --usage\" for more information.\n",
 	          program_basename(path), program_basename(path));
+
+	/* Restore stdout for message levels <= lg_Debug. */
+	lg_error_set_handler(default_handler, (int []){lg_Debug});
 }
 
 static void invalid_int_value(const char *name, int value)
