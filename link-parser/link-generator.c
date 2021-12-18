@@ -11,7 +11,7 @@
 #include <unistd.h>
 #endif
 
-#include <argp.h>
+#include <getopt.h>
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -48,7 +48,22 @@ typedef struct
 	Parse_Options opts;
 } gen_parameters;
 
-static struct argp_option options[] =
+/* Originally, this program used argp, but now it uses getopt in
+ * order to make the porting to MS Windows easy. The original
+ * definitions are still being used here because they are more readable
+ * and the also allow easy a dynamic generation of an help message.
+ * They are converted to getopt options.  Only the minimal needed
+ * conversion is done (e.g. flags are not supported).
+ */
+static struct argp_option
+{
+	const char *name;
+	int key;
+	const char *arg;
+	int flags;
+	const char *doc;
+	int group;
+} options[] =
 {
 	{"language", 'l', "language", 0, "Directory containing language definition."},
 	{"length", 's', "length", 0, "Sentence length. If 0 - get sentence template from stdin."},
@@ -70,6 +85,110 @@ static struct argp_option options[] =
 	{ 0 }
 };
 
+#define ARGP_OPTION_ARRAY_SIZE (sizeof(options)/sizeof(options[0]))
+
+static struct option long_options[ARGP_OPTION_ARRAY_SIZE];
+static char short_options[2*ARGP_OPTION_ARRAY_SIZE +2]; /* :...\0 */
+
+/*
+ * Convert the argp-style options to getopt.
+ * Only the minimal needed conversion is done.
+ */
+static void argp2getopt(const struct argp_option *a_opt, char *g_optstring,
+                        struct option *g_opt)
+{
+	*g_optstring++ = ':';
+
+	for (const struct argp_option *a = a_opt;
+	     (a->name != NULL) || (a->doc != NULL); a++)
+	{
+		if (a->name == NULL) continue;
+
+		/* Generate long options. */
+		g_opt->name = a->name;
+		g_opt->has_arg = (a->arg == NULL) ? no_argument : required_argument;
+		g_opt->flag = NULL;
+		g_opt->val = a->key;
+
+		/* Generate short options. */
+		if ((a->key > 32) && (a->key < 127))
+		{
+			*g_optstring++ = (char)a->key;
+			if (a->arg) *g_optstring++ = ':';
+		}
+
+		g_opt++;
+	}
+}
+
+static const char *program_basename(const char *path)
+{
+	if (path == NULL) return "(null)";
+
+	const char *fs = strrchr(path, '/');
+	if (fs != NULL) return fs + 1;
+
+	const char *rs = strrchr(path, '\\');
+	if (rs != NULL) return rs + 1;
+
+	return path;
+}
+
+#define LONG_OPTION_PRINT_WIDTH 20
+
+static void print_option_help(const struct argp_option *a_opt)
+{
+	if (a_opt->name == NULL)
+	{
+		printf("\n %s\n", a_opt->doc);
+		return;
+	}
+
+	if ((a_opt->key > 32) && (a_opt->key < 127))
+		printf("  -%c, ", a_opt->key);
+	else
+		printf("      ");
+
+	int pos = printf("--%s", a_opt->name); /* Line position w/o resort to %n. */
+	if (a_opt->arg) pos += printf("=%s", a_opt->arg);
+	int pad = LONG_OPTION_PRINT_WIDTH - pos;
+	if (pad < 0) pad = 0;
+	if (a_opt->doc) printf("%*s   %s", pad, "", a_opt->doc);
+	printf("\n");
+}
+
+static void help(const char *path, const struct argp_option *a_opt)
+{
+	printf("Usage: %s [OPTIONS...]\n\n", program_basename(path));
+
+	for (const struct argp_option *a = a_opt;
+	     (a->name != NULL) || (a->doc != NULL); a++)
+	{
+		print_option_help(a);
+	}
+}
+
+/*
+ * This output was copied from the original argp output.
+ * FIXME: Generate it dynamically.
+ */
+static void usage(const char *path)
+{
+	printf("Usage: %s %s\n", program_basename(path),
+"[-.drux?v] [-c count] [-l language] [-s length]\n"
+"            [--leave-subscripts] [--count=count] [--disjuncts]\n"
+"            [--language=language] [--no-walls] [--random] [--length=length]\n"
+"            [--unused] [--explode] [--cost-max=float] [--dialect=dialect_list]\n"
+"            [--debug=debug_specification] [--test=test_list]\n"
+"            [--verbosity=level] [--help] [--usage] [--version]\n");
+}
+
+static void try_help(char *path)
+{
+	prt_error("Try \"%s --help\" or \"%s --usage\" for more information.\n",
+	          program_basename(path), program_basename(path));
+}
+
 static void invalid_int_value(const char *name, int value)
 {
 	prt_error("Fatal error: Invalid sentence %s \"%d\".\n", name, value);
@@ -77,63 +196,82 @@ static void invalid_int_value(const char *name, int value)
 
 }
 
-static error_t parse_opt(int key, char *arg, struct argp_state *state)
+static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
+                         const char *g_short_options,
+                         const struct option *g_long_options,
+                         gen_parameters* gp)
 {
-	gen_parameters* gp = state->input;
-	switch (key)
+	argp2getopt(options, short_options, long_options);
+
+	while (true)
 	{
-		case 'l': gp->language = arg; break;
-		case 's': gp->sentence_length = atoi(arg);
-		          if ((gp->sentence_length < 0) ||
-		              (gp->sentence_length > MAX_SENTENCE))
-			          invalid_int_value("sentence length", gp->sentence_length);
-		          break;
-		case 'c': gp->corpus_size = atoll(arg);
-		          if (gp->corpus_size <= 0)
-			          invalid_int_value("corpus size", gp->corpus_size);
-		          break;
-		case 'x': gp->explode = true; break;
-		case 'd': gp->display_disjuncts = true; break;
-		case 'u': gp->display_unused_disjuncts = true; break;
-		case '.': gp->leave_subscripts = true; break;
-		case 'r': gp->unrepeatable_random = true; break;
-		case 'w'+128: gp->walls = false; break;
-
-		case 'v':
+		int key = getopt_long(ac, av, g_short_options, g_long_options, NULL);
+		switch (key)
 		{
-			printf("Version: %s\n", linkgrammar_get_version());
-			printf("%s\n", linkgrammar_get_configuration());
-			exit(0);
+			case 'l': gp->language = optarg; break;
+			case 's': gp->sentence_length = atoi(optarg);
+			          if ((gp->sentence_length < 0) ||
+			              (gp->sentence_length > MAX_SENTENCE))
+				          invalid_int_value("sentence length", gp->sentence_length);
+			          break;
+			case 'c': gp->corpus_size = atoll(optarg);
+			          if (gp->corpus_size <= 0)
+				          invalid_int_value("corpus size", gp->corpus_size);
+			          break;
+			case 'x': gp->explode = true; break;
+			case 'd': gp->display_disjuncts = true; break;
+			case 'u': gp->display_unused_disjuncts = true; break;
+			case '.': gp->leave_subscripts = true; break;
+			case 'r': gp->unrepeatable_random = true; break;
+			case 'w'+128:
+			          gp->walls = false; break;
+
+			case 'v': printf("Version: %s\n", linkgrammar_get_version());
+			          printf("%s\n", linkgrammar_get_configuration());
+			          exit(0);
+
+			// Library options.
+			case 1:   parse_options_set_debug(gp->opts, optarg); break;
+			case 2:   verbosity_level = atoi(optarg);
+			          if (verbosity_level < 0)
+				          invalid_int_value("verbosity", verbosity_level);
+			          parse_options_set_verbosity(gp->opts, verbosity_level); break;
+			case 3:   parse_options_set_test(gp->opts, optarg); break;
+			case 4:   parse_options_set_disjunct_cost(gp->opts, atof(optarg)); break;
+			case 5:   parse_options_set_dialect(gp->opts, optarg); break;
+
+			// Error handling.
+			case '?': prt_error("Fatal error: Unknown %s option \"%s\"\n",
+									 program_basename(av[0]), av[optind-1]);
+
+			          try_help(av[0]);
+						 exit(-1);
+			case ':': prt_error("Fatal error: %s: "
+			                    "Missing argument to option \"%s\"\n",
+			                    program_basename(av[0]), av[optind-1]);
+			          try_help(av[0]);
+						 exit(-1);
+			case -1:  if (optind < ac)
+			          {
+				          prt_error("Fatal error: "
+				                    "%s doesn't accept non-option arguments:",
+				                    program_basename(av[0]));
+							 while (optind < ac)
+								 prt_error(" %s", av[optind++]);
+							 prt_error("\n");
+							 try_help(av[0]);
+				          exit(-1);
+			          }
+			          break;
+
+			default:  prt_error("Fatal error: %s encountered an internal error:"
+			                    "getopt() returned an unexpected value %d\n",
+			                    program_basename(av[0]), key);
+			          exit(-1);
 		}
-
-		// Library options.
-		case 1:
-			parse_options_set_debug(gp->opts, arg); break;
-		case 2:
-			verbosity_level = atoi(arg);
-			if (verbosity_level < 0)
-				invalid_int_value("verbosity", verbosity_level);
-			parse_options_set_verbosity(gp->opts, verbosity_level); break;
-		case 3:
-			parse_options_set_test(gp->opts, arg); break;
-		case 4:
-			parse_options_set_disjunct_cost(gp->opts, atof(arg)); break;
-		case 5:
-			parse_options_set_dialect(gp->opts, arg); break;
-
-		case ARGP_KEY_ARG:
-			prt_error("Fatal error: \"%s\":"
-			          "link-generator doesn't accept non-option arguments\n",
-			          arg);
-			exit(-1);
-
-		default: return ARGP_ERR_UNKNOWN;
+		if (key == -1) break;
 	}
-	return 0;
 }
-
-static char args_doc[] = "";
-static struct argp argp = { options, parse_opt, args_doc, 0, 0, 0 };
 
 int main (int argc, char* argv[])
 {
@@ -153,7 +291,7 @@ int main (int argc, char* argv[])
 	parms.unrepeatable_random = false;
 	parms.walls = true;
 	parms.opts = opts;
-	argp_parse(&argp, argc, argv, 0, 0, &parms);
+	getopt_parse(argc, argv, options, short_options, long_options, &parms);
 	if (!parms.unrepeatable_random)
 	{
 		srand(0);
