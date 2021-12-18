@@ -69,7 +69,6 @@ static struct argp_option
 	{"length", 's', "length", 0, "Sentence length. If 0 - get sentence template from stdin."},
 	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
 	{"explode", 'x', 0, 0, "Generate all wording samples per linkage."},
-	{"version", 'v', 0, 0, "Print version and exit."},
 	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts."},
 	{"unused", 'u', 0, 0, "Display unused disjuncts."},
 	{"leave-subscripts", '.', 0, 0, "Don't remove word subscripts."},
@@ -86,6 +85,7 @@ static struct argp_option
 	/* These options are default in argparse but are needed for getopt. */
 	{"help", '?', 0, 0, "Give this help list."},
 	{"usage",'u'+128, 0, 0, "Give a short usage message."},
+	{"version", 'v', 0, 0, "Print version and exit."},
 	{ 0 }
 };
 
@@ -238,10 +238,6 @@ static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
 			case 'w'+128:
 			          gp->walls = false; break;
 
-			case 'v': printf("Version: %s\n", linkgrammar_get_version());
-			          printf("%s\n", linkgrammar_get_configuration());
-			          exit(0);
-
 			// Library options.
 			case 1:   parse_options_set_debug(gp->opts, optarg); break;
 			case 2:   verbosity_level = atoi(optarg);
@@ -255,6 +251,9 @@ static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
 			// Standard GNU options.
 			case 'u'+128:
 			          usage(av[0]);
+			          exit(0);
+			case 'v': printf("Version: %s\n", linkgrammar_get_version());
+			          printf("%s\n", linkgrammar_get_configuration());
 			          exit(0);
 			case '?': if ((strncmp(av[optind-1], "--help",
 			                      strlen(av[optind-1])) == 0) ||
