@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <limits.h>
+#include <errno.h>                      // errno
 
 #ifdef _MSC_VER
 #define LINK_GRAMMAR_DLL_EXPORT 0
@@ -36,8 +37,8 @@ int verbosity_level;
 typedef struct
 {
 	const char* language;
-	int sentence_length;
-	size_t corpus_size;
+	unsigned int sentence_length;
+	unsigned int corpus_size; /* Limited to INT_MAX. */
 	bool display_disjuncts;
 	bool display_unused_disjuncts;
 	bool leave_subscripts;
@@ -201,11 +202,30 @@ static void try_help(char *path)
 	lg_error_set_handler(default_handler, (int []){lg_Debug});
 }
 
-static void invalid_int_value(const char *name, int value)
+static int strtoi_errexit(const char *flag, const char *strval,
+                           int min_v, int max_v)
 {
-	prt_error("Fatal error: Invalid sentence %s \"%d\".\n", name, value);
-	exit(-1);
+	char *end;
 
+	errno = 0;
+	long val = strtol(strval, &end, 10);
+
+	int retval = (int)val;
+	if (*end != '\0')
+	{
+		prt_error("Fatal error: %s: Bad character '%c' in argument \"%s\".\n",
+		          flag, end[0], strval);
+		exit(-1);
+	}
+
+	if ((val < min_v) || (val > max_v) || (errno != 0) || (retval != val))
+	{
+		prt_error("Fatal error: %s: Argument \"%s\" out of range [%d, %d].\n",
+		          flag, strval, min_v, max_v);
+		exit(-1);
+	}
+
+	return val;
 }
 
 static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
@@ -221,14 +241,11 @@ static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
 		switch (key)
 		{
 			case 'l': gp->language = optarg; break;
-			case 's': gp->sentence_length = atoi(optarg);
-			          if ((gp->sentence_length < 0) ||
-			              (gp->sentence_length > MAX_SENTENCE))
-				          invalid_int_value("sentence length", gp->sentence_length);
+			case 's': gp->sentence_length = (int)
+			             strtoi_errexit(av[optind-2], optarg, 0, MAX_SENTENCE-2);
 			          break;
-			case 'c': gp->corpus_size = atoll(optarg);
-			          if (gp->corpus_size <= 0)
-				          invalid_int_value("corpus size", gp->corpus_size);
+			case 'c': gp->corpus_size =
+			             strtoi_errexit(av[optind-2], optarg, 1, INT_MAX);
 			          break;
 			case 'x': gp->explode = true; break;
 			case 'd': gp->display_disjuncts = true; break;
@@ -240,9 +257,8 @@ static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
 
 			// Library options.
 			case 1:   parse_options_set_debug(gp->opts, optarg); break;
-			case 2:   verbosity_level = atoi(optarg);
-			          if (verbosity_level < 0)
-				          invalid_int_value("verbosity", verbosity_level);
+			case 2:   verbosity_level =
+			             strtoi_errexit(av[optind-2], optarg, 0, 999);
 			          parse_options_set_verbosity(gp->opts, verbosity_level); break;
 			case 3:   parse_options_set_test(gp->opts, optarg); break;
 			case 4:   parse_options_set_disjunct_cost(gp->opts, atof(optarg)); break;
@@ -324,8 +340,8 @@ int main (int argc, char* argv[])
 
 	printf("#\n# Corpus for language: \"%s\"\n", parms.language);
 	if (parms.sentence_length != 0)
-		printf("# Sentence length: %d\n", parms.sentence_length);
-	printf("# Requested corpus size: %zu\n", parms.corpus_size);
+		printf("# Sentence length: %u\n", parms.sentence_length);
+	printf("# Requested corpus size: %u\n", parms.corpus_size);
 
 	// Force the system into generation mode by setting the "test"
 	// parse-option to "generate".
@@ -360,16 +376,14 @@ int main (int argc, char* argv[])
 		exit(0);
 	}
 
-	int linkage_limit = parms.corpus_size;
-	if (INT_MAX < parms.corpus_size) linkage_limit = INT_MAX;
-	parse_options_set_linkage_limit(opts, linkage_limit);
+	parse_options_set_linkage_limit(opts, parms.corpus_size);
 
 	if (parms.sentence_length > 0)
 	{
 		// Set a sentence template for the requested sentence length.
 		char *stmp = malloc(4 * parms.sentence_length + 1);
 		stmp[0] = '\0';
-		for (int i = 0; i < parms.sentence_length; i++)
+		for (unsigned int i = 0; i < parms.sentence_length; i++)
 			strcat(stmp, WILDCARD_WORD " ");
 
 		sent = sentence_create(stmp, dict);
@@ -436,7 +450,7 @@ int main (int argc, char* argv[])
 		((double) parms.corpus_size) / ((double) num_linkages)
 		: 1.0;
 
-	size_t num_printed = 0;
+	unsigned int num_printed = 0;
 	for (int i=0; i<num_linkages; i++)
 	{
 		Linkage linkage;
