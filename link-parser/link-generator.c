@@ -109,13 +109,18 @@ static char short_options[2*ARGP_OPTION_ARRAY_SIZE +2]; /* :...\0 */
  * Convert the argp-style options to getopt.
  * Only the minimal needed conversion is done.
  */
-static void argp2getopt(const struct argp_option *a_opt, char *g_optstring,
+static void argp2getopt(struct argp_option *a_opt, char *g_optstring,
                         struct option *g_opt)
 {
 	*g_optstring++ = ':';
 
 	for (struct argp_option *a = a_opt; !end_of_argp_options(a); a++)
 	{
+		if ((a->group == 0) && (a != a_opt))
+		{
+			a->group = a[-1].group + ((a->name == NULL) ? 1 : 0);
+			continue;
+		}
 		if (a->name == NULL) continue;
 
 		/* Generate long options. */
@@ -234,12 +239,46 @@ static int strtoi_errexit(const char *flag, const char *strval,
 	return val;
 }
 
+static int option_cmp(const void *a, const void *b)
+{
+	const struct argp_option *oa = a;
+	const struct argp_option *ob = b;
+
+	int key_a = oa->key;
+	int key_b = ob->key;
+	if ((oa->key <= 32) || (oa->key >= 127)) key_a = (unsigned char)oa->name[0];
+	if ((ob->key <= 32) || (ob->key >= 127)) key_b = (unsigned char)ob->name[0];
+
+	return key_a - key_b;
+}
+
+/*
+ * Note: This function only supports group numbers that fit inside
+ * a signed char. (unsigned char) is used in the comparison to support
+ * an order as follows: 0, 1, 2, ..., n, -m, ..., -2, -1.
+ */
+static int group_cmp(const void *a, const void *b)
+{
+	const struct argp_option *oa = a;
+	const struct argp_option *ob = b;
+
+	return (unsigned char)oa->group - (unsigned char)ob->group;
+}
+
+static int help_entry_cmp(const void *a, const void *b)
+{
+	if (is_group_header(a) || is_group_header(b)) return 0;
+	if (group_cmp(a, b) != 0) return group_cmp(a, b);
+	return option_cmp(a, b);
+}
+
 static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
                          const char *g_short_options,
                          const struct option *g_long_options,
                          gen_parameters* gp)
 {
 	argp2getopt(options, short_options, long_options);
+	qsort(a_opt, ARGP_OPTION_ARRAY_SIZE-1, sizeof(options[0]), help_entry_cmp);
 
 	while (true)
 	{
