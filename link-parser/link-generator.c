@@ -90,6 +90,16 @@ static struct argp_option
 	{ 0 }
 };
 
+static bool is_group_header(const struct argp_option *a_opt)
+{
+	return (a_opt->name == NULL) && (a_opt->doc != NULL);
+}
+
+static bool end_of_argp_options(const struct argp_option *a_opt)
+{
+	return (a_opt->name == NULL) && (a_opt->doc == NULL);
+}
+
 #define ARGP_OPTION_ARRAY_SIZE (sizeof(options)/sizeof(options[0]))
 
 static struct option long_options[ARGP_OPTION_ARRAY_SIZE];
@@ -104,8 +114,7 @@ static void argp2getopt(const struct argp_option *a_opt, char *g_optstring,
 {
 	*g_optstring++ = ':';
 
-	for (const struct argp_option *a = a_opt;
-	     (a->name != NULL) || (a->doc != NULL); a++)
+	for (struct argp_option *a = a_opt; !end_of_argp_options(a); a++)
 	{
 		if (a->name == NULL) continue;
 
@@ -166,11 +175,8 @@ static void help(const char *path, const struct argp_option *a_opt)
 {
 	printf("Usage: %s [OPTIONS...]\n\n", program_basename(path));
 
-	for (const struct argp_option *a = a_opt;
-	     (a->name != NULL) || (a->doc != NULL); a++)
-	{
+	for (const struct argp_option *a = a_opt; !end_of_argp_options(a); a++)
 		print_option_help(a);
-	}
 }
 
 /*
