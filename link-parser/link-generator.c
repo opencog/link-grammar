@@ -100,6 +100,11 @@ static bool end_of_argp_options(const struct argp_option *a_opt)
 	return (a_opt->name == NULL) && (a_opt->doc == NULL);
 }
 
+static bool is_short_option(const struct argp_option *a_opt)
+{
+	return (a_opt->key > 32) && (a_opt->key < 127);
+}
+
 #define ARGP_OPTION_ARRAY_SIZE (sizeof(options)/sizeof(options[0]))
 
 static struct option long_options[ARGP_OPTION_ARRAY_SIZE];
@@ -130,7 +135,7 @@ static void argp2getopt(struct argp_option *a_opt, char *g_optstring,
 		g_opt->val = a->key;
 
 		/* Generate short options. */
-		if ((a->key > 32) && (a->key < 127))
+		if (is_short_option(a))
 		{
 			*g_optstring++ = (char)a->key;
 			if (a->arg) *g_optstring++ = ':';
@@ -163,7 +168,7 @@ static void print_option_help(const struct argp_option *a_opt)
 		return;
 	}
 
-	if ((a_opt->key > 32) && (a_opt->key < 127))
+	if (is_short_option(a_opt))
 		printf("  -%c, ", a_opt->key);
 	else
 		printf("      ");
@@ -244,10 +249,8 @@ static int option_cmp(const void *a, const void *b)
 	const struct argp_option *oa = a;
 	const struct argp_option *ob = b;
 
-	int key_a = oa->key;
-	int key_b = ob->key;
-	if ((oa->key <= 32) || (oa->key >= 127)) key_a = (unsigned char)oa->name[0];
-	if ((ob->key <= 32) || (ob->key >= 127)) key_b = (unsigned char)ob->name[0];
+	int key_a = is_short_option(a) ? oa->key : (unsigned char)oa->name[0];
+	int key_b = is_short_option(b) ? ob->key : (unsigned char)ob->name[0];
 
 	return key_a - key_b;
 }
