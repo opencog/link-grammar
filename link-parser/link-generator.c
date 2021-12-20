@@ -268,19 +268,52 @@ static void help(const char *path, const struct argp_option *a_opt)
 		print_option_help(a);
 }
 
+#define USAGE_INDENT 12
 /*
- * This output was copied from the original argp output.
- * FIXME: Generate it dynamically.
+ * Print a usage message in a style as follows (mimicking argp):
+ * Usage: link-generator [-.drux?v] [-c count] [-l language] [-s length]
+ *             [--leave-subscripts] [--count=count] [--disjuncts]
+ *             ...
+ *
+ * Only ASCII is supported.
  */
-static void usage(const char *path)
+static void usage(const char *path, const struct argp_option *a_opt,
+                  const char *g_short_options)
 {
-	printf("Usage: %s %s\n", program_basename(path),
-"[-.drux?v] [-c count] [-l language] [-s length]\n"
-"            [--leave-subscripts] [--count=count] [--disjuncts]\n"
-"            [--language=language] [--no-walls] [--random] [--length=length]\n"
-"            [--unused] [--explode] [--cost-max=float] [--dialect=dialect_list]\n"
-"            [--debug=debug_specification] [--test=test_list]\n"
-"            [--verbosity=level] [--help] [--usage] [--version]\n");
+	int col = printf("Usage: %s", program_basename(path));
+
+	if (*g_short_options == ':') g_short_options++;
+	if (*g_short_options != ':')
+	{
+		col += printf(" [-");
+		for (const struct argp_option *a = a_opt; !end_of_argp_options(a); a++)
+		{
+			if (is_group_header(a)) continue;
+			{
+				if ((a->arg == NULL) && is_short_option(a))
+					col += printf("%c", a->key);
+			}
+		}
+		col += printf("]");
+	}
+
+	char optbuff[128];
+	for (const struct argp_option *a = a_opt; !end_of_argp_options(a); a++)
+	{
+		if (is_group_header(a)) continue;
+		col += snprintf(optbuff, sizeof(optbuff), " [--%s%s%s]", a->name,
+		      (a->arg == NULL) ? "" : "=", (a->arg == NULL) ? "" : a->arg);
+		if (col <= MAXCOL)
+		{
+			printf("%s", optbuff);
+		}
+		else
+		{
+			printf("\n");
+			col = printf("%*s%s", USAGE_INDENT-1, "", optbuff);
+		}
+	}
+	printf("\n");
 }
 
 static void try_help(char *path)
@@ -393,7 +426,7 @@ static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
 
 			// Standard GNU options.
 			case 'u'+128:
-			          usage(av[0]);
+			          usage(av[0], a_opt, g_short_options);
 			          exit(0);
 			case 'v': printf("Version: %s\n", linkgrammar_get_version());
 			          printf("%s\n", linkgrammar_get_configuration());
