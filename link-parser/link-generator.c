@@ -122,10 +122,7 @@ static void argp2getopt(struct argp_option *a_opt, char *g_optstring,
 	for (struct argp_option *a = a_opt; !end_of_argp_options(a); a++)
 	{
 		if ((a->group == 0) && (a != a_opt))
-		{
 			a->group = a[-1].group + ((a->name == NULL) ? 1 : 0);
-			continue;
-		}
 		if (a->name == NULL) continue;
 
 		/* Generate long options. */
@@ -158,8 +155,87 @@ static const char *program_basename(const char *path)
 	return path;
 }
 
-#define LONG_OPTION_PRINT_WIDTH 20
+/*
+ * Print the given string "s" between columns "start_col" and "end_col",
+ * folding after a word end if possible (so very long words are not
+ * folded). "current_col" is the current screen column. Column number
+ * starts at 1.
+ *
+ * - Only ASCII is supported.
+ * - The line folding itself is counted as one blank.
+ * - The rest of the blanks are preserved (but not at end of string).
+ * - Tabs ('\t') are not supported.
+ * - A single newline ('\n') in "s" folds the printout when encountered.
+ */
+static void print_folded_line(const char *s, int current_col, int start_col,
+                              int end_col)
+{
+	int col = 0;
+	const char *line_start = s;
+	bool last_is_nonblank = true;
+	const char *end_blank = NULL;
 
+
+	int pad; /* Number of blanks for printout alignment. */
+	if (current_col > start_col)
+	{
+		printf("\n");
+		pad = start_col;
+	}
+	else
+	{
+		pad = start_col - current_col;
+	}
+
+	for (const char *p = s; ; p++)
+	{
+		if (line_start != s) pad = start_col;
+		if (*p == '\n')
+		{
+			end_blank = p;
+			col = (end_col - start_col) + 1; /* Force output. */
+		}
+		else if ((*p == ' ') || (*p == '\0'))
+		{
+			if (last_is_nonblank)
+			{
+				last_is_nonblank = false;
+				end_blank = p;
+			}
+			if (*p == '\0') col = (end_col - start_col) + 1; /* Force output. */
+		}
+		else
+		{
+			last_is_nonblank = true;
+		}
+
+		if ((col > (end_col - start_col)) && (end_blank != NULL))
+		{
+			printf("%*s", pad + 1, ""); /* At least 1 blank separation. */
+			printf("%.*s\n", (int)(end_blank - line_start), line_start);
+
+			/* Find the start of the next line. Terminate if no more to print. */
+			if (*end_blank == '\0') break;        /* Nothing remained. */
+			p = line_start = end_blank + 1;
+			if (p[strspn(p, " ")] == '\0') break; /* Nothing or only blanks. */
+
+			end_blank = NULL;
+			last_is_nonblank = true;
+			col = 0;
+			continue;
+		}
+		if (*p == '\0') break;
+		col++;
+	}
+}
+
+#define MAXCOL 79
+#define SHORT_OPT_WIDTH 6
+#define LONG_OPT_WIDTH 22
+
+/*
+ * Print a help message (mimicking argp).
+ */
 static void print_option_help(const struct argp_option *a_opt)
 {
 	if (a_opt->name == NULL)
@@ -168,17 +244,20 @@ static void print_option_help(const struct argp_option *a_opt)
 		return;
 	}
 
+	int col;
 	if (is_short_option(a_opt))
-		printf("  -%c, ", a_opt->key);
+		col = printf("  -%c, ", a_opt->key);
 	else
-		printf("      ");
+		col = printf("      ");
+	assert(col == SHORT_OPT_WIDTH);
 
-	int pos = printf("--%s", a_opt->name); /* Line position w/o resort to %n. */
-	if (a_opt->arg) pos += printf("=%s", a_opt->arg);
-	int pad = LONG_OPTION_PRINT_WIDTH - pos;
-	if (pad < 0) pad = 0;
-	if (a_opt->doc) printf("%*s   %s", pad, "", a_opt->doc);
-	printf("\n");
+	col += printf("--%s", a_opt->name);
+	if (a_opt->arg) col += printf("=%s", a_opt->arg);
+
+	if (a_opt->doc)
+		print_folded_line(a_opt->doc, col, SHORT_OPT_WIDTH+LONG_OPT_WIDTH, MAXCOL);
+	else
+		printf("\n");
 }
 
 static void help(const char *path, const struct argp_option *a_opt)
