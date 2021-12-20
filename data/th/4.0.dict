@@ -103,16 +103,28 @@
 % Noun
 %%%%%%%%%%%%%%%%%%%%
 
-<noun-start> :
-    {NS+ or hAT+}
-    & {@hAJ+ or hPS+}
+<noun-looking-for-mods> :
+    {@hAJ+ or hPS+}
     & {PUp+ or PUy+}
     & {<num-cl>}
     & {@hAJ+};
 
+<noun-start> :
+    {NS+ or hAT+}
+    & <noun-looking-for-mods>;
+
+<noun-start-temporal> :
+    {TS+ or hAT+}
+    & <noun-looking-for-mods>
+    & {PUsr+ & TS+};
+
 <noun-serial> :
     NS-
     & {NS+};
+
+<noun-serial-temporal> :
+    TS-
+    & {TS+};
 
 <noun-imprel> :
     hRI+
@@ -159,9 +171,14 @@
 %%%% Temporal Entity %%%%
 
 /th/words/words.n.temporal :
-    ({hNUnr+} & <noun-start> & {dAJt-} & {hAJt+} & <noun-temporal>)
-    or [{hNUnr+} & <noun-start> & {dAJt-} & {hAJt+} & <noun-element>]
-    or <noun-serial>;
+    (
+        {hNUtr+}
+        & <noun-start-temporal> 
+        & {dAJt-} 
+        & {hAJt+} 
+        & (<noun-temporal> or <noun-element>)
+    )
+    or <noun-serial-temporal>;
 
 %%%%%%%%%%%%%%%%%%%%
 %   Pronoun
@@ -301,12 +318,12 @@
     or [{hQFl-} & dAVnr- & hCLn+ & {hQFr+}]
     or [{hQFl-} & dAVvr- & hCLv+ & {hQFr+}]
     or dNUnl+
+    or dNUtr-
     or dONr-;
 
 /th/words/words.num.common
 NUMBERS.nu FRACTION.nu :
-    <number-simple>
-    or (PUsl- & PUsr+ & <number-simple>);
+    {PUsl-} & {PUsr+} & <number-simple>;
 
 /th/words/words.num.movable :
     (hCLn- & (dNUnr- or [dAVnr-]))
