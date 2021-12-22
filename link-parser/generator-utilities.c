@@ -124,9 +124,9 @@ static size_t print_several(const Category* catlist,
                             Linkage linkage, size_t nwords, const char** words,
                             bool subscript, double fraction)
 {
-	const Category_cost* cclist[nwords];
-	unsigned int cclen[nwords];
-	const char* selected_words[nwords];
+	const Category_cost* cclist[MAX_SENTENCE];
+	unsigned int cclen[MAX_SENTENCE];
+	const char* selected_words[MAX_SENTENCE];
 
 	for(WordIdx w = 0; w < nwords; w++)
 	{
