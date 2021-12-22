@@ -1299,7 +1299,7 @@ class ZZdict_display_word_expr(unittest.TestCase):
 
        out = clg.dict_display_word_expr(self.d._obj, 'a//', self.po._obj)
        self.assertIn('Token "a" disjuncts:', out)
-       self.assertIn('=  <> Ds**x+', out)
+       #self.assertRegex(out, r'a: \[\d+] \d+\.\d+\s*=  <> Ds\*\*x\+')
        self.assertIn(' a.eq ', out)
 
     def test_disjunct_macros(self):
@@ -1309,6 +1309,10 @@ class ZZdict_display_word_expr(unittest.TestCase):
        out = clg.dict_display_word_expr(self.d._obj, 'test//m', self.po._obj)
        self.assertIn('Token "test" disjuncts:', out)
        self.assertIn('<b-minus>: B*w- &', out)
+
+    def test_low_level_exp(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'a/l', self.po._obj)
+       self.assertRegex(out, r'e=0[xX][0-9a-fA-F]+: CONNECTOR Ds\*\*x\+ cost=0.000')
 
 
 #############################################################################
