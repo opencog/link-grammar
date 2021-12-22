@@ -639,6 +639,8 @@ static void dyn_print_disjunct_list(dyn_str *s, const Disjunct *dj,
 {
 	int djn = 0;
 	char word[MAX_WORD + 32];
+	int max_ccnt = 0;
+	int *exp_pos = NULL;
 	bool print_disjunct_address = test_enabled("disjunct-address");
 
 	for (;dj != NULL; dj=dj->next)
@@ -667,6 +669,7 @@ static void dyn_print_disjunct_list(dyn_str *s, const Disjunct *dj,
 		dyn_print_connector_list(l, dj->right, /*dir*/1, flags);
 
 		char *ls = dyn_str_take(l);
+
 		if ((NULL == select) || select(ls, criterion))
 		{
 			dyn_strcat(s, ls);
@@ -674,14 +677,19 @@ static void dyn_print_disjunct_list(dyn_str *s, const Disjunct *dj,
 
 			if ((criterion != NULL) && (criterion->exp != NULL))
 			{
-				int ccnt = 1;
+				int ccnt = 1; /* 1 for exp_pos -1 terminator. */
 				for (Connector *c = dj->left; c != NULL; c = c->next)
 					ccnt++;
 				for (Connector *c = dj->right; c != NULL; c = c->next)
 					ccnt++;
 
-				int *exp_pos = alloca(ccnt * sizeof(int));
+				if (ccnt > max_ccnt)
+				{
+					max_ccnt = (ccnt == 0) ? 32 : ccnt;
+					exp_pos = alloca(max_ccnt * sizeof(int));
+				}
 				int *i = exp_pos;
+
 				for (Connector *c = dj->left; c != NULL; c = c->next)
 					*i++ = c->exp_pos;
 				for (Connector *c = dj->right; c != NULL; c = c->next)
