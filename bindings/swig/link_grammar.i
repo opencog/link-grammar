@@ -59,6 +59,8 @@
 %free_returned_value_by_free(lg_exp_stringify, char *);
 %free_returned_value_by_free(sentence_unused_disjuncts, Disjunct **);
 %free_returned_value_by_free(disjunct_expression, char *);
+%free_returned_value_by_free(dict_display_word_expr, char *);
+%free_returned_value_by_free(dict_display_word_info, char *);
 // End of functions that need free().
 
 // Reset to default.
