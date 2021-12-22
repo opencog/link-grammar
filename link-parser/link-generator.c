@@ -129,7 +129,7 @@ static void argp2getopt(struct argp_option *a_opt, char *g_optstring,
 		if (a->name == NULL) continue;
 
 		/* Generate long options. */
-		g_opt->name = a->name;
+		g_opt->name = (char *)a->name; /* For (char *) see commit comment. */
 		g_opt->has_arg = (a->arg == NULL) ? no_argument : required_argument;
 		g_opt->flag = NULL;
 		g_opt->val = a->key;
