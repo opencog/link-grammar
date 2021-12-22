@@ -19,15 +19,12 @@
 #include <limits.h>
 #include <errno.h>                      // errno
 
-#ifdef _MSC_VER
-#define LINK_GRAMMAR_DLL_EXPORT 0
-#endif /* _MSC_VER */
+#include "generator-utilities.h"
 
 #include <link-includes.h>
 #include <dict-api.h>
 #include <dict-defines.h>               // WILDCARD_WORD
 
-#include "generator-utilities.h"
 
 int verbosity_level;
 
