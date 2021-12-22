@@ -29,8 +29,6 @@
 
 #include "generator-utilities.h"
 
-#define MAX_SENTENCE 254
-
 int verbosity_level;
 
 /* Argument parsing for the generator */

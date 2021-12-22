@@ -7,3 +7,5 @@ size_t print_sentences(const Category*,
 
 
 extern int verbosity_level;
+
+#define MAX_SENTENCE 254
