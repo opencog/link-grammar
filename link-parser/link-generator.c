@@ -20,9 +20,7 @@
 #include <errno.h>                      // errno
 
 #include "generator-utilities.h"
-#ifdef _MSC_VER
 #include "parser-utilities.h"
-#endif /* _MSC_VER */
 
 #include <link-includes.h>
 #include <dict-api.h>
@@ -480,9 +478,7 @@ int main (int argc, char* argv[])
 	Parse_Options   opts = parse_options_create();
 	Sentence        sent = NULL;
 
-#ifdef _WIN32
-	win32_set_utf8_output();
-#endif /* _WIN32 */
+	argv = ms_windows_setup(argc);
 
 	gen_parameters parms;
 	parms.language = "lt";

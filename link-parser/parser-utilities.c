@@ -182,7 +182,7 @@ static BOOL CtrlHandler(DWORD fdwCtrlType)
  * Set the output conversion attributes for transparency.
  * This way UTF-8 output doesn't pass any conversion.
  */
-void win32_set_utf8_output(void)
+static void win32_set_utf8_output(void)
 {
 	if (-1 == _setmode(fileno(stdout), _O_BINARY))
 	{
@@ -303,7 +303,7 @@ static void argv2utf8_free(void)
 /**
  * Convert argv from the startup locale to UTF-8.
  */
-char **argv2utf8(int argc)
+static char **argv2utf8(int argc)
 {
 	char **nargv = malloc(argc * sizeof(char *));
 	LPWSTR *warglist = CommandLineToArgvW(GetCommandLineW(), &argc);
@@ -331,6 +331,47 @@ char **argv2utf8(int argc)
 	atexit(argv2utf8_free);
 
 	return nargv;
+}
+
+static bool running_under_cygwin;
+
+char **ms_windows_setup(int argc)
+{
+	/* If compiled with MSVC/MinGW, we still support running under Cygwin.
+	 * This is done by checking running_under_cygwin to resolve
+	 * incompatibilities. */
+	const char *ostype = getenv("OSTYPE");
+	if ((NULL != ostype) && (0 == strcmp(ostype, "cygwin")))
+		running_under_cygwin = true;
+
+	/* argv encoding is in the current locale. */
+	char **argv = argv2utf8(argc);
+	if (NULL == argv)
+	{
+		prt_error("Fatal error: Unable to parse command line\n");
+		exit(-1);
+	}
+
+	win32_set_utf8_output();
+
+	return argv;
+}
+
+char *get_utf8_line(char *input_string, int max_input_line, FILE *in)
+{
+	char *pline;
+
+	if (!running_under_cygwin)
+		pline = get_console_line();
+	else
+		pline = fgets(input_string, max_input_line, in);
+
+	return pline;
+}
+#else
+char *get_utf8_line(char *input_string, int max_input_line, FILE *in)
+{
+	return fgets(input_string, max_input_line, in);
 }
 #endif /* _WIN32 */
 

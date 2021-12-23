@@ -63,7 +63,7 @@ static char * debug = (char *)"";
 static char * test = (char *)"";
 static bool isatty_stdin, isatty_stdout;
 #ifdef _WIN32
-static bool running_under_cygwin = false;
+extern bool running_under_cygwin;
 #endif /* _WIN32 */
 
 typedef enum
@@ -544,24 +544,7 @@ int main(int argc, char * argv[])
 	isatty_stdin = isatty(fileno(stdin));
 	isatty_stdout = isatty(fileno(stdout));
 
-#ifdef _WIN32
-	/* If compiled with MSVC/MinGW, we still support running under Cygwin.
-	 * This is done by checking running_under_cygwin to resolve
-	 * incompatibilities. */
-	const char *ostype = getenv("OSTYPE");
-	if ((NULL != ostype) && (0 == strcmp(ostype, "cygwin")))
-		running_under_cygwin = true;
-
-	/* argv encoding is in the current locale. */
-	argv = argv2utf8(argc);
-	if (NULL == argv)
-	{
-		prt_error("Fatal error: Unable to parse command line\n");
-		exit(-1);
-	}
-
-	win32_set_utf8_output();
-#endif /* _WIN32 */
+	argv = ms_windows_setup(argc);
 
 	if ((argc > 1) && (argv[1][0] != '-')) {
 		/* The dictionary is the first argument if it doesn't begin with "-" */

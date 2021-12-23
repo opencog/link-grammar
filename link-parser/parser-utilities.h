@@ -36,10 +36,12 @@ typedef SSIZE_T ssize_t;
 #endif
 
 char *get_console_line(void);
-void win32_set_utf8_output(void);
-char **argv2utf8(int);
+char **ms_windows_setup(int);
 int lg_isatty(int);
 #define isatty lg_isatty
+#else /* !_WIN32 */
+#define ms_windows_setup(argc) (argv)
 #endif /* _WIN32 */
 
+char *get_utf8_line(char *, int, FILE *);
 #endif // _PARSER_UTILITIES_
