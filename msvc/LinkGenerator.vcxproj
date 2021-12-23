@@ -21,10 +21,12 @@
   <ItemGroup>
     <ClCompile Include="..\link-parser\link-generator.c" />
     <ClCompile Include="..\link-parser\generator-utilities.c" />
+    <ClCompile Include="..\link-parser\parser-utilities.c" />
     <ClCompile Include="getopt\getopt.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\link-parser\generator-utilities.h" />
+    <ClInclude Include="..\link-parser\parser-utilities.h" />
     <ClInclude Include="getopt\getopt.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
