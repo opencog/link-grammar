@@ -28,6 +28,11 @@
 #include <dict-api.h>
 #include <dict-defines.h>               // WILDCARD_WORD
 
+#ifdef _MSC_VER
+#ifndef getopt_long
+#define getopt_long(...) _getopt_internal(__VA_ARGS__, false)
+#endif /* !getopt_long */
+#endif /* _MSC_VER */
 
 int verbosity_level;
 
