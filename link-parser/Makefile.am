@@ -24,7 +24,9 @@ link_parser_LDADD = $(LIBEDIT_LIBS) $(top_builddir)/link-grammar/liblink-grammar
 
 link_generator_SOURCES = link-generator.c \
                          generator-utilities.h \
-                         generator-utilities.c
+                         generator-utilities.c \
+                         parser-utilities.h \
+                         parser-utilities.c
 
 link_generator_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) -I$(top_srcdir)/link-grammar -I$(top_srcdir)/link-grammar/dict-common
 link_generator_CFLAGS = $(WARN_CFLAGS)
