@@ -331,7 +331,6 @@ static void table_stat(count_context_t *ctxt)
 	size_t N = 0;          /* NULL table slots */
 	size_t null_count[256] = { 0 };   /* null_count histogram */
 	int chain_length[64] = { 0 };     /* Chain length histogram */
-	int n;                 /* For printf() pretty printing */
 	bool table_stat_entries = test_enabled("count-table-entries");
 
 	for (size_t i = 0; i < ctxt->table_size; i++)
@@ -410,7 +409,7 @@ static void table_stat(count_context_t *ctxt)
 				{
 					if (t->null_count != nc) continue;
 
-					printf("[%zu]%n", i, &n);
+					int n = printf("[%zu]", i);
 					printf("%*d %5d c=%"COUNT_FMT"\n",  15-n, t->l_id, t->r_id, t->count);
 				}
 			}
