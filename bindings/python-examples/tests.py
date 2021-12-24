@@ -1249,9 +1249,71 @@ class ZRULangTestCase(unittest.TestCase):
              'облачк.=', '=а.ndnpi',
              '.', 'RIGHT-WALL'])
 
+
 class ZXDictDialectTestCase(unittest.TestCase):
     def test_dialect(self):
         linkage_testfile(self, Dictionary(lang='en'), ParseOptions(dialect='headline'), 'dialect')
+
+
+# Test for some catastrophic failures in displaying word expressions.
+# FIXME: This is a very small subset of the tests that are needed to
+# cover the correctness of dict_display_word_expr().
+class ZZdict_display_word_expr(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+       cls.d, cls.po = Dictionary(), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+       del cls.d, cls.po
+
+    def test_nonexistent_word(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'xxxdummy', self.po._obj)
+       self.assertIsNone(out)
+
+    def test_unsubscripted_word(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'test', self.po._obj)
+       self.assertIsNotNone(out, 'Word "test" not found')
+       self.assertIn(' test.n ', out)
+
+    def test_subscripted_word(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'test.v', self.po._obj)
+       self.assertIsNotNone(out, 'Word "test.v" not found')
+       self.assertIn(' test.v ', out)
+       self.assertNotIn(' test.n ', out)
+
+    def test_wildcard(self):
+       ltdict = Dictionary('lt')
+       out = clg.dict_display_word_expr(ltdict._obj, '*', self.po._obj)
+       # The output contains at least this number of non-empty lines.
+       self.assertTrue(len(list(out.splitlines())) > 1800)
+
+    def test_macros(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'test/m', self.po._obj)
+       self.assertIn('<common-const-noun>:', out)
+       self.assertIn('<verb-pl,i>', out)
+
+    def test_disjuncts(self):
+       # dict_display_word_expr doesn't trigger reading the default cost_max.
+       self.po.disjunct_cost = clg.linkgrammar_get_dict_max_disjunct_cost(self.d._obj)
+
+       out = clg.dict_display_word_expr(self.d._obj, 'a//', self.po._obj)
+       self.assertIn('Token "a" disjuncts:', out)
+       #self.assertRegex(out, r'a: \[\d+] \d+\.\d+\s*=  <> Ds\*\*x\+')
+       self.assertIn(' a.eq ', out)
+
+    def test_disjunct_macros(self):
+       self.po.disjunct_cost = clg.linkgrammar_get_dict_max_disjunct_cost(self.d._obj)
+       # Here we use the word "test" that has many disjuncts, in a try to
+       # trigger memory handling bugs, if exist.
+       out = clg.dict_display_word_expr(self.d._obj, 'test//m', self.po._obj)
+       self.assertIn('Token "test" disjuncts:', out)
+       self.assertIn('<b-minus>: B*w- &', out)
+
+    def test_low_level_exp(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'a/l', self.po._obj)
+       self.assertRegex(out, r'e=0[xX][0-9a-fA-F]+: CONNECTOR Ds\*\*x\+ cost=0.000')
+
 
 #############################################################################
 
