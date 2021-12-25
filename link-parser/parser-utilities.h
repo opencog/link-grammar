@@ -35,8 +35,8 @@ typedef SSIZE_T ssize_t;
 #define strncasecmp _strnicmp
 #endif
 
-char *get_console_line(void);
 char **ms_windows_setup(int);
+int get_console_line(char *inbuf, int inbuf_size);
 int lg_isatty(int);
 #define isatty lg_isatty
 #else /* !_WIN32 */

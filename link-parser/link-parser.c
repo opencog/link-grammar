@@ -73,27 +73,51 @@ typedef enum
 	NO_LABEL = ' '
 } Label;
 
-static char * get_terminal_line(char *input_string, FILE *in, FILE *out)
+static int fgets_with_check(char *inbuf, unsigned int inbuf_size, FILE *fh)
 {
-	static char *pline;
+	const char *rc = fgets(inbuf, inbuf_size, fh);
+	if (rc == NULL)
+	{
+		/* EOF or error */
+		if (!ferror(fh)) return 0;
+		snprintf(inbuf, inbuf_size, "fgets(): %s", strerror(errno));
+		return -1;
+	}
+
+	size_t len = strlen(inbuf);
+	if ((len == inbuf_size -1) && inbuf[len -2] != '\n')
+	{
+		snprintf(inbuf, inbuf_size, "Input line too long (>%u).", inbuf_size-2);
+		return -1;
+	}
+
+	return 1;
+}
+
+static int get_terminal_line(char **input_string, FILE *in, FILE *out)
+{
 	const char *prompt = (0 == verbosity)? "" : "linkparser> ";
+	int rc = 1;
 
 #ifdef HAVE_EDITLINE
-	pline = lg_readline(prompt);
+	*input_string = lg_readline(prompt);
+	rc = (*input_string != NULL);
 #else
 	fprintf(out, "%s", prompt);
 	fflush(out);
 #ifdef _WIN32
 	if (!running_under_cygwin)
-		pline = get_console_line();
+	{
+		rc = get_console_line(*input_string, MAX_INPUT_LINE);
+	}
 	else
-		pline = fgets(input_string, MAX_INPUT_LINE, in);
-#else
-	pline = fgets(input_string, MAX_INPUT_LINE, in);
 #endif /* _WIN32 */
+	{
+		rc = fgets_with_check(*input_string, MAX_INPUT_LINE, in);
+	}
 #endif /* HAVE_EDITLINE */
 
-	return pline;
+	return rc;
 }
 
 static char * fget_input_string(FILE *in, FILE *out, bool check_return)
@@ -101,33 +125,31 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 	static char *pline;
 	static char input_string[MAX_INPUT_LINE];
 	static bool input_pending = false;
+	int rc;
 
 	if (input_pending)
 	{
 		input_pending = false;
 		return pline;
 	}
-
-	input_string[MAX_INPUT_LINE-2] = '\0';
+	pline = input_string;
 
 	if (((in != stdin) && !check_return) || !isatty_stdin)
 	{
 		/* Get input from a file. */
-		pline = fgets(input_string, MAX_INPUT_LINE, in);
+		rc = fgets_with_check(input_string, MAX_INPUT_LINE, in);
 	}
 	else
 	{
 		/* If we are here, the input is from a terminal. */
-		pline = get_terminal_line(input_string, in, out);
+		rc = get_terminal_line(&pline, in, out);
 	}
 
-	if (NULL == pline) return NULL;      /* EOF or error */
-
-	if (('\0' != input_string[MAX_INPUT_LINE-2]) &&
-	    ('\n' != input_string[MAX_INPUT_LINE-2]))
+	if (rc == 0) return NULL; /* EOF */
+	if (rc == -1)
 	{
-		prt_error("Warning: Input line too long (>%d)\n", MAX_INPUT_LINE-1);
-		/* TODO: Ignore it and its continuation part(s). */
+		prt_error("Fatal error: %s\n", input_string);
+		return NULL;
 	}
 
 	if (check_return)

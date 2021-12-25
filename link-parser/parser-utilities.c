@@ -19,7 +19,8 @@
 #include <windows.h>
 #include <wchar.h>
 #include <io.h>
-#include <shellapi.h>                    /* CommandLineToArgvW() */
+#include <shellapi.h>                   // CommandLineToArgvW()
+#include <errhandlingapi.h>             // GetLastError()
 #else
 #include <pwd.h>
 #include <signal.h>
@@ -106,18 +107,22 @@ char *expand_homedir(const char *filename)
 }
 
 #ifdef _WIN32
+#define INPUT_UTF16_SIZE 4096
 /**
  * Get a line from the console in UTF-8.
  * This function bypasses the code page conversion and reads Unicode
  * directly from the console.
- * @return An input line from the console in UTF-8 encoding.
+ * @param inbuf Buffer for the returned line (in UTF-8 encoding).
+ * @param inbuf_size The size of this buffer.
+ * @return -1: error; 0: EOF; 1: Success.
  */
-char *get_console_line(void)
+int get_console_line(char *inbuf, int inbuf_size)
 {
 	static HANDLE console_handle = NULL;
-	wchar_t winbuf[MAX_INPUT_LINE];
-	/* Worst-case: 4 bytes per UTF-8 char, 1 UTF-8 char per wchar_t char. */
-	static char utf8inbuf[MAX_INPUT_LINE*4+1];
+	wchar_t winbuf[INPUT_UTF16_SIZE];
+	static bool eof;
+
+	if (eof) return 0;
 
 	if (NULL == console_handle)
 	{
@@ -125,39 +130,52 @@ char *get_console_line(void)
 		                             NULL, OPEN_EXISTING, 0, NULL);
 		if (!console_handle || (INVALID_HANDLE_VALUE == console_handle))
 		{
-			prt_error("Error: CreateFileA CONIN$: Error %d.\n", (int)GetLastError());
-			return NULL;
+			snprintf(inbuf, inbuf_size, "CreateFileA CONIN$: Error %d", GetLastError());
+			return -1;
 		}
 	}
 
 	DWORD nchar;
-	if (!ReadConsoleW(console_handle, &winbuf, MAX_INPUT_LINE-sizeof(wchar_t), &nchar, NULL))
+	if (!ReadConsoleW(console_handle, &winbuf, INPUT_UTF16_SIZE-1, &nchar, NULL))
 	{
-		prt_error("Error: ReadConsoleW: Error %d\n", (int)GetLastError());
-		return NULL;
+		snprintf(inbuf, inbuf_size, "ReadConsoleW: Error %d\n", GetLastError());
+		return -1;
 	}
-	winbuf[nchar] = L'\0';
+	winbuf[nchar] = L'\0'; /* nchar is always <= INPUT_UTF16_SIZE-1.  */
 
-	nchar = WideCharToMultiByte(CP_UTF8, 0, winbuf, -1, utf8inbuf,
-	                            sizeof(utf8inbuf), NULL, NULL);
+	nchar = WideCharToMultiByte(CP_UTF8, 0, winbuf, -1, inbuf,
+	                            inbuf_size, NULL, NULL);
 	if (0 == nchar)
 	{
-		prt_error("Error: WideCharToMultiByte CP_UTF8 failed: Error %d.\n",
-		          (int)GetLastError());
-		return NULL;
+		DWORD err = GetLastError();
+		if (err == ERROR_INSUFFICIENT_BUFFER)
+			snprintf(inbuf, inbuf_size, "Input line too long (>%d)", inbuf_size-3);
+		else
+			snprintf(inbuf, inbuf_size, "WideCharToMultiByte CP_UTF8: Error %d", err);
+		return -1;
 	}
 
 	/* Make sure we don't have conversion problems, by searching for U+FFFD. */
-	const char *invalid_char  = strstr(utf8inbuf, "\xEF\xBF\xBD");
+	const char *invalid_char  = strstr(inbuf, "\xEF\xBF\xBD");
 	if (NULL != invalid_char)
-		prt_error("Warning: Invalid input character encountered.\n");
+	{
+		prt_error("Error: Unable to process UTF8 in input string.\n");
+		inbuf[0] = '\0'; /* Just ignore the input line. */
+	}
 
 	/* ^Z is read as a character. Convert it to an EOF indication. */
-	if ('\x1A' == utf8inbuf[0]) /* Only handle it at line start. */
-		return NULL;
+	char *ctrl_z_position = strchr(inbuf, '\x1A');
+	if (ctrl_z_position != NULL)
+	{
+		if (ctrl_z_position == inbuf) return 0;
+		*ctrl_z_position = '\n';
+		eof = true;
+		return 1;
+	}
 
-	return utf8inbuf;
+	return 1;
 }
+
 
 static int console_input_cp;
 static int console_output_cp;
