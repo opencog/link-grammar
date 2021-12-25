@@ -120,7 +120,7 @@ static int get_terminal_line(char **input_string, FILE *in, FILE *out)
 	return rc;
 }
 
-static char * fget_input_string(FILE *in, FILE *out, bool check_return)
+static char *fget_input_string(FILE *in, FILE *out, bool tty, bool check_return)
 {
 	static char *pline;
 	static char input_string[MAX_INPUT_LINE];
@@ -134,7 +134,7 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 	}
 	pline = input_string;
 
-	if (((in != stdin) && !check_return) || !isatty_stdin)
+	if (((in != stdin) && !check_return) || !tty)
 	{
 		/* Get input from a file. */
 		rc = fgets_with_check(input_string, MAX_INPUT_LINE, in);
@@ -405,7 +405,8 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 				{
 					fprintf(stdout, "Press RETURN for the next linkage.\n");
 				}
-				char *rc = fget_input_string(stdin, stdout, /*check_return*/true);
+				char *rc = fget_input_string(stdin, stdout, isatty_stdin,
+				                             /*check_return*/true);
 				if ((NULL == rc) || (*rc != '\n')) return rc;
 			}
 		}
@@ -769,7 +770,8 @@ int main(int argc, char * argv[])
 		debug = parse_options_get_debug(opts);
 		test = parse_options_get_test(opts);
 
-		input_string = fget_input_string(input_fh, stdout, /*check_return*/false);
+		input_string = fget_input_string(input_fh, stdout, isatty_stdin,
+		                                 /*check_return*/false);
 
 		if (NULL == input_string)
 		{
