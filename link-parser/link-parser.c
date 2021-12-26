@@ -66,6 +66,12 @@ static bool isatty_stdin, isatty_stdout;
 extern bool running_under_cygwin;
 #endif /* _WIN32 */
 
+static const char prompt[] = "linkparser> ";
+static const char *use_prompt(int verbosity_level)
+{
+	return (0 == verbosity_level)? "" : prompt;
+}
+
 typedef enum
 {
 	UNGRAMMATICAL = '*',
@@ -94,63 +100,83 @@ static int fgets_with_check(char *inbuf, unsigned int inbuf_size, FILE *fh)
 	return 1;
 }
 
-static int get_terminal_line(char **input_string, FILE *in, FILE *out)
+static int get_terminal_line(const char *uprompt, char **buf,
+                             unsigned int bufsize, FILE *in, FILE *out, bool tty)
 {
-	const char *prompt = (0 == verbosity)? "" : "linkparser> ";
 	int rc = 1;
 
 #ifdef HAVE_EDITLINE
-	*input_string = lg_readline(prompt);
-	rc = (*input_string != NULL);
+	*buf = lg_readline(uprompt);
+	rc = (*buf != NULL);
 #else
-	fprintf(out, "%s", prompt);
+	fprintf(out, "%s", uprompt);
 	fflush(out);
 #ifdef _WIN32
-	if (!running_under_cygwin)
+	if (!running_under_cygwin || tty)
 	{
-		rc = get_console_line(*input_string, MAX_INPUT_LINE);
+		rc = get_console_line(*buf, bufsize);
 	}
 	else
 #endif /* _WIN32 */
 	{
-		rc = fgets_with_check(*input_string, MAX_INPUT_LINE, in);
+		rc = fgets_with_check(*buf, bufsize, in);
 	}
 #endif /* HAVE_EDITLINE */
 
 	return rc;
 }
 
-static char *fget_input_string(FILE *in, FILE *out, bool tty, bool check_return)
+/*
+ * Get an input line. Notify errors.
+ *
+ * @param in: Input file handle.
+ * @param out: Output file handle.
+ * @param tty \c false: from file; \c true: from terminal.
+ * @return \c true if successful, \c false on error.
+ */
+static int get_line(const char *uprompt, char **buf, unsigned int bufsize,
+                     FILE *in, FILE *out, bool tty)
+{
+	int rc;
+
+	if ((in != stdin) || !tty)
+	{
+		/* Get input from a file. */
+		rc = fgets_with_check(*buf, bufsize, in);
+	}
+	else
+	{
+		/* If we are here, the input is from a terminal. */
+		rc = get_terminal_line(uprompt, buf, bufsize, in, out, tty);
+	}
+
+	if (rc == 0) return 0; /* EOF */
+	if (rc == -1)
+	{
+		prt_error("Fatal error: %s\n", *buf);
+		return -1;
+	}
+
+	return 1;
+}
+
+static char *fget_input_string(const char *uprompt, FILE *in, FILE *out,
+                               bool tty, bool check_return)
 {
 	static char *pline;
 	static char input_string[MAX_INPUT_LINE];
 	static bool input_pending = false;
-	int rc;
 
 	if (input_pending)
 	{
 		input_pending = false;
 		return pline;
 	}
+
 	pline = input_string;
 
-	if (((in != stdin) && !check_return) || !tty)
-	{
-		/* Get input from a file. */
-		rc = fgets_with_check(input_string, MAX_INPUT_LINE, in);
-	}
-	else
-	{
-		/* If we are here, the input is from a terminal. */
-		rc = get_terminal_line(&pline, in, out);
-	}
-
-	if (rc == 0) return NULL; /* EOF */
-	if (rc == -1)
-	{
-		prt_error("Fatal error: %s\n", input_string);
+	if (get_line(uprompt, &pline, MAX_INPUT_LINE, in, out, tty) != 1)
 		return NULL;
-	}
 
 	if (check_return)
 	{
@@ -405,8 +431,8 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 				{
 					fprintf(stdout, "Press RETURN for the next linkage.\n");
 				}
-				char *rc = fget_input_string(stdin, stdout, isatty_stdin,
-				                             /*check_return*/true);
+				char *rc = fget_input_string(use_prompt(verbosity),  stdin, stdout,
+				                             isatty_stdin, /*check_return*/true);
 				if ((NULL == rc) || (*rc != '\n')) return rc;
 			}
 		}
@@ -770,8 +796,8 @@ int main(int argc, char * argv[])
 		debug = parse_options_get_debug(opts);
 		test = parse_options_get_test(opts);
 
-		input_string = fget_input_string(input_fh, stdout, isatty_stdin,
-		                                 /*check_return*/false);
+		input_string = fget_input_string(use_prompt(verbosity), input_fh, stdout,
+		                                 isatty_stdin, /*check_return*/false);
 
 		if (NULL == input_string)
 		{
