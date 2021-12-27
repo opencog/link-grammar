@@ -32,7 +32,7 @@
 #endif /* !getopt_long */
 #endif /* _MSC_VER */
 
-int verbosity_level;
+int verbosity_level = 1;
 
 static const char prompt[] = "linkgenerator> ";
 static const char *use_prompt(int verbosity)
@@ -506,6 +506,7 @@ int main (int argc, char* argv[])
 	{
 		srand(getpid());
 	}
+	parse_options_set_verbosity(opts, verbosity_level);
 
 	printf("#\n# Corpus for language: \"%s\"\n", parms.language);
 	if (parms.sentence_length != 0)
