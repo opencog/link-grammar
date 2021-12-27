@@ -124,7 +124,7 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>post-build.bat $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-generator $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
       <Message>Performing post-build commands</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -150,7 +150,7 @@
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\link-grammar-x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>post-build.bat $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-generator $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Performing post-build commands</Message>
@@ -183,7 +183,7 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>post-build.bat $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-generator $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
       <Message>Performing post-build commands</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -210,7 +210,7 @@
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\link-grammar-x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>post-build.bat $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-generator $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Performing post-build commands</Message>
