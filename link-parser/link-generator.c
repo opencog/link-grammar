@@ -34,6 +34,12 @@
 
 int verbosity_level;
 
+static const char prompt[] = "linkgenerator> ";
+static const char *use_prompt(int verbosity)
+{
+	return (0 == verbosity)? "" : prompt;
+}
+
 /* Argument parsing for the generator */
 typedef struct
 {
@@ -554,15 +560,16 @@ int main (int argc, char* argv[])
 	}
 	else
 	{
-		char sbuf[1024] = { [sizeof(sbuf)-1] = 'x' };
-		char *retbuf = fgets(sbuf, sizeof(sbuf), stdin);
-		if (NULL == retbuf || sbuf[sizeof(sbuf)-1] != 'x')
-		{
-			prt_error("Fatal error: Input line too long (>%zu)\n", sizeof(sbuf)-2);
-			exit(-1);
-		}
-		sent = sentence_create(sbuf, dict);
-		printf("# Sentence template: %s\n", sbuf);
+		char sbuf[1024];
+		char *retbuf = sbuf;
+
+		int rc = get_line(use_prompt(verbosity_level), &retbuf, sizeof(sbuf),
+		                  stdin, stdout, isatty(fileno(stdin)));
+		if (rc == 0) exit(0); /* EOF. */
+		if (rc == -1) exit(-1); /* Error (get_line() issues an error message). */
+
+		sent = sentence_create(retbuf, dict);
+		printf("# Sentence template: %s\n", retbuf);
 	}
 
 	// sentence_split(sent, opts);
