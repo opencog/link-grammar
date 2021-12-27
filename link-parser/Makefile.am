@@ -28,7 +28,7 @@ link_generator_SOURCES = link-generator.c \
                          parser-utilities.h \
                          parser-utilities.c
 
-link_generator_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) -I$(top_srcdir)/link-grammar -I$(top_srcdir)/link-grammar/dict-common
+link_generator_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir) -I$(top_srcdir)/link-grammar -I$(top_srcdir)/link-grammar/dict-common -UHAVE_EDITLINE
 link_generator_CFLAGS = $(WARN_CFLAGS)
 link_generator_LDFLAGS = $(LINK_CFLAGS)
 link_generator_LDADD = $(top_builddir)/link-grammar/liblink-grammar.la

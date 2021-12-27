@@ -53,7 +53,6 @@
 
 #include "parser-utilities.h"
 #include "command-line.h"
-#include "lg_readline.h"
 
 #define DISPLAY_MAX 1024
 
@@ -62,9 +61,6 @@ static int verbosity = 0;
 static char * debug = (char *)"";
 static char * test = (char *)"";
 static bool isatty_stdin, isatty_stdout;
-#ifdef _WIN32
-extern bool running_under_cygwin;
-#endif /* _WIN32 */
 
 static const char prompt[] = "linkparser> ";
 static const char *use_prompt(int verbosity_level)
@@ -78,87 +74,6 @@ typedef enum
 	PARSE_WITH_DISJUNCT_COST_GT_0 = ':',  /* Not used anywhere, currently ... */
 	NO_LABEL = ' '
 } Label;
-
-static int fgets_with_check(char *inbuf, unsigned int inbuf_size, FILE *fh)
-{
-	const char *rc = fgets(inbuf, inbuf_size, fh);
-	if (rc == NULL)
-	{
-		/* EOF or error */
-		if (!ferror(fh)) return 0;
-		snprintf(inbuf, inbuf_size, "fgets(): %s", strerror(errno));
-		return -1;
-	}
-
-	size_t len = strlen(inbuf);
-	if ((len == inbuf_size -1) && inbuf[len -2] != '\n')
-	{
-		snprintf(inbuf, inbuf_size, "Input line too long (>%u).", inbuf_size-2);
-		return -1;
-	}
-
-	return 1;
-}
-
-static int get_terminal_line(const char *uprompt, char **buf,
-                             unsigned int bufsize, FILE *in, FILE *out, bool tty)
-{
-	int rc = 1;
-
-#ifdef HAVE_EDITLINE
-	*buf = lg_readline(uprompt);
-	rc = (*buf != NULL);
-#else
-	fprintf(out, "%s", uprompt);
-	fflush(out);
-#ifdef _WIN32
-	if (!running_under_cygwin || tty)
-	{
-		rc = get_console_line(*buf, bufsize);
-	}
-	else
-#endif /* _WIN32 */
-	{
-		rc = fgets_with_check(*buf, bufsize, in);
-	}
-#endif /* HAVE_EDITLINE */
-
-	return rc;
-}
-
-/*
- * Get an input line. Notify errors.
- *
- * @param in: Input file handle.
- * @param out: Output file handle.
- * @param tty \c false: from file; \c true: from terminal.
- * @return \c true if successful, \c false on error.
- */
-static int get_line(const char *uprompt, char **buf, unsigned int bufsize,
-                     FILE *in, FILE *out, bool tty)
-{
-	int rc;
-
-	if ((in != stdin) || !tty)
-	{
-		/* Get input from a file. */
-		rc = fgets_with_check(*buf, bufsize, in);
-	}
-	else
-	{
-		/* If we are here, the input is from a terminal. */
-		rc = get_terminal_line(uprompt, buf, bufsize, in, out, tty);
-	}
-
-	if (rc == 0) return 0; /* EOF */
-	if (rc == -1)
-	{
-		prt_error("Fatal error: %s\n", *buf);
-		return -1;
-	}
-
-	return 1;
-}
 
 static char *fget_input_string(const char *uprompt, FILE *in, FILE *out,
                                bool tty, bool check_return)

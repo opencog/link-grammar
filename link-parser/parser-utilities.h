@@ -43,5 +43,5 @@ int lg_isatty(int);
 #define ms_windows_setup(argc) (argv)
 #endif /* _WIN32 */
 
-char *get_utf8_line(char *, int, FILE *);
+bool get_line(const char *, char **, unsigned int, FILE *, FILE *, bool);
 #endif // _PARSER_UTILITIES_
