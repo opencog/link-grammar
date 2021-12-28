@@ -170,15 +170,20 @@
 
 %%%% Temporal Entity %%%%
 
-/th/words/words.n.temporal :
-    (
-        {hNUtr+}
-        & <noun-start-temporal> 
-        & {dAJt-} 
-        & {hAJt+} 
-        & (<noun-temporal> or <noun-element>)
-    )
-    or <noun-serial-temporal>;
+THAI-DATE
+THAI-TIME:
+    <noun-start-temporal>
+    & (<noun-temporal> or <noun-element>);
+
+% /th/words/words.n.temporal :
+%     (
+%         {hNUtr+}
+%         & <noun-start-temporal> 
+%         & {dAJt-} 
+%         & {hAJt+} 
+%         & (<noun-temporal> or <noun-element>)
+%     )
+%     or <noun-serial-temporal>;
 
 %%%%%%%%%%%%%%%%%%%%
 %   Pronoun
