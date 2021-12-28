@@ -565,7 +565,8 @@ int main (int argc, char* argv[])
 		char *retbuf = sbuf;
 
 		int rc = get_line(use_prompt(verbosity_level), &retbuf, sizeof(sbuf),
-		                  stdin, stdout, isatty(fileno(stdin)));
+		                  stdin, stdout,
+		                  isatty(fileno(stdin)) && isatty(fileno(stdout)));
 		if (rc == 0) exit(0); /* EOF. */
 		if (rc == -1) exit(-1); /* Error (get_line() issues an error message). */
 

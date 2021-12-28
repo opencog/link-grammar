@@ -60,7 +60,7 @@ static int batch_errors = 0;
 static int verbosity = 0;
 static char * debug = (char *)"";
 static char * test = (char *)"";
-static bool isatty_stdin, isatty_stdout;
+static bool isatty_io; /* Both input and output are tty. */
 
 static const char prompt[] = "linkparser> ";
 static const char *use_prompt(int verbosity_level)
@@ -342,12 +342,12 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 		{
 			if (!auto_next_linkage)
 			{
-				if ((verbosity > 0) && (!copts->batch_mode) && isatty_stdin && isatty_stdout)
+				if ((verbosity > 0) && (!copts->batch_mode) && isatty_io)
 				{
 					fprintf(stdout, "Press RETURN for the next linkage.\n");
 				}
 				char *rc = fget_input_string(use_prompt(verbosity),  stdin, stdout,
-				                             isatty_stdin, /*check_return*/true);
+				                             isatty_io, /*check_return*/true);
 				if ((NULL == rc) || (*rc != '\n')) return rc;
 			}
 		}
@@ -505,8 +505,7 @@ int main(int argc, char * argv[])
 	Parse_Options   opts;
 	bool batch_in_progress = false;
 
-	isatty_stdin = isatty(fileno(stdin));
-	isatty_stdout = isatty(fileno(stdout));
+	isatty_io = isatty(fileno(stdin)) && isatty(fileno(stdout));
 
 	argv = ms_windows_setup(argc);
 
@@ -712,7 +711,8 @@ int main(int argc, char * argv[])
 		test = parse_options_get_test(opts);
 
 		input_string = fget_input_string(use_prompt(verbosity), input_fh, stdout,
-		                                 isatty_stdin, /*check_return*/false);
+
+		                                 isatty_io, /*check_return*/false);
 
 		if (NULL == input_string)
 		{
