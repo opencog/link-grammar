@@ -177,7 +177,6 @@ int get_console_line(char *inbuf, int inbuf_size)
 	return 1;
 }
 
-
 static int console_input_cp;
 static int console_output_cp;
 static void restore_console_cp(void)
@@ -222,13 +221,13 @@ static void win32_set_utf8_output(void)
 	if (!SetConsoleCP(CP_UTF8))
 	{
 		prt_error("Warning: Cannot set input codepage %d (error %d).\n",
-			CP_UTF8, (int)GetLastError());
+			CP_UTF8, GetLastError());
 	}
 	/* For Console output. */
 	if (!SetConsoleOutputCP(CP_UTF8))
 	{
 		prt_error("Warning: Cannot set output codepage %d (error %d).\n",
-			CP_UTF8, (int)GetLastError());
+			CP_UTF8, GetLastError());
 	}
 }
 
@@ -275,7 +274,7 @@ int lg_isatty(int fd)
 
 	if (!GetFileInformationByHandleEx(fh, FileNameInfo, pfni, sizeof(buf)))
 	{
-		printf("GetFileInformationByHandleEx: Error %d\n", (int)GetLastError());
+		printf("GetFileInformationByHandleEx: Error %d\n", GetLastError());
 		goto no_tty;
 	}
 
@@ -338,12 +337,11 @@ static char **argv2utf8(int argc)
 		if (0 == n)
 		{
 			prt_error("Error: WideCharToMultiByte CP_UTF8 failed: Error %d.\n",
-			         (int)GetLastError());
+			         GetLastError());
 			return NULL;
 		}
 	}
 	LocalFree(warglist);
-
 
 	utf8_argv = nargv;
 	utf8_argc = argc;
