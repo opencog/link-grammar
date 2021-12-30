@@ -53,7 +53,6 @@
 
 #include "parser-utilities.h"
 #include "command-line.h"
-#include "lg_readline.h"
 
 #define DISPLAY_MAX 1024
 
@@ -61,10 +60,13 @@ static int batch_errors = 0;
 static int verbosity = 0;
 static char * debug = (char *)"";
 static char * test = (char *)"";
-static bool isatty_stdin, isatty_stdout;
-#ifdef _WIN32
-static bool running_under_cygwin = false;
-#endif /* _WIN32 */
+static bool isatty_io; /* Both input and output are tty. */
+
+static const char prompt[] = "linkparser> ";
+static const char *use_prompt(int verbosity_level)
+{
+	return (0 == verbosity_level)? "" : prompt;
+}
 
 typedef enum
 {
@@ -73,30 +75,8 @@ typedef enum
 	NO_LABEL = ' '
 } Label;
 
-static char * get_terminal_line(char *input_string, FILE *in, FILE *out)
-{
-	static char *pline;
-	const char *prompt = (0 == verbosity)? "" : "linkparser> ";
-
-#ifdef HAVE_EDITLINE
-	pline = lg_readline(prompt);
-#else
-	fprintf(out, "%s", prompt);
-	fflush(out);
-#ifdef _WIN32
-	if (!running_under_cygwin)
-		pline = get_console_line();
-	else
-		pline = fgets(input_string, MAX_INPUT_LINE, in);
-#else
-	pline = fgets(input_string, MAX_INPUT_LINE, in);
-#endif /* _WIN32 */
-#endif /* HAVE_EDITLINE */
-
-	return pline;
-}
-
-static char * fget_input_string(FILE *in, FILE *out, bool check_return)
+static char *fget_input_string(const char *uprompt, FILE *in, FILE *out,
+                               bool tty, bool check_return)
 {
 	static char *pline;
 	static char input_string[MAX_INPUT_LINE];
@@ -108,27 +88,10 @@ static char * fget_input_string(FILE *in, FILE *out, bool check_return)
 		return pline;
 	}
 
-	input_string[MAX_INPUT_LINE-2] = '\0';
+	pline = input_string;
 
-	if (((in != stdin) && !check_return) || !isatty_stdin)
-	{
-		/* Get input from a file. */
-		pline = fgets(input_string, MAX_INPUT_LINE, in);
-	}
-	else
-	{
-		/* If we are here, the input is from a terminal. */
-		pline = get_terminal_line(input_string, in, out);
-	}
-
-	if (NULL == pline) return NULL;      /* EOF or error */
-
-	if (('\0' != input_string[MAX_INPUT_LINE-2]) &&
-	    ('\n' != input_string[MAX_INPUT_LINE-2]))
-	{
-		prt_error("Warning: Input line too long (>%d)\n", MAX_INPUT_LINE-1);
-		/* TODO: Ignore it and its continuation part(s). */
-	}
+	if (get_line(uprompt, &pline, MAX_INPUT_LINE, in, out, tty) != 1)
+		return NULL;
 
 	if (check_return)
 	{
@@ -379,11 +342,12 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 		{
 			if (!auto_next_linkage)
 			{
-				if ((verbosity > 0) && (!copts->batch_mode) && isatty_stdin && isatty_stdout)
+				if ((verbosity > 0) && (!copts->batch_mode) && isatty_io)
 				{
 					fprintf(stdout, "Press RETURN for the next linkage.\n");
 				}
-				char *rc = fget_input_string(stdin, stdout, /*check_return*/true);
+				char *rc = fget_input_string(use_prompt(verbosity),  stdin, stdout,
+				                             isatty_io, /*check_return*/true);
 				if ((NULL == rc) || (*rc != '\n')) return rc;
 			}
 		}
@@ -541,31 +505,9 @@ int main(int argc, char * argv[])
 	Parse_Options   opts;
 	bool batch_in_progress = false;
 
-	isatty_stdin = isatty(fileno(stdin));
-	isatty_stdout = isatty(fileno(stdout));
+	isatty_io = isatty(fileno(stdin)) && isatty(fileno(stdout));
 
-#ifdef _WIN32
-	/* If compiled with MSVC/MinGW, we still support running under Cygwin.
-	 * This is done by checking running_under_cygwin to resolve
-	 * incompatibilities. */
-	const char *ostype = getenv("OSTYPE");
-	if ((NULL != ostype) && (0 == strcmp(ostype, "cygwin")))
-		running_under_cygwin = true;
-
-	/* argv encoding is in the current locale. */
-	argv = argv2utf8(argc);
-	if (NULL == argv)
-	{
-		prt_error("Fatal error: Unable to parse command line\n");
-		exit(-1);
-	}
-
-#ifdef _MSC_VER
-	_set_printf_count_output(1); /* enable %n support for display_1line_help()*/
-#endif /* _MSC_VER */
-
-	win32_set_utf8_output();
-#endif /* _WIN32 */
+	argv = ms_windows_setup(argc);
 
 	if ((argc > 1) && (argv[1][0] != '-')) {
 		/* The dictionary is the first argument if it doesn't begin with "-" */
@@ -768,7 +710,9 @@ int main(int argc, char * argv[])
 		debug = parse_options_get_debug(opts);
 		test = parse_options_get_test(opts);
 
-		input_string = fget_input_string(input_fh, stdout, /*check_return*/false);
+		input_string = fget_input_string(use_prompt(verbosity), input_fh, stdout,
+
+		                                 isatty_io, /*check_return*/false);
 
 		if (NULL == input_string)
 		{

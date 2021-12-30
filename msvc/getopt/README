@@ -1,0 +1,4 @@
+Downloaded https://gist.github.com/ashelly/7776712.
+Gist description:
+"Port of GNU getopt() to Win32 for anyone who's tired of dealing with getopt() calls in Unix-to-Windows ports."
+Ported by Pete Wilson. Recovered from the Internet Archive's snapshot of www.pwilson.net/sample.html.

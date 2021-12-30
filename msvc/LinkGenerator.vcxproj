@@ -19,21 +19,21 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\link-parser\command-line.c" />
-    <ClCompile Include="..\link-parser\lg_readline.c" />
-    <ClCompile Include="..\link-parser\link-parser.c" />
+    <ClCompile Include="..\link-parser\link-generator.c" />
+    <ClCompile Include="..\link-parser\generator-utilities.c" />
     <ClCompile Include="..\link-parser\parser-utilities.c" />
+    <ClCompile Include="getopt\getopt.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\link-parser\command-line.h" />
-    <ClInclude Include="..\link-parser\lg_readline.h" />
+    <ClInclude Include="..\link-parser\generator-utilities.h" />
     <ClInclude Include="..\link-parser\parser-utilities.h" />
+    <ClInclude Include="getopt\getopt.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{532EFF4D-758A-4705-91EE-9A4AC72C017B}</ProjectGuid>
     <RootNamespace>LinkGrammarExe</RootNamespace>
     <Keyword>Win32Proj</Keyword>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectGuid>{C86F1C7F-9E10-4E2B-BD8A-7152BDBC0B99}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -109,7 +109,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
       <CompileAs>CompileAsC</CompileAs>
-      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>getopt;..\link-grammar;..\link-grammar\dict-common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
@@ -124,7 +124,7 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>post-build.bat link-parser $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-generator $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
       <Message>Performing post-build commands</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -140,7 +140,7 @@
       <CompileAs>CompileAsC</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <OpenMPSupport>true</OpenMPSupport>
-      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>getopt;..\link-grammar;..\link-grammar\dict-common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OmitFramePointers>false</OmitFramePointers>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
@@ -150,7 +150,7 @@
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\link-grammar-x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>post-build.bat link-parser $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-generator $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Performing post-build commands</Message>
@@ -165,7 +165,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <PrecompiledHeader />
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>getopt;..\link-grammar;..\link-grammar\dict-common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OmitFramePointers>true</OmitFramePointers>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -183,7 +183,7 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>post-build.bat link-parser $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-generator $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
       <Message>Performing post-build commands</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -197,7 +197,7 @@
       <PrecompiledHeader>
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <AdditionalIncludeDirectories>..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>getopt;..\link-grammar;..\link-grammar\dict-common;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OmitFramePointers>true</OmitFramePointers>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -210,7 +210,7 @@
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\link-grammar-x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>post-build.bat link-parser $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-generator $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Performing post-build commands</Message>

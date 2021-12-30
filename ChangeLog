@@ -4,6 +4,7 @@ Version 5.10.3 (XXX 2021)
  * Fix memory leak in the "!" link-parser command. #1256
  * Add C++ regex support. It is now the default for MSVC builds. #1258
  * Fix spell-guess for run-on words. #1249
+ * Port link-generator to MS-Windows. #1269
 
 Version 5.10.2 (16 Sept 2021)
  * Fix python install path.

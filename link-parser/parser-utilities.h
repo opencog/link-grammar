@@ -35,11 +35,13 @@ typedef SSIZE_T ssize_t;
 #define strncasecmp _strnicmp
 #endif
 
-char *get_console_line(void);
-void win32_set_utf8_output(void);
-char **argv2utf8(int);
+char **ms_windows_setup(int);
+int get_console_line(char *inbuf, int inbuf_size);
 int lg_isatty(int);
 #define isatty lg_isatty
+#else /* !_WIN32 */
+#define ms_windows_setup(argc) (argv)
 #endif /* _WIN32 */
 
+bool get_line(const char *, char **, unsigned int, FILE *, FILE *, bool);
 #endif // _PARSER_UTILITIES_
