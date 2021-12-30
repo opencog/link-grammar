@@ -437,7 +437,7 @@ Tools that may need installation before you can build link-grammar:
 `autoconf`<br>
 `libtool`<br>
 `autoconf-archive`<br>
-`pkg-config`<br>
+`pkg-config` (may be named `pkgconf` or `pkgconfig`)<br>
 `pip3` (for the Python bindings)<br>
 
 Optional:<br>
@@ -470,8 +470,7 @@ It adds some verification debug code and functions that can
 pretty-print several data structures.
 
 A feature that may be useful for debugging is the word-graph
-display.  Use the `configure` option `--enable-wordgraph-display` to enable
-it. For more details on this feature, see
+display.  It is enabled by default. For more details on this feature, see
 [Word-graph display](link-grammar/tokenize/README.md#word-graph-display).
 
 
@@ -532,23 +531,7 @@ Windows systems from Vista on.
 The Cygwin way currently produces the best result, as it supports line editing
 with command completion and history and also supports word-graph displaying on
 X-windows. (MinGW currently doesn't  have `libedit`, and the MSVC port
-currently doesn't support command completion and history, spelling and
-X-Windows word-graph display.)
-
-Link-grammar requires a working version of POSIX-standard regex
-libraries.  Since these are not provided by Microsoft, a copy must
-be obtained elsewhere.  One popular choice is
-[TRE](http://gnuwin32.sourceforge.net/packages/tre.htm).
-
-Another popular choice is PCRE, 'Perl-Compatible Regular Expressions',
-available at: http://www.pcre.org/ .<br>
-For building on Windows: https://github.com/rivy/PCRE .<br>
-Another popular choice is
-[PCRE, 'Perl-Compatible Regular Expressions'](http://www.pcre.org/).<br>
-Older 32-bit binaries are at:
-http://gnuwin32.sourceforge.net/packages/regex.htm .<br>
-See also:
-http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README .
+currently doesn't support command completion and history, and also spelling.
 
 ### BUILDING on Windows (Cygwin)
 The easiest way to have link-grammar working on MS Windows is to
@@ -599,7 +582,7 @@ directory in that order, directly or under a directory names `data`:
    command, which may be a script).
 
 If link-parser cannot find the desired dictionary, use verbosity
-level 3 to debug the problem; for example:
+level 4 to debug the problem; for example:
 ```
 link-parser ru -verbosity=4
 ```
