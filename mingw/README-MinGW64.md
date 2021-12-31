@@ -98,8 +98,8 @@ Build break due to recent FORTIFY_SOURCES misconfiguration in Mingw-w64
 -----------------------------------------------------------------------
 Some packages are compiled with FORTIFY_SOURCES=2. Their configurations updates
 CFLAGS but not LIBS. If you get linking errors on undefined references to `__strcpy_chk`
-and `__stack_chk_fail`, add LIBS=-ssp to `configure` as follows:<br>
-`configure LIBS=-ssp ...`
+and `__stack_chk_fail`, add LIBS=-lssp to `configure` as follows:<br>
+`configure LIBS=-lssp ...`
 
 Test results
 ------------
