@@ -296,7 +296,7 @@ static bool link_advance(Dictionary dict)
 		bool ok = get_character(dict, false, c);
 		if (!ok) return false;
 	}
-	while (lg_isspace(c[0]));
+	while (lg_isspace((unsigned char)c[0]));
 
 	quote_mode = false;
 
@@ -311,12 +311,12 @@ static bool link_advance(Dictionary dict)
 			if (c[0] == '"' &&
 			    /* Check the next character too, to allow " in words */
 			    (*dict->pin == ':' || *dict->pin == ';' ||
-			    lg_isspace(*dict->pin))) {
+			    lg_isspace((unsigned char)*dict->pin))) {
 
 				dict->token[i] = '\0';
 				return true;
 			}
-			if (lg_isspace(c[0])) {
+			if (lg_isspace((unsigned char)c[0])) {
 				dict_error(dict, "White space inside of token.");
 				return false;
 			}
@@ -347,7 +347,7 @@ static bool link_advance(Dictionary dict)
 				dict->token[0] = '\0';
 				return true;
 			}
-			if (lg_isspace(c[0])) {
+			if (lg_isspace((unsigned char)c[0])) {
 				dict->token[i] = '\0';
 				return true;
 			}
@@ -1178,7 +1178,7 @@ static Exp *make_expression(Dictionary dict)
 			}
 			else if ((strcmp(dict->token, "or") != 0) &&
 			         (strcmp(dict->token, "and") != 0) &&
-			         isalpha(dict->token[0]))
+			         isalpha((unsigned char)dict->token[0]))
 			{
 				const char *bad = valid_dialect_name(dict->token);
 				if (bad != NULL)

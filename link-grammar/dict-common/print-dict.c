@@ -927,7 +927,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 		for (size_t i = 0; i < pat_len; i++)
 		{
 			const char *c =  &pattern[i];
-			if (!isalnum(*c) && (strchr("*+- ", *c) == NULL))
+			if (!isalnum((unsigned char)*c) && (strchr("*+- ", *c) == NULL))
 			{
 				prt_error("Warning: Invalid character \"%.*s\" in full "
 				          "disjunct specification.\n",
