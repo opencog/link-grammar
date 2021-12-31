@@ -1,8 +1,7 @@
 r"""
 Run Link Grammar Python scripts using the build target locations.
 
-This program sets PYTHONPATH and PATH, and uses Python2 or Python3
-to run the script, as needed.
+This program sets PYTHONPATH and PATH.
 
 This program is designed to reside in this directory.
 It reads Local.props in order to find Python's EXE location.
@@ -13,9 +12,9 @@ change the related variables.
 The default script directory is binding\python-examples and the default script
 to run is tests.py.  In order to run the file example.py there, the following
 can be used:
-console-prompt>make-check.py x64\Debug\Python2 example.py
+console-prompt>make-check.py x64\Debug\Python3 example.py
 The following starts an interactive python program:
-console-prompt>make-check.py x64\Debug\Python2 ""
+console-prompt>make-check.py x64\Debug\Python3 ""
 """
 import os
 import sys
@@ -31,7 +30,7 @@ def error(msg):
         print(msg)
     prog = os.path.basename(sys.argv[0])
     print("Usage: ", prog, '[python_flag] PYTHON_OUTDIR [script.py] [script_args]')
-    print(r'        OUTDIR is in the format of "x64\Debug\Python2"')
+    print(r'        OUTDIR is in the format of "x64\Debug\Python3"')
     sys.exit(1)
 
 local_prop = {}
