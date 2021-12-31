@@ -68,7 +68,6 @@ double hist_cost_cutoff(Count_bin*, count_t count);
 
 #else
 
-typedef int32_t count_t;
 #define COUNT_FMT PRId32
 
 typedef count_t Count_bin;
