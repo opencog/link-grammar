@@ -163,10 +163,11 @@
     (<noun-start> & <noun-element>)
     or <noun-attribute>;
 
-%%%% Prefix Noun %%%%
+%%%% Nominalizing Prefix %%%%
 
 /th/words/words.n.prefix :
-    <noun-imprel> & <noun-element>;
+    <noun-imprel>
+    & <noun-element>;
 
 %%%% Temporal Entity %%%%
 
@@ -175,21 +176,11 @@ THAI-TIME:
     <noun-start-temporal>
     & (<noun-temporal> or <noun-element>);
 
-% /th/words/words.n.temporal :
-%     (
-%         {hNUtr+}
-%         & <noun-start-temporal> 
-%         & {dAJt-} 
-%         & {hAJt+} 
-%         & (<noun-temporal> or <noun-element>)
-%     )
-%     or <noun-serial-temporal>;
-
 %%%%%%%%%%%%%%%%%%%%
 %   Pronoun
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.pr.common :
+/th/words/words.pro.common :
     (
         {hAJr+}
         & {<num-cl>}
@@ -257,7 +248,7 @@ THAI-TIME:
     {@hAX-}
     & {hS- & ([TP-] or ())}
     & {hAVpl-}
-    & {dPC- or dRC-}
+    & {dPC- or dRC- or dZN-}
     & (hO+ or [()])
     & {@hAV+}
     & {[VS+]};
@@ -395,17 +386,17 @@ NUMBERS.nu FRACTION.nu :
     or [hPC+ & <utterance-prep>]
     or (hPC+ & {PUsr+} & dAVpl+);
 
-/th/words/words.prep.noun :
+/th/words/words.prep.n :
     <prep-noun>;
 
-/th/words/words.prep.verb :
+/th/words/words.prep.v :
     <prep-verb>;
 
 /th/words/words.prep.nv :
     <prep-noun>
     or <prep-verb>;
 
-/th/words/words.nprep.noun :
+/th/words/words.prep-n.n :
     <nprep-noun>;
 
 % /th/words/words.nprep.verb :
@@ -421,7 +412,7 @@ NUMBERS.nu FRACTION.nu :
 % /th/words/words.vprep.verb :
 %     <vprep-verb>;
 
-/th/words/words.vprep.nv :
+/th/words/words.prep-v.nv :
     <vprep-noun>
     or <vprep-verb>;
 
