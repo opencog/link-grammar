@@ -76,12 +76,16 @@ AC_PROG_CC
 AC_PROG_CXX
 AX_COMPILER_VENDOR
 AC_PROG_CPP
-AM_PROG_LEX(noyywrap)
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 LT_INIT([win32-dll])
 PKG_PROG_PKG_CONFIG
+
+AC_PROG_LEX(noyywrap)
+(test -z "$LEX" || test "$LEX" == ':') &&
+	AC_MSG_ERROR([No flex/lex program found. Please install the "flex" or
+                 "btyacc" package.])
 
 # The below says "use the C compiler for all remaining tests".
 # That way, if g++ is not installed, configure won't crap out
