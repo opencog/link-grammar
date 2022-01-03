@@ -47,6 +47,7 @@ Packages that are used by the link-grammar library
 mingw-w64-x86_64-sqlite3<br>
 mingw-w64-x86_64-libtre-git<br>
 mingw-w64-x86_64-gettext<br>
+mingw-w64-x86_64-btyacc (for `flex`)<br>
 mingw-w64-x86_64-hunspell, mingw-w64-x86_64-hunspell-en (optional)<br>
 zlib-devel (optional - for the SAT parser)<br>
 mingw-w64-x86_64-python3<br>
