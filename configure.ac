@@ -68,6 +68,9 @@ dnl "Undefined AX_ macro" is checked in autogen.sh, so if this message
 dnl is changed here it should be changed there too.
 m4_pattern_forbid([^AX_(COMPILER_VENDOR|TLS|AX_CHECK_ZLIB|PKG_SWIG)\b],
 	[Undefined AX_ macro. Please install the "autoconf-archive" package.])
+m4_pattern_forbid([^PKG_],
+	[Undefined PKG_ macro. Please install the "pkg-config"
+                  package (may be also named "pkgconf" or "pkgconfig").])
 
 # OS checks, including Win32
 AC_CANONICAL_HOST
@@ -81,7 +84,7 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 LT_INIT([win32-dll])
 
-PKG_PROG_PKG_CONFIG
+PKG_PROG_PKG_CONFIGX
 test -z "$PKG_CONFIG" &&
 	AC_MSG_ERROR([No pkg-config program found. Please install the "pkg-config"
                   package (may be also named "pkgconf" or "pkgconfig").])
