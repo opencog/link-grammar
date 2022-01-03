@@ -851,10 +851,8 @@ AC_SUBST(pythondir)
 # of compiler warnings, so it got discarded here. Now we generate only
 # python3 bindings, but since we don't use this definition, it is still
 # discarded here.
-# Note: The v command allows to differentiate between the two flavors of sed.
-edit_in_place=-i
-sed v </dev/null 2>/dev/null || edit_in_place="-i ''"
-sed $edit_in_place '/HAVE_PYTHON/d' confdefs.h
+# Note: "sed -i" cannot be used because it is not portable.
+sed '/HAVE_PYTHON/d' confdefs.h > confdefs.h.bak && mv confdefs.h.bak confdefs.h
 
 popdef([AC_MSG_ERROR])
 
