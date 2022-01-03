@@ -1054,6 +1054,6 @@ $PACKAGE-$VERSION  build configuration settings
 	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
 	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
-	Definitions:                    ${DEFS}
+	Definitions:                    ${LG_DEFS}
 	Libraries:                      ${lglibs}
 ]"
