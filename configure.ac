@@ -84,7 +84,7 @@ AC_PROG_LN_S
 AC_PROG_MAKE_SET
 LT_INIT([win32-dll])
 
-PKG_PROG_PKG_CONFIGX
+PKG_PROG_PKG_CONFIG
 test -z "$PKG_CONFIG" &&
 	AC_MSG_ERROR([No pkg-config program found. Please install the "pkg-config"
                   package (may be also named "pkgconf" or "pkgconfig").])
@@ -275,8 +275,8 @@ then
 	# But not the NetBSD sh, so use sed instead.
 	# CFLAGS="${CFLAGS//-O[[2-9]]} -g"
 	# CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
-	CFLAGS=`echo -g ${CFLAGS} |sed "s/-O[[2-9]]//g"`
-	CXXFLAGS=`echo -g ${CXXFLAGS} |sed "s/-O[[2-9]]//g"`
+	CFLAGS=`AS_ECHO["-g ${CFLAGS}] |sed "s/-O[[2-9]]//g"`
+	CXXFLAGS=`AS_ECHO[-g ${CXXFLAGS}] |sed "s/-O[[2-9]]//g"`
 	LDFLAGS="-g ${LDFLAGS}"
 	AC_DEFINE(DEBUG,1)
 fi
@@ -936,7 +936,6 @@ if test "x$link_cv_warn_maybe" != "x$MAYBE_WARN"; then
 	unset link_cv_warn_cflags
 fi
 AC_CACHE_CHECK([for supported warning flags], link_cv_warn_cflags, [
-	echo
 	WARN_CFLAGS=""
 
 	# Some warning options are not supported by all versions of
@@ -981,7 +980,7 @@ AC_FUNC_STRERROR_R
 
 dnl Save the compilation definitions for an extended version printout
 AC_OUTPUT_MAKE_DEFS()
-LG_DEFS=`$ECHO "$DEFS" | $SED 's/\\\\//g'`
+LG_DEFS=`AS_ECHO["$DEFS"] | $SED 's/\\\\//g'`
 AC_SUBST(LG_DEFS)
 
 AC_CONFIG_FILES([
@@ -1033,7 +1032,7 @@ AC_OUTPUT
 lglibs=`${ECHO} "$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS $REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
 test -n "$regexlib_cxx" && REGEX_LIBS='C++'
 
-echo "
+AS_ECHO["
 $PACKAGE-$VERSION  build configuration settings
 
 	prefix:                         ${prefix}
@@ -1057,4 +1056,4 @@ $PACKAGE-$VERSION  build configuration settings
 	SQLite-backed dictionary:       ${SQLiteFound}
 	Definitions:                    ${DEFS}
 	Libraries:                      ${lglibs}
-"
+]"
