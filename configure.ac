@@ -626,7 +626,7 @@ AC_ARG_WITH([regexlib],
 
 lgregexlib=--with-regexlib="$with_regexlib"
 
-case $with_regexlib in
+case "$with_regexlib" in
 	'')
 		break
 		;;
