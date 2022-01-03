@@ -80,7 +80,11 @@ AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 LT_INIT([win32-dll])
+
 PKG_PROG_PKG_CONFIG
+test -z "$PKG_CONFIG" &&
+	AC_MSG_ERROR([No pkg-config program found. Please install the "pkg-config"
+                  package (may be also named "pkgconf" or "pkgconfig").])
 
 AC_PROG_LEX(noyywrap)
 (test -z "$LEX" || test "$LEX" == ':') &&
