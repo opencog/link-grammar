@@ -1312,7 +1312,7 @@ class ZZdict_display_word_expr(unittest.TestCase):
 
     def test_low_level_exp(self):
        out = clg.dict_display_word_expr(self.d._obj, 'a/l', self.po._obj)
-       self.assertRegex(out, r'e=0[xX][0-9a-fA-F]+: CONNECTOR Ds\*\*x\+ cost=0.000')
+       self.assertRegex(out, r'e=(0[xX])?[0-9a-fA-F]+: CONNECTOR Ds\*\*x\+ cost=0.000')
 
 
 #############################################################################
