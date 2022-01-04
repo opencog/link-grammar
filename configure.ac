@@ -888,6 +888,14 @@ if test -n "$swig_required"; then
 else
 	SWIGfound=no
 fi
+
+# "swig -swiglib" on MinGW64 (swig 4.02) gives the following 2 lines
+# C:\msys64\mingw64\bin\Lib
+# C:/msys64/mingw64/share/swig/4.0.2
+# This breaks the Makefiles at the place SWIG_LIB is set.
+# However, since we don't use SWIG_LIB, we can solve that by clearing it.
+SWIG_LIB=
+
 AM_CONDITIONAL(HAVE_SWIG, test -n "$SWIG")
 
 # ====================================================================
