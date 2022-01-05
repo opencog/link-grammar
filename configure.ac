@@ -128,14 +128,14 @@ if test "$EMSCRIPTEN" != ''; then
 fi
 if test "$emscripten" != yes; then
 	AX_PTHREAD
-	if [ test -n "$ax_pthread_ok" ]; then
+	if test -n "$ax_pthread_ok"; then
 		CC="${PTHREAD_CC:-CC}"
 		#CCX="${PTHREAD_CC:-CCX}"
 
 		dnl Currently, libtool uses --nostdlib when linking shared libraries,
 		dnl which causes the -pthread flag to be ignored. Try to work around that
 		dnl by explicitly specifying the pthread library unless it is already set.
-		if [ test -z "$PTHREAD_LIBS" ]; then
+		if test -z "$PTHREAD_LIBS"; then
 			PTHREAD_LIBS=-lpthread
 		fi
 	fi
