@@ -303,7 +303,7 @@ int lg_isatty(int fd)
 			return 1;
 	}
 no_tty:
-	errno = EINVAL;
+	errno = ENOTTY;
 	return 0;
 }
 
