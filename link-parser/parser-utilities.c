@@ -284,9 +284,9 @@ int lg_isatty(int fd)
 	pfni->FileName[pfni->FileNameLength / sizeof (WCHAR)] = L'\0';
 
 	/* Now check the name pattern.  The filename of a Cygwin pseudo tty pipe
-	   looks like this:
+	   matches this regex:
 
-			 \{cygwin,msys}-%16llx-pty%d-{to,from}-master
+			 ^\\(cygwin|msys)-{[a-z\d]}16-pty\d+-(to|from)-master
 
 		%16llx is the hash of the Cygwin installation, (to support multiple
 		parallel installations), %d id the pseudo tty number, "to" or "from"
