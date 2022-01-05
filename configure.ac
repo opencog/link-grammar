@@ -275,8 +275,8 @@ then
 	# But not the NetBSD sh, so use sed instead.
 	# CFLAGS="${CFLAGS//-O[[2-9]]} -g"
 	# CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
-	CFLAGS=`AS_ECHO["-g ${CFLAGS}] |sed "s/-O[[2-9]]//g"`
-	CXXFLAGS=`AS_ECHO[-g ${CXXFLAGS}] |sed "s/-O[[2-9]]//g"`
+	CFLAGS=`AS_ECHO["-g ${CFLAGS}] |$SED "s/-O[[2-9]]//g"`
+	CXXFLAGS=`AS_ECHO[-g ${CXXFLAGS}] |$SED "s/-O[[2-9]]//g"`
 	LDFLAGS="-g ${LDFLAGS}"
 	AC_DEFINE(DEBUG,1)
 fi
@@ -855,7 +855,7 @@ AC_SUBST(pythondir)
 # python3 bindings, but since we don't use this definition, it is still
 # discarded here.
 # Note: "sed -i" cannot be used because it is not portable.
-sed '/HAVE_PYTHON/d' confdefs.h > confdefs.h.bak && mv confdefs.h.bak confdefs.h
+$SED '/HAVE_PYTHON/d' confdefs.h >confdefs.h.bak && mv confdefs.h.bak confdefs.h
 
 popdef([AC_MSG_ERROR])
 
