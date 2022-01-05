@@ -299,7 +299,7 @@ int lg_isatty(int fd)
 		cp = wcschr(cp + 26, '-');
 		if (!cp)
 			goto no_tty;
-		if (!wcscmp(cp, L"-from-master") || !wcscmp(cp, L"-to-master"))
+		if (!wcsncmp(cp, L"-from-master", 12) || !wcsncmp(cp, L"-to-master", 10))
 			return 1;
 	}
 no_tty:
