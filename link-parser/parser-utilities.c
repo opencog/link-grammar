@@ -413,7 +413,7 @@ static int get_terminal_line(const char *uprompt, char **buf,
 	fprintf(out, "%s", uprompt);
 	fflush(out);
 #ifdef _WIN32
-	if (!running_under_cygwin || tty)
+	if (!running_under_cygwin && tty)
 	{
 		rc = get_console_line(*buf, bufsize);
 	}
