@@ -131,7 +131,8 @@ int get_console_line(char *inbuf, int inbuf_size)
 		                             NULL, OPEN_EXISTING, 0, NULL);
 		if (!console_handle || (INVALID_HANDLE_VALUE == console_handle))
 		{
-			snprintf(inbuf, inbuf_size, "CreateFileA CONIN$: Error %d", GetLastError());
+			snprintf(inbuf, inbuf_size, "CreateFileA CONIN$: Error %lu",
+			         GetLastError());
 			return -1;
 		}
 	}
@@ -139,7 +140,7 @@ int get_console_line(char *inbuf, int inbuf_size)
 	DWORD nchar;
 	if (!ReadConsoleW(console_handle, &winbuf, INPUT_UTF16_SIZE-1, &nchar, NULL))
 	{
-		snprintf(inbuf, inbuf_size, "ReadConsoleW: Error %d\n", GetLastError());
+		snprintf(inbuf, inbuf_size, "ReadConsoleW: Error %lu\n", GetLastError());
 		return -1;
 	}
 	winbuf[nchar] = L'\0'; /* nchar is always <= INPUT_UTF16_SIZE-1.  */
@@ -152,7 +153,8 @@ int get_console_line(char *inbuf, int inbuf_size)
 		if (err == ERROR_INSUFFICIENT_BUFFER)
 			snprintf(inbuf, inbuf_size, "Input line too long (>%d)", inbuf_size-3);
 		else
-			snprintf(inbuf, inbuf_size, "WideCharToMultiByte CP_UTF8: Error %d", err);
+			snprintf(inbuf, inbuf_size, "WideCharToMultiByte CP_UTF8: Error %lu",
+			         err);
 		return -1;
 	}
 
@@ -220,13 +222,13 @@ static void win32_set_utf8_output(void)
 	 * command "chcp 65001" before invoking link-parser. */
 	if (!SetConsoleCP(CP_UTF8))
 	{
-		prt_error("Warning: Cannot set input codepage %d (error %d).\n",
+		prt_error("Warning: Cannot set input codepage %d (error %lu).\n",
 			CP_UTF8, GetLastError());
 	}
 	/* For Console output. */
 	if (!SetConsoleOutputCP(CP_UTF8))
 	{
-		prt_error("Warning: Cannot set output codepage %d (error %d).\n",
+		prt_error("Warning: Cannot set output codepage %d (error %lu).\n",
 			CP_UTF8, GetLastError());
 	}
 }
@@ -274,7 +276,7 @@ int lg_isatty(int fd)
 
 	if (!GetFileInformationByHandleEx(fh, FileNameInfo, pfni, sizeof(buf)))
 	{
-		printf("GetFileInformationByHandleEx: Error %d\n", GetLastError());
+		printf("GetFileInformationByHandleEx: Error %lu\n", GetLastError());
 		goto no_tty;
 	}
 
@@ -282,9 +284,9 @@ int lg_isatty(int fd)
 	pfni->FileName[pfni->FileNameLength / sizeof (WCHAR)] = L'\0';
 
 	/* Now check the name pattern.  The filename of a Cygwin pseudo tty pipe
-	   looks like this:
+	   matches this regex:
 
-			 \{cygwin,msys}-%16llx-pty%d-{to,from}-master
+			 ^\\(cygwin|msys)-{[a-z\d]}16-pty\d+-(to|from)-master
 
 		%16llx is the hash of the Cygwin installation, (to support multiple
 		parallel installations), %d id the pseudo tty number, "to" or "from"
@@ -297,11 +299,11 @@ int lg_isatty(int fd)
 		cp = wcschr(cp + 26, '-');
 		if (!cp)
 			goto no_tty;
-		if (!wcscmp(cp, L"-from-master") || !wcscmp(cp, L"-to-master"))
+		if (!wcsncmp(cp, L"-from-master", 12) || !wcsncmp(cp, L"-to-master", 10))
 			return 1;
 	}
 no_tty:
-	errno = EINVAL;
+	errno = ENOTTY;
 	return 0;
 }
 
@@ -336,7 +338,7 @@ static char **argv2utf8(int argc)
 		n = WideCharToMultiByte(CP_UTF8, 0, warglist[i], -1, nargv[i], n, NULL, NULL);
 		if (0 == n)
 		{
-			prt_error("Error: WideCharToMultiByte CP_UTF8 failed: Error %d.\n",
+			prt_error("Error: WideCharToMultiByte CP_UTF8 failed: Error %lu.\n",
 			         GetLastError());
 			return NULL;
 		}
@@ -411,7 +413,7 @@ static int get_terminal_line(const char *uprompt, char **buf,
 	fprintf(out, "%s", uprompt);
 	fflush(out);
 #ifdef _WIN32
-	if (!running_under_cygwin || tty)
+	if (!running_under_cygwin && tty)
 	{
 		rc = get_console_line(*buf, bufsize);
 	}

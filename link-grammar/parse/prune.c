@@ -1346,7 +1346,7 @@ static void reset_last_criterion(multiset_table *cmt, const char *ctiterion)
  */
 static bool can_form_link(const char *s, const char *t, const char *e)
 {
-	if (islower(*t)) t++; /* Skip head-dependent indicator */
+	if (islower((unsigned char)*t)) t++; /* Skip head-dependent indicator */
 	while (is_connector_name_char(*s))
 	{
 		if (*s != *t) return false;

@@ -57,7 +57,7 @@ static const char * make_expression(Dictionary dict,
 	/* Search for the start of a connector */
 	Exp_type etype = CONNECTOR_type;
 	const char * p = exp_str;
-	while (*p && (lg_isspace(*p))) p++;
+	while (*p && (lg_isspace((unsigned char)*p))) p++;
 	if (0 == *p) return p;
 
 	/* If it's an open paren, assume its the beginning of a new list */
@@ -69,7 +69,7 @@ static const char * make_expression(Dictionary dict,
 	{
 		/* Search for the end of a connector */
 		const char * con_start = p;
-		while (*p && (isalnum(*p) || '*' == *p)) p++;
+		while (*p && (isalnum((unsigned char)*p) || '*' == *p)) p++;
 
 		/* Connectors always end with a + or - */
 		assert (('+' == *p) || ('-' == *p),
@@ -100,7 +100,7 @@ static const char * make_expression(Dictionary dict,
 
 	/* Is there any more? If not, return what we've got. */
 	p++;
-	while (*p && (lg_isspace(*p))) p++;
+	while (*p && (lg_isspace((unsigned char)*p))) p++;
 	if (')' == *p || 0 == *p)
 	{
 		return p;

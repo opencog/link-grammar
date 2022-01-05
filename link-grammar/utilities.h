@@ -218,7 +218,7 @@ void *aligned_alloc(size_t alignment, size_t size);
 #define strndupa(s, n) _strndupa3(alloca((n)+1), s, n)
 static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 {
-	strncpy(new_s, s, n);
+	memcpy(new_s, s, n);
 	new_s[n] = '\0';
 
 	return new_s;

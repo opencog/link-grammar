@@ -38,7 +38,7 @@ EXTRA_DIST =                            \
 	man/link-parser.1                    \
 	mingw/README-Cygwin.md               \
 	mingw/README-MinGW64.md              \
-	mingw/link-parser.bat                \
+	mingw/link-parser-mingw.bat          \
 	mingw/link-parser-cygwin.bat         \
 	msvc/LGlib-features.props            \
 	msvc/LinkGrammarExe.vcxproj          \

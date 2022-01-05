@@ -47,9 +47,9 @@ Packages that are used by the link-grammar library
 mingw-w64-x86_64-sqlite3<br>
 mingw-w64-x86_64-libtre-git<br>
 mingw-w64-x86_64-gettext<br>
+mingw-w64-x86_64-btyacc (for `flex`)<br>
 mingw-w64-x86_64-hunspell, mingw-w64-x86_64-hunspell-en (optional)<br>
 zlib-devel (optional - for the SAT parser)<br>
-mingw-w64-x86_64-python2<br>
 mingw-w64-x86_64-python3<br>
 
 Java bindings
@@ -75,7 +75,7 @@ will be found at `C:\msys64\mingw64\bin` and the dictionary files at
 
 Python bindings
 ---------------
-The bindings for Python2 (2.7.15) and Python3 (3.7.0) work fine.<br>
+The bindings for Python3 (3.7.0) works fine.<br>
 All the tests pass (when configured with `hunspell` and the SAT parser).
 
 Here is a way to work with python3 from Windows:
@@ -99,8 +99,8 @@ Build break due to recent FORTIFY_SOURCES misconfiguration in Mingw-w64
 -----------------------------------------------------------------------
 Some packages are compiled with FORTIFY_SOURCES=2. Their configurations updates
 CFLAGS but not LIBS. If you get linking errors on undefined references to `__strcpy_chk`
-and `__stack_chk_fail`, add LIBS=-ssp to `configure` as follows:<br>
-`configure LIBS=-ssp ...`
+and `__stack_chk_fail`, add LIBS=-lssp to `configure` as follows:<br>
+`configure LIBS=-lssp ...`
 
 Test results
 ------------

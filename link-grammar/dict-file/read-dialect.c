@@ -163,7 +163,7 @@ static char *get_label(dialect_file_status *dfile)
 	/* Trim spaces from end of label. */
 	char *p;
 	for (p = dfile->pin-1; p > label; p--)
-		if (!lg_isspace(*p)) break;
+		if (!lg_isspace((unsigned char)*p)) break;
 	p[1] = '\0';
 
 	const char *bad = valid_dialect_name(label);
@@ -209,7 +209,7 @@ static bool require_delimiter(dialect_file_status *dfile, char *s, char *buf)
 static void skip_space(dialect_file_status *dfile)
 {
 	while ((*dfile->pin != '\n') && (*dfile->pin != '\0') &&
-	       lg_isspace(*dfile->pin))
+	       lg_isspace((unsigned char)*dfile->pin))
 	{
 		dfile->pin++;
 	}

@@ -68,6 +68,9 @@ dnl "Undefined AX_ macro" is checked in autogen.sh, so if this message
 dnl is changed here it should be changed there too.
 m4_pattern_forbid([^AX_(COMPILER_VENDOR|TLS|AX_CHECK_ZLIB|PKG_SWIG)\b],
 	[Undefined AX_ macro. Please install the "autoconf-archive" package.])
+m4_pattern_forbid([^PKG_],
+	[Undefined PKG_ macro. Please install the "pkg-config"
+                  package (may be also named "pkgconf" or "pkgconfig").])
 
 # OS checks, including Win32
 AC_CANONICAL_HOST
@@ -76,12 +79,20 @@ AC_PROG_CC
 AC_PROG_CXX
 AX_COMPILER_VENDOR
 AC_PROG_CPP
-AM_PROG_LEX(noyywrap)
 AC_PROG_INSTALL
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
 LT_INIT([win32-dll])
+
 PKG_PROG_PKG_CONFIG
+test -z "$PKG_CONFIG" &&
+	AC_MSG_ERROR([No pkg-config program found. Please install the "pkg-config"
+                  package (may be also named "pkgconf" or "pkgconfig").])
+
+AC_PROG_LEX(noyywrap)
+(test -z "$LEX" || test "$LEX" == ':') &&
+	AC_MSG_ERROR([No flex/lex program found. Please install the "flex" or
+                 "btyacc" package.])
 
 # The below says "use the C compiler for all remaining tests".
 # That way, if g++ is not installed, configure won't crap out
@@ -117,14 +128,14 @@ if test "$EMSCRIPTEN" != ''; then
 fi
 if test "$emscripten" != yes; then
 	AX_PTHREAD
-	if [ test -n "$ax_pthread_ok" ]; then
+	if test -n "$ax_pthread_ok"; then
 		CC="${PTHREAD_CC:-CC}"
 		#CCX="${PTHREAD_CC:-CCX}"
 
 		dnl Currently, libtool uses --nostdlib when linking shared libraries,
 		dnl which causes the -pthread flag to be ignored. Try to work around that
 		dnl by explicitly specifying the pthread library unless it is already set.
-		if [ test -z "$PTHREAD_LIBS" ]; then
+		if test -z "$PTHREAD_LIBS"; then
 			PTHREAD_LIBS=-lpthread
 		fi
 	fi
@@ -264,8 +275,8 @@ then
 	# But not the NetBSD sh, so use sed instead.
 	# CFLAGS="${CFLAGS//-O[[2-9]]} -g"
 	# CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
-	CFLAGS=`echo -g ${CFLAGS} |sed "s/-O[[2-9]]//g"`
-	CXXFLAGS=`echo -g ${CXXFLAGS} |sed "s/-O[[2-9]]//g"`
+	CFLAGS=`AS_ECHO["-g ${CFLAGS}] |$SED "s/-O[[2-9]]//g"`
+	CXXFLAGS=`AS_ECHO[-g ${CXXFLAGS}] |$SED "s/-O[[2-9]]//g"`
 	LDFLAGS="-g ${LDFLAGS}"
 	AC_DEFINE(DEBUG,1)
 fi
@@ -622,7 +633,7 @@ AC_ARG_WITH([regexlib],
 
 lgregexlib=--with-regexlib="$with_regexlib"
 
-case $with_regexlib in
+case "$with_regexlib" in
 	'')
 		break
 		;;
@@ -843,10 +854,8 @@ AC_SUBST(pythondir)
 # of compiler warnings, so it got discarded here. Now we generate only
 # python3 bindings, but since we don't use this definition, it is still
 # discarded here.
-# Note: The v command allows to differentiate between the two flavors of sed.
-edit_in_place=-i
-sed v </dev/null 2>/dev/null || edit_in_place="-i ''"
-sed $edit_in_place '/HAVE_PYTHON/d' confdefs.h
+# Note: "sed -i" cannot be used because it is not portable.
+$SED '/HAVE_PYTHON/d' confdefs.h >confdefs.h.bak && mv confdefs.h.bak confdefs.h
 
 popdef([AC_MSG_ERROR])
 
@@ -857,16 +866,6 @@ if test x$enable_python_bindings = xyes; then
                   could not be configured (minimum version: PYTHON3_REQUIRED).])
 	fi
 fi
-
-# ===================================================================
-# argp is needed for link-generate.
-
-AC_CHECK_HEADER([argp.h], [AC_SEARCH_LIBS([argp_parse], [argp],, [no_argp=1])], [no_argp=1])
-
-if test -n "$no_argp"; then
-	AC_MSG_WARN([No argp library found - "link-generator" will not get built.])
-fi
-AM_CONDITIONAL(HAVE_ARGP, test -z "$no_argp")
 
 # ===================================================================
 # swig is needed for compiling the Perl and Python bindings ...
@@ -889,6 +888,14 @@ if test -n "$swig_required"; then
 else
 	SWIGfound=no
 fi
+
+# "swig -swiglib" on MinGW64 (swig 4.02) gives the following 2 lines
+# C:\msys64\mingw64\bin\Lib
+# C:/msys64/mingw64/share/swig/4.0.2
+# This breaks the Makefiles at the place SWIG_LIB is set.
+# However, since we don't use SWIG_LIB, we can solve that by clearing it.
+SWIG_LIB=
+
 AM_CONDITIONAL(HAVE_SWIG, test -n "$SWIG")
 
 # ====================================================================
@@ -937,7 +944,6 @@ if test "x$link_cv_warn_maybe" != "x$MAYBE_WARN"; then
 	unset link_cv_warn_cflags
 fi
 AC_CACHE_CHECK([for supported warning flags], link_cv_warn_cflags, [
-	echo
 	WARN_CFLAGS=""
 
 	# Some warning options are not supported by all versions of
@@ -982,7 +988,7 @@ AC_FUNC_STRERROR_R
 
 dnl Save the compilation definitions for an extended version printout
 AC_OUTPUT_MAKE_DEFS()
-LG_DEFS=`$ECHO "$DEFS" | $SED 's/\\\\//g'`
+LG_DEFS=`AS_ECHO["$DEFS"] | $SED 's/\\\\//g'`
 AC_SUBST(LG_DEFS)
 
 AC_CONFIG_FILES([
@@ -1034,7 +1040,7 @@ AC_OUTPUT
 lglibs=`${ECHO} "$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS $REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
 test -n "$regexlib_cxx" && REGEX_LIBS='C++'
 
-echo "
+AS_ECHO["
 $PACKAGE-$VERSION  build configuration settings
 
 	prefix:                         ${prefix}
@@ -1056,6 +1062,6 @@ $PACKAGE-$VERSION  build configuration settings
 	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
 	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
-	Definitions:                    ${DEFS}
+	Definitions:                    ${LG_DEFS}
 	Libraries:                      ${lglibs}
-"
+]"

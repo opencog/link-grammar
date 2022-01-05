@@ -294,7 +294,7 @@ static void calculate_connector_info(condesc_t * c)
 	const char *s;
 
 	s = c->string;
-	if (islower(*s))
+	if (islower((unsigned char)*s))
 	{
 		dassert((c->string[0] == 'h') || (c->string[0] == 'd'),
 	        "\'%c\': Bad head/dependent character", c->string[0]);

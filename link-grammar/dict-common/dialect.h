@@ -82,10 +82,10 @@ bool apply_dialect(Dictionary, Dialect *, unsigned int, Dialect *, dialect_info 
  */
 static inline const char *valid_dialect_name(const char *name)
 {
-	if (!isalpha(name[0])) return name;
+	if (!isalpha((unsigned char)name[0])) return name;
 	while (*++name != '\0')
 	{
-		if (!isalnum(name[0]) && name[0] != '_' && name[0] != '-')
+		if (!isalnum((unsigned char)name[0]) && name[0] != '_' && name[0] != '-')
 			return name;
 	}
 	return NULL;

@@ -207,7 +207,7 @@ void free_cost_table(Parse_Options opts)
 static bool dialect_conf_exists(dialect_info *dinfo)
 {
 	for (const char *p = dinfo->conf; *p != '\0'; p++)
-		if (!lg_isspace(*p)) return true;
+		if (!lg_isspace((unsigned char)*p)) return true;
 	return false;
 }
 

@@ -13,7 +13,7 @@
 #ifdef HAVE_HUNSPELL
 
 #if HAVE_PTHREAD && __MINGW32__
-#define HUN_THREAD_PROTECT
+#define HUN_THREAD_PROTECT 1
 #endif
 
 #include <stdio.h>

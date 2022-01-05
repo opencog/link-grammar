@@ -1,5 +1,5 @@
-%= A link-parser.exe wrapper for Cygwin =%
-%= This wrapper can be invoked from Cygwin or from a the Windows console. =%
+%= A link-parser.exe wrapper for MinGW64 =%
+%- This wrapper can be invoked from MINGW64 or from a the Windows console. =%
 
 @echo off
 
@@ -20,11 +20,14 @@ if x%1==x-b (
 setlocal
 if defined ProgramW6432 set ProgramFiles=%ProgramW6432%
 
-REM Add the Cygwin binary path
-set "PATH=C:\cygwin64\bin;\cygwin64\usr\local\bin;%PATH%"
+REM Prepend the MinGW64 binary path
+set "PATH=C:\msys64\mingw64\bin;%PATH%"
 
 REM For USE_WORDGRAPH_DISPLAY
-if not exist C:\cygwin64\bin\dot.exe (
+if exist C:\cygwin64\bin\dot.exe (
+	set "PATH=C:\cygwin64\bin;%PATH%"
+)
+else (
 	set "PATH=%ProgramFiles(x86)%\Graphviz2.38\bin;%PATH%"
 )
 REM Path for "PhotoViewer.dll"
