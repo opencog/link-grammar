@@ -1044,7 +1044,7 @@ AC_OUTPUT
 lglibs=`${ECHO} "$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS $REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
 test -n "$regexlib_cxx" && REGEX_LIBS='C++'
 
-AS_ECHO["
+AS_ECHO_N(["
 $PACKAGE-$VERSION  build configuration settings
 
 	prefix:                         ${prefix}
@@ -1068,4 +1068,10 @@ $PACKAGE-$VERSION  build configuration settings
 	SQLite-backed dictionary:       ${SQLiteFound}
 	Definitions:                    ${LG_DEFS}
 	Libraries:                      ${lglibs}
-]"
+])"
+# Show LDFLAGS if set (usually by environment of argument).
+if test -n "$LDFLAGS"; then
+	AS_ECHO(["	Loader flags:                   $LDFLAGS"])
+else
+	AS_ECHO([])
+fi
