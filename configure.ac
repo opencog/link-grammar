@@ -275,8 +275,8 @@ then
 	# But not the NetBSD sh, so use sed instead.
 	# CFLAGS="${CFLAGS//-O[[2-9]]} -g"
 	# CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
-	CFLAGS=`AS_ECHO["-g ${CFLAGS}] |$SED "s/-O[[2-9]]//g"`
-	CXXFLAGS=`AS_ECHO[-g ${CXXFLAGS}] |$SED "s/-O[[2-9]]//g"`
+	CFLAGS=`AS_ECHO["-g ${CFLAGS}"] |$SED "s/-O[[2-9]]//g"`
+	CXXFLAGS=`AS_ECHO["-g ${CXXFLAGS}"] |$SED "s/-O[[2-9]]//g"`
 	LDFLAGS="-g ${LDFLAGS}"
 	AC_DEFINE(DEBUG,1)
 fi
