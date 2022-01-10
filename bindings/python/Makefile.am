@@ -84,6 +84,9 @@ if !OS_CYGWIN
 PYMODULE_EXT = -shrext .pyd
 endif
 endif
+if OS_NETBSD
+AVOID_VERSION = -avoid-version
+endif
 _clinkgrammar_la_LDFLAGS =                        \
     -version-info @VERSION_INFO@ $(AVOID_VERSION) \
     $(PYTHON_LDFLAGS) -module -no-undefined $(PYMODULE_EXT)

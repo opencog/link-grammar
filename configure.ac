@@ -187,6 +187,18 @@ esac
 AC_MSG_RESULT([$apple_osx])
 AM_CONDITIONAL(OS_X, test "x$apple_osx" = "xyes")
 
+AC_MSG_CHECKING([for NetBSD])
+case "$host_os" in
+  *netbsd*)
+    netbsd=yes
+    ;;
+  *)
+    netbsd=no
+    ;;
+esac
+AC_MSG_RESULT([$netbsd])
+AM_CONDITIONAL(OS_NETBSD, test "x$netbsd" = "xyes")
+
 HOST_OS="$host_os"
 AC_SUBST(HOST_OS)
 # ====================================================================
