@@ -759,7 +759,7 @@ bool strtodC(const char *s, float *r)
 {
 	char *err;
 
-#if defined(HAVE_LOCALE_T) && !defined(__sun__)
+#if defined(HAVE_LOCALE_T) && !defined(__sun__) && !defined(__OpenBSD__)
 	double val = strtod_l(s, &err, get_C_LC_NUMERIC());
 #else
 	/* dictionary_setup_locale() invokes setlocale(LC_NUMERIC, "C") */
