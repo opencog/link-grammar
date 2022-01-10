@@ -271,6 +271,11 @@ AC_ARG_ENABLE( debug,
 
 if test "x$enable_debug" = "xyes"
 then
+	# Use -Og if possible
+	AX_CHECK_COMPILE_FLAG([-Og],
+		[CFLAGS="${CFLAGS} -Og" CXXFLAGS="${CXXFLAGS} -Og"],
+		[CFLAGS="${CFLAGS} -O0" CXXFLAGS="${CXXFLAGS} -O0"], [])
+
 	# Only bash supports double-backslash... Well, dash does too...
 	# But not the NetBSD sh, so use sed instead.
 	# CFLAGS="${CFLAGS//-O[[2-9]]} -g"
