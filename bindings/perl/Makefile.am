@@ -45,7 +45,15 @@ clinkgrammar_la_CPPFLAGS =      \
    -I$(top_srcdir)/link-grammar \
    -I$(top_builddir)
 
-clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(PERL_LDFLAGS) -module -no-undefined
+if OS_WIN32
+AVOID_VERSION = -avoid-version
+endif
+if OS_NETBSD
+AVOID_VERSION = -avoid-version
+endif
+
+clinkgrammar_la_LDFLAGS = -version-info $(AVOID_VERSION) @VERSION_INFO@ \
+								  $(PERL_LDFLAGS) -module -no-undefined
 clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
 
 if HAVE_HUNSPELL
