@@ -282,7 +282,6 @@ then
 	# CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
 	CFLAGS=`AS_ECHO["${CFLAGS}"] |$SED "s/-O[[2-9]]//g"`
 	CXXFLAGS=`AS_ECHO["${CXXFLAGS}"] |$SED "s/-O[[2-9]]//g"`
-	LDFLAGS="-g ${LDFLAGS}"
 	AC_DEFINE(DEBUG,1)
 fi
 
