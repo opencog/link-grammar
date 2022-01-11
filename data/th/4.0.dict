@@ -409,8 +409,8 @@ NUMBERS.nu FRACTION.nu :
 % /th/words/words.vprep.noun :
 %     <vprep-noun>;
 
-% /th/words/words.vprep.verb :
-%     <vprep-verb>;
+/th/words/words.prep-v.v :
+    <vprep-verb>;
 
 /th/words/words.prep-v.nv :
     <vprep-noun>
