@@ -177,7 +177,7 @@ AM_CONDITIONAL(OS_CYGWIN, test "x$cygwin" = "xyes")
 
 AC_MSG_CHECKING([for 64-bit Apple OSX])
 case "$host_os" in
-  darwin*)
+  x86_64-*darwin*)
     apple_osx=yes
     ;;
   *)
