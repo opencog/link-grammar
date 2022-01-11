@@ -177,7 +177,7 @@ AM_CONDITIONAL(OS_CYGWIN, test "x$cygwin" = "xyes")
 
 AC_MSG_CHECKING([for 64-bit Apple OSX])
 case "$host_os" in
-  darwin*)
+  x86_64-*darwin*)
     apple_osx=yes
     ;;
   *)
@@ -186,6 +186,18 @@ case "$host_os" in
 esac
 AC_MSG_RESULT([$apple_osx])
 AM_CONDITIONAL(OS_X, test "x$apple_osx" = "xyes")
+
+AC_MSG_CHECKING([for NetBSD])
+case "$host_os" in
+  *netbsd*)
+    netbsd=yes
+    ;;
+  *)
+    netbsd=no
+    ;;
+esac
+AC_MSG_RESULT([$netbsd])
+AM_CONDITIONAL(OS_NETBSD, test "x$netbsd" = "xyes")
 
 HOST_OS="$host_os"
 AC_SUBST(HOST_OS)
@@ -271,13 +283,17 @@ AC_ARG_ENABLE( debug,
 
 if test "x$enable_debug" = "xyes"
 then
+	# Use -Og if possible
+	AX_CHECK_COMPILE_FLAG([-Og],
+		[CFLAGS="${CFLAGS} -Og" CXXFLAGS="${CXXFLAGS} -Og"],
+		[CFLAGS="${CFLAGS} -O0" CXXFLAGS="${CXXFLAGS} -O0"], [])
+
 	# Only bash supports double-backslash... Well, dash does too...
 	# But not the NetBSD sh, so use sed instead.
 	# CFLAGS="${CFLAGS//-O[[2-9]]} -g"
 	# CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
-	CFLAGS=`AS_ECHO["-g ${CFLAGS}] |$SED "s/-O[[2-9]]//g"`
-	CXXFLAGS=`AS_ECHO[-g ${CXXFLAGS}] |$SED "s/-O[[2-9]]//g"`
-	LDFLAGS="-g ${LDFLAGS}"
+	CFLAGS=`AS_ECHO(["${CFLAGS}"]) | $SED "s/-O[[2-9]]//g"`
+	CXXFLAGS=`AS_ECHO(["${CXXFLAGS}"]) | $SED "s/-O[[2-9]]//g"`
 	AC_DEFINE(DEBUG,1)
 fi
 
@@ -988,7 +1004,7 @@ AC_FUNC_STRERROR_R
 
 dnl Save the compilation definitions for an extended version printout
 AC_OUTPUT_MAKE_DEFS()
-LG_DEFS=`AS_ECHO["$DEFS"] | $SED 's/\\\\//g'`
+LG_DEFS=`AS_ECHO(["$DEFS"]) | $SED 's/\\\\//g'`
 AC_SUBST(LG_DEFS)
 
 AC_CONFIG_FILES([
@@ -1037,10 +1053,12 @@ man/Makefile
 AC_OUTPUT
 
 # ====================================================================
-lglibs=`${ECHO} "$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS $REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"|${SED} 's/  */ /g'`
+lglibs=`AS_ECHO(m4_normalize(["$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS
+										$REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS
+										$LIBS"])) | ${SED} 's/  */ /g'`
 test -n "$regexlib_cxx" && REGEX_LIBS='C++'
 
-AS_ECHO["
+AS_ECHO_N(["
 $PACKAGE-$VERSION  build configuration settings
 
 	prefix:                         ${prefix}
@@ -1064,4 +1082,10 @@ $PACKAGE-$VERSION  build configuration settings
 	SQLite-backed dictionary:       ${SQLiteFound}
 	Definitions:                    ${LG_DEFS}
 	Libraries:                      ${lglibs}
-]"
+])"
+# Show LDFLAGS if set (usually by environment of argument).
+if test -n "$LDFLAGS"; then
+	AS_ECHO(["	Loader flags:                   $LDFLAGS"])
+else
+	AS_ECHO([])
+fi

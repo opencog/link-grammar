@@ -166,7 +166,7 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #ifdef HAVE_LOCALE_T
 locale_t newlocale_LC_CTYPE(const char *);
 #else
-typedef int locale_t;
+typedef void *locale_t;
 #define iswupper_l(c, l) iswupper(c)
 #define iswalpha_l(c, l) iswalpha(c)
 #define iswdigit_l(c, l) iswdigit(c)
