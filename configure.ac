@@ -1053,7 +1053,9 @@ man/Makefile
 AC_OUTPUT
 
 # ====================================================================
-lglibs=`AS_ECHO(["$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS $REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS $LIBS"])|${SED} 's/  */ /g'`
+lglibs=`AS_ECHO(m4_normalize(["$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS
+										$REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS
+										$LIBS"]))|${SED} 's/  */ /g'`
 test -n "$regexlib_cxx" && REGEX_LIBS='C++'
 
 AS_ECHO_N(["
