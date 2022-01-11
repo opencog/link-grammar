@@ -292,8 +292,8 @@ then
 	# But not the NetBSD sh, so use sed instead.
 	# CFLAGS="${CFLAGS//-O[[2-9]]} -g"
 	# CXXFLAGS="${CXXFLAGS//-O[[2-9]]} -g"
-	CFLAGS=`AS_ECHO(["${CFLAGS}"]) |$SED "s/-O[[2-9]]//g"`
-	CXXFLAGS=`AS_ECHO(["${CXXFLAGS}"]) |$SED "s/-O[[2-9]]//g"`
+	CFLAGS=`AS_ECHO(["${CFLAGS}"]) | $SED "s/-O[[2-9]]//g"`
+	CXXFLAGS=`AS_ECHO(["${CXXFLAGS}"]) | $SED "s/-O[[2-9]]//g"`
 	AC_DEFINE(DEBUG,1)
 fi
 
@@ -1055,7 +1055,7 @@ AC_OUTPUT
 # ====================================================================
 lglibs=`AS_ECHO(m4_normalize(["$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS
 										$REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS
-										$LIBS"]))|${SED} 's/  */ /g'`
+										$LIBS"])) | ${SED} 's/  */ /g'`
 test -n "$regexlib_cxx" && REGEX_LIBS='C++'
 
 AS_ECHO_N(["
