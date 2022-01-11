@@ -285,6 +285,9 @@ THAI-TIME:
     & dAJj-
     & {hAVw+};
 
+<adj-lhs> :
+    dAJj+;
+
 <adj-attribute> :
     {hCL-}
     & dAJv-
@@ -295,6 +298,9 @@ THAI-TIME:
 /th/words/words.adj.common
 /th/words/words.num.ordinal :
     <adj-simple>;
+
+/th/words/words.adj.lhs :
+    <adj-lhs>;
 
 %%%% Attributive Verb %%%%
 
@@ -436,7 +442,8 @@ NUMBERS.nu FRACTION.nu :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.conj.noun :
-    {PUs-}
+    {JD-}
+    & {PUs-}
     & {PUs+}
     & JNl-
     & JNr+
@@ -452,7 +459,8 @@ _.cn :
     & <noun-element>;
 
 /th/words/words.conj.verb :
-    {PUs-}
+    {JD-}
+    & {PUs-}
     & {PUs+}
     & JVl-
     & JVr+;
@@ -462,6 +470,9 @@ _.cv :
         JVl-
         & JVr+
     ]];
+
+/th/words/words.conj.discont :
+    JD+;
 
 %%%%%%%%%%%%%%%%%%%%
 % Particle
