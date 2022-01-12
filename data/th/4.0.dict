@@ -39,6 +39,7 @@
 %       AVn = numeral phrase modifying noun phrase
 %       AVv = numeral phrase modifying verb phrase
 %       AVt = temporal entity modifying verb phrase
+%       AVc = cohesive marker
 %   PT = particle
 %   IJ = interjection
 %   NU = number
@@ -216,6 +217,7 @@ THAI-TIME:
     )
     & {hAVpl-}
     & {hAVtl-}
+    & {hAVcl-}
     & (<left-wall-sent> or JVr-)
     & (hO+ or [()])
     & (
@@ -231,6 +233,7 @@ THAI-TIME:
         or [()]
     )
     & {hAVpl-}
+    & {hAVcl-}
     & (<left-wall-sent> or JVr-)
     & (
         ({@hAV+} & {@hAV-} & <right-wall>)
@@ -357,6 +360,9 @@ NUMBERS.nu FRACTION.nu :
 
 /th/words/words.adv.attrmod :
     dAM+ & {hAV+};
+
+/th/words/words.adv.cohmark :
+    dAVcl+;
 
 %%%%%%%%%%%%%%%%%%%%
 % Preposition
