@@ -216,8 +216,8 @@ CXXFLAGS="${CXXFLAGS} -Wall"
 # Final solution: enable std=c11, explicitly turn on BSD and SVID and
 # GNU, but do NOT turn on POSIX.
 
-CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAGS} ${CFLAG_VISIBILITY}"
-CXXFLAGS="-std=c++11 ${CXXFLAGS} ${CFLAG_VISIBILITY}"
+CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAG_VISIBILITY} ${CFLAGS}"
+CXXFLAGS="-std=c++11 ${CFLAG_VISIBILITY} ${CXXFLAGS}"
 
 if test x${native_win32} = xyes; then
 	# We need the shlwapi for PathRemoveFileSpecA().
@@ -301,8 +301,8 @@ AC_ARG_ENABLE( mudflap,
 
 if test "x$enable_mudflap" = "xyes"
 then
-	CFLAGS="${CFLAGS} -fmudflap"
-	LDFLAGS="${LDFLAGS} -fmudflap -lmudflap"
+	CFLAGS="-fmudflap ${CFLAGS}"
+	LDFLAGS="-lmudflap ${LDFLAGS}"
 fi
 
 # ====================================================================
@@ -314,8 +314,8 @@ AC_ARG_ENABLE( profile,
 )
 if test "x$enable_profile" = "xyes"
 then
-	CFLAGS="${CFLAGS} -pg"
-	LDFLAGS="${LDFLAGS} -pg"
+	CFLAGS="-pg ${CFLAGS}"
+	LDFLAGS="-pg ${LDFLAGS}"
 fi
 
 # ====================================================================
@@ -734,7 +734,7 @@ if test "x$enable_java_bindings" = "xyes"; then
 		# Java on Apple OSX requires a 64-bit build. However, even
 		# modern 64-bit Apple machines build 32-bit binaries by default.
 		# So force a 64-bit build if a 64-bit CPU is found.
-		CFLAGS="${CFLAGS} -arch x86_64"
+		CFLAGS="-arch x86_64 ${CFLAGS}"
 	fi
 
 	absolute_srcdir=`(cd "$srcdir"; pwd)`
