@@ -23,7 +23,7 @@
 #define WILDCARD_WORD    "\\*"    /* Any dictionary word. */
 
 /* MAX_WORD is large, because Unicode entries can use a lot of space. */
-#define MAX_WORD 180              /* Maximum number of bytes in a word. */
+#define MAX_WORD 1024              /* Maximum number of bytes in a word. */
 
 /* Word subscripts come after the subscript mark (ASCII ETX)
  * In the dictionary, a dot is used; but that dot interferes with dots

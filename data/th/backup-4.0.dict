@@ -18,26 +18,46 @@
 %   DEPENDENCY LINKS
 %
 %   LW = left wall
+%       LWs = sentence
+%       LWn = utterance of noun phrase
+%       LWp = utterance of preposition phrase
 %   RW = right wall
 %   VS = serial verb
 %   NS = serial noun
 %   S  = subject
 %   O  = object
 %   AJ = adjective
+%       AJr = relative clause
+%       AJj = simple adjective
+%       AJv = attributive verb
+%       AJp = preposition phrase
+%       AJt = temporal modifier
 %   AX = auxiliary
 %   AV = adverb
+%       AVp = preposition phrase
+%       AVw = simple adverb
+%       AVn = numeral phrase modifying noun phrase
+%       AVv = numeral phrase modifying verb phrase
+%       AVt = temporal entity modifying verb phrase
+%       AVc = cohesive marker
 %   PT = particle
 %   IJ = interjection
 %   NU = number
+%       NUn = simple number
+%       NUv = number for verb
 %   CL = classifier
+%       CLn = classifier for noun
+%       CLv = classifier for verb
 %   PO = prepositional object (noun)
 %   PC = prepositional complement (verb)
-%   RL = relative clause
 %   JN = conjoined noun
 %   JV = conjoined verb
 %   TP = topicalization
 %   RI = implicit relative clause
 %   AT = attribute
+%   QF = numeral quantifier
+%   AM = attribute modifier
+%   PS = possessive pronoun
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -47,16 +67,28 @@
 %                                       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-<left-wall> :
+<left-wall-sent> :
     {@IJ-}
-    & LW-;
+    & LWs-;
+
+<left-wall-noun> :
+    {@IJ-}
+    & LWn-;
+
+<left-wall-prep> :
+    {@IJ-}
+    & LWp-;
 
 <right-wall> :
     {@PT+} 
     & RW+;
 
-<utterance> :
-    <left-wall>
+<utterance-noun> :
+    <left-wall-noun>
+    & <right-wall>;
+
+<utterance-prep> :
+    <left-wall-prep>
     & <right-wall>;
 
 <num-cl> :
@@ -72,16 +104,28 @@
 % Noun
 %%%%%%%%%%%%%%%%%%%%
 
-<noun-start> :
-    {NS+ or hAT+}
-    & {@hAJ+}
+<noun-looking-for-mods> :
+    {@hAJ+ or hPS+}
     & {PUp+ or PUy+}
     & {<num-cl>}
     & {@hAJ+};
 
+<noun-start> :
+    {NS+ or hAT+}
+    & <noun-looking-for-mods>;
+
+<noun-start-temporal> :
+    {TS+ or hAT+}
+    & <noun-looking-for-mods>
+    & {PUsr+ & TS+};
+
 <noun-serial> :
     NS-
     & {NS+};
+
+<noun-serial-temporal> :
+    TS-
+    & {TS+};
 
 <noun-imprel> :
     hRI+
@@ -94,7 +138,7 @@
 <noun-element> :
     dS+
     or dO-
-    or [<utterance>]
+    or [<utterance-noun>]
     or dPO-
     or JNl+ 
     or JNr- 
@@ -105,30 +149,45 @@
     or <noun-serial>
     or (<noun-imprel> & <noun-element>);
 
+<noun-temporal> :
+    dAVtl+
+    or dAVtr-;
+
 %%%% Common Noun %%%%
 
-/th/words/words.n.common:
+/th/words/words.n.common :
     <noun-simple>;
 
 %%%% Attributive Noun %%%%
 
-/th/words/words.n.attribute:
+/th/words/words.n.attribute :
     (<noun-start> & <noun-element>)
     or <noun-attribute>;
 
-%%%% Prefix Noun %%%%
+%%%% Nominalizing Prefix %%%%
 
-/th/words/words.n.prefix:
-    <noun-imprel> & <noun-element>;
+/th/words/words.n.prefix :
+    <noun-imprel>
+    & <noun-element>;
+
+%%%% Temporal Entity %%%%
+
+THAI-DATE
+THAI-TIME:
+    <noun-start-temporal>
+    & (<noun-temporal> or <noun-element>);
 
 %%%%%%%%%%%%%%%%%%%%
 %   Pronoun
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.pr.common:
-    {hAJr+}
-    & {<num-cl>}
-    & <noun-element>;
+/th/words/words.pro.common :
+    (
+        {hAJr+}
+        & {<num-cl>}
+        & <noun-element>
+    )
+    or dPS-;
 
 %%%%%%%%%%%%%%%%%%%%
 % Classifier
@@ -140,10 +199,10 @@
 <cls-v> :
     dCLv+ or dCLv-;
 
-/th/words/words.cl.noun:
+/th/words/words.cl.noun :
     <cls-n>;
 
-/th/words/words.cl.verb:
+/th/words/words.cl.verb :
     <cls-v>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -157,10 +216,15 @@
         or [()]
     )
     & {hAVpl-}
-    & (<left-wall> or JVr-)
+    & {hAVtl-}
+    & {hAVcl-}
+    & (<left-wall-sent> or JVr-)
     & (hO+ or [()])
-    & {@hAV+}
-    & (<right-wall> or [VS+] or JVl+);
+    & (
+        ({@hAV+} & <right-wall>)
+        or [VS+] 
+        or ({@hAV+} & JVl+)
+    );
 
 <verb-intrans> :
     {@hAX-}
@@ -169,7 +233,8 @@
         or [()]
     )
     & {hAVpl-}
-    & (<left-wall> or JVr-)
+    & {hAVcl-}
+    & (<left-wall-sent> or JVr-)
     & (
         ({@hAV+} & {@hAV-} & <right-wall>)
         or [VS+]
@@ -186,7 +251,7 @@
     {@hAX-}
     & {hS- & ([TP-] or ())}
     & {hAVpl-}
-    & {dPC- or dRC-}
+    & {dPC- or dRC- or dZN-}
     & (hO+ or [()])
     & {@hAV+}
     & {[VS+]};
@@ -198,20 +263,20 @@
 
 <verb-simple> :
     (
-        {PUsl-}
-        & {PUsr+}
+        {[[PUsl-]]}
+        & {[[PUsr+]]}
         & (<verb-start> or <verb-serial> or <verb-comp>)
     )
     or [<verb-imprel>];
 
 <verb-simple-intrans> :
-    {PUsl-}
-    & {PUsr+}
+    {[[PUsl-]]}
+    & {[[PUsr+]]}
     & <verb-intrans>;
 
 %%%% Common Verb %%%%
 
-/th/words/words.v.common:
+/th/words/words.v.common :
     <verb-simple>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -220,66 +285,148 @@
 
 <adj-simple> :
     {hCL-}
-    & dAJ-
-    & {hAV+};
+    & dAJj-
+    & {hAVw+};
+
+<adj-lhs> :
+    dAJj+;
+
+<adj-attribute> :
+    {hCL-}
+    & dAJv-
+    & {hAVw+ or hAVp+};
 
 %%%% Simple Adjective %%%%
 
-/th/words/words.adj.common:
+/th/words/words.adj.common
+/th/words/words.num.ordinal :
     <adj-simple>;
+
+/th/words/words.adj.lhs :
+    <adj-lhs>;
 
 %%%% Attributive Verb %%%%
 
-/th/words/words.v.attribute:
-    <adj-simple>
-    or [<verb-simple-intrans> or <verb-comp>];
+/th/words/words.v.attribute :
+    {hAM-}
+    & (
+        <adj-attribute>
+        or [<verb-simple-intrans> or <verb-comp>]
+    );
 
 %%%%%%%%%%%%%%%%%%%%
 % Number
 %%%%%%%%%%%%%%%%%%%%
 
+<number-simple> :
+    ({hQFl-} & dNUnr- & hCLn+ & {hQFr+})
+    or [{hQFl-} & dAVnr- & hCLn+ & {hQFr+}]
+    or [{hQFl-} & dAVvr- & hCLv+ & {hQFr+}]
+    or dNUnl+
+    or dNUtr-
+    or dONr-;
+
 /th/words/words.num.common
 NUMBERS.nu FRACTION.nu :
-    (dNUn- & hCLn+)
-    or [dAVn- & hCLn+]
-    or [dAVv- & hCLv+]
-    or dNUn+;
+    {PUsl-} & {PUsr+} & <number-simple>;
 
-/th/words/words.num.movable:
-    (hCLn- & (dNUn- or [dAVn-]))
-    or (hCLv- & (dNUv- or [dAVv-]));
+/th/words/words.num.movable :
+    (hCLn- & (dNUnr- or [dAVnr-]))
+    or (hCLv- & (dNUvr- or [dAVvr-]));
+
+/th/words/words.qf.lhs :
+    dQFl+;
+
+/th/words/words.qf.rhs :
+    dQFr-;
+
+/th/words/words.ordmark :
+    hONr+
+    & <adj-simple>;
 
 %%%%%%%%%%%%%%%%%%%%
 % Auxiliary
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.aux.common:
+/th/words/words.aux.common :
     dAX+;
 
 %%%%%%%%%%%%%%%%%%%%
 % Adverb
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.adv.common:
-    dAVw-;
+/th/words/words.adv.common :
+    dAVw- & {hAV+};
+
+/th/words/words.adv.attrmod :
+    dAM+ & {hAV+};
+
+/th/words/words.adv.cohmark :
+    dAVcl+;
 
 %%%%%%%%%%%%%%%%%%%%
 % Preposition
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.prep.noun:
-    (([dAVpr-] or dAJpr-) & hPO+)
-    or
-    (hPO+ & {PUsr+} & dAVpl+);
+<prep-noun> :
+    ((dAVpr- or [dAJpr-]) & hPO+)
+    or [hPO+ & <utterance-prep>]
+    or (hPO+ & {PUsr+} & dAVpl+);
 
-/th/words/words.prep.verb:
-    (([dAVpr-] or dAJpr-) & hPC+)
+<prep-verb> :
+    ((dAVpr- or [dAJpr-]) & hPC+)
+    or [hPC+ & <utterance-prep>]
     or (hPC+ & {PUsr+} & dAVpl+);
 
-/th/words/words.prep.nv:
-    (([dAVpr-] or dAJpr-) & (hPO+ or hPC+))
-    or
-    ((hPO+ or hPC+) & {PUsr+} & dAVpl+);
+<nprep-noun> :
+    (dAJpr- & hPO+)
+    or [hPO+ & <utterance-prep>]
+    or (hPO+ & {PUsr+} & dAVpl+);
+
+<nprep-verb> :
+    (dAJpr- & hPC+)
+    or [hPC+ & <utterance-prep>]
+    or (hPC+ & {PUsr+} & dAVpl+);
+
+<vprep-noun> :
+    (dAVpr- & hPO+)
+    or [hPO+ & <utterance-prep>]
+    or (hPO+ & {PUsr+} & dAVpl+);
+
+<vprep-verb> :
+    (dAVpr- & hPC+)
+    or [hPC+ & <utterance-prep>]
+    or (hPC+ & {PUsr+} & dAVpl+);
+
+/th/words/words.prep.n :
+    <prep-noun>;
+
+/th/words/words.prep.v :
+    <prep-verb>;
+
+/th/words/words.prep.nv :
+    <prep-noun>
+    or <prep-verb>;
+
+/th/words/words.prep-n.n :
+    <nprep-noun>;
+
+% /th/words/words.nprep.verb :
+%     <nprep-verb>;
+
+% /th/words/words.nprep.nv :
+%     <nprep-noun>
+%     or <nprep-verb>;
+
+% /th/words/words.vprep.noun :
+%     <vprep-noun>;
+
+/th/words/words.prep-v.v :
+    <vprep-verb>;
+
+/th/words/words.prep-v.nv :
+    <vprep-noun>
+    or <vprep-verb>;
 
 %%%%%%%%%%%%%%%%%%%%
 % Relative Pronoun
@@ -290,18 +437,19 @@ NUMBERS.nu FRACTION.nu :
 
 <relsent> :
     (dAVr- or hRC+)
-    & <left-wall>
+    & <left-wall-sent>
     & <right-wall>;
 
-/th/words/words.relpro.common:
-    <relcls> or <relsent>;
+/th/words/words.relpro.common :
+    <relcls> or [<relsent>];
 
 %%%%%%%%%%%%%%%%%%%%
 % Conjunction
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.conj.noun:
-    {PUs-}
+/th/words/words.conj.noun :
+    {JD-}
+    & {PUs-}
     & {PUs+}
     & JNl-
     & JNr+
@@ -316,8 +464,9 @@ _.cn :
     & <noun-start>
     & <noun-element>;
 
-/th/words/words.conj.verb:
-    {PUs-}
+/th/words/words.conj.verb :
+    {JD-}
+    & {PUs-}
     & {PUs+}
     & JVl-
     & JVr+;
@@ -328,11 +477,14 @@ _.cv :
         & JVr+
     ]];
 
+/th/words/words.conj.discont :
+    JD+;
+
 %%%%%%%%%%%%%%%%%%%%
 % Particle
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.part.common:
+/th/words/words.part.common :
     PT-;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -340,7 +492,7 @@ _.cv :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.intj.common
-EMOTICON:
+EMOTICON :
     {PUs-}
     & {PUs+}
     & (IJ+ or PT-);

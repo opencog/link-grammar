@@ -39,7 +39,7 @@
 %       AVn = numeral phrase modifying noun phrase
 %       AVv = numeral phrase modifying verb phrase
 %       AVt = temporal entity modifying verb phrase
-%       AVc = cohesive marker
+%       AVc = clause-level adverb
 %   PT = particle
 %   IJ = interjection
 %   NU = number
@@ -111,7 +111,7 @@
     & {@hAJ+};
 
 <noun-start> :
-    {NS+ or hAT+}
+    {[NS+] or hAT+}
     & <noun-looking-for-mods>;
 
 <noun-start-temporal> :
@@ -361,8 +361,11 @@ NUMBERS.nu FRACTION.nu :
 /th/words/words.adv.attrmod :
     dAM+ & {hAV+};
 
-/th/words/words.adv.cohmark :
+/th/words/words.adv.lhs :
     dAVcl+;
+
+/th/words/words.adv.rhs :
+    dAVcr-;
 
 %%%%%%%%%%%%%%%%%%%%
 % Preposition
@@ -418,8 +421,8 @@ NUMBERS.nu FRACTION.nu :
 %     <nprep-noun>
 %     or <nprep-verb>;
 
-% /th/words/words.vprep.noun :
-%     <vprep-noun>;
+/th/words/words.prep-v.n :
+    <vprep-noun>;
 
 /th/words/words.prep-v.v :
     <vprep-verb>;
