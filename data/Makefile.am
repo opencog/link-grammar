@@ -1,4 +1,4 @@
-SUBDIRS=ady amy any gen ar de en fa he id kz lt ru tr vn demo-sql
+SUBDIRS=ady amy any gen ar de en fa he id kz lt ru th tr vn demo-sql
 
 dictdir=$(pkgdatadir)
 dict_DATA=command-help-en.txt
