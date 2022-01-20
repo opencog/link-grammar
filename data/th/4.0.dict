@@ -33,9 +33,12 @@
 %       AJp = preposition phrase
 %       AJt = temporal modifier
 %   AX = auxiliary
+%       AXw = simple auxiliary
+%       AXg = negative auxiliary
 %   AV = adverb
 %       AVp = preposition phrase
 %       AVw = simple adverb
+%       AVg = negative adverb
 %       AVn = numeral phrase modifying noun phrase
 %       AVv = numeral phrase modifying verb phrase
 %       AVt = temporal entity modifying verb phrase
@@ -349,7 +352,7 @@ NUMBERS.nu FRACTION.nu :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.aux.common :
-    dAX+;
+    dAXw+;
 
 %%%%%%%%%%%%%%%%%%%%
 % Adverb
@@ -366,6 +369,16 @@ NUMBERS.nu FRACTION.nu :
 
 /th/words/words.adv.rhs :
     dAVcr-;
+
+%%%%%%%%%%%%%%%%%%%%
+% Negator
+%%%%%%%%%%%%%%%%%%%%
+
+/th/words/words.neg.lhs :
+    dAXg+;
+
+/th/words/words.neg.rhs :
+    dAVgr-;
 
 %%%%%%%%%%%%%%%%%%%%
 % Preposition
