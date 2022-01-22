@@ -158,7 +158,8 @@
 
 %%%% Common Noun %%%%
 
-/th/words/words.n.common :
+/th/words/words.n.common 
+THAI-COLOR.n :
     <noun-simple>;
 
 %%%% Attributive Noun %%%%
@@ -175,8 +176,7 @@
 
 %%%% Temporal Entity %%%%
 
-THAI-DATE
-THAI-TIME:
+THAI-DATE THAI-TIME :
     <noun-start-temporal>
     & (<noun-temporal> or <noun-element>);
 
@@ -260,7 +260,7 @@ THAI-TIME:
     & {[VS+]};
 
 <verb-imprel> :
-    dRI-
+    [dRI-]
     & (hO+ or [()])
     & {[hAV+]};
 
@@ -302,7 +302,8 @@ THAI-TIME:
 %%%% Simple Adjective %%%%
 
 /th/words/words.adj.common
-/th/words/words.num.ordinal :
+/th/words/words.num.ordinal
+THAI-COLOR.j :
     <adj-simple>;
 
 /th/words/words.adj.lhs :
@@ -310,7 +311,8 @@ THAI-TIME:
 
 %%%% Attributive Verb %%%%
 
-/th/words/words.v.attribute :
+/th/words/words.v.attribute
+THAI-COLOR.va :
     {hAM-}
     & (
         <adj-attribute>
@@ -330,7 +332,8 @@ THAI-TIME:
     or dONr-;
 
 /th/words/words.num.common
-NUMBERS.nu FRACTION.nu :
+NUMBERS.nu FRACTION.nu 
+THAI-NUMBERS.nu THAI-FRACTION.nu:
     {PUsl-} & {PUsr+} & <number-simple>;
 
 /th/words/words.num.movable :
