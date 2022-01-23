@@ -430,8 +430,8 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 /th/words/words.prep-n.n :
     <nprep-noun>;
 
-% /th/words/words.nprep.verb :
-%     <nprep-verb>;
+/th/words/words.prep-n.v :
+    <nprep-verb>;
 
 % /th/words/words.nprep.nv :
 %     <nprep-noun>
