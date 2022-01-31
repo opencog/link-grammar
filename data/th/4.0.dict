@@ -397,6 +397,11 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     or [hPC+ & <utterance-prep>]
     or (hPC+ & {PUsr+} & dAVpl+);
 
+<prep-lw> :
+    ((dAVpr- or [dAJpr-]) & LW+)
+    or [LW+ & <utterance-prep>]
+    or (LW+ & {PUsr+} & dAVpl+);
+
 <nprep-noun> :
     (dAJpr- & hPO+)
     or [hPO+ & <utterance-prep>]
@@ -446,6 +451,9 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 /th/words/words.prep-v.nv :
     <vprep-noun>
     or <vprep-verb>;
+
+/th/words/words.prep.lw :
+    <prep-lw>;
 
 %%%%%%%%%%%%%%%%%%%%
 % Relative Pronoun
