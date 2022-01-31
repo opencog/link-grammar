@@ -397,10 +397,16 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     or [hPC+ & <utterance-prep>]
     or (hPC+ & {PUsr+} & dAVpl+);
 
+<prep-lw-comp> :
+    @hPO+
+    or @hPC+
+    or @hAVp+
+    or @hAJp+;
+
 <prep-lw> :
-    ((dAVpr- or [dAJpr-]) & LW+)
-    or [LW+ & <utterance-prep>]
-    or (LW+ & {PUsr+} & dAVpl+);
+    ((dAVpr- or [dAJpr-]) & <prep-lw-comp>)
+    or [<prep-lw-comp> & <utterance-prep>]
+    or (<prep-lw-comp> & {PUsr+} & dAVpl+);
 
 <nprep-noun> :
     (dAJpr- & hPO+)
