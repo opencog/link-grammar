@@ -367,11 +367,8 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 /th/words/words.adv.attrmod :
     dAM+ & {hAV+};
 
-/th/words/words.adv.lhs :
+/th/words/words.adv.cohesive :
     dAVcl+;
-
-/th/words/words.adv.rhs :
-    dAVcr-;
 
 %%%%%%%%%%%%%%%%%%%%
 % Negator
