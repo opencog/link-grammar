@@ -15,7 +15,7 @@ Class 1:
 
 ----------------------------------------
 Class 2:
-	v/words.v.common
+	low v/words.v.common
 	del cl/words.cl.verb
 	del n/words.n.common
 	r/words.adv.cohesive
@@ -31,7 +31,7 @@ Class 3:
 	cl/words.cl.verb
 	n/words.n.common
 	p/words.prep.n
-	va/words.v.attribute
+	low va/words.v.attribute
 	fx/words.n.prefix
 	del r/words.adv.common
 ด้าน  
@@ -43,48 +43,48 @@ Class 4:
 	p/words.prep-v.nv
 	cl/words.cl.verb
 	del v/words.v.common
-	n/words.n.common
-	fx/words.n.prefix
+	del n/words.n.common
+	del fx/words.n.prefix
 เท่า  
 
 ----------------------------------------
 Class 5:
 	p/words.prep.nv
-	cl/words.cl.noun
-	p/words.prep-v.nv
-	cl/words.cl.verb
-	pt/words.part.common
-	p/words.prep-v.v
-	n/words.n.common
+	del cl/words.cl.noun
+	del p/words.prep-v.nv
+	del cl/words.cl.verb
+	del pt/words.part.common
+	del p/words.prep-v.v
+	del n/words.n.common
 เมื่อ  
 
 ----------------------------------------
 Class 6:
 	j/words.adj.common
 	r/words.adv.common
-	cl/words.cl.noun
-	cl/words.cl.verb
-	n/words.n.common
+	del cl/words.cl.noun
+	del cl/words.cl.verb
+	del n/words.n.common
 	r/words.adv.cohesive
 เดิม  
 
 ----------------------------------------
 Class 7:
 	j/words.adj.common
-	cl/words.cl.noun
+	del cl/words.cl.noun
 	v/words.v.common
-	cl/words.cl.verb
-	n/words.n.common
-	r/words.adv.common
+	del cl/words.cl.verb
+	del n/words.n.common
+	del r/words.adv.common
 รอง  
 
 ----------------------------------------
 Class 8:
-	j/words.adj.common
-	cl/words.cl.noun
+	del j/words.adj.common
+	del cl/words.cl.noun
 	j/words.adj.lhs
-	cl/words.cl.verb
-	n/words.n.common
+	del cl/words.cl.verb
+	del n/words.n.common
 	r/words.adv.common
 หลาย  
 
@@ -93,36 +93,36 @@ Class 9:
 	ng/words.neg.lhs
 	j/words.adj.common
 	pt/words.part.common
-	va/words.v.attribute
-	n/words.n.common
+	del va/words.v.attribute
+	del n/words.n.common
 	r/words.adv.common
 เปล่า  
 
 ----------------------------------------
 Class 10:
-	v/words.v.common
-	pt/words.part.common
-	p/words.prep.n
+	del v/words.v.common
+	del pt/words.part.common
+	del p/words.prep.n
 	r/words.adv.attrmod
-	n/words.n.common
+	del n/words.n.common
 	r/words.adv.common
 หน่อย  
 
 ----------------------------------------
 Class 11:
-	cl/words.cl.noun
+	del cl/words.cl.noun
 	v/words.v.common
-	cl/words.cl.verb
-	n/words.n.common
+	del cl/words.cl.verb
+	del n/words.n.common
 	r/words.adv.common
 	x/words.aux.common
 ไป  
 
 ----------------------------------------
 Class 12:
-	cl/words.cl.noun
+	del cl/words.cl.noun
 	v/words.v.common
-	cl/words.cl.verb
+	del cl/words.cl.verb
 	va/words.v.attribute
 	n/words.n.common
 	r/words.adv.common

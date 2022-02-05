@@ -463,7 +463,9 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 %%%%%%%%%%%%%%%%%%%%
 
 <relcls> :
-    dAJr- & hPC+;
+    {hCLn-}
+    & dAJr-
+    & hPC+;
 
 <relsent> :
     (dAVr- or hRC+)
