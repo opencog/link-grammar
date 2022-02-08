@@ -423,8 +423,10 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	dict->num_categories++;
 	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
+	char* esc = escape_quotes(argv[0]);
 	dict->category[dict->num_categories].name =
-		string_set_add(argv[0], dict->string_set);
+		string_set_add(esc, dict->string_set);
+	if (esc != argv[0]) free(esc);
 
 	char category_string[16];     /* For the tokenizer - not used here */
 	snprintf(category_string, sizeof(category_string), " %x",
