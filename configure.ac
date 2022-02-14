@@ -4,7 +4,7 @@
 # accordingly.
 # Don't end the URLs with a slash even if it appears in the official address,
 # because we may append a component. Also, they cannot include "!".
-AC_INIT([link-grammar],[5.10.2],[https://github.com/opencog/link-grammar],[],
+AC_INIT([link-grammar],[5.10.3],[https://github.com/opencog/link-grammar],[],
 		  [https://www.abisource.com/projects/link-grammar])
 
 dnl Check whether we want to set defaults for CFLAGS and CXXFLAGS
@@ -37,7 +37,7 @@ LINK_MINOR_VERSION=10
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=2
+LINK_MICRO_VERSION=3
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -55,8 +55,8 @@ AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 # When maintainer-mode is enabled, downstream users sometimes trip
 # trip over automake issues. See bug #649.
-# AM_MAINTAINER_MODE([disable])
-AM_MAINTAINER_MODE([enable])
+AM_MAINTAINER_MODE([disable])
+# AM_MAINTAINER_MODE([enable])
 
 AC_CONFIG_MACRO_DIR([m4])
 

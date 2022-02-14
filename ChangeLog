@@ -1,4 +1,4 @@
-Version 5.10.3 (XXX 2022)
+Version 5.10.3 (14 Feb 2022)
  * Remove `node.js/package-lock.json` from tarball distribution. #1251
  * Fix Windows MSVC build break. #1253
  * Fix memory leak in the "!" link-parser command. #1256
