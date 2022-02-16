@@ -536,7 +536,7 @@ EMOTICON :
 _.pu :
     PUs+ or PUs-;
 
-ๆ.pu :
+ๆ.pu ฯลฯ.pu :
     {PUs-}
     & dPUy-
     & {PUs+};
