@@ -301,6 +301,10 @@ THAI-DATE THAI-TIME :
 
 %%%% Simple Adjective %%%%
 
+% Test frame: _____ (non-verb) + kwàa/láew
+%     If not allowed, it is an adjective.
+%     Otherwise, it is an attributive verb.
+
 /th/words/words.adj.common
 /th/words/words.num.ordinal
 THAI-COLOR.j :
@@ -310,6 +314,8 @@ THAI-COLOR.j :
     <adj-lhs>;
 
 %%%% Attributive Verb %%%%
+
+% Test frame: khwaam + _____
 
 /th/words/words.v.attribute
 THAI-COLOR.va :
