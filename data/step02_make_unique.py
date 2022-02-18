@@ -50,11 +50,8 @@ def remove_specific_from_parent(node):
 
 def main():
     content = set()
-    opath = sys.argv[1]
-    for fname in sys.argv[2:]:
-        read_content(content, fname)
-    for word in sorted(content):
-        print(word)
+    ifname = sys.argv[1]
+    opath = sys.argv[2]
 
 ############################################################
 
