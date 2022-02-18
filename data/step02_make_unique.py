@@ -27,6 +27,27 @@ def create_node(filetree):
 
 ############################################################
 
+def move_common_to_parent(node):
+    common = None
+    for dtr in node['dtrs']:
+        move_common_to_parent(dtr)
+        if common is None:
+            common = dtr['words']
+        else:
+            common = common & dtr['words']
+    if len(common) != 0:
+        for dtr in node['dtrs']:
+            dtr['words'] = dtr['words'] - common
+
+############################################################
+
+def remove_specific_from_parent(node):
+    for dtr in node['dtrs']:
+        dtr['words'] = dtr['words'] - node['words']
+        remove_specific_from_parent(dtr)
+
+############################################################
+
 def main():
     content = set()
     opath = sys.argv[1]
