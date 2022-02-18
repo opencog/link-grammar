@@ -9,14 +9,28 @@ def read_content(content, fname):
     fhdl = open(fname)
     for line in fhdl:
         line = line.strip()
+        if len(line) == 0: continue
         content.add(line)
     fhdl.close()
 
 ############################################################
 
+def create_node(filetree):
+    fname = filetree[0]
+    result = {'fname': fname, 'words': set(), 'dtrs': []}
+    if fname is not None:
+        read_content(result['words'], fname)
+    for dtr in filetree[1]:
+        tree = create_node(dtr)
+        result['dtrs'].append(tree)
+    return result
+
+############################################################
+
 def main():
     content = set()
-    for fname in sys.argv[1:]:
+    opath = sys.argv[1]
+    for fname in sys.argv[2:]:
         read_content(content, fname)
     for word in sorted(content):
         print(word)
