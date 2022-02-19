@@ -110,9 +110,14 @@ def read_content(content, fname):
 def create_node(filetree):
     fname = filetree.fname
     result = {'fname': fname, 'words': set(), 'dtrs': []}
+    print(f'>>> Loading {fname} ...', end='')
     if fname is not None:
         if os.path.exists(fname):
             read_content(result['words'], fname)
+        if len(result['words']) == 0:
+            input('***ZERO members***')
+        else:
+            print(f'{len(result["words"])} members')
     for dtr in filetree.dtrs:
         tree = create_node(dtr)
         result['dtrs'].append(tree)
@@ -121,41 +126,49 @@ def create_node(filetree):
 ############################################################
 
 def move_common_to_parent(node):
-    common = None
     for dtr in node['dtrs']:
         move_common_to_parent(dtr)
+
+    if len(node['dtrs']) < 2:
+        return
+
+    common = None
+    for dtr in node['dtrs']:
         if common is None:
             common = dtr['words']
         else:
             common = common & dtr['words']
-    if common is None:
-        common = set()
-    if len(common) != 0:
+
+    if common is not None and len(common) != 0:
         for dtr in node['dtrs']:
-            dtr['words'] = dtr['words'] - common
+            diff = dtr['words'] - common
+            if len(diff) > 0:
+                dtr['words'] = diff
 
 ############################################################
 
 def remove_specific_from_parent(node):
     for dtr in node['dtrs']:
         dtr['words'] = dtr['words'] - node['words']
+    for dtr in node['dtrs']:
         remove_specific_from_parent(dtr)
 
 ############################################################
 
-def write_hier(opath, node):
+def write_hier(opath, node, spc=0):
     if node['fname'] is not None:
         head, tail = os.path.split(node['fname'])
         ofname = os.path.join(opath, tail)
     else:
         ofname = os.path.join(opath, 'words.any')
+    print(spc * ' ' + f'>>> Writing out: {ofname} ... {len(node["words"])}')
     ofhdl = open(ofname, 'w')
     for word in sorted(node['words']):
         ofhdl.write(word + '\n')
     ofhdl.close()
 
     for dtr in node['dtrs']:
-        write_hier(opath, dtr)
+        write_hier(opath, dtr, spc+4)
 
 ############################################################
 
@@ -170,7 +183,7 @@ def main():
     pos_hier = create_node(hier)
     move_common_to_parent(pos_hier)
     remove_specific_from_parent(pos_hier)
-    print(pos_hier)
+    # print(pos_hier)
     write_hier(opath, pos_hier)
 
 ############################################################

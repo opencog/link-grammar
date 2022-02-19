@@ -1,63 +1,63 @@
-words/words.adj.lhs
+old_words/words.adj.lhs
 
-words/words.intj.common
+old_words/words.intj.common
 
-words/words.qf.common
-    words/words.qf.lhs
-    words/words.qf.rhs
+old_words/words.qf.common
+    old_words/words.qf.lhs
+    old_words/words.qf.rhs
 
-words/words.v.common
-    words/words.v.attribute
+old_words/words.v.common
+    old_words/words.v.attribute
 
-words/words.connector
-    words/words.prep.nv
-        words/words.prep.lw
-        words/words.prep.n
-            words/words.prep-n.n
-            words/words.prep-v.n
-        words/words.prep.v
-            words/words.prep-n.v
-            words/words.prep-v.v
-        words/words.prep-v.nv
-        words/words.sclmark
-    words/words.conj.common
-        words/words.conj.discont
-        words/words.conj.noun
-        words/words.conj.verb
-    words/words.relpro.common
-    words/words.ordmark
+old_words/words.connector
+    old_words/words.prep.nv
+        old_words/words.prep.lw
+        old_words/words.prep.n
+            old_words/words.prep-n.n
+            old_words/words.prep-v.n
+        old_words/words.prep.v
+            old_words/words.prep-n.v
+            old_words/words.prep-v.v
+        old_words/words.prep-v.nv
+        old_words/words.sclmark
+    old_words/words.conj.common
+        old_words/words.conj.discont
+        old_words/words.conj.noun
+        old_words/words.conj.verb
+    old_words/words.relpro.common
+    old_words/words.ordmark
 
-words/words.adv.common
-    words/words.part.common
-    words/words.adv.attrmod
-    words/words.neg.rhs
+old_words/words.adv.common
+    old_words/words.part.common
+    old_words/words.adv.attrmod
+    old_words/words.neg.rhs
 
-words/words.aux.common
-    words/words.adv.qf
-    words/words.neg.lhs
-    words/words.adv.cohesive
-    words/words.passmark
+old_words/words.aux.common
+    old_words/words.adv.qf
+    old_words/words.neg.lhs
+    old_words/words.adv.cohesive
+    old_words/words.passmark
 
-words/words.cl.common
-    words/words.cl.noun
-    words/words.cl.verb
+old_words/words.cl.common
+    old_words/words.cl.noun
+    old_words/words.cl.verb
 
-words/words.num.common
-    words/words.num.movable
+old_words/words.num.common
+    old_words/words.num.movable
 
-words/words.adj.common
-    words/words.num.ordinal
+old_words/words.adj.common
+    old_words/words.num.ordinal
 
-words/words.nominal.common
-    words/words.pro.common
-    words/words.n.common
-        words/words.n.attribute
-        words/words.n.person
-            words/words.n.title
-            words/words.n.designator
-        words/words.n.legalperson
-            words/words.n.brand
-            words/words.n.location
-            words/words.n.organization
-        words/words.n.prefix
-        words/words.n.term
+old_words/words.nominal.common
+    old_words/words.pro.common
+    old_words/words.n.attribute
+    old_words/words.n.common
+        old_words/words.n.person
+            old_words/words.n.title
+            old_words/words.n.designator
+        old_words/words.n.legalperson
+            old_words/words.n.brand
+            old_words/words.n.location
+            old_words/words.n.organization
+        old_words/words.n.prefix
+        old_words/words.n.term
