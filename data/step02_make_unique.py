@@ -182,7 +182,7 @@ def main():
 
     pos_hier = create_node(hier)
     move_common_to_parent(pos_hier)
-    remove_specific_from_parent(pos_hier)
+    # remove_specific_from_parent(pos_hier)
     # print(pos_hier)
     write_hier(opath, pos_hier)
 

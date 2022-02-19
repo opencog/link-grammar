@@ -27,10 +27,13 @@ old_words/words.connector
     old_words/words.relpro.common
     old_words/words.ordmark
 
-old_words/words.adv.common
-    old_words/words.part.common
+old_words/words.adverbial.common
+    old_words/words.adv.common
     old_words/words.adv.attrmod
-    old_words/words.neg.rhs
+
+old_words/words.neg.rhs
+
+old_words/words.part.common
 
 old_words/words.aux.common
     old_words/words.adv.qf
