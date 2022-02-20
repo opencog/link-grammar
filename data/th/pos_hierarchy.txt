@@ -18,7 +18,12 @@ old_words/words.connector
         old_words/words.prep.v
             old_words/words.prep-n.v
             old_words/words.prep-v.v
+        old_words/words.prep-n.nv
+            old_words/words.prep-n.n
+            old_words/words.prep-n.v
         old_words/words.prep-v.nv
+            old_words/words.prep-v.n
+            old_words/words.prep-v.v
         old_words/words.sclmark
     old_words/words.conj.common
         old_words/words.conj.discont

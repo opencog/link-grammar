@@ -1,3 +1,4 @@
+File	Size
 words/words.any	0
     words/words.adj.lhs	26
     words/words.intj.common	64
@@ -9,13 +10,18 @@ words/words.any	0
     words/words.connector	0
         words/words.prep.nv	33
             words/words.prep.lw	3
-            words/words.prep.n	68
-                words/words.prep-n.n	25
-                words/words.prep-v.n	26
+            words/words.prep.n	59
+                words/words.prep-n.n	23
+                words/words.prep-v.n	19
             words/words.prep.v	7
                 words/words.prep-n.v	1
-                words/words.prep-v.v	50
-            words/words.prep-v.nv	63
+                words/words.prep-v.v	36
+            words/words.prep-n.nv	0
+                words/words.prep-n.n	23
+                words/words.prep-n.v	1
+            words/words.prep-v.nv	56
+                words/words.prep-v.n	19
+                words/words.prep-v.v	36
             words/words.sclmark	1
         words/words.conj.common	0
             words/words.conj.discont	2
@@ -45,8 +51,8 @@ words/words.any	0
         words/words.n.attribute	18
         words/words.n.common	41194
             words/words.n.person	17634
-                words/words.n.title	153
-                words/words.n.designator	768
+                words/words.n.title	137
+                words/words.n.designator	755
             words/words.n.legalperson	0
                 words/words.n.brand	241
                 words/words.n.location	8365

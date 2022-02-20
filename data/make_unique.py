@@ -107,27 +107,29 @@ def read_content(content, fname):
 
 ############################################################
 
-def create_node(filetree):
+def create_node(filetree, wordsettbl):
     fname = filetree.fname
-    result = {'fname': fname, 'words': set(), 'dtrs': []}
+    if fname not in wordsettbl:
+        wordsettbl[fname] = set()
+    result = {'fname': fname, 'dtrs': []}
     print(f'>>> Loading {fname} ...', end='')
     if fname is not None:
         if os.path.exists(fname):
-            read_content(result['words'], fname)
-        if len(result['words']) == 0:
+            read_content(wordsettbl[fname], fname)
+        if len(wordsettbl[fname]) == 0:
             print('***ZERO members***')
         else:
-            print(f'{len(result["words"])} members')
+            print(f'{len(wordsettbl[fname])} members')
     for dtr in filetree.dtrs:
-        tree = create_node(dtr)
+        tree = create_node(dtr, wordsettbl)
         result['dtrs'].append(tree)
     return result
 
 ############################################################
 
-def move_common_to_parent(node):
+def move_common_to_parent(node, wordsettbl):
     for dtr in node['dtrs']:
-        move_common_to_parent(dtr)
+        move_common_to_parent(dtr, wordsettbl)
 
     if len(node['dtrs']) < 2:
         return
@@ -135,51 +137,52 @@ def move_common_to_parent(node):
     common = None
     for dtr in node['dtrs']:
         if common is None:
-            common = dtr['words']
+            common = wordsettbl[dtr['fname']]
         else:
-            common = common & dtr['words']
+            common = common & wordsettbl[dtr['fname']]
 
     if common is not None and len(common) != 0:
         for dtr in node['dtrs']:
-            diff = dtr['words'] - common
+            diff = wordsettbl[dtr['fname']] - common
             if len(diff) > 0:
-                dtr['words'] = diff
+                wordsettbl[dtr['fname']] = diff
 
 ############################################################
 
-def remove_specific_from_parent(node):
+def remove_specific_from_parent(node, wordsettbl):
     for dtr in node['dtrs']:
-        dtr['words'] = dtr['words'] - node['words']
+        wordsettbl[dtr['fname']] = wordsettbl[dtr['fname']] - wordsettbl[node['fname']]
+
     for dtr in node['dtrs']:
-        remove_specific_from_parent(dtr)
+        remove_specific_from_parent(dtr, wordsettbl)
 
 ############################################################
 
-def write_hier(opath, node, spc=0):
+def write_hier(opath, node, wordsettbl, spc=0):
     if node['fname'] is not None:
         head, tail = os.path.split(node['fname'])
         ofname = os.path.join(opath, tail)
     else:
         ofname = os.path.join(opath, 'words.any')
-    print(spc * ' ' + f'>>> Writing out: {ofname} ... {len(node["words"])}')
+    print(spc * ' ' + f'>>> Writing out: {ofname} ... {len(wordsettbl[node["fname"]])}')
     ofhdl = open(ofname, 'w')
-    for word in sorted(node['words']):
+    for word in sorted(wordsettbl[node['fname']]):
         ofhdl.write(word + '\n')
     ofhdl.close()
 
     for dtr in node['dtrs']:
-        write_hier(opath, dtr, spc+4)
+        write_hier(opath, dtr, wordsettbl, spc+4)
 
-def write_stats(ofhdl, opath, node, spc=0):
+def write_stats(ofhdl, opath, node, wordsettbl, spc=0):
     if node['fname'] is not None:
         head, tail = os.path.split(node['fname'])
         ofname = os.path.join(opath, tail)
     else:
         ofname = os.path.join(opath, 'words.any')
-    ofhdl.write(spc * ' ' + f'{ofname}\t{len(node["words"])}\n')
+    ofhdl.write(spc * ' ' + f'{ofname}\t{len(wordsettbl[node["fname"]])}\n')
 
     for dtr in node['dtrs']:
-        write_stats(ofhdl, opath, dtr, spc+4)
+        write_stats(ofhdl, opath, dtr, wordsettbl, spc+4)
 
 ############################################################
 
@@ -191,15 +194,17 @@ def main():
     hier = load_filetree(ifname)
     hier.print()
 
-    pos_hier = create_node(hier)
-    move_common_to_parent(pos_hier)
-    # remove_specific_from_parent(pos_hier)
+    wordsettbl = {}
+    pos_hier = create_node(hier, wordsettbl)
+    move_common_to_parent(pos_hier, wordsettbl)
+    remove_specific_from_parent(pos_hier, wordsettbl)
     # print(pos_hier)
-    write_hier(opath, pos_hier)
+    write_hier(opath, pos_hier, wordsettbl)
 
-    ofstats = os.path.join(opath, 'stats.txt')
+    ofstats = os.path.join(opath, 'stats.tsv')
     ofhdl = open(ofstats, 'w')
-    write_stats(ofhdl, opath, pos_hier)
+    ofhdl.write('File\tSize\n')
+    write_stats(ofhdl, opath, pos_hier, wordsettbl)
     ofhdl.close()
 
 ############################################################
