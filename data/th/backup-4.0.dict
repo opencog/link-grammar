@@ -33,13 +33,16 @@
 %       AJp = preposition phrase
 %       AJt = temporal modifier
 %   AX = auxiliary
+%       AXw = simple auxiliary
+%       AXg = negative auxiliary
 %   AV = adverb
 %       AVp = preposition phrase
 %       AVw = simple adverb
+%       AVg = negative adverb
 %       AVn = numeral phrase modifying noun phrase
 %       AVv = numeral phrase modifying verb phrase
 %       AVt = temporal entity modifying verb phrase
-%       AVc = cohesive marker
+%       AVc = clause-level adverb
 %   PT = particle
 %   IJ = interjection
 %   NU = number
@@ -111,7 +114,7 @@
     & {@hAJ+};
 
 <noun-start> :
-    {NS+ or hAT+}
+    {[NS+] or hAT+}
     & <noun-looking-for-mods>;
 
 <noun-start-temporal> :
@@ -155,7 +158,8 @@
 
 %%%% Common Noun %%%%
 
-/th/words/words.n.common :
+/th/words/words.n.common 
+THAI-COLOR.n :
     <noun-simple>;
 
 %%%% Attributive Noun %%%%
@@ -172,8 +176,7 @@
 
 %%%% Temporal Entity %%%%
 
-THAI-DATE
-THAI-TIME:
+THAI-DATE THAI-TIME :
     <noun-start-temporal>
     & (<noun-temporal> or <noun-element>);
 
@@ -226,6 +229,19 @@ THAI-TIME:
         or ({@hAV+} & JVl+)
     );
 
+<passive-marker> :
+    {@hAX-}
+    & (
+        (hS- & ([TP-] or ()))
+        or [()]
+    )
+    & {hAVpl-}
+    & {hAVtl-}
+    & {hAVcl-}
+    & (<left-wall-sent> or JVr-)
+    & (hO+ or [()])
+    & VS+;
+
 <verb-intrans> :
     {@hAX-}
     & (
@@ -257,7 +273,7 @@ THAI-TIME:
     & {[VS+]};
 
 <verb-imprel> :
-    dRI-
+    [dRI-]
     & (hO+ or [()])
     & {[hAV+]};
 
@@ -279,6 +295,11 @@ THAI-TIME:
 /th/words/words.v.common :
     <verb-simple>;
 
+%%%% Passive Marker %%%%
+
+/th/words/words.passmark :
+    <passive-marker>;
+
 %%%%%%%%%%%%%%%%%%%%
 % Adjective
 %%%%%%%%%%%%%%%%%%%%
@@ -298,8 +319,13 @@ THAI-TIME:
 
 %%%% Simple Adjective %%%%
 
+% Test frame: _____ (non-verb) + kwàa/láew
+%     If not allowed, it is an adjective.
+%     Otherwise, it is an attributive verb.
+
 /th/words/words.adj.common
-/th/words/words.num.ordinal :
+/th/words/words.num.ordinal
+THAI-COLOR.j :
     <adj-simple>;
 
 /th/words/words.adj.lhs :
@@ -307,7 +333,10 @@ THAI-TIME:
 
 %%%% Attributive Verb %%%%
 
-/th/words/words.v.attribute :
+% Test frame: khwaam + _____
+
+/th/words/words.v.attribute
+THAI-COLOR.va :
     {hAM-}
     & (
         <adj-attribute>
@@ -327,7 +356,8 @@ THAI-TIME:
     or dONr-;
 
 /th/words/words.num.common
-NUMBERS.nu FRACTION.nu :
+NUMBERS.nu FRACTION.nu 
+THAI-NUMBERS.nu THAI-FRACTION.nu:
     {PUsl-} & {PUsr+} & <number-simple>;
 
 /th/words/words.num.movable :
@@ -349,7 +379,7 @@ NUMBERS.nu FRACTION.nu :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.aux.common :
-    dAX+;
+    dAXw+;
 
 %%%%%%%%%%%%%%%%%%%%
 % Adverb
@@ -361,8 +391,18 @@ NUMBERS.nu FRACTION.nu :
 /th/words/words.adv.attrmod :
     dAM+ & {hAV+};
 
-/th/words/words.adv.cohmark :
+/th/words/words.adv.cohesive :
     dAVcl+;
+
+%%%%%%%%%%%%%%%%%%%%
+% Negator
+%%%%%%%%%%%%%%%%%%%%
+
+/th/words/words.neg.lhs :
+    dAXg+;
+
+/th/words/words.neg.rhs :
+    dAVgr-;
 
 %%%%%%%%%%%%%%%%%%%%
 % Preposition
@@ -377,6 +417,17 @@ NUMBERS.nu FRACTION.nu :
     ((dAVpr- or [dAJpr-]) & hPC+)
     or [hPC+ & <utterance-prep>]
     or (hPC+ & {PUsr+} & dAVpl+);
+
+<prep-lw-comp> :
+    @hPO+
+    or @hPC+
+    or @hAVp+
+    or @hAJp+;
+
+<prep-lw> :
+    ((dAVpr- or [dAJpr-]) & <prep-lw-comp>)
+    or [<prep-lw-comp> & <utterance-prep>]
+    or (<prep-lw-comp> & {PUsr+} & dAVpl+);
 
 <nprep-noun> :
     (dAJpr- & hPO+)
@@ -411,15 +462,15 @@ NUMBERS.nu FRACTION.nu :
 /th/words/words.prep-n.n :
     <nprep-noun>;
 
-% /th/words/words.nprep.verb :
-%     <nprep-verb>;
+/th/words/words.prep-n.v :
+    <nprep-verb>;
 
 % /th/words/words.nprep.nv :
 %     <nprep-noun>
 %     or <nprep-verb>;
 
-% /th/words/words.vprep.noun :
-%     <vprep-noun>;
+/th/words/words.prep-v.n :
+    <vprep-noun>;
 
 /th/words/words.prep-v.v :
     <vprep-verb>;
@@ -428,12 +479,17 @@ NUMBERS.nu FRACTION.nu :
     <vprep-noun>
     or <vprep-verb>;
 
+/th/words/words.prep.lw :
+    <prep-lw>;
+
 %%%%%%%%%%%%%%%%%%%%
 % Relative Pronoun
 %%%%%%%%%%%%%%%%%%%%
 
 <relcls> :
-    dAJr- & hPC+;
+    {hCLn-}
+    & dAJr-
+    & hPC+;
 
 <relsent> :
     (dAVr- or hRC+)
@@ -504,7 +560,7 @@ EMOTICON :
 _.pu :
     PUs+ or PUs-;
 
-ๆ.pu :
+ๆ.pu ฯลฯ.pu :
     {PUs-}
     & dPUy-
     & {PUs+};

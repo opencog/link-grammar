@@ -115,7 +115,7 @@ def create_node(filetree):
         if os.path.exists(fname):
             read_content(result['words'], fname)
         if len(result['words']) == 0:
-            input('***ZERO members***')
+            print('***ZERO members***')
         else:
             print(f'{len(result["words"])} members')
     for dtr in filetree.dtrs:
@@ -170,6 +170,17 @@ def write_hier(opath, node, spc=0):
     for dtr in node['dtrs']:
         write_hier(opath, dtr, spc+4)
 
+def write_stats(ofhdl, opath, node, spc=0):
+    if node['fname'] is not None:
+        head, tail = os.path.split(node['fname'])
+        ofname = os.path.join(opath, tail)
+    else:
+        ofname = os.path.join(opath, 'words.any')
+    ofhdl.write(spc * ' ' + f'{ofname}\t{len(node["words"])}\n')
+
+    for dtr in node['dtrs']:
+        write_stats(ofhdl, opath, dtr, spc+4)
+
 ############################################################
 
 def main():
@@ -177,7 +188,7 @@ def main():
     ifname = sys.argv[1]
     opath = sys.argv[2]
 
-    hier = load_filetree(os.path.join(ifname))
+    hier = load_filetree(ifname)
     hier.print()
 
     pos_hier = create_node(hier)
@@ -185,6 +196,11 @@ def main():
     # remove_specific_from_parent(pos_hier)
     # print(pos_hier)
     write_hier(opath, pos_hier)
+
+    ofstats = os.path.join(opath, 'stats.txt')
+    ofhdl = open(ofstats, 'w')
+    write_stats(ofhdl, opath, pos_hier)
+    ofhdl.close()
 
 ############################################################
 

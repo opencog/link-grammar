@@ -229,6 +229,19 @@ THAI-DATE THAI-TIME :
         or ({@hAV+} & JVl+)
     );
 
+<passive-marker> :
+    {@hAX-}
+    & (
+        (hS- & ([TP-] or ()))
+        or [()]
+    )
+    & {hAVpl-}
+    & {hAVtl-}
+    & {hAVcl-}
+    & (<left-wall-sent> or JVr-)
+    & (hO+ or [()])
+    & VS+;
+
 <verb-intrans> :
     {@hAX-}
     & (
@@ -281,6 +294,11 @@ THAI-DATE THAI-TIME :
 
 /th/words/words.v.common :
     <verb-simple>;
+
+%%%% Passive Marker %%%%
+
+/th/words/words.passmark :
+    <passive-marker>;
 
 %%%%%%%%%%%%%%%%%%%%
 % Adjective

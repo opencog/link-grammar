@@ -12,7 +12,10 @@ def load_dict(wordtbl, fname):
         if len(line) == 0: continue
         if line.startswith('#') or line.startswith('%'): continue
         
-        word, postag = line.rsplit('.', maxsplit=1)
+        if '.' in line:
+            word, postag = line.rsplit('.', maxsplit=1)
+        else:
+            word, postag = line, 'any'
         if word not in wordtbl:
             wordtbl[word] = set()
         wordtbl[word].add((postag, fname))
@@ -102,6 +105,7 @@ def main():
         'NUM', 'NUMV', 'NUMO', 'ORD', '|',
         'CLN', 'CLV', 'QFL', 'QFR', '|',
         'CD', 'CN', 'CV', '|',
+        'ANY', '|'
     ]
     fieldmap = {
         'words.adj.common': 'J',
@@ -144,6 +148,15 @@ def main():
         'words.sclmark': 'SM',
         'words.v.attribute': 'VA',
         'words.v.common': 'V',
+
+        'words.n.title': 'ANY',
+        'words.n.designator': 'ANY',
+        'words.n.person': 'ANY',
+        'words.n.legalperson': 'ANY',
+        'words.n.location': 'ANY',
+        'words.n.organization': 'ANY',
+        'words.n.brand': 'ANY',
+        'words.n.term': 'ANY',
     }
     print_postbl(clstbl, wordtbl, fields, fieldmap)
 
