@@ -23,6 +23,7 @@
 %       LWp = utterance of preposition phrase
 %   RW = right wall
 %   VS = serial verb
+%   VC = controlled verb
 %   NS = serial noun
 %   S  = subject
 %   O  = object
@@ -72,6 +73,7 @@
 
 <left-wall-sent> :
     {@IJ-}
+    & {LWn-}
     & LWs-;
 
 <left-wall-noun> :
@@ -240,7 +242,7 @@ THAI-DATE THAI-TIME :
     & {hAVcl-}
     & (<left-wall-sent> or JVr-)
     & (hO+ or [()])
-    & VS+;
+    & VC+;
 
 <verb-intrans> :
     {@hAX-}
@@ -259,6 +261,12 @@ THAI-DATE THAI-TIME :
 
 <verb-serial> :
     VS-
+    & (hO+ or [()])
+    & {@hAV+}
+    & (<right-wall> or VS+);
+
+<verb-control> :
+    VC-
     & (hO+ or [()])
     & {@hAV+}
     & (<right-wall> or VS+);
@@ -283,6 +291,7 @@ THAI-DATE THAI-TIME :
         & {[[PUsr+]]}
         & (<verb-start> or <verb-serial> or <verb-comp>)
     )
+    or <verb-control>
     or [<verb-imprel>];
 
 <verb-simple-intrans> :
@@ -407,6 +416,10 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 %%%%%%%%%%%%%%%%%%%%
 % Preposition
 %%%%%%%%%%%%%%%%%%%%
+
+<ablative> :
+    [dAVpr-]
+    or dAVpl+;
 
 <prep-noun> :
     ((dAVpr- or [dAJpr-]) & hPO+)

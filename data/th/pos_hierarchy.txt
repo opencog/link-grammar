@@ -60,12 +60,7 @@ old_words/words.nominal.common
     old_words/words.pro.common
     old_words/words.n.attribute
     old_words/words.n.common
-        old_words/words.n.person
-            old_words/words.n.title
-            old_words/words.n.designator
-        old_words/words.n.legalperson
-            old_words/words.n.brand
-            old_words/words.n.location
-            old_words/words.n.organization
-        old_words/words.n.prefix
-        old_words/words.n.term
+        old_words/words.n.proper
+    old_words/words.n.prefix
+        old_words/words.n.title
+        old_words/words.n.designator

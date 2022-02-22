@@ -111,7 +111,7 @@ def create_node(filetree, wordsettbl):
     fname = filetree.fname
     if fname not in wordsettbl:
         wordsettbl[fname] = set()
-    result = {'fname': fname, 'dtrs': []}
+    result = {'fname': fname, 'dtrs': [], 'orgsize': 0}
     print(f'>>> Loading {fname} ...', end='')
     if fname is not None:
         if os.path.exists(fname):
@@ -119,6 +119,7 @@ def create_node(filetree, wordsettbl):
         if len(wordsettbl[fname]) == 0:
             print('***ZERO members***')
         else:
+            result['orgsize'] = len(wordsettbl[fname])
             print(f'{len(wordsettbl[fname])} members')
     for dtr in filetree.dtrs:
         tree = create_node(dtr, wordsettbl)
@@ -164,7 +165,7 @@ def write_hier(opath, node, wordsettbl, spc=0):
         ofname = os.path.join(opath, tail)
     else:
         ofname = os.path.join(opath, 'words.any')
-    print(spc * ' ' + f'>>> Writing out: {ofname} ... {len(wordsettbl[node["fname"]])}')
+    print(spc * ' ' + f'>>> Writing out: {ofname} ... {node["orgsize"]} --> {len(wordsettbl[node["fname"]])}')
     ofhdl = open(ofname, 'w')
     for word in sorted(wordsettbl[node['fname']]):
         ofhdl.write(word + '\n')
@@ -179,7 +180,7 @@ def write_stats(ofhdl, opath, node, wordsettbl, spc=0):
         ofname = os.path.join(opath, tail)
     else:
         ofname = os.path.join(opath, 'words.any')
-    ofhdl.write(spc * ' ' + f'{ofname}\t{len(wordsettbl[node["fname"]])}\n')
+    ofhdl.write(spc * ' ' + f'{ofname}\t{node["orgsize"]}\t{len(wordsettbl[node["fname"]])}\n')
 
     for dtr in node['dtrs']:
         write_stats(ofhdl, opath, dtr, wordsettbl, spc+4)
@@ -197,13 +198,13 @@ def main():
     wordsettbl = {}
     pos_hier = create_node(hier, wordsettbl)
     move_common_to_parent(pos_hier, wordsettbl)
-    remove_specific_from_parent(pos_hier, wordsettbl)
+    # remove_specific_from_parent(pos_hier, wordsettbl)
     # print(pos_hier)
     write_hier(opath, pos_hier, wordsettbl)
 
     ofstats = os.path.join(opath, 'stats.tsv')
     ofhdl = open(ofstats, 'w')
-    ofhdl.write('File\tSize\n')
+    ofhdl.write('File\tOriginal size\tPost-processed size\n')
     write_stats(ofhdl, opath, pos_hier, wordsettbl)
     ofhdl.close()
 
