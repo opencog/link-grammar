@@ -1,7 +1,9 @@
 กับ.pvn
 ขึ้น.pvn
 จาก.pvn
+ตรลอด.pvn
 ตราบ.pvn
+ตราบเท่า.pvn
 ตลอด.pvn
 ต่อ.pvn
 ถึง.pvn

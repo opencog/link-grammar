@@ -1,27 +1,27 @@
 File	Original size	Post-processed size
 words/words.any	0	0
     words/words.adj.lhs	26	26
-    words/words.intj.common	64	64
+    words/words.intj.common	135	135
     words/words.qf.common	0	0
         words/words.qf.lhs	12	12
         words/words.qf.rhs	3	3
-    words/words.v.common	4116	4116
+    words/words.v.common	10369	10369
         words/words.v.attribute	2008	2008
     words/words.connector	0	0
         words/words.prep.nv	33	33
             words/words.prep.lw	3	3
             words/words.prep.n	68	68
                 words/words.prep-n.n	26	26
-                words/words.prep-v.n	27	27
+                words/words.prep-v.n	29	29
             words/words.prep.v	7	7
                 words/words.prep-n.v	1	1
-                words/words.prep-v.v	50	50
+                words/words.prep-v.v	95	95
             words/words.prep-n.nv	0	0
                 words/words.prep-n.n	26	26
                 words/words.prep-n.v	1	1
             words/words.prep-v.nv	63	63
-                words/words.prep-v.n	27	27
-                words/words.prep-v.v	50	50
+                words/words.prep-v.n	29	29
+                words/words.prep-v.v	95	95
             words/words.sclmark	1	1
         words/words.conj.common	0	0
             words/words.conj.discont	2	2
@@ -37,7 +37,7 @@ words/words.any	0	0
     words/words.aux.common	73	73
         words/words.adv.qf	1	1
         words/words.neg.lhs	8	8
-        words/words.adv.cohesive	108	108
+        words/words.adv.cohesive	153	153
         words/words.passmark	2	2
     words/words.cl.common	0	0
         words/words.cl.noun	694	694
@@ -47,9 +47,9 @@ words/words.any	0	0
     words/words.adj.common	233	233
         words/words.num.ordinal	2	2
     words/words.nominal.common	0	0
-        words/words.pro.common	71	71
+        words/words.pro.common	126	126
         words/words.n.attribute	18	18
-        words/words.n.common	41193	41193
+        words/words.n.common	58101	58101
             words/words.n.proper	39239	39239
         words/words.n.prefix	24	24
             words/words.n.title	218	218

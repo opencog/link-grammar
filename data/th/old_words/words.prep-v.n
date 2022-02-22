@@ -1,9 +1,11 @@
 ตลอด.pvn
+ตรลอด.pvn
 ถึง.pvn
 ทั้ง.pvn
 ราว.pvn
 กับ.pvn
 ตราบ.pvn
+ตราบเท่า.pvn
 ถูก.pvn
 หา.pvn
 อยู่.pvn
