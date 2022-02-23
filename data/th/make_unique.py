@@ -102,12 +102,15 @@ def read_content(content, fname):
     for line in fhdl:
         line = line.strip()
         if len(line) == 0: continue
+        if line.startswith('#'): continue
         content.add(line)
     fhdl.close()
 
 ############################################################
 
-def create_node(filetree, wordsettbl):
+def create_node(filetree, wordsettbl, excls=None):
+    if excls is None: excls = set()
+
     fname = filetree.fname
     if fname not in wordsettbl:
         wordsettbl[fname] = set()
@@ -116,13 +119,16 @@ def create_node(filetree, wordsettbl):
     if fname is not None:
         if os.path.exists(fname):
             read_content(wordsettbl[fname], fname)
+            # print(f'wordset = {wordsettbl[fname]}')
+            # input(f'excls = {excls}')
+            wordsettbl[fname] = wordsettbl[fname] - excls
         if len(wordsettbl[fname]) == 0:
             print('***ZERO members***')
         else:
             result['orgsize'] = len(wordsettbl[fname])
             print(f'{len(wordsettbl[fname])} members')
     for dtr in filetree.dtrs:
-        tree = create_node(dtr, wordsettbl)
+        tree = create_node(dtr, wordsettbl, excls)
         result['dtrs'].append(tree)
     return result
 
@@ -191,12 +197,16 @@ def main():
     # content = set()
     ifname = sys.argv[1]
     opath = sys.argv[2]
+    exclfname = sys.argv[3]
 
     hier = load_filetree(ifname)
     hier.print()
 
+    excls = set()
+    read_content(excls, exclfname)
+
     wordsettbl = {}
-    pos_hier = create_node(hier, wordsettbl)
+    pos_hier = create_node(hier, wordsettbl, excls)
     move_common_to_parent(pos_hier, wordsettbl)
     # remove_specific_from_parent(pos_hier, wordsettbl)
     # print(pos_hier)
