@@ -214,6 +214,7 @@ Contents
 | data/he/ | An experimental Hebrew dictionary |
 | data/kz/ | An experimental Kazakh dictionary |
 | data/tr/ | An experimental Turkish dictionary |
+| data/th/ | A full-fledged Thai dictionary |
 | ---- | ---- |
 | morphology/ar/ | An Arabic morphology analyzer |
 | morphology/fa/ | An Persian morphology analyzer |
