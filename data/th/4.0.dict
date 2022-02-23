@@ -242,7 +242,7 @@ THAI-DATE THAI-TIME :
     & {hAVcl-}
     & (<left-wall-sent> or JVr-)
     & (hO+ or [()])
-    & VC+;
+    & hVC+;
 
 <verb-intrans> :
     {@hAX-}
@@ -266,7 +266,7 @@ THAI-DATE THAI-TIME :
     & (<right-wall> or VS+);
 
 <verb-control> :
-    VC-
+    dVC-
     & (hO+ or [()])
     & {@hAV+}
     & (<right-wall> or VS+);
@@ -337,7 +337,9 @@ THAI-DATE THAI-TIME :
 THAI-COLOR.j :
     <adj-simple>;
 
-/th/words/words.adj.lhs :
+/th/words/words.adj.lhs 
+/th/words/words.n.title
+/th/words/words.n.designator :
     <adj-lhs>;
 
 %%%% Attributive Verb %%%%
