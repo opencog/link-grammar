@@ -205,6 +205,7 @@ Contents
 | data/en/corpus*.batch | Example corpora used for testing. |
 | ---- | ---- |
 | data/ru/ | A full-fledged Russian dictionary |
+| data/th/ | A full-fledged Thai dictionary (100,000+ words) |
 | data/ar/ | A fairly complete Arabic dictionary |
 | data/fa/ | A Persian (Farsi) dictionary |
 | data/de/ | A small prototype German dictionary |
@@ -214,7 +215,6 @@ Contents
 | data/he/ | An experimental Hebrew dictionary |
 | data/kz/ | An experimental Kazakh dictionary |
 | data/tr/ | An experimental Turkish dictionary |
-| data/th/ | A full-fledged Thai dictionary |
 | ---- | ---- |
 | morphology/ar/ | An Arabic morphology analyzer |
 | morphology/fa/ | An Persian morphology analyzer |
