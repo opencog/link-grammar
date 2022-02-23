@@ -132,6 +132,19 @@ suffixes that carry all of the syntactic structure, and not the stems.
 The Russian lexis is
 [documented here](https://www.abisource.com/projects/link-grammar/russian/doc/).
 
+And here is an example in Thai:
+```
+linkparser> นายกรัฐมนตรี ขึ้น กล่าว สุนทรพจน์
+	Linkage 1, cost vector = (UNUSED=0 DIS= 2.00 LEN=2)
+
+    +---------LWs--------+
+    |           +<---S<--+--VS-+-->O-->+
+    |           |        |     |       |
+LEFT-WALL นายกรัฐมนตรี.n ขึ้น.v กล่าว.v สุนทรพจน์.n
+```
+
+The `VS` link connects two verbs 'ขึ้น' and 'กล่าว' in a serial verb construction.
+
 Theory and Documentation
 ------------------------
 An extended overview and summary can be found in the

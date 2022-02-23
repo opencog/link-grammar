@@ -338,8 +338,8 @@ THAI-COLOR.j :
     <adj-simple>;
 
 /th/words/words.adj.lhs 
-/th/words/words.n.title
-/th/words/words.n.designator :
+/th/words/words.n.title :
+% /th/words/words.n.designator :
     <adj-lhs>;
 
 %%%% Attributive Verb %%%%
