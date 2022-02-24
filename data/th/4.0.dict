@@ -17,22 +17,40 @@
 %
 %   DEPENDENCY LINKS
 %
+%   Utterance
+%   ---------
 %   LW = left wall
 %       LWs = sentence
 %       LWn = utterance of noun phrase
 %       LWp = utterance of preposition phrase
 %   RW = right wall
-%   VS = serial verb
-%   VC = controlled verb
-%   NS = serial noun
+%   IJ = interjection
+%   PT = particle
+%
+%   Sentence
+%   --------
 %   S  = subject
 %   O  = object
+%   VZ = serial verb
+%   VC = controlled verb
+%   TP = topicalization
+%
+%   Noun Phrase
+%   -----------
+%   NZ = serial noun
 %   AJ = adjective
 %       AJr = relative clause
 %       AJj = simple adjective
 %       AJv = attributive verb
 %       AJp = preposition phrase
 %       AJt = temporal modifier
+%   RI = implicit relative clause
+%   AT = attribute
+%   PS = possessive pronoun
+%   AM = attribute's modifier
+%
+%   Verb Phrase
+%   -----------
 %   AX = auxiliary
 %       AXw = simple auxiliary
 %       AXg = negative auxiliary
@@ -44,24 +62,27 @@
 %       AVv = numeral phrase modifying verb phrase
 %       AVt = temporal entity modifying verb phrase
 %       AVc = clause-level adverb
-%   PT = particle
-%   IJ = interjection
+%
+%   Preposition Phrase
+%   ------------------
+%   PO = prepositional object (noun)
+%   PC = prepositional complement (verb)
+%   PZ = serial preposition
+%
+%   Numeral Phrase
+%   --------------
 %   NU = number
 %       NUn = simple number
 %       NUv = number for verb
 %   CL = classifier
 %       CLn = classifier for noun
 %       CLv = classifier for verb
-%   PO = prepositional object (noun)
-%   PC = prepositional complement (verb)
-%   JN = conjoined noun
-%   JV = conjoined verb
-%   TP = topicalization
-%   RI = implicit relative clause
-%   AT = attribute
 %   QF = numeral quantifier
-%   AM = attribute modifier
-%   PS = possessive pronoun
+%
+%   Coordinate Structure
+%   --------------------
+%   JN = conjoined noun phrase
+%   JV = conjoined verb phrase
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -116,7 +137,7 @@
     & {@hAJ+};
 
 <noun-start> :
-    {[NS+] or hAT+}
+    {[NZ+] or hAT+}
     & <noun-looking-for-mods>;
 
 <noun-start-temporal> :
@@ -125,8 +146,8 @@
     & {PUsr+ & TS+};
 
 <noun-serial> :
-    NS-
-    & {NS+};
+    NZ-
+    & {NZ+};
 
 <noun-serial-temporal> :
     TS-
@@ -227,7 +248,7 @@ THAI-DATE THAI-TIME :
     & (hO+ or [()])
     & (
         ({@hAV+} & <right-wall>)
-        or [VS+] 
+        or [VZ+] 
         or ({@hAV+} & JVl+)
     );
 
@@ -255,21 +276,21 @@ THAI-DATE THAI-TIME :
     & (<left-wall-sent> or JVr-)
     & (
         ({@hAV+} & {@hAV-} & <right-wall>)
-        or [VS+]
+        or [VZ+]
         or ({@hAV+} & JVl+)
     );
 
 <verb-serial> :
-    VS-
+    VZ-
     & (hO+ or [()])
     & {@hAV+}
-    & (<right-wall> or VS+);
+    & (<right-wall> or VZ+);
 
 <verb-control> :
     dVC-
     & (hO+ or [()])
     & {@hAV+}
-    & (<right-wall> or VS+);
+    & (<right-wall> or VZ+);
 
 <verb-comp> :
     {@hAX-}
@@ -278,7 +299,7 @@ THAI-DATE THAI-TIME :
     & {dPC- or dRC- or dZN-}
     & (hO+ or [()])
     & {@hAV+}
-    & {[VS+]};
+    & {[VZ+]};
 
 <verb-imprel> :
     [dRI-]
@@ -324,7 +345,7 @@ THAI-DATE THAI-TIME :
 <adj-attribute> :
     {hCL-}
     & dAJv-
-    & {hAVw+ or hAVp+};
+    & {hAVw+ or hAVp+ or hAM+};
 
 %%%% Simple Adjective %%%%
 
@@ -349,11 +370,9 @@ ROMAN-NUMERAL-WORDS.j :
 
 /th/words/words.v.attribute
 THAI-COLOR.va :
-    {hAM-}
-    & (
-        <adj-attribute>
-        or [<verb-simple-intrans> or <verb-comp>]
-    );
+    <adj-attribute>
+    or [<verb-simple-intrans>]
+    or [verb-comp>];
 
 %%%%%%%%%%%%%%%%%%%%
 % Number
