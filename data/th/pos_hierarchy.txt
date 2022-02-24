@@ -29,6 +29,7 @@ old_words/words.connector
         old_words/words.conj.discont
         old_words/words.conj.noun
         old_words/words.conj.verb
+        old_words/words.conj.prep
     old_words/words.relpro.common
     old_words/words.ordmark
 

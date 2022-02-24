@@ -88,5 +88,14 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | `JNl` | **Left-hand-side conjoined noun phrase.** It connects a noun-phrase conjunct on the left hand side to its coordinator. |
 | `JNr` | **Right-hand-side conjoined noun phrase.** It connects a noun-phrase conjunct on the right hand side to its coordinator. |
 | `JV`       | **Conjoined verb phrase.** It connects a verb-phrase conjunct to its coordinator. |
-| `JVl`       | **Conjoined verb phrase.** It connects a verb-phrase conjunct on the left hand side to its coordinator. |
-| `JVr`       | **Conjoined verb phrase.** It connects a verb-phrase conjunct on the right hand side to its coordinator. |
+| `JVl`      | **Conjoined verb phrase.** It connects a verb-phrase conjunct on the left hand side to its coordinator. |
+| `JVr`      | **Conjoined verb phrase.** It connects a verb-phrase conjunct on the right hand side to its coordinator. |
+
+## Punctuation
+
+| Link-types | Descriptions |
+|:----------:|--------------|
+| `PU`       | **Punctuation mark.** It connects a punctuation mark to its modifiee. |
+| `PUs`      | **White space.** It connects a white space to its modifiee. |
+| `PUp`      | **Paiyal Noi 'ฯ'.** It connects a paiyal noi 'ฯ' to its modifiee. |
+| `PUy`      | **Mai Yamok 'ๆ'.** It connects a mai yamok 'ๆ' to its modifiee. |

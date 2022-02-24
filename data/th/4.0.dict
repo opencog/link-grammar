@@ -83,6 +83,14 @@
 %   --------------------
 %   JN = conjoined noun phrase
 %   JV = conjoined verb phrase
+%   JP = conjoined preposition phrase
+%
+%   Punctuation
+%   -----------
+%   PU = punctuation
+%       PUs = white space
+%       PUp = paiyal noi 'ฯ'
+%       PUy = mai yamok 'ๆ'
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -372,7 +380,7 @@ ROMAN-NUMERAL-WORDS.j :
 THAI-COLOR.va :
     <adj-attribute>
     or [<verb-simple-intrans>]
-    or [verb-comp>];
+    or [<verb-comp>];
 
 %%%%%%%%%%%%%%%%%%%%
 % Number
@@ -443,10 +451,13 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     [dAVpr-]
     or dAVpl+;
 
+<p-obj> :
+    hPO+ or [[()]];
+
 <prep-noun> :
-    ((dAVpr- or [dAJpr-]) & hPO+)
-    or [hPO+ & <utterance-prep>]
-    or (hPO+ & {PUsr+} & dAVpl+);
+    ((dAVpr- or [dAJpr-]) & <p-obj>)
+    or [<p-obj> & <utterance-prep>]
+    or (<p-obj> & {PUsr+} & dAVpl+);
 
 <prep-verb> :
     ((dAVpr- or [dAJpr-]) & hPC+)
@@ -465,9 +476,9 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     or (<prep-lw-comp> & {PUsr+} & dAVpl+);
 
 <nprep-noun> :
-    (dAJpr- & hPO+)
-    or [hPO+ & <utterance-prep>]
-    or (hPO+ & {PUsr+} & dAVpl+);
+    (dAJpr- & <p-obj>)
+    or [<p-obj> & <utterance-prep>]
+    or (<p-obj> & {PUsr+} & dAVpl+);
 
 <nprep-verb> :
     (dAJpr- & hPC+)
@@ -475,9 +486,9 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     or (hPC+ & {PUsr+} & dAVpl+);
 
 <vprep-noun> :
-    (dAVpr- & hPO+)
-    or [hPO+ & <utterance-prep>]
-    or (hPO+ & {PUsr+} & dAVpl+);
+    (dAVpr- & <p-obj>)
+    or [<p-obj> & <utterance-prep>]
+    or (<p-obj> & {PUsr+} & dAVpl+);
 
 <vprep-verb> :
     (dAVpr- & hPC+)
@@ -567,6 +578,18 @@ _.cv :
         JVl-
         & JVr+
     ]];
+
+/th/words/words.conj.prep :
+    (AVpr+ & AVpl- & (dAVpr- or dAVpl+))
+    or 
+    [AJpr+ & AJpl- & (dAJpr- or dAJpl+)];
+
+_.cp :
+    [[
+        (AVpl- & AVpr+)
+        or (AJpl- & AJpr+)
+    ]]
+    & (dAVpr- or [dAJpr-]);
 
 /th/words/words.conj.discont :
     JD+;
