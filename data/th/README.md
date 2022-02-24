@@ -15,8 +15,6 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | `LWn`      | **Left wall: noun phrase.** It links the core noun of a noun phrase to the left wall. |
 | `LWp`      | **Left wall: preposition phrase.** It links the preposition of a preposition phrase to the left wall. |
 | `RW`       | **Right wall.** It links the last element of an acceptable utterance to the right wall. |
-| `IJ`      | **Interjection.** It links an interjection word to the left wall. |
-| `PT`      | **Particle.** It links a particle word to the right wall. |
 
 ## Sentence
 
@@ -27,6 +25,8 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | `VZ`       | **Serial verb.** It connects a verb to its modifying verb in a serial verb construction. |
 | `VC`       | **Controlled verb.** It connects a verb to its controlled verb. |
 | `TP`       | **Topicalization.** It connects a topicalized noun phrase to its main verb. |
+| `IJ`      | **Interjection.** It links an interjection word to the left wall. |
+| `PT`      | **Particle.** It links a particle word to the right wall. |
 
 ## Noun Phrase
 
@@ -90,6 +90,9 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | `JV`       | **Conjoined verb phrase.** It connects a verb-phrase conjunct to its coordinator. |
 | `JVl`      | **Conjoined verb phrase.** It connects a verb-phrase conjunct on the left hand side to its coordinator. |
 | `JVr`      | **Conjoined verb phrase.** It connects a verb-phrase conjunct on the right hand side to its coordinator. |
+| `JP`       | **Conjoined preposition phrase.** It connects a preposition-phrase conjunct to its coordinator. |
+| `JPl`      | **Conjoined preposition phrase.** It connects a preposition-phrase conjunct on the left hand side to its coordinator. |
+| `JPr`      | **Conjoined preposition phrase.** It connects a preposition-phrase conjunct on the right hand side to its coordinator. |
 
 ## Punctuation
 
