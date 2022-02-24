@@ -10,7 +10,7 @@
 %                                                               %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#define dictionary-version-number 0.0.1;
+#define dictionary-version-number 5.10.2;
 #define dictionary-locale th_TH.UTF-8;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -334,12 +334,13 @@ THAI-DATE THAI-TIME :
 
 /th/words/words.adj.common
 /th/words/words.num.ordinal
-THAI-COLOR.j :
+THAI-COLOR.j 
+ROMAN-NUMERAL-WORDS.j :
     <adj-simple>;
 
 /th/words/words.adj.lhs 
-/th/words/words.n.title :
-% /th/words/words.n.designator :
+/th/words/words.n.title
+/th/words/words.n.designator :
     <adj-lhs>;
 
 %%%% Attributive Verb %%%%
@@ -558,6 +559,9 @@ _.cv :
 /th/words/words.part.common :
     PT-;
 
+ครัช.#ครับ ครัล.#ครับ คนับ.#ครับ: [ครับ.pt]bad-spelling;
+คับ.#ครับ จั๊บ.#ครับ: [ครับ.pt]colloquial;
+
 %%%%%%%%%%%%%%%%%%%%
 % Interjection
 %%%%%%%%%%%%%%%%%%%%
@@ -584,6 +588,25 @@ _.pu :
     {PUs-}
     & dPUp-
     & {PUs+};
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%
+% Date and Time
+%%%%%%%%%%%%%%%%%%%%
+
+HMS-TIME.n DECADE-DATE.n YEAR-DATE.n THAI-DATE.n THAI-TIME.n :
+    <noun-simple>;
+
+HMS-TIME.r YEAR-DATE.r THAI-DATE.r THAI-TIME.r :
+    <ablative>;
+
+%%%%%%%%%%%%%%%%%%%%
+% Part Number
+%%%%%%%%%%%%%%%%%%%%
+
+PART-NUMBER THAI-PART-NUMBER :
+    <noun-simple>;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
