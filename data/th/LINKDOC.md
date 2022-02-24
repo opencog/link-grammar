@@ -109,7 +109,7 @@ LEFT-WALL คณะ.n นักเรียน.n เดินทาง.v มา.
 
 ### O
 
-This directed connects an object to its main verb.
+This directed link connects an object to its main verb.
 
 ```
     +-------LWs-------+--------->AVpr--------->+
@@ -120,15 +120,29 @@ LEFT-WALL เรา.pr รับประทาน.v อาหาร.n กลา
 
 ### VZ
 
-This directed connects a verb to its modifying verb in a serial verb construction.
+This *undirected* link connects a verb to its modifying verb in a serial verb construction.
+
+```
+    +-----LWs-----+
+    |       +<-S<-+--VZ-+--VZ--+>AVpr>+->PO>+---NZ--+
+    |       |     |     |      |      |     |       |
+LEFT-WALL ฉัน.pr ออก.v เดิน.v ช็อปปิ้ง.v ที่.paa ห้าง.n พารากอน.n
+```
 
 ### VC
 
-This directed connects a verb to its controlled verb.
+This directed link connects a verb to its controlled verb.
+
+```
+    +--------LWs--------+----->VC----->+
+    |          +<---S<--+-->O->+       +-->O-->+---NZ---+
+    |          |        |      |       |       |        |
+LEFT-WALL นักการเมือง.n ถูก.ps นักข่าว.n ซักถาม.v เรื่อง.n งบประมาณ.n
+```
 
 ### TP
 
-This *undirected* connects a topicalized noun phrase to its main verb.
+This *undirected* link connects a topicalized noun phrase to its main verb.
 
 ```
     +-----------------LWs-----------------+
@@ -141,11 +155,28 @@ LEFT-WALL บ้าน.n เรือน.n ไทย.n _.pu ฉัน.pr ชอ�
 
 ### IJ
 
-It links an interjection word to the left wall.
+This *undirected* link connects an interjection word to the left wall.
+
+```
+    +--------------LWs--------------+
+    |        +----------IJ----------+
+    |        |          +<----S<----+--------PT-------+
+    |        +-PUs-+    |     +<AXw<+>AVw>+>AVw>+     |
+    |        |     |    |     |     |     |     |     |
+LEFT-WALL เฮ้ย.ij _.pu มัน.pr จะ.x  เป็น.v ไป.r  ได้.r หรือ.pt
+```
 
 ### PT
 
-It links a particle word to the right wall.
+This *undirected* link connects a particle word to the right wall.
+
+```
+    +---------LWs--------+
+    |        +<----S<----+------PT------+
+    |        |     +<AXw<+->O->+        |
+    |        |     |     |     |        |
+LEFT-WALL เธอ.pr เคย.x ไป.v โคราช.n หรือยัง.pt
+```
 
 ----------
 
@@ -153,27 +184,65 @@ It links a particle word to the right wall.
 
 ### NZ
 
-It connects a noun to its modifying noun in a serial noun construction.
+This *undirected* link connects a noun to its modifying noun in a serial noun construction.
+
+```
+    +--------------------LWs-------------------+
+    |        +<---------------S<---------------+
+    |        +--NZ--+---NZ--+---NZ--+    +<AXw<+-->O->+->AJv>+
+    |        |      |       |       |    |     |      |      |
+LEFT-WALL คุณภาพ.n ชีวิต.n ชาวไทย.n ภูเขา.n ก็.x  เป็น.v ปัจจัย.n สำคัญ.va
+```
 
 ### AJ
 
-It connects a nominal modifier to its core noun.
+This directed link connects a nominal modifier to its core noun. There are five types of `AJ` links: `AJj`, `AJr`, `AJp`, `AJv`, and `AJt`.
+
+`AJj` connects an adjective to its core noun.
+
+```
+    +-----------------LWs-----------------+
+    |        +-------------TP-------------+
+    |        +----->AJj---->+             +-----PT-----+
+    |        |      +<-CLn<-+       +<-S<-+>AVw>+      |
+    |        |      |       |       |     |     |      |
+LEFT-WALL รถยนต์.n คัน.cl ก่อนหน้า.j เขา.pr ไป.v  ถึง.r หรือยัง.pt
+```
+
+`AJr` connects a relativizer to its core noun.
+
+```
+    +----------------LWs----------------+
+    |       +<------------S<------------+
+    |       |     +--->PC--->+          |
+    |       +>AJr>+    +<-S<-+>AVw>+    +->O->+
+    |       |     |    |     |     |    |     |
+LEFT-WALL สมุด.n ที่.rl ฉัน.pr ซื้อ.v  มา.r อยู่.v ที่ไหน.pr
+```
 
 ### RI
 
-It connects an implicit relative clause to its core noun.
+This directed link connects an implicit relative clause to its core noun.
 
 ### AT
 
-It connects an attribute noun to its core noun.
+This directed link connects an attribute noun to its core noun.
+
+```
+    +----------------LWs----------------+
+    |        +<------------S<-----------+
+    |        +->AT->+->AJv->+     +<AXw<+->O->+-->AJv->+-->AVw->+->AVw->+
+    |        |      |       |     |     |     |        |        |       |
+LEFT-WALL ระบบ.n ขนาด.na ใหญ่.va ย่อม.x  มี.v ความ.n สลับซับซ้อน.va เป็น.r ธรรมดา.r
+```
 
 ### PS
 
-It connects a possessive pronoun to its core noun.
+This directed link connects a possessive pronoun to its core noun.
 
 ### AM
 
-It connects an attribute's modifier to its attributive verb.
+This directed link connects an attribute's modifier to its attributive verb.
 
 ----------
 
