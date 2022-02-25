@@ -343,7 +343,8 @@ THAI-DATE THAI-TIME :
 %%%%%%%%%%%%%%%%%%%%
 
 <adj-simple> :
-    {hCL-}
+    {PUy+}
+    & {hCL-}
     & dAJj-
     & {hAVw+};
 
@@ -351,7 +352,8 @@ THAI-DATE THAI-TIME :
     dAJj+;
 
 <adj-attribute> :
-    {hCL-}
+    {PUy+}
+    & {hCL-}
     & dAJv-
     & {hAVw+ or hAVp+ or hAM+};
 
@@ -379,7 +381,7 @@ ROMAN-NUMERAL-WORDS.j :
 /th/words/words.v.attribute
 THAI-COLOR.va :
     <adj-attribute>
-    or [<verb-simple-intrans>]
+    or [{PUy+} & <verb-simple-intrans>]
     or [<verb-comp>];
 
 %%%%%%%%%%%%%%%%%%%%
@@ -623,12 +625,12 @@ _.pu :
 
 ๆ.pu ฯลฯ.pu :
     {PUs-}
-    & dPUy-
+    & PUy-
     & {PUs+};
 
 ฯ.pu :
     {PUs-}
-    & dPUp-
+    & PUp-
     & {PUs+};
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
