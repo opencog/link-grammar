@@ -1318,7 +1318,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 			suflen = strlen(*suffix);
 			 /* The remaining w is too short for a possible match.
 			  * In addition, don't allow empty stems. */
-			if ((wend-suflen) < (w+1)) continue;
+			if ((size_t) (wend-w) < suflen+1) continue;
 
 			/* A lang like Russian allows empty suffixes, which have a real
 			 * morphological linkage. In the following check, the empty suffix
@@ -1365,7 +1365,8 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 
 				/* A zero length "stem" is not allowed here. In any case,
 				 * it cannot be handled (yet) by the rest of the code. */
-				if (suflen+prelen < wend-w && strncmp(w, prefix[j], prelen) == 0)
+				if (suflen+prelen < (size_t) (wend-w)
+				    && strncmp(w, prefix[j], prelen) == 0)
 				{
 					strcpy(newword, w+prelen);
 					/* ??? Do we need a regex match? */
