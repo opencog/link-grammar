@@ -19,7 +19,7 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-#define dictionary-version-number 5.10.2;
+#define dictionary-version-number 5.10.4;
 #define dictionary-locale         en_US.UTF-8;
 
 % The default largest disjunct cost to consider during parsing.
@@ -7458,7 +7458,7 @@ unlike:
 % Mf- & MVp+: "She was a girl of about John's age"
 of:
   ({JQ+}
-    & (Js+ or Jp+ or Ju+ or Mgp+ or (QI+ & {CV+}))
+    & (Js+ or Jp+ or Ju+ or Jr+ or Mgp+ or (QI+ & {CV+}))
     & (Mp-
       or Mf-
       or OFj-
