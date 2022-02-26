@@ -284,7 +284,7 @@ LEFT-WALL คอมพิวเตอร์.n เขา.pr ติด.v เชื
 
 ### AX
 
-It connects an auxiliary to its main verb. All kinds of auxiliary always <u>precede</u> the main verb. There are two types of `AX` links: `AXw` and `AXg`.
+This directed link connects an auxiliary to its main verb. All kinds of auxiliary always <u>precede</u> the main verb. There are two types of `AX` links: `AXw` and `AXg`.
 
 `AXw` connects an auxiliary verb to its main verb.
 
@@ -308,7 +308,7 @@ LEFT-WALL เธอ.pr ไม่.ng ยอม.v ไป.v ตรวจ.v โร�
 
 ### AV
 
-It connects an adverbial to its main verb. All kinds of adverbial (except cohesive marker) always <u>follow</u> the main verb. There are seven types of `AV` links: `AVp`, `AVw`, `AVg`, `AVn`, `AVv`, `AVt`, and `AVc`.
+This directed link connects an adverbial to its main verb. All kinds of adverbial (except cohesive marker) always <u>follow</u> the main verb. There are seven types of `AV` links: `AVp`, `AVw`, `AVg`, `AVn`, `AVv`, `AVt`, and `AVc`.
 
 `AVp` connects a preposition phrase to its main verb.
 
@@ -362,7 +362,24 @@ LEFT-WALL นักเรียน.n ถูก.x ลงโทษ.v ซ้ำ.r 2
 
 `AVt` connects a temporal phrase to the main verb.
 
+```
+                   +------------>AVtr----------->+
+    +------LWs-----+--->AVpr-->+                 |
+    |        +<-S<-+->O>+      +->PO>+           |
+    |        |     |    |      |     |           |
+LEFT-WALL เพื่อน.n จัด.v งาน.n ให้.pva ฉัน.pr วันที่_10_สิงหาคม[!]
+```
+
 `AVc` connects a cohesive marker to the main verb. The cohesive markers always <u>precede</u> a sentence.
+
+```
+    +-----------------LWs-----------------+
+    |           +<----------AVcl<---------+------------------>AVw------------------>+
+    |           |           +<-----S<-----+       +---->AJpr---->+---->PO---->+     |
+    |           |           |       +<AXw<+-->O-->+->RI->+       |      +<AJj<+     |
+    |           |           |       |     |       |      |       |      |     |     |
+LEFT-WALL อย่างไรก็ตาม.rc ข้าพเจ้า.pr ได้.x ติดตาม.v การ.fx ทำงาน.v ของ.pnn ทุก.jl ฝ่าย.n แล้ว.r
+```
 
 ----------
 
@@ -370,15 +387,31 @@ LEFT-WALL นักเรียน.n ถูก.x ลงโทษ.v ซ้ำ.r 2
 
 ### PO
 
-It connects a preposition to its complementing noun phrase.
+This directed link connects a preposition to its complementing noun phrase.
+
+```
+    +----------LWs----------+
+    |        +<----AVpl<----+------PT------+
+    |        +-->PO->+      +->O->+        |
+    |        |       |      |     |        |
+LEFT-WALL บน.pan เครื่องบิน.n มี.v ห้องน้ำ.n หรือไม่.pt
+```
 
 ### PC
 
-It connects a preposition to its complementing sentence.
+This directed link connects a preposition to its complementing sentence.
+
+```
+    +----------LWs---------+
+    |        +<-----S<-----+      +---->AVw---->+        +----->PC---->+     +--->AJpr-->+
+    |        |      +<-AXw<+--VZ--+-->O->+      +->AVpr->+       +<AXw<+->O->+>AJv>+     +-->PO->+
+    |        |      |      |      |      |      |        |       |     |     |     |     |       |
+LEFT-WALL สมชาย.n จึง.x เดินทาง.v ไป.v สกลนคร.n ทันที.r หลังจาก.pva ได้.x ทราบ.v ข่าว.n ดี.va ของ.pnn ภรรยา.n
+```
 
 ### PZ
 
-It connects a preposition to its modifying preposition in a serial preposition construction.
+This directed link connects a preposition to its modifying preposition in a serial preposition construction.
 
 ----------
 
@@ -386,15 +419,15 @@ It connects a preposition to its modifying preposition in a serial preposition c
 
 ### NU
 
-It connects a numeral phrase to its modifiee.
+This directed link connects a numeral phrase to its modifiee.
 
 ### CL
 
-It connects a classifier to its number.
+This directed link connects a classifier to its number.
 
 ### QF
 
-It connects a numeral quantifier to its number.
+This directed link connects a numeral quantifier to its number.
 
 ----------
 
@@ -402,15 +435,15 @@ It connects a numeral quantifier to its number.
 
 ### JN
 
-It connects a noun-phrase conjunct to its coordinator.
+This *undirected* link connects a noun-phrase conjunct to its coordinator.
 
 ### JV
 
-It connects a verb-phrase conjunct to its coordinator.
+This *undirected* link connects a verb-phrase conjunct to its coordinator.
 
 ### JP
 
-It connects a preposition-phrase conjunct to its coordinator.
+This *undirected* link connects a preposition-phrase conjunct to its coordinator.
 
 ----------
 
@@ -418,6 +451,6 @@ It connects a preposition-phrase conjunct to its coordinator.
 
 ### PU
 
-It connects a punctuation mark to its modifiee.
+This *undirected* link connects a punctuation mark to its modifiee.
 
 

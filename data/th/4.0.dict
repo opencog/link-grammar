@@ -137,7 +137,8 @@
 %%%%%%%%%%%%%%%%%%%%
 
 <noun-looking-for-mods> :
-    {@hAJ+ or hPS+}
+    {hAJj-}
+    & {@hAJ+ or hPS+}
     & {PUp+ or PUy+}
     & {<num-cl>}
     & {@hAJ+};
@@ -455,14 +456,14 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     hPO+ or [[()]];
 
 <prep-noun> :
-    ((dAVpr- or [dAJpr-]) & <p-obj>)
+    ({PUs-} & (dAVpr- or [dAJpr-]) & <p-obj>)
     or [<p-obj> & <utterance-prep>]
-    or (<p-obj> & {PUsr+} & dAVpl+);
+    or (<p-obj> & {PUs+} & dAVpl+);
 
 <prep-verb> :
-    ((dAVpr- or [dAJpr-]) & hPC+)
+    ({PUs-} & (dAVpr- or [dAJpr-]) & hPC+)
     or [hPC+ & <utterance-prep>]
-    or (hPC+ & {PUsr+} & dAVpl+);
+    or (hPC+ & {PUs+} & dAVpl+);
 
 <prep-lw-comp> :
     @hPO+
@@ -471,29 +472,29 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     or @hAJp+;
 
 <prep-lw> :
-    ((dAVpr- or [dAJpr-]) & <prep-lw-comp>)
+    ({PUs-} & (dAVpr- or [dAJpr-]) & <prep-lw-comp>)
     or [<prep-lw-comp> & <utterance-prep>]
-    or (<prep-lw-comp> & {PUsr+} & dAVpl+);
+    or (<prep-lw-comp> & dAVpl+);
 
 <nprep-noun> :
-    (dAJpr- & <p-obj>)
+    ({PUs-} & dAJpr- & <p-obj>)
     or [<p-obj> & <utterance-prep>]
-    or (<p-obj> & {PUsr+} & dAVpl+);
+    or (<p-obj> & {PUs+} & dAVpl+);
 
 <nprep-verb> :
-    (dAJpr- & hPC+)
+    ({PUs-} & dAJpr- & hPC+)
     or [hPC+ & <utterance-prep>]
-    or (hPC+ & {PUsr+} & dAVpl+);
+    or (hPC+ & {PUs+} & dAVpl+);
 
 <vprep-noun> :
-    (dAVpr- & <p-obj>)
+    ({PUs-} & dAVpr- & <p-obj>)
     or [<p-obj> & <utterance-prep>]
-    or (<p-obj> & {PUsr+} & dAVpl+);
+    or (<p-obj> & {PUs+} & dAVpl+);
 
 <vprep-verb> :
-    (dAVpr- & hPC+)
+    ({PUs-} & dAVpr- & hPC+)
     or [hPC+ & <utterance-prep>]
-    or (hPC+ & {PUsr+} & dAVpl+);
+    or (hPC+ & {PUs+} & dAVpl+);
 
 /th/words/words.prep.n :
     <prep-noun>;
