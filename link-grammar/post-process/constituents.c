@@ -965,7 +965,6 @@ exprint_constituent_structure(con_context_t *ctxt,
 	bool *leftdone = alloca(numcon_total * sizeof(bool));
 	bool *rightdone = alloca(numcon_total * sizeof(bool));
 	int best, bestright, bestleft;
-	char s[MAX_WORD];
 	dyn_str * cs = dyn_str_new();
 
 	assert (numcon_total < ctxt->conlen, "Too many constituents (b)");
@@ -1006,6 +1005,7 @@ exprint_constituent_structure(con_context_t *ctxt,
 		/* Don't print out right wall */
 		if (w < linkage->num_words - 1)
 		{
+			char s[MAX_WORD];
 			char *p;
 			strncpy(s, linkage->word[w], MAX_WORD);
 			s[MAX_WORD-1] = 0;
