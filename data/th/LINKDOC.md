@@ -411,7 +411,27 @@ LEFT-WALL สมชาย.n จึง.x เดินทาง.v ไป.v สก�
 
 ### PZ
 
-This directed link connects a preposition to its modifying preposition in a serial preposition construction.
+This directed link connects a preposition to its core preposition in a serial preposition construction. There are two types of `PZ` links: `PZn` and `PZv`.
+
+`PZn` connects a preposition to its core noun-consuming preposition.
+
+```
+    +-----LWs----+--->AVw--->+--->AVpr-->+
+    |       +<-S<+->O->+     |    +<-PZn<+->PO>+
+    |       |    |     |     |    |      |     |
+LEFT-WALL พ่อ.n วาง.v ของ.n ไว้.r ที่.pan บน.pan บ้าน.n
+```
+
+`PZv` connects a preposition to its core verb-consuming preposition.
+
+```
+    +-------------LWs-------------+
+    |        +<---------S<--------+
+    |        |      +<----AXw<----+------->AVpr------>+
+    |        |      |      +<-AXw<+->O->+     +<-PZv<-+->PC>+-->O->+->RI->+-->O->+
+    |        |      |      |      |     |     |       |     |      |      |      |
+LEFT-WALL เรา.pr จำเป็น.x ต้อง.x สร้าง.v ตึก.n เพื่อ.pav ให้.pva เกิด.v การ.fx พัฒนา.v เมือง.n
+```
 
 ----------
 

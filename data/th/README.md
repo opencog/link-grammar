@@ -65,7 +65,9 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 |:----------:|--------------|
 | `PO`       | **Prepositional object.** It connects a preposition to its complementing noun phrase. |
 | `PC`       | **Prepositional complement.** It connects a preposition to its complementing sentence. |
-| `PZ`       | **Serial preposition.** It connects a preposition to its modifying preposition in a serial preposition construction. |
+| `PZ`       | **Serial preposition.** It connects a preposition to its core preposition in a serial preposition construction. |
+| `PZn`       | **Serial noun-consuming preposition.** It connects a preposition to its core noun-consuming preposition. |
+| `PZv`       | **Serial verb-consuming preposition.** It connects a preposition to its core verb-consuming preposition. |
 
 ## Numeral Phrase
 

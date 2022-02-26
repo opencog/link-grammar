@@ -456,14 +456,16 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     hPO+ or [[()]];
 
 <prep-noun> :
-    ({PUs-} & (dAVpr- or [dAJpr-]) & <p-obj>)
-    or [<p-obj> & <utterance-prep>]
-    or (<p-obj> & {PUs+} & dAVpl+);
+    ({hPZn-} & {PUs-} & (dAVpr- or [dAJpr-]) & <p-obj>)
+    or [{hPZn-} & <p-obj> & <utterance-prep>]
+    or ({hPZn-} & <p-obj> & {PUs+} & dAVpl+)
+    or dPZn+;
 
 <prep-verb> :
-    ({PUs-} & (dAVpr- or [dAJpr-]) & hPC+)
-    or [hPC+ & <utterance-prep>]
-    or (hPC+ & {PUs+} & dAVpl+);
+    ({hPZv-} & {PUs-} & (dAVpr- or [dAJpr-]) & hPC+)
+    or [{hPZv-} & hPC+ & <utterance-prep>]
+    or ({hPZv-} & hPC+ & {PUs+} & dAVpl+)
+    or dPZv+;
 
 <prep-lw-comp> :
     @hPO+
@@ -477,9 +479,10 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     or (<prep-lw-comp> & dAVpl+);
 
 <nprep-noun> :
-    ({PUs-} & dAJpr- & <p-obj>)
-    or [<p-obj> & <utterance-prep>]
-    or (<p-obj> & {PUs+} & dAVpl+);
+    ({hPZn-} & {PUs-} & dAJpr- & <p-obj>)
+    or [{hPZn-} & <p-obj> & <utterance-prep>]
+    or ({hPZn-} & <p-obj> & {PUs+} & dAVpl+)
+    or dPZn+;
 
 <nprep-verb> :
     ({PUs-} & dAJpr- & hPC+)
@@ -487,14 +490,16 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     or (hPC+ & {PUs+} & dAVpl+);
 
 <vprep-noun> :
-    ({PUs-} & dAVpr- & <p-obj>)
-    or [<p-obj> & <utterance-prep>]
-    or (<p-obj> & {PUs+} & dAVpl+);
+    ({hPZn-} & {PUs-} & dAVpr- & <p-obj>)
+    or [{hPZn-} & <p-obj> & <utterance-prep>]
+    or ({hPZn-} & <p-obj> & {PUs+} & dAVpl+)
+    or dPZn+;
 
 <vprep-verb> :
-    ({PUs-} & dAVpr- & hPC+)
-    or [hPC+ & <utterance-prep>]
-    or (hPC+ & {PUs+} & dAVpl+);
+    ({hPZv-} & {PUs-} & dAVpr- & hPC+)
+    or [{hPZv-} & hPC+ & <utterance-prep>]
+    or ({hPZv-} & hPC+ & {PUs+} & dAVpl+)
+    or dPZv+;
 
 /th/words/words.prep.n :
     <prep-noun>;
