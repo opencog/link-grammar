@@ -35,13 +35,13 @@ This document elaborates the details of each link type for the Thai Link Grammar
 
 However, the remaining of this document is organized with respect to the syntactic hierarchy:
 
-1. Utterance
-2. Sentence
-3. Noun phrase
-4. Verb phrase
-5. Numeral phrase 
-6. Coordinate structure 
-7. Punctuation
+1. [Utterance](#utterance)
+2. [Sentence](#sentence)
+3. [Noun phrase](#noun-phrase)
+4. [Verb phrase](#verb-phrase)
+5. [Numeral phrase](#numeral-phrase)
+6. [Coordinate structure](#coordinate-structure)
+7. [Punctuation](#punctuation)
 
 ----------
 
