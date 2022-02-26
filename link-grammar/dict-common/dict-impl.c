@@ -528,7 +528,7 @@ static int revcmplen(const void *a, const void *b)
  */
 static void get_dict_affixes(Dictionary dict, Dict_node * dn,
                              char infix_mark,
-                             const char** plast, size_t lastlen)
+                             const char** plast, size_t *lastlen)
 {
 	const char *w;         /* current dict word */
 	const char *w_sm;      /* SUBSCRIPT_MARK position in the dict word */
@@ -542,7 +542,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 	w_sm = strrchr(w, SUBSCRIPT_MARK);
 	w_len = (NULL == w_sm) ? strlen(w) : (size_t)(w_sm - w);
 
-	if (lastlen != w_len || 0 != strncmp(*plast, w, w_len))
+	if (*lastlen != w_len || 0 != strncmp(*plast, w, w_len))
 	{
 		char* wtrunc = strdupa(w);
 		wtrunc[w_len] = '\0';
@@ -559,7 +559,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 		}
 
 		*plast = w;
-		lastlen = w_len;
+		*lastlen = w_len;
 	}
 
 	get_dict_affixes(dict, dn->left, infix_mark, plast, lastlen);
@@ -670,7 +670,8 @@ bool afdict_init(Dictionary dict)
 		    (0 == AFCLASS(afdict, AFDICT_SUF)->length))
 		{
 			const char *last = 0x0;
-			get_dict_affixes(dict, dict->root, ac->string[0][0], &last, 0);
+			size_t len = 0;
+			get_dict_affixes(dict, dict->root, ac->string[0][0], &last, &len);
 		}
 		else
 		{
