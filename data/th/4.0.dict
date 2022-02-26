@@ -43,11 +43,9 @@
 %       AJj = simple adjective
 %       AJv = attributive verb
 %       AJp = preposition phrase
-%       AJt = temporal modifier
 %   RI = implicit relative clause
 %   AT = attribute
 %   PS = possessive pronoun
-%   AM = attribute's modifier
 %
 %   Verb Phrase
 %   -----------
@@ -355,7 +353,7 @@ THAI-DATE THAI-TIME :
     {PUy+}
     & {hCL-}
     & dAJv-
-    & {hAVw+ or hAVp+ or hAM+};
+    & {hAVw+ or hAVp+};
 
 %%%% Simple Adjective %%%%
 
@@ -430,7 +428,7 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     dAVw- & {hAV+};
 
 /th/words/words.adv.attrmod :
-    dAM+ & {hAV+};
+    dAVw+;
 
 /th/words/words.adv.cohesive :
     dAVcl+;

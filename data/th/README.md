@@ -38,7 +38,6 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | `AJr`      | **Relative clause.** It connects a relativizer to its core noun. |
 | `AJv`      | **Attributive verb.** It connects an attributive verb that acts as an adjective to its core noun. |
 | `AJp`      | **Preposition phrase.** It connects a preposition phrase to its core noun. |
-| `AJt`      | **Temporal phrase.** It connects a temporal phrase to its core noun. |
 | `RI`       | **Implicit relative clause.** It connects an implicit relative clause to its core noun. |
 | `AT`       | **Attribute noun.** It connects an attribute noun to its core noun. |
 | `PS`       | **Possessive pronoun.** It connects a possessive pronoun to its core noun. |

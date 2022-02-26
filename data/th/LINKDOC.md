@@ -7,7 +7,6 @@ License: Creative Commons, Attribution (CC-BY)
 This document elaborates the details of each link type for the Thai Link Grammar. These link types are listed alphabetically for convenience purposes as follows.
 
 > [AJ](#aj)
-[AM](#am)
 [AT](#at)
 [AV](#av)
 [AX](#ax)
@@ -220,9 +219,40 @@ LEFT-WALL รถยนต์.n คัน.cl ก่อนหน้า.j เขา
 LEFT-WALL สมุด.n ที่.rl ฉัน.pr ซื้อ.v  มา.r อยู่.v ที่ไหน.pr
 ```
 
+`AJp` connects a preposition phrase to its core noun.
+
+```
+    +-------------------LWs------------------+
+    |        +<--------------S<--------------+
+    |        |                   +<---AXw<---+
+    |        +>AJpr>+->PO->+     |    +<-AXw<+->AVw->+
+    |        |      |      |     |    |      |       |
+LEFT-WALL สินค้า.n บน.pan รถไฟ.n ยัง.x คง.x ปลอดภัย.va อยู่.r
+```
+
+`AJv` connects an attributive verb that acts as an adjective to its core noun.
+
+```
+    +------------------LWs-----------------+
+    |         +<-------------S<------------+
+    |         +---->AJv---->+              |
+    |         |      +<-CLn<+      +<-AXw<-+
+    |         |      |      |      |       |
+LEFT-WALL นักเรียน.n คน.cl ขยัน.va กำลัง.x เดินทาง.v
+```
+
 ### RI
 
 This directed link connects an implicit relative clause to its core noun.
+
+```
+    +----------------LWs---------------+
+    |       +<------------S<-----------+
+    |       +--------->AJj-------->+   |
+    |       +->RI>+->O>+     +<CLn<+   +->O->+->AJv->+
+    |       |     |    |     |     |   |     |       |
+LEFT-WALL หม้อ.n หุง.v ข้าว.n ใบ.cl  นี้.j มี.v ระบบ.n อัตโนมัติ.va
+```
 
 ### AT
 
@@ -240,9 +270,13 @@ LEFT-WALL ระบบ.n ขนาด.na ใหญ่.va ย่อม.x  มี.
 
 This directed link connects a possessive pronoun to its core noun.
 
-### AM
-
-This directed link connects an attribute's modifier to its attributive verb.
+```
+    +------------LWs-----------+
+    |          +<------S<------+
+    |          +--->PS-->+     +->O>+--NZ--+
+    |          |         |     |    |      |
+LEFT-WALL คอมพิวเตอร์.n เขา.pr ติด.v เชื้อ.n ไวรัส.n
+```
 
 ----------
 
@@ -250,11 +284,85 @@ This directed link connects an attribute's modifier to its attributive verb.
 
 ### AX
 
-It connects an auxiliary to its main verb. All kinds of auxiliary always <u>precede</u> the main verb.
+It connects an auxiliary to its main verb. All kinds of auxiliary always <u>precede</u> the main verb. There are two types of `AX` links: `AXw` and `AXg`.
+
+`AXw` connects an auxiliary verb to its main verb.
+
+```
+    +---------LWs--------+
+    |       +<-----S<----+      +------>AVw----->+
+    |       |     +<-AXw<+--VZ--+-->O-->+        +>AVw>+
+    |       |     |      |      |       |        |     |
+LEFT-WALL เขา.n จะ.x เดินทาง.v ไป.v อุบลราชธานี.n อยู่.r  แล้ว.r
+```
+
+`AXg` connects a negator to its main verb.
+
+```
+    +---------LWs--------+
+    |        +<----S<----+
+    |        |     +<AXg<+--VZ-+--VZ-+->O->+->RI->+
+    |        |     |     |     |     |     |      |
+LEFT-WALL เธอ.pr ไม่.ng ยอม.v ไป.v ตรวจ.v โรค.n ติดต่อ.v
+```
 
 ### AV
 
-It connects an adverbial to its main verb. All kinds of adverbial (except cohesive marker) always <u>follow</u> the main verb.
+It connects an adverbial to its main verb. All kinds of adverbial (except cohesive marker) always <u>follow</u> the main verb. There are seven types of `AV` links: `AVp`, `AVw`, `AVg`, `AVn`, `AVv`, `AVt`, and `AVc`.
+
+`AVp` connects a preposition phrase to its main verb.
+
+```
+    +--------LWs--------+
+    |        +----TP----+-->AVpr-->+
+    |        |     +<-S<+->O>+     +->PO->+
+    |        |     |    |    |     |      |
+LEFT-WALL เรา.pr นัด.n พบ.v กัน.pr ที่.pan ปารีส.n
+```
+
+`AVw` connects an adverb to its main verb.
+
+```
+    +---------------LWs--------------+
+    |          +<---------S<---------+------------>AVw------------>+
+    |          +---NZ---+      +<AXw<+--->O-->+-----NZ----+        |
+    |          |        |      |     |        |           |        |
+LEFT-WALL สายการบิน.n นกแอร์.n มา.x  ถึง.v ท่าอากาศยาน.n อุบลราชธานี.n แล้ว.r
+```
+
+`AVg` connects a negative adverb to its main verb.
+
+```
+    +----------LWs---------+
+    |         +<-----S<----+------->AVgr------>+
+    |         |      +<AXw<+->AVw->+>AVw>+     |
+    |         |      |     |       |     |     |
+LEFT-WALL นักเรียน.n จะ.x กระทำ.v อย่าง.r  นี้.r มิได้.ng
+```
+
+`AVn` connects a numeral modifier of a noun phrase to the main verb.
+
+```
+                       +------->AVnr------>+
+    +-----LWs----+     +----->AVw---->+    |
+    |       +<-S<+--VZ-+-->O->+       |    +>CLn>+
+    |       |    |     |      |       |    |     |
+LEFT-WALL แม่.n ฝาก.v ซื้อ.v กล้วยหอม.n ไว้.r 2.nu  ลูก.cl
+```
+
+`AVv` connects a numeral modifier to the main verb.
+
+```
+    +----------LWs---------+
+    |         +<-----S<----+--->AVvr-->+
+    |         |      +<AXw<+->AVw>+    +>CLv>+
+    |         |      |     |      |    |     |
+LEFT-WALL นักเรียน.n ถูก.x ลงโทษ.v ซ้ำ.r 2.nu ครั้ง.cl
+```
+
+`AVt` connects a temporal phrase to the main verb.
+
+`AVc` connects a cohesive marker to the main verb. The cohesive markers always <u>precede</u> a sentence.
 
 ----------
 
