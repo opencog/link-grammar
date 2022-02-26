@@ -16,7 +16,7 @@
 
 #include "api-structures.h"
 #include "dict-common/dict-common.h"    // Dictionary_s
-#include "dict-common/dict-defines.h"   // RIGHT_WALL_WORD, MAX_WORD
+#include "dict-common/dict-defines.h"   // RIGHT_WALL_WORD
 #include "error.h"
 #include "linkage/linkage.h"
 #include "post-process/post-process.h"
@@ -1005,10 +1005,8 @@ exprint_constituent_structure(con_context_t *ctxt,
 		/* Don't print out right wall */
 		if (w < linkage->num_words - 1)
 		{
-			char s[MAX_WORD];
 			char *p;
-			strncpy(s, linkage->word[w], MAX_WORD);
-			s[MAX_WORD-1] = 0;
+			char *s = strdupa(linkage->word[w]);
 
 			/* Constituent processing will crash if the sentence contains
 			 * square brackets, so we have to do something ... replace
