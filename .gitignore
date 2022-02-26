@@ -53,3 +53,4 @@ bindings/js/link-parser/dist
 # Visual Studio keeps adding the directory ".vs". If it got added while
 # rebasing and it is not git-ignored, it somehow breaks the rebase.
 .vs
+data/th/old_words
