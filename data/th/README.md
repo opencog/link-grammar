@@ -73,7 +73,7 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 
 | Link-types | Descriptions |
 |:----------:|--------------|
-| `NU`       | **Numeral phrase.** It connects a numeral phrase to its modifiee. |
+| `NU`       | **Numeral phrase.** It connects a numeral phrase to its head. |
 | `NUn`      | **Numeral phrase for noun.** It connects a numeral phrase to its core noun. |
 | `NUv`      | **Numeral phrase for verb.** It connects a numeral phrase to its main verb. |
 | `CL`       | **Classifier.** It connects a classifier to its number. |
@@ -99,7 +99,7 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 
 | Link-types | Descriptions |
 |:----------:|--------------|
-| `PU`       | **Punctuation mark.** It connects a punctuation mark to its modifiee. |
-| `PUs`      | **White space.** It connects a white space to its modifiee. |
-| `PUp`      | **Paiyal Noi 'ฯ'.** It connects a paiyal noi 'ฯ' to its modifiee. |
-| `PUy`      | **Mai Yamok 'ๆ'.** It connects a mai yamok 'ๆ' to its modifiee. |
+| `PU`       | **Punctuation mark.** It connects a punctuation mark to its head. |
+| `PUs`      | **White space.** It connects a white space to its head. |
+| `PUp`      | **Paiyal Noi 'ฯ'.** It connects a paiyal noi 'ฯ' to its head. |
+| `PUy`      | **Mai Yamok 'ๆ'.** It connects a mai yamok 'ๆ' to its head. |

@@ -439,11 +439,30 @@ LEFT-WALL เรา.pr จำเป็น.x ต้อง.x สร้าง.v ต
 
 ### NU
 
-This directed link connects a numeral phrase to its modifiee.
+This directed link connects a numeral phrase to its head. There are two types of `NU` links: `NUn` and `NUv`.
+
+`NUn` connects a numeral phrase to its core noun.
+
+```
+    +----------------LWs----------------+
+    |         +<-----------S<-----------+
+    |         +>NUnr>+>CLn>+      +<AXw<+>AVw>+
+    |         |      |     |      |     |     |
+LEFT-WALL นักเรียน.n 3.nu  คน.cl กำลัง.x เดิน.v มา.r
+```
+
+`NUv` connects a numeral phrase to its main verb.
+
+```
+```
 
 ### CL
 
-This directed link connects a classifier to its number.
+This directed link connects a classifier to its number. There are two types of `CL` links: `CLn` and `CLv`.
+
+`CLn` connects a classifier for nouns to its number.
+
+`CLv` connects a classifier for verbs to its number.
 
 ### QF
 
@@ -471,6 +490,6 @@ This *undirected* link connects a preposition-phrase conjunct to its coordinator
 
 ### PU
 
-This *undirected* link connects a punctuation mark to its modifiee.
+This *undirected* link connects a punctuation mark to its head.
 
 
