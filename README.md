@@ -143,7 +143,7 @@ linkparser> นายกรัฐมนตรี ขึ้น กล่าว �
 LEFT-WALL นายกรัฐมนตรี.n ขึ้น.v กล่าว.v สุนทรพจน์.n
 ```
 
-The `VS` link connects two verbs 'ขึ้น' and 'กล่าว' in a serial verb construction.
+The `VS` link connects two verbs 'ขึ้น' and 'กล่าว' in a serial verb construction. A summary of link types is [documented here](https://github.com/kaamanita/link-grammar/blob/master/data/th/README.md). A full documentation of Thai Link Grammar can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md).
 
 Theory and Documentation
 ------------------------
