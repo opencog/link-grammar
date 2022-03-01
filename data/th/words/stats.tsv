@@ -3,7 +3,7 @@ words/words.any	0	0
     words/words.adj.lhs	28	28
     words/words.intj.common	131	131
     words/words.qf.common	0	0
-        words/words.qf.lhs	12	12
+        words/words.qf.lhs	13	13
         words/words.qf.rhs	3	3
     words/words.v.common	10336	10336
         words/words.v.attribute	2008	2008
@@ -35,7 +35,7 @@ words/words.any	0	0
         words/words.adv.attrmod	9	9
     words/words.neg.rhs	3	3
     words/words.part.common	100	100
-    words/words.aux.common	73	73
+    words/words.aux.common	74	74
         words/words.adv.qf	1	1
         words/words.neg.lhs	8	8
         words/words.adv.cohesive	153	153

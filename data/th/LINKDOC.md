@@ -12,6 +12,7 @@ This document elaborates the details of each link type for the Thai Link Grammar
 [AX](#ax)
 [CL](#cl)
 [IJ](#ij)
+[JD](#jd)
 [JN](#jn)
 [JV](#jv)
 [JP](#jp)
@@ -320,6 +321,17 @@ This directed link connects an adverbial to its main verb. All kinds of adverbia
 LEFT-WALL เรา.pr นัด.n พบ.v กัน.pr ที่.pan ปารีส.n
 ```
 
+Two `AVp` links can also be constituted as a coordinate structure.
+
+```
+                 +----------------------------PT---------------------------+
+                 |                   +------>AVpr------>+                  |
+    +-----LWs----+------->AVw------->+     +<---AVpl----+                  |
+    |       +<-S<+-->O->+--NZ--+     |     +->PO>+      +-AVpr>+->PO>+     |
+    |       |    |      |      |     |     |     |      |      |     |     |
+LEFT-WALL ครู.n วาง.v หนังสือ.n เอา.n ไว้.r บน.pan โต๊ะ.n หรือ.cp ใต้.pan โต๊ะ.n ล่ะ.pt
+```
+
 `AVw` connects an adverb to its main verb.
 
 ```
@@ -454,6 +466,11 @@ LEFT-WALL นักเรียน.n 3.nu  คน.cl กำลัง.x เดิ
 `NUv` connects a numeral phrase to its main verb.
 
 ```
+                +----------->O---------->+
+    +----LWs----+    +--------JNl--------+
+    |       +<S<+    +>NUvr>+>CLv>+      +-JNr+>NUvr>+>CLv>+
+    |       |   |    |      |     |      |    |      |     |
+LEFT-WALL แม่.n ตี.v น้อง.n  3.nu ครั้ง.cl และ.cn พี่.n   2.nu ครั้ง.cl
 ```
 
 ### CL
@@ -462,11 +479,34 @@ This directed link connects a classifier to its number. There are two types of `
 
 `CLn` connects a classifier for nouns to its number.
 
+```
+    +------LWs-----+
+    |        +<-S<-+->O->+>NUnr>+>CLn>+
+    |        |     |     |      |     |
+LEFT-WALL สมชาย.n มี.v รถยนต์.n 30.nu คัน.cl
+```
+
 `CLv` connects a classifier for verbs to its number.
+
+```
+    +-----LWs-----+      +------->AVvr------>+
+    |       +<-S<-+--VZ--+-->O->+      +<QFl<+>CLv>+
+    |       |     |      |      |      |     |     |
+LEFT-WALL พอล.n เดิน.v สำรวจ.v พื้นที่.n ถึง.qfl 3.nu รอบ.cl
+```
 
 ### QF
 
 This directed link connects a numeral quantifier to its number.
+
+```
+    +-----------------LWs-----------------+
+    |         +<------------S<------------+
+    |         +----->NUnr----->+          |
+    |         |        +<-QFl<-+>CLn>+    +->O->+-->AJv->+
+    |         |        |       |     |    |     |        |
+LEFT-WALL นักเรียน.n เกือบ.qfl 100.nu คน.cl มี.v อาการ.n ท้องเสีย.va
+```
 
 ----------
 
@@ -476,13 +516,49 @@ This directed link connects a numeral quantifier to its number.
 
 This *undirected* link connects a noun-phrase conjunct to its coordinator.
 
+```
+    +--------------LWs--------------+
+    |             +<-------S<-------+
+    |       +-JNl-+-JNr-+    +<-AXw<+-->O->+
+    |       |     |     |    |      |      |
+LEFT-WALL พ่อ.n และ.cn แม่.n ต่าง.x ปกป้อง.v ลูก.n
+```
+
 ### JV
 
 This *undirected* link connects a verb-phrase conjunct to its coordinator.
 
+```
+    +---------LWs--------+
+    |        +<----S<----+
+    |        |     +<AXw<+--JVl--+-JVr-+--VZ-+-PT-+
+    |        |     |     |       |     |     |    |
+LEFT-WALL เขา.pr จะ.x ทำงาน.v หรือ.cv นอน.v พัก.v ล่ะ.pt
+```
+
 ### JP
 
 This *undirected* link connects a preposition-phrase conjunct to its coordinator.
+
+```
+             +------->AJpr------->+
+             |       +-----JPl----+
+    +---LWn--+       +->PO>+      +--JPr-+->PO->+
+    |        |       |     |      |      |      |
+LEFT-WALL หนังสือ.n บน.pan โต๊ะ.n และ.cp ใต้.pan เก้าอี้.n
+```
+
+### JD
+
+This *undirected* link connects a discontinuous conjunction to its core conjunction.
+
+```
+                  +-------->O-------->+
+    +-----LWs-----+    +------JD------+
+    |       +<-S<-+    |      +--JNl--+-JNr-+
+    |       |     |    |      |       |     |
+LEFT-WALL ฉัน.pr ซื้อ.v ทั้ง.cd หนังสือ.n และ.cn สมุด.n
+```
 
 ----------
 
@@ -490,6 +566,36 @@ This *undirected* link connects a preposition-phrase conjunct to its coordinator
 
 ### PU
 
-This *undirected* link connects a punctuation mark to its head.
+This *undirected* link connects a punctuation mark to its head. There are three types of `PU` links: `PUs`, `PUp`, and `PUy`.
 
+`PUs` connects a white space to its head.
 
+```
+                              +--------JNr-------+
+    +------LWs-----+---->O--->+     +-----JNl----+
+    |        +<-S<-+    +-JNl-+     |      +-PUs-+--JNr-+
+    |        |     |    |     |     |      |     |      |
+LEFT-WALL เรา.pr ซื้อ.v สมุด.n _.cn หนังสือ.n _.pu และ.cn ดินสอ.n
+```
+
+`PUp` connects a paiyal noi 'ฯ' to its head.
+
+```
+    +------------LWs-----------+
+    |         +<-------S<------+
+    |         +--PUp-+-PUs+    +--->O-->+->AJpr->+-->PO-->+--NZ--+
+    |         |      |    |    |        |        |        |      |
+LEFT-WALL กรุงเทพ.n ฯ.pu _.pu เป็น.v เมืองหลวง.n ของ.pnn ประเทศ.n ไทย.n
+```
+
+`PUy` connects a mai yamok 'ๆ' to its head.
+
+```
+    +------------------LWs------------------+
+    |       +<--------------S<--------------+
+    |       |              +<------AXw<-----+
+    |       |              |    +<---AXw<---+
+    |       +-PUy-+-PUs+   |    |    +<-AXg<+->AVw>+
+    |       |     |    |   |    |    |      |      |
+LEFT-WALL เด็ก.n ๆ.pu _.pu ก็.x ยัง.x ไม่.ng เข้าใจ.v อยู่ดี.r
+```

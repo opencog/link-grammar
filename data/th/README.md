@@ -74,8 +74,8 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | Link-types | Descriptions |
 |:----------:|--------------|
 | `NU`       | **Numeral phrase.** It connects a numeral phrase to its head. |
-| `NUn`      | **Numeral phrase for noun.** It connects a numeral phrase to its core noun. |
-| `NUv`      | **Numeral phrase for verb.** It connects a numeral phrase to its main verb. |
+| `NUn`      | **Numeral phrase for noun.** It connects a noun-modifying numeral phrase to its core noun. |
+| `NUv`      | **Numeral phrase for verb.** It connects a verb-modifying numeral phrase to its core noun. |
 | `CL`       | **Classifier.** It connects a classifier to its number. |
 | `CLn`      | **Classifier for nouns.** It connects a classifier for nouns to its number. |
 | `CLv`      | **Classifier for verbs.** It connects a classifier for verbs to its number. |
@@ -94,6 +94,7 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | `JP`       | **Conjoined preposition phrase.** It connects a preposition-phrase conjunct to its coordinator. |
 | `JPl`      | **Conjoined preposition phrase.** It connects a preposition-phrase conjunct on the left hand side to its coordinator. |
 | `JPr`      | **Conjoined preposition phrase.** It connects a preposition-phrase conjunct on the right hand side to its coordinator. |
+| `JD`       | **Discontinuous conjunction.** It connects a discontinuous conjunction to its core conjunction. |
 
 ## Punctuation
 

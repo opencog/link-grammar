@@ -81,7 +81,6 @@
 %   --------------------
 %   JN = conjoined noun phrase
 %   JV = conjoined verb phrase
-%   JP = conjoined preposition phrase
 %
 %   Punctuation
 %   -----------
@@ -124,7 +123,9 @@
     & <right-wall>;
 
 <num-cl> :
-    hNUn- or hNUn+;
+    hNUn-
+    or [hNUn+]
+    or [[hNUv+]];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %                                       %
@@ -242,7 +243,7 @@ THAI-DATE THAI-TIME :
 % Verb
 %%%%%%%%%%%%%%%%%%%%
 
-<verb-start> :
+<core-of-verb> :
     {@hAX-}
     & (
         (hS- & ([TP-] or ()))
@@ -250,7 +251,10 @@ THAI-DATE THAI-TIME :
     )
     & {hAVpl-}
     & {hAVtl-}
-    & {hAVcl-}
+    & {hAVcl-};
+
+<verb-start> :
+    <core-of-verb>
     & (<left-wall-sent> or JVr-)
     & (hO+ or [()])
     & (
@@ -260,26 +264,13 @@ THAI-DATE THAI-TIME :
     );
 
 <passive-marker> :
-    {@hAX-}
-    & (
-        (hS- & ([TP-] or ()))
-        or [()]
-    )
-    & {hAVpl-}
-    & {hAVtl-}
-    & {hAVcl-}
+    <core-of-verb>
     & (<left-wall-sent> or JVr-)
     & (hO+ or [()])
     & hVC+;
 
 <verb-intrans> :
-    {@hAX-}
-    & (
-        (hS- & ([TP-] or ()))
-        or [()]
-    )
-    & {hAVpl-}
-    & {hAVcl-}
+    <core-of-verb>
     & (<left-wall-sent> or JVr-)
     & (
         ({@hAV+} & {@hAV-} & <right-wall>)
@@ -389,6 +380,7 @@ THAI-COLOR.va :
 
 <number-simple> :
     ({hQFl-} & dNUnr- & hCLn+ & {hQFr+})
+    or [[{hQFl-} & dNUvr- & hCLv+ & {hQFr+}]]
     or [{hQFl-} & dAVnr- & hCLn+ & {hQFr+}]
     or [{hQFl-} & dAVvr- & hCLv+ & {hQFr+}]
     or dNUnl+
@@ -452,12 +444,17 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     [dAVpr-]
     or dAVpl+;
 
+<prep-conjoined> :
+    JPl+
+    or JPr-;
+
 <p-obj> :
     hPO+ or [[()]];
 
 <prep-noun> :
     ({hPZn-} & {PUs-} & (dAVpr- or [dAJpr-]) & <p-obj>)
     or [{hPZn-} & <p-obj> & <utterance-prep>]
+    or [{hPZn-} & <p-obj> & <prep-conjoined> & {JD-}]
     or ({hPZn-} & <p-obj> & {PUs+} & dAVpl+)
     or dPZn+;
 
@@ -481,6 +478,7 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 <nprep-noun> :
     ({hPZn-} & {PUs-} & dAJpr- & <p-obj>)
     or [{hPZn-} & <p-obj> & <utterance-prep>]
+    or [{hPZn-} & <p-obj> & <prep-conjoined> & {JD-}]
     or ({hPZn-} & <p-obj> & {PUs+} & dAVpl+)
     or dPZn+;
 
@@ -492,6 +490,7 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 <vprep-noun> :
     ({hPZn-} & {PUs-} & dAVpr- & <p-obj>)
     or [{hPZn-} & <p-obj> & <utterance-prep>]
+    or [{hPZn-} & <p-obj> & <prep-conjoined> & {JD-}]
     or ({hPZn-} & <p-obj> & {PUs+} & dAVpl+)
     or dPZn+;
 
@@ -556,11 +555,11 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.conj.noun :
-    {JD-}
-    & {PUs-}
+    {PUs-}
     & {PUs+}
     & JNl-
     & JNr+
+    & {JD-}
     & <noun-start>
     & <noun-element>;
 
@@ -573,8 +572,7 @@ _.cn :
     & <noun-element>;
 
 /th/words/words.conj.verb :
-    {JD-}
-    & {PUs-}
+    {PUs-}
     & {PUs+}
     & JVl-
     & JVr+;
@@ -586,9 +584,9 @@ _.cv :
     ]];
 
 /th/words/words.conj.prep :
-    (AVpr+ & AVpl- & (dAVpr- or dAVpl+))
+    (AVpr+ & AVpl- & {JD-} & (dAVpr- or dAVpl+))
     or 
-    [AJpr+ & AJpl- & (dAJpr- or dAJpl+)];
+    [JPr+ & JPl- & {JD-} & (dAJpr- or dAJpl+)];
 
 _.cp :
     [[
