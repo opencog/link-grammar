@@ -52,7 +52,16 @@ However, the remaining of this document is organized with respect to the syntact
 
 This *undirected* link connects the first element of an acceptable utterance to the left wall. There are three types of LW links: `LWs` (sentence), `LWn` (noun phrase), and `LWp` (preposition phrase).
 
-`LWs` links the main verb of a complete sentence to the left wall. For example, ฉัน ไป โรงเรียน 'I go to school.' is parsed as follows.
+`LWs` links the main verb of a complete sentence to the left wall. For example, ฉันไปโรงเรียน 'I go to school':
+
+```
+ฉัน    ไป   โรงเรียน
+ʨʰǎn  paɪ  roːŋ.rian
+I     go   school
+'I go to school.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +-----LWs-----+
@@ -61,7 +70,16 @@ This *undirected* link connects the first element of an acceptable utterance to 
 LEFT-WALL ฉัน.pr ไป.v โรงเรียน.n
 ```
 
-`LWn` links the core noun of a noun phrase to the left wall. For example, เครื่องบิน พาณิชย์ 30 ลำ 'thirty commercial airplanes' is parsed below.
+`LWn` links the core noun of a noun phrase to the left wall. For example, เครื่องบินพาณิชย์ 30 ลำ 'thirty commercial airplanes':
+
+```
+เครื่องบิน     พาณิชย์       30        ลำ
+kʰrɯâŋ.bin  pʰaːnít     sǎːm.sib  lam
+airplane    commercial  thirty    CL
+'thirty commercial airplanes'
+```
+
+This noun phrase is parsed below.
 
 ```
               +----->NUnr---->+
@@ -70,7 +88,16 @@ LEFT-WALL ฉัน.pr ไป.v โรงเรียน.n
 LEFT-WALL เครื่องบิน.n พาณิชย์.j 30.nu ลำ.cl
 ```
 
-`LWp` links the preposition of a preposition phrase to the left wall. For example, ใน เรือน ปั้นหยา 'In the hip-roofed house' is parsed below.
+`LWp` links the preposition of a preposition phrase to the left wall. For example, ใน เรือน ปั้นหยา 'in the hip-roofed house':
+
+```
+ใน   เรือน   ปั้นหยา
+naɪ  rɯaːn  pânjǎː
+in   house  hip-roofed
+'in the hip-roofed house'
+```
+
+This preposition phrase is parsed below.
 
 ```
     +---LWp--+->PO->+--NZ--+
@@ -80,7 +107,16 @@ LEFT-WALL ใน.pan เรือน.n ปั้นหยา.n
 
 ### RW
 
-This *undirected* link connects the last element of an acceptable utterance to the right wall. For every utterance, there must be an `RW` link from it to the right wall, such that it is accepted by the Thai Link Grammar.
+This *undirected* link connects the last element of an acceptable utterance to the right wall. For every utterance, there must be an `RW` link from it to the right wall, such that it is accepted by the Thai Link Grammar. For example, ฉันไปโรงเรียน 'I go to school':
+
+```
+ฉัน    ไป   โรงเรียน
+ʨʰǎn  paɪ  roːŋ.rian
+I     go   school
+'I go to school.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +-----LWs-----+--------RW-------+
