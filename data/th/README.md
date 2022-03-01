@@ -20,8 +20,8 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 
 | Link-types | Descriptions |
 |:----------:|--------------|
-| `S`        | **Subject.** It connects a subject to its main verb. |
-| `O`	       | **Object.** It connects an object to its main verb. |
+| `S`        | **Subject.** It connects a grammatical subject to its main verb. |
+| `O`	       | **Object.** It connects a grammatical object to its main verb. |
 | `VZ`       | **Serial verb.** It connects a verb to its modifying verb in a serial verb construction. |
 | `VC`       | **Controlled verb.** It connects a verb to its controlled verb. |
 | `TP`       | **Topicalization.** It connects a topicalized noun phrase to its main verb. |

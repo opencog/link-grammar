@@ -55,9 +55,9 @@ This *undirected* link connects the first element of an acceptable utterance to 
 `LWs` links the main verb of a complete sentence to the left wall. For example, ฉันไปโรงเรียน 'I go to school':
 
 ```
-ฉัน    ไป   โรงเรียน
-ʨʰǎn  paɪ  roːŋ.rian
-I     go   school
+ฉัน     ไป   โรงเรียน
+tɕʰǎn  paɪ  roːŋ.rian
+I      go   school
 'I go to school.'
 ```
 
@@ -110,9 +110,9 @@ LEFT-WALL ใน.pan เรือน.n ปั้นหยา.n
 This *undirected* link connects the last element of an acceptable utterance to the right wall. For every utterance, there must be an `RW` link from it to the right wall, such that it is accepted by the Thai Link Grammar. For example, ฉันไปโรงเรียน 'I go to school':
 
 ```
-ฉัน    ไป   โรงเรียน
-ʨʰǎn  paɪ  roːŋ.rian
-I     go   school
+ฉัน     ไป   โรงเรียน
+tɕʰǎn  paɪ  roːŋ.rian
+I      go   school
 'I go to school.'
 ```
 
@@ -124,7 +124,6 @@ This sentence is parsed as follows.
     |       |     |      |          |
 LEFT-WALL ฉัน.pr ไป.v โรงเรียน.n RIGHT-WALL
 ```
-
 `RW` links typically do not appear unless the flag `!walls` is enabled in the Link Parser.
 
 ----------
@@ -133,7 +132,16 @@ LEFT-WALL ฉัน.pr ไป.v โรงเรียน.n RIGHT-WALL
 
 ### S
 
-This directed link connects a subject to its main verb.
+This directed link connects a grammatical subject to its main verb. For example, คณะนักเรียนเดินทางมาเชียงใหม่ 'A group of students are traveling to Chiang Mai':
+
+```
+คณะ    นักเรียน    เดินทาง      มา    เชียงใหม่
+kʰáná  nák.rian  dəːn.tʰaːŋ  maː   tɕʰiaŋ.màɪ
+group  student   travel      come  Chiang Mai
+'A group of students are traveling to Chiang Mai.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +-----------LWs----------+
@@ -143,9 +151,20 @@ This directed link connects a subject to its main verb.
 LEFT-WALL คณะ.n นักเรียน.n เดินทาง.v มา.v เชียงใหม่.n
 ```
 
+Note that the `S` link connects the grammatical subject คณะนักเรียน 'a group of students' to the main verb เดินทาง 'travel'.
+
 ### O
 
-This directed link connects an object to its main verb.
+This directed link connects a grammatical object to its main verb. For example, เรารับประทานอาหารกลางวันที่ร้านนี้ 'We had lunch at this restaurant':
+
+```
+เรา  รับประทาน     อาหาร    กลางวัน     ที่     ร้าน   นี้
+raʊ  ráppratʰaːn  ʔaːhǎːn  klaːŋ.ʋan  tʰîː  ráːn  níː
+we   eat       meal   afternoon  at  restaurant  this
+'We had lunch at this restaurant.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +-------LWs-------+--------->AVpr--------->+
@@ -153,6 +172,8 @@ This directed link connects an object to its main verb.
     |        |        |        |        |      |     |     |
 LEFT-WALL เรา.pr รับประทาน.v อาหาร.n กลางวัน.n ที่.pan ร้าน.n นี้.pr
 ```
+
+Note that the `O` link connects the grammatical object อาหารกลางวัน 'lunch' to its main verb รับประทาน 'eat'.
 
 ### VZ
 
