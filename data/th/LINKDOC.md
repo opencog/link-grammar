@@ -177,7 +177,16 @@ Note that the `O` link connects the grammatical object อาหารกลา�
 
 ### VZ
 
-This *undirected* link connects a verb to its modifying verb in a serial verb construction.
+This *undirected* link connects a verb to its modifying verb in a serial verb construction. For example ฉันออกเดินช็อปปิ้งที่ห้างพารากอน 'I am out for shopping at Paragon Mall':
+
+```
+ฉัน    ออก    เดิน   ช็อปปิ้ง     ที่     ห้าง   พารากอน
+tɕǎn  ʔɔ̀ːk   dəːn  tɕɔ́ppîŋ   tʰîː  hâːŋ  pʰaːraːkɔ̂n
+I     leave  walk  shopping  at    mall  Paragon
+'I am out for shopping at Paragon Mall.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +-----LWs-----+
@@ -186,9 +195,20 @@ This *undirected* link connects a verb to its modifying verb in a serial verb co
 LEFT-WALL ฉัน.pr ออก.v เดิน.v ช็อปปิ้ง.v ที่.paa ห้าง.n พารากอน.n
 ```
 
+Note that three verbs ออก 'leave', เดิน 'walk', and ช็อปปิ้ง 'shop' form a serial verb construction and are connected via the `VZ` link. If any, the grammatical subject is always connected to the first verb, while post-verb modifiers are attached to the last verb.
+
 ### VC
 
-This directed link connects a verb to its controlled verb.
+This directed link connects a verb to its controlled verb. For example, นักการเมืองถูกนักข่าวซักถามเรื่องงบประมาณ 'The politician is questioned by the news reporters about the budget':
+
+```
+นักการเมือง       ถูก     นักข่าว          ซักถาม      เรื่อง    งบประมาณ
+nák.kaːn.mɯaːŋ  tʰùːk  nák.kʰàːʊ      sák.tʰǎːm  rɯâːŋ   ŋóp.pràmaːn
+politician      PASS   news reporter  question   matter  budget
+'The politician is questioned by the news reporters about the budget'
+```
+
+This sentence is parsed as follows.
 
 ```
     +--------LWs--------+----->VC----->+
@@ -197,9 +217,20 @@ This directed link connects a verb to its controlled verb.
 LEFT-WALL นักการเมือง.n ถูก.ps นักข่าว.n ซักถาม.v เรื่อง.n งบประมาณ.n
 ```
 
+Note that the controlled verb ซักถาม 'question' is connected to the passive marker ถูก.
+
 ### TP
 
-This *undirected* link connects a topicalized noun phrase to its main verb.
+This *undirected* link connects a topicalized noun phrase to its main verb. For example, บ้านเรือนไทย ฉันชอบที่สุด 'Traditional Thai houses, I like the most':
+
+```
+บ้าน    เรือน               ไทย   _  ฉัน     ชอบ     ที่สุด
+bâːn   rɯaːn              tʰaɪ     tɕʰǎn  tɕʰɔ̂:p  tʰîːsùt
+house  traditional house  Thai     I      like    most
+'Traditional Thai houses, I like the most.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +-----------------LWs-----------------+
@@ -210,22 +241,44 @@ This *undirected* link connects a topicalized noun phrase to its main verb.
 LEFT-WALL บ้าน.n เรือน.n ไทย.n _.pu ฉัน.pr ชอบ.v ที่สุด.r
 ```
 
+Note that the topicalized object บ้านเรือนไทย 'Traditional Thai houses' is connected to its main verb ชอบ 'like' via the `TP` link.
+
 ### IJ
 
-This *undirected* link connects an interjection word to the left wall.
+This *undirected* link connects an interjection word to the left wall. For example, เฮ้ย มันจะเป็นไปได้หรือ 'Whoa, how could it happen?'
+
+```
+เฮ้ย   _  มัน   จะ    เป็นไป    ได้    หรือ
+hə́ɪ      man  tɕà   pen.paɪ  dâːɪ  rɯ̌ː
+whoa     it   will  happen   ABLE  QUES
+'Whoa, how could it happen?'
+```
+
+This sentence is parsed as follows.
 
 ```
     +--------------LWs--------------+
     |        +----------IJ----------+
-    |        |          +<----S<----+--------PT-------+
-    |        +-PUs-+    |     +<AXw<+>AVw>+>AVw>+     |
-    |        |     |    |     |     |     |     |     |
-LEFT-WALL เฮ้ย.ij _.pu มัน.pr จะ.x  เป็น.v ไป.r  ได้.r หรือ.pt
+    |        |          +<----S<----+-----PT-----+
+    |        +-PUs-+    |     +<AXw<+->AVw>+     |
+    |        |     |    |     |     |      |     |
+LEFT-WALL เฮ้ย.ij _.pu มัน.pr จะ.x เป็นไป.v ได้.r หรือ.pt
 ```
+
+Note that the interjection เฮ้ย 'whoa' is connected to its main verb via the `IJ` link.
 
 ### PT
 
-This *undirected* link connects a particle word to the right wall.
+This *undirected* link connects a particle word to the right wall. For example, เธอเคยไปโคราชหรือยัง 'Have you been to Khorat yet?':
+
+```
+เธอ   เคย    ไป   โคราช     หรือยัง
+tʰəː  kʰəːɪ  paɪ  kʰoːrâːt  rɯ̌ːjaŋ
+you   PERF   go   Khorat    QUES.yet
+'Have you been to Khorat yet?'
+```
+
+This sentence is parsed as follows.
 
 ```
     +---------LWs--------+
@@ -234,6 +287,8 @@ This *undirected* link connects a particle word to the right wall.
     |        |     |     |     |        |
 LEFT-WALL เธอ.pr เคย.x ไป.v โคราช.n หรือยัง.pt
 ```
+
+Note that the particle หรือยัง 'yet?' is connected to its main verb ไป 'go' via the `PT` link.
 
 ----------
 
