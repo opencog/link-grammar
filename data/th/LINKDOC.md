@@ -205,7 +205,7 @@ This directed link connects a verb to its controlled verb. For example, นั�
 นักการเมือง       ถูก     นักข่าว          ซักถาม      เรื่อง    งบประมาณ
 nák.kaːn.mɯaːŋ  tʰùːk  nák.kʰàːʊ      sák.tʰǎːm  rɯâːŋ   ŋóp.pràmaːn
 politician      PASS   news reporter  question   matter  budget
-'The politician is questioned by the news reporters about the budget'
+'The politician is questioned by the news reporters about the budget.'
 ```
 
 This sentence is parsed as follows.
@@ -296,7 +296,16 @@ Note that the particle หรือยัง 'yet?' is connected to its main ver
 
 ### NZ
 
-This *undirected* link connects a noun to its modifying noun in a serial noun construction.
+This *undirected* link connects a noun to its modifying noun in a serial noun construction. For example, คุณภาพชีวิตชาวไทยภูเขาก็เป็นปัจจัยสำคัญ 'The life quality of Thai hill tribes is also a crucial factor':
+
+```
+คุณภาพ        ชีวิต       ชาวไทย      ภูเขา         ก็     เป็น  ปัจจัย    สำคัญ
+kʰunnapʰâːp  tɕʰiːʋít  tɕʰaːʊtʰaɪ  pʰuːkʰǎʊ     kɔ̂ː   pen  pàtɕaɪ  sǎmkʰan
+quality      life      Thai        hill tribes  also  be   factor  crucial
+'The life quality of Thai hill tribes is also a crucial factor.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +--------------------LWs-------------------+
@@ -305,6 +314,8 @@ This *undirected* link connects a noun to its modifying noun in a serial noun co
     |        |      |       |       |    |     |      |      |
 LEFT-WALL คุณภาพ.n ชีวิต.n ชาวไทย.n ภูเขา.n ก็.x  เป็น.v ปัจจัย.n สำคัญ.va
 ```
+
+Note that four nouns คุณภาพ 'quality', ชีวิต 'life', ชาวไทย 'Thai', and ภูเขา 'hill' form a serial noun construction and are connected to each other via the `NZ` link. If any, the pre-noun modifier is linked to the first noun, while the post-noun modifiers are linked to the last noun.
 
 ### AJ
 
