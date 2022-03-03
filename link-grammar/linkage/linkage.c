@@ -476,7 +476,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 			}
 			else
 			{
-				/* Get rid of those ugly "I" */
+				/* Get rid of those ugly ".I" */
 				if (is_idiom_word(t))
 				{
 					s = strdupa(t);
