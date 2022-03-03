@@ -151,7 +151,7 @@ This sentence is parsed as follows.
 LEFT-WALL คณะ.n นักเรียน.n เดินทาง.v มา.v เชียงใหม่.n
 ```
 
-Note that the `S` link connects the grammatical subject คณะนักเรียน 'a group of students' to the main verb เดินทาง 'travel'.
+The `S` link connects the grammatical subject คณะนักเรียน 'a group of students' to the main verb เดินทาง 'travel'.
 
 ### O
 
@@ -173,7 +173,7 @@ This sentence is parsed as follows.
 LEFT-WALL เรา.pr รับประทาน.v อาหาร.n กลางวัน.n ที่.pan ร้าน.n นี้.pr
 ```
 
-Note that the `O` link connects the grammatical object อาหารกลางวัน 'lunch' to its main verb รับประทาน 'eat'.
+The `O` link connects the grammatical object อาหารกลางวัน 'lunch' to its main verb รับประทาน 'eat'.
 
 ### VZ
 
@@ -195,7 +195,7 @@ This sentence is parsed as follows.
 LEFT-WALL ฉัน.pr ออก.v เดิน.v ช็อปปิ้ง.v ที่.paa ห้าง.n พารากอน.n
 ```
 
-Note that three verbs ออก 'leave', เดิน 'walk', and ช็อปปิ้ง 'shop' form a serial verb construction and are connected via the `VZ` link. If any, the grammatical subject is always connected to the first verb, while post-verb modifiers are attached to the last verb.
+Three verbs ออก 'leave', เดิน 'walk', and ช็อปปิ้ง 'shop' form a serial verb construction and are connected via the `VZ` link. If any, the grammatical subject is always connected to the first verb, while post-verb modifiers are attached to the last verb.
 
 ### VC
 
@@ -217,7 +217,7 @@ This sentence is parsed as follows.
 LEFT-WALL นักการเมือง.n ถูก.ps นักข่าว.n ซักถาม.v เรื่อง.n งบประมาณ.n
 ```
 
-Note that the controlled verb ซักถาม 'question' is connected to the passive marker ถูก.
+The controlled verb ซักถาม 'question' is connected to the passive marker ถูก.
 
 ### TP
 
@@ -241,7 +241,7 @@ This sentence is parsed as follows.
 LEFT-WALL บ้าน.n เรือน.n ไทย.n _.pu ฉัน.pr ชอบ.v ที่สุด.r
 ```
 
-Note that the topicalized object บ้านเรือนไทย 'Traditional Thai houses' is connected to its main verb ชอบ 'like' via the `TP` link.
+The topicalized object บ้านเรือนไทย 'Traditional Thai houses' is connected to its main verb ชอบ 'like' via the `TP` link.
 
 ### IJ
 
@@ -265,7 +265,7 @@ This sentence is parsed as follows.
 LEFT-WALL เฮ้ย.ij _.pu มัน.pr จะ.x เป็นไป.v ได้.r หรือ.pt
 ```
 
-Note that the interjection เฮ้ย 'whoa' is connected to its main verb via the `IJ` link.
+The interjection เฮ้ย 'whoa' is connected to its main verb via the `IJ` link.
 
 ### PT
 
@@ -288,7 +288,7 @@ This sentence is parsed as follows.
 LEFT-WALL เธอ.pr เคย.x ไป.v โคราช.n หรือยัง.pt
 ```
 
-Note that the particle หรือยัง 'yet?' is connected to its main verb ไป 'go' via the `PT` link.
+The particle หรือยัง 'yet?' is connected to its main verb ไป 'go' via the `PT` link.
 
 ----------
 
@@ -315,13 +315,22 @@ This sentence is parsed as follows.
 LEFT-WALL คุณภาพ.n ชีวิต.n ชาวไทย.n ภูเขา.n ก็.x  เป็น.v ปัจจัย.n สำคัญ.va
 ```
 
-Note that four nouns คุณภาพ 'quality', ชีวิต 'life', ชาวไทย 'Thai', and ภูเขา 'hill' form a serial noun construction and are connected to each other via the `NZ` link. If any, the pre-noun modifier is linked to the first noun, while the post-noun modifiers are linked to the last noun.
+Four nouns คุณภาพ 'quality', ชีวิต 'life', ชาวไทย 'Thai', and ภูเขา 'hill' form a serial noun construction and are connected to each other via the `NZ` link. If any, the pre-noun modifier is linked to the first noun, while the post-noun modifiers are linked to the last noun.
 
 ### AJ
 
 This directed link connects a nominal modifier to its core noun. There are five types of `AJ` links: `AJj`, `AJr`, `AJp`, `AJv`, and `AJt`.
 
-`AJj` connects an adjective to its core noun.
+`AJj` connects an adjective to its core noun. For example, รถยนต์คันก่อนหน้า เขาไปถึงหรือยัง 'The leading car, has it arrived yet?':
+
+```
+รถยนต์    คัน    ก่อนหน้า    _  เขา   ไป   ถึง      หรือยัง
+rót.jon  kʰan  kɔ̀ːn.nâː     kʰǎʊ  paɪ  tʰɯ̌ŋ    rɯ̌ːjaŋ
+car      CL    previous     he    go   arrive  QUES.yet
+'The leading car, has it arrived yet?'
+```
+
+The sentence is parsed as follows.
 
 ```
     +-----------------LWs-----------------+
@@ -332,7 +341,18 @@ This directed link connects a nominal modifier to its core noun. There are five 
 LEFT-WALL รถยนต์.n คัน.cl ก่อนหน้า.j เขา.pr ไป.v  ถึง.r หรือยัง.pt
 ```
 
-`AJr` connects a relativizer to its core noun.
+The noun modifier คันก่อนหน้า 'previous CL' connects to the core noun via the `AJj` link.
+
+`AJr` connects a relativizer to its core noun. For example, สมุดที่ฉันซื้อมาอยู่ที่ไหน 'Where is the book I have bought?':
+
+```
+สมุด    ที่     ฉัน     ซื้อ   มา        อยู่   ที่ไหน
+sàmùt  tʰîː  tɕʰǎn  sɯ́ː  maː       jùː  tʰîː.nǎɪ
+book   REL   I      buy  ADV.come  be   where
+'Where is the book I have bought?'
+```
+
+The sentence is parsed as follows.
 
 ```
     +----------------LWs----------------+
@@ -343,7 +363,18 @@ LEFT-WALL รถยนต์.n คัน.cl ก่อนหน้า.j เขา
 LEFT-WALL สมุด.n ที่.rl ฉัน.pr ซื้อ.v  มา.r อยู่.v ที่ไหน.pr
 ```
 
-`AJp` connects a preposition phrase to its core noun.
+The relative pronoun ที่ is linked to the core noun via the link `AJr`.
+
+`AJp` connects a preposition phrase to its core noun. For example, สินค้าบนรถไฟยังปลอดภัยอยู่ 'The goods on the train are still safe':
+
+```
+สินค้า    บน   รถไฟ    ยัง     ปลอดภัย      อยู่
+sǐnkʰá  bon  rótfaɪ  jaŋ    plɔ̀ːt.pʰaɪ  jùː
+goods   on   train   still  safe        yet
+'The goods on the train are still safe.'
+```
+
+The sentence is parsed as follows.
 
 ```
     +-------------------LWs------------------+
@@ -354,7 +385,18 @@ LEFT-WALL สมุด.n ที่.rl ฉัน.pr ซื้อ.v  มา.r อ�
 LEFT-WALL สินค้า.n บน.pan รถไฟ.n ยัง.x คง.x ปลอดภัย.va อยู่.r
 ```
 
-`AJv` connects an attributive verb that acts as an adjective to its core noun.
+Preposition บน 'on' is linked to the core noun สินค้า 'goods' via the `AJp` link.
+
+`AJv` connects an attributive verb that acts as an adjective to its core noun. For example, นักเรียนคนขยันกำลังเดินทาง 'The diligent student is traveling':
+
+```
+นักเรียน    คน    ขยัน            กำลัง    เดินทาง
+nák.rian  kʰon  kʰayǎn         kamlaŋ  dəːn.tʰaːŋ
+student   CL    ATTR.diligent  PROG    travel
+'The diligent student is traveling.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +------------------LWs-----------------+
@@ -365,9 +407,20 @@ LEFT-WALL สินค้า.n บน.pan รถไฟ.n ยัง.x คง.x �
 LEFT-WALL นักเรียน.n คน.cl ขยัน.va กำลัง.x เดินทาง.v
 ```
 
+Acting as an adjective, attributive verb ขยัน 'be diligent' is connected to the core noun นักเรียน 'student' via the `AJv` link.
+
 ### RI
 
-This directed link connects an implicit relative clause to its core noun.
+This directed link connects an implicit relative clause to its core noun. For example, หม้อหุงข้าวใบนี้มีระบบอัตโนมัติ 'This rice cooker has an automatic mechanism':
+
+```
+หม้อ       หุง    ข้าว    ใบ   นี้     มี     ระบบ       อัตโนมัติ
+mɔ̂ː       hǔŋ   kʰâːʊ  baɪ  níː   miː   rábòp      ʔàttànoːmát
+saucepan  cook  rice   CL   this  have  mechanism  automatic
+'This rice cooker has an automatic mechanism.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +----------------LWs---------------+
@@ -378,21 +431,43 @@ This directed link connects an implicit relative clause to its core noun.
 LEFT-WALL หม้อ.n หุง.v ข้าว.n ใบ.cl  นี้.j มี.v ระบบ.n อัตโนมัติ.va
 ```
 
+The implicit relative clause หุงข้าว 'cook rice' is connected to the core noun หม้อ 'pot' via the `RI` link.
+
 ### AT
 
-This directed link connects an attribute noun to its core noun.
+This directed link connects an attribute noun to its core noun. For example, ระบบขนาดใหญ่ย่อมมีความสลับซับซ้อน 'A big-scaled system always has complexity':
+
+```
+ระบบ    ขนาด     ใหญ่  ย่อม     มี     ความ    สลับซับซ้อน
+rábòp   kʰánàːt  jàɪ  yɔ̂m     miː   kʰʷaːm  sàlàp.sápsɔ́ːn
+system  scale    big  always  have  NOM     complex
+'A big-scaled system always has complexity.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +----------------LWs----------------+
     |        +<------------S<-----------+
-    |        +->AT->+->AJv->+     +<AXw<+->O->+-->AJv->+-->AVw->+->AVw->+
-    |        |      |       |     |     |     |        |        |       |
-LEFT-WALL ระบบ.n ขนาด.na ใหญ่.va ย่อม.x  มี.v ความ.n สลับซับซ้อน.va เป็น.r ธรรมดา.r
+    |        +->AT->+->AJv->+     +<AXw<+->O->+-->AJv-->+
+    |        |      |       |     |     |     |         |
+LEFT-WALL ระบบ.n ขนาด.na ใหญ่.va ย่อม.x  มี.v ความ.fx สลับซับซ้อน.va
 ```
+
+Attribute modifier ขนาดใหญ่ 'big-scaled' is connected to the core noun ระบบ 'system' via the `AT` link.
 
 ### PS
 
-This directed link connects a possessive pronoun to its core noun.
+This directed link connects a possessive pronoun to its core noun. For example, คอมพิวเตอร์เขาติดเชื้อไวรัส 'His computer is infected with a virus':
+
+```
+คอมพิวเตอร์    เขา      ติด           เชื้อ     ไวรัส
+kʰɔmpʰíʊtə̂ː  kʰǎʊ     tìt          tɕʰɯáː  ʋaɪrás
+computer     POSS.he  be infected  germ    virus
+'His computer is infected with a virus.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +------------LWs-----------+
@@ -401,6 +476,8 @@ This directed link connects a possessive pronoun to its core noun.
     |          |         |     |    |      |
 LEFT-WALL คอมพิวเตอร์.n เขา.pr ติด.v เชื้อ.n ไวรัส.n
 ```
+
+Possessive pronoun เขา 'his' is connected to the core noun คอมพิวเตอร์ 'computer' via the `PS` link.
 
 ----------
 

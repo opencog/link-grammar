@@ -162,7 +162,7 @@
     & {TS+};
 
 <noun-imprel> :
-    hRI+
+    (hRI+ or hAJv+)
     & {@hAJ+};
 
 <noun-attribute> :
