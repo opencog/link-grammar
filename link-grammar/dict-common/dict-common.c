@@ -45,7 +45,7 @@
  */
 bool is_stem(const char* w)
 {
-	const char *subscrmark = strchr(w, SUBSCRIPT_MARK);
+	const char *subscrmark = get_word_subscript(w);
 
 	if (NULL == subscrmark) return false;
 	if (subscrmark == w) return false;

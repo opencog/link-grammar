@@ -612,8 +612,8 @@ static Dict_node * prune_lookup_list(Dict_node * restrict llist, const char * re
 /* ======================================================================== */
 static bool subscr_match(const char *s, const Dict_node * dn)
 {
-	const char * s_sub = strrchr(s, SUBSCRIPT_MARK);
-	const char * t_sub = strrchr(dn->string, SUBSCRIPT_MARK);
+	const char * s_sub = get_word_subscript(s);
+	const char * t_sub = get_word_subscript(dn->string);
 
 	if (NULL == s_sub)
 	{
@@ -1569,7 +1569,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 	dn_second_half = dn->left;
 	dn->left = dn->right = NULL;
 
-	const char *sm = strchr(dn->string, SUBSCRIPT_MARK);
+	const char *sm = get_word_subscript(dn->string);
 	if ((NULL != sm) && ('_' == sm[1]))
 	{
 		prt_error("Warning: Word \"%s\" found near line %d of \"%s\".\n"

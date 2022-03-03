@@ -538,7 +538,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 	get_dict_affixes(dict, dn->right, infix_mark, w_last);
 
 	w = dn->string;
-	w_sm = strrchr(w, SUBSCRIPT_MARK);
+	w_sm = get_word_subscript(w);
 	w_len = (NULL == w_sm) ? strlen(w) : (size_t)(w_sm - w);
 	if (w_len > MAX_WORD)
 	{

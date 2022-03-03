@@ -101,7 +101,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 	Dict_node * dn = NULL;
 	char * s = strdupa(string);
 	const char * t;
-	const char *sm = strchr(s, SUBSCRIPT_MARK);
+	const char *sm = get_word_subscript(s);
 
 	for (t = s; NULL != s; t = s)
 	{
@@ -312,7 +312,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
  */
 bool is_idiom_word(const char * s)
 {
-	const char *sm = strchr(s, SUBSCRIPT_MARK);
+	const char *sm = get_word_subscript(s);
 
 	if (NULL == sm) return false;
 	if ((sm[1] == '_') && (sm[2] == 'I') && (sm[3] == '\0')) return true;
