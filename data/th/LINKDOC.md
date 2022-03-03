@@ -435,13 +435,13 @@ The implicit relative clause หุงข้าว 'cook rice' is connected to t
 
 ### AT
 
-This directed link connects an attribute noun to its core noun. For example, ระบบขนาดใหญ่ย่อมมีความสลับซับซ้อน 'A big-scaled system always has complexity':
+This directed link connects an attribute noun to its core noun. For example, ระบบขนาดใหญ่ย่อมมีความสลับซับซ้อน 'A large-scaled system always has complexity':
 
 ```
-ระบบ    ขนาด     ใหญ่  ย่อม     มี     ความ    สลับซับซ้อน
-rábòp   kʰánàːt  jàɪ  yɔ̂m     miː   kʰʷaːm  sàlàp.sápsɔ́ːn
-system  scale    big  always  have  NOM     complex
-'A big-scaled system always has complexity.'
+ระบบ    ขนาด     ใหญ่    ย่อม     มี     ความ    สลับซับซ้อน
+rábòp   kʰánàːt  jàɪ    yɔ̂m     miː   kʰʷaːm  sàlàp.sápsɔ́ːn
+system  scale    large  always  have  NOM     complex
+'A large-scaled system always has complexity.'
 ```
 
 This sentence is parsed as follows.
@@ -454,7 +454,7 @@ This sentence is parsed as follows.
 LEFT-WALL ระบบ.n ขนาด.na ใหญ่.va ย่อม.x  มี.v ความ.fx สลับซับซ้อน.va
 ```
 
-Attribute modifier ขนาดใหญ่ 'big-scaled' is connected to the core noun ระบบ 'system' via the `AT` link.
+Attribute modifier ขนาดใหญ่ 'large-scaled' is connected to the core noun ระบบ 'system' via the `AT` link.
 
 ### PS
 
