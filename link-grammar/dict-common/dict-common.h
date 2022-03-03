@@ -196,7 +196,7 @@ static inline const char *subscript_mark_str(void)
  */
 static inline char *get_word_subscript(const char *word)
 {
-	return strrchr(word, SUBSCRIPT_MARK);
+	return (char *)strrchr(word, SUBSCRIPT_MARK); /* (char *) for MSVC */
 }
 #define get_word_subscript(word) _Generic((word), \
 	const char * : (const char *)(get_word_subscript)((word)), \
