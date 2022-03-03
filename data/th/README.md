@@ -4,7 +4,7 @@ Copyright (C) 2021 Prachya Boonkwan
 National Electronics and Computer Technology Center, Thailand  
 License: Creative Commons, Attribution (CC-BY)
 
-This document summarizes all the link-types used in `4.0.dict` for Thai Link Grammar. They are classified with respect to the syntactic hierarchy.
+This document summarizes all the link-types used in `4.0.dict` for Thai Link Grammar. They are classified with respect to the syntactic hierarchy. On the other hand, a full documentation is provided [here](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md).
 
 ## Utterance
 
