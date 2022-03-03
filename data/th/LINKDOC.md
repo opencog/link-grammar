@@ -487,25 +487,47 @@ Possessive pronoun เขา 'his' is connected to the core noun คอมพิ
 
 This directed link connects an auxiliary to its main verb. All kinds of auxiliary always <u>precede</u> the main verb. There are two types of `AX` links: `AXw` and `AXg`.
 
-`AXw` connects an auxiliary verb to its main verb.
+`AXw` connects an auxiliary verb to its main verb. For example, เขาจะเดินทางไปอุบลราชธานีอยู่แล้ว 'He would travel to Ubon Ratchathani anyway':
 
 ```
-    +---------LWs--------+
-    |       +<-----S<----+      +------>AVw----->+
-    |       |     +<-AXw<+--VZ--+-->O-->+        +>AVw>+
-    |       |     |      |      |       |        |     |
-LEFT-WALL เขา.n จะ.x เดินทาง.v ไป.v อุบลราชธานี.n อยู่.r  แล้ว.r
+เขา   จะ   เดินทาง     ไป   อุบลราชธานี             อยู่แล้ว
+he    FUT  travel     go   Ubon Ratchathani      already
+kʰǎʊ  tɕà  dəːntʰa:ŋ  paɪ  ʔùbon.râːtɕʰátʰaːniː  jùːlǽːʊ
+'He would travel to Ubon Ratchathani anyway.'
 ```
 
-`AXg` connects a negator to its main verb.
+This sentence is parsed as follows.
+
+```
+    +---------LWs---------+
+    |        +<-----S<----+      +------>AVw------>+
+    |        |     +<-AXw<+--VZ--+-->O-->+         |
+    |        |     |      |      |       |         |
+LEFT-WALL เขา.pr จะ.x เดินทาง.v ไป.v อุบลราชธานี.n อยู่แล้ว.r
+```
+
+Auxiliary verb จะ 'will' is connected to the main verb เดินทาง 'travel' via the `AXw` link.
+
+`AXg` connects a negator to its main verb. For example, เขาไม่ยอมไปตรวจโรคติดต่อ 'He did not have himself checked up for infectious diseases':
+
+```
+เขา   ไม่   ยอม      ไป   ตรวจ     โรค      ติดต่อ
+kʰǎʊ  mâɪ  jɔːm     paɪ  truàt    rôːk     tìttɔ̀ː
+he    NEG  consent  go   examine  disease  infect
+'He did not have himself checked up for infectious diseases.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +---------LWs--------+
     |        +<----S<----+
     |        |     +<AXg<+--VZ-+--VZ-+->O->+->RI->+
     |        |     |     |     |     |     |      |
-LEFT-WALL เธอ.pr ไม่.ng ยอม.v ไป.v ตรวจ.v โรค.n ติดต่อ.v
+LEFT-WALL เขา.pr ไม่.ng ยอม.v ไป.v ตรวจ.v โรค.n ติดต่อ.v
 ```
+
+Negator ไม่ 'not' is connected to the main verb ยอม 'consent' via the `AXg` link.
 
 ### AV
 
