@@ -912,7 +912,16 @@ This directed link connects a classifier to its number. There are two types of `
 
 #### CLn
 
-`CLn` connects a classifier for nouns to its number.
+`CLn` connects a classifier for nouns to its number. For example, สมชายมีรถยนต์ 30 คัน 'Somchai has 30 cars':
+
+```
+สมชาย      มี    รถยนต์    30        คัน
+sǒmtɕʰaːɪ  miː  rót.jon  sǎːm.sìp  kʰan
+Somchai    has  car      thirty    CL.car
+'Somchai has 30 cars.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +------LWs-----+
@@ -921,9 +930,20 @@ This directed link connects a classifier to its number. There are two types of `
 LEFT-WALL สมชาย.n มี.v รถยนต์.n 30.nu คัน.cl
 ```
 
+The noun-modifying classifier คัน 'CL.car' is connected to the number สามสิบ 'thirty' via the `NUn` link.
+
 #### CLv
 
-`CLv` connects a classifier for verbs to its number.
+`CLv` connects a classifier for verbs to its number. For example, พอลเดินสำรวจพื้นที่ถึง 3 รอบ 'Paul walked around and explored the area for three rounds':
+
+```
+พอล    เดิน   สำรวจ    พื้นที่        ถึง          3      รอบ
+pʰɔːl  dəːn  sǎmruàt  pʰɯ́ːntʰîː  tʰɯ̌ŋ        sǎːm   rɔ̂ːp
+Paul   walk  explore  area       QUANT.EMPH  three  CL.frequency
+'Paul walked around and explored the area for three rounds.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +-----LWs-----+      +------->AVvr------>+
@@ -932,9 +952,20 @@ LEFT-WALL สมชาย.n มี.v รถยนต์.n 30.nu คัน.cl
 LEFT-WALL พอล.n เดิน.v สำรวจ.v พื้นที่.n ถึง.qfl 3.nu รอบ.cl
 ```
 
+The verb-modifying classifier รอบ 'CL.frequency' is connected to the number สาม 'three' via the `QF` link.
+
 ### QF
 
-This directed link connects a numeral quantifier to its number.
+This directed link connects a numeral quantifier to its number. For example, นักเรียนเกือบ 100 คนมีอาการท้องเสีย 'Almost 100 students are having a case of diarrhea':
+
+```
+นักเรียน    เกือบ          100          คน         มี     อาการ    ท้องเสีย
+nák.rian  kɯàːp         nɯ̀ŋrɔ́ːɪ      kʰon       miː   ʔaːkaːn  tʰɔ́ːŋ.siǎ
+student   QUANT.APPROX  one hundred  CL.person  have  symptom  diarrhea
+'Almost 100 students are having a case of diarrhea.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +-----------------LWs-----------------+
@@ -944,6 +975,8 @@ This directed link connects a numeral quantifier to its number.
     |         |        |       |     |    |     |        |
 LEFT-WALL นักเรียน.n เกือบ.qfl 100.nu คน.cl มี.v อาการ.n ท้องเสีย.va
 ```
+
+Quantifier เกือบ 'almost' is connected to the number หนึ่งร้อย 'one hundred' via the `QF` link.
 
 ----------
 
