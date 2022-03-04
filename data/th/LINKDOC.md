@@ -321,21 +321,21 @@ This sentence is parsed as follows.
 LEFT-WALL คุณภาพ.n ชีวิต.n ชาวไทย.n ภูเขา.n ก็.x  เป็น.v ปัจจัย.n สำคัญ.va
 ```
 
-Four nouns คุณภาพ 'quality', ชีวิต 'life', ชาวไทย 'Thai', and ภูเขา 'hill' form a serial noun construction and are connected to each other via the `NZ` link. If any, the pre-noun modifier is linked to the first noun, while the post-noun modifiers are linked to the last noun.
+Four nouns คุณภาพ 'quality', ชีวิต 'life', ชาวไทย 'Thai', and ภูเขา 'mountain' form a serial noun construction and are connected to each other via the `NZ` link. If any, the pre-noun modifier is linked to the first noun, while the post-noun modifiers are linked to the last noun.
 
 ### AJ
 
-This directed link connects a nominal modifier to its core noun. There are five types of `AJ` links: `AJj`, `AJr`, `AJp`, `AJv`, and `AJt`.
+This directed link connects a nominal modifier to its core noun. There are five types of `AJ` links: `AJj` (simple adjective), `AJr` (relative clause), `AJp` (preposition phrase), and `AJv` (attributive verb).
 
 #### AJj
 
-`AJj` connects an adjective to its core noun. For example, รถยนต์คันก่อนหน้า เขาไปถึงหรือยัง 'The leading car, has it arrived yet?':
+`AJj` connects an adjective to its core noun. For example, รถยนต์คันก่อนหน้า เขาไปถึงหรือยัง 'The preceding car, has it arrived yet?':
 
 ```
 รถยนต์    คัน          ก่อนหน้า    _  เขา   ไป   ถึง      หรือยัง
 rót.jon  kʰan        kɔ̀ːn.nâː     kʰǎʊ  paɪ  tʰɯ̌ŋ    rɯ̌ːjaŋ
 car      CL.vehicle  previous     he    go   arrive  QUES.yet
-'The leading car, has it arrived yet?'
+'The preceding car, has it arrived yet?'
 ```
 
 The sentence is parsed as follows.
@@ -349,7 +349,7 @@ The sentence is parsed as follows.
 LEFT-WALL รถยนต์.n คัน.cl ก่อนหน้า.j เขา.pr ไป.v  ถึง.r หรือยัง.pt
 ```
 
-The noun modifier คันก่อนหน้า 'previous CL.vehicle' connects to the core noun via the `AJj` link.
+The noun modifier คันก่อนหน้า 'preceding CL.vehicle' connects to the core noun รถยนต์ 'car' via the `AJj` link.
 
 #### AJr
 
@@ -373,7 +373,7 @@ The sentence is parsed as follows.
 LEFT-WALL สมุด.n ที่.rl ฉัน.pr ซื้อ.v  มา.r อยู่.v ที่ไหน.pr
 ```
 
-The relative pronoun ที่ is linked to the core noun via the link `AJr`.
+The relative pronoun ที่ is linked to the core noun สมุด 'book' via the link `AJr`.
 
 #### AJp
 
