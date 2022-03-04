@@ -188,4 +188,17 @@ static inline const char *subscript_mark_str(void)
 	static const char sm[] = { SUBSCRIPT_MARK, '\0' };
 	return sm;
 }
+
+/**
+ * Get the subscript of the given word.
+ * In case of more than one subscript, return the last subscript.
+ * The returned value constness is the same as the argument.
+ */
+static inline char *get_word_subscript(const char *word)
+{
+	return (char *)strrchr(word, SUBSCRIPT_MARK); /* (char *) for MSVC */
+}
+#define get_word_subscript(word) _Generic((word), \
+	const char * : (const char *)(get_word_subscript)((word)), \
+	char *       :               (get_word_subscript)((word)))
 #endif /* _LG_DICT_COMMON_H_ */

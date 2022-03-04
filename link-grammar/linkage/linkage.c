@@ -51,7 +51,7 @@ static void add_morpheme_unmarked(Sentence sent, char *join_buff,
                                   const char *wm, Morpheme_type mt)
 {
 	const char infix_mark = INFIX_MARK(sent->dict->affix_table);
-	const char *sm =  strrchr(wm, SUBSCRIPT_MARK);
+	const char *sm =  get_word_subscript(wm);
 
 	if (NULL == sm) sm = (char *)wm + strlen(wm);
 
@@ -465,9 +465,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 		else
 		{
 			/* This word has a linkage. */
-
 			/* TODO: Suppress "virtual-morphemes", currently the dictcap ones. */
-			char *sm;
 
 			t = cdj->word_string;
 			/* Print the subscript, as in "dog.n" as opposed to "dog". */
@@ -478,11 +476,11 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 			}
 			else
 			{
-				/* Get rid of those ugly "I" */
+				/* Get rid of those ugly ".I" */
 				if (is_idiom_word(t))
 				{
 					s = strdupa(t);
-					sm = strrchr(s, SUBSCRIPT_MARK); /* Possible double subscript. */
+					char *sm = (char *)get_word_subscript(s);
 					UNREACHABLE(NULL == sm); /* We know it has a subscript. */
 					*sm = '\0';
 					t = string_set_add(s, sent->string_set);
@@ -570,7 +568,8 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 								}
 							}
 
-							sm =  strchr(cdjp[i+m]->word_string, SUBSCRIPT_MARK);
+							const char *sm =
+								get_word_subscript(cdjp[i+m]->word_string);
 
 							if (NULL != sm)
 							{
@@ -633,7 +632,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 			{
 
 				s = strdupa(t);
-				sm = strrchr(s, SUBSCRIPT_MARK);
+				char *sm = get_word_subscript(s);
 				if (sm) *sm = SUBSCRIPT_DOT;
 
 				if ((!(w->status & WS_GUESS) && (w->status & WS_INDICT))

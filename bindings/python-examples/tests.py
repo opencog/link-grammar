@@ -1018,6 +1018,8 @@ class XLookupListTestCase(unittest.TestCase):
 
     def test_file_lookup_list_no_subscr(self):
         dictnode = clg.dictionary_lookup_list(self.d_en._obj, 'test')
+        # The following supposes there are no idioms with the word "test".
+        # If such idioms are added, filter out the subscript "._I".
         self.assertEqual(sorted([dictnode[i].string for i in range(len(dictnode))]), [sm('test.n'), sm('test.v')])
         for i in range(len(dictnode)):
             self.assertIn("(", str(dictnode[i].exp), "Missing expression")

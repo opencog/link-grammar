@@ -3065,7 +3065,7 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		else
 		{
 			dyn_str *xs = dyn_str_new();
-			const char *sm = strrchr(dn->string, SUBSCRIPT_MARK);
+			const char *sm = get_word_subscript(dn->string);
 
 			dyn_strcat(xs, w->subword);
 			if (NULL != sm) dyn_strcat(xs, sm);
