@@ -1084,7 +1084,16 @@ This *undirected* link connects a punctuation mark to its head. There are three 
 
 #### PUs
 
-`PUs` connects a white space to its head.
+`PUs` connects a white space to its head. For example, เราซื้อสมุด หนังสือ และดินสอ 'We bought notebooks, books, and pencils':
+
+```
+เรา  ซื้อ   สมุด       _  หนังสือ   _  และ  ดินสอ
+raʊ  sɯ́ː  sàmùt        nǎŋsɯ̌ː     lǽ   dinsɔ̌ː
+we   buy  notebook     book       and  pencil
+'We bought notebooks, books, and pencils'
+```
+
+This sentence is parsed as follows.
 
 ```
                               +--------JNr-------+
@@ -1094,9 +1103,20 @@ This *undirected* link connects a punctuation mark to its head. There are three 
 LEFT-WALL เรา.pr ซื้อ.v สมุด.n _.cn หนังสือ.n _.pu และ.cn ดินสอ.n
 ```
 
+The white space is connected to the conjunction และ 'and' via the `PUs` link.
+
 #### PUp
 
-`PUp` connects a paiyal noi 'ฯ' to its head.
+`PUp` connects a paiyal noi 'ฯ' (ไปยาลน้อย) to its head. For example, กรุงเทพฯ เป็นเมืองหลวงของประเทศไทย 'Bangkok is the capital of Thailand':
+
+```
+กรุงเทพ     ฯ             _  เป็น  เมืองหลวง   ของ    ประเทศ    ไทย
+kruŋ.tʰêp  (PAIYAL NOI)     pen  mɯaŋ.luǎŋ  kʰɔ̌ːŋ  pràtʰêːt  tʰaɪ
+Bangkok    ABBRMARK         be   capital    of     country   Thailand
+'Bangkok is the capital of Thailand.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +------------LWs-----------+
@@ -1106,9 +1126,20 @@ LEFT-WALL เรา.pr ซื้อ.v สมุด.n _.cn หนังสือ.
 LEFT-WALL กรุงเทพ.n ฯ.pu _.pu เป็น.v เมืองหลวง.n ของ.pnn ประเทศ.n ไทย.n
 ```
 
+The paiyal noi ฯ is connected to the noun กรุงเทพ 'Bangkok' via the `PUp` link.
+
 #### PUy
 
-`PUy` connects a mai yamok 'ๆ' to its head.
+`PUy` connects a mai yamok 'ๆ' (ไม้ยมก) to its head. For example, เด็กๆ ก็ยังไม่เข้าใจอยู่ดี 'The children still do not understand yet':
+
+```
+เด็ก    ๆ            _  ก็     ยัง   ไม่   เข้าใจ       อยู่ดี
+dèk    (MAI YAMOK)     kɔ̂ː   jaŋ  mâɪ  kʰâʊ.tɕaɪ   jùːdiː
+child  REDUP           also  yet  NEG  understand  still
+'The children still do not understand yet.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +------------------LWs------------------+
@@ -1119,3 +1150,5 @@ LEFT-WALL กรุงเทพ.n ฯ.pu _.pu เป็น.v เมืองห�
     |       |     |    |   |    |    |      |      |
 LEFT-WALL เด็ก.n ๆ.pu _.pu ก็.x ยัง.x ไม่.ng เข้าใจ.v อยู่ดี.r
 ```
+
+The mai yamok ๆ is connected to the core noun เด็ก 'child' via the `PUy` link.
