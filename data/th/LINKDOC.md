@@ -643,7 +643,7 @@ Negative adverb มิได้ is connected to the main verb กระทำ 'd
 
 #### AVn
 
-`AVn` connects a numeral modifier of a noun phrase to the main verb. For example, แม่ฝากซื้อกล้วยหอมไว้ 2 ลูก 'Mother has asked (me) to buy two bananas':
+`AVn` connects a numeral modifier of a noun phrase to the main verb so as to avoid crossing links. For example, แม่ฝากซื้อกล้วยหอมไว้ 2 ลูก 'Mother has asked (me) to buy two bananas':
 
 ```
 แม่      ฝาก   ซื้อ   กล้วยหอม     ไว้    2     ลูก
@@ -867,7 +867,25 @@ Numeral phrase สามคน 'three CL.person' is connected to the core noun �
 
 #### NUv
 
-`NUv` connects a numeral phrase to its main verb. For example, แม่ตีน้อง 3 ครั้งและพี่ 2 ครั้ง 'Mother hits the younger brother three times and the older brother twice':
+`NUv` connects a numeral phrase to its main verb. For example, แม่ตีน้อง 3 ครั้ง 'Mother hits the younger brother three times':
+
+```
+แม่      ตี    น้อง              3      ครั้ง
+mæ̂ː     tiː  nɔ̂ːŋ             sǎːm   kʰráŋ
+mother  hit  younger brother  three  CL.frequency
+'Mother hits the younger brother three times.'
+```
+
+This sentence is parsed as follows.
+
+```
+    +----LWs----+-->AVvr-->+
+    |       +<S<+->O>+     +>CLv>+
+    |       |   |    |     |     |
+LEFT-WALL แม่.n ตี.v น้อง.n 3.nu ครั้ง.cl
+```
+
+However, a verb-modifying numeral phrase may sometimes be connected to a noun phrase via the `NUv` link so as to avoid crossing links. For example, แม่ตีน้อง 3 ครั้งและพี่ 2 ครั้ง 'Mother hits the younger brother three times and the older brother twice':
 
 ```
 แม่      ตี    น้อง              3      ครั้ง           และ  พี่              2     ครั้ง
@@ -886,11 +904,11 @@ This sentence is parsed as follows.
 LEFT-WALL แม่.n ตี.v น้อง.n  3.nu ครั้ง.cl และ.cn พี่.n   2.nu ครั้ง.cl
 ```
 
-Numeral phrases สามครั้ง 'three CL.frequency' and สองครั้ง 'two CL.frequency' are connected to their core nouns น้อง 'younger brother' and พี่ 'older brother', respectively, via the `NUv` link. Although these numeral phrases actually modify the main verb ตี 'hit', we connect them to the grammatical objects instead to avoid crossing links. Thai Link Grammar **<u>always</u>** preserves the projectivity of dependency structures.
+In this case, numeral phrases สามครั้ง 'three CL.frequency' and สองครั้ง 'two CL.frequency' are connected to their core nouns น้อง 'younger brother' and พี่ 'older brother', respectively, via the `NUv` link. Although these numeral phrases actually modify the main verb ตี 'hit', we connect them to the grammatical objects instead. Thai Link Grammar **<u>always</u>** preserves the projectivity of dependency structures.
 
 ### CL
 
-This directed link connects a classifier to its number. There are two types of `CL` links: `CLn` and `CLv`.
+This directed link connects a classifier to its number. There are two types of `CL` links: `CLn` (noun-modifying classifier) and `CLv` (verb-modifying classifier).
 
 #### CLn
 
