@@ -1,8 +1,9 @@
-Version 5.10.4 (XXX 2022)
+Version 5.10.4 (4 March 2022)
  * English dict: fix relative clause, per mailing list.
  * Remove assorted length restrictions on word-size. #1283
  * Add missing files for building link-generator on Windows. #1285
  * Strip the internally added "._I" from subscripted idioms. #1287
+ * New: Provisional Thai dictionary. #1279
 
 Version 5.10.3 (14 Feb 2022)
  * Remove `node.js/package-lock.json` from tarball distribution. #1251

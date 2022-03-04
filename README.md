@@ -1,6 +1,6 @@
 Link Grammar Parser
 ===================
-***Version 5.10.3***
+***Version 5.10.4***
 
 ![Main](https://github.com/opencog/link-grammar/actions/workflows/main.yml/badge.svg)
 ![node.js](https://github.com/opencog/link-grammar/actions/workflows/bindings-js.yml/badge.svg)
@@ -241,7 +241,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.10.3.tar.gz.asc`
+`gpg --verify link-grammar-5.10.4.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
@@ -256,7 +256,7 @@ verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 Tags in `git` can be verified by performing the following:
 ```
 gpg --recv-keys --keyserver keyserver.ubuntu.com EB6AA534E0C0651C
-git tag -v link-grammar-5.10.3
+git tag -v link-grammar-5.10.4
 ```
 
 
