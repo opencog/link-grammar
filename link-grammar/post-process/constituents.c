@@ -1006,7 +1006,15 @@ exprint_constituent_structure(con_context_t *ctxt,
 		if (w < linkage->num_words - 1)
 		{
 			char *p;
-			char *s = strdupa(linkage->word[w]);
+
+			/* All dict words are smaller than MAX_WORD;
+			 * However, user-inputs may be unknown-words of
+			 * unbounded length, and could overflow the stack,
+			 * if hostile. Truncate these to finite size.
+			 */
+			char s[MAX_WORD];
+			strncpy(s, linkage->word[w], MAX_WORD);
+			s[MAX_WORD-1] = 0;
 
 			/* Constituent processing will crash if the sentence contains
 			 * square brackets, so we have to do something ... replace
