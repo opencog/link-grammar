@@ -816,7 +816,7 @@ Preposition ที่ 'at' is connected to preposition บน 'on' via the `PZz`
 
 ```
 เรา  จำเป็น       ต้อง   สร้าง   ตึก       เพื่อ      ให้       เกิด          การ   พัฒนา        เมือง
-raʊ  tɕampen     tɔ̂ŋ   sâːŋ   tɯ̀k      pʰɯâː    hâɪ      kə̀t          kaːn  pʰáttʰánaː  mɯaːŋ
+raʊ  tɕampen     tɔ̂ŋ   sâːŋ   tɯ̀k      pʰɯâː    hâɪ      kə̀ːt         kaːn  pʰáttʰánaː  mɯaːŋ
 we   be obliged  must  build  edifice  INFMARK  INFMARK  make happen  NOM   develop     city
 'We are obliged to build some edifices so as to make the city development happen.'
 ```
@@ -1090,7 +1090,7 @@ This *undirected* link connects a punctuation mark to its head. There are three 
 เรา  ซื้อ   สมุด       _  หนังสือ   _  และ  ดินสอ
 raʊ  sɯ́ː  sàmùt        nǎŋsɯ̌ː     lǽ   dinsɔ̌ː
 we   buy  notebook     book       and  pencil
-'We bought notebooks, books, and pencils'
+'We bought notebooks, books, and pencils.'
 ```
 
 This sentence is parsed as follows.
