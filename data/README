@@ -27,6 +27,8 @@ ru -- Russian.  Complete set of dictionaries, should parse most text.
       Russian-ized Latin technical terms, etc.  See the English 4.0.regex
       file for more.
 
+th -- Thai.  Complete set of dictionaries, consist of more than 100,000 words and should parse most text.
+
 tr -- Turkish. Experimental prototype. Contains a few dozen words.
 
 vn -- Vietnamese. Experimental prototype. Contains a few hundred words.

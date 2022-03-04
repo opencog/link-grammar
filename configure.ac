@@ -1040,6 +1040,8 @@ data/kz/Makefile
 data/lt/Makefile
 data/ru/Makefile
 data/ru/words/Makefile
+data/th/Makefile
+data/th/words/Makefile
 data/tr/Makefile
 data/vn/Makefile
 data/demo-sql/Makefile

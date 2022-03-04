@@ -50,6 +50,7 @@ pp_lexer.c
 __init__.py
 bindings/js/emsdk/
 bindings/js/link-parser/dist
+data/th/old_words/**
 # Visual Studio keeps adding the directory ".vs". If it got added while
 # rebasing and it is not git-ignored, it somehow breaks the rebase.
 .vs

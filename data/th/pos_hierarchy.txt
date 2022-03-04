@@ -1,0 +1,68 @@
+old_words/words.adj.lhs
+
+old_words/words.intj.common
+
+old_words/words.qf.common
+    old_words/words.qf.lhs
+    old_words/words.qf.rhs
+
+old_words/words.v.common
+    old_words/words.v.attribute
+
+old_words/words.connector
+    old_words/words.prep.nv
+        old_words/words.prep.lw
+        old_words/words.prep.n
+            old_words/words.prep-n.n
+            old_words/words.prep-v.n
+        old_words/words.prep.v
+            old_words/words.prep-n.v
+            old_words/words.prep-v.v
+        old_words/words.prep-n.nv
+            old_words/words.prep-n.n
+            old_words/words.prep-n.v
+        old_words/words.prep-v.nv
+            old_words/words.prep-v.n
+            old_words/words.prep-v.v
+        old_words/words.sclmark
+    old_words/words.conj.common
+        old_words/words.conj.discont
+        old_words/words.conj.noun
+        old_words/words.conj.verb
+        old_words/words.conj.prep
+    old_words/words.relpro.common
+    old_words/words.ordmark
+
+old_words/words.adverbial.common
+    old_words/words.adv.common
+    old_words/words.adv.attrmod
+
+old_words/words.neg.rhs
+
+old_words/words.part.common
+
+old_words/words.aux.common
+    old_words/words.adv.qf
+    old_words/words.neg.lhs
+    old_words/words.adv.cohesive
+    old_words/words.passmark
+
+old_words/words.cl.common
+    old_words/words.cl.noun
+    old_words/words.cl.verb
+
+old_words/words.num.common
+    old_words/words.num.movable
+
+old_words/words.adj.common
+    old_words/words.num.ordinal
+
+old_words/words.nominal.common
+    old_words/words.pro.common
+    old_words/words.n.attribute
+    old_words/words.n.common
+        old_words/words.n.proper
+    old_words/words.n.prefix
+        old_words/words.n.title
+        old_words/words.n.designator
+

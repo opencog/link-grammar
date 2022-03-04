@@ -132,6 +132,19 @@ suffixes that carry all of the syntactic structure, and not the stems.
 The Russian lexis is
 [documented here](https://www.abisource.com/projects/link-grammar/russian/doc/).
 
+And here is an example in Thai:
+```
+linkparser> นายกรัฐมนตรี ขึ้น กล่าว สุนทรพจน์
+	Linkage 1, cost vector = (UNUSED=0 DIS= 2.00 LEN=2)
+
+    +---------LWs--------+
+    |           +<---S<--+--VS-+-->O-->+
+    |           |        |     |       |
+LEFT-WALL นายกรัฐมนตรี.n ขึ้น.v กล่าว.v สุนทรพจน์.n
+```
+
+The `VS` link connects two verbs 'ขึ้น' and 'กล่าว' in a serial verb construction. A summary of link types is [documented here](https://github.com/kaamanita/link-grammar/blob/master/data/th/README.md). A full documentation of Thai Link Grammar can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md).
+
 Theory and Documentation
 ------------------------
 An extended overview and summary can be found in the
@@ -192,6 +205,7 @@ Contents
 | data/en/corpus*.batch | Example corpora used for testing. |
 | ---- | ---- |
 | data/ru/ | A full-fledged Russian dictionary |
+| data/th/ | A full-fledged Thai dictionary (100,000+ words) |
 | data/ar/ | A fairly complete Arabic dictionary |
 | data/fa/ | A Persian (Farsi) dictionary |
 | data/de/ | A small prototype German dictionary |
