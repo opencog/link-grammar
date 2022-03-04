@@ -305,9 +305,9 @@ The particle หรือยัง 'yet?' is connected to its main verb ไป '
 This *undirected* link connects a noun to its modifying noun in a serial noun construction. For example, คุณภาพชีวิตชาวไทยภูเขาก็เป็นปัจจัยสำคัญ 'The life quality of Thai hill tribes is also a crucial factor':
 
 ```
-คุณภาพ        ชีวิต       ชาวไทย      ภูเขา         ก็     เป็น  ปัจจัย    สำคัญ
-kʰunnapʰâːp  tɕʰiːʋít  tɕʰaːʊtʰaɪ  pʰuːkʰǎʊ     kɔ̂ː   pen  pàtɕaɪ  sǎmkʰan
-quality      life      Thai        hill tribes  also  be   factor  crucial
+คุณภาพ        ชีวิต       ชาวไทย      ภูเขา      ก็     เป็น  ปัจจัย    สำคัญ
+kʰunnapʰâːp  tɕʰiːʋít  tɕʰaːʊtʰaɪ  pʰuːkʰǎʊ  kɔ̂ː   pen  pàtɕaɪ  sǎmkʰan
+quality      life      Thai        hill      also  be   factor  crucial
 'The life quality of Thai hill tribes is also a crucial factor.'
 ```
 
