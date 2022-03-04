@@ -164,9 +164,9 @@ The `S` link connects the grammatical subject คณะนักเรียน 
 This directed link connects a grammatical object to its main verb. For example, เรารับประทานอาหารกลางวันที่ร้านนี้ 'We had lunch at this restaurant':
 
 ```
-เรา  รับประทาน     อาหาร    กลางวัน     ที่     ร้าน   นี้
-raʊ  ráppratʰaːn  ʔaːhǎːn  klaːŋ.ʋan  tʰîː  ráːn  níː
-we   eat       meal   afternoon  at  restaurant  this
+เรา  รับประทาน     อาหาร    กลางวัน     ที่     ร้าน         นี้
+raʊ  ráppratʰaːn  ʔaːhǎːn  klaːŋ.ʋan  tʰîː  ráːn        níː
+we   eat          meal     afternoon  at    restaurant  this
 'We had lunch at this restaurant.'
 ```
 
