@@ -307,7 +307,7 @@ This *undirected* link connects a noun to its modifying noun in a serial noun co
 ```
 คุณภาพ        ชีวิต       ชาวไทย      ภูเขา      ก็     เป็น  ปัจจัย    สำคัญ
 kʰunnapʰâːp  tɕʰiːʋít  tɕʰaːʊtʰaɪ  pʰuːkʰǎʊ  kɔ̂ː   pen  pàtɕaɪ  sǎmkʰan
-quality      life      Thai        hill      also  be   factor  crucial
+quality      life      Thai        mountain  also  be   factor  crucial
 'The life quality of Thai hill tribes is also a crucial factor.'
 ```
 
