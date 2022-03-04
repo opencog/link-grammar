@@ -984,7 +984,16 @@ Quantifier เกือบ 'almost' is connected to the number หนึ่ง�
 
 ### JN
 
-This *undirected* link connects a noun-phrase conjunct to its coordinator.
+This *undirected* link connects a noun-phrase conjunct to its coordinator. For example, พ่อและแม่ต่างปกป้องลูก 'Each father and mother is protecting the children':
+
+```
+พ่อ      และ  แม่      ต่าง       ปกป้อง    ลูก
+pʰɔ̂ː    lǽ   mæ̂ː     tàːŋ      pòkpɔ̂ŋ   lûːk
+father  and  mother  ADV.each  protect  child
+'Each father and mother are protecting the children.'
+```
+
+This sentence is parsed as follows.
 
 ```
     +--------------LWs--------------+
@@ -994,9 +1003,20 @@ This *undirected* link connects a noun-phrase conjunct to its coordinator.
 LEFT-WALL พ่อ.n และ.cn แม่.n ต่าง.x ปกป้อง.v ลูก.n
 ```
 
+Both conjuncts พ่อ 'father' and แม่ 'mother' are connected to the conjunction และ 'and' via the `JN` link.
+
 ### JV
 
-This *undirected* link connects a verb-phrase conjunct to its coordinator.
+This *undirected* link connects a verb-phrase conjunct to its coordinator. For example, เขาจะทำงานหรือนอนพักล่ะ 'Is he going to work or take a rest?':
+
+```
+เขา   จะ   ทำงาน      หรือ  นอน    พัก    ล่ะ
+kʰǎʊ  tɕà  tʰam.ŋaːn  rɯ̌ː  nɔːn   pʰák  lâ
+he    FUT  work       or   sleep  rest  EMPH
+'Is he going to work or take a rest?'
+```
+
+This sentence is parsed as follows.
 
 ```
     +---------LWs--------+
@@ -1006,9 +1026,20 @@ This *undirected* link connects a verb-phrase conjunct to its coordinator.
 LEFT-WALL เขา.pr จะ.x ทำงาน.v หรือ.cv นอน.v พัก.v ล่ะ.pt
 ```
 
+Via the `JV` link, the first verb ทำงาน 'work' is connected to the conjunction หรือ 'or', and the conjunction, to the second verb นอน 'sleep'.
+
 ### JP
 
-This *undirected* link connects a preposition-phrase conjunct to its coordinator.
+This *undirected* link connects a preposition-phrase conjunct to its coordinator. For example, หนังสือบนโต๊ะและใต้เก้าอี้ 'the books on the table and under the chair':
+
+```
+หนังสือ   บน   โต๊ะ    และ  ใต้     เก้าอี้
+nǎŋsɯ̌ː  bon  tó     lǽ   tâɪ    kâʊʔîː
+book    on   table  and  under  chair
+'the books on the table and under the chair'
+```
+
+This sentence is parsed as follows.
 
 ```
              +------->AJpr------->+
@@ -1018,9 +1049,20 @@ This *undirected* link connects a preposition-phrase conjunct to its coordinator
 LEFT-WALL หนังสือ.n บน.pan โต๊ะ.n และ.cp ใต้.pan เก้าอี้.n
 ```
 
+Both conjuncts บนโต๊ะ 'on the table' and ใต้เก้าอี้ 'under the chair' are connected to the conjunction และ 'and' via the `JP` link.
+
 ### JD
 
-This *undirected* link connects a discontinuous conjunction to its core conjunction.
+This *undirected* link connects a discontinuous conjunction to its core conjunction. For example, ฉันซื้อทั้งหนังสือและสมุด 'I bought both books and notebooks':
+
+```
+ฉัน     ซื้อ   ทั้ง    หนังสือ   และ  สมุด
+tɕʰǎn  sɯ́ː  tʰáŋ  nǎŋsɯ̌ː  lǽ   sàmùt
+I      buy  both  book    and  notebook
+'I bought both books and notebooks.'
+```
+
+This sentence is parsed as follows.
 
 ```
                   +-------->O-------->+
@@ -1029,6 +1071,8 @@ This *undirected* link connects a discontinuous conjunction to its core conjunct
     |       |     |    |      |       |     |
 LEFT-WALL ฉัน.pr ซื้อ.v ทั้ง.cd หนังสือ.n และ.cn สมุด.n
 ```
+
+Discontinous conjunction ทั้ง 'both' is connected to the main conjunction และ 'and' via the `JD` link.
 
 ----------
 
