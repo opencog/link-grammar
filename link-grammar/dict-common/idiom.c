@@ -14,7 +14,6 @@
 #include "api-types.h"
 #include "dict-api.h"
 #include "dict-common.h"
-#include "dict-defines.h" // For MAX_WORD
 #include "error.h"
 #include "idiom.h"
 #include "string-set.h"
@@ -74,9 +73,10 @@ static bool is_idiom_string(const char * s)
  * This is the same as s, but with a postfix of ".I". */
 static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
-	char buff[2*MAX_WORD];
+	size_t n = strlen(s);
+	char *buff = alloca(n+5);
 
-	size_t n = lg_strlcpy(buff, s, sizeof(buff));
+	strcpy(buff, s);
 	buff[n] = SUBSCRIPT_MARK;
 	buff[n + 1] = '_';
 	buff[n + 2] = 'I';
