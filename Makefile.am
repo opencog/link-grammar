@@ -40,7 +40,11 @@ EXTRA_DIST =                            \
 	mingw/README-MinGW64.md              \
 	mingw/link-parser-mingw.bat          \
 	mingw/link-parser-cygwin.bat         \
+	msvc/getopt/getopt.c                 \
+	msvc/getopt/getopt.h                 \
+	msvc/getopt/README                   \
 	msvc/LGlib-features.props            \
+	msvc/LinkGenerator.vcxproj           \
 	msvc/LinkGrammarExe.vcxproj          \
 	msvc/LinkGrammarExe.vcxproj.filters  \
 	msvc/LinkGrammarJava.vcxproj         \

@@ -527,7 +527,8 @@ static int revcmplen(const void *a, const void *b)
  * The saved affixes don't include the infix mark.
  */
 static void get_dict_affixes(Dictionary dict, Dict_node * dn,
-                             char infix_mark, char * w_last)
+                             char infix_mark,
+                             const char** plast, size_t *lastlen)
 {
 	const char *w;         /* current dict word */
 	const char *w_sm;      /* SUBSCRIPT_MARK position in the dict word */
@@ -535,37 +536,33 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 	Dictionary afdict = dict->affix_table;
 
 	if (dn == NULL) return;
-	get_dict_affixes(dict, dn->right, infix_mark, w_last);
+	get_dict_affixes(dict, dn->right, infix_mark, plast, lastlen);
 
 	w = dn->string;
 	w_sm = get_word_subscript(w);
 	w_len = (NULL == w_sm) ? strlen(w) : (size_t)(w_sm - w);
-	if (w_len > MAX_WORD)
-	{
-		prt_error("Error: word '%s' too long (%zu), program may malfunction\n",
-		          w, w_len);
-		w_len = MAX_WORD;
-	}
-	/* (strlen(w_last) can be cached for speedup) */
-	if ((strlen(w_last) != w_len) || (0 != strncmp(w_last, w, w_len)))
-	{
-		strncpy(w_last, w, w_len);
-		w_last[w_len] = '\0';
 
-		if (infix_mark == w_last[0])
+	if (*lastlen != w_len || 0 != strncmp(*plast, w, w_len))
+	{
+		char* wtrunc = strdupa(w);
+		wtrunc[w_len] = '\0';
+
+		if (infix_mark == w[0])
 		{
-			affix_list_add(afdict, &afdict->afdict_class[AFDICT_SUF], w_last+1);
+			affix_list_add(afdict, &afdict->afdict_class[AFDICT_SUF], wtrunc+1);
 		}
 		else
-		if (infix_mark == w_last[w_len-1])
+		if (infix_mark == w[w_len-1])
 		{
-			w_last[w_len-1] = '\0';
-			affix_list_add(afdict, &afdict->afdict_class[AFDICT_PRE], w_last);
-			w_last[w_len-1] = infix_mark;
+			wtrunc[w_len-1] = '\0';
+			affix_list_add(afdict, &afdict->afdict_class[AFDICT_PRE], wtrunc);
 		}
+
+		*plast = w;
+		*lastlen = w_len;
 	}
 
-	get_dict_affixes(dict, dn->left, infix_mark, w_last);
+	get_dict_affixes(dict, dn->left, infix_mark, plast, lastlen);
 }
 
 /**
@@ -672,8 +669,9 @@ bool afdict_init(Dictionary dict)
 		if ((0 == AFCLASS(afdict, AFDICT_PRE)->length) &&
 		    (0 == AFCLASS(afdict, AFDICT_SUF)->length))
 		{
-			char last_entry[MAX_WORD+1] = "";
-			get_dict_affixes(dict, dict->root, ac->string[0][0], last_entry);
+			const char *last = 0x0;
+			size_t len = 0;
+			get_dict_affixes(dict, dict->root, ac->string[0][0], &last, &len);
 		}
 		else
 		{
