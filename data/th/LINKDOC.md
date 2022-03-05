@@ -186,9 +186,9 @@ The `O` link connects the grammatical object อาหารกลางวั�
 This *undirected* link connects a verb to its modifying verb in a serial verb construction. For example ฉันออกเดินช็อปปิ้งที่ห้างพารากอน 'I am out for shopping at Paragon Mall':
 
 ```
-ฉัน    ออก    เดิน   ช็อปปิ้ง     ที่     ห้าง   พารากอน
-tɕǎn  ʔɔ̀ːk   dəːn  tɕɔ́ppîŋ   tʰîː  hâːŋ  pʰaːraːkɔ̂n
-I     leave  walk  shopping  at    mall  Paragon
+ฉัน     ออก    เดิน   ช็อปปิ้ง     ที่     ห้าง   พารากอน
+tɕʰǎn  ʔɔ̀ːk   dəːn  tɕɔ́ppîŋ   tʰîː  hâːŋ  pʰaːraːkɔ̂n
+I      leave  walk  shopping  at    mall  Paragon
 'I am out for shopping at Paragon Mall.'
 ```
 
