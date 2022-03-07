@@ -1405,6 +1405,7 @@ bugles.n
 bugs.n
 builders.n
 buildings.n
+builds.n
 bulbs.n
 Bulgarians.n
 bulges.n
