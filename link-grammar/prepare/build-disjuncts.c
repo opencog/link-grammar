@@ -25,8 +25,7 @@ typedef struct Tconnector_struct Tconnector;
 struct Tconnector_struct
 {
 	Tconnector * next;
-	const Exp *e; /* a CONNECTOR_type element from which to get the connector  */
-	int exp_pos;  /* the position in the originating expression */
+	Exp *e; /* a CONNECTOR_type element from which to get the connector  */
 };
 
 typedef struct clause_struct Clause;
@@ -114,7 +113,7 @@ static Tconnector * build_terminal(Exp *e, clause_context *ct)
 	Tconnector *c = pool_alloc(ct->Tconnector_pool);
 	c->e = e;
 	c->next = NULL;
-	c->exp_pos = ct->exp_pos++;
+	c->e->pos = ct->exp_pos++;
 	return c;
 }
 
@@ -267,7 +266,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			Connector *n = connector_new(connector_pool, t->e->condesc, opts);
 			Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
 
-			n->exp_pos = t->exp_pos;
+			n->exp_pos = t->e->pos;
 			n->multi = t->e->multi;
 			n->farthest_word = t->e->farthest_word;
 			n->next = *loc;   /* prepend the connector to the current list */

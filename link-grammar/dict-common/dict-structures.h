@@ -49,11 +49,14 @@ typedef enum { Exptag_none=0, Exptag_dialect, Exptag_macro } Exptag_type;
  * list of operands (when each of them points to the next one through
  * "operand_next"). Else "condesc" is the connector descriptor, when "dir"
  * indicates the connector direction.
+ * For CONNECTOR_type, the "pos" filed is the expression ordinal position
+ * (found when building the disjuncts, for "!!word/m").
  */
 struct Exp_struct
 {
 	Exp_type type:8;      /* One of three types: AND, OR, or connector. */
-	unsigned int unused:24;
+	unsigned int unsued:8;
+	unsigned int pos:16;  /* The position in the expression. */
 	union
 	{
 		struct /* For non-terminals. */
