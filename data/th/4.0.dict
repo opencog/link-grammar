@@ -419,12 +419,14 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 %%%%%%%%%%%%%%%%%%%%
 
 <adv-simple>:
-    {PUy+}
+    {hAXg-}
+    & {PUy+}
     & dAVw-
     & {hAV+};
 
 <adv-attrmod>:
-    {PUy+}
+    {hAXg-}
+    & {PUy+}
     & dAVw+;
 
 <adv-cohesive>:
