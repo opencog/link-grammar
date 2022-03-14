@@ -418,24 +418,42 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 % Adverb
 %%%%%%%%%%%%%%%%%%%%
 
+<adv-simple>:
+    {PUy+}
+    & dAVw-
+    & {hAV+};
+
+<adv-attrmod>:
+    {PUy+}
+    & dAVw+;
+
+<adv-cohesive>:
+    dAVcl+;
+
 /th/words/words.adv.common :
-    dAVw- & {hAV+};
+    <adv-simple>;
 
 /th/words/words.adv.attrmod :
-    dAVw+;
+    <adv-attrmod>;
 
 /th/words/words.adv.cohesive :
-    dAVcl+;
+    <adv-cohesive>;
 
 %%%%%%%%%%%%%%%%%%%%
 % Negator
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.neg.lhs :
+<neg-lhs>:
     dAXg+;
 
-/th/words/words.neg.rhs :
+<neg-rhs>:
     dAVgr-;
+
+/th/words/words.neg.lhs :
+    <neg-lhs>;
+
+/th/words/words.neg.rhs :
+    <neg-rhs>;
 
 %%%%%%%%%%%%%%%%%%%%
 % Preposition
@@ -524,7 +542,8 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 /th/words/words.prep-v.n :
     <vprep-noun>;
 
-/th/words/words.prep-v.v :
+/th/words/words.prep-v.v
+/th/words/words.sclmark :
     <vprep-verb>;
 
 /th/words/words.prep-v.nv :
@@ -613,11 +632,14 @@ _.cp :
 % Interjection
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.intj.common
-EMOTICON :
+<intj>:
     {PUs-}
     & {PUs+}
     & (IJ+ or PT-);
+
+/th/words/words.intj.common
+EMOTICON :
+    <intj>;
 
 %%%%%%%%%%%%%%%%%%%%
 % Punctuation
@@ -654,6 +676,32 @@ HMS-TIME.r YEAR-DATE.r THAI-DATE.r THAI-TIME.r :
 
 PART-NUMBER THAI-PART-NUMBER :
     <noun-simple>;
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%
+% English Word
+%%%%%%%%%%%%%%%%%%%%
+
+ENGLISH-WORD :
+    <noun-simple>
+    or <verb-simple>
+    or <adj-simple>
+    or [<adj-attribute>]
+    or [<adv-simple>]
+    or [<adv-cohesive>]
+    or [<neg-lhs>]
+    or [<prep-lw>]
+    or [<intj>];
+
+CAPITALIZED-WORD:
+    <noun-simple>
+    or [<adv-cohesive>]
+    or <intj>;
+
+HYPHENATED-WORD:
+    <noun-simple>
+    or <adj-simple>;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
