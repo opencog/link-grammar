@@ -190,7 +190,7 @@
 %%%% Common Noun %%%%
 
 /th/words/words.n.common 
-/th/words/words.n.proper
+% /th/words/words.n.proper
 THAI-COLOR.n :
     <noun-simple>;
 
