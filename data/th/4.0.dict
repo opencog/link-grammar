@@ -110,6 +110,10 @@
     {@IJ-}
     & LWp-;
 
+<left-wall-aux> :
+    {@IJ-}
+    & LWx-;
+
 <right-wall> :
     {@PT+} 
     & RW+;
@@ -412,7 +416,13 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.aux.common :
-    dAXw+;
+    dAXw+
+    or [
+        <left-wall-aux>
+        & {@hAVx+}
+        & <right-wall>
+    ]
+    or [dAVx-];
 
 %%%%%%%%%%%%%%%%%%%%
 % Adverb
