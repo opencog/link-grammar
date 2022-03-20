@@ -1156,7 +1156,7 @@ display_word_split_error:
  * Only one minor cheat here: we are ignoring the cost_cutoff, so
  * this potentially over-counts if the cost_cutoff is set low.
  */
-static uint64_t count_clause(const Exp *e)
+uint64_t count_clause(const Exp *e)
 {
 	uint64_t cnt = 0;
 

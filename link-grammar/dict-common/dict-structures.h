@@ -14,6 +14,8 @@
 #ifndef _LG_DICT_STRUCTURES_H_
 #define _LG_DICT_STRUCTURES_H_
 
+#include <stdint.h>
+
 #include "link-includes.h"
 
 #ifndef SWIG
@@ -100,6 +102,7 @@ typedef struct
 #ifndef SWIG
 bool cost_eq(float cost1, float cost2);
 const char *cost_stringify(float cost);
+uint64_t count_clause(const Exp *);
 #endif /* !SWIG */
 
 /* API to access the above structure. */
