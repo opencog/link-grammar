@@ -1,6 +1,6 @@
 Link Grammar Parser
 ===================
-***Version 5.10.4***
+***Version 5.10.5***
 
 ![Main](https://github.com/opencog/link-grammar/actions/workflows/main.yml/badge.svg)
 ![node.js](https://github.com/opencog/link-grammar/actions/workflows/bindings-js.yml/badge.svg)
@@ -1213,6 +1213,16 @@ Some complex phantom constructions:
  * Perhaps he will (do it), if he sees enough of her.
 
 See also [github issue #224](https://github.com/opencog/link-grammar/issues/224).
+
+Actual ellipsis:
+ * At first, it seemed like ...
+ * It became clear that ...
+
+Here, the ellipsis stands for a subordinate clause, which attaches
+with not one, but two links: `C+ & CV+`, and thus requires two words,
+not one. There is no way to have the ellipsis word to sink two
+connectors starting from the same word, and so some more complex
+mechanism is needed.
 
 #### Elision of syllables
 Many (unstressed) syllables can be elided; in modern English, this occurs
