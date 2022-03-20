@@ -1158,7 +1158,7 @@ display_word_split_error:
  */
 uint64_t count_clause(const Exp *e)
 {
-	uint64_t cnt = 0;
+	uint64_t cnt;
 
 	assert(e != NULL, "count_clause called with null parameter");
 	if (e->type == AND_type)
@@ -1171,6 +1171,7 @@ uint64_t count_clause(const Exp *e)
 	else if (e->type == OR_type)
 	{
 		/* Just additive */
+		cnt = 0;
 		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 			cnt += count_clause(opd);
 	}
