@@ -1156,7 +1156,7 @@ display_word_split_error:
  * Only one minor cheat here: we are ignoring the cost_cutoff, so
  * this potentially over-counts if the cost_cutoff is set low.
  */
-static unsigned int count_clause(Exp *e)
+static unsigned int count_clause(const Exp *e)
 {
 	unsigned int cnt = 0;
 
