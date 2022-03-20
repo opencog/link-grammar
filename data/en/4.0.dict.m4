@@ -11025,8 +11025,12 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 % S+ has a cost so that the infinitive I+ is preferred.
 % BI+, QI+: "... how those two should work together"
 % TH+: "... that it rained."
+% LI+: "... like it would rain"
 ....x ….x:
-  We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or TH+ or QI+ or (R+ & B+ & {S+}));
+  We- & (
+    J+ or [S+] or I+ or M+ or MV+ or BI+
+    or LI+ or TH+ or QI+ or (R+ & B+ & {S+})
+  );
 
 % Ellipsis as verb: "Lud, son of Shem, ..."
 % Qp-: "In what way...?
