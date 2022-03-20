@@ -1,5 +1,6 @@
 Version 5.10.5 (XXX 2022)
- * Nothing yet.
+ * Updated Docker files. #1288
+ * English dict: broader handling of ellipsis.
 
 Version 5.10.4 (4 March 2022)
  * English dict: fix relative clause, per mailing list.

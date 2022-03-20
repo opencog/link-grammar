@@ -11012,9 +11012,11 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 
 % ellipsis ... at the end, trailing off ...
 % D- & O+: "He is such a ..."
+% J-: "She was thinking of ..."
 ....y ….y:
   (hCO- & Wd-)
   or ({D-} & O-)
+  or J-
   or Xx-;
 
 % ellipsis ... at the start
