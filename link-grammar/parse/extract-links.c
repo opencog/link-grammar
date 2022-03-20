@@ -56,7 +56,7 @@ struct Parse_set_struct
 #ifdef RECOUNT
 	count_t recount;  /* Exactly the same as above, but counted at a later stage. */
 	count_t cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
-	//double cost_cutoff;
+	//float cost_cutoff;
 #undef RECOUNT
 #define RECOUNT(X) X
 #else

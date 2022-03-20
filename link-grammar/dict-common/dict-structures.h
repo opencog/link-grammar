@@ -14,6 +14,8 @@
 #ifndef _LG_DICT_STRUCTURES_H_
 #define _LG_DICT_STRUCTURES_H_
 
+#include <stdint.h>
+
 #include "link-includes.h"
 
 #ifndef SWIG
@@ -37,7 +39,7 @@ typedef enum
 
 #ifndef SWIG
 static const int cost_max_dec_places = 3;
-static const double cost_epsilon = 1E-5;
+static const float cost_epsilon = 1E-5;
 
 #define EXPTAG_SZ 100 /* Initial size for the Exptag array. */
 typedef enum { Exptag_none=0, Exptag_dialect, Exptag_macro } Exptag_type;
@@ -49,11 +51,14 @@ typedef enum { Exptag_none=0, Exptag_dialect, Exptag_macro } Exptag_type;
  * list of operands (when each of them points to the next one through
  * "operand_next"). Else "condesc" is the connector descriptor, when "dir"
  * indicates the connector direction.
+ * For CONNECTOR_type, the "pos" filed is the expression ordinal position
+ * (found when building the disjuncts, for "!!word/m").
  */
 struct Exp_struct
 {
 	Exp_type type:8;      /* One of three types: AND, OR, or connector. */
-	unsigned int unused:24;
+	unsigned int unsued:8;
+	unsigned int pos:16;  /* The position in the expression. */
 	union
 	{
 		struct /* For non-terminals. */
@@ -95,8 +100,9 @@ typedef struct
 } Category_cost;
 
 #ifndef SWIG
-bool cost_eq(double cost1, double cost2);
-const char *cost_stringify(double cost);
+bool cost_eq(float cost1, float cost2);
+const char *cost_stringify(float cost);
+uint64_t count_clause(const Exp *);
 #endif /* !SWIG */
 
 /* API to access the above structure. */

@@ -28,7 +28,7 @@ struct Linkage_info_struct
 	short unused_word_cost;
 	short link_cost;
 
-	double disjunct_cost;
+	float disjunct_cost;
 	const char *pp_violation_msg;
 };
 

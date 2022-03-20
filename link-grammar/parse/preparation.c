@@ -96,7 +96,7 @@ void gword_record_in_connector(Sentence sent)
  * Turn sentence expressions into disjuncts.
  * Sentence expressions must have been built, before calling this routine.
  */
-static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
+static void build_sentence_disjuncts(Sentence sent, float cost_cutoff,
                                      Parse_Options opts)
 {
 	Disjunct * d;
@@ -121,6 +121,11 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
 		}
 		sent->word[w].d = d;
 	}
+
+	/* Delete the memory pools created in build_disjuncts_for_exp(). */
+	pool_delete(sent->Clause_pool);
+	pool_delete(sent->Tconnector_pool);
+	sent->Clause_pool = NULL;
 }
 
 

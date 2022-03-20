@@ -79,7 +79,7 @@ struct condesc_struct
 	lc_enc_t lc_mask;
 
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
-	// double *cost; /* Array of cost by connector length (cost[0]: default) */
+	// float *cost;    /* Array of cost by connector length (cost[0]: default) */
 	connector_hash_t uc_num; /* uc part enumeration. */
 	uint8_t length_limit; /* If not 0, it gives the limit of the length of the
 	                       * link that can be used on this connector type. The

@@ -1889,7 +1889,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 #else
     cost_cutoff = 1000.0;
 #endif // LIMIT_TOTAL_LINKAGE_COST
-    d = build_disjuncts_for_exp(NULL, de, xnode_word[wi]->string,
+    d = build_disjuncts_for_exp(_sent, de, xnode_word[wi]->string,
                                 &xnode_word[wi]->word->gword_set_head,
                                 cost_cutoff, _opts);
 
