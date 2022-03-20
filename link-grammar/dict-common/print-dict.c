@@ -1156,9 +1156,9 @@ display_word_split_error:
  * Only one minor cheat here: we are ignoring the cost_cutoff, so
  * this potentially over-counts if the cost_cutoff is set low.
  */
-static unsigned int count_clause(const Exp *e)
+static uint64_t count_clause(const Exp *e)
 {
-	unsigned int cnt = 0;
+	uint64_t cnt = 0;
 
 	assert(e != NULL, "count_clause called with null parameter");
 	if (e->type == AND_type)
@@ -1189,7 +1189,7 @@ static unsigned int count_clause(const Exp *e)
 /**
  * Count number of disjuncts given the dict node dn.
  */
-static unsigned int count_disjunct_for_dict_node(Dict_node *dn)
+static uint64_t count_disjunct_for_dict_node(Dict_node *dn)
 {
 	return (NULL == dn) ? 0 : count_clause(dn->exp);
 }
@@ -1204,7 +1204,7 @@ static char *display_counts(const char *word, Dict_node *dn)
 	dyn_strcat(s, "matches:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
-		append_string(s, "    %-*s %8u  disjuncts",
+		append_string(s, "    %-*s %8zu  disjuncts",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
 		              count_disjunct_for_dict_node(dn));
 
