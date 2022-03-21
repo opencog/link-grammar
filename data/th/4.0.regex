@@ -161,7 +161,6 @@ WORD-ADV-ATTRMOD: /\.ra$/
 WORD-ADV-COHESIVE: /\.rc$/
 WORD-ADV-QF: /\.qr$/
 WORD-AUX: /\.x$/
-WORD-CL: /\.cl$/
 WORD-CL-NOUN: /\.cln$/
 WORD-CL-VERB: /\.clv$/
 WORD-CONJ-DISCONT: /\.cd$/

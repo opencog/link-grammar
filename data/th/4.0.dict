@@ -243,12 +243,10 @@ WORD-PRO :
     dCLv+ or dCLv-;
 
 /th/words/words.cl.noun
-WORD-CL
 WORD-CL-NOUN :
     <cls-n>;
 
 /th/words/words.cl.verb
-WORD-CL
 WORD-CL-VERB :
     <cls-v>;
 
@@ -766,6 +764,10 @@ LEFT-WALL :
 
 RIGHT-WALL :
     RW-;
+
+/th/words/words.sentsep :
+    RW-
+    & {LW+};
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
