@@ -195,18 +195,21 @@
 
 /th/words/words.n.common 
 % /th/words/words.n.proper
+WORD-NOUN
 THAI-COLOR.n :
     <noun-simple>;
 
 %%%% Attributive Noun %%%%
 
-/th/words/words.n.attribute :
+/th/words/words.n.attribute 
+WORD-NOUN-ATTR :
     (<noun-start> & <noun-element>)
     or <noun-attribute>;
 
 %%%% Nominalizing Prefix %%%%
 
-/th/words/words.n.prefix :
+/th/words/words.n.prefix 
+WORD-NOUN-PREFIX :
     <noun-imprel>
     & <noun-element>;
 
@@ -220,7 +223,8 @@ THAI-DATE THAI-TIME :
 %   Pronoun
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.pro.common :
+/th/words/words.pro.common 
+WORD-PRO :
     (
         {hAJr+}
         & {<num-cl>}
@@ -238,10 +242,14 @@ THAI-DATE THAI-TIME :
 <cls-v> :
     dCLv+ or dCLv-;
 
-/th/words/words.cl.noun :
+/th/words/words.cl.noun
+WORD-CL
+WORD-CL-NOUN :
     <cls-n>;
 
-/th/words/words.cl.verb :
+/th/words/words.cl.verb
+WORD-CL
+WORD-CL-VERB :
     <cls-v>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -325,12 +333,14 @@ THAI-DATE THAI-TIME :
 
 %%%% Common Verb %%%%
 
-/th/words/words.v.common :
+/th/words/words.v.common 
+WORD-VERB :
     <verb-simple>;
 
 %%%% Passive Marker %%%%
 
-/th/words/words.passmark :
+/th/words/words.passmark 
+WORD-PASSMARK :
     <passive-marker>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -361,12 +371,15 @@ THAI-DATE THAI-TIME :
 /th/words/words.adj.common
 /th/words/words.num.ordinal
 THAI-COLOR.j 
-ROMAN-NUMERAL-WORDS.j :
+ROMAN-NUMERAL-WORDS.j 
+WORD-ADJ :
     <adj-simple>;
 
 /th/words/words.adj.lhs 
 /th/words/words.n.title
-/th/words/words.n.designator :
+/th/words/words.n.designator 
+WORD-ADJ-LHS 
+WORD-NOUN-TITLE :
     <adj-lhs>;
 
 %%%% Attributive Verb %%%%
@@ -374,7 +387,8 @@ ROMAN-NUMERAL-WORDS.j :
 % Test frame: khwaam + _____
 
 /th/words/words.v.attribute
-THAI-COLOR.va :
+THAI-COLOR.va 
+WORD-VERB-ATTR :
     <adj-attribute>
     or [{PUy+} & <verb-simple-intrans>]
     or [<verb-comp>];
@@ -394,20 +408,25 @@ THAI-COLOR.va :
 
 /th/words/words.num.common
 NUMBERS.nu FRACTION.nu 
-THAI-NUMBERS.nu THAI-FRACTION.nu:
+THAI-NUMBERS.nu THAI-FRACTION.nu
+WORD-NUM :
     {PUsl-} & {PUsr+} & <number-simple>;
 
-/th/words/words.num.movable :
+/th/words/words.num.movable 
+WORD-NUM-MOV :
     (hCLn- & (dNUnr- or [dAVnr-]))
     or (hCLv- & (dNUvr- or [dAVvr-]));
 
-/th/words/words.qf.lhs :
+/th/words/words.qf.lhs 
+WORD-QF-LEFT :
     dQFl+;
 
-/th/words/words.qf.rhs :
+/th/words/words.qf.rhs 
+WORD-QF-RIGHT :
     dQFr-;
 
-/th/words/words.ordmark :
+/th/words/words.ordmark
+WORD-ORDMARK :
     hONr+
     & <adj-simple>;
 
@@ -415,7 +434,8 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 % Auxiliary
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.aux.common :
+/th/words/words.aux.common 
+WORD-AUX :
     dAXw+
     or [
         <left-wall-aux>
@@ -442,13 +462,16 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 <adv-cohesive>:
     dAVcl+;
 
-/th/words/words.adv.common :
+/th/words/words.adv.common 
+WORD-ADV :
     <adv-simple>;
 
-/th/words/words.adv.attrmod :
+/th/words/words.adv.attrmod
+WORD-ADV-ATTRMOD :
     <adv-attrmod>;
 
-/th/words/words.adv.cohesive :
+/th/words/words.adv.cohesive 
+WORD-ADV-COHESIVE :
     <adv-cohesive>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -461,10 +484,12 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
 <neg-rhs>:
     dAVgr-;
 
-/th/words/words.neg.lhs :
+/th/words/words.neg.lhs 
+WORD-NEG-LEFT :
     <neg-lhs>;
 
-/th/words/words.neg.rhs :
+/th/words/words.neg.rhs 
+WORD-NEG-RIGHT :
     <neg-rhs>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -531,38 +556,49 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     or ({hPZv-} & hPC+ & {PUs+} & dAVpl+)
     or dPZv+;
 
-/th/words/words.prep.n :
+/th/words/words.prep.n 
+WORD-PREP-AN :
     <prep-noun>;
 
-/th/words/words.prep.v :
+/th/words/words.prep.v
+WORD-PREP-AV :
     <prep-verb>;
 
-/th/words/words.prep.nv :
+/th/words/words.prep.nv
+WORD-PREP-AA :
     <prep-noun>
     or <prep-verb>;
 
-/th/words/words.prep-n.n :
+/th/words/words.prep-n.n
+WORD-PREP-NN :
     <nprep-noun>;
 
-/th/words/words.prep-n.v :
+/th/words/words.prep-n.v
+WORD-PREP-NV :
     <nprep-verb>;
 
-% /th/words/words.nprep.nv :
-%     <nprep-noun>
-%     or <nprep-verb>;
+% /th/words/words.nprep.nv 
+WORD-PREP-NA :
+    <nprep-noun>
+    or <nprep-verb>;
 
-/th/words/words.prep-v.n :
+/th/words/words.prep-v.n
+WORD-PREP-VN :
     <vprep-noun>;
 
 /th/words/words.prep-v.v
-/th/words/words.sclmark :
+/th/words/words.sclmark 
+WORD-PREP-VV
+WORD-SCLMARK :
     <vprep-verb>;
 
-/th/words/words.prep-v.nv :
+/th/words/words.prep-v.nv
+WORD-PREP-VA :
     <vprep-noun>
     or <vprep-verb>;
 
-/th/words/words.prep.lw :
+/th/words/words.prep.lw
+WORD-PREP-LW :
     <prep-lw>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -579,14 +615,16 @@ THAI-NUMBERS.nu THAI-FRACTION.nu:
     & <left-wall-sent>
     & <right-wall>;
 
-/th/words/words.relpro.common :
+/th/words/words.relpro.common
+WORD-RELPRO :
     <relcls> or [<relsent>];
 
 %%%%%%%%%%%%%%%%%%%%
 % Conjunction
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.conj.noun :
+/th/words/words.conj.noun
+WORD-CONJ-NOUN :
     {PUs-}
     & {PUs+}
     & JNl-
@@ -603,7 +641,8 @@ _.cn :
     & <noun-start>
     & <noun-element>;
 
-/th/words/words.conj.verb :
+/th/words/words.conj.verb
+WORD-CONJ-VERB :
     {PUs-}
     & {PUs+}
     & JVl-
@@ -615,7 +654,8 @@ _.cv :
         & JVr+
     ]];
 
-/th/words/words.conj.prep :
+/th/words/words.conj.prep
+WORD-CONJ-PREP :
     (AVpr+ & AVpl- & {JD-} & (dAVpr- or dAVpl+))
     or 
     [JPr+ & JPl- & {JD-} & (dAJpr- or dAJpl+)];
@@ -627,14 +667,16 @@ _.cp :
     ]]
     & (dAVpr- or [dAJpr-]);
 
-/th/words/words.conj.discont :
+/th/words/words.conj.discont
+WORD-CONJ-DISCONT :
     JD+;
 
 %%%%%%%%%%%%%%%%%%%%
 % Particle
 %%%%%%%%%%%%%%%%%%%%
 
-/th/words/words.part.common :
+/th/words/words.part.common
+WORD-PARTICLE :
     PT-;
 
 ครัช.#ครับ ครัล.#ครับ คนับ.#ครับ: [ครับ.pt]bad-spelling;
@@ -651,6 +693,7 @@ _.cp :
     & (IJ+ or PT-);
 
 /th/words/words.intj.common
+WORD-INTJ
 EMOTICON :
     <intj>;
 

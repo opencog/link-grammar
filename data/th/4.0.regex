@@ -139,8 +139,7 @@ EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdD
 PART-NUMBER:
   /^[A-Z0-9#][A-Z0-9$\/#]*[A-Z0-9$\/#,.-]*[0-9][A-Z0-9$\/#,.-]*[A-Z0-9$\/#]+$|^[1-9][0-9]+[\/-][0-9]+$/
 
-THAI-PART-NUMBER:
-  /^[A-Zก-ฮ0-9๐-๙#][A-Zก-ฮ0-9๐-๙$\/#]*[A-Zก-ฮ0-9๐-๙$\/#,.-]*[0-9๐-๙][A-Zก-ฮ0-9๐-๙$\/#,.-]*[A-Zก-ฮ0-9๐-๙$\/#]+$|^[1-9๑-๙][0-9๐-๙]+[\/-][0-9๐-๙]+$/
+THAI-PART-NUMBER: /^[A-Zก-ฮ0-9๐-๙#][A-Zก-ฮ0-9๐-๙$\/#]*[A-Zก-ฮ0-9๐-๙$\/#,.-]*[0-9๐-๙][A-Zก-ฮ0-9๐-๙$\/#,.-]*[A-Zก-ฮ0-9๐-๙$\/#]+$|^[1-9๑-๙][0-9๐-๙]+[\/-][0-9๐-๙]+$/
 
 % Sequence of punctuation marks. If some mark appears in the affix table
 % such as a period, comma, dash or underscore, and there's a sequence of
@@ -152,3 +151,49 @@ THAI-PART-NUMBER:
 % UNKNOWN-WORD: /^[.,-]{4}[.,-]*$/
 
 ENGLISH-WORD:    /^[A-Za-z'’]+$/
+
+% Words with annotated POS tags
+
+WORD-ADJ: /\.j$/
+WORD-ADJ-LHS: /\.jl$/
+WORD-ADV: /\.r$/
+WORD-ADV-ATTRMOD: /\.ra$/
+WORD-ADV-COHESIVE: /\.rc$/
+WORD-ADV-QF: /\.qr$/
+WORD-AUX: /\.x$/
+WORD-CL: /\.cl$/
+WORD-CL-NOUN: /\.cln$/
+WORD-CL-VERB: /\.clv$/
+WORD-CONJ-DISCONT: /\.cd$/
+WORD-CONJ-NOUN: /\.cn$/
+WORD-CONJ-PREP: /\.cp$/
+WORD-CONJ-VERB: /\.cv$/
+WORD-INTJ: /\.ij$/
+WORD-NOUN-ATTR: /\.na$/
+WORD-NOUN: /\.n$/
+WORD-NOUN-TITLE: /\.nt$/
+WORD-NOUN-PREFIX: /\.fx$/
+WORD-NEG-LEFT: /\.ngl$/
+WORD-NEG-RIGHT: /\.ngr$/
+WORD-NUM: /\.nu$/
+WORD-NUM-MOV: /\.nuv$/
+WORD-ORDMARK: /\.om$/
+WORD-PARTICLE: /\.pt$/
+WORD-PASSMARK: /\.ps$/
+WORD-PREP-NN: /\.pnn$/
+WORD-PREP-VN: /\.pvn$/
+WORD-PREP-AN: /\.pan$/
+WORD-PREP-NV: /\.pnv$/
+WORD-PREP-VV: /\.pvv$/
+WORD-PREP-AV: /\.pav$/
+WORD-PREP-NA: /\.pna$/
+WORD-PREP-VA: /\.pva$/
+WORD-PREP-AA: /\.paa$/
+WORD-PREP-LW: /\.pw$/
+WORD-PRO: /\.pr$/
+WORD-QF-LEFT: /\.qfl$/
+WORD-QF-RIGHT: /\.qfr$/
+WORD-RELPRO: /\.rl$/
+WORD-SCLMARK: /\.sm$/
+WORD-VERB: /\.v$/
+WORD-VERB-ATTR: /\.va$/
