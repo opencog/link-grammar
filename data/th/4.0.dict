@@ -195,27 +195,28 @@
 
 /th/words/words.n.common 
 % /th/words/words.n.proper
-WORD-NOUN
-THAI-COLOR.n :
+W-NOUN
+THAI-COLOR.n
+NE-PER.n NE-ORG.n NE-BRN.n NE-LOC.n NE-TRM.n :
     <noun-simple>;
 
 %%%% Attributive Noun %%%%
 
 /th/words/words.n.attribute 
-WORD-NOUN-ATTR :
+W-NOUN-ATTR :
     (<noun-start> & <noun-element>)
     or <noun-attribute>;
 
 %%%% Nominalizing Prefix %%%%
 
 /th/words/words.n.prefix 
-WORD-NOUN-PREFIX :
+W-NOUN-PREFIX NE-DES.fx :
     <noun-imprel>
     & <noun-element>;
 
 %%%% Temporal Entity %%%%
 
-THAI-DATE THAI-TIME :
+THAI-DATE THAI-TIME NE-DTM :
     <noun-start-temporal>
     & (<noun-temporal> or <noun-element>);
 
@@ -224,7 +225,7 @@ THAI-DATE THAI-TIME :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.pro.common 
-WORD-PRO :
+W-PRO :
     (
         {hAJr+}
         & {<num-cl>}
@@ -243,11 +244,13 @@ WORD-PRO :
     dCLv+ or dCLv-;
 
 /th/words/words.cl.noun
-WORD-CL-NOUN :
+W-CL-NOUN
+NE-MEA.cln :
     <cls-n>;
 
 /th/words/words.cl.verb
-WORD-CL-VERB :
+W-CL-VERB
+NE-MEA.clv :
     <cls-v>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -332,13 +335,13 @@ WORD-CL-VERB :
 %%%% Common Verb %%%%
 
 /th/words/words.v.common 
-WORD-VERB :
+W-VERB :
     <verb-simple>;
 
 %%%% Passive Marker %%%%
 
 /th/words/words.passmark 
-WORD-PASSMARK :
+W-PASSMARK :
     <passive-marker>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -370,14 +373,13 @@ WORD-PASSMARK :
 /th/words/words.num.ordinal
 THAI-COLOR.j 
 ROMAN-NUMERAL-WORDS.j 
-WORD-ADJ :
+W-ADJ :
     <adj-simple>;
 
 /th/words/words.adj.lhs 
 /th/words/words.n.title
 /th/words/words.n.designator 
-WORD-ADJ-LHS 
-WORD-NOUN-TITLE :
+W-ADJ-LHS W-NOUN-TITLE NE-TTL.nt :
     <adj-lhs>;
 
 %%%% Attributive Verb %%%%
@@ -386,7 +388,7 @@ WORD-NOUN-TITLE :
 
 /th/words/words.v.attribute
 THAI-COLOR.va 
-WORD-VERB-ATTR :
+W-VERB-ATTR :
     <adj-attribute>
     or [{PUy+} & <verb-simple-intrans>]
     or [<verb-comp>];
@@ -407,24 +409,24 @@ WORD-VERB-ATTR :
 /th/words/words.num.common
 NUMBERS.nu FRACTION.nu 
 THAI-NUMBERS.nu THAI-FRACTION.nu
-WORD-NUM :
+W-NUM NE-NUM.nu :
     {PUsl-} & {PUsr+} & <number-simple>;
 
 /th/words/words.num.movable 
-WORD-NUM-MOV :
+W-NUM-MOV :
     (hCLn- & (dNUnr- or [dAVnr-]))
     or (hCLv- & (dNUvr- or [dAVvr-]));
 
 /th/words/words.qf.lhs 
-WORD-QF-LEFT :
+W-QF-LEFT :
     dQFl+;
 
 /th/words/words.qf.rhs 
-WORD-QF-RIGHT :
+W-QF-RIGHT :
     dQFr-;
 
 /th/words/words.ordmark
-WORD-ORDMARK :
+W-ORDMARK :
     hONr+
     & <adj-simple>;
 
@@ -433,7 +435,7 @@ WORD-ORDMARK :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.aux.common 
-WORD-AUX :
+W-AUX :
     dAXw+
     or [
         <left-wall-aux>
@@ -461,15 +463,15 @@ WORD-AUX :
     dAVcl+;
 
 /th/words/words.adv.common 
-WORD-ADV :
+W-ADV :
     <adv-simple>;
 
 /th/words/words.adv.attrmod
-WORD-ADV-ATTRMOD :
+W-ADV-ATTRMOD :
     <adv-attrmod>;
 
 /th/words/words.adv.cohesive 
-WORD-ADV-COHESIVE :
+W-ADV-COHESIVE :
     <adv-cohesive>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -483,11 +485,11 @@ WORD-ADV-COHESIVE :
     dAVgr-;
 
 /th/words/words.neg.lhs 
-WORD-NEG-LEFT :
+W-NEG-LEFT :
     <neg-lhs>;
 
 /th/words/words.neg.rhs 
-WORD-NEG-RIGHT :
+W-NEG-RIGHT :
     <neg-rhs>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -555,48 +557,48 @@ WORD-NEG-RIGHT :
     or dPZv+;
 
 /th/words/words.prep.n 
-WORD-PREP-AN :
+W-PREP-AN :
     <prep-noun>;
 
 /th/words/words.prep.v
-WORD-PREP-AV :
+W-PREP-AV :
     <prep-verb>;
 
 /th/words/words.prep.nv
-WORD-PREP-AA :
+W-PREP-AA :
     <prep-noun>
     or <prep-verb>;
 
 /th/words/words.prep-n.n
-WORD-PREP-NN :
+W-PREP-NN :
     <nprep-noun>;
 
 /th/words/words.prep-n.v
-WORD-PREP-NV :
+W-PREP-NV :
     <nprep-verb>;
 
 % /th/words/words.nprep.nv 
-WORD-PREP-NA :
+W-PREP-NA :
     <nprep-noun>
     or <nprep-verb>;
 
 /th/words/words.prep-v.n
-WORD-PREP-VN :
+W-PREP-VN :
     <vprep-noun>;
 
 /th/words/words.prep-v.v
 /th/words/words.sclmark 
-WORD-PREP-VV
-WORD-SCLMARK :
+W-PREP-VV
+W-SCLMARK :
     <vprep-verb>;
 
 /th/words/words.prep-v.nv
-WORD-PREP-VA :
+W-PREP-VA :
     <vprep-noun>
     or <vprep-verb>;
 
 /th/words/words.prep.lw
-WORD-PREP-LW :
+W-PREP-LW :
     <prep-lw>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -614,7 +616,7 @@ WORD-PREP-LW :
     & <right-wall>;
 
 /th/words/words.relpro.common
-WORD-RELPRO :
+W-RELPRO :
     <relcls> or [<relsent>];
 
 %%%%%%%%%%%%%%%%%%%%
@@ -622,7 +624,7 @@ WORD-RELPRO :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.conj.noun
-WORD-CONJ-NOUN :
+W-CONJ-NOUN :
     {PUs-}
     & {PUs+}
     & JNl-
@@ -640,7 +642,7 @@ _.cn :
     & <noun-element>;
 
 /th/words/words.conj.verb
-WORD-CONJ-VERB :
+W-CONJ-VERB :
     {PUs-}
     & {PUs+}
     & JVl-
@@ -653,7 +655,7 @@ _.cv :
     ]];
 
 /th/words/words.conj.prep
-WORD-CONJ-PREP :
+W-CONJ-PREP :
     (AVpr+ & AVpl- & {JD-} & (dAVpr- or dAVpl+))
     or 
     [JPr+ & JPl- & {JD-} & (dAJpr- or dAJpl+)];
@@ -666,7 +668,7 @@ _.cp :
     & (dAVpr- or [dAJpr-]);
 
 /th/words/words.conj.discont
-WORD-CONJ-DISCONT :
+W-CONJ-DISCONT :
     JD+;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -674,7 +676,7 @@ WORD-CONJ-DISCONT :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.part.common
-WORD-PARTICLE :
+W-PARTICLE :
     PT-;
 
 ครัช.#ครับ ครัล.#ครับ คนับ.#ครับ: [ครับ.pt]bad-spelling;
@@ -691,7 +693,7 @@ WORD-PARTICLE :
     & (IJ+ or PT-);
 
 /th/words/words.intj.common
-WORD-INTJ
+W-INTJ
 EMOTICON :
     <intj>;
 

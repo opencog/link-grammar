@@ -152,47 +152,70 @@ THAI-PART-NUMBER: /^[A-Zก-ฮ0-9๐-๙#][A-Zก-ฮ0-9๐-๙$\/#]*[A-Zก-�
 
 ENGLISH-WORD:    /^[A-Za-z'’]+$/
 
-% Words with annotated POS tags
+% Words annotated with POS tags
 
-WORD-ADJ: /\.j$/
-WORD-ADJ-LHS: /\.jl$/
-WORD-ADV: /\.r$/
-WORD-ADV-ATTRMOD: /\.ra$/
-WORD-ADV-COHESIVE: /\.rc$/
-WORD-ADV-QF: /\.qr$/
-WORD-AUX: /\.x$/
-WORD-CL-NOUN: /\.cln$/
-WORD-CL-VERB: /\.clv$/
-WORD-CONJ-DISCONT: /\.cd$/
-WORD-CONJ-NOUN: /\.cn$/
-WORD-CONJ-PREP: /\.cp$/
-WORD-CONJ-VERB: /\.cv$/
-WORD-INTJ: /\.ij$/
-WORD-NOUN-ATTR: /\.na$/
-WORD-NOUN: /\.n$/
-WORD-NOUN-TITLE: /\.nt$/
-WORD-NOUN-PREFIX: /\.fx$/
-WORD-NEG-LEFT: /\.ngl$/
-WORD-NEG-RIGHT: /\.ngr$/
-WORD-NUM: /\.nu$/
-WORD-NUM-MOV: /\.nuv$/
-WORD-ORDMARK: /\.om$/
-WORD-PARTICLE: /\.pt$/
-WORD-PASSMARK: /\.ps$/
-WORD-PREP-NN: /\.pnn$/
-WORD-PREP-VN: /\.pvn$/
-WORD-PREP-AN: /\.pan$/
-WORD-PREP-NV: /\.pnv$/
-WORD-PREP-VV: /\.pvv$/
-WORD-PREP-AV: /\.pav$/
-WORD-PREP-NA: /\.pna$/
-WORD-PREP-VA: /\.pva$/
-WORD-PREP-AA: /\.paa$/
-WORD-PREP-LW: /\.pw$/
-WORD-PRO: /\.pr$/
-WORD-QF-LEFT: /\.qfl$/
-WORD-QF-RIGHT: /\.qfr$/
-WORD-RELPRO: /\.rl$/
-WORD-SCLMARK: /\.sm$/
-WORD-VERB: /\.v$/
-WORD-VERB-ATTR: /\.va$/
+W-ADJ: /\.j$/
+W-ADJ-LHS: /\.jl$/
+W-ADV: /\.r$/
+W-ADV-ATTRMOD: /\.ra$/
+W-ADV-COHESIVE: /\.rc$/
+W-ADV-QF: /\.qr$/
+W-AUX: /\.x$/
+W-CL-NOUN: /\.cln$/
+W-CL-VERB: /\.clv$/
+W-CONJ-DISCONT: /\.cd$/
+W-CONJ-NOUN: /\.cn$/
+W-CONJ-PREP: /\.cp$/
+W-CONJ-VERB: /\.cv$/
+W-INTJ: /\.ij$/
+W-NOUN-ATTR: /\.na$/
+W-NOUN: /\.n$/
+W-NOUN-TITLE: /\.nt$/
+W-NOUN-PREFIX: /\.fx$/
+W-NEG-LEFT: /\.ngl$/
+W-NEG-RIGHT: /\.ngr$/
+W-NUM: /\.nu$/
+W-NUM-MOV: /\.nuv$/
+W-ORDMARK: /\.om$/
+W-PARTICLE: /\.pt$/
+W-PASSMARK: /\.ps$/
+W-PREP-NN: /\.pnn$/
+W-PREP-VN: /\.pvn$/
+W-PREP-AN: /\.pan$/
+W-PREP-NV: /\.pnv$/
+W-PREP-VV: /\.pvv$/
+W-PREP-AV: /\.pav$/
+W-PREP-NA: /\.pna$/
+W-PREP-VA: /\.pva$/
+W-PREP-AA: /\.paa$/
+W-PREP-LW: /\.pw$/
+W-PRO: /\.pr$/
+W-QF-LEFT: /\.qfl$/
+W-QF-RIGHT: /\.qfr$/
+W-RELPRO: /\.rl$/
+W-SCLMARK: /\.sm$/
+W-VERB: /\.v$/
+W-VERB-ATTR: /\.va$/
+
+% Named Entities
+
+% Person
+NE-PER : /\@PER$/
+% Title
+NE-TTL : /\@TTL$/
+% Designator
+NE-DES : /\@DES$/
+% Organization
+NE-ORG : /\@ORG$/
+% Location
+NE-LOC : /\@LOC$/
+% Brand
+NE-BRN : /\@BRN$/
+% Date and time
+NE-DTM : /\@DTM$/
+% Measurement unit
+NE-MEA : /\@MEA$/
+% Number
+NE-NUM : /\@NUM$/
+% Terminology
+NE-TRM : /\@TRM$/
