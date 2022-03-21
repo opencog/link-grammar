@@ -79,7 +79,7 @@ ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
 % Strings of initials. e.g "Dr. J.G.D. Smith lives on Main St."
 % Make it at least two letters long, as otherwise it clobbers
 % single-letter handling in the dict, which is different.
-INITIALS: /^[A-Z]\.([A-Z]\.)+$/
+% INITIALS: /^[A-Z]\.([A-Z]\.)+$/
 
 % Greek letters with numbers
 % GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
@@ -91,7 +91,7 @@ INITIALS: /^[A-Z]\.([A-Z]\.)+$/
 % commas, colons, or periods/question-marks at the end of sentences.
 % In addition, this must not swallow words ending in 's 'll etc.
 % (... any affix, for that matter ...) and so no embedded apostrophe
-CAPITALIZED-WORDS:     /^[[:upper:]][^'’]*[^[:punct:]]$/
+CAPITALIZED-WORD:     /^[[:upper:]][^'’]*[^[:punct:]]$/
 
 % Hyphenated words. In the original LG morpho-guessing system that
 % predated the regex-based system, hyphenated words were detected
@@ -104,7 +104,7 @@ CAPITALIZED-WORDS:     /^[[:upper:]][^'’]*[^[:punct:]]$/
 % Explicitly call out (5'|3') so that we don't all a generic match to 'll
 % But something is funky about this 5'-3' business since 2' also matches ???
 %  /^[[:alnum:]][][:alnum:],:.\[-]*-[][:alnum:],:.\[-]*[[:alnum:]]$/
-HYPHENATED-WORDS:
+HYPHENATED-WORD:
   /^[[:alnum:](5'|3')][][:alnum:](5'|3'),:.\(\)\[-]*-[][:alnum:],:.\(\)\[-]*[[:alnum:]]$/
 
 % Emoticon checks must come *after* the above, so that the above take precedence.
@@ -139,8 +139,7 @@ EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdD
 PART-NUMBER:
   /^[A-Z0-9#][A-Z0-9$\/#]*[A-Z0-9$\/#,.-]*[0-9][A-Z0-9$\/#,.-]*[A-Z0-9$\/#]+$|^[1-9][0-9]+[\/-][0-9]+$/
 
-THAI-PART-NUMBER:
-  /^[A-Zก-ฮ0-9๐-๙#][A-Zก-ฮ0-9๐-๙$\/#]*[A-Zก-ฮ0-9๐-๙$\/#,.-]*[0-9๐-๙][A-Zก-ฮ0-9๐-๙$\/#,.-]*[A-Zก-ฮ0-9๐-๙$\/#]+$|^[1-9๑-๙][0-9๐-๙]+[\/-][0-9๐-๙]+$/
+THAI-PART-NUMBER: /^[A-Zก-ฮ0-9๐-๙#][A-Zก-ฮ0-9๐-๙$\/#]*[A-Zก-ฮ0-9๐-๙$\/#,.-]*[0-9๐-๙][A-Zก-ฮ0-9๐-๙$\/#,.-]*[A-Zก-ฮ0-9๐-๙$\/#]+$|^[1-9๑-๙][0-9๐-๙]+[\/-][0-9๐-๙]+$/
 
 % Sequence of punctuation marks. If some mark appears in the affix table
 % such as a period, comma, dash or underscore, and there's a sequence of
@@ -149,6 +148,76 @@ THAI-PART-NUMBER:
 % tokenizer explicitly mangles based on these punctuation marks.
 % 
 % Look for at least four in a row.
-UNKNOWN-WORD: /^[.,-]{4}[.,-]*$/
+% UNKNOWN-WORD: /^[.,-]{4}[.,-]*$/
 
-ENGLISH-WORDS:    /^[A-Za-z'’]$/
+ENGLISH-WORD:    /^[A-Za-z'’]+$/
+
+% Words annotated with POS tags
+
+W-ADJ: /\.j$/
+W-ADJ-LHS: /\.jl$/
+W-ADV: /\.r$/
+W-ADV-ATTRMOD: /\.ra$/
+W-ADV-COHESIVE: /\.rc$/
+W-ADV-QF: /\.qr$/
+W-AUX: /\.x$/
+W-CL-NOUN: /\.cln$/
+W-CL-VERB: /\.clv$/
+W-CONJ-DISCONT: /\.cd$/
+W-CONJ-NOUN: /\.cn$/
+W-CONJ-PREP: /\.cp$/
+W-CONJ-VERB: /\.cv$/
+W-INTJ: /\.ij$/
+W-NOUN-ATTR: /\.na$/
+W-NOUN: /\.n$/
+W-NOUN-TITLE: /\.nt$/
+W-NOUN-PREFIX: /\.fx$/
+W-NEG-LEFT: /\.ngl$/
+W-NEG-RIGHT: /\.ngr$/
+W-NUM: /\.nu$/
+W-NUM-MOV: /\.nuv$/
+W-ORDMARK: /\.om$/
+W-PARTICLE: /\.pt$/
+W-PASSMARK: /\.ps$/
+W-PREP: /\.p$/
+W-PREP-NN: /\.pnn$/
+W-PREP-VN: /\.pvn$/
+W-PREP-AN: /\.pan$/
+W-PREP-NV: /\.pnv$/
+W-PREP-VV: /\.pvv$/
+W-PREP-AV: /\.pav$/
+W-PREP-NA: /\.pna$/
+W-PREP-VA: /\.pva$/
+W-PREP-AA: /\.paa$/
+W-PREP-LW: /\.pw$/
+W-PRO: /\.pr$/
+W-QF-LEFT: /\.qfl$/
+W-QF-RIGHT: /\.qfr$/
+W-RELPRO: /\.rl$/
+W-SCLMARK: /\.sm$/
+W-VERB: /\.v$/
+W-VERB-ATTR: /\.va$/
+W-VERB-GER: /\.vg$/
+
+% Named Entities
+
+% Person
+NE-PER : /\@PER$/
+% Title
+NE-TTL : /\@TTL$/
+% Designator
+NE-DES : /\@DES$/
+% Organization
+NE-ORG : /\@ORG$/
+% Location
+NE-LOC : /\@LOC$/
+% Brand
+NE-BRN : /\@BRN$/
+% Date and time
+NE-DTM : /\@DTM$/
+% Measurement unit
+NE-MEA : /\@MEA$/
+% Number
+NE-NUM : /\@NUM$/
+% Terminology
+NE-TRM : /\@TRM$/

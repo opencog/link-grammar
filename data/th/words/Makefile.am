@@ -49,6 +49,7 @@ WORDS=			\
 	words.qf.rhs \
 	words.relpro.common \
 	words.sclmark \
+	words.sentsep \
 	words.v.attribute \
 	words.v.common
 
