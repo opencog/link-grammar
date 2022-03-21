@@ -603,6 +603,11 @@ W-PREP-VA :
 W-PREP-LW :
     <prep-lw>;
 
+W-PREP :
+    <prep-noun>
+    or <prep-verb>
+    or <prep-lw>;
+
 %%%%%%%%%%%%%%%%%%%%
 % Relative Pronoun
 %%%%%%%%%%%%%%%%%%%%

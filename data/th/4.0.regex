@@ -179,6 +179,7 @@ W-NUM-MOV: /\.nuv$/
 W-ORDMARK: /\.om$/
 W-PARTICLE: /\.pt$/
 W-PASSMARK: /\.ps$/
+W-PREP: /\.p$/
 W-PREP-NN: /\.pnn$/
 W-PREP-VN: /\.pvn$/
 W-PREP-AN: /\.pan$/
