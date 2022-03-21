@@ -197,7 +197,7 @@
 % /th/words/words.n.proper
 W-NOUN
 THAI-COLOR.n
-NE-PER.n NE-ORG.n NE-BRN.n NE-LOC.n NE-TRM.n :
+NE-PER NE-ORG NE-BRN NE-LOC NE-TRM :
     <noun-simple>;
 
 %%%% Attributive Noun %%%%
@@ -210,7 +210,7 @@ W-NOUN-ATTR :
 %%%% Nominalizing Prefix %%%%
 
 /th/words/words.n.prefix 
-W-NOUN-PREFIX NE-DES.fx :
+W-NOUN-PREFIX NE-DES :
     <noun-imprel>
     & <noun-element>;
 
@@ -218,6 +218,7 @@ W-NOUN-PREFIX NE-DES.fx :
 
 THAI-DATE THAI-TIME NE-DTM :
     <noun-start-temporal>
+    & {PUs+}
     & (<noun-temporal> or <noun-element>);
 
 %%%%%%%%%%%%%%%%%%%%
@@ -244,13 +245,11 @@ W-PRO :
     dCLv+ or dCLv-;
 
 /th/words/words.cl.noun
-W-CL-NOUN
-NE-MEA.cln :
+W-CL-NOUN NE-MEA.cln :
     <cls-n>;
 
 /th/words/words.cl.verb
-W-CL-VERB
-NE-MEA.clv :
+W-CL-VERB NE-MEA.clv :
     <cls-v>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -338,6 +337,9 @@ NE-MEA.clv :
 W-VERB :
     <verb-simple>;
 
+W-VERB-GER :
+    <verb-imprel>;
+
 %%%% Passive Marker %%%%
 
 /th/words/words.passmark 
@@ -379,7 +381,7 @@ W-ADJ :
 /th/words/words.adj.lhs 
 /th/words/words.n.title
 /th/words/words.n.designator 
-W-ADJ-LHS W-NOUN-TITLE NE-TTL.nt :
+W-ADJ-LHS W-NOUN-TITLE NE-TTL :
     <adj-lhs>;
 
 %%%% Attributive Verb %%%%
@@ -409,7 +411,7 @@ W-VERB-ATTR :
 /th/words/words.num.common
 NUMBERS.nu FRACTION.nu 
 THAI-NUMBERS.nu THAI-FRACTION.nu
-W-NUM NE-NUM.nu :
+W-NUM NE-NUM :
     {PUsl-} & {PUsr+} & <number-simple>;
 
 /th/words/words.num.movable 

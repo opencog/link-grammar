@@ -196,6 +196,7 @@ W-RELPRO: /\.rl$/
 W-SCLMARK: /\.sm$/
 W-VERB: /\.v$/
 W-VERB-ATTR: /\.va$/
+W-VERB-GER: /\.vg$/
 
 % Named Entities
 
