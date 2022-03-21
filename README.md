@@ -1222,7 +1222,12 @@ Here, the ellipsis stands for a subordinate clause, which attaches
 with not one, but two links: `C+ & CV+`, and thus requires two words,
 not one. There is no way to have the ellipsis word to sink two
 connectors starting from the same word, and so some more complex
-mechanism is needed.
+mechanism is needed. The solution is to infer a second phantom ellipsis:
+
+ * It became clear that ... (...)
+
+where the first ellipsis is a stand in for the subject of a subordinate
+clause, and the second stands in for an unknown verb.
 
 #### Elision of syllables
 Many (unstressed) syllables can be elided; in modern English, this occurs

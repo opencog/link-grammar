@@ -11052,6 +11052,11 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
   ({D+} & dSJl+) or
   ({D+} & dSJr-);
 
+% subordinate clause "It became clear that ... ..."
+% Note that two ellipses are needed for this to appear.
+....s ….s:
+  C- & S+;
+
 % The percent sign following a number (also basis pt, per mil)
 % Also -- see above, for handling of 12ft. 12in. not just 12%
 % AN- & Jp-: "... the concentration in v/v %"
