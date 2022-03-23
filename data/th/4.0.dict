@@ -195,7 +195,6 @@
 %%%% Common Noun %%%%
 
 /th/words/words.n.common 
-% /th/words/words.n.proper
 W-NOUN
 THAI-COLOR.n
 NE-PER NE-ORG NE-BRN NE-LOC NE-TRM :

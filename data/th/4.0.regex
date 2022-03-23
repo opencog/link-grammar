@@ -34,13 +34,6 @@ DECADE-DATE: /^([1-4][0-9][0-9]|[1-9][0-9])0(s|'s|’s)$/
 % We process this before NUMBERS below, so that this is matched first.
 YEAR-DATE: /^([1-4][0-9]{3}|[1-9][0-9]{0,2})$/
 
-% Day-of-month names; this regex will match before the one below.
-% DAY-ORDINALS: /^(1st|2nd|3rd|[4-9]th|1[0-9]th|2(0th|1st|2nd|3rd|[4-9]th)|30th|31st)$/
-
-% Ordinal numbers; everything except 1st through 13th
-% is handled by regex.
-% ORDINALS: /^[1-9][0-9]*(0th|1st|2nd|3rd|[4-9]th)$/
-
 % Allows any number of commas or periods
 % Be careful not match the period at the end of a sentence; 
 % for example: "It happened in 1942."
@@ -73,17 +66,6 @@ THAI-COLOR: /^(สี)?_?(เหลือบ)?_?(ดำ|ขาว|เหลื�
 % cure for this is to use look-ahead, but neither the Gnu nor the BSD
 % regex libs support look-ahead. I can't think of a better solution.
 ROMAN-NUMERAL-WORDS: /^M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
-% ROMAN-NUMERAL-WORDS: /^(?=(M|C|D|L|X|V|I)+)M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
-% ROMAN-NUMERAL-WORDS: /^(?=.+)M*(CM|D?C{0,3}|CD)(XC|L?X{0,3}|XL)(IX|V?I{0,3}|IV)$/
-
-% Strings of initials. e.g "Dr. J.G.D. Smith lives on Main St."
-% Make it at least two letters long, as otherwise it clobbers
-% single-letter handling in the dict, which is different.
-% INITIALS: /^[A-Z]\.([A-Z]\.)+$/
-
-% Greek letters with numbers
-% GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)\-?[0-9]+$/
-% PL-GREEK-LETTER-AND-NUMBER: /^(alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|omicron|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega)s\-?[0-9]+$/
 
 % Other proper nouns.
 % We demand that these end with an alphanumeric, i.e. explicitly
@@ -136,9 +118,7 @@ EMOTICON: /^[[:punct:];BＣ☆ಠ●＠◎～][-!"#$%&'()+,:;<=>?@[\\^_`{|}~<cdD
 % separate_word() will generate an alternative anyway.
 % The second part of this regex is for NNN-NNN in sentences like
 % "The plane is a 747-400".  However, such words currently match NUMBERS.
-PART-NUMBER:
-  /^[A-Z0-9#][A-Z0-9$\/#]*[A-Z0-9$\/#,.-]*[0-9][A-Z0-9$\/#,.-]*[A-Z0-9$\/#]+$|^[1-9][0-9]+[\/-][0-9]+$/
-
+PART-NUMBER: /^[A-Z0-9#][A-Z0-9$\/#]*[A-Z0-9$\/#,.-]*[0-9][A-Z0-9$\/#,.-]*[A-Z0-9$\/#]+$|^[1-9][0-9]+[\/-][0-9]+$/
 THAI-PART-NUMBER: /^[A-Zก-ฮ0-9๐-๙#][A-Zก-ฮ0-9๐-๙$\/#]*[A-Zก-ฮ0-9๐-๙$\/#,.-]*[0-9๐-๙][A-Zก-ฮ0-9๐-๙$\/#,.-]*[A-Zก-ฮ0-9๐-๙$\/#]+$|^[1-9๑-๙][0-9๐-๙]+[\/-][0-9๐-๙]+$/
 
 % Sequence of punctuation marks. If some mark appears in the affix table
@@ -152,7 +132,13 @@ THAI-PART-NUMBER: /^[A-Zก-ฮ0-9๐-๙#][A-Zก-ฮ0-9๐-๙$\/#]*[A-Zก-�
 
 ENGLISH-WORD:    /^[A-Za-z'’]+$/
 
-% Words annotated with POS tags
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%   Words Annotated with POS tags
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Link Grammar's POS Tag
 
 W-ADJ: /\.j$/
 W-ADJ-LHS: /\.jl$/
@@ -201,23 +187,13 @@ W-VERB-GER: /\.vg$/
 
 % Named Entities
 
-% Person
-NE-PER : /\@PER$/
-% Title
-NE-TTL : /\@TTL$/
-% Designator
-NE-DES : /\@DES$/
-% Organization
-NE-ORG : /\@ORG$/
-% Location
-NE-LOC : /\@LOC$/
-% Brand
-NE-BRN : /\@BRN$/
-% Date and time
-NE-DTM : /\@DTM$/
-% Measurement unit
-NE-MEA : /\@MEA$/
-% Number
-NE-NUM : /\@NUM$/
-% Terminology
-NE-TRM : /\@TRM$/
+NE-PER : /\@PER$/           % Person
+NE-TTL : /\@TTL$/           % Title
+NE-DES : /\@DES$/           % Designator
+NE-ORG : /\@ORG$/           % Organization
+NE-LOC : /\@LOC$/           % Location
+NE-BRN : /\@BRN$/           % Brand
+NE-DTM : /\@DTM$/           % Date and time
+NE-MEA : /\@MEA$/           % Measurement unit
+NE-NUM : /\@NUM$/           % Number
+NE-TRM : /\@TRM$/           % Terminology

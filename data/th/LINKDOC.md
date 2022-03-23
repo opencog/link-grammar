@@ -499,7 +499,7 @@ Possessive pronoun เขา 'his' is connected to the core noun คอมพิ
 
 ### AX
 
-This directed link connects an auxiliary to its main verb. All kinds of auxiliary always <u>**precede**</u> the main verb. There are two types of `AX` links: `AXw` (simple auxiliary) and `AXg` (negator).
+This directed link connects an auxiliary to its main verb. All kinds of auxiliary always <u>**precede**</u> the main verb. There are three types of `AX` links: `AXw` (simple auxiliary), `AXg` (negator), and `AXq` (emphasis).
 
 #### AXw
 
@@ -546,6 +546,31 @@ LEFT-WALL เขา.pr ไม่.ng ยอม.v ไป.v ตรวจ.v โร�
 ```
 
 Negator ไม่ 'not' is connected to the main verb ยอม 'consent' via the `AXg` link.
+
+#### AXq
+
+`AXq` connects an emphasis marker to the main verb. For example, เราแทบจะไม่ได้ข่าวเกี่ยวกับเขาเลย 'We have not heard any news about him':
+
+```
+เรา  แทบ     ไม่   ได้       ข่าว    เกี่ยวกับ   เขา   เลย
+raʊ  tʰæ̂ːp   mâɪ  dâɪ      kʰà:ʊ  kiàʊkàp  kʰǎʊ  ləːɪ
+we   almost  NEG  receive  news   about    he    PART.EMPH
+'We have not heard any news about him.'
+```
+
+This sentence is parsed as follows.
+
+```
+    +---------------LWs--------------+
+    |        +<----------S<----------+
+    |        |      +<------AXq<-----+-------------PT-------------+
+    |        |      |     +<---AXw<--+---->AVpr--->+              |
+    |        |      |     |    +<AXg<+->O>+        +-->PO->+      |
+    |        |      |     |    |     |    |        |       |      |
+LEFT-WALL เรา.pr แทบ.qr จะ.x ไม่.ng ได้.v ข่าว.n เกี่ยวกับ.pan เขา.n เลย.pt
+```
+
+Emphasis marker แทบ 'almost' is connected to the main verb ได้ 'receive' via the `AXq` link.
 
 ### AV
 
