@@ -52,6 +52,7 @@
 %   AX = auxiliary
 %       AXw = simple auxiliary
 %       AXg = negative auxiliary
+%       AXq = quantifying auxiliary
 %   AV = adverb
 %       AVp = preposition phrase
 %       AVw = simple adverb
@@ -475,6 +476,10 @@ W-ADV-ATTRMOD :
 /th/words/words.adv.cohesive 
 W-ADV-COHESIVE :
     <adv-cohesive>;
+
+/th/words/words.adv.qf
+W-ADV-QF :
+    dAXq+;
 
 %%%%%%%%%%%%%%%%%%%%
 % Negator
