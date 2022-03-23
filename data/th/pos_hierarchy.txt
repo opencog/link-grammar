@@ -8,6 +8,7 @@ old_words/words.qf.common
 
 old_words/words.v.common
     old_words/words.v.attribute
+    old_words/words.v.existential
 
 old_words/words.connector
     old_words/words.prep.nv

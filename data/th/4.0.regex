@@ -184,6 +184,7 @@ W-SCLMARK: /\.sm$/
 W-VERB: /\.v$/
 W-VERB-ATTR: /\.va$/
 W-VERB-GER: /\.vg$/
+W-VERB-EXIST: /\.ve$/
 
 % Named Entities
 

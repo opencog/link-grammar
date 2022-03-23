@@ -282,6 +282,12 @@ W-CL-VERB NE-MEA.clv :
     & (hO+ or [()])
     & hVC+;
 
+<verb-existential> :
+    <core-of-verb>
+    & (<left-wall-sent> or JVr-)
+    & hO+
+    & hVE+;
+
 <verb-intrans> :
     <core-of-verb>
     & (<left-wall-sent> or JVr-)
@@ -307,7 +313,14 @@ W-CL-VERB NE-MEA.clv :
     {@hAX-}
     & {hS- & ([TP-] or ())}
     & {hAVpl-}
-    & {dPC- or dRC- or dZN-}
+    & {dPC- or dRC-}
+    & (hO+ or [()])
+    & {@hAV+}
+    & {[VZ+]};
+
+<verb-comp-existential> :
+    {@hAX-}
+    & dVE-
     & (hO+ or [()])
     & {@hAV+}
     & {[VZ+]};
@@ -324,6 +337,7 @@ W-CL-VERB NE-MEA.clv :
         & (<verb-start> or <verb-serial> or <verb-comp>)
     )
     or <verb-control>
+    or <verb-comp-existential>
     or [<verb-imprel>];
 
 <verb-simple-intrans> :
@@ -339,6 +353,10 @@ W-VERB :
 
 W-VERB-GER :
     <verb-imprel>;
+
+/th/words/words.v.existential
+W-VERB-EXIST :
+    <verb-existential>;
 
 %%%% Passive Marker %%%%
 
