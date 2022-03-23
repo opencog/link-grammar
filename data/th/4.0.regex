@@ -184,17 +184,36 @@ W-SCLMARK: /\.sm$/
 W-VERB: /\.v$/
 W-VERB-ATTR: /\.va$/
 W-VERB-GER: /\.vg$/
-W-VERB-EXIST: /\.ve$/
+W-VERB-EVIDENTIAL: /\.ve$/
+
+% Mapping to LST20 POS Tags
+
+W-LST20-AJ: /\@AJ$/
+W-LST20-AV: /\@AV$/
+W-LST20-AX: /\@AX$/
+W-LST20-CC: /\@CC$/
+W-LST20-CL: /\@CL$/
+W-LST20-FX: /\@FX$/
+W-LST20-IJ: /\@IJ$/
+W-LST20-NG: /\@NG$/
+W-LST20-NN: /\@NN$/
+W-LST20-NU: /\@NU$/
+W-LST20-PA: /\@PA$/
+W-LST20-PR: /\@PR$/
+W-LST20-PS: /\@PS$/
+W-LST20-PU: /\@PU$/
+W-LST20-VV: /\@VV$/
+W-LST20-XX: /\@XX$/
 
 % Named Entities
 
-NE-PER : /\@PER$/           % Person
-NE-TTL : /\@TTL$/           % Title
-NE-DES : /\@DES$/           % Designator
-NE-ORG : /\@ORG$/           % Organization
-NE-LOC : /\@LOC$/           % Location
-NE-BRN : /\@BRN$/           % Brand
-NE-DTM : /\@DTM$/           % Date and time
-NE-MEA : /\@MEA$/           % Measurement unit
-NE-NUM : /\@NUM$/           % Number
-NE-TRM : /\@TRM$/           % Terminology
+NE-LST20-PER : /\@PER$/           % Person
+NE-LST20-TTL : /\@TTL$/           % Title
+NE-LST20-DES : /\@DES$/           % Designator
+NE-LST20-ORG : /\@ORG$/           % Organization
+NE-LST20-LOC : /\@LOC$/           % Location
+NE-LST20-BRN : /\@BRN$/           % Brand
+NE-LST20-DTM : /\@DTM$/           % Date and time
+NE-LST20-MEA : /\@MEA$/           % Measurement unit
+NE-LST20-NUM : /\@NUM$/           % Number
+NE-LST20-TRM : /\@TRM$/           % Terminology

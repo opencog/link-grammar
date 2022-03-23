@@ -32,6 +32,7 @@ This document elaborates the details of each link type for the Thai Link Grammar
 [S](#s)
 [TP](#tp)
 [VC](#vc)
+[VE](#ve)
 [VZ](#vz)
 
 However, the remaining of this document is organized with respect to the syntactic hierarchy:
@@ -224,6 +225,28 @@ LEFT-WALL นักการเมือง.n ถูก.ps นักข่าว
 ```
 
 The controlled verb ซักถาม 'question' is connected to the passive marker ถูก.
+
+### VE
+
+This directed link connects a verb to its evidential verb. For example, ฉันเห็นเพื่อนทำงานกลุ่ม 'I see my friends working on a group project':
+
+```
+ฉัน     เห็น  เพื่อน    ทำ    งาน   กลุ่ม
+tɕʰǎn  hěn  pʰɯân   tʰam  ŋaːn  klùm
+I      see  friend  do    work  group
+'I see my friends working on a group project.'
+```
+
+This sentence is parsed as follows.
+
+```
+    +------LWs-----+---->VE---->+
+    |       +<--S<-+-->O->+     +->O>+--NZ-+
+    |       |      |      |     |    |     |
+LEFT-WALL ฉัน.pr เห็น.ve เพื่อน.n ทำ.v งาน.n กลุ่ม.n
+```
+
+The verb ทำ 'do' is connected to the evidential verb เห็น 'see'.
 
 ### TP
 

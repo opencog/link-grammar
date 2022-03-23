@@ -24,6 +24,7 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | `O`	       | **Object.** It connects a grammatical object to its main verb. |
 | `VZ`       | **Serial verb.** It connects a verb to its modifying verb in a serial verb construction. |
 | `VC`       | **Controlled verb.** It connects a verb to its controlled verb. |
+| `VE`       | **Evidential verb.** It connects a verb to its evidential verb. |
 | `TP`       | **Topicalization.** It connects a topicalized noun phrase to its main verb. |
 | `IJ`      | **Interjection.** It links an interjection word to the left wall. |
 | `PT`      | **Particle.** It links a particle word to the right wall. |

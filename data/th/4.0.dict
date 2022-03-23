@@ -33,6 +33,7 @@
 %   O  = object
 %   VZ = serial verb
 %   VC = controlled verb
+%   VE = evidential verb
 %   TP = topicalization
 %
 %   Noun Phrase
@@ -195,28 +196,29 @@
 %%%% Common Noun %%%%
 
 /th/words/words.n.common 
-W-NOUN
+W-NOUN W-LST20-NN.n
 THAI-COLOR.n
-NE-PER NE-ORG NE-BRN NE-LOC NE-TRM :
+NE-LST20-PER NE-LST20-ORG NE-LST20-BRN NE-LST20-LOC NE-LST20-TRM :
     <noun-simple>;
 
 %%%% Attributive Noun %%%%
 
 /th/words/words.n.attribute 
-W-NOUN-ATTR :
+W-NOUN-ATTR W-LST20-NN.na :
     (<noun-start> & <noun-element>)
     or <noun-attribute>;
 
 %%%% Nominalizing Prefix %%%%
 
 /th/words/words.n.prefix 
-W-NOUN-PREFIX NE-DES :
+W-NOUN-PREFIX W-LST20-FX.fx
+NE-LST20-DES :
     <noun-imprel>
     & <noun-element>;
 
 %%%% Temporal Entity %%%%
 
-THAI-DATE THAI-TIME NE-DTM :
+THAI-DATE THAI-TIME NE-LST20-DTM :
     <noun-start-temporal>
     & {PUs+}
     & (<noun-temporal> or <noun-element>);
@@ -226,7 +228,7 @@ THAI-DATE THAI-TIME NE-DTM :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.pro.common 
-W-PRO :
+W-PRO W-LST20-PR.pr :
     (
         {hAJr+}
         & {<num-cl>}
@@ -245,11 +247,13 @@ W-PRO :
     dCLv+ or dCLv-;
 
 /th/words/words.cl.noun
-W-CL-NOUN NE-MEA.cln :
+W-CL-NOUN W-LST20-CL.cln
+NE-LST20-MEA.cln :
     <cls-n>;
 
 /th/words/words.cl.verb
-W-CL-VERB NE-MEA.clv :
+W-CL-VERB W-LST20-CL.clv
+NE-LST20-MEA.clv :
     <cls-v>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -356,20 +360,20 @@ W-CL-VERB NE-MEA.clv :
 %%%% Common Verb %%%%
 
 /th/words/words.v.common 
-W-VERB :
+W-VERB W-LST20-VV.v :
     <verb-simple>;
 
-W-VERB-GER :
+W-VERB-GER W-LST20-VV.vg :
     <verb-imprel>;
 
-/th/words/words.v.existential
-W-VERB-EXIST :
+/th/words/words.v.evidential
+W-VERB-EVIDENTIAL :
     <verb-existential>;
 
 %%%% Passive Marker %%%%
 
 /th/words/words.passmark 
-W-PASSMARK :
+W-PASSMARK ถูก@AX.x :
     <passive-marker>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -401,13 +405,14 @@ W-PASSMARK :
 /th/words/words.num.ordinal
 THAI-COLOR.j 
 ROMAN-NUMERAL-WORDS.j 
-W-ADJ :
+W-ADJ W-LST20-AJ.j :
     <adj-simple>;
 
 /th/words/words.adj.lhs 
 /th/words/words.n.title
 /th/words/words.n.designator 
-W-ADJ-LHS W-NOUN-TITLE NE-TTL :
+W-ADJ-LHS W-NOUN-TITLE W-LST20-AJ.jl
+NE-LST20-TTL :
     <adj-lhs>;
 
 %%%% Attributive Verb %%%%
@@ -416,7 +421,7 @@ W-ADJ-LHS W-NOUN-TITLE NE-TTL :
 
 /th/words/words.v.attribute
 THAI-COLOR.va 
-W-VERB-ATTR :
+W-VERB-ATTR W-LST20-VV.va :
     <adj-attribute>
     or [{PUy+} & <verb-simple-intrans>]
     or [<verb-comp>];
@@ -437,24 +442,25 @@ W-VERB-ATTR :
 /th/words/words.num.common
 NUMBERS.nu FRACTION.nu 
 THAI-NUMBERS.nu THAI-FRACTION.nu
-W-NUM NE-NUM :
+W-NUM W-LST20-NU.nu
+NE-LST20-NUM :
     {PUsl-} & {PUsr+} & <number-simple>;
 
 /th/words/words.num.movable 
-W-NUM-MOV :
+W-NUM-MOV W-LST20-NU.nuv :
     (hCLn- & (dNUnr- or [dAVnr-]))
     or (hCLv- & (dNUvr- or [dAVvr-]));
 
 /th/words/words.qf.lhs 
-W-QF-LEFT :
+W-QF-LEFT W-LST20-AJ.qfl :
     dQFl+;
 
 /th/words/words.qf.rhs 
-W-QF-RIGHT :
+W-QF-RIGHT W-LST20-AJ.qfr :
     dQFr-;
 
 /th/words/words.ordmark
-W-ORDMARK :
+W-ORDMARK ที่@PS.om :
     hONr+
     & <adj-simple>;
 
@@ -463,7 +469,7 @@ W-ORDMARK :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.aux.common 
-W-AUX :
+W-AUX W-LST20-AX.x :
     dAXw+
     or [
         <left-wall-aux>
@@ -491,19 +497,19 @@ W-AUX :
     dAVcl+;
 
 /th/words/words.adv.common 
-W-ADV :
+W-ADV W-LST20-AV.r :
     <adv-simple>;
 
 /th/words/words.adv.attrmod
-W-ADV-ATTRMOD :
+W-ADV-ATTRMOD W-LST20-AV.ra :
     <adv-attrmod>;
 
 /th/words/words.adv.cohesive 
-W-ADV-COHESIVE :
+W-ADV-COHESIVE W-LST20-CC.rc :
     <adv-cohesive>;
 
 /th/words/words.adv.qf
-W-ADV-QF :
+W-ADV-QF W-LST20-AV.qr :
     dAXq+;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -517,11 +523,11 @@ W-ADV-QF :
     dAVgr-;
 
 /th/words/words.neg.lhs 
-W-NEG-LEFT :
+W-NEG-LEFT W-LST20-NG.ngl :
     <neg-lhs>;
 
 /th/words/words.neg.rhs 
-W-NEG-RIGHT :
+W-NEG-RIGHT W-LST20-NG.ngr :
     <neg-rhs>;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -589,51 +595,50 @@ W-NEG-RIGHT :
     or dPZv+;
 
 /th/words/words.prep.n 
-W-PREP-AN :
+W-PREP-AN W-LST20-PS.pan :
     <prep-noun>;
 
 /th/words/words.prep.v
-W-PREP-AV :
+W-PREP-AV W-LST20-PS.pav :
     <prep-verb>;
 
 /th/words/words.prep.nv
-W-PREP-AA :
+W-PREP-AA W-LST20-PS.paa :
     <prep-noun>
     or <prep-verb>;
 
 /th/words/words.prep-n.n
-W-PREP-NN :
+W-PREP-NN W-LST20-PS.pnn :
     <nprep-noun>;
 
 /th/words/words.prep-n.v
-W-PREP-NV :
+W-PREP-NV W-LST20-PS.pnv :
     <nprep-verb>;
 
 % /th/words/words.nprep.nv 
-W-PREP-NA :
+W-PREP-NA W-LST20-PS.pna :
     <nprep-noun>
     or <nprep-verb>;
 
 /th/words/words.prep-v.n
-W-PREP-VN :
+W-PREP-VN W-LST20-PS.pvn :
     <vprep-noun>;
 
 /th/words/words.prep-v.v
 /th/words/words.sclmark 
-W-PREP-VV
-W-SCLMARK :
+W-PREP-VV W-SCLMARK W-LST20-PS.pvv W-LST20-CC.pvv :
     <vprep-verb>;
 
 /th/words/words.prep-v.nv
-W-PREP-VA :
+W-PREP-VA W-LST20-PS.pva :
     <vprep-noun>
     or <vprep-verb>;
 
 /th/words/words.prep.lw
-W-PREP-LW :
+W-PREP-LW W-LST20-PS.pw :
     <prep-lw>;
 
-W-PREP :
+W-PREP W-LST20-PS :
     <prep-noun>
     or <prep-verb>
     or <prep-lw>;
@@ -653,7 +658,7 @@ W-PREP :
     & <right-wall>;
 
 /th/words/words.relpro.common
-W-RELPRO :
+W-RELPRO W-LST20-CC.rl :
     <relcls> or [<relsent>];
 
 %%%%%%%%%%%%%%%%%%%%
@@ -661,7 +666,7 @@ W-RELPRO :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.conj.noun
-W-CONJ-NOUN :
+W-CONJ-NOUN W-LST20-CC.cn :
     {PUs-}
     & {PUs+}
     & JNl-
@@ -670,7 +675,7 @@ W-CONJ-NOUN :
     & <noun-start>
     & <noun-element>;
 
-_.cn :
+_.cn _@PU.cn :
     [[
         JNl-
         & JNr+
@@ -679,25 +684,25 @@ _.cn :
     & <noun-element>;
 
 /th/words/words.conj.verb
-W-CONJ-VERB :
+W-CONJ-VERB W-LST20-CC.cv :
     {PUs-}
     & {PUs+}
     & JVl-
     & JVr+;
 
-_.cv :
+_.cv _@PU.cv :
     [[
         JVl-
         & JVr+
     ]];
 
 /th/words/words.conj.prep
-W-CONJ-PREP :
+W-CONJ-PREP W-LST20-CC.cp :
     (AVpr+ & AVpl- & {JD-} & (dAVpr- or dAVpl+))
     or 
     [JPr+ & JPl- & {JD-} & (dAJpr- or dAJpl+)];
 
-_.cp :
+_.cp _@PU.cp :
     [[
         (AVpl- & AVpr+)
         or (AJpl- & AJpr+)
@@ -705,7 +710,7 @@ _.cp :
     & (dAVpr- or [dAJpr-]);
 
 /th/words/words.conj.discont
-W-CONJ-DISCONT :
+W-CONJ-DISCONT W-LST20-CC.cd :
     JD+;
 
 %%%%%%%%%%%%%%%%%%%%
@@ -713,7 +718,7 @@ W-CONJ-DISCONT :
 %%%%%%%%%%%%%%%%%%%%
 
 /th/words/words.part.common
-W-PARTICLE :
+W-PARTICLE W-LST20-PA.pt :
     PT-;
 
 ครัช.#ครับ ครัล.#ครับ คนับ.#ครับ: [ครับ.pt]bad-spelling;
@@ -730,7 +735,7 @@ W-PARTICLE :
     & (IJ+ or PT-);
 
 /th/words/words.intj.common
-W-INTJ
+W-INTJ W-LST20-IJ.ij
 EMOTICON :
     <intj>;
 
@@ -738,15 +743,16 @@ EMOTICON :
 % Punctuation
 %%%%%%%%%%%%%%%%%%%%
 
-_.pu :
+_.pu 
+W-LST20-PU.pu :
     PUs+ or PUs-;
 
-ๆ.pu ฯลฯ.pu :
+ๆ.pu ฯลฯ.pu ๆ@PU.pu ฯลฯ@PU.pu :
     {PUs-}
     & PUy-
     & {PUs+};
 
-ฯ.pu :
+ฯ.pu ฯ@PU.pu :
     {PUs-}
     & PUp-
     & {PUs+};
@@ -810,6 +816,7 @@ RIGHT-WALL :
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-<UNKNOWN-WORD> : XXXXXXXX+;
+<UNKNOWN-WORD> W-LST20-XX :
+    XXXXXXXX+;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
