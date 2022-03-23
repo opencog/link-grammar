@@ -280,13 +280,21 @@ W-CL-VERB NE-MEA.clv :
     <core-of-verb>
     & (<left-wall-sent> or JVr-)
     & (hO+ or [()])
-    & hVC+;
+    & hVC+
+    & (
+        <right-wall>
+        or ({@hAV+} & JVl+)
+    );
 
 <verb-existential> :
     <core-of-verb>
     & (<left-wall-sent> or JVr-)
     & hO+
-    & hVE+;
+    & hVE+
+    & (
+        <right-wall>
+        or ({@hAV+} & JVl+)
+    );
 
 <verb-intrans> :
     <core-of-verb>
