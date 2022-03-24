@@ -51,7 +51,7 @@ Found 1 linkage (1 had no P.P. violations)
 LEFT-WALL เมื่อวานนี้.n[!] มี.ve[!] คน.n[!] มา.x[!] ติดต่อ.v[!] คุณ.pr[!] ครับ.pt[!]
 ```
 
-Note that each word is annotated with the Thai Link Grammar's POS tags.
+Note that each word is annotated with the Thai Link Grammar's POS tags. A full documentation on the tagsets can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/TAGSETS.md).
 
 ## LST20 Tagset
 
@@ -87,4 +87,4 @@ Found 348 linkages (348 had no P.P. violations)
 LEFT-WALL วันที่_25_ธันวาคม@DTM[!] ของ@PS[!].pnn ทุก@AJ[!].jl ปี@NN[!].n เป็น@VV[!].v วัน@NN[!].na คริสต์มาส@NN[!].n
 ```
 
-Note that the phrase วันที่ 25 ธันวาคม is annotated with the named entity tag `DTM`.
+Note that the phrase วันที่ 25 ธันวาคม is annotated with the named entity tag `DTM`. A full documentation on the tagsets can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/TAGSETS.md). The annotation guideline of LST20 Corpus can be [found here](https://arxiv.org/abs/2008.05055).
