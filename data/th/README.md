@@ -9,6 +9,7 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 - [Dependency types](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md)
 - [Input formats](https://github.com/kaamanita/link-grammar/blob/master/data/th/INPUT_FORMATS.md)
 - [POS tags](https://github.com/kaamanita/link-grammar/blob/master/data/th/TAGSETS.md)
+- [LST20 POS tags](https://arxiv.org/abs/2008.05055)
 
 ## Utterance
 
