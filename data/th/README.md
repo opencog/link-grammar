@@ -56,7 +56,7 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | `AX`       | **Auxiliary.** It connects an auxiliary to its main verb. All kinds of auxiliary always <u>precede</u> the main verb. |
 | `AXw`      | **Simple auxiliary.** It connects an auxiliary verb to its main verb. |
 | `AXg`      | **Negative auxiliary.** It connects a negator to its main verb. |
-| `AXq`      | **Quantifying auxiliary.** It connects a quantifying adverb to its main verb. |
+| `AXq`      | **Emphasizing adverb.** It connects an emphasizing adverb to its main verb. |
 | `AV`       | **Adverbial.** It connects an adverbial to its main verb. All kinds of adverbial (except cohesive marker) always <u>follow</u> the main verb. |
 | `AVp`      | **Preposition phrase.** It connects a preposition phrase to its main verb. |
 | `AVw`      | **Simple adverb.** It connects an adverb to its main verb. |
