@@ -4,7 +4,11 @@ Copyright (C) 2021 Prachya Boonkwan
 National Electronics and Computer Technology Center, Thailand  
 License: Creative Commons, Attribution (CC-BY)
 
-This document summarizes all the link-types used in `4.0.dict` for Thai Link Grammar. They are classified with respect to the syntactic hierarchy. On the other hand, a full documentation is provided [here](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md).
+This document summarizes all the link-types used in `4.0.dict` for Thai Link Grammar. They are classified with respect to the syntactic hierarchy. There are full documentations available here:
+
+- [Dependency types](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md)
+- [Input formats](https://github.com/kaamanita/link-grammar/blob/master/data/th/INPUT_FORMATS.md)
+- [POS tags](https://github.com/kaamanita/link-grammar/blob/master/data/th/TAGSETS.md)
 
 ## Utterance
 
