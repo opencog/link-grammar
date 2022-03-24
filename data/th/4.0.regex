@@ -145,7 +145,7 @@ W-ADJ-LHS: /\.jl$/
 W-ADV: /\.r$/
 W-ADV-ATTRMOD: /\.ra$/
 W-ADV-COHESIVE: /\.rc$/
-W-ADV-QF: /\.qr$/
+W-ADV-QF: /\.rq$/
 W-AUX: /\.x$/
 W-CL-NOUN: /\.cln$/
 W-CL-VERB: /\.clv$/

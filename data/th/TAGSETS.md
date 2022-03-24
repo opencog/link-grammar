@@ -20,7 +20,7 @@ There are 13 content-word types as shown below.
 | `r`     | Adverb |
 | `ra`    | Attribute-modifying adverb |
 | `rc`    | Cohesive adverb |
-| `qr`    | Emphasizing adverb |
+| `rq`    | Emphasizing adverb |
 
 ### Function Words
 

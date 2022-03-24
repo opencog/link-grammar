@@ -572,7 +572,7 @@ Negator ไม่ 'not' is connected to the main verb ยอม 'consent' via th
 
 #### AXq
 
-`AXq` connects an emphasis marker to the main verb. For example, เราแทบจะไม่ได้ข่าวเกี่ยวกับเขาเลย 'We have not heard any news about him':
+`AXq` connects an emphasizing adverb to the main verb. For example, เราแทบจะไม่ได้ข่าวเกี่ยวกับเขาเลย 'We have not heard any news about him':
 
 ```
 เรา  แทบ     ไม่   ได้       ข่าว    เกี่ยวกับ   เขา   เลย
@@ -590,10 +590,10 @@ This sentence is parsed as follows.
     |        |      |     +<---AXw<--+---->AVpr--->+              |
     |        |      |     |    +<AXg<+->O>+        +-->PO->+      |
     |        |      |     |    |     |    |        |       |      |
-LEFT-WALL เรา.pr แทบ.qr จะ.x ไม่.ng ได้.v ข่าว.n เกี่ยวกับ.pan เขา.n เลย.pt
+LEFT-WALL เรา.pr แทบ.rq จะ.x ไม่.ng ได้.v ข่าว.n เกี่ยวกับ.pan เขา.n เลย.pt
 ```
 
-Emphasis marker แทบ 'almost' is connected to the main verb ได้ 'receive' via the `AXq` link.
+Emphasizing adverb แทบ 'almost' is connected to the main verb ได้ 'receive' via the `AXq` link.
 
 ### AV
 
