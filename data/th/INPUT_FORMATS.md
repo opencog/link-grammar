@@ -37,7 +37,7 @@ LEFT-WALL ผม.pr ได้.x ติดต่อ.v เจ้าหน้าท
 
 ## POS-Annotated Text
 
-This parser also accepts linguistically annotated texts. Once tokenized into words, some of them can be annotated with POS tags to increase the accuracy. The format of POS annotation is *word*`.`*tag*. For example, เมื่อวานนี้มีคนมาติดต่อคุณครับ 'Yesterday, someone came to contact you' is parsed as follows.
+This parser also accepts linguistically annotated texts. Once tokenized, some words in a sentence can be annotated with Link POS tags to increase the accuracy. The format of Link POS annotation is *word*`.`*tag*. For example, เมื่อวานนี้มีคนมาติดต่อคุณครับ 'Yesterday, someone came to contact you' is parsed as follows.
 
 ```
 linkparser> เมื่อวานนี้.n มี.ve คน.n มา.x ติดต่อ.v คุณ.pr ครับ.pt
@@ -53,16 +53,56 @@ LEFT-WALL เมื่อวานนี้.n[!] มี.ve[!] คน.n[!] มา
 
 Note that each word is annotated with the Thai Link Grammar's POS tags.
 
+## LST20 Tagset
+
+The parser also accepts texts annotated with the LST20 tagset, a large-scaled Thai corpus annotated with word boundaries, POS tags, named entities, clause boundaries, and sentence boundaries. The parser offers this compatibility as a means to bridge from the fundamental NLP tools to the Link Parser.
+
+Once tokenized, some words in a sentence can be annotated with the LST20 tags. Due to some discrepancies with the Link Grammar, annotation with the LST20 tagset generally yields less accuracy than the Link POS tagset. The format of LST20 tags is *word*`@`*tag*. For example, เขาบอกนักเรียนให้นอนได้แล้ว 'He asks the students to go to bed' is parsed as follows.
+
+```
+linkparser> เขา@PR บอก@VV นักเรียน@NN ให้@PS นอน@VV ได้แล้ว@AV
+Found 162 linkages (162 had no P.P. violations)
+	Linkage 1, cost vector = (UNUSED=0 DIS= 1.00 LEN=5)
+
+    +----------LWs----------+
+    |           +<----S<----+----->O----->+---->AJpr--->+---->PC--->+---->AVw--->+
+    |           |           |             |             |           |            |
+LEFT-WALL เขา@PR[!].pr บอก@VV[!].v นักเรียน@NN[!].n ให้@PS[!].pna นอน@VV[!].v ได้แล้ว@AV[!].r
+```
+
+Note that each word is annotated with the LST20 POS tags.
+
+Moreover, the parser also accepts LST20 named entity tags. For example, `<DTM>`*วันที่ 25 ธันวาคม*`</DTM>`ของทุกปีเป็นวันคริสต์มาส '25 December of every year is Christmas Day' is parsed as follows.
+
+```
+linkparser> linkparser> วันที่_25_ธันวาคม@DTM ของ@PS ทุก@AJ ปี@NN เป็น@VV วัน@NN คริสต์มาส@NN
+Found 348 linkages (348 had no P.P. violations)
+	Linkage 1, cost vector = (UNUSED=0 DIS= 1.00 LEN=10)
+
+    +--------------------------------LWs--------------------------------+
+    |               +<------------------------S<------------------------+
+    |               |                +---------->PO--------->+          |
+    |               +----->AJpr----->+            +<---AJj<--+          +---->O---->+------NZ-----+
+    |               |                |            |          |          |           |             |
+LEFT-WALL วันที่_25_ธันวาคม@DTM[!] ของ@PS[!].pnn ทุก@AJ[!].jl ปี@NN[!].n เป็น@VV[!].v วัน@NN[!].na คริสต์มาส@NN[!].n
+```
+
+Note that the phrase วันที่ 25 ธันวาคม is annotated with the named entity tag `DTM`.
+
 ## POS Tagset for Thai Link Grammar
 
+### Content Words
+
+There are 13 content-word types as shown below.
+
 | POS tag | Description |
-|:--------|-------------|
+|:-------:|:------------|
 | `n`     | Noun |
 | `na`    | Attributive noun |
 | `nt`    | Title noun |
 | `v`     | Verb |
 | `va`    | Attributive verb |
-| `vg`    | Gerundial verb |
+| `vg`    | Noun-modifying verb |
 | `ve`    | Existential verb |
 | `j`     | Adjective |
 | `jl`    | Preceding adjective |
@@ -71,8 +111,12 @@ Note that each word is annotated with the Thai Link Grammar's POS tags.
 | `rc`    | Cohesive adverb |
 | `qr`    | Adverb-modifying adverb |
 
+### Function Words
+
+There are 22 function-word types as shown below.
+
 | POS tag | Description |
-|:--------|-------------|
+|:-------:|:------------|
 | `x`     | Auxiliary |
 | `fx`    | Nominalizing prefix |
 | `ngl`   | Preceding negator |
@@ -89,6 +133,19 @@ Note that each word is annotated with the Thai Link Grammar's POS tags.
 | `rl`    | Relative pronoun |
 | `sm`    | Subclause marker |
 | `p`     | Preposition |
+| `cn`    | Noun conjunction |
+| `cv`    | Verb conjunction |
+| `cp`    | Preposition conjunction |
+| `cd`    | Discontinuous conjunction |
+| `pt`    | Particle |
+| `ij`    | Interjection |
+
+### Subcategorization of Prepositions
+
+The prepositions are subcategorized into nine subtypes.
+
+| POS tag | Description |
+|:-------:|:------------|
 | `pnn`   | Noun-modifying preposition taking a noun phrase |
 | `pvn`   | Verb-modifying preposition taking a noun phrase |
 | `pan`   | Preposition taking a noun phrase |
@@ -98,9 +155,43 @@ Note that each word is annotated with the Thai Link Grammar's POS tags.
 | `pna`   | Noun-modifying preposition taking both a noun phrase and a verb phrase |
 | `pva`   | Verb-modifying preposition taking a noun phrase and a verb phrase |
 | `paa`   | Preposition taking a noun phrase and a verb phrase |
-| `cn`    | Noun conjunction |
-| `cv`    | Verb conjunction |
-| `cp`    | Preposition conjunction |
-| `cd`    | Discontinuous conjunction |
-| `pt`    | Particle |
-| `ij`    | Interjection |
+
+## LST20 Tagsets
+
+The LST20 Corpus is a large-scaled Thai corpus annotated with word boundaries, POS tags, named entities, clause boundaries, and sentence boundaries. There are two tagsets that can be used with the Link Parser: POS and named entities.
+
+### LST20 POS Tagset
+
+| POS Tag | Description |
+|:-------:|:------------|
+| `NN`    | **Noun:** person, place, thing, abstract concept, and proper name |
+| `VV`    | **Verb:** action, state, occurrence, and word that forms the predicate part |
+| `AJ`    | **Adjective:** attribute, modifier, and description of a noun |
+| `AV`    | **Adverb:** word that modifies or qualifies an adjective, verb, or another adverb |
+| `AX`    | **Auxiliary:** tense, aspect, mood, and voice |
+| `CC`    | **Connector:** conjunction and relative pronoun |
+| `CL`    | **Classifier:** class or measurement unit to which a noun or an action belongs |
+| `FX`    | **Prefix:** inflectional prefix (nominalizer, adjectivizer, adverbializer, and courteous verbalizer), and derivational prefix |
+| `IJ`    | **Interjection:** exclamation word |
+| `NG`    | **Negator:** word of negation |
+| `NU`    | **Number:** quantity for counting and calculation |
+| `PA`    | **Particle:** politeness, intention, belief, and question |
+| `PR`    | **Pronoun:** word used to refer to an element in the discourse |
+| `PS`    | **Preposition:** location, comparison, instrument, exemplification |
+| `PU`    | **Punctuation:** punctuation mark |
+| `XX`    | **Others:** unknown category |
+
+### Named Entity Tagset
+
+| NE Tag | Description |
+|:------:|:------------|
+| `TTL`  | **Title:** family relationship, social relationship, and permanent title |
+| `DES`  | **Designation:** position and professional title |
+| `PER`  | **Person:** name of a person or family |
+| `ORG`  | **Organization:** name of organization, office, and company |
+| `LOC`  | **Location:** name of land according to geo-political borders |
+| `BRN`  | **Brand:** name of brand, product, and trademark |
+| `DTM`  | **Date and Time:** time or a specific period of time |
+| `MEA`  | **Measurement:** measurement unit and quantity of things |
+| `NUM`  | **Number:** the number of a measurement unit |
+| `TRM`  | **Terminology:** domain-specific word |
