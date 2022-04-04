@@ -586,14 +586,11 @@ static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
 }
 
 /**
- * Cache lookup:
- * Is the range [c, w) going to yield a nonzero leftcount / rightcount?
+ * lrcnt cache entry inspection:
+ * Does this entry indicate a nonzero leftcount / rightcount?
  *
- * @param ctxt Count context.
- * @param dir Direction - 0: leftcount; 1: rightcount.
- * @param c The connector that starts the range.
- * @param wordvec_index Word-vector index.
- * @param null_count[in] The current null-count to check.
+ * @param wv Word vector element
+ * @param null_count The current null-count to check.
  *
  * Return these values:
  * @param null_start[out] First null count to check (the previous ones can be
@@ -602,6 +599,54 @@ static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
  *    NULL - A nonzero count may be encountered for \c null_count>=null_start.
  *    lrcnt_cache_zero - A zero count would result.
  *    Cache pointer - An update for \c null_count>=null_start is needed.
+ */
+static wordvecp lrcnt_check(wordvecp wvp, unsigned int null_count,
+                                unsigned int *null_start)
+{
+	/* Below, several checks are done on the cache. The function returns
+	 * on the first one that succeeds. */
+
+	if (wvp->status == -1)
+	{
+		if (null_start != NULL) *null_start = 0;
+		return wvp; /* Needs update */
+	}
+
+	if  (wvp->status == 1)
+	{
+		/* The range yields a nonzero leftcount/rightcount for some
+		 * null_count. But we can still skip the initial null counts. */
+		if (null_start != NULL)
+			*null_start = (null_count_m)(wvp->null_count + 1);
+		return NULL; /* No update needed - this is a permanent status */
+	}
+
+	if (null_count <= wvp->null_count)
+	{
+		/* Here (wvp->status == 0) which means our count would
+		 * be zero - so nothing to do for this word. */
+		return &lrcnt_cache_zero;
+	}
+
+	/* The null counts greater than wvp->null_count have not
+	 * been handled yet for the given range (the cache will get
+	 * updated for them by lrcnt_cache_update()). */
+	if (null_start == NULL) return NULL;
+	*null_start = wvp->null_count + 1;
+	return wvp;
+}
+
+/**
+ * Cache lookup for word w indicated by \p wordvec_index:
+ * Is the range [c, w) going to yield a nonzero leftcount / rightcount?
+ *
+ * @param ctxt Count context.
+ * @param dir Direction - 0: leftcount; 1: rightcount.
+ * @param c The connector that starts the range.
+ * @param wordvec_index Word-vector index.
+ * @param null_count The current null-count to check.
+ *
+ * @return: See lrcnt_check().
  */
 static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
                              unsigned int wordvec_index,
@@ -625,39 +670,8 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
 		}
 		return NULL;
 	}
-	Table_lrcnt *lp = &(*wv)[wordvec_index];
 
-	/* Below, several checks are done on the cache. The function returns
-	 * on the first one that succeeds. */
-
-	if (lp->status == -1)
-	{
-		if (null_start != NULL) *null_start = 0;
-		return lp; /* Needs update */
-	}
-
-	if  (lp->status == 1)
-	{
-		/* The range yields a nonzero leftcount/rightcount for some
-		 * null_count. But we can still skip the initial null counts. */
-		if (null_start != NULL)
-			*null_start = (null_count_m)(lp->null_count + 1);
-		return NULL; /* No update needed - this is a permanent status */
-	}
-
-	if (null_count <= lp->null_count)
-	{
-		/* Here (lp->status == 0) which means our count would
-		 * be zero - so nothing to do for this word. */
-		return &lrcnt_cache_zero;
-	}
-
-	/* The null counts greater than lp->null_count have not
-	 * been handled yet for the given range (the cache will get
-	 * updated for them by lrcnt_cache_update()). */
-	if (null_start == NULL) return NULL;
-	*null_start = lp->null_count + 1;
-	return lp;
+	return lrcnt_check(&(*wv)[wordvec_index], null_count, null_start);
 }
 
 bool no_count(count_context_t *ctxt, int dir, Connector *c,
