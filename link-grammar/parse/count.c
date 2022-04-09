@@ -620,7 +620,7 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
 			memset(*wv, -1, sizeof(Table_lrcnt) * wordvec_size);
 
 			*null_start = 0;
-			assert(wordvec_index < ctxt->sent->length, "Bad wordvec index");
+			assert(wordvec_index < wordvec_size, "Bad wordvec index");
 			return &(*wv)[wordvec_index]; /* Needs update */
 		}
 		return NULL;
