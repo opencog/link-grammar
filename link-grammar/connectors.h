@@ -68,11 +68,8 @@ static inline bool is_connector_subscript_char(unsigned char c)
 }
 /* End of connector string character validation. */
 
-/* The size of the following struct on a 64-bit machine is 32 bytes.
- * It should be kept at this size. If needed, uc_length
- * and uc_start can be eliminate or moved out. Also, there not enough
- * space here to implement cost per connector length - an index to a
- * cost table should be used instead.*/
+/* Note: If more byte-size fields are needed, to save space
+ * uc_length and uc_start may be moved to struct hdesc. */
 struct condesc_struct
 {
 	lc_enc_t lc_letters;
