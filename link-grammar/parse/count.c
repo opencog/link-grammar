@@ -657,18 +657,16 @@ static Table_lrcnt *is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
 	wordvecp *wv = &ctxt->table_lrcnt[dir][c->tracon_id];
 	if (*wv == NULL)
 	{
-		if (null_start != NULL)
-		{
-			/* Create a new cache entry, to be updated by lrcnt_cache_update(). */
-			const size_t wordvec_size = abs(c->farthest_word - c->nearest_word) + 1;
-			*wv = pool_alloc_vec(ctxt->sent->wordvec_pool, wordvec_size);
-			memset(*wv, -1, sizeof(Table_lrcnt) * wordvec_size);
+		if (null_start == NULL) return NULL;
+		*null_start = 0;
 
-			*null_start = 0;
-			assert(wordvec_index < wordvec_size, "Bad wordvec index");
-			return &(*wv)[wordvec_index]; /* Needs update */
-		}
-		return NULL;
+		/* Create a new cache entry, to be updated by lrcnt_cache_update(). */
+		const size_t wordvec_size = abs(c->farthest_word - c->nearest_word) + 1;
+		*wv = pool_alloc_vec(ctxt->sent->wordvec_pool, wordvec_size);
+		memset(*wv, -1, sizeof(Table_lrcnt) * wordvec_size);
+
+		assert(wordvec_index < wordvec_size, "Bad wordvec index");
+		return &(*wv)[wordvec_index]; /* Needs update */
 	}
 
 	return lrcnt_check(&(*wv)[wordvec_index], null_count, null_start);
