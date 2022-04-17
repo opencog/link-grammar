@@ -32,6 +32,7 @@ This document elaborates the details of each link type for the Thai Link Grammar
 [S](#s)
 [TP](#tp)
 [VC](#vc)
+[VE](#ve)
 [VZ](#vz)
 
 However, the remaining of this document is organized with respect to the syntactic hierarchy:
@@ -224,6 +225,28 @@ LEFT-WALL นักการเมือง.n ถูก.ps นักข่าว
 ```
 
 The controlled verb ซักถาม 'question' is connected to the passive marker ถูก.
+
+### VE
+
+This directed link connects a verb to its evidential verb. For example, ฉันเห็นเพื่อนทำงานกลุ่ม 'I see my friends working on a group project':
+
+```
+ฉัน     เห็น  เพื่อน    ทำ    งาน   กลุ่ม
+tɕʰǎn  hěn  pʰɯân   tʰam  ŋaːn  klùm
+I      see  friend  do    work  group
+'I see my friends working on a group project.'
+```
+
+This sentence is parsed as follows.
+
+```
+    +------LWs-----+---->VE---->+
+    |       +<--S<-+-->O->+     +->O>+--NZ-+
+    |       |      |      |     |    |     |
+LEFT-WALL ฉัน.pr เห็น.ve เพื่อน.n ทำ.v งาน.n กลุ่ม.n
+```
+
+The verb ทำ 'do' is connected to the evidential verb เห็น 'see'.
 
 ### TP
 
@@ -499,7 +522,7 @@ Possessive pronoun เขา 'his' is connected to the core noun คอมพิ
 
 ### AX
 
-This directed link connects an auxiliary to its main verb. All kinds of auxiliary always <u>**precede**</u> the main verb. There are two types of `AX` links: `AXw` (simple auxiliary) and `AXg` (negator).
+This directed link connects an auxiliary to its main verb. All kinds of auxiliary always <u>**precede**</u> the main verb. There are three types of `AX` links: `AXw` (simple auxiliary), `AXg` (negator), and `AXq` (emphasis).
 
 #### AXw
 
@@ -546,6 +569,31 @@ LEFT-WALL เขา.pr ไม่.ng ยอม.v ไป.v ตรวจ.v โร�
 ```
 
 Negator ไม่ 'not' is connected to the main verb ยอม 'consent' via the `AXg` link.
+
+#### AXq
+
+`AXq` connects an emphasizing adverb to the main verb. For example, เราแทบจะไม่ได้ข่าวเกี่ยวกับเขาเลย 'We have not heard any news about him':
+
+```
+เรา  แทบ     ไม่   ได้       ข่าว    เกี่ยวกับ   เขา   เลย
+raʊ  tʰæ̂ːp   mâɪ  dâɪ      kʰà:ʊ  kiàʊkàp  kʰǎʊ  ləːɪ
+we   almost  NEG  receive  news   about    he    PART.EMPH
+'We have not heard any news about him.'
+```
+
+This sentence is parsed as follows.
+
+```
+    +---------------LWs--------------+
+    |        +<----------S<----------+
+    |        |      +<------AXq<-----+-------------PT-------------+
+    |        |      |     +<---AXw<--+---->AVpr--->+              |
+    |        |      |     |    +<AXg<+->O>+        +-->PO->+      |
+    |        |      |     |    |     |    |        |       |      |
+LEFT-WALL เรา.pr แทบ.rq จะ.x ไม่.ng ได้.v ข่าว.n เกี่ยวกับ.pan เขา.n เลย.pt
+```
+
+Emphasizing adverb แทบ 'almost' is connected to the main verb ได้ 'receive' via the `AXq` link.
 
 ### AV
 

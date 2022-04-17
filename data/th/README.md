@@ -4,7 +4,12 @@ Copyright (C) 2021 Prachya Boonkwan
 National Electronics and Computer Technology Center, Thailand  
 License: Creative Commons, Attribution (CC-BY)
 
-This document summarizes all the link-types used in `4.0.dict` for Thai Link Grammar. They are classified with respect to the syntactic hierarchy. On the other hand, a full documentation is provided [here](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md).
+This document summarizes all the link-types used in `4.0.dict` for Thai Link Grammar. They are classified with respect to the syntactic hierarchy. There are full documentations available here:
+
+- [Dependency types](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md)
+- [Input formats](https://github.com/kaamanita/link-grammar/blob/master/data/th/INPUT_FORMATS.md)
+- [POS tags](https://github.com/kaamanita/link-grammar/blob/master/data/th/TAGSETS.md)
+- [LST20 POS tags](https://arxiv.org/abs/2008.05055)
 
 ## Utterance
 
@@ -24,6 +29,7 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | `O`	       | **Object.** It connects a grammatical object to its main verb. |
 | `VZ`       | **Serial verb.** It connects a verb to its modifying verb in a serial verb construction. |
 | `VC`       | **Controlled verb.** It connects a verb to its controlled verb. |
+| `VE`       | **Evidential verb.** It connects a verb to its evidential verb. |
 | `TP`       | **Topicalization.** It connects a topicalized noun phrase to its main verb. |
 | `IJ`      | **Interjection.** It links an interjection word to the left wall. |
 | `PT`      | **Particle.** It links a particle word to the right wall. |
@@ -50,6 +56,7 @@ This document summarizes all the link-types used in `4.0.dict` for Thai Link Gra
 | `AX`       | **Auxiliary.** It connects an auxiliary to its main verb. All kinds of auxiliary always <u>precede</u> the main verb. |
 | `AXw`      | **Simple auxiliary.** It connects an auxiliary verb to its main verb. |
 | `AXg`      | **Negative auxiliary.** It connects a negator to its main verb. |
+| `AXq`      | **Emphasizing adverb.** It connects an emphasizing adverb to its main verb. |
 | `AV`       | **Adverbial.** It connects an adverbial to its main verb. All kinds of adverbial (except cohesive marker) always <u>follow</u> the main verb. |
 | `AVp`      | **Preposition phrase.** It connects a preposition phrase to its main verb. |
 | `AVw`      | **Simple adverb.** It connects an adverb to its main verb. |

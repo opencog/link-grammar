@@ -145,6 +145,39 @@ LEFT-WALL นายกรัฐมนตรี.n ขึ้น.v กล่าว.
 
 The `VS` link connects two verbs 'ขึ้น' and 'กล่าว' in a serial verb construction. A summary of link types is [documented here](https://github.com/kaamanita/link-grammar/blob/master/data/th/README.md). A full documentation of Thai Link Grammar can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md).
 
+Thai Link Grammar also accepts POS-tagged and named-entity-tagged inputs. Each word can be annotated with the Link POS tag. For example:
+
+```
+linkparser> เมื่อวานนี้.n มี.ve คน.n มา.x ติดต่อ.v คุณ.pr ครับ.pt
+Found 1 linkage (1 had no P.P. violations)
+	Unique linkage, cost vector = (UNUSED=0 DIS= 0.00 LEN=12)
+
+                          +---------------------PT--------------------+
+    +---------LWs---------+---------->VE---------->+                  |
+    |           +<---S<---+-->O-->+       +<--AXw<-+--->O--->+        |
+    |           |         |       |       |        |         |        |
+LEFT-WALL เมื่อวานนี้.n[!] มี.ve[!] คน.n[!] มา.x[!] ติดต่อ.v[!] คุณ.pr[!] ครับ.pt[!]
+```
+
+A full documentation for the input formats can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/INPUT_FORMATS.md).
+
+Moreover, it accepts LST20 tagsets for POS and named entities to bridge the gap between fundamental NLP tools and the Link Parser. For example:
+
+```
+linkparser> linkparser> วันที่_25_ธันวาคม@DTM ของ@PS ทุก@AJ ปี@NN เป็น@VV วัน@NN คริสต์มาส@NN
+Found 348 linkages (348 had no P.P. violations)
+	Linkage 1, cost vector = (UNUSED=0 DIS= 1.00 LEN=10)
+
+    +--------------------------------LWs--------------------------------+
+    |               +<------------------------S<------------------------+
+    |               |                +---------->PO--------->+          |
+    |               +----->AJpr----->+            +<---AJj<--+          +---->O---->+------NZ-----+
+    |               |                |            |          |          |           |             |
+LEFT-WALL วันที่_25_ธันวาคม@DTM[!] ของ@PS[!].pnn ทุก@AJ[!].jl ปี@NN[!].n เป็น@VV[!].v วัน@NN[!].na คริสต์มาส@NN[!].n
+```
+
+Note that each word above is annotated with LST20 POS tags and NE tags. A full documentation for both the Link POS tags and the LST20 tagsets can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/TAGSETS.md). More information about LST20, e.g. annotation guideline and data statistics, can be [found here](https://arxiv.org/abs/2008.05055).
+
 Theory and Documentation
 ------------------------
 An extended overview and summary can be found in the

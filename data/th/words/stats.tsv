@@ -7,6 +7,7 @@ words/words.any	0	0
         words/words.qf.rhs	3	3
     words/words.v.common	10357	10357
         words/words.v.attribute	6096	6096
+        words/words.v.evidential	12	12
     words/words.connector	0	0
         words/words.prep.nv	33	33
             words/words.prep.lw	3	3
@@ -35,20 +36,20 @@ words/words.any	0	0
         words/words.adv.attrmod	9	9
     words/words.neg.rhs	3	3
     words/words.part.common	100	100
-    words/words.aux.common	77	77
-        words/words.adv.qf	1	1
+    words/words.aux.common	30	30
+        words/words.adv.qf	48	48
         words/words.neg.lhs	10	10
         words/words.adv.cohesive	153	153
         words/words.passmark	2	2
     words/words.cl.common	0	0
         words/words.cl.noun	694	694
-        words/words.cl.verb	702	8
+        words/words.cl.verb	702	702
     words/words.num.common	1005	1005
         words/words.num.movable	3	3
     words/words.adj.common	249	249
         words/words.num.ordinal	2	2
     words/words.nominal.common	0	0
-        words/words.pro.common	124	124
+        words/words.pro.common	180	180
         words/words.n.attribute	19	19
         words/words.n.common	56491	56491
             words/words.n.proper	38927	38927

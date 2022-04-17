@@ -51,7 +51,8 @@ WORDS=			\
 	words.sclmark \
 	words.sentsep \
 	words.v.attribute \
-	words.v.common
+	words.v.common \
+	words.v.evidential
 
 wordsdir=$(pkgdatadir)/th/words
 words_DATA = $(WORDS)
