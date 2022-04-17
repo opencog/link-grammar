@@ -143,9 +143,13 @@ linkparser> นายกรัฐมนตรี ขึ้น กล่าว �
 LEFT-WALL นายกรัฐมนตรี.n ขึ้น.v กล่าว.v สุนทรพจน์.n
 ```
 
-The `VS` link connects two verbs 'ขึ้น' and 'กล่าว' in a serial verb construction. A summary of link types is [documented here](https://github.com/kaamanita/link-grammar/blob/master/data/th/README.md). A full documentation of Thai Link Grammar can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md).
+The `VS` link connects two verbs 'ขึ้น' and 'กล่าว' in a serial verb
+construction. A summary of link types is
+[documented here](data/th/README.md). Full documentation of Thai Link
+Grammar can be [found here](data/th/LINKDOC.md).
 
-Thai Link Grammar also accepts POS-tagged and named-entity-tagged inputs. Each word can be annotated with the Link POS tag. For example:
+Thai Link Grammar also accepts POS-tagged and named-entity-tagged
+inputs. Each word can be annotated with the Link POS tag. For example:
 
 ```
 linkparser> เมื่อวานนี้.n มี.ve คน.n มา.x ติดต่อ.v คุณ.pr ครับ.pt
@@ -159,9 +163,11 @@ Found 1 linkage (1 had no P.P. violations)
 LEFT-WALL เมื่อวานนี้.n[!] มี.ve[!] คน.n[!] มา.x[!] ติดต่อ.v[!] คุณ.pr[!] ครับ.pt[!]
 ```
 
-A full documentation for the input formats can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/INPUT_FORMATS.md).
+A full documentation for the input formats can be
+[found here](th/INPUT_FORMATS.md).
 
-Moreover, it accepts LST20 tagsets for POS and named entities to bridge the gap between fundamental NLP tools and the Link Parser. For example:
+Moreover, it accepts LST20 tagsets for POS and named entities to bridge
+the gap between fundamental NLP tools and the Link Parser. For example:
 
 ```
 linkparser> linkparser> วันที่_25_ธันวาคม@DTM ของ@PS ทุก@AJ ปี@NN เป็น@VV วัน@NN คริสต์มาส@NN
@@ -176,7 +182,11 @@ Found 348 linkages (348 had no P.P. violations)
 LEFT-WALL วันที่_25_ธันวาคม@DTM[!] ของ@PS[!].pnn ทุก@AJ[!].jl ปี@NN[!].n เป็น@VV[!].v วัน@NN[!].na คริสต์มาส@NN[!].n
 ```
 
-Note that each word above is annotated with LST20 POS tags and NE tags. A full documentation for both the Link POS tags and the LST20 tagsets can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/TAGSETS.md). More information about LST20, e.g. annotation guideline and data statistics, can be [found here](https://arxiv.org/abs/2008.05055).
+Note that each word above is annotated with LST20 POS tags and NE tags.
+Full documentation for both the Link POS tags and the LST20 tagsets can
+be [found here](data/th/TAGSETS.md). More information about LST20, e.g.
+annotation guideline and data statistics, can be
+[found here](https://arxiv.org/abs/2008.05055).
 
 Theory and Documentation
 ------------------------
