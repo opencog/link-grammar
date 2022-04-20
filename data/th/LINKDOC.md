@@ -133,6 +133,27 @@ LEFT-WALL ฉัน.pr ไป.v โรงเรียน.n RIGHT-WALL
 ```
 `RW` links typically do not appear unless the flag `!walls` is enabled in the Link Parser.
 
+### Modifiers of Accepted Constituents
+
+All accepted constituents can be modified by an interjection and a particle. For example, เฮ้ย ในเรือนปั้นหยาไง 'Hey, in the hip-roofed house!':
+
+```
+เฮ้ย  _  ใน   เรือน   ปั้นหยา       ไง
+hə́ɪ     naɪ  rɯaːn  pânjǎː      ŋaɪ
+hey     in   house  hip-roofed  EMPH
+'Hey, in the hip-roofed house!'
+```
+
+This preposition phrase is parsed below.
+
+```
+    +---------LWp--------+
+    |        +-----IJ----+---------PT---------+
+    |        +-PUs-+     +->PO->+--NZ--+      |
+    |        |     |     |      |      |      |
+LEFT-WALL เฮ้ย.ij _.pu ใน.pan เรือน.n ปั้นหยา.n ไง.pt
+```
+
 ----------
 
 ## Sentence
