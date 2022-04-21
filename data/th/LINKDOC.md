@@ -208,9 +208,9 @@ The `O` link connects the grammatical object อาหารกลางวั�
 This *undirected* link connects a verb to its modifying verb in a serial verb construction. For example ฉันออกเดินช็อปปิ้งที่ห้างพารากอน 'I am out for shopping at Paragon Mall':
 
 ```
-ฉัน     ออก    เดิน   ช็อปปิ้ง     ที่     ห้าง   พารากอน
-tɕʰǎn  ʔɔ̀ːk   dəːn  tɕɔ́ppîŋ   tʰîː  hâːŋ  pʰaːraːkɔ̂n
-I      leave  walk  shopping  at    mall  Paragon
+ฉัน     ออก    เดิน   ช็อปปิ้ง      ที่     ห้าง   พารากอน
+tɕʰǎn  ʔɔ̀ːk   dəːn  tɕʰɔ́ppîŋ   tʰîː  hâːŋ  pʰaːraːkɔ̂n
+I      leave  walk  shopping   at    mall  Paragon
 'I am out for shopping at Paragon Mall.'
 ```
 
@@ -349,9 +349,9 @@ The particle หรือยัง 'yet?' is connected to its main verb ไป '
 This *undirected* link connects a noun to its modifying noun in a serial noun construction. For example, คุณภาพชีวิตชาวไทยภูเขาก็เป็นปัจจัยสำคัญ 'The life quality of Thai hill tribes is also a crucial factor':
 
 ```
-คุณภาพ        ชีวิต       ชาวไทย      ภูเขา      ก็     เป็น  ปัจจัย    สำคัญ
-kʰunnapʰâːp  tɕʰiːʋít  tɕʰaːʊtʰaɪ  pʰuːkʰǎʊ  kɔ̂ː   pen  pàtɕaɪ  sǎmkʰan
-quality      life      Thai        mountain  also  be   factor  crucial
+คุณภาพ        ชีวิต       ชาวไทย      ภูเขา      ก็     เป็น  ปัจจัย     สำคัญ
+kʰunnapʰâːp  tɕʰiːʋít  tɕʰaːʊtʰaɪ  pʰuːkʰǎʊ  kɔ̂ː   pen  pàttɕaɪ  sǎmkʰan
+quality      life      Thai        mountain  also  be   factor   crucial
 'The life quality of Thai hill tribes is also a crucial factor.'
 ```
 
