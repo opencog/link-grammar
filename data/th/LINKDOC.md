@@ -596,9 +596,9 @@ Negator ไม่ 'not' is connected to the main verb ยอม 'consent' via th
 `AXq` connects an emphasizing adverb to the main verb. For example, เราแทบจะไม่ได้ข่าวเกี่ยวกับเขาเลย 'We have not heard any news about him':
 
 ```
-เรา  แทบ     ไม่   ได้       ข่าว    เกี่ยวกับ   เขา   เลย
-raʊ  tʰæ̂ːp   mâɪ  dâɪ      kʰà:ʊ  kiàʊkàp  kʰǎʊ  ləːɪ
-we   almost  NEG  receive  news   about    he    PART.EMPH
+เรา  แทบ     จะ   ไม่   ได้       ข่าว    เกี่ยวกับ   เขา   เลย
+raʊ  tʰæ̂ːp   tɕà  mâɪ  dâɪ      kʰà:ʊ  kiàʊkàp  kʰǎʊ  ləːɪ
+we   almost  FUT  NEG  receive  news   about    he    PART.EMPH
 'We have not heard any news about him.'
 ```
 
