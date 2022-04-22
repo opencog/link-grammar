@@ -310,7 +310,7 @@ static void init_table_lrcnt(count_context_t *ctxt)
 	{
 		ctxt->sent->wordvec_pool =
 			pool_new(__func__, "count_expectation", /*num_elements*/initial_size,
-			         sizeof(count_expectation), /*zero_out*/false,
+			         sizeof(count_expectation), /*zero_out*/true,
 			         /*align*/false, /*exact*/false);
 	}
 }
@@ -672,8 +672,13 @@ static wordvecp is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
 		/* Create a new cache entry, to be updated by lrcnt_cache_update(). */
 		const size_t wordvec_size = abs(c->farthest_word - c->nearest_word) + 1;
 		*wv = pool_alloc_vec(ctxt->sent->wordvec_pool, wordvec_size);
-		memset(*wv, -1, sizeof(count_expectation) * wordvec_size);
-
+		/* FIXME: Eliminate the need to initialize these fields with -1. */
+		for (size_t i = 0; i < wordvec_size; i++)
+		{
+			(*wv)[i].status = -1;
+			(*wv)[i].null_count = -1;
+			(*wv)[i].check_next = -1;
+		}
 		assert(wordvec_index < wordvec_size, "Bad wordvec index");
 		return &(*wv)[wordvec_index]; /* Needs update */
 	}
