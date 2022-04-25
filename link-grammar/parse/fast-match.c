@@ -68,7 +68,7 @@ struct sortbin_s
 /**
  * Push a match-list element into the match-list array.
  */
-static void push_match_list_element(fast_matcher_t *ctxt, Disjunct *d)
+static void push_match_list_element(fast_matcher_t *ctxt, int id, Disjunct *d)
 {
 	if (ctxt->match_list_end >= ctxt->match_list_size)
 	{
@@ -77,6 +77,9 @@ static void push_match_list_element(fast_matcher_t *ctxt, Disjunct *d)
 		                      ctxt->match_list_size * sizeof(*ctxt->match_list));
 	}
 
+#ifdef VERIFY_MATCH_LIST
+	if (id != 0) d->match_id = id;
+#endif
 	ctxt->match_list[ctxt->match_list_end++] = d;
 }
 
@@ -517,7 +520,7 @@ static size_t terminate_match_list(fast_matcher_t *ctxt, int id,
                              Connector *lc, int lw,
                              Connector *rc, int rw)
 {
-	push_match_list_element(ctxt, NULL);
+	push_match_list_element(ctxt, 0, NULL);
 	print_match_list(ctxt, id, ml_start, w, lc, lw, rc, rw);
 	return ml_start;
 }
@@ -603,10 +606,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		if (!mx->d->match_left) continue;
 		mx->d->match_right = false;
 
-#ifdef VERIFY_MATCH_LIST
-		mx->d->match_id = lid;
-#endif
-		push_match_list_element(ctxt, mx->d);
+		push_match_list_element(ctxt, lid, mx->d);
 	}
 
 	if ((lc != NULL) && is_no_match_list(ctxt, front)) /* lc optimization */
@@ -628,10 +628,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 			                  alt_connection_possible(mx->d->right, rc, &gc);
 		if (!mx->d->match_right || mx->d->match_left) continue;
 
-#ifdef VERIFY_MATCH_LIST
-		mx->d->match_id = lid;
-#endif
-		push_match_list_element(ctxt, mx->d);
+		push_match_list_element(ctxt, lid, mx->d);
 	}
 
 	return terminate_match_list(ctxt, lid, front, w, lc, lw, rc, rw);
