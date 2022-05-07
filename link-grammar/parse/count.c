@@ -314,9 +314,12 @@ static void init_table_lrcnt(count_context_t *ctxt)
 	}
 }
 
+#ifdef DEBUG
+#define DEBUG_TABLE_STAT
+#endif /* DEBUG */
 //#define DEBUG_TABLE_STAT
-#if defined(DEBUG) || defined(DEBUG_TABLE_STAT)
-static uint64_t hit, miss;  /* Table value found/not found */
+#ifdef DEBUG_TABLE_STAT
+static uint64_t hit, miss;  /* Table entry stats */
 #define TABLE_STAT(...) __VA_ARGS__
 #else
 #define TABLE_STAT(...)
