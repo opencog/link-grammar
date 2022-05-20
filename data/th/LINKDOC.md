@@ -133,6 +133,27 @@ LEFT-WALL ฉัน.pr ไป.v โรงเรียน.n RIGHT-WALL
 ```
 `RW` links typically do not appear unless the flag `!walls` is enabled in the Link Parser.
 
+### Modifiers of Accepted Constituents
+
+All accepted constituents can be modified by an interjection and a particle. For example, เฮ้ย ในเรือนปั้นหยาไง 'Hey, in the hip-roofed house!':
+
+```
+เฮ้ย  _  ใน   เรือน   ปั้นหยา       ไง
+hə́ɪ     naɪ  rɯaːn  pânjǎː      ŋaɪ
+hey     in   house  hip-roofed  EMPH
+'Hey, in the hip-roofed house!'
+```
+
+This preposition phrase is parsed below.
+
+```
+    +---------LWp--------+
+    |        +-----IJ----+---------PT---------+
+    |        +-PUs-+     +->PO->+--NZ--+      |
+    |        |     |     |      |      |      |
+LEFT-WALL เฮ้ย.ij _.pu ใน.pan เรือน.n ปั้นหยา.n ไง.pt
+```
+
 ----------
 
 ## Sentence
@@ -187,9 +208,9 @@ The `O` link connects the grammatical object อาหารกลางวั�
 This *undirected* link connects a verb to its modifying verb in a serial verb construction. For example ฉันออกเดินช็อปปิ้งที่ห้างพารากอน 'I am out for shopping at Paragon Mall':
 
 ```
-ฉัน     ออก    เดิน   ช็อปปิ้ง     ที่     ห้าง   พารากอน
-tɕʰǎn  ʔɔ̀ːk   dəːn  tɕɔ́ppîŋ   tʰîː  hâːŋ  pʰaːraːkɔ̂n
-I      leave  walk  shopping  at    mall  Paragon
+ฉัน     ออก    เดิน   ช็อปปิ้ง      ที่     ห้าง   พารากอน
+tɕʰǎn  ʔɔ̀ːk   dəːn  tɕʰɔ́ppîŋ   tʰîː  hâːŋ  pʰaːraːkɔ̂n
+I      leave  walk  shopping   at    mall  Paragon
 'I am out for shopping at Paragon Mall.'
 ```
 
@@ -328,9 +349,9 @@ The particle หรือยัง 'yet?' is connected to its main verb ไป '
 This *undirected* link connects a noun to its modifying noun in a serial noun construction. For example, คุณภาพชีวิตชาวไทยภูเขาก็เป็นปัจจัยสำคัญ 'The life quality of Thai hill tribes is also a crucial factor':
 
 ```
-คุณภาพ        ชีวิต       ชาวไทย      ภูเขา      ก็     เป็น  ปัจจัย    สำคัญ
-kʰunnapʰâːp  tɕʰiːʋít  tɕʰaːʊtʰaɪ  pʰuːkʰǎʊ  kɔ̂ː   pen  pàtɕaɪ  sǎmkʰan
-quality      life      Thai        mountain  also  be   factor  crucial
+คุณภาพ        ชีวิต       ชาวไทย      ภูเขา      ก็     เป็น  ปัจจัย     สำคัญ
+kʰunnapʰâːp  tɕʰiːʋít  tɕʰaːʊtʰaɪ  pʰuːkʰǎʊ  kɔ̂ː   pen  pàttɕaɪ  sǎmkʰan
+quality      life      Thai        mountain  also  be   factor   crucial
 'The life quality of Thai hill tribes is also a crucial factor.'
 ```
 
@@ -575,9 +596,9 @@ Negator ไม่ 'not' is connected to the main verb ยอม 'consent' via th
 `AXq` connects an emphasizing adverb to the main verb. For example, เราแทบจะไม่ได้ข่าวเกี่ยวกับเขาเลย 'We have not heard any news about him':
 
 ```
-เรา  แทบ     ไม่   ได้       ข่าว    เกี่ยวกับ   เขา   เลย
-raʊ  tʰæ̂ːp   mâɪ  dâɪ      kʰà:ʊ  kiàʊkàp  kʰǎʊ  ləːɪ
-we   almost  NEG  receive  news   about    he    PART.EMPH
+เรา  แทบ     จะ   ไม่   ได้       ข่าว    เกี่ยวกับ   เขา   เลย
+raʊ  tʰæ̂ːp   tɕà  mâɪ  dâɪ      kʰà:ʊ  kiàʊkàp  kʰǎʊ  ləːɪ
+we   almost  FUT  NEG  receive  news   about    he    PART.EMPH
 'We have not heard any news about him.'
 ```
 
