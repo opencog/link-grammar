@@ -1243,7 +1243,6 @@ static Count_bin do_count(
 					if (0 < hist_total(&leftcount))
 					{
 						lrcnt_found = true;
-						lrcnt_optimize = true;
 
 						/* Evaluate using the left match, but not the right */
 						CACHE_COUNT(l_bnr, hist_muladdv(&total, &leftcount, d->cost, count),
@@ -1271,7 +1270,6 @@ static Count_bin do_count(
 						if (le == NULL)
 						{
 							lrcnt_found = true;
-							lrcnt_optimize = true;
 
 							/* Evaluate using the right match, but not the left */
 							CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
