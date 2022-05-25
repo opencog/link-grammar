@@ -558,7 +558,8 @@ static size_t terminate_match_list(fast_matcher_t *ctxt, int id,
 size_t
 form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
-                Connector *rc, int rw)
+                Connector *rc, int rw,
+                Disjunct ***mlcl, Disjunct ***mlcr)
 {
 	Match_node *mx, *mr_end;
 	size_t front = get_match_list_position(ctxt);

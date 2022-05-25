@@ -51,7 +51,8 @@ struct fast_matcher_s
 fast_matcher_t* alloc_fast_matcher(const Sentence, unsigned int *[]);
 void free_fast_matcher(Sentence sent, fast_matcher_t*);
 
-size_t form_match_list(fast_matcher_t *, int, Connector *, int, Connector *, int);
+size_t form_match_list(fast_matcher_t *, int, Connector *, int, Connector *,
+                       int, Disjunct ***, Disjunct ***);
 
 /**
  * Return the match-list element at the given index.

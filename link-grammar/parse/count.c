@@ -704,6 +704,18 @@ bool no_count(count_context_t *ctxt, int dir, Connector *c,
 		is_lrcnt(ctxt, dir, c, wordvec_index, null_count, NULL);
 }
 
+Disjunct ***get_cached_match_list(count_context_t *ctxt, int dir, int w,
+                                  Connector *c)
+{
+	if (ctxt->sent->null_count != 0) return NULL;
+	if (ctxt->is_short) return NULL;
+
+	wordvecp wv = ctxt->table_lrcnt[dir].tracon_wvp[c->tracon_id];
+	if (wv == NULL) return NULL;
+
+	return &wv[w - ((dir == 0) ? c->nearest_word : c->farthest_word)].d_lkg_nc0;
+}
+
 static bool lrcnt_cache_update(wordvecp wv, bool lrcnt_found,
                               bool match_list, unsigned int null_count)
 {
@@ -1065,6 +1077,8 @@ static Count_bin do_count(
 		unsigned int lnull_start = 0; /* First null_count to check */
 		unsigned int lnull_end = null_count; /* Last null_count to check */
 		Connector *fml_re = re;       /* For form_match_list() only */
+		Disjunct ***mlcl = NULL, ***mlcr = NULL;
+		bool using_cached_match_list = false;
 #define S(c) (!c?"(nil)":connector_string(c))
 
 		if (!ctxt->is_short)
@@ -1107,9 +1121,19 @@ static Count_bin do_count(
 		}
 		/* End of nonzero leftcount/rightcount range cache check. */
 
+		if ((lrcnt_cache == NULL) && (ctxt->sent->null_count == 0))
+		{
+			using_cached_match_list = true;
+
+			if (le != NULL)
+				mlcl = get_cached_match_list(ctxt, 0, w, le);
+			if (fml_re != NULL && ((le == NULL) || (re->farthest_word <= w)))
+				mlcr = get_cached_match_list(ctxt, 1, w, re);
 		}
 
-		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw);
+		}
+
+		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw, mlcl, mlcr);
 
 #ifdef VERIFY_MATCH_LIST
 		unsigned int id = get_match_list_element(mchxt, mlb) ?
