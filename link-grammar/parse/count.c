@@ -605,6 +605,38 @@ static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
 }
 
 /**
+ * Cache the match list elements that yield a non-zero count.
+ */
+static void lrcnt_cache_match_list(wordvecp lrcnt_cache, fast_matcher_t *mchxt,
+                                   size_t mlb, bool dir)
+{
+	size_t dcnt = 0;
+	size_t i  = 0;
+
+	for (i = mlb; get_match_list_element(mchxt, i) != NULL; i++)
+	{
+		Disjunct *d = get_match_list_element(mchxt, i);
+		dcnt += (int)(dir ? d->match_right : d->match_left);
+	}
+	dassert(dcnt > 0, "No disjuncts to cache");
+	//if (dcnt == i-mlb) return NULL;
+	lgdebug(+9, "MATCH_LIST %9d dir=%d mlb %zu cached %zu/%zu\n",
+	        get_match_list_element(mchxt, mlb)->match_id, dir, mlb, dcnt, i-mlb);
+
+	Disjunct **ml = pool_alloc_vec(mchxt->mld_pool, dcnt + 1);
+	dcnt = 0;
+	for (i = mlb; get_match_list_element(mchxt, i) != NULL; i++)
+	{
+		Disjunct *d = get_match_list_element(mchxt, i);
+		if ((dir == 0) ? d->match_left : d->match_right)
+			ml[dcnt++] = d;
+	}
+	ml[dcnt] = NULL;
+
+	lrcnt_cache->d_lkg_nc0 = ml;
+}
+
+/**
  * lrcnt cache entry inspection:
  * Does this entry indicate a nonzero leftcount / rightcount?
  *
@@ -1337,6 +1369,8 @@ static Count_bin do_count(
 			bool match_list = (get_match_list_element(mchxt, mlb) != NULL);
 			if (lrcnt_cache_update(lrcnt_cache, lrcnt_found, match_list, null_count))
 				lrcnt_cache_changed = true;
+			if (lrcnt_found && (ctxt->sent->null_count == 0))
+				lrcnt_cache_match_list(lrcnt_cache, mchxt, mlb, /*dir*/le == NULL);
 		}
 
 		pop_match_list(mchxt, mlb);
