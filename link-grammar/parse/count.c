@@ -238,6 +238,7 @@ static void free_table_lrcnt(count_context_t *ctxt)
 	if (verbosity_level(D_COUNT))
 	{
 		unsigned int nonzero = 0, any_null = 0, zero = 0, non_max_null = 0;
+		unsigned int cml = 0, cml_disjunct = 0; /* Cashed match lists */
 		Pool_location loc = { 0 };
 		wordvecp t;
 
@@ -248,7 +249,15 @@ static void free_table_lrcnt(count_context_t *ctxt)
 		{
 			if (t->status == -1) continue;
 			if (t->status == 1)
+			{
 				nonzero++;
+				if (t->d_lkg_nc0 && (t->d_lkg_nc0 != NULL))
+				{
+					cml++;
+					for (Disjunct **d = t->d_lkg_nc0; *d != NULL; d++)
+						cml_disjunct++;
+				}
+			}
 			else if (t->null_count == ANY_NULL_COUNT)
 				any_null++;
 			else if (ctxt->sent->null_count > t->null_count)
@@ -259,9 +268,10 @@ static void free_table_lrcnt(count_context_t *ctxt)
 
 		const unsigned int num_values = ctxt->sent->wordvec_pool->curr_elements;
 		lgdebug(+0, "Values %u (usage = non_max_null %u + other %u, "
-		        "other = any_null_zero %u + zero %u + nonzero %u)\n",
+		        "other = any_null_zero %u + zero %u + nonzero %u); "
+		        "%u disjuncts in %u cache entries\n",
 		        num_values, non_max_null, num_values-non_max_null,
-		        any_null, zero, nonzero);
+		        any_null, zero, nonzero, cml_disjunct, cml);
 
 		for (unsigned int dir = 0; dir < 2; dir++)
 		{
