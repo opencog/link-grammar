@@ -97,6 +97,7 @@ void free_fast_matcher(Sentence sent, fast_matcher_t *mchxt)
 	lgdebug(+6, "Sentence length %zu, match_list_size %zu\n",
 	        mchxt->size, mchxt->match_list_size);
 
+	pool_delete(mchxt->mld_pool);
 	xfree(mchxt->l_table_size, mchxt->size * sizeof(unsigned int));
 	xfree(mchxt->l_table, mchxt->size * sizeof(Match_node **));
 	xfree(mchxt, sizeof(fast_matcher_t));
@@ -256,6 +257,10 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			         /*num_elements*/2048, sizeof(Match_node),
 			         /*zero_out*/false, /*align*/true, /*exact*/false);
 	}
+	ctxt->mld_pool =
+		pool_new(__func__, "Match list cache",
+		         /*num_elements*/512*1024, sizeof(Disjunct *),
+		         /*zero_out*/false, /*align*/false, /*exact*/false);
 
 	sortbin *sbin = alloca(sent->length * sizeof(sortbin));
 
