@@ -1114,6 +1114,8 @@ static Count_bin do_count(
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
 
+			d->match_left = d->match_right = false;
+
 #ifdef VERIFY_MATCH_LIST
 			assert(id == d->match_id, "Modified id (%u!=%u)", id, d->match_id);
 #endif
@@ -1249,6 +1251,7 @@ static Count_bin do_count(
 					if (0 < hist_total(&leftcount))
 					{
 						lrcnt_found = true;
+						d->match_left = true;
 
 						/* Evaluate using the left match, but not the right */
 						CACHE_COUNT(l_bnr, hist_muladdv(&total, &leftcount, d->cost, count),
@@ -1276,6 +1279,7 @@ static Count_bin do_count(
 						if (le == NULL)
 						{
 							lrcnt_found = true;
+							d->match_right = true;
 
 							/* Evaluate using the right match, but not the left */
 							CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
