@@ -94,7 +94,7 @@ void free_fast_matcher(Sentence sent, fast_matcher_t *mchxt)
 
 	free(mchxt->l_table[0]);
 	free(mchxt->match_list);
-	lgdebug(6, "Sentence length %zu, match_list_size %zu\n",
+	lgdebug(+6, "Sentence length %zu, match_list_size %zu\n",
 	        mchxt->size, mchxt->match_list_size);
 
 	xfree(mchxt->l_table_size, mchxt->size * sizeof(unsigned int));
