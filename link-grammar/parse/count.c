@@ -69,6 +69,7 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * check_next skips all the words for which the count is known to be zero. */
 typedef struct
 {
+	Disjunct **d_lkg_nc0;    /* Disjuncts with a jet linkage for null_count==0 */
 	null_count_m null_count; /* status==0 valid up to this null count */
 	int8_t status;         /* -1: Needs update; 0: No count; 1: Count possible */
 	WordIdx_m check_next;    /* Next word to check */
