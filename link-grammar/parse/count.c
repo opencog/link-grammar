@@ -1126,7 +1126,8 @@ static Count_bin do_count(
 			{
 				lcnt_optimize = false;
 			}
-			else if ((re != NULL) && (re->farthest_word <= w))
+
+			if ((re != NULL) && (re->farthest_word <= w))
 			{
 				/* If it is already known that "re" would yield a zero
 				 * rightcount, there is no need to fetch the right match list.
