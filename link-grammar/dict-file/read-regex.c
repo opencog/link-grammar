@@ -42,7 +42,6 @@
 */
 
 #define MAX_REGEX_NAME_LENGTH 50
-// #define MAX_REGEX_LENGTH      255
 #define MAX_REGEX_LENGTH      10240
 
 bool read_regex_file(Dictionary dict, const char *file_name)
