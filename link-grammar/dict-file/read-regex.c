@@ -48,10 +48,10 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 {
 	Regex_node **tail = &dict->regex_root; /* Last Regex_node * in list */
 	Regex_node *new_re;
-	char name[MAX_REGEX_NAME_LENGTH];
-	char regex[MAX_REGEX_LENGTH];
 	int c,prev,i,line=1;
 	FILE *fp;
+	char name[MAX_REGEX_NAME_LENGTH];
+	char regex[MAX_REGEX_LENGTH];
 
 	fp = dictopen(file_name, "r");
 	if (fp == NULL)
