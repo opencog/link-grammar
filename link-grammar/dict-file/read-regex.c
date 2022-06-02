@@ -56,7 +56,7 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 	fp = dictopen(file_name, "r");
 	if (fp == NULL)
 	{
-		prt_error("Error: Cannot open regex file %s\n", file_name);
+		prt_error("Error: Cannot open regex file %s.\n", file_name);
 		return false;
 	}
 
@@ -91,7 +91,7 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 		{
 			if (i >= MAX_REGEX_NAME_LENGTH-1)
 			{
-				prt_error("Error: Regex name too long on line %d\n", line);
+				prt_error("Error: Regex name too long on line %d.\n", line);
 				goto failure;
 			}
 			name[i++] = c;
@@ -108,7 +108,7 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 		}
 		if (c != ':')
 		{
-			prt_error("Error: Regex missing colon on line %d\n", line);
+			prt_error("Error: Regex missing colon on line %d.\n", line);
 			goto failure;
 		}
 
@@ -131,7 +131,7 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 		}
 		if (c != '/')
 		{
-			prt_error("Error: Regex missing leading slash on line %d\n", line);
+			prt_error("Error: Regex missing leading slash on line %d.\n", line);
 			goto failure;
 		}
 
@@ -141,7 +141,7 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 		{
 			if (i > MAX_REGEX_LENGTH-1)
 			{
-				prt_error("Error: Regex too long on line %d\n", line);
+				prt_error("Error: Regex too long on line %d.\n", line);
 				goto failure;
 			}
 			prev = c;
@@ -157,7 +157,7 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 		/* Expect termination by a slash. */
 		if (c != '/')
 		{
-			prt_error("Error: Regex missing trailing slash on line %d\n", line);
+			prt_error("Error: Regex missing trailing slash on line %d.\n", line);
 			goto failure;
 		}
 
