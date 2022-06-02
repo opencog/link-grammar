@@ -45,7 +45,7 @@
 // #define MAX_REGEX_LENGTH      255
 #define MAX_REGEX_LENGTH      10240
 
-int read_regex_file(Dictionary dict, const char *file_name)
+bool read_regex_file(Dictionary dict, const char *file_name)
 {
 	Regex_node **tail = &dict->regex_root; /* Last Regex_node * in list */
 	Regex_node *new_re;
@@ -58,7 +58,7 @@ int read_regex_file(Dictionary dict, const char *file_name)
 	if (fp == NULL)
 	{
 		prt_error("Error: cannot open regex file %s\n", file_name);
-		return 1;
+		return false;
 	}
 
 	/* read in regexs. loop broken on EOF. */
@@ -174,9 +174,9 @@ int read_regex_file(Dictionary dict, const char *file_name)
 	}
 
 	fclose(fp);
-	return 0;
+	return true;
 failure:
 	fclose(fp);
-	return 1;
+	return false;
 }
 

@@ -227,7 +227,7 @@ dictionary_six_str(const char * lang,
 	 * We have to compile regexs using the dictionary locale,
 	 * so make a temporary locale swap.
 	 */
-	if (read_regex_file(dict, regex_name)) goto failure;
+	if (!read_regex_file(dict, regex_name)) goto failure;
 
 	const char *locale = setlocale(LC_CTYPE, NULL); /* Save current locale. */
 	locale = strdupa(locale); /* setlocale() uses its own memory. */

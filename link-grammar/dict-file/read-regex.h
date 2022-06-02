@@ -8,4 +8,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-int read_regex_file(Dictionary dict, const char *file_name);
+#include <stdbool.h>
+
+bool read_regex_file(Dictionary dict, const char *file_name);
