@@ -57,7 +57,7 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 	fp = dictopen(file_name, "r");
 	if (fp == NULL)
 	{
-		prt_error("Error: cannot open regex file %s\n", file_name);
+		prt_error("Error: Cannot open regex file %s\n", file_name);
 		return false;
 	}
 
