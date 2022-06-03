@@ -157,6 +157,7 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 	Regex_node *new_re;
 	int c,prev,i,line=1;
 	FILE *fp;
+	bool no_expand = false;
 	char name[MAX_REGEX_NAME_LENGTH];
 	char regex[MAX_REGEX_LENGTH];
 
@@ -270,7 +271,13 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 
 		lgdebug(+D_REGEX+1, "%s: %s\n", name, regex);
 
-		if (!expand_character_ranges(file_name, line, name, regex))
+		if (strcmp(name, "NO-EXPAND") == 0)
+		{
+			no_expand = true;
+			continue;
+		}
+
+		if (!no_expand && !expand_character_ranges(file_name, line, name, regex))
 			goto failure;
 
 		/* Create new Regex_node and add to dict list. */
