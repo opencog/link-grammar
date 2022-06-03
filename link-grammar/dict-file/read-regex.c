@@ -44,6 +44,12 @@
   stop further match tries until a different regex name is encountered.
   Thus, they can serve as a kind of a negative look-ahead.
 
+  To allow non-ASCII ranges in character classes for libraries other
+  than recent PCRE2, such ranges are expanded by default. Since various
+  regex libraries have different syntax features for character classes,
+  it is hard to do such an expansion only inside character classes, so
+  this expansion is always done. To avoid it, add:
+  NO-EXPAND://
 */
 
 #define MAX_REGEX_NAME_LENGTH 50
