@@ -1,0 +1,29 @@
+% This file contains test sentences, and the expected parses and
+% constituents output, for the Thai dictionary
+
+% Test that the character ranges in THAI-PART-NUMBER and
+% THAI-NUMBERS actually work.
+
+-display_morphology = True
+
+I5-123/๙456#ฮ๐
+O
+O    +---------LWn---------+
+O    |                     |
+OLEFT-WALL 5-123/๙456#ฮ๐[!THAI-PART-NUMBER]
+O
+
+I๙ สาย
+O
+O    +-------------LWn------------+
+O    |              +<----NUnl<---+
+O    |              |             |
+OLEFT-WALL ๙[!THAI-NUMBERS].nu สาย.na
+O
+N
+O
+O    +------------LWn------------+
+O    |              +<---NUnl<---+
+O    |              |            |
+OLEFT-WALL ๙[!THAI-NUMBERS].nu สาย.n
+O

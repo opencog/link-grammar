@@ -1252,6 +1252,11 @@ class ZRULangTestCase(unittest.TestCase):
              '.', 'RIGHT-WALL'])
 
 
+class ZTHLangTestCase(unittest.TestCase):
+    def test_thai(self):
+        linkage_testfile(self, Dictionary(lang='th'), ParseOptions())
+
+
 class ZXDictDialectTestCase(unittest.TestCase):
     def test_dialect(self):
         linkage_testfile(self, Dictionary(lang='en'), ParseOptions(dialect='headline'), 'dialect')
