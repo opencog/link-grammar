@@ -18,6 +18,13 @@
 % Regex'es that are preceded by !, if they match a token, stop
 % further match tries of the same regex name. Thus, they can serve
 % as a kind of a negative look-ahead.
+%
+% To allow non-ASCII ranges in character classes for libraries other
+% than recent PCRE2, such ranges are expanded by default. Since various
+% regex libraries have different syntax features for character classes,
+% it is hard to do such an expansion only inside character classes, so
+% this expansion is always done. To avoid it, add:
+% NO-EXPAND: //
 
 % Numbers.
 % XXX, we need to add utf8 U+00A0 "no-break space"
