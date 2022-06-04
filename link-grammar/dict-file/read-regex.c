@@ -79,10 +79,11 @@ static bool expand_character_ranges(const char *file_name, int line,
 
 		if (b_len + 1 > (int)(MAX_REGEX_LENGTH - (regex - r)))
 		{
-			prt_error("Error: File \"%s\", line %d, position %d: \"%s\": "
-			          "Expanded definition overflow (>%d chars)\n",
-			          file_name, line, (int)(p - orig_regex), name,
-			          MAX_REGEX_LENGTH-1);
+			lgdebug(D_REGEX, "Warning: File \"%s\", line %d, position %d: "
+			        "\"%s\": Expanded definition overflow (>%d chars)\n",
+			        file_name, line, (int)(p - orig_regex), name,
+			        MAX_REGEX_LENGTH-1);
+			strcpy(regex, orig_regex);
 			return false;
 		}
 
@@ -104,28 +105,28 @@ static bool expand_character_ranges(const char *file_name, int line,
 
 			if (b_len != e_len)
 			{
-				prt_error("Error: File \"%s\", line %d: \"%s\": "
-				          "Range \"%.*s-%.*s\": "
-							 "Characters with an unequal number of bytes.\n",
-							 file_name, line, name, b_len, b_char, e_len, p);
-				return false;
+				lgdebug(D_REGEX, "Warning: File \"%s\", line %d: \"%s\": "
+				        "Range \"%.*s-%.*s\": "
+				        "Characters with an unequal number of bytes.\n",
+				        file_name, line, name, b_len, b_char, e_len, p);
+				return true;
 			}
 
 			size_t prefix_len = b_len - 1;
 			if (strncmp(b_char, p, prefix_len) != 0)
 			{
-				prt_error("Error: File \"%s\", line %d: \"%s\": "
-				          "Range \"%.*s-%.*s\": "
-							 "No common prefix before the last byte.\n",
-							 file_name, line, name, b_len, b_char, e_len, p);
-				return false;
+				lgdebug(D_REGEX, "Warning: File \"%s\", line %d: \"%s\": "
+				        "Range \"%.*s-%.*s\": "
+				        "No common prefix before the last byte.\n",
+				        file_name, line, name, b_len, b_char, e_len, p);
+				return true;
 			}
 			if ((unsigned char)b_char[prefix_len] > (unsigned char)p[prefix_len])
 			{
-				prt_error("Error: File \"%s\", line %d: \"%s\": "
-				          "Range \"%.*s-%.*s\": Decreasing order.\n",
-							 file_name, line, name, b_len, b_char, e_len, p);
-				return false;
+				lgdebug(D_REGEX, "Warning: File \"%s\", line %d: \"%s\": "
+				        "Range \"%.*s-%.*s\": Decreasing order.\n",
+				        file_name, line, name, b_len, b_char, e_len, p);
+				return true;
 			}
 
 			for (unsigned char last_byte = b_char[prefix_len] + 1;
@@ -133,12 +134,13 @@ static bool expand_character_ranges(const char *file_name, int line,
 			{
 				if (b_len + 1 > (int)(MAX_REGEX_LENGTH - (r - regex)))
 				{
-					prt_error("Error: File \"%s\", line %d: ,position %d: \"%s\": "
-					          "Range \"%.*s-%.*s\": "
-					          "Expanded definition overflow (>%d chars)\n",
-					          file_name, line, (int)(r - regex), name,
-					          b_len, b_char, e_len, p, MAX_REGEX_LENGTH-1);
-					return false;
+					lgdebug(D_REGEX, "Warning: : File \"%s\", line %d: ,position %d: "
+					        "\"%s\": Range \"%.*s-%.*s\": "
+					        "Expanded definition overflow (>%d chars)\n",
+					        file_name, line, (int)(r - regex), name,
+					        b_len, b_char, e_len, p, MAX_REGEX_LENGTH-1);
+					strcpy(regex, orig_regex);
+					return true;
 				}
 				memcpy(r, b_char, prefix_len);
 				r += prefix_len;
