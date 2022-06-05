@@ -18,6 +18,13 @@
 % Regex'es that are preceded by !, if they match a token, stop
 % further match tries of the same regex name. Thus, they can serve
 % as a kind of a negative look-ahead.
+%
+% To allow non-ASCII ranges in character classes for libraries other
+% than recent PCRE2, such ranges are expanded by default. Since various
+% regex libraries have different syntax features for character classes,
+% it is hard to do such an expansion only inside character classes, so
+% this expansion is always done. To avoid it, add:
+% NO-EXPAND: //
 
 % Numbers.
 % XXX, we need to add utf8 U+00A0 "no-break space"
@@ -82,12 +89,13 @@ CAPITALIZED-WORD:     /^[[:upper:]][^'’]*[^[:punct:]]$/
 % never a verb. To return to this ordering, move this regex just
 % after the CAPITALIZED-WORDS regex.
 % We also match on commas, dots, brackets: n-amino-3-azabicyclo[3.3.0]octane
-% []] means "match right-bracket"
+% []...] means "match right-bracket" -> Replaced by |\] because it
+% doesn't work in c++ <regex>.
 % Explicitly call out (5'|3') so that we don't all a generic match to 'll
 % But something is funky about this 5'-3' business since 2' also matches ???
 %  /^[[:alnum:]][][:alnum:],:.\[-]*-[][:alnum:],:.\[-]*[[:alnum:]]$/
 HYPHENATED-WORD:
-  /^[[:alnum:](5'|3')][][:alnum:](5'|3'),:.\(\)\[-]*-[][:alnum:],:.\(\)\[-]*[[:alnum:]]$/
+  /^([[:alnum:]]|5'|3'|2'|N')([[:alnum:],:.()[-]|\]|5'|3'|2'|N')*-([[:alnum:],:.()[-]|\])*[[:alnum:]]*$/
 
 % Emoticon checks must come *after* the above, so that the above take precedence.
 % See Wikipedia List_of_emoticons (also the References section).
