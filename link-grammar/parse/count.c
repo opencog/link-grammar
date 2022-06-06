@@ -687,53 +687,48 @@ static wordvecp lrcnt_check(wordvecp wvp, unsigned int null_count,
 	return wvp;
 }
 
-/**
- * Cache lookup for word w indicated by \p wordvec_index:
- * Is the range [c, w) going to yield a nonzero leftcount / rightcount?
- *
- * @param ctxt Count context.
- * @param dir Direction - 0: leftcount; 1: rightcount.
- * @param c The connector that starts the range.
- * @param wordvec_index Word-vector index.
- * @param null_count The current null-count to check.
- *
- * @return: See lrcnt_check().
- */
-static wordvecp is_lrcnt(count_context_t *ctxt, int dir, Connector *c,
-                             unsigned int wordvec_index,
-                             unsigned int null_count, unsigned int *null_start)
+static wordvecp *get_lrcnt_wvpa(count_context_t *ctxt, Connector *le,
+                                Connector *re)
 {
 	if (ctxt->is_short) return NULL;
 
-	wordvecp *wv = &ctxt->table_lrcnt[dir].tracon_wvp[c->tracon_id];
-	if (*wv == NULL)
-	{
-		if (null_start == NULL) return NULL;
-		*null_start = 0;
+	int dir = (int)(le == NULL);
+	int tracon_id = (le == NULL) ? re->tracon_id : le->tracon_id;
 
+	return &ctxt->table_lrcnt[dir].tracon_wvp[tracon_id];
+}
+
+static wordvecp alloc_lrcnt_wv(count_context_t *ctxt, wordvecp *wvp,
+                               Connector *le, Connector *re)
+{
+	if (*wvp == NULL)
+	{
+		Connector *c = (le == NULL) ? re : le;
 		/* Create a new cache entry, to be updated by lrcnt_cache_update(). */
 		const size_t wordvec_size = abs(c->farthest_word - c->nearest_word) + 1;
-		*wv = pool_alloc_vec(ctxt->sent->wordvec_pool, wordvec_size);
+		*wvp = pool_alloc_vec(ctxt->sent->wordvec_pool, wordvec_size);
 		/* FIXME: Eliminate the need to initialize these fields with -1. */
 		for (size_t i = 0; i < wordvec_size; i++)
 		{
-			(*wv)[i].status = -1;
-			(*wv)[i].null_count = -1;
-			(*wv)[i].check_next = -1;
+			(*wvp)[i].status = -1;
+			(*wvp)[i].null_count = -1;
+			(*wvp)[i].check_next = -1;
 		}
-		assert(wordvec_index < wordvec_size, "Bad wordvec index");
-		return &(*wv)[wordvec_index]; /* Needs update */
 	}
 
-	return lrcnt_check(&(*wv)[wordvec_index], null_count, null_start);
+	return *wvp;
 }
 
 bool no_count(count_context_t *ctxt, int dir, Connector *c,
               unsigned int wordvec_index, unsigned int null_count)
 {
-	return
-		&lrcnt_cache_zero ==
-		is_lrcnt(ctxt, dir, c, wordvec_index, null_count, NULL);
+	if (ctxt->is_short) return false;
+
+	wordvecp wvp = ctxt->table_lrcnt[dir].tracon_wvp[c->tracon_id];
+	if (wvp == NULL) return false;
+	wordvecp lrcnt_cache = &wvp[wordvec_index];
+
+	return (lrcnt_check(lrcnt_cache, null_count, NULL) == &lrcnt_cache_zero);
 }
 
 Disjunct ***get_cached_match_list(count_context_t *ctxt, int dir, int w,
@@ -1065,27 +1060,24 @@ static Count_bin do_count(
 	int woffset = 0;
 	if (!ctxt->is_short)
 	{
-		if (le != NULL)
-		{
-			wvp = ctxt->table_lrcnt[0].tracon_wvp[le->tracon_id];
-			woffset = le->nearest_word;
-		}
-		else
-		{
-			wvp = ctxt->table_lrcnt[1].tracon_wvp[re->tracon_id];
-			woffset = re->farthest_word;
-		}
+		wordvecp *wvpa = get_lrcnt_wvpa(ctxt, le, re);
+		wvp = alloc_lrcnt_wv(ctxt, wvpa, le, re);
+		woffset = (le == NULL) ? re->farthest_word : le->nearest_word;
 	}
 
 	for (w = start_word; w < end_word; w = next_word)
 	{
 		COUNT_COST(ctxt->count_cost[0]++;)
 
-		/* Use the word-skip vector to skip over words that are
-		 * known to yield a zero count. */
-		if ((wvp != NULL) && (w != end_word -1))
+		wordvecp lrcnt_cache = NULL;
+
+		if (!ctxt->is_short)
 		{
-			next_word = wvp[w - woffset].check_next;
+			lrcnt_cache = &wvp[w - woffset];
+
+			/* Use the word-skip vector to skip over words that are
+			 * known to yield a zero count. */
+			next_word = lrcnt_cache->check_next;
 			if (next_word == INCREMENT_WORD) next_word = w + 1;
 		}
 		else
@@ -1102,7 +1094,6 @@ static Count_bin do_count(
 		 * l/rcnt_optimize==false. If this can be fixed, a significant
 		 * speedup is expected. */
 
-		wordvecp lrcnt_cache = NULL;
 		bool lrcnt_found = false;     /* TRUE iff a range yielded l/r count */
 		bool lcnt_optimize = true;   /* Perform left count optimization */
 		bool rcnt_optimize = true;   /* Perform right count optimization */
@@ -1118,8 +1109,7 @@ static Count_bin do_count(
 
 		if (le != NULL)
 		{
-			lrcnt_cache =
-				is_lrcnt(ctxt, 0, le, w - le->nearest_word, null_count, &lnull_start);
+			lrcnt_cache = lrcnt_check(lrcnt_cache, null_count, &lnull_start);
 			if (lrcnt_cache == &lrcnt_cache_zero) continue;
 
 			if (lrcnt_cache != NULL)
@@ -1132,17 +1122,15 @@ static Count_bin do_count(
 				/* If it is already known that "re" would yield a zero
 				 * rightcount, there is no need to fetch the right match list.
 				 * The code below will still check for possible l_bnr counts. */
-				wordvecp rgc =
-					is_lrcnt(ctxt, 1, re, w - re->farthest_word, null_count, NULL);
-				if (rgc == &lrcnt_cache_zero) fml_re = NULL;
+				if (no_count(ctxt, 1, re, w - re->farthest_word, null_count))
+					fml_re = NULL;
 			}
 		}
 		else
 		{
 			/* Here re != NULL. */
 			unsigned int rnull_start;
-			lrcnt_cache =
-				is_lrcnt(ctxt, 1, re, w - re->farthest_word, null_count, &rnull_start);
+			lrcnt_cache = lrcnt_check(lrcnt_cache, null_count, &rnull_start);
 			if (lrcnt_cache == &lrcnt_cache_zero) continue;
 
 			if (lrcnt_cache != NULL)
