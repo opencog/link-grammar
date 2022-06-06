@@ -1043,14 +1043,15 @@ static Count_bin do_count(
 		 * extremely effective for long sentences, but doesn't speed up
 		 * short ones.
 		 *
-		 * FIXME: lrcnt_optimize==false doubles the Table_connector cache!
+		 * FIXME: l/rcnt_optimize==false doubles the Table_connector cache!
 		 * Try to fix it by not caching zero counts in Table_connector when
-		 * lrcnt_optimize==false. If this can be fixed, a significant
+		 * l/rcnt_optimize==false. If this can be fixed, a significant
 		 * speedup is expected. */
 
 		wordvecp lrcnt_cache = NULL;
 		bool lrcnt_found = false;     /* TRUE iff a range yielded l/r count */
-		bool lrcnt_optimize = true;   /* Perform l/r count optimization */
+		bool lcnt_optimize = true;   /* Perform left count optimization */
+		bool rcnt_optimize = true;   /* Perform right count optimization */
 		unsigned int lnull_start = 0; /* First null_count to check */
 		unsigned int lnull_end = null_count; /* Last null_count to check */
 		Connector *fml_re = re;       /* For form_match_list() only */
@@ -1067,7 +1068,7 @@ static Count_bin do_count(
 
 			if (lrcnt_cache != NULL)
 			{
-				lrcnt_optimize = false;
+				lcnt_optimize = false;
 			}
 			else if ((re != NULL) && (re->farthest_word <= w))
 			{
@@ -1089,7 +1090,7 @@ static Count_bin do_count(
 
 			if (lrcnt_cache != NULL)
 			{
-				lrcnt_optimize = false;
+				rcnt_optimize = false;
 				if (rnull_start <= null_count)
 					lnull_end -= rnull_start;
 			}
@@ -1231,7 +1232,7 @@ static Count_bin do_count(
 				w_Count_bin leftcount = hist_zero();
 				w_Count_bin rightcount = hist_zero();
 				if (leftpcount &&
-				    (!lrcnt_optimize || rightpcount || (0 != hist_total(&l_bnr))))
+				    (!lcnt_optimize || rightpcount || (0 != hist_total(&l_bnr))))
 				{
 					CACHE_COUNT(l_any, leftcount = count,
 						do_count(ctxt, lw, w, le->next, d->left->next, lnull_cnt));
@@ -1256,7 +1257,7 @@ static Count_bin do_count(
 				}
 
 				if (rightpcount &&
-				    (!lrcnt_optimize || (0 < hist_total(&leftcount)) || (0 != hist_total(&r_bnl))))
+				    (!rcnt_optimize || (0 < hist_total(&leftcount)) || (0 != hist_total(&r_bnl))))
 				{
 					CACHE_COUNT(r_any, rightcount = count,
 						do_count(ctxt, w, rw, d->right->next, re->next, rnull_cnt));
