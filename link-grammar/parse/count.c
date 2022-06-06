@@ -1069,22 +1069,6 @@ static Count_bin do_count(
 	{
 		COUNT_COST(ctxt->count_cost[0]++;)
 
-		wordvecp lrcnt_cache = NULL;
-
-		if (!ctxt->is_short)
-		{
-			lrcnt_cache = &wvp[w - woffset];
-
-			/* Use the word-skip vector to skip over words that are
-			 * known to yield a zero count. */
-			next_word = lrcnt_cache->check_next;
-			if (next_word == INCREMENT_WORD) next_word = w + 1;
-		}
-		else
-		{
-			next_word = w + 1;
-		}
-
 		/* Start of nonzero leftcount/rightcount range cache check. It is
 		 * extremely effective for long sentences, but doesn't speed up
 		 * short ones.
@@ -1094,6 +1078,7 @@ static Count_bin do_count(
 		 * l/rcnt_optimize==false. If this can be fixed, a significant
 		 * speedup is expected. */
 
+		wordvecp lrcnt_cache = NULL;
 		bool lrcnt_found = false;     /* TRUE iff a range yielded l/r count */
 		bool lcnt_optimize = true;   /* Perform left count optimization */
 		bool rcnt_optimize = true;   /* Perform right count optimization */
@@ -1104,54 +1089,63 @@ static Count_bin do_count(
 		bool using_cached_match_list = false;
 #define S(c) (!c?"(nil)":connector_string(c))
 
-		if (!ctxt->is_short)
+		if (ctxt->is_short)
 		{
-
-		if (le != NULL)
-		{
-			lrcnt_cache = lrcnt_check(lrcnt_cache, null_count, &lnull_start);
-			if (lrcnt_cache == &lrcnt_cache_zero) continue;
-
-			if (lrcnt_cache != NULL)
-			{
-				lcnt_optimize = false;
-			}
-
-			if ((re != NULL) && (re->farthest_word <= w))
-			{
-				/* If it is already known that "re" would yield a zero
-				 * rightcount, there is no need to fetch the right match list.
-				 * The code below will still check for possible l_bnr counts. */
-				if (no_count(ctxt, 1, re, w - re->farthest_word, null_count))
-					fml_re = NULL;
-			}
+			next_word = w + 1;
 		}
 		else
 		{
-			/* Here re != NULL. */
-			unsigned int rnull_start;
-			lrcnt_cache = lrcnt_check(lrcnt_cache, null_count, &rnull_start);
-			if (lrcnt_cache == &lrcnt_cache_zero) continue;
+			lrcnt_cache = &wvp[w - woffset];
 
-			if (lrcnt_cache != NULL)
-			{
-				rcnt_optimize = false;
-				if (rnull_start <= null_count)
-					lnull_end -= rnull_start;
-			}
-		}
-		/* End of nonzero leftcount/rightcount range cache check. */
-
-		if ((lrcnt_cache == NULL) && (ctxt->sent->null_count == 0))
-		{
-			using_cached_match_list = true;
+			/* Use the word-skip vector to skip over words that are
+			 * known to yield a zero count. */
+			next_word = lrcnt_cache->check_next;
+			if (next_word == INCREMENT_WORD) next_word = w + 1;
 
 			if (le != NULL)
-				mlcl = get_cached_match_list(ctxt, 0, w, le);
-			if (fml_re != NULL && ((le == NULL) || (re->farthest_word <= w)))
-				mlcr = get_cached_match_list(ctxt, 1, w, re);
-		}
+			{
+				lrcnt_cache = lrcnt_check(lrcnt_cache, null_count, &lnull_start);
+				if (lrcnt_cache == &lrcnt_cache_zero) continue;
 
+				if (lrcnt_cache != NULL)
+				{
+					lcnt_optimize = false;
+				}
+
+				if ((re != NULL) && (re->farthest_word <= w))
+				{
+					/* If it is already known that "re" would yield a zero
+					 * rightcount, there is no need to fetch the right match list.
+					 * The code below will still check for possible l_bnr counts. */
+					if (no_count(ctxt, 1, re, w - re->farthest_word, null_count))
+						fml_re = NULL;
+				}
+			}
+			else
+			{
+				/* Here re != NULL. */
+				unsigned int rnull_start;
+				lrcnt_cache = lrcnt_check(lrcnt_cache, null_count, &rnull_start);
+				if (lrcnt_cache == &lrcnt_cache_zero) continue;
+
+				if (lrcnt_cache != NULL)
+				{
+					rcnt_optimize = false;
+					if (rnull_start <= null_count)
+						lnull_end -= rnull_start;
+				}
+			}
+			/* End of nonzero leftcount/rightcount range cache check. */
+
+			if ((lrcnt_cache == NULL) && (ctxt->sent->null_count == 0))
+			{
+				using_cached_match_list = true;
+
+				if (le != NULL)
+					mlcl = get_cached_match_list(ctxt, 0, w, le);
+				if (fml_re != NULL && ((le == NULL) || (re->farthest_word <= w)))
+					mlcr = get_cached_match_list(ctxt, 1, w, re);
+			}
 		}
 
 		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw, mlcl, mlcr);
