@@ -70,6 +70,7 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 typedef struct
 {
 	Disjunct **d_lkg_nc0;    /* Disjuncts with a jet linkage for null_count==0 */
+	count_t *count_nc0;      /* The counts for that linkage. */
 	null_count_m null_count; /* status==0 valid up to this null count */
 	int8_t status;         /* -1: Needs update; 0: No count; 1: Count possible */
 	WordIdx_m check_next;    /* Next word to check */

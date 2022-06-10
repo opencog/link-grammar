@@ -45,6 +45,7 @@ struct fast_matcher_s
 
 	/* Match list cache. */
 	Pool_desc *mld_pool; /* disjuncts pointers */
+	Pool_desc *mlc_pool; /* linkage counts */
 };
 
 /* See the source file for documentation. */
