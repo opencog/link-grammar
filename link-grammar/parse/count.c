@@ -784,6 +784,21 @@ Disjunct ***get_cached_match_list(count_context_t *ctxt, int dir, int w,
 	return &wv[w - ((dir == 0) ? c->nearest_word : c->farthest_word)].d_lkg_nc0;
 }
 
+static Count_bin *get_cached_count(count_context_t *ctxt, int dir, int w,
+                                    Connector *c)
+{
+	if (ctxt->sent->null_count != 0) return NULL;
+
+	wordvecp wv = ctxt->table_lrcnt[dir].tracon_wvp[c->tracon_id];
+	if (wv == NULL) return NULL;
+
+	Count_bin *count =
+		wv[w - ((dir == 0) ? c->nearest_word : c->farthest_word)].count_nc0;
+	if (count == NULL) return NULL;
+
+	return count;
+}
+
 static bool lrcnt_expectation_update(wordvecp wv, bool lrcnt_found,
                                      bool match_list, unsigned int null_count)
 {
@@ -1106,6 +1121,8 @@ static Count_bin do_count(
 		Connector *fml_re = re;       /* For form_match_list() only */
 		Disjunct ***mlcl = NULL, ***mlcr = NULL;
 		bool using_cached_match_list = false;
+		Count_bin *l_cache = NULL;
+		Count_bin *r_cache = NULL;
 #define S(c) (!c?"(nil)":connector_string(c))
 
 		if (ctxt->is_short)
@@ -1161,9 +1178,15 @@ static Count_bin do_count(
 				using_cached_match_list = true;
 
 				if (le != NULL)
+				{
+					l_cache = get_cached_count(ctxt, 0, w, le);
 					mlcl = get_cached_match_list(ctxt, 0, w, le);
+				}
 				if (fml_re != NULL && ((le == NULL) || (re->farthest_word <= w)))
+				{
+					r_cache = get_cached_count(ctxt, 1, w, re);
 					mlcr = get_cached_match_list(ctxt, 1, w, re);
+				}
 			}
 		}
 
