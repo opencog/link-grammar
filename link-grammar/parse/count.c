@@ -1123,6 +1123,7 @@ static Count_bin do_count(
 		bool using_cached_match_list = false;
 		Count_bin *l_cache = NULL;
 		Count_bin *r_cache = NULL;
+		unsigned int lcount_index = 0; /* Cached left count index */
 #define S(c) (!c?"(nil)":connector_string(c))
 
 		if (ctxt->is_short)
@@ -1206,8 +1207,24 @@ static Count_bin do_count(
 			bool Rmatch = d->match_right;
 			w_Count_bin leftcount = NO_COUNT;
 			w_Count_bin rightcount = NO_COUNT;
+			bool leftpcount = false;
+			bool rightpcount = false;
 
 			d->match_left = d->match_right = false;
+
+			if (using_cached_match_list)
+			{
+				if (Lmatch && (l_cache != NULL))
+				{
+					leftpcount = true;
+					leftcount = l_cache[lcount_index++];
+				}
+				if (Rmatch && (r_cache != NULL))
+				{
+					rightpcount = true;
+					rightcount = r_cache[d->rcount_index];
+				}
+			}
 
 #ifdef VERIFY_MATCH_LIST
 			assert(id == d->match_id, "Modified id (%u!=%u)", id, d->match_id);
@@ -1220,8 +1237,14 @@ static Count_bin do_count(
 				int rnull_cnt = null_count - lnull_cnt;
 				/* Now lnull_cnt and rnull_cnt are the null-counts we're
 				 * requiring in those parts respectively. */
-				bool leftpcount = false;
-				bool rightpcount = false;
+
+				if (!using_cached_match_list)
+				{
+					leftcount = NO_COUNT;
+					rightcount = NO_COUNT;
+					leftpcount = false;
+					rightpcount = false;
+				}
 
 				Count_bin l_any = INIT_NO_COUNT;
 				Count_bin r_any = INIT_NO_COUNT;
@@ -1248,7 +1271,7 @@ static Count_bin do_count(
 				 * Cache the result in the l_* and r_* variables, so a table
 				 * lookup can be skipped in cases we cannot skip the actual
 				 * calculation and a table entry exists. */
-				if (Lmatch)
+				if (Lmatch && !leftpcount)
 				{
 					l_any = pseudocount(ctxt, lw, w, le->next, d->left->next, lnull_cnt);
 					leftpcount = (hist_total(&l_any) != 0);
@@ -1272,7 +1295,7 @@ static Count_bin do_count(
 					}
 				}
 
-				if (Rmatch && (leftpcount || (le == NULL)))
+				if (Rmatch && !rightpcount && (leftpcount || (le == NULL)))
 				{
 					r_any = pseudocount(ctxt, w, rw, d->right->next, re->next, rnull_cnt);
 					rightpcount = (hist_total(&r_any) != 0);
@@ -1327,17 +1350,20 @@ static Count_bin do_count(
 				if (leftpcount &&
 				    (!lcnt_optimize || rightpcount || (0 != hist_total(&l_bnr))))
 				{
-					CACHE_COUNT(l_any, leftcount = count,
-						do_count(ctxt, lw, w, le->next, d->left->next, lnull_cnt));
-					if (le->multi)
-						CACHE_COUNT(l_cmulti, hist_accumv(&leftcount, d->cost, count),
-							do_count(ctxt, lw, w, le, d->left->next, lnull_cnt));
-					if (d->left->multi)
-						CACHE_COUNT(l_dmulti, hist_accumv(&leftcount, d->cost, count),
-							do_count(ctxt, lw, w, le->next, d->left, lnull_cnt));
-					if (d->left->multi && le->multi)
-						CACHE_COUNT(l_dcmulti, hist_accumv(&leftcount, d->cost, count),
-							do_count(ctxt, lw, w, le, d->left, lnull_cnt));
+					if (hist_total(&leftcount) == NO_COUNT)
+					{
+						CACHE_COUNT(l_any, leftcount = count,
+							do_count(ctxt, lw, w, le->next, d->left->next, lnull_cnt));
+						if (le->multi)
+							CACHE_COUNT(l_cmulti, hist_accumv(&leftcount, d->cost, count),
+								do_count(ctxt, lw, w, le, d->left->next, lnull_cnt));
+						if (d->left->multi)
+							CACHE_COUNT(l_dmulti, hist_accumv(&leftcount, d->cost, count),
+								do_count(ctxt, lw, w, le->next, d->left, lnull_cnt));
+						if (d->left->multi && le->multi)
+							CACHE_COUNT(l_dcmulti, hist_accumv(&leftcount, d->cost, count),
+								do_count(ctxt, lw, w, le, d->left, lnull_cnt));
+					}
 
 					if (0 < hist_total(&leftcount))
 					{
@@ -1353,17 +1379,20 @@ static Count_bin do_count(
 				if (rightpcount &&
 				    (!rcnt_optimize || (0 < hist_total(&leftcount)) || (0 != hist_total(&r_bnl))))
 				{
-					CACHE_COUNT(r_any, rightcount = count,
-						do_count(ctxt, w, rw, d->right->next, re->next, rnull_cnt));
-					if (re->multi)
-						CACHE_COUNT(r_cmulti, hist_accumv(&rightcount, d->cost, count),
-							do_count(ctxt, w, rw, d->right->next, re, rnull_cnt));
-					if (d->right->multi)
-						CACHE_COUNT(r_dmulti, hist_accumv(&rightcount, d->cost, count),
-							do_count(ctxt, w, rw, d->right, re->next, rnull_cnt));
-					if (d->right->multi && re->multi)
-						CACHE_COUNT(r_dcmulti, hist_accumv(&rightcount, d->cost, count),
-							do_count(ctxt, w, rw, d->right, re, rnull_cnt));
+					if (hist_total(&rightcount) == NO_COUNT)
+					{
+						CACHE_COUNT(r_any, rightcount = count,
+							do_count(ctxt, w, rw, d->right->next, re->next, rnull_cnt));
+						if (re->multi)
+							CACHE_COUNT(r_cmulti, hist_accumv(&rightcount, d->cost, count),
+								do_count(ctxt, w, rw, d->right->next, re, rnull_cnt));
+						if (d->right->multi)
+							CACHE_COUNT(r_dmulti, hist_accumv(&rightcount, d->cost, count),
+								do_count(ctxt, w, rw, d->right, re->next, rnull_cnt));
+						if (d->right->multi && re->multi)
+							CACHE_COUNT(r_dcmulti, hist_accumv(&rightcount, d->cost, count),
+								do_count(ctxt, w, rw, d->right, re, rnull_cnt));
+					}
 
 					if (0 < hist_total(&rightcount))
 					{
