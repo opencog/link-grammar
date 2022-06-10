@@ -681,7 +681,7 @@ static wordvecp lrcnt_check(wordvecp wvp, unsigned int null_count,
 
 	/* The null counts greater than wvp->null_count have not
 	 * been handled yet for the given range (the cache will get
-	 * updated for them by lrcnt_cache_update()). */
+	 * updated for them by lrcnt_expectation_update()). */
 	if (null_start == NULL) return NULL;
 	*null_start = wvp->null_count + 1;
 	return wvp;
@@ -704,7 +704,7 @@ static wordvecp alloc_lrcnt_wv(count_context_t *ctxt, wordvecp *wvp,
 	if (*wvp == NULL)
 	{
 		Connector *c = (le == NULL) ? re : le;
-		/* Create a new cache entry, to be updated by lrcnt_cache_update(). */
+		/* Create a cache entry, to be updated by lrcnt_expectation_update(). */
 		const size_t wordvec_size = abs(c->farthest_word - c->nearest_word) + 1;
 		*wvp = pool_alloc_vec(ctxt->sent->wordvec_pool, wordvec_size);
 		/* FIXME: Eliminate the need to initialize these fields with -1. */
@@ -743,8 +743,8 @@ Disjunct ***get_cached_match_list(count_context_t *ctxt, int dir, int w,
 	return &wv[w - ((dir == 0) ? c->nearest_word : c->farthest_word)].d_lkg_nc0;
 }
 
-static bool lrcnt_cache_update(wordvecp wv, bool lrcnt_found,
-                              bool match_list, unsigned int null_count)
+static bool lrcnt_expectation_update(wordvecp wv, bool lrcnt_found,
+                                     bool match_list, unsigned int null_count)
 {
 	bool lrcnt_status_changed = (wv->status != (int)lrcnt_found);
 	unsigned int prev_null_count = wv->null_count;
@@ -1350,8 +1350,11 @@ static Count_bin do_count(
 		if (lrcnt_cache != NULL)
 		{
 			bool match_list = (get_match_list_element(mchxt, mlb) != NULL);
-			if (lrcnt_cache_update(lrcnt_cache, lrcnt_found, match_list, null_count))
+			if (lrcnt_expectation_update(lrcnt_cache, lrcnt_found, match_list,
+			                             null_count))
+			{
 				lrcnt_cache_changed = true;
+			}
 			if (lrcnt_found && (ctxt->sent->null_count == 0))
 				lrcnt_cache_match_list(lrcnt_cache, mchxt, mlb, /*dir*/le == NULL);
 		}
