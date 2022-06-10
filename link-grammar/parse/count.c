@@ -606,6 +606,39 @@ static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
 }
 
 /**
+ *  Clamp the given count to INT_MAX.
+ *  The returned value is normally unused by the callers
+ *  (to be used when debugging overflows).
+ */
+static bool parse_count_clamp(w_Count_bin *total)
+{
+	if (INT_MAX < hist_total(total))
+	{
+		/*  Sigh. Overflows can and do occur, esp for the ANY language. */
+#if PERFORM_COUNT_HISTOGRAMMING
+		total->total = INT_MAX;
+#else
+		*total = INT_MAX;
+#endif /* PERFORM_COUNT_HISTOGRAMMING */
+
+		return true;
+	}
+
+	return false;
+}
+
+static void lrcnt_keep_count(wordvecp lrcnt_cache, bool dir, Disjunct *d,
+                             w_Count_bin leftcount, w_Count_bin rightcount)
+{
+#if PERFORM_COUNT_HISTOGRAMMING
+	return; /* Not supported. */
+#endif
+	w_Count_bin count = dir ? rightcount : leftcount;
+	parse_count_clamp(&count);
+	d->lrcount = (Count_bin)count;
+}
+
+/**
  * Cache the match list elements that yield a non-zero count.
  */
 static void lrcnt_cache_match_list(wordvecp lrcnt_cache, fast_matcher_t *mchxt,
@@ -811,28 +844,6 @@ static Count_bin pseudocount(count_context_t * ctxt,
 	Count_bin *count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	if (NULL == count) return count_unknown;
 	return *count;
-}
-
-/**
- *  Clamp the given count to INT_MAX.
- *  The returned value is normally unused by the callers
- *  (to be used when debugging overflows).
- */
-static bool parse_count_clamp(w_Count_bin *total)
-{
-	if (INT_MAX < hist_total(total))
-	{
-		/*  Sigh. Overflows can and do occur, esp for the ANY language. */
-#if PERFORM_COUNT_HISTOGRAMMING
-		total->total = INT_MAX;
-#else
-		*total = INT_MAX;
-#endif /* PERFORM_COUNT_HISTOGRAMMING */
-
-		return true;
-	}
-
-	return false;
 }
 
 /**
@@ -1163,6 +1174,8 @@ static Count_bin do_count(
 			Disjunct *d = get_match_list_element(mchxt, mle);
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
+			w_Count_bin leftcount = NO_COUNT;
+			w_Count_bin rightcount = NO_COUNT;
 
 			d->match_left = d->match_right = false;
 
@@ -1281,8 +1294,6 @@ static Count_bin do_count(
 				 * in the count multiplication is zero,
 				 * we know that the true total is zero. So we don't
 				 * bother counting the other term at all, in that case. */
-				w_Count_bin leftcount = hist_zero();
-				w_Count_bin rightcount = hist_zero();
 				if (leftpcount &&
 				    (!lcnt_optimize || rightpcount || (0 != hist_total(&l_bnr))))
 				{
@@ -1345,6 +1356,13 @@ static Count_bin do_count(
 				}
 
 				parse_count_clamp(&total);
+			}
+
+			if ((lrcnt_cache != NULL) && (d->match_left || d->match_right) &&
+			    (ctxt->sent->null_count == 0))
+			{
+				lrcnt_keep_count(lrcnt_cache, /*dir*/le == NULL, d, leftcount,
+				                 rightcount);
 			}
 		}
 
