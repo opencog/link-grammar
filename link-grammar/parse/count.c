@@ -69,8 +69,11 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
  * check_next skips all the words for which the count is known to be zero. */
 typedef struct
 {
-	Disjunct **d_lkg_nc0;    /* Disjuncts with a jet linkage for null_count==0 */
-	count_t *count_nc0;      /* The counts for that linkage. */
+	/* Arrays of match list information for sentences with null_count==0.
+	 * The count at index x is due to the disjuncts at the same index x. */
+	Disjunct **d_lkg_nc0;    /* Disjuncts with a jet linkage */
+	count_t *count_nc0;      /* The counts for that linkage */
+
 	null_count_m null_count; /* status==0 valid up to this null count */
 	int8_t status;         /* -1: Needs update; 0: No count; 1: Count possible */
 	WordIdx_m check_next;    /* Next word to check */
@@ -1214,6 +1217,16 @@ static Count_bin do_count(
 
 			if (using_cached_match_list)
 			{
+				/* If a cached left match list is used, form_match_list() always
+				 * uses all of its disjuncts. But if a cached right match list
+				 * is used and le!=0, form_match_list() omits its disjuncts that
+				 * don't have a left match (see "lc optimization" there)).
+				 * Since the left/right cached count elements correspond to the
+				 * full cached match lists (see count_expectation), an
+				 * incremental counter can be used for the cached left count,
+				 * but for the cached right count we depend on form_match_list()
+				 * to set d->rcount_index as the index into the corresponding
+				 * cached right count array. */
 				if (Lmatch && (l_cache != NULL))
 				{
 					leftpcount = true;
