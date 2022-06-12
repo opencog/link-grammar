@@ -691,6 +691,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		{
 			if ((lc != NULL) && !(*cmx)->match_left) continue; /* lc optimization*/
 			(*cmx)->match_right = true;
+			(*cmx)->rcount_index = (uint32_t)(cmx - *mlcr);
 			if ((*cmx)->match_left) continue;
 			push_match_list_element(ctxt, lid, *cmx);
 		}
