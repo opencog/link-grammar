@@ -658,16 +658,23 @@ static void lrcnt_cache_match_list(wordvecp lrcnt_cache, fast_matcher_t *mchxt,
 	        get_match_list_element(mchxt, mlb)->match_id, dir, mlb, dcnt, i-mlb);
 
 	Disjunct **ml = pool_alloc_vec(mchxt->mld_pool, dcnt + 1);
+	count_t *c = pool_alloc_vec(mchxt->mlc_pool, dcnt);
 	dcnt = 0;
 	for (i = mlb; get_match_list_element(mchxt, i) != NULL; i++)
 	{
 		Disjunct *d = get_match_list_element(mchxt, i);
 		if ((dir == 0) ? d->match_left : d->match_right)
-			ml[dcnt++] = d;
+		{
+			ml[dcnt] = d;
+			assert(d->lrcount > 0, "Invalid linkage count %d", d->lrcount);
+			c[dcnt] = d->lrcount;
+			dcnt++;
+		}
 	}
 	ml[dcnt] = NULL;
 
 	lrcnt_cache->d_lkg_nc0 = ml;
+	lrcnt_cache->count_nc0 = c;
 }
 
 /**
