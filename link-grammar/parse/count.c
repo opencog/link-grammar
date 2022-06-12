@@ -13,7 +13,7 @@
 /*************************************************************************/
 
 #include <limits.h>
-#include <inttypes.h>                 // PRIu64
+#include <inttypes.h>                   // PRIu64
 #if HAVE_THREADS_H
 #include <threads.h>
 #endif /* HAVE_THREADS_H */
@@ -26,7 +26,7 @@
 #include "disjunct-utils.h"
 #include "fast-match.h"
 #include "resources.h"
-#include "tokenize/word-structures.h" // for Word_struct
+#include "tokenize/word-structures.h"   // for Word_struct
 #include "utilities.h"
 
 /* This file contains the exhaustive search algorithm. */
@@ -38,7 +38,7 @@ struct Table_connector_s
 {
 	Table_connector  *next;
 	int              l_id, r_id;
-	Count_bin          count;
+	Count_bin        count;
 	unsigned int     null_count;
 	size_t           hash;
 };
@@ -315,7 +315,6 @@ static void init_table_lrcnt(count_context_t *ctxt)
 
 	const size_t initial_size = MIN(sent->length/2, 16) *
 		                   (ctxt->table_lrcnt[0].sz + ctxt->table_lrcnt[1].sz);
-
 
 	if (NULL != sent->wordvec_pool)
 	{

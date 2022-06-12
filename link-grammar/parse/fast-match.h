@@ -13,11 +13,11 @@
 #ifndef _FAST_MATCH_H_
 #define _FAST_MATCH_H_
 
-#include <stddef.h> // for size_t
+#include <stddef.h>                     // for size_t
 #include "api-types.h"
 #include "disjunct-utils.h"             // Disjunct_struct
 #include "error.h"                      // lgdebug
-#include "link-includes.h" // for Sentence
+#include "link-includes.h"              // for Sentence
 #include "memory-pool.h"
 
 typedef struct Match_node_struct Match_node;
