@@ -133,8 +133,15 @@ void pool_delete (const char *func, Pool_desc *mp)
  */
 void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 {
-	dassert(vecsize < mp->num_elements, "Pool block is too small %zu > %zu)",
-	        vecsize, mp->num_elements);
+	dassert(vecsize < mp->num_elements,
+	        "Pool %s: num_elements is too small %zu >= %zu)",
+	        mp->name, vecsize, mp->num_elements);
+	if (vecsize >= mp->num_elements)
+	{
+		prt_error("Warning: Pool %s: num_elements is too small %zu >= %zu)\n",
+		          mp->name, vecsize, mp->num_elements);
+		return NULL;
+	}
 
 	mp->curr_elements += vecsize; /* skipped space disregarded when vecsize > 1 */
 
