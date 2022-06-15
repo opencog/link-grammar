@@ -259,13 +259,15 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			         /*num_elements*/2048, sizeof(Match_node),
 			         /*zero_out*/false, /*align*/true, /*exact*/false);
 	}
+	const size_t match_list_pool_size = 512*1024; /* Currently a hard limit. */
+	/* FIXME: Modify pool_alloc_vec() to use dynamic block sizes. */
 	ctxt->mld_pool =
 		pool_new(__func__, "Match list cache",
-		         /*num_elements*/512*1024, sizeof(Disjunct *),
+		         /*num_elements*/match_list_pool_size, sizeof(Disjunct *),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
 	ctxt->mlc_pool =
 		pool_new(__func__, "Match list counts",
-		         /*num_elements*/512*1024, sizeof(count_t),
+		         /*num_elements*/match_list_pool_size, sizeof(count_t),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
 
 	sortbin *sbin = alloca(sent->length * sizeof(sortbin));
