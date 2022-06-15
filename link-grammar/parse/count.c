@@ -662,6 +662,9 @@ static void lrcnt_cache_match_list(wordvecp lrcnt_cache, fast_matcher_t *mchxt,
 
 	Disjunct **ml = pool_alloc_vec(mchxt->mld_pool, dcnt + 1);
 	count_t *c = pool_alloc_vec(mchxt->mlc_pool, dcnt);
+
+	if ((ml == NULL) || (c == NULL)) return; /* Cannot allocate cache array */
+
 	dcnt = 0;
 	for (i = mlb; get_match_list_element(mchxt, i) != NULL; i++)
 	{
