@@ -18,7 +18,9 @@
 #include "error.h"
 #include "utilities.h"                  // GNUC_MALLOC (XXX separate include?)
 
+#ifndef D_MEMPOOL                       // Allow redefining for debug.
 #define D_MEMPOOL (D_SPEC+4)
+#endif
 #define MIN_ALIGNMENT sizeof(void *)    // Minimum element alignment.
 #define MAX_ALIGNMENT 64                // Maximum element alignment.
 //#define POOL_FREE                       // Allow to reuse individual elements.

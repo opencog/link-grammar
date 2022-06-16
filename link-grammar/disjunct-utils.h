@@ -19,6 +19,7 @@
 #include "connectors.h"                 // Connector
 #include "api-types.h"
 #include "api-structures.h"             // Sentence
+#include "parse/histogram.h"            // count_t
 
 // Can undefine VERIFY_MATCH_LIST when done debugging...
 #define VERIFY_MATCH_LIST
@@ -52,7 +53,11 @@ struct Disjunct_struct
 	union
 	{
 		Disjunct *dup_table_next; /* Duplicate elimination | before pruning */
-		Disjunct *unused1;        /* Unused now | before parsing */
+		struct
+		{
+			count_t lrcount;       /* Left/right count | during counting */
+			uint32_t rcount_index; /* Right count index | set by form_match_list */
+		};
 	}; /* 8 bytes */
 
 	/* Shared by different steps. For what | when. */
