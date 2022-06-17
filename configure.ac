@@ -496,7 +496,7 @@ AC_CHECK_HEADER([opencog/atomspace/AtomSpace.h], [AtomSpaceFound=yes], AtomSpace
 AC_LANG_POP()
 
 if test "${AtomSpaceFound}" = yes; then
-	AC_DEFINE(USE_ATOMESE, 1, [Define for compilation])
+	AC_DEFINE(HAVE_ATOMESE, 1, [Define for compilation])
 fi
 
 # ====================================================================
@@ -1055,6 +1055,7 @@ data/th/Makefile
 data/th/words/Makefile
 data/tr/Makefile
 data/vn/Makefile
+data/demo-atomese/Makefile
 data/demo-sql/Makefile
 man/Makefile
 ])

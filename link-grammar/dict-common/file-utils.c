@@ -445,12 +445,12 @@ bool check_db(const char *lang)
 {
 	char *dbname = join_path (lang, "dict.db");
 	bool retval = file_exists(dbname);
-	free(dbname);
 #if !HAVE_SQLITE3
 	if (retval)
 		prt_error("Error: Could not open dictionary \"%s\" "
 		          "(not configured with SQLite support)\n", dbname);
 #endif /* !HAVE_SQLITE3 */
+	free(dbname);
 	return retval;
 }
 
@@ -458,12 +458,12 @@ bool check_atomspace(const char *lang)
 {
 	char *cfgfile = join_path (lang, "cogserver.dict");
 	bool retval = file_exists(cfgfile);
-	free(cfgfile);
 #if !HAVE_ATOMESE
 	if (retval)
 		prt_error("Error: Could not open dictionary \"%s\" "
 		          "(not configured with AtomSpace support)\n", cfgfile);
 #endif /* !HAVE_ATOMESE */
+	free(cfgfile);
 	return retval;
 }
 

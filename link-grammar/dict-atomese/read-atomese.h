@@ -15,8 +15,8 @@
 
 #include "link-includes.h"
 
-#ifdef HAVE_ATOMSPACE
-Dictionary dictionary_create_from_atomspace(const char *lang);
-#endif /* HAVE_ATOMSPACE */
+#ifdef HAVE_ATOMESE
+Dictionary dictionary_create_from_atomese(const char *lang);
+#endif /* HAVE_ATOMESE */
 
 #endif /* READ_ATOMESE_H */

@@ -10,10 +10,11 @@
  * Copyright (c) 2014, 2022 Linas Vepstas <linasvepstas@gmail.com>
  */
 
-#ifdef HAVE_ATOMSPACE
+#ifdef HAVE_ATOMESE
 
 #define D_ATOMSPACE 5 /* Verbosity levels for this module are 5 and 6. */
 
+extern "C" {
 #include "api-structures.h"
 #include "connectors.h"
 #include "dict-common/dict-api.h"
@@ -32,6 +33,8 @@
 
 #include "read-atomese.h"
 
+}; // extern "C"
+
 Dictionary dictionary_create_from_atomese(const char *lang)
 {
 	Dictionary dict;
@@ -42,9 +45,11 @@ printf("duuude hello world\n");
 
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
+#if 0
 	t = strrchr (lang, '/');
 	t = (NULL == t) ? lang : t+1;
 	dict->lang = string_set_add(t, dict->string_set);
+#endif
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 
 	dict->spell_checker = nullptr;
@@ -89,9 +94,11 @@ printf("duuude hello world\n");
 
 	return dict;
 
+#if 0
 failure:
 	dictionary_delete(dict);
 	return NULL;
+#endif
 }
 
 #endif /* HAVE_ATOMESE */
