@@ -10,7 +10,7 @@
 %                                                               %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-#define dictionary-version-number 5.10.4;
+#define dictionary-version-number 5.10.5;
 #define dictionary-locale th_TH.UTF-8;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

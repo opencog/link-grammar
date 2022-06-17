@@ -1,4 +1,4 @@
-Version 5.10.5 (XXX 2022)
+Version 5.10.5 (17 June 2022)
  * Updated Docker files. #1288
  * English dict: broader handling of ellipsis.
  * Updated Thai dicts: #1292, #1294

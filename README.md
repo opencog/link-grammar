@@ -132,7 +132,8 @@ suffixes that carry all of the syntactic structure, and not the stems.
 The Russian lexis is
 [documented here](https://www.abisource.com/projects/link-grammar/russian/doc/).
 
-And here is an example in Thai:
+The Thai dictionary is now fully developed, effectively covering the
+entire language.  An example in Thai:
 ```
 linkparser> นายกรัฐมนตรี ขึ้น กล่าว สุนทรพจน์
 	Linkage 1, cost vector = (UNUSED=0 DIS= 2.00 LEN=2)
@@ -163,11 +164,12 @@ Found 1 linkage (1 had no P.P. violations)
 LEFT-WALL เมื่อวานนี้.n[!] มี.ve[!] คน.n[!] มา.x[!] ติดต่อ.v[!] คุณ.pr[!] ครับ.pt[!]
 ```
 
-A full documentation for the input formats can be
+Full documentation for the Thai dictionary can be
 [found here](th/INPUT_FORMATS.md).
 
-Moreover, it accepts LST20 tagsets for POS and named entities to bridge
-the gap between fundamental NLP tools and the Link Parser. For example:
+The Thai dictionary accepts LST20 tagsets for POS and named entities,
+to bridge the gap between fundamental NLP tools and the Link Parser.
+For example:
 
 ```
 linkparser> linkparser> วันที่_25_ธันวาคม@DTM ของ@PS ทุก@AJ ปี@NN เป็น@VV วัน@NN คริสต์มาส@NN
@@ -284,7 +286,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.10.4.tar.gz.asc`
+`gpg --verify link-grammar-5.10.5.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
@@ -299,7 +301,7 @@ verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 Tags in `git` can be verified by performing the following:
 ```
 gpg --recv-keys --keyserver keyserver.ubuntu.com EB6AA534E0C0651C
-git tag -v link-grammar-5.10.4
+git tag -v link-grammar-5.10.5
 ```
 
 
