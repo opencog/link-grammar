@@ -74,16 +74,11 @@ printf("duuude called as_close\n");
 
 Dictionary dictionary_create_from_atomese(const char *dictdir)
 {
-	Dictionary cfgd;
-	define_s cfg_defines;
-
-	Dictionary dict;
-	const char* url;
-	char * affix_name;
 
 	/* Read basic configuration */
 	char *cfg_name = join_path (dictdir, "cogserver.dict");
-	cfgd = dictionary_six(dictdir, cfg_name, NULL, NULL, NULL, NULL);
+	Dictionary cfgd =
+		dictionary_six(dictdir, cfg_name, NULL, NULL, NULL, NULL);
 	if (cfgd == NULL)
 	{
 		prt_error("Error: Could not open cogserver configuration file %s\n",
@@ -93,7 +88,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	}
 	free(cfg_name);
 
-	cfg_defines = cfgd->define;
+	define_s cfg_defines = cfgd->define;
 	memset(&cfgd->define, 0, sizeof(define_s));
 
 	/* It's a temporary, we don't need it any more. */
@@ -101,7 +96,8 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	cfgd = NULL;
 
 	/* --------------------------------------------- */
-	dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
+	const char* url;
+	Dictionary dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
 	/* Language and locale stuff */
@@ -116,7 +112,19 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	dict->spell_checker = nullptr;
 	dict->base_knowledge = NULL;
 	dict->hpsg_knowledge = NULL;
-	dict->db_handle = NULL;
+
+	/* Setup the affix table */
+	/* XXX FIXME -- need to pull this from atomspace, too. */
+	char * affix_name = join_path (lang, "4.0.affix");
+	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
+	if (dict->affix_table == NULL)
+	{
+		prt_error("Error: Could not open affix file %s\n", affix_name);
+		free(affix_name);
+		goto failure;
+	}
+	free(affix_name);
+	if (!afdict_init(dict)) goto failure;
 
 	url = linkgrammar_get_dict_define(dict, COGSERVER_URL);
 	if (NULL == url) goto failure;
@@ -137,18 +145,6 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	                          sizeof(Exp), /*zero_out*/false,
 	                          /*align*/false, /*exact*/false);
 
-	/* Setup the affix table */
-	/* XXX FIXME -- need to pull this from atomspace, too. */
-	affix_name = join_path (lang, "4.0.affix");
-	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
-	if (dict->affix_table == NULL)
-	{
-		prt_error("Error: Could not open affix file %s\n", affix_name);
-		free(affix_name);
-		goto failure;
-	}
-	free(affix_name);
-	if (!afdict_init(dict)) goto failure;
 
 #if 0
 	if (!dictionary_setup_defines(dict))
