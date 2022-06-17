@@ -1,6 +1,7 @@
 
 DICTS=                           \
-      cogserver.dict
+      cogserver.dict             \
+      4.0.affix
 
 dictdir=$(pkgdatadir)/demo-atomese
 dict_DATA = $(DICTS)

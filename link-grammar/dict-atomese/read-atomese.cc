@@ -79,6 +79,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 
 	Dictionary dict;
 	const char* url;
+	char * affix_name;
 
 	/* Read basic configuration */
 	char *cfg_name = join_path (dictdir, "cogserver.dict");
@@ -136,9 +137,9 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	                          sizeof(Exp), /*zero_out*/false,
 	                          /*align*/false, /*exact*/false);
 
-#if 0
 	/* Setup the affix table */
-	char *affix_name = join_path (lang, "4.0.affix");
+	/* XXX FIXME -- need to pull this from atomspace, too. */
+	affix_name = join_path (lang, "4.0.affix");
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
 	{
@@ -147,9 +148,9 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 		goto failure;
 	}
 	free(affix_name);
-	if (!afdict_init(dict))
-		goto failure;
+	if (!afdict_init(dict)) goto failure;
 
+#if 0
 	if (!dictionary_setup_defines(dict))
 		goto failure;
 
