@@ -38,6 +38,40 @@ extern "C" {
 #define COGSERVER_URL "cogserver-url"
 
 
+static bool as_lookup(Dictionary dict, const char *s)
+{
+printf("duuude called as_lookup for %s\n", s);
+	return false;
+}
+
+static Dict_node * as_lookup_list(Dictionary dict, const char *s)
+{
+printf("duuude called as_lookup_list for %s\n", s);
+	return NULL;
+}
+
+static Dict_node * as_lookup_wild(Dictionary dict, const char *s)
+{
+printf("duuude called as_lookup_wild for %s\n", s);
+	return NULL;
+}
+
+static void as_free_llist(Dictionary dict, Dict_node *llist)
+{
+	Dict_node * dn;
+	while (llist != NULL)
+	{
+		dn = llist->right;
+		free(llist);
+		llist = dn;
+	}
+}
+
+static void as_close(Dictionary dict)
+{
+printf("duuude called as_close\n");
+}
+
 Dictionary dictionary_create_from_atomese(const char *dictdir)
 {
 	Dictionary cfgd;
@@ -84,22 +118,17 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	dict->db_handle = NULL;
 
 	url = linkgrammar_get_dict_define(dict, COGSERVER_URL);
-	if (NULL == url)
-	{
-		dictionary_delete(cfgd);
-		return NULL;
-	}
+	if (NULL == url) goto failure;
 
-#if 0
-	/* Set up the database */
-	dict->db_handle = object_open(dict->name, db_open, NULL);
+	/* Set up the server connection */
+	dict->as_server = NULL;
 
-	dict->lookup_list = db_lookup_list;
-	dict->lookup_wild = db_lookup_wild;
-	dict->free_lookup = db_free_llist;
-	dict->lookup = db_lookup;
-	dict->close = db_close;
-#endif
+	/* Install backend methods */
+	dict->lookup_list = as_lookup_list;
+	dict->lookup_wild = as_lookup_wild;
+	dict->free_lookup = as_free_llist;
+	dict->lookup = as_lookup;
+	dict->close = as_close;
 
 	condesc_init(dict, 1<<8);
 
@@ -131,11 +160,9 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 
 	return dict;
 
-#if 0
 failure:
 	dictionary_delete(dict);
 	return NULL;
-#endif
 }
 
 #endif /* HAVE_ATOMESE */

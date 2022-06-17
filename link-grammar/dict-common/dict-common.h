@@ -132,6 +132,9 @@ struct Dictionary_s
 #ifdef HAVE_SQLITE3
 	void *          db_handle;         /* database handle */
 #endif
+#ifdef HAVE_ATOMESE
+	void *          as_server;         /* cogserver connection */
+#endif
 
 	void (*insert_entry)(Dictionary, Dict_node *, int);
 	Dict_node* (*lookup_list)(Dictionary, const char*);
