@@ -217,7 +217,7 @@ CXXFLAGS="${CXXFLAGS} -Wall"
 # GNU, but do NOT turn on POSIX.
 
 CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAG_VISIBILITY} ${CFLAGS}"
-CXXFLAGS="-std=c++11 ${CFLAG_VISIBILITY} ${CXXFLAGS}"
+CXXFLAGS="-std=c++17 ${CFLAG_VISIBILITY} ${CXXFLAGS}"
 
 if test x${native_win32} = xyes; then
 	# We need the shlwapi for PathRemoveFileSpecA().
@@ -491,7 +491,9 @@ AC_SUBST(SQLITE3_CFLAGS)
 # ====================================================================
 # The AtomSpace dictionary backend
 
+AC_LANG_PUSH([C++])
 AC_CHECK_HEADER([opencog/atomspace/AtomSpace.h], [AtomSpaceFound=yes], AtomSpaceFound=no)
+AC_LANG_POP()
 
 if test "${AtomSpaceFound}" = yes; then
 	AC_DEFINE(USE_ATOMESE, 1, [Define for compilation])
