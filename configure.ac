@@ -4,7 +4,7 @@
 # accordingly.
 # Don't end the URLs with a slash even if it appears in the official address,
 # because we may append a component. Also, they cannot include "!".
-AC_INIT([link-grammar],[5.10.5],[https://github.com/opencog/link-grammar],[],
+AC_INIT([link-grammar],[5.11.0],[https://github.com/opencog/link-grammar],[],
 		  [https://www.abisource.com/projects/link-grammar])
 
 dnl Check whether we want to set defaults for CFLAGS and CXXFLAGS
@@ -33,11 +33,11 @@ dnl     4a) Increment when removing or changing interfaces.
 LINK_MAJOR_VERSION=5
 dnl     4a) 5) Increment when adding interfaces.
 dnl     6) Set to zero when removing or changing interfaces.
-LINK_MINOR_VERSION=10
+LINK_MINOR_VERSION=11
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=5
+LINK_MICRO_VERSION=0
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -55,8 +55,8 @@ AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 # When maintainer-mode is enabled, downstream users sometimes trip
 # trip over automake issues. See bug #649.
-AM_MAINTAINER_MODE([disable])
-# AM_MAINTAINER_MODE([enable])
+# AM_MAINTAINER_MODE([disable])
+AM_MAINTAINER_MODE([enable])
 
 AC_CONFIG_MACRO_DIR([m4])
 
@@ -487,6 +487,15 @@ fi
 AM_CONDITIONAL(HAVE_SQLITE3, test "${SQLiteFound}" = yes)
 AC_SUBST(SQLITE3_LIBS)
 AC_SUBST(SQLITE3_CFLAGS)
+
+# ====================================================================
+# The AtomSpace dictionary backend
+
+AC_CHECK_HEADER([opencog/atomspace/AtomSpace.h], [AtomSpaceFound=yes], AtomSpaceFound=no)
+
+if test "${AtomSpaceFound}" = yes; then
+	AC_DEFINE(USE_ATOMESE, 1, [Define for compilation])
+fi
 
 # ====================================================================
 # Set Default Spell Checker settings
@@ -1077,6 +1086,7 @@ $PACKAGE-$VERSION  build configuration settings
 	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
 	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
+	AtomSpace-backed dictionary:    ${AtomSpaceFound}
 	Definitions:                    ${LG_DEFS}
 	Libraries:                      ${lglibs}
 ])"
