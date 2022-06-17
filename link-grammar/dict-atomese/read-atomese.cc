@@ -41,6 +41,7 @@ extern "C" {
 Dictionary dictionary_create_from_atomese(const char *lang)
 {
 	Dictionary cfgd;
+	String_id* cfg_defines;
 
 	Dictionary dict;
 	const char* url;
@@ -56,22 +57,19 @@ Dictionary dictionary_create_from_atomese(const char *lang)
 		return NULL;
 	}
 	free(cfg_name);
-
-	url = linkgrammar_get_dict_define(cfgd, COGSERVER_URL);
-	if (NULL == url)
-	{
-		dictionary_delete(cfgd);
-		return NULL;
-	}
-printf("duuude url=%s\n", url);
+	cfg_defines = cfgd->define.set;
+	cfgd->define.set = NULL;
 
 	/* It's a temporary, we don't need it any more. */
 	dictionary_delete(cfgd);
+	cfgd = NULL;
 
+	/* --------------------------------------------- */
 	dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
 	/* Language and file-name stuff */
+	dict->define.set = cfg_defines;
 	dict->string_set = string_set_create();
 #if 0
 	dict->lang = string_set_add(t, dict->string_set);
@@ -81,6 +79,16 @@ printf("duuude url=%s\n", url);
 	dict->spell_checker = nullptr;
 	dict->base_knowledge = NULL;
 	dict->hpsg_knowledge = NULL;
+
+	dict->define.set = string_id_create();
+
+	url = linkgrammar_get_dict_define(dict, COGSERVER_URL);
+	if (NULL == url)
+	{
+		dictionary_delete(cfgd);
+		return NULL;
+	}
+printf("duuude url=%s\n", url);
 
 #if 0
 	/* Set up the database */
