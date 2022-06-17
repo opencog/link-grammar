@@ -172,6 +172,9 @@ dictionary_six_str(const char * lang,
 		dict->lookup = return_true;
 		condesc_init(dict, 1<<9);
 		Exp_pool_size = 1<<5;
+
+		/* Allow affix files to use defines. Used by atomese cfg. */
+		dict->define.set = string_id_create();
 	}
 
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/Exp_pool_size,

@@ -35,10 +35,38 @@ extern "C" {
 
 }; // extern "C"
 
+#define COGSERVER_URL "cogserver-url"
+
+
 Dictionary dictionary_create_from_atomese(const char *lang)
 {
+	Dictionary cfgd;
+
 	Dictionary dict;
-printf("duuude hello world\n");
+	const char* url;
+
+	/* Read basic configuration */
+	char *cfg_name = join_path (lang, "cogserver.dict");
+	cfgd = dictionary_six(lang, cfg_name, NULL, NULL, NULL, NULL);
+	if (cfgd == NULL)
+	{
+		prt_error("Error: Could not open cogserver configuration file %s\n",
+			cfg_name);
+		free(cfg_name);
+		return NULL;
+	}
+	free(cfg_name);
+
+	url = linkgrammar_get_dict_define(cfgd, COGSERVER_URL);
+	if (NULL == url)
+	{
+		dictionary_delete(cfgd);
+		return NULL;
+	}
+printf("duuude url=%s\n", url);
+
+	/* It's a temporary, we don't need it any more. */
+	dictionary_delete(cfgd);
 
 	dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
@@ -46,8 +74,6 @@ printf("duuude hello world\n");
 	/* Language and file-name stuff */
 	dict->string_set = string_set_create();
 #if 0
-	t = strrchr (lang, '/');
-	t = (NULL == t) ? lang : t+1;
 	dict->lang = string_set_add(t, dict->string_set);
 #endif
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);

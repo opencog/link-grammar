@@ -5,4 +5,7 @@
 % The default port for CogServers is 17001
 % Here `localhost` is just 127.0.0.1
 % Replace `localhost` by `example.com` or a dotted IPv4 address.
-#define cogserver-url cog://localhost:17001
+#define cogserver-url "cog://localhost:17001";
+
+% At least one bogus entry is needed.
+foo: BAR+;
