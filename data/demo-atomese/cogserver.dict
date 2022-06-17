@@ -1,6 +1,7 @@
 
-#define dictionary-version-number 5.11.0;
+#define dictionary-lang           en;
 #define dictionary-locale         en_US.UTF-8;
+#define dictionary-version-number 5.11.0;
 
 % The default port for CogServers is 17001
 % Here `localhost` is just 127.0.0.1

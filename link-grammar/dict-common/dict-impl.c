@@ -341,7 +341,7 @@ double linkgrammar_get_dict_max_disjunct_cost(Dictionary dict)
 
 /* ======================================================================= */
 
-static void dictionary_setup_locale(Dictionary dict)
+void dictionary_setup_locale(Dictionary dict)
 {
 	/* Get the locale for the dictionary. The first one of the
 	 * following which exists, is used:

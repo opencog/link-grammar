@@ -38,7 +38,7 @@ extern "C" {
 #define COGSERVER_URL "cogserver-url"
 
 
-Dictionary dictionary_create_from_atomese(const char *lang)
+Dictionary dictionary_create_from_atomese(const char *dictdir)
 {
 	Dictionary cfgd;
 	define_s cfg_defines;
@@ -47,8 +47,8 @@ Dictionary dictionary_create_from_atomese(const char *lang)
 	const char* url;
 
 	/* Read basic configuration */
-	char *cfg_name = join_path (lang, "cogserver.dict");
-	cfgd = dictionary_six(lang, cfg_name, NULL, NULL, NULL, NULL);
+	char *cfg_name = join_path (dictdir, "cogserver.dict");
+	cfgd = dictionary_six(dictdir, cfg_name, NULL, NULL, NULL, NULL);
 	if (cfgd == NULL)
 	{
 		prt_error("Error: Could not open cogserver configuration file %s\n",
@@ -69,12 +69,13 @@ Dictionary dictionary_create_from_atomese(const char *lang)
 	dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
-	/* Language and file-name stuff */
+	/* Language and locale stuff */
 	dict->define = cfg_defines;
 	dict->string_set = string_set_create();
-#if 0
-	dict->lang = string_set_add(t, dict->string_set);
-#endif
+
+	const char* lang = linkgrammar_get_dict_define(dict, "dictionary-lang");
+	dict->lang = string_set_add(lang, dict->string_set);
+	dictionary_setup_locale(dict);
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 
 	dict->spell_checker = nullptr;
@@ -98,12 +99,15 @@ Dictionary dictionary_create_from_atomese(const char *lang)
 	dict->free_lookup = db_free_llist;
 	dict->lookup = db_lookup;
 	dict->close = db_close;
+#endif
+
 	condesc_init(dict, 1<<8);
 
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
 	                          sizeof(Exp), /*zero_out*/false,
 	                          /*align*/false, /*exact*/false);
 
+#if 0
 	/* Setup the affix table */
 	char *affix_name = join_path (lang, "4.0.affix");
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
