@@ -35,6 +35,7 @@
 Dictionary dictionary_create_from_atomese(const char *lang)
 {
 	Dictionary dict;
+printf("duuude hello world\n");
 
 	dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));

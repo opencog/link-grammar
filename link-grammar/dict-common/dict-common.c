@@ -28,6 +28,7 @@
 #include "dict-sql/read-sql.h"
 #include "dict-file/read-dict.h"
 #include "dict-file/word-file.h"
+#include "dict-atomese/read-atomese.h"
 
 /* Stems, by definition, end with ".=x" (when x is usually an empty
  * string, i.e. ".="). The STEMSUBSCR definition in the affix file
@@ -116,6 +117,15 @@ Dictionary dictionary_create_lang(const char * lang)
 #else
 		return NULL;
 #endif /* HAVE_SQLITE3 */
+	}
+
+	else if (check_atomspace(lang))
+	{
+#if HAVE_ATOMESE
+		dictionary = dictionary_create_from_atomese(lang);
+#else
+		return NULL;
+#endif /* HAVE_ATOMESE */
 	}
 
 	/* Fallback to a plain-text dictionary */

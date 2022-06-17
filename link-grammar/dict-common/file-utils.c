@@ -454,6 +454,19 @@ bool check_db(const char *lang)
 	return retval;
 }
 
+bool check_atomspace(const char *lang)
+{
+	char *cfgfile = join_path (lang, "cogserver.dict");
+	bool retval = file_exists(cfgfile);
+	free(cfgfile);
+#if !HAVE_ATOMESE
+	if (retval)
+		prt_error("Error: Could not open dictionary \"%s\" "
+		          "(not configured with AtomSpace support)\n", cfgfile);
+#endif /* !HAVE_ATOMESE */
+	return retval;
+}
+
 /**
  * Check to see if a file exists.
  */
