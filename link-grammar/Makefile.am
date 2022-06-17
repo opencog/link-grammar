@@ -99,6 +99,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/read-regex.c           \
 	dict-file/word-file.c            \
 	dict-sql/read-sql.c              \
+	dict-atomese/read-atomese.cc     \
 	disjunct-utils.c                 \
 	error.c                          \
 	linkage/analyze-linkage.c        \
@@ -201,7 +202,7 @@ liblink_grammar_include_HEADERS =   \
 	link-features.h                  \
 	link-includes.h                  \
 	dict-common/dict-api.h           \
-	dict-common/dict-defines.h           \
+	dict-common/dict-defines.h       \
 	dict-common/dict-structures.h
 
 uninstall-hook:
@@ -212,6 +213,7 @@ EXTRA_DIST=                         \
 	dict-sql/dict.sql                \
 	dict-sql/demo.sql                \
 	dict-sql/README.md               \
+	dict-atomese/README.md           \
 	tokenize/README.md
 
 # -----------------------------------------------------------
