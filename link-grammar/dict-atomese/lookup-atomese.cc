@@ -40,6 +40,9 @@ void as_open(Dictionary dict, const char* url)
 
 	local->stnp->open();
 
+	// XXX FIXME. Right now, this is lying about the connection,
+	// because open() does not actually try to connect. This needs
+	// fixing ... sometime later.
 	if (local->stnp->connected())
 		printf("Connected to %s\n", url);
 	else
