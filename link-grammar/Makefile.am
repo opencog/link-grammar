@@ -59,6 +59,10 @@ if HAVE_SQLITE3
 liblink_grammar_la_LIBADD  +=  ${SQLITE3_LIBS}
 endif
 
+if HAVE_ATOMSPACE
+liblink_grammar_la_LIBADD  +=  ${ATOMSPACE_LIBS}
+endif
+
 if WITH_SAT_SOLVER
 # Dummy C++ source to cause C++ linking.
 nodist_EXTRA_liblink_grammar_la_SOURCES = dummy.cxx

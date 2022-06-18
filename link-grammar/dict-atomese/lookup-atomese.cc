@@ -29,7 +29,8 @@ void as_close(Dictionary dict)
 {
 printf("duuude called as_close\n");
 	if (nullptr == dict->as_server) return;
-	delete dict->as_server;
+	AtomSpacePtr* aspp = (AtomSpacePtr*) (dict->as_server);
+	delete aspp;
 	dict->as_server = nullptr;
 }
 

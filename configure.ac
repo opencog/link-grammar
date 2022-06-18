@@ -490,14 +490,19 @@ AC_SUBST(SQLITE3_CFLAGS)
 
 # ====================================================================
 # The AtomSpace dictionary backend
+# TODO - use pkg_config for find the libs.
 
 AC_LANG_PUSH([C++])
 AC_CHECK_HEADER([opencog/atomspace/AtomSpace.h], [AtomSpaceFound=yes], AtomSpaceFound=no)
 AC_LANG_POP()
 
-if test "${AtomSpaceFound}" = yes; then
+AM_CONDITIONAL(HAVE_ATOMSPACE, test x${AtomSpaceFound} = xyes)
+
+if test x"${AtomSpaceFound}" = xyes; then
 	AC_DEFINE(HAVE_ATOMESE, 1, [Define for compilation])
+	ATOMSPACE_LIBS="-latomspace -L/usr/local/lib/opencog/"
 fi
+AC_SUBST(ATOMSPACE_LIBS)
 
 # ====================================================================
 # Set Default Spell Checker settings
@@ -1064,6 +1069,7 @@ AC_OUTPUT
 # ====================================================================
 lglibs=`AS_ECHO(m4_normalize(["$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS
 										$REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS
+										$ATOMSPACE_LIBS
 										$LIBS"])) | ${SED} 's/  */ /g'`
 test -n "$regexlib_cxx" && REGEX_LIBS='C++'
 
