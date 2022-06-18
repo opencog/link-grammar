@@ -70,7 +70,10 @@ printf("duuude called as_lookup for >>%s<<\n", s);
 	// Are there any Sections in the local atomspace?
 	size_t nsects = wrd->getIncomingSetSizeByType(SECTION);
 	if (0 == nsects)
+	{
 		local->stnp->fetch_incoming_by_type(wrd, SECTION);
+		local->stnp->barrier();
+	}
 
 	nsects = wrd->getIncomingSetSizeByType(SECTION);
 printf("duuude as_lookup for >>%s<< sects=%lu\n", s, nsects);
