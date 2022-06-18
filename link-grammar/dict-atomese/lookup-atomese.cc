@@ -7,13 +7,35 @@
  */
 
 #include <cstdlib>
+#include <opencog/atomspace/AtomSpace.h>
+#undef STRINGIFY
 
 extern "C" {
+#include "../link-includes.h"            // For Dictionary
+#include "../dict-common/dict-common.h"  // for Dictionary_s
 #include "lookup-atomese.h"
 };
 
+using namespace opencog;
+
+void as_open(Dictionary dict, const char* url)
+{
+printf("duuude called as_open\n");
+	AtomSpacePtr asp = createAtomSpace();
+	dict->as_server = (void*) new AtomSpacePtr(asp);
+}
+
+void as_close(Dictionary dict)
+{
+printf("duuude called as_close\n");
+	if (nullptr == dict->as_server) return;
+	delete dict->as_server;
+	dict->as_server = nullptr;
+}
+
 bool as_lookup(Dictionary dict, const char *s)
 {
+	AtomSpacePtr* aspp = (AtomSpacePtr*) (dict->as_server);
 printf("duuude called as_lookup for %s\n", s);
 	return false;
 }
@@ -39,9 +61,4 @@ void as_free_llist(Dictionary dict, Dict_node *llist)
 		free(llist);
 		llist = dn;
 	}
-}
-
-void as_close(Dictionary dict)
-{
-printf("duuude called as_close\n");
 }

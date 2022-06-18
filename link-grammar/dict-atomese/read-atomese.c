@@ -92,7 +92,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	if (NULL == url) goto failure;
 
 	/* Set up the server connection */
-	dict->as_server = NULL;
+	as_open(dict, url);
 
 	/* Install backend methods */
 	dict->lookup_list = as_lookup_list;
