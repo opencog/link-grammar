@@ -12,7 +12,7 @@
 /*************************************************************************/
 
 #include <ctype.h>
-#include <math.h>                       // fabs
+#include <math.h>                       // fabs signbit
 
 #include "api-structures.h"             // Parse_Options_s  (seems hacky to me)
 #include "dict-common.h"
@@ -35,14 +35,24 @@ bool cost_eq(float cost1, float cost2)
 	return (fabs(cost1 - cost2) < cost_epsilon);
 }
 
+#define COMBINE(a, b) a ## b
+#define EXP10(a, s) COMBINE(a ## e, s)
 /**
- * Convert cost to a string with at most cost_max_dec_places decimal places.
+ * Convert \p cost to a string with COST_MAX_DEC_PLACES decimal places.
+ * Always use dot as a radix character.
+ * @return A static thread-local pointer to the result string.
  */
 const char *cost_stringify(float cost)
 {
 	static TLS char buf[16];
 
-	int l = snprintf(buf, sizeof(buf), "%.*f", cost_max_dec_places, cost);
+	const int scale = EXP10(1, COST_MAX_DEC_PLACES);
+	const bool sign = signbit(cost);
+	const float roundinc = (1 / EXP10(2, COST_MAX_DEC_PLACES));
+	int c = (int)((fabs(cost) + roundinc) * scale);
+
+	int l = snprintf(buf, sizeof(buf), "%s%d.%0*d", sign ? "-" : "",
+	                 c / scale, COST_MAX_DEC_PLACES, c - c / scale * scale);
 	if ((l < 0) || (l >= (int)sizeof(buf))) return "ERR_COST";
 
 	return buf;
