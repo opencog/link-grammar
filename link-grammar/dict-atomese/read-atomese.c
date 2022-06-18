@@ -1,5 +1,5 @@
 /*
- * read-atomese.cc
+ * read-atomese.c
  *
  * Use a dictionary located in the OpenCog AtomSpace.
  *
@@ -14,7 +14,6 @@
 
 #define D_ATOMSPACE 5 /* Verbosity levels for this module are 5 and 6. */
 
-extern "C" {
 #include "api-structures.h"
 #include "connectors.h"
 #include "dict-common/dict-api.h"
@@ -32,49 +31,12 @@ extern "C" {
 #include "utilities.h"
 
 #include "read-atomese.h"
-
-}; // extern "C"
+#include "lookup-atomese.h"
 
 #define COGSERVER_URL "cogserver-url"
 
-
-static bool as_lookup(Dictionary dict, const char *s)
-{
-printf("duuude called as_lookup for %s\n", s);
-	return false;
-}
-
-static Dict_node * as_lookup_list(Dictionary dict, const char *s)
-{
-printf("duuude called as_lookup_list for %s\n", s);
-	return NULL;
-}
-
-static Dict_node * as_lookup_wild(Dictionary dict, const char *s)
-{
-printf("duuude called as_lookup_wild for %s\n", s);
-	return NULL;
-}
-
-static void as_free_llist(Dictionary dict, Dict_node *llist)
-{
-	Dict_node * dn;
-	while (llist != NULL)
-	{
-		dn = llist->right;
-		free(llist);
-		llist = dn;
-	}
-}
-
-static void as_close(Dictionary dict)
-{
-printf("duuude called as_close\n");
-}
-
 Dictionary dictionary_create_from_atomese(const char *dictdir)
 {
-
 	/* Read basic configuration */
 	char *cfg_name = join_path (dictdir, "cogserver.dict");
 	Dictionary cfgd =
@@ -109,7 +71,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	dictionary_setup_locale(dict);
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 
-	dict->spell_checker = nullptr;
+	dict->spell_checker = NULL;
 	dict->base_knowledge = NULL;
 	dict->hpsg_knowledge = NULL;
 

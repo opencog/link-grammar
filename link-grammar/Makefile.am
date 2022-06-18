@@ -99,7 +99,8 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/read-regex.c           \
 	dict-file/word-file.c            \
 	dict-sql/read-sql.c              \
-	dict-atomese/read-atomese.cc     \
+	dict-atomese/read-atomese.c      \
+	dict-atomese/lookup-atomese.cc   \
 	disjunct-utils.c                 \
 	error.c                          \
 	linkage/analyze-linkage.c        \
@@ -158,6 +159,8 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/read-regex.h           \
 	dict-file/word-file.h            \
 	dict-sql/read-sql.h              \
+	dict-atomese/read-atomese.h      \
+	dict-atomese/lookup-atomese.h    \
 	disjunct-utils.h                 \
 	error.h                          \
 	externs.h                        \
