@@ -5,6 +5,7 @@
  *
  * Copyright (c) 2022 Linas Vepstas <linasvepstas@gmail.com>
  */
+#ifdef HAVE_ATOMESE
 
 #include <cstdlib>
 #include <opencog/atomspace/AtomSpace.h>
@@ -90,3 +91,4 @@ void as_free_llist(Dictionary dict, Dict_node *llist)
 		llist = dn;
 	}
 }
+#endif /* HAVE_ATOMSPACE */
