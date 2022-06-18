@@ -8,6 +8,8 @@
 
 #include <cstdlib>
 #include <opencog/atomspace/AtomSpace.h>
+#include <opencog/persist/api/StorageNode.h>
+#include <opencog/nlp/types/atom_types.h>
 #undef STRINGIFY
 
 extern "C" {
@@ -18,27 +20,41 @@ extern "C" {
 
 using namespace opencog;
 
+class Local
+{
+public:
+	AtomSpacePtr asp;
+	StorageNodePtr stnp;
+};
+
 void as_open(Dictionary dict, const char* url)
 {
-printf("duuude called as_open\n");
-	AtomSpacePtr asp = createAtomSpace();
-	dict->as_server = (void*) new AtomSpacePtr(asp);
+	Local* local = new Local;
+	local->asp = createAtomSpace();
+
+	local->stnp = StorageNodeCast(
+		local->asp->add_node(COG_STORAGE_NODE, url));
+
+	local->stnp->open();
+
+	dict->as_server = (void*) local;
 }
 
 void as_close(Dictionary dict)
 {
-printf("duuude called as_close\n");
 	if (nullptr == dict->as_server) return;
-	AtomSpacePtr* aspp = (AtomSpacePtr*) (dict->as_server);
-	delete aspp;
+	Local* local = (Local*) (dict->as_server);
+	local->stnp->close();
+	delete local;
 	dict->as_server = nullptr;
 }
 
 bool as_lookup(Dictionary dict, const char *s)
 {
-	AtomSpacePtr* aspp = (AtomSpacePtr*) (dict->as_server);
+	Local* local = (Local*) (dict->as_server);
 printf("duuude called as_lookup for %s\n", s);
-	return false;
+	Handle wrd = local->asp->get_node(WORD_NODE, s);
+	return nullptr != wrd;
 }
 
 Dict_node * as_lookup_list(Dictionary dict, const char *s)

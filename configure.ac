@@ -491,6 +491,7 @@ AC_SUBST(SQLITE3_CFLAGS)
 # ====================================================================
 # The AtomSpace dictionary backend
 # TODO - use pkg_config for find the libs.
+# TODO - check for opencog/nlp/types/atom_types.h
 
 AC_LANG_PUSH([C++])
 AC_CHECK_HEADER([opencog/atomspace/AtomSpace.h], [AtomSpaceFound=yes], AtomSpaceFound=no)
@@ -500,7 +501,7 @@ AM_CONDITIONAL(HAVE_ATOMSPACE, test x${AtomSpaceFound} = xyes)
 
 if test x"${AtomSpaceFound}" = xyes; then
 	AC_DEFINE(HAVE_ATOMESE, 1, [Define for compilation])
-	ATOMSPACE_LIBS="-latomspace -L/usr/local/lib/opencog/"
+	ATOMSPACE_LIBS="-lnlp-types -lpersist-cog -lpersist -latomspace -L/usr/local/lib/opencog/"
 fi
 AC_SUBST(ATOMSPACE_LIBS)
 
