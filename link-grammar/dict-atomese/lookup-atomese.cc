@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/persist/api/StorageNode.h>
+#include <opencog/persist/cog-storage/CogStorage.h>
 #include <opencog/nlp/types/atom_types.h>
 #undef STRINGIFY
 
@@ -32,10 +33,17 @@ void as_open(Dictionary dict, const char* url)
 	Local* local = new Local;
 	local->asp = createAtomSpace();
 
-	local->stnp = StorageNodeCast(
-		local->asp->add_node(COG_STORAGE_NODE, url));
+	/* The cast below forces the shared lib constructor to run. */
+	/* That's needed to force the factory to get installed. */
+	Handle hsn = local->asp->add_node(COG_STORAGE_NODE, url);
+	local->stnp = CogStorageNodeCast(hsn);
 
 	local->stnp->open();
+
+	if (local->stnp->connected())
+		printf("Connected to %s\n", url);
+	else
+		printf("Failed to connect to %s\n", url);
 
 	dict->as_server = (void*) local;
 }
