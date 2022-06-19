@@ -66,7 +66,6 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 
 const char *linkgrammar_get_dict_define(Dictionary dict, const char *name)
 {
-	if (IS_DYNAMIC_DICT(dict)) return NULL; /* Not supported yet */
 	unsigned int id = string_id_lookup(name, dict->dfine.set);
 	if (id == 0) return NULL;
 	return dict->dfine.value[id - 1];
