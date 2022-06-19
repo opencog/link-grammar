@@ -102,12 +102,13 @@ static std::string get_linkname(Local* local, const Handle& lnk)
 
 	std::string slnk = "XXX";
 	vname = createStringValue(slnk);
-	ctcr->setValue(local->linkp, vname);
-	return slink;
+	lnk->setValue(local->linkp, ValueCast(vname));
+	return slnk;
 }
 
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
+	Local* local = (Local*) (dict->as_server);
 	Dict_node * dn = nullptr;
 
 printf("duuude called as_lookup_list for >>%s<<\n", s);
@@ -122,14 +123,14 @@ printf("duuude called as_lookup_list for >>%s<<\n", s);
 		// The connector sequence the secnd atom.
 		// Loop over the connectors in the connector sequence.
 		const Handle& conseq = sect->getOutgoingAtom(1);
-		for (const Handle& ctcr : conseq)
+		for (const Handle& ctcr : conseq->getOutgoingSet())
 		{
 			const Handle& lnk = ctcr->getOutgoingAtom(0);
 			const Handle& dir = ctcr->getOutgoingAtom(1);
 			std::string slnk = get_linkname(local, lnk);
 			const std::string& sdir = dir->get_name();
 
-printf("duuude got connector %s %s\n", sctr.c_str(), sdir.c_str());
+printf("duuude got connector %s %s\n", slnk.c_str(), sdir.c_str());
 			Exp* e = Exp_create(dict->Exp_pool);
 			e->type = CONNECTOR_type;
 			e->operand_next = NULL;
@@ -139,9 +140,24 @@ printf("duuude got connector %s %s\n", sctr.c_str(), sdir.c_str());
 				string_set_add(slnk.c_str(), dict->string_set));
 			e->dir =
 				string_set_add(sdir.c_str(), dict->string_set);
+
+			exp = e;
+#if 0
+			if (xx)
+			{
+				Exp* join = Exp_create(dict->Exp_pool);
+				join->type = AND_type;
+				join->cost = 0.0;
+				join->operand_first = e;
+				join->operand_next = NULL;
+				e->operand_next = ??
+				exp = join;
+rest->operand_next = NULL;
+			}
+#endif
 		}
 
-		Dict_node *sdn = malloc(sizeof(Dict_node));
+		Dict_node *sdn = (Dict_node*) malloc(sizeof(Dict_node));
 		memset(sdn, 0, sizeof(Dict_node));
 		sdn->string = string_set_add(s, dict->string_set);
 		sdn->exp = exp;
