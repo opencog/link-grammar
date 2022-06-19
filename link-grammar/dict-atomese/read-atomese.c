@@ -80,7 +80,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 
 	/* Setup the affix table */
 	/* XXX FIXME -- need to pull this from atomspace, too. */
-	char * affix_name = join_path (lang, "4.0.affix");
+	char * affix_name = join_path (dictdir, "4.0.affix");
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
 	{
