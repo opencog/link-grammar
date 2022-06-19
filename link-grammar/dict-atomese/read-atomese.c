@@ -104,6 +104,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	dict->lookup = as_lookup;
 	dict->close = as_close;
 
+	dict->dynamic_lookup = true;
 	condesc_init(dict, 1<<8);
 
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,

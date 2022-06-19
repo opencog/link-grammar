@@ -608,6 +608,8 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->free_lookup = db_free_llist;
 	dict->lookup = db_lookup;
 	dict->close = db_close;
+
+	dict->dynamic_lookup = true;
 	condesc_init(dict, 1<<8);
 
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,

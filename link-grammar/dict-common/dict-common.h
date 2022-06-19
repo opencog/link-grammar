@@ -72,11 +72,11 @@ struct Afdict_class_struct
 #define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */
 #define IDIOM_LINK_SZ 16
 
-#ifdef HAVE_SQLITE3
-#define IS_DB_DICT(dict) (NULL != dict->db_handle)
+#if defined HAVE_SQLITE3 || defined HAVE_ATOMESE
+#define IS_DYNAMIC_DICT(dict) dict->dynamic_lookup
 #else
-#define IS_DB_DICT(dict) false
-#endif /* HAVE_SQLITE3 */
+#define IS_DYNAMIC_DICT(dict) false
+#endif /* HAVE_SQLITE3 or HAVE_ATOMESE */
 
 /* "#define name value" */
 typedef struct
@@ -113,6 +113,7 @@ struct Dictionary_s
 	bool         left_wall_defined;
 	bool         right_wall_defined;
 	bool         shuffle_linkages;
+	bool         dynamic_lookup;
 
 	Dialect *dialect;                  /* "4.0.dialect" info */
 	expression_tag dialect_tag;        /* Expression dialect tag info */
