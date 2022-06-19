@@ -50,8 +50,10 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	}
 	free(cfg_name);
 
-	define_s cfg_defines = cfgd->define;
-	memset(&cfgd->define, 0, sizeof(define_s));
+	String_set *ss = cfgd->string_set;
+	cfgd->string_set = NULL;
+	dfine_s cfg_defines = cfgd->dfine;
+	memset(&cfgd->dfine, 0, sizeof(dfine_s));
 
 	/* It's a temporary, we don't need it any more. */
 	dictionary_delete(cfgd);
@@ -63,8 +65,8 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
 	/* Language and locale stuff */
-	dict->define = cfg_defines;
-	dict->string_set = string_set_create();
+	dict->string_set = ss;
+	dict->dfine = cfg_defines;
 
 	const char* lang = linkgrammar_get_dict_define(dict, "dictionary-lang");
 	dict->lang = string_set_add(lang, dict->string_set);
