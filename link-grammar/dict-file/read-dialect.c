@@ -398,6 +398,7 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	{
 		prt_error("Warning: "
 		          "File '%s' found but no dialects in the dictionary.\n", fname);
+		free(input);
 		return true;
 	}
 
@@ -420,9 +421,10 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	bool rc = dialect_read_from_str(dict, di, &dfile);
 	if (!rc) return false;
 
-	if ((di->num_sections == 0) && verbosity_level(D_USER_FILES))
+	if (di->num_sections == 0)
 	{
-		prt_error("Warning: Dialect file: No definitions found.\n");
+		if (verbosity_level(D_USER_FILES))
+			prt_error("Warning: Dialect file: No definitions found.\n");
 		return true;
 	}
 
