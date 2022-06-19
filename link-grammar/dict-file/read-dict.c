@@ -1596,9 +1596,9 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 
 static void add_define(Dictionary dict, const char *name, const char *value)
 {
-	int id = string_id_add(name, dict->define.set);
+	int id = string_id_add(name, dict->dfine.set);
 
-	if (!IS_DB_DICT(dict) && (dict->define.size >= (unsigned int)id))
+	if (!IS_DB_DICT(dict) && (dict->dfine.size >= (unsigned int)id))
 	{
 		prt_error("Warning: Redefinition of \"%s\", "
 		          "found near line %d of \"%s\"\n",
@@ -1606,16 +1606,16 @@ static void add_define(Dictionary dict, const char *name, const char *value)
 	}
 	else
 	{
-		dict->define.size++;
-		dict->define.value =
-			realloc(dict->define.value, dict->define.size * sizeof(char *));
-		dict->define.name =
-			realloc(dict->define.name, dict->define.size * sizeof(char *));
-		assert(dict->define.size == (unsigned int)id,
-		       "\"define\" array size inconsistency");
-		dict->define.name[id - 1] = string_set_add(name, dict->string_set);
+		dict->dfine.size++;
+		dict->dfine.value =
+			realloc(dict->dfine.value, dict->dfine.size * sizeof(char *));
+		dict->dfine.name =
+			realloc(dict->dfine.name, dict->dfine.size * sizeof(char *));
+		assert(dict->dfine.size == (unsigned int)id,
+		       "\"dfine\" array size inconsistency");
+		dict->dfine.name[id - 1] = string_set_add(name, dict->string_set);
 	}
-	dict->define.value[id - 1] = string_set_add(value, dict->string_set);
+	dict->dfine.value[id - 1] = string_set_add(value, dict->string_set);
 }
 
 static bool is_directive(const char *s)
@@ -1868,12 +1868,12 @@ syntax_error:
 
 void print_dictionary_defines(Dictionary dict)
 {
-	for (size_t i = 0; i < dict->define.size; i++)
+	for (size_t i = 0; i < dict->dfine.size; i++)
 	{
-		const char *value = dict->define.value[i];
+		const char *value = dict->dfine.value[i];
 		int q = (int)(strcspn(value, SPECIAL) == strlen(value));
 		printf("#define %s %s%s%s\n",
-		       dict->define.name[i], &"\""[q], value, &"\""[q]);
+		       dict->dfine.name[i], &"\""[q], value, &"\""[q]);
 	}
 }
 

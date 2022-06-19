@@ -85,7 +85,7 @@ typedef struct
 	const char **name;
 	const char **value;
 	unsigned int size;                 /* Allocated value array size */
-} define_s;
+} dfine_s;
 
 typedef struct
 {
@@ -106,7 +106,7 @@ struct Dictionary_s
 	locale_t     lctype;    /* Locale argument for the *_l() functions */
 	int          num_entries;
 	float default_max_disjunct_cost;
-	define_s     define;    /* Name-value definitions */
+	dfine_s      dfine;    /* Name-value definitions */
 
 	bool         use_unknown_word;
 	bool         unknown_word_defined;
