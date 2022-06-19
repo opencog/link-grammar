@@ -90,6 +90,20 @@ printf("duuude as_lookup for >>%s<< sects=%lu\n", s, nsects);
 	return 0 != nsects;
 }
 
+/// int to base-26 capital letters.
+static std::string idtostr(uint64_t aid)
+{
+	std::string s;
+	do
+	{
+		char c = (aid % 26) + 'A';
+		s.push_back(c);
+	}
+	while (0 < (aid /= 26));
+
+	return s;
+}
+
 // Return a cached LG-compatible link string.
 // Assisgn a new name, if one does not exist.
 static std::string get_linkname(Local* local, const Handle& lnk)
@@ -100,11 +114,23 @@ static std::string get_linkname(Local* local, const Handle& lnk)
 	if (vname)
 		return vname->value()[0];
 
-	std::string slnk = "XXX";
+	static uint64_t lid = 0;
+	std::string slnk = idtostr(lid++);
 	vname = createStringValue(slnk);
 	lnk->setValue(local->linkp, ValueCast(vname));
 	return slnk;
 }
+
+// Cheap hack until c++20 ranges are generally available.
+template<typename T>
+class reverse {
+private:
+  T& iterable_;
+public:
+  explicit reverse(T& iterable) : iterable_{iterable} {}
+  auto begin() const { return std::rbegin(iterable_); }
+  auto end() const { return std::rend(iterable_); }
+};
 
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
@@ -123,14 +149,13 @@ printf("duuude called as_lookup_list for >>%s<<\n", s);
 		// The connector sequence the secnd atom.
 		// Loop over the connectors in the connector sequence.
 		const Handle& conseq = sect->getOutgoingAtom(1);
-		for (const Handle& ctcr : conseq->getOutgoingSet())
+		for (const Handle& ctcr : reverse(conseq->getOutgoingSet()))
 		{
 			const Handle& lnk = ctcr->getOutgoingAtom(0);
 			const Handle& dir = ctcr->getOutgoingAtom(1);
 			std::string slnk = get_linkname(local, lnk);
 			const std::string& sdir = dir->get_name();
 
-printf("duuude got connector %s %s\n", slnk.c_str(), sdir.c_str());
 			Exp* e = Exp_create(dict->Exp_pool);
 			e->type = CONNECTOR_type;
 			e->operand_next = NULL;
@@ -138,24 +163,25 @@ printf("duuude got connector %s %s\n", slnk.c_str(), sdir.c_str());
 			e->multi = false;
 			e->condesc = condesc_add(&dict->contable,
 				string_set_add(slnk.c_str(), dict->string_set));
-			e->dir =
-				string_set_add(sdir.c_str(), dict->string_set);
+			e->dir = sdir.c_str()[0];
 
-			exp = e;
-#if 0
-			if (xx)
+			if (nullptr == exp)
 			{
-				Exp* join = Exp_create(dict->Exp_pool);
-				join->type = AND_type;
-				join->cost = 0.0;
-				join->operand_first = e;
-				join->operand_next = NULL;
-				e->operand_next = ??
-				exp = join;
-rest->operand_next = NULL;
+				exp = e;
+				continue;
 			}
-#endif
+
+			Exp* join = Exp_create(dict->Exp_pool);
+			join->type = AND_type;
+			join->cost = 0.0;
+			join->operand_first = e;
+			join->operand_next = NULL;
+			e->operand_next = exp;
+			exp->operand_next = NULL;
+
+			exp = join;
 		}
+printf("duuude exp=%s\n", lg_exp_stringify(exp));
 
 		Dict_node *sdn = (Dict_node*) malloc(sizeof(Dict_node));
 		memset(sdn, 0, sizeof(Dict_node));
