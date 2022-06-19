@@ -70,11 +70,14 @@ void as_close(Dictionary dict)
 
 /// Return true if the given word can be found in the dictionary,
 /// else return false.
-bool as_lookup(Dictionary dict, const char *s)
+bool as_boolean_lookup(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
 
-printf("duuude called as_lookup for >>%s<<\n", s);
+printf("duuude called as_boolean_lookup for >>%s<<\n", s);
+	bool found = file_boolean_lookup(dict, s);
+	if (found) return true;
+
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
 
@@ -91,7 +94,7 @@ printf("duuude called as_lookup for >>%s<<\n", s);
 	}
 
 	nsects = wrd->getIncomingSetSizeByType(SECTION);
-printf("duuude as_lookup for >>%s<< sects=%lu\n", s, nsects);
+printf("duuude as_boolean_lookup for >>%s<< sects=%lu\n", s, nsects);
 	return 0 != nsects;
 }
 
@@ -146,8 +149,8 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	if (dn) return dn;
 
-	Local* local = (Local*) (dict->as_server);
 	const char* ssc = string_set_add(s, dict->string_set);
+	Local* local = (Local*) (dict->as_server);
 
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
