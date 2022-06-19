@@ -9,4 +9,5 @@
 #define cogserver-url "cog://localhost:17001";
 
 % At least one bogus entry is needed.
-foo: BAR+;
+% This file is read as an affix file, so only affix names are allowed.
+foo: UNITS+;
