@@ -215,7 +215,7 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 
 	// Perform the lookup. We cannot return the dn above, as the
 	// as_free_llist() below will delete it, leading to mem corruption.
-	dn = file_lookup_list(dict, s);
+	dn = file_lookup_list(dict, ssc);
 	return dn;
 }
 
