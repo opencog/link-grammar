@@ -146,6 +146,7 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	const char* ssc = string_set_add(s, dict->string_set);
 
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
+	if (nullptr == wrd) return nullptr;
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = wrd->getIncomingSetByType(SECTION);
