@@ -112,10 +112,10 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	                          /*align*/false, /*exact*/false);
 
 
-#if 0
 	if (!dictionary_setup_defines(dict))
 		goto failure;
 
+#if 0
 	/* Initialize word categories, for text generation. */
 	if (dictionary_generation_request(dict))
 		add_categories(dict);

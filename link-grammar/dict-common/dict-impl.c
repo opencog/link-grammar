@@ -442,8 +442,9 @@ bool dictionary_setup_defines(Dictionary dict)
 
 	dict->shuffle_linkages = false;
 
-	if (!dictionary_setup_max_disjunct_cost(dict)) return false;
 	dictionary_setup_locale(dict);
+
+	if (!dictionary_setup_max_disjunct_cost(dict)) return false;
 
 	return true;
 }

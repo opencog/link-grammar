@@ -73,7 +73,11 @@ void as_close(Dictionary dict)
 bool as_lookup(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
+
 printf("duuude called as_lookup for >>%s<<\n", s);
+	if (0 == strcmp(s, LEFT_WALL_WORD))
+		s = "###LEFT-WALL###";
+
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
 	if (nullptr == wrd)
 		wrd = local->asp->add_node(WORD_NODE, s);
@@ -145,6 +149,9 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	Local* local = (Local*) (dict->as_server);
 	const char* ssc = string_set_add(s, dict->string_set);
 
+	if (0 == strcmp(s, LEFT_WALL_WORD))
+		s = "###LEFT-WALL###";
+
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
 	if (nullptr == wrd) return nullptr;
 
@@ -189,7 +196,7 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 
 			exp = join;
 		}
-printf("duuude exp=%s\n", lg_exp_stringify(exp));
+		// printf("Word %s expression %s\n", ssc, lg_exp_stringify(exp));
 
 		Dict_node *sdn = (Dict_node*) malloc(sizeof(Dict_node));
 		memset(sdn, 0, sizeof(Dict_node));
