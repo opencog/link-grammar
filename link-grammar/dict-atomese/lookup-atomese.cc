@@ -73,7 +73,6 @@ void as_close(Dictionary dict)
 bool as_lookup(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
-printf("duuude dict=%p ss=%p\n", dict, dict->string_set);
 printf("duuude called as_lookup for >>%s<<\n", s);
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
 	if (nullptr == wrd)
@@ -138,16 +137,13 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
 	// Do we already have this word cached? If so, pull from
 	// the cache.
-	// Dict_node * dn = file_lookup_list(dict, s);
-// XXX Doing the above leads to wild string-set corruption
-	Dict_node * dn=nullptr;
+	Dict_node * dn = file_lookup_list(dict, s);
 
 printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	if (dn) return dn;
 
 	Local* local = (Local*) (dict->as_server);
 	const char* ssc = string_set_add(s, dict->string_set);
-printf("duuude wtf ssc=%p %s\n", ssc, ssc);
 
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
 
@@ -206,6 +202,9 @@ printf("duuude exp=%s\n", lg_exp_stringify(exp));
 	// Cache the result; avoid repeated lookups.
 	dict->root = insert_dict(dict, dict->root, dn);
 
+	// Perform the lookup. We cannot return the dn above, as the
+	// as_free_llist() below will delete it, leading to mem corruption.
+	dn = file_lookup_list(dict, s);
 	return dn;
 }
 
