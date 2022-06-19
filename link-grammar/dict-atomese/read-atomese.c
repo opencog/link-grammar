@@ -74,6 +74,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	dict->spell_checker = NULL;
 	dict->base_knowledge = NULL;
 	dict->hpsg_knowledge = NULL;
+	dict->root = NULL;
 
 	/* Setup the affix table */
 	/* XXX FIXME -- need to pull this from atomspace, too. */

@@ -18,6 +18,7 @@
 extern "C" {
 #include "../link-includes.h"            // For Dictionary
 #include "../dict-common/dict-common.h"  // for Dictionary_s
+#include "../dict-file/read-dict.h" // XXX move to dict-common
 #include "lookup-atomese.h"
 };
 
@@ -72,6 +73,7 @@ void as_close(Dictionary dict)
 bool as_lookup(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
+printf("duuude dict=%p ss=%p\n", dict, dict->string_set);
 printf("duuude called as_lookup for >>%s<<\n", s);
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
 	if (nullptr == wrd)
@@ -134,10 +136,19 @@ public:
 
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
-	Local* local = (Local*) (dict->as_server);
-	Dict_node * dn = nullptr;
+	// Do we already have this word cached? If so, pull from
+	// the cache.
+	// Dict_node * dn = file_lookup_list(dict, s);
+// XXX Doing the above leads to wild string-set corruption
+	Dict_node * dn=nullptr;
 
-printf("duuude called as_lookup_list for >>%s<<\n", s);
+printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
+	if (dn) return dn;
+
+	Local* local = (Local*) (dict->as_server);
+	const char* ssc = string_set_add(s, dict->string_set);
+printf("duuude wtf ssc=%p %s\n", ssc, ssc);
+
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
 
 	// Loop over all Sections on the word.
@@ -185,15 +196,15 @@ printf("duuude exp=%s\n", lg_exp_stringify(exp));
 
 		Dict_node *sdn = (Dict_node*) malloc(sizeof(Dict_node));
 		memset(sdn, 0, sizeof(Dict_node));
-		sdn->string = string_set_add(s, dict->string_set);
+		sdn->string = ssc;
 		sdn->exp = exp;
 		sdn->right = dn;
+		sdn->left = NULL;
 		dn = sdn;
 	}
 
-	// make_expression(dict, argv[0], &exp);
-	// assert(NULL != exp, "Failed expression %s", argv[0]);
-	// exp->cost = 1.0;
+	// Cache the result; avoid repeated lookups.
+	dict->root = insert_dict(dict, dict->root, dn);
 
 	return dn;
 }
