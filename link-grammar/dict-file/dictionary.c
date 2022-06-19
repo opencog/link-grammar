@@ -172,7 +172,7 @@ dictionary_six_str(const char * lang,
 		Exp_pool_size = 1<<5;
 	}
 
-	dict->define.set = string_id_create();
+	dict->dfine.set = string_id_create();
 
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/Exp_pool_size,
 	                          sizeof(Exp), /*zero_out*/false,
