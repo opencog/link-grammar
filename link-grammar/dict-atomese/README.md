@@ -17,6 +17,36 @@ in the [OpenCog learn repo](https://github.com/opencog/learn).
 **Version 0.7.0** -- The basic code has been laid down. Use of gram classes
 not yet implemented.
 
+Demo
+----
+A working demo can be created as follows:
+```
+git clone https://github.com/opencog/docker
+cd docker/opencog
+./docker-build.sh -s -u
+```
+The above may take an hour or two to complete.
+Then `cd lang-model` and read and follow the instructions in
+`Dockerfile`.  This will result in a running CogServer with
+some minimalist, bare-bones language data in it.  Start the
+link-parser as `link-parser demo-atomese`. Simple, short
+sentences using common English words should parse. Be sure to
+end sentences with punctuation (a period, exclamation, etc.)
+
+Some working sentences with the above dataset:
+```
+this is a test .
+she looked out the window .
+why are you here ?
+this is a very long sentence of some kind that says something dull .
+```
+This is a low-quality dataset, so don't exepect much. Other datasets
+are better but are not publicly available.
+
+Custom CogServer locations can be specified by altering the
+[demo dictionary file](../../data/demo-atomese/cogserver.dict).
+
+
 AtomSpace Format
 ================
 The AtomSpace dictionary encoding is described in many places. A quick
