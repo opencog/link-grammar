@@ -1598,7 +1598,7 @@ static void add_define(Dictionary dict, const char *name, const char *value)
 {
 	int id = string_id_add(name, dict->dfine.set);
 
-	if (!IS_DB_DICT(dict) && (dict->dfine.size >= (unsigned int)id))
+	if (dict->dfine.size >= (unsigned int)id)
 	{
 		prt_error("Warning: Redefinition of \"%s\", "
 		          "found near line %d of \"%s\"\n",

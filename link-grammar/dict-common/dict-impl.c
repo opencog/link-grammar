@@ -66,7 +66,6 @@ int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, in
 
 const char *linkgrammar_get_dict_define(Dictionary dict, const char *name)
 {
-	if (IS_DB_DICT(dict)) return NULL; /* Not supported yet */
 	unsigned int id = string_id_lookup(name, dict->dfine.set);
 	if (id == 0) return NULL;
 	return dict->dfine.value[id - 1];
@@ -341,7 +340,7 @@ double linkgrammar_get_dict_max_disjunct_cost(Dictionary dict)
 
 /* ======================================================================= */
 
-static void dictionary_setup_locale(Dictionary dict)
+void dictionary_setup_locale(Dictionary dict)
 {
 	/* Get the locale for the dictionary. The first one of the
 	 * following which exists, is used:
@@ -443,8 +442,9 @@ bool dictionary_setup_defines(Dictionary dict)
 
 	dict->shuffle_linkages = false;
 
-	if (!dictionary_setup_max_disjunct_cost(dict)) return false;
 	dictionary_setup_locale(dict);
+
+	if (!dictionary_setup_max_disjunct_cost(dict)) return false;
 
 	return true;
 }

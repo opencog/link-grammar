@@ -4,7 +4,7 @@
 # accordingly.
 # Don't end the URLs with a slash even if it appears in the official address,
 # because we may append a component. Also, they cannot include "!".
-AC_INIT([link-grammar],[5.10.5],[https://github.com/opencog/link-grammar],[],
+AC_INIT([link-grammar],[5.11.0],[https://github.com/opencog/link-grammar],[],
 		  [https://www.abisource.com/projects/link-grammar])
 
 dnl Check whether we want to set defaults for CFLAGS and CXXFLAGS
@@ -33,11 +33,11 @@ dnl     4a) Increment when removing or changing interfaces.
 LINK_MAJOR_VERSION=5
 dnl     4a) 5) Increment when adding interfaces.
 dnl     6) Set to zero when removing or changing interfaces.
-LINK_MINOR_VERSION=10
+LINK_MINOR_VERSION=11
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=5
+LINK_MICRO_VERSION=0
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -217,7 +217,7 @@ CXXFLAGS="${CXXFLAGS} -Wall"
 # GNU, but do NOT turn on POSIX.
 
 CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAG_VISIBILITY} ${CFLAGS}"
-CXXFLAGS="-std=c++11 ${CFLAG_VISIBILITY} ${CXXFLAGS}"
+CXXFLAGS="-std=c++17 ${CFLAG_VISIBILITY} ${CXXFLAGS}"
 
 if test x${native_win32} = xyes; then
 	# We need the shlwapi for PathRemoveFileSpecA().
@@ -487,6 +487,23 @@ fi
 AM_CONDITIONAL(HAVE_SQLITE3, test "${SQLiteFound}" = yes)
 AC_SUBST(SQLITE3_LIBS)
 AC_SUBST(SQLITE3_CFLAGS)
+
+# ====================================================================
+# The AtomSpace dictionary backend
+# TODO - use pkg_config for find the libs.
+# TODO - check for opencog/nlp/types/atom_types.h
+
+AC_LANG_PUSH([C++])
+AC_CHECK_HEADER([opencog/atomspace/AtomSpace.h], [AtomSpaceFound=yes], AtomSpaceFound=no)
+AC_LANG_POP()
+
+AM_CONDITIONAL(HAVE_ATOMSPACE, test x${AtomSpaceFound} = xyes)
+
+if test x"${AtomSpaceFound}" = xyes; then
+	AC_DEFINE(HAVE_ATOMESE, 1, [Define for compilation])
+	ATOMSPACE_LIBS="-lnlp-types -lstorage-types -lpersist-cog -lpersist -latomspace -L/usr/local/lib/opencog/"
+fi
+AC_SUBST(ATOMSPACE_LIBS)
 
 # ====================================================================
 # Set Default Spell Checker settings
@@ -1044,6 +1061,7 @@ data/th/Makefile
 data/th/words/Makefile
 data/tr/Makefile
 data/vn/Makefile
+data/demo-atomese/Makefile
 data/demo-sql/Makefile
 man/Makefile
 ])
@@ -1052,6 +1070,7 @@ AC_OUTPUT
 # ====================================================================
 lglibs=`AS_ECHO(m4_normalize(["$LIBEDIT_LIBS $HUNSPELL_LIBS $ASPELL_LIBS
 										$REGEX_LIBS $MINISAT_LIBS $SQLITE3_LIBS
+										$ATOMSPACE_LIBS
 										$LIBS"])) | ${SED} 's/  */ /g'`
 test -n "$regexlib_cxx" && REGEX_LIBS='C++'
 
@@ -1077,6 +1096,7 @@ $PACKAGE-$VERSION  build configuration settings
 	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
 	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
+	AtomSpace-backed dictionary:    ${AtomSpaceFound}
 	Definitions:                    ${LG_DEFS}
 	Libraries:                      ${lglibs}
 ])"

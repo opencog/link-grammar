@@ -408,7 +408,7 @@ static int condesc_by_uc_constring(const void * a, const void * b)
  */
 bool sort_condesc_by_uc_constring(Dictionary dict)
 {
-	if ((0 == dict->contable.num_con) && !IS_DB_DICT(dict))
+	if ((0 == dict->contable.num_con) && !IS_DYNAMIC_DICT(dict))
 	{
 		prt_error("Error: Dictionary %s: No connectors found.\n", dict->name);
 		return false;

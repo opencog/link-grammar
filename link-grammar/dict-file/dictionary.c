@@ -159,8 +159,6 @@ dictionary_six_str(const char * lang,
 			dict->macro_tag = malloc(sizeof(*dict->macro_tag));
 			memset(dict->macro_tag, 0, sizeof(*dict->macro_tag));
 		}
-
-		dict->dfine.set = string_id_create();
 	}
 	else
 	{
@@ -173,6 +171,8 @@ dictionary_six_str(const char * lang,
 		condesc_init(dict, 1<<9);
 		Exp_pool_size = 1<<5;
 	}
+
+	dict->dfine.set = string_id_create();
 
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/Exp_pool_size,
 	                          sizeof(Exp), /*zero_out*/false,

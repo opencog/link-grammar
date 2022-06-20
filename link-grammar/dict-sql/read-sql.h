@@ -1,8 +1,8 @@
 /*
  * read-sql.h
  *
- * Read in dictionary from an SQL DB.
- * Keeping it simple for just right now, and using SQLite.
+ * Use a dictionary specified in an SQL DB.
+ * Keep it simple for just right now, and use SQLite.
  *
  * The goal of reading the dictionary from SQL is to enable some
  * other process (machine-learning algo) to dynamically update

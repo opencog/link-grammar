@@ -28,6 +28,7 @@
 #include "dict-sql/read-sql.h"
 #include "dict-file/read-dict.h"
 #include "dict-file/word-file.h"
+#include "dict-atomese/read-atomese.h"
 
 /* Stems, by definition, end with ".=x" (when x is usually an empty
  * string, i.e. ".="). The STEMSUBSCR definition in the affix file
@@ -116,6 +117,15 @@ Dictionary dictionary_create_lang(const char * lang)
 #else
 		return NULL;
 #endif /* HAVE_SQLITE3 */
+	}
+
+	else if (check_atomspace(lang))
+	{
+#if HAVE_ATOMESE
+		dictionary = dictionary_create_from_atomese(lang);
+#else
+		return NULL;
+#endif /* HAVE_ATOMESE */
 	}
 
 	/* Fallback to a plain-text dictionary */
@@ -299,6 +309,8 @@ static void free_dictionary(Dictionary dict)
 
 static void affix_list_delete(Dictionary dict)
 {
+	if (NULL == dict->afdict_class) return;
+
 	int i;
 	Afdict_class * atc;
 	for (i=0, atc = dict->afdict_class; i < AFDICT_NUM_ENTRIES; i++, atc++)
@@ -321,6 +333,8 @@ void dictionary_delete(Dictionary dict)
 		affix_list_delete(dict->affix_table);
 		dictionary_delete(dict->affix_table);
 	}
+	affix_list_delete(dict);
+
 	spellcheck_destroy(dict->spell_checker);
 	if ((locale_t) 0 != dict->lctype) {
 		freelocale(dict->lctype);
