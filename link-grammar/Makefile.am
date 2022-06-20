@@ -102,6 +102,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/read-dict.c            \
 	dict-file/read-regex.c           \
 	dict-file/word-file.c            \
+	dict-ram/dict-ram.c              \
 	dict-sql/read-sql.c              \
 	dict-atomese/read-atomese.c      \
 	dict-atomese/lookup-atomese.cc   \
@@ -162,6 +163,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/read-dict.h            \
 	dict-file/read-regex.h           \
 	dict-file/word-file.h            \
+	dict-ram/dict-ram.h              \
 	dict-sql/read-sql.h              \
 	dict-atomese/read-atomese.h      \
 	dict-atomese/lookup-atomese.h    \
@@ -217,6 +219,7 @@ uninstall-hook:
 
 EXTRA_DIST=                         \
 	README.md                        \
+	dict-ram/README.md               \
 	dict-sql/dict.sql                \
 	dict-sql/demo.sql                \
 	dict-sql/README.md               \

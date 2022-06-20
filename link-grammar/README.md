@@ -4,6 +4,7 @@ Directories
 Listed in rough processing order.
 
  * dict-common  - generic dictionary-handling code.
+ * dict-ram     - Maintain dictionary in RAM.
  * dict-file    - read dictionaries from files.
  * dict-sql     - read dictionaries from an SQL DB.
  * dict-atomese - read dictionaries from an OpenCog AtomSpace.

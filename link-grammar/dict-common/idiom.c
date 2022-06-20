@@ -14,6 +14,7 @@
 #include "api-types.h"
 #include "dict-api.h"
 #include "dict-common.h"
+#include "dict-ram/dict-ram.h"
 #include "error.h"
 #include "idiom.h"
 #include "string-set.h"
@@ -277,7 +278,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 			/* The word doesn't participate yet in any idiom. Just insert it. */
 			dn_list->left = dn_list->right = NULL;
 			dn_list->string = word_name;
-			dict->root = insert_dict(dict, dict->root, dn_list);
+			dict->root = dict_node_insert(dict, dict->root, dn_list);
 			dict->num_entries++;
 		}
 		else

@@ -72,12 +72,6 @@ link_public_api(bool)
 	dictionary_word_is_known(const Dictionary dict, const char *word);
 
 #ifndef SWIG
-/* This was exported and used by mistake! */
-bool boolean_dictionary_lookup(const Dictionary dict, const char *word);
-
-/* XXX the below probably does not belong ...  ?? */
-Dict_node * insert_dict(Dictionary dict, Dict_node * n, Dict_node * newnode);
-
 LINK_END_DECLS
 #endif /* !SWIG */
 

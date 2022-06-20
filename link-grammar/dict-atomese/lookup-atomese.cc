@@ -18,7 +18,7 @@
 extern "C" {
 #include "../link-includes.h"            // For Dictionary
 #include "../dict-common/dict-common.h"  // for Dictionary_s
-#include "../dict-file/read-dict.h" // XXX move to dict-common
+#include "../dict-ram/dict-ram.h"
 #include "lookup-atomese.h"
 };
 
@@ -75,7 +75,7 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	Local* local = (Local*) (dict->as_server);
 
 printf("duuude called as_boolean_lookup for >>%s<<\n", s);
-	bool found = file_boolean_lookup(dict, s);
+	bool found = dict_node_exists_lookup(dict, s);
 	if (found) return true;
 
 	if (0 == strcmp(s, LEFT_WALL_WORD))
@@ -144,7 +144,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
 	// Do we already have this word cached? If so, pull from
 	// the cache.
-	Dict_node * dn = file_lookup_list(dict, s);
+	Dict_node * dn = dict_node_lookup(dict, s);
 
 printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	if (dn) return dn;
@@ -211,11 +211,11 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	}
 
 	// Cache the result; avoid repeated lookups.
-	dict->root = insert_dict(dict, dict->root, dn);
+	dict->root = dict_node_insert(dict, dict->root, dn);
 
 	// Perform the lookup. We cannot return the dn above, as the
 	// as_free_llist() below will delete it, leading to mem corruption.
-	dn = file_lookup_list(dict, ssc);
+	dn = dict_node_lookup(dict, ssc);
 	return dn;
 }
 
