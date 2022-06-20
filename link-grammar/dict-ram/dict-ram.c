@@ -413,15 +413,6 @@ Exp *make_unary_node(Pool_desc *mp, Exp * e)
 	return n;
 }
 
-Exp *make_op_Exp(Pool_desc *mp, Exp_type t)
-{
-	Exp * n = Exp_create(mp);
-	n->type = t;
-
-	/* The caller is supposed to assign n->operand->first. */
-	return n;
-}
-
 /**
  * Create an expression that joins together `nl` and `nr`.
  * The join type can be either `AND_type` or `OR_type`.
