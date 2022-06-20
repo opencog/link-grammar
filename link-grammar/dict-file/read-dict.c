@@ -434,6 +434,7 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 	char *constring;
 	bool multi = false;
 
+	char dir = dict->token[i];
 	dict->token[i] = '\0';   /* get rid of the + or - */
 	if (dict->token[0] == '@')
 	{
@@ -444,7 +445,7 @@ static Exp * make_dir_connector(Dictionary dict, int i)
 		constring = dict->token;
 
 	return  make_connector_node(dict, dict->Exp_pool,
-	                            constring, dict->token[i], multi);
+	                            constring, dir, multi);
 }
 
 /* ======================================================================== */
