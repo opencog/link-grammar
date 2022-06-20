@@ -119,14 +119,7 @@ static const char * make_expression(Dictionary dict,
 	assert(NULL != rest, "Badly formed expression %s", exp_str);
 
 	/* Join it all together. */
-	Exp* join = Exp_create(dict->Exp_pool);
-	join->type = etype;
-	join->operand_next = NULL;
-	join->cost = 0.0;
-
-	join->operand_first = *pex;
-	(*pex)->operand_next = rest;
-	rest->operand_next = NULL;
+	Exp* join = make_join_node(dict->Exp_pool, etype, *pex, rest);
 
 	*pex = join;
 
