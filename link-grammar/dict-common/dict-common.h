@@ -18,6 +18,7 @@
 #include "connectors.h"                 // ConTable
 #include "dict-defines.h"
 #include "dict-structures.h"
+#include "dict-ram/dict-ram.h"
 #include "memory-pool.h"                // Pool_desc
 #include "utilities.h"                  // locale_t
 
@@ -174,10 +175,6 @@ struct Dictionary_s
 bool is_stem(const char *);
 bool is_wall(const char *);
 bool is_macro(const char *);
-
-Exp *Exp_create(Pool_desc *);
-Exp *Exp_create_dup(Pool_desc *, Exp *);
-Exp *make_unary_node(Pool_desc *, Exp *);
 
 bool dictionary_generation_request(const Dictionary);
 

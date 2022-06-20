@@ -76,25 +76,18 @@ static const char * make_expression(Dictionary dict,
 				"Missing direction character in connector string: %s", con_start);
 
 		/* Create an expression to hold the connector */
-		Exp* e = Exp_create(dict->Exp_pool);
-		e->dir = *p;
-		e->type = CONNECTOR_type;
-		e->operand_next = NULL;
-		e->cost = 0.0;
 		char * constr = NULL;
+		bool multi = false;
 		if ('@' == *con_start)
 		{
 			constr = strndupa(con_start+1, p-con_start-1);
-			e->multi = true;
+			multi = true;
 		}
 		else
-		{
 			constr = strndupa(con_start, p-con_start);
-			e->multi = false;
-		}
 
-		e->condesc = condesc_add(&dict->contable,
-		                           string_set_add(constr, dict->string_set));
+		Exp* e = make_connector_node(dict, dict->Exp_pool, constr, *p, multi);
+
 		*pex = e;
 	}
 
@@ -125,14 +118,7 @@ static const char * make_expression(Dictionary dict,
 	assert(NULL != rest, "Badly formed expression %s", exp_str);
 
 	/* Join it all together. */
-	Exp* join = Exp_create(dict->Exp_pool);
-	join->type = etype;
-	join->operand_next = NULL;
-	join->cost = 0.0;
-
-	join->operand_first = *pex;
-	(*pex)->operand_next = rest;
-	rest->operand_next = NULL;
+	Exp* join = make_join_node(dict->Exp_pool, etype, *pex, rest);
 
 	*pex = join;
 
@@ -194,13 +180,7 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	/* If the second expression, OR-it with the existing expression. */
 	if (OR_type != bs->exp->type)
 	{
-		Exp* orn = Exp_create(dict->Exp_pool);
-		orn->type = OR_type;
-		orn->cost = 0.0;
-
-		orn->operand_first = exp;
-		exp->operand_next = bs->exp;
-		bs->exp = orn;
+		bs->exp = make_or_node(dict->Exp_pool, exp, bs->exp);
 		return 0;
 	}
 

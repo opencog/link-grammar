@@ -174,30 +174,15 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 			std::string slnk = get_linkname(local, lnk);
 			const std::string& sdir = dir->get_name();
 
-			Exp* e = Exp_create(dict->Exp_pool);
-			e->type = CONNECTOR_type;
-			e->operand_next = NULL;
-			e->cost = 0.0;
-			e->multi = false;
-			e->condesc = condesc_add(&dict->contable,
-				string_set_add(slnk.c_str(), dict->string_set));
-			e->dir = sdir.c_str()[0];
-
+			Exp* e = make_connector_node(dict, dict->Exp_pool,
+			                 slnk.c_str(), sdir.c_str()[0], false);
 			if (nullptr == exp)
 			{
 				exp = e;
 				continue;
 			}
 
-			Exp* join = Exp_create(dict->Exp_pool);
-			join->type = AND_type;
-			join->cost = 0.0;
-			join->operand_first = e;
-			join->operand_next = NULL;
-			e->operand_next = exp;
-			exp->operand_next = NULL;
-
-			exp = join;
+			exp = make_and_node(dict->Exp_pool, e, exp);
 		}
 		// printf("Word %s expression %s\n", ssc, lg_exp_stringify(exp));
 

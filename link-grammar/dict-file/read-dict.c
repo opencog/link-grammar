@@ -431,29 +431,21 @@ static bool check_connector(Dictionary dict, const char * s)
  */
 static Exp * make_dir_connector(Dictionary dict, int i)
 {
-	Exp* n = Exp_create(dict->Exp_pool);
 	char *constring;
+	bool multi = false;
 
-	n->dir = dict->token[i];
+	char dir = dict->token[i];
 	dict->token[i] = '\0';   /* get rid of the + or - */
 	if (dict->token[0] == '@')
 	{
 		constring = dict->token+1;
-		n->multi = true;
+		multi = true;
 	}
 	else
-	{
 		constring = dict->token;
-		n->multi = false;
-	}
 
-	n->condesc = condesc_add(&dict->contable,
-	                         string_set_add(constring, dict->string_set));
-	if (NULL == n->condesc) return NULL; /* Table ovf */
-	n->type = CONNECTOR_type;
-	n->operand_next = NULL; /* unused, but accessed by copy_Exp() and some more */
-	n->cost = 0.0;
-	return n;
+	return  make_connector_node(dict, dict->Exp_pool,
+	                            constring, dir, multi);
 }
 
 /* ======================================================================== */
@@ -591,22 +583,11 @@ void add_empty_word(Sentence sent, X_node *x)
 		//lgdebug(+0, "Processing '%s'\n", x->string);
 
 		/* zn points at {ZZZ+} */
-		zn = Exp_create(sent->Exp_pool);
-		zn->dir = '+';
-		zn->condesc = condesc_add(&sent->dict->contable, ZZZ);
-		zn->multi = false;
-		zn->type = CONNECTOR_type;
-		zn->operand_next = NULL; /* unused, but to be on the safe side */
-		zn->cost = 0.0;
+		zn = make_connector_node(sent->dict, sent->Exp_pool, ZZZ, '+', false);
 		zn = make_optional_node(sent->Exp_pool, zn);
 
 		/* an will be {ZZZ+} & (plain-word-exp) */
-		an = Exp_create(sent->Exp_pool);
-		an->type = AND_type;
-		an->operand_next = NULL;
-		an->cost = 0.0;
-		an->operand_first = zn;
-		zn->operand_next = x->exp;
+		an = make_and_node(sent->Exp_pool, zn, x->exp);
 
 		x->exp = an;
 	}
@@ -819,8 +800,7 @@ static Exp *make_expression(Dictionary dict)
 		 * expression level. */
 		if (e_head == NULL)
 		{
-			e_head = make_op_Exp(dict->Exp_pool, op);
-			e_head->operand_first = nl;
+			e_head = make_join_node(dict->Exp_pool, op, nl, NULL);
 		}
 		else
 		{
