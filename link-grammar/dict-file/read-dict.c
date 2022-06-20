@@ -893,6 +893,17 @@ static void insert_length_limit(Dictionary dict, Dict_node *dn)
 	add_condesc_length_limit(dict, dn, length_limit);
 }
 
+void free_insert_list(Dict_node *ilist)
+{
+	Dict_node * n;
+	while (ilist != NULL)
+	{
+		n = ilist->left;
+		free(ilist);
+		ilist = n;
+	}
+}
+
 /**
  * insert_list() -
  * p points to a list of dict_nodes connected by their left pointers.

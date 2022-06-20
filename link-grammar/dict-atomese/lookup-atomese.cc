@@ -18,7 +18,7 @@
 extern "C" {
 #include "../link-includes.h"            // For Dictionary
 #include "../dict-common/dict-common.h"  // for Dictionary_s
-#include "../dict-file/read-dict.h" // XXX move to dict-common
+#include "../dict-ram/dict-ram.h"
 #include "lookup-atomese.h"
 };
 

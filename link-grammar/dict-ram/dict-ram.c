@@ -306,17 +306,6 @@ void file_free_lookup(Dict_node *llist)
 	}
 }
 
-void free_insert_list(Dict_node *ilist)
-{
-	Dict_node * n;
-	while (ilist != NULL)
-	{
-		n = ilist->left;
-		free(ilist);
-		ilist = n;
-	}
-}
-
 /**
  * file_lookup_wild -- allows for wildcard searches (globs)
  * Used to support the !! command in the parser command-line tool.
@@ -679,56 +668,6 @@ Dict_node *insert_dict(Dictionary dict, Dict_node *n, Dict_node *newnode)
 
 	return n;
 	/* return rebalance(n); Uncomment to get an AVL tree */
-}
-
-/**
- * Remember the length_limit definitions in a list according to their order.
- * The order is kept to allow later more specific definitions to override
- * already applied ones.
- */
-static void add_condesc_length_limit(Dictionary dict, Dict_node *dn,
-                                     int length_limit)
-{
-	length_limit_def_t *lld = malloc(sizeof(*lld));
-	lld->next = NULL;
-	lld->length_limit = length_limit;
-	lld->defexp = dn->exp;
-	lld->defword = dn->string;
-	*dict->contable.length_limit_def_next = lld;
-	dict->contable.length_limit_def_next = &lld->next;
-}
-
-static void insert_length_limit(Dictionary dict, Dict_node *dn)
-{
-	int length_limit;
-
-	if (0 == strcmp(UNLIMITED_CONNECTORS_WORD, dn->string))
-	{
-		length_limit = UNLIMITED_LEN;
-	}
-	else
-	if (0 == strncmp(LIMITED_CONNECTORS_WORD, dn->string,
-	                 sizeof(LIMITED_CONNECTORS_WORD)-1))
-	{
-		char *endp;
-		length_limit =
-			(int)strtol(dn->string + sizeof(LIMITED_CONNECTORS_WORD)-1, &endp, 10);
-		if ((length_limit < 0) || (length_limit > MAX_SENTENCE) ||
-		  (('\0' != *endp) && (SUBSCRIPT_MARK != *endp)))
-		{
-			prt_error("Warning: Word \"%s\" found near line %d of \"%s\".\n"
-					  "\tThis word should end with a number (1-%d).\n"
-					  "\tThis word will be ignored.\n",
-					  dn->string, dict->line_number, dict->name, MAX_SENTENCE);
-			return;
-		}
-	}
-	else return;
-
-	/* We cannot set the connectors length_limit yet because the
-	 * needed data structure is not defined yet. For now, just
-	 * remember the definitions in their order. */
-	add_condesc_length_limit(dict, dn, length_limit);
 }
 
 void add_define(Dictionary dict, const char *name, const char *value)

@@ -14,6 +14,7 @@
 #include "api-types.h"
 #include "dict-api.h"
 #include "dict-common.h"
+#include "dict-ram/dict-ram.h"
 #include "error.h"
 #include "idiom.h"
 #include "string-set.h"
