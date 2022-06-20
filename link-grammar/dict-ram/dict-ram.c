@@ -452,9 +452,7 @@ Exp *make_op_Exp(Pool_desc *mp, Exp_type t)
  */
 Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr)
 {
-	Exp* n;
-
-	n = Exp_create(mp);
+	Exp* n = Exp_create(mp);
 	n->type = OR_type;
 	n->operand_next = NULL;
 	n->cost = 0.0;
@@ -462,6 +460,22 @@ Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr)
 	n->operand_first = nl;
 	nl->operand_next = nr;
 	nr->operand_next = NULL;
+
+	return n;
+}
+
+Exp * make_connector_node(Dictionary dict,
+                          const char* linktype, char dir, bool multi)
+{
+	Exp* n = Exp_create(dict->Exp_pool);
+	n->type = CONNECTOR_type;
+	n->operand_next = NULL;
+	n->cost = 0.0;
+
+	n->condesc = condesc_add(&dict->contable,
+		string_set_add(linktype, dict->string_set));
+	n->dir = dir;
+	n->multi = multi;
 
 	return n;
 }

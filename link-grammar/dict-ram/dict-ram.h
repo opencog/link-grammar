@@ -27,6 +27,8 @@ Exp * make_op_Exp(Pool_desc *mp, Exp_type t);
 Exp * make_and_node(Pool_desc *mp, Exp* nl, Exp* nr);
 Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr);
 Exp * make_optional_node(Pool_desc *mp, Exp *e);
+Exp * make_connector_node(Dictionary dict,
+                          const char* linktype, char dir, bool multi);
 
 void add_define(Dictionary dict, const char *name, const char *value);
 
