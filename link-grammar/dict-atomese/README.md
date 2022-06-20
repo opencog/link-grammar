@@ -1,7 +1,7 @@
 
 Experimental Atomese Dictionary
 ===============================
-This directory provides code that implemenets a connection to an
+This directory provides code that implements a connection to an
 AtomSpace CogServer, from which dictionary data can be fetched. The goal
 of this dictionary is to enable access to a dynamically-changing, live
 dictionary maintained in the AtomSpace.  This provides several benefits:
@@ -10,6 +10,9 @@ dictionary maintained in the AtomSpace.  This provides several benefits:
  * Enables "lifelong learning": as new language uses are learned, the
    AtomSpace contents are changed, and those changes become visible to
    the parser.
+
+This is meant to work with dictionaries created by the code located
+in the [OpenCog learn repo](https://github.com/opencog/learn).
 
 **Version 0.7.0** -- The basic code has been laid down. Use of gram classes
 not yet implemented.
@@ -40,7 +43,7 @@ parse are encoded as:
 ```
 
 Grammatical classes are similar, except that the `WordNode`s are
-replaced by `WordClassNode`s.
+replaced by `WordClassNode`s. Some details are subject to change.
 
 TODO
 ====
