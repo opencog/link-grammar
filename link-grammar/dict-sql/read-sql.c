@@ -87,7 +87,7 @@ static const char * make_expression(Dictionary dict,
 		else
 			constr = strndupa(con_start, p-con_start);
 
-		Exp* e = make_connector_node(dict, constr, *p, multi);
+		Exp* e = make_connector_node(dict, dict->Exp_pool, constr, *p, multi);
 
 		*pex = e;
 	}

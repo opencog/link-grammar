@@ -174,7 +174,8 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 			std::string slnk = get_linkname(local, lnk);
 			const std::string& sdir = dir->get_name();
 
-			Exp* e = make_connector_node(dict, slnk.c_str(), sdir.c_str()[0], false);
+			Exp* e = make_connector_node(dict, dict->Exp_pool,
+			                 slnk.c_str(), sdir.c_str()[0], false);
 			if (nullptr == exp)
 			{
 				exp = e;

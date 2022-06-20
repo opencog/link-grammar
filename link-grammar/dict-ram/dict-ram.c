@@ -464,10 +464,10 @@ Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr)
 	return make_join_node(mp, OR_type, nl, nr);
 }
 
-Exp * make_connector_node(Dictionary dict,
+Exp * make_connector_node(Dictionary dict, Pool_desc *mp,
                           const char* linktype, char dir, bool multi)
 {
-	Exp* n = Exp_create(dict->Exp_pool);
+	Exp* n = Exp_create(mp);
 	n->type = CONNECTOR_type;
 	n->operand_next = NULL;
 	n->cost = 0.0;

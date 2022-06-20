@@ -591,22 +591,11 @@ void add_empty_word(Sentence sent, X_node *x)
 		//lgdebug(+0, "Processing '%s'\n", x->string);
 
 		/* zn points at {ZZZ+} */
-		zn = Exp_create(sent->Exp_pool);
-		zn->dir = '+';
-		zn->condesc = condesc_add(&sent->dict->contable, ZZZ);
-		zn->multi = false;
-		zn->type = CONNECTOR_type;
-		zn->operand_next = NULL; /* unused, but to be on the safe side */
-		zn->cost = 0.0;
+		zn = make_connector_node(sent->dict, sent->Exp_pool, ZZZ, '+', false);
 		zn = make_optional_node(sent->Exp_pool, zn);
 
 		/* an will be {ZZZ+} & (plain-word-exp) */
-		an = Exp_create(sent->Exp_pool);
-		an->type = AND_type;
-		an->operand_next = NULL;
-		an->cost = 0.0;
-		an->operand_first = zn;
-		zn->operand_next = x->exp;
+		an = make_and_node(sent->Exp_pool, zn, x->exp);
 
 		x->exp = an;
 	}
