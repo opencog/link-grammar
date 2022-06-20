@@ -612,6 +612,8 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->dynamic_lookup = true;
 	condesc_init(dict, 1<<8);
 
+	dict->dfine.set = string_id_create();
+
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
 	                          sizeof(Exp), /*zero_out*/false,
 	                          /*align*/false, /*exact*/false);
