@@ -22,7 +22,10 @@ bool dict_node_exists_lookup(Dictionary dict, const char *s);
 void dict_node_free_lookup(Dictionary dict, Dict_node *llist);
 void dict_node_free_list(Dict_node *llist);
 
+Exp * Exp_create(Pool_desc *);
+Exp * Exp_create_dup(Pool_desc *, Exp *);
 Exp * make_zeroary_node(Pool_desc *mp);
+Exp * make_unary_node(Pool_desc *, Exp *);
 Exp * make_op_Exp(Pool_desc *mp, Exp_type t);
 Exp * make_join_node(Pool_desc *mp, Exp_type t, Exp* nl, Exp* nr);
 Exp * make_and_node(Pool_desc *mp, Exp* nl, Exp* nr);
