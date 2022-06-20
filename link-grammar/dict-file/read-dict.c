@@ -21,6 +21,7 @@
 #include "dict-common/dict-utils.h"     // patch_subscript
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
+#include "dict-ram/dict-ram.h"
 #include "error.h"
 #include "externs.h"
 #include "print/print.h"
@@ -419,6 +420,40 @@ static bool check_connector(Dictionary dict, const char * s)
 		s++;
 	}
 	return true;
+}
+
+/* ======================================================================== */
+/**
+ * make_dir_connector() -- make a single node for a connector
+ * that is a + or a - connector.
+ *
+ * Assumes the current token is the connector.
+ */
+static Exp * make_dir_connector(Dictionary dict, int i)
+{
+	Exp* n = Exp_create(dict->Exp_pool);
+	char *constring;
+
+	n->dir = dict->token[i];
+	dict->token[i] = '\0';   /* get rid of the + or - */
+	if (dict->token[0] == '@')
+	{
+		constring = dict->token+1;
+		n->multi = true;
+	}
+	else
+	{
+		constring = dict->token;
+		n->multi = false;
+	}
+
+	n->condesc = condesc_add(&dict->contable,
+	                         string_set_add(constring, dict->string_set));
+	if (NULL == n->condesc) return NULL; /* Table ovf */
+	n->type = CONNECTOR_type;
+	n->operand_next = NULL; /* unused, but accessed by copy_Exp() and some more */
+	n->cost = 0.0;
+	return n;
 }
 
 /* ======================================================================== */
@@ -856,6 +891,66 @@ static void insert_length_limit(Dictionary dict, Dict_node *dn)
 	 * needed data structure is not defined yet. For now, just
 	 * remember the definitions in their order. */
 	add_condesc_length_limit(dict, dn, length_limit);
+}
+
+/**
+ * insert_list() -
+ * p points to a list of dict_nodes connected by their left pointers.
+ * l is the length of this list (the last ptr may not be NULL).
+ * It inserts the list into the dictionary.
+ * It does the middle one first, then the left half, then the right.
+ *
+ * Note: I think this "insert middle, then left, then right" algo has
+ * its origins as a lame attempt to hack around the fact that the
+ * resulting binary tree is rather badly unbalanced. This has been
+ * fixed by using the DSW rebalancing algo. Now, that would seem
+ * to render this crazy bisected-insertion algo obsolete, but ..
+ * oddly enough, it seems to make the DSW balancing go really fast!
+ * Faster than a simple insertion. Go figure. I think this has
+ * something to do with the fact that the dictionaries are in
+ * alphabetical order! This subdivision helps randomize a bit.
+ */
+void insert_list(Dictionary dict, Dict_node * p, int l)
+{
+	Dict_node * dn, *dn_second_half;
+	int k, i; /* length of first half */
+
+	if (l == 0) return;
+
+	k = (l-1)/2;
+	dn = p;
+	for (i = 0; i < k; i++)
+	{
+		dn = dn->left;
+	}
+
+	/* dn now points to the middle element */
+	dn_second_half = dn->left;
+	dn->left = dn->right = NULL;
+
+	const char *sm = get_word_subscript(dn->string);
+	if ((NULL != sm) && ('_' == sm[1]))
+	{
+		prt_error("Warning: Word \"%s\" found near line %d of \"%s\".\n"
+		        "\tWords ending \"._\" are reserved for internal use.\n"
+		        "\tThis word will be ignored.\n",
+		        dn->string, dict->line_number, dict->name);
+		free(dn);
+	}
+	else
+	{
+		if (contains_underbar(dn->string))
+		{
+			insert_idiom(dict, dn);
+		}
+
+		dict->root = insert_dict(dict, dict->root, dn);
+		insert_length_limit(dict, dn);
+		dict->num_entries++;
+	}
+
+	insert_list(dict, p, k);
+	insert_list(dict, dn_second_half, l-k-1);
 }
 
 /**

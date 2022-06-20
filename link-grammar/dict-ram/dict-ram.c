@@ -24,12 +24,11 @@
 #include "error.h"
 #include "externs.h"
 #include "print/print.h"
-#include "read-dict.h"
 #include "string-set.h"
 #include "tokenize/tok-structures.h"    // MT_WALL
 #include "utilities.h"
-#include "word-file.h"
 
+#include "dict-ram.h"
 
 /* ======================================================================== */
 /**
@@ -139,6 +138,7 @@ static inline int dict_order_bare(const char *s, const Dict_node * dn)
  * Otherwise, replace SUBSCRIPT_MARK by "\0", and take the difference.
  * This behavior matches that of the function dict_order_bare().
  */
+#define WILD_TYPE '*'
 #define D_DOW 6
 static inline int dict_order_wild(const char * s, const Dict_node * dn)
 {
@@ -155,7 +155,7 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
 }
 #undef D_DOW
 
-static inline Dict_node * dict_node_new(void)
+Dict_node * dict_node_new(void)
 {
 	return (Dict_node*) malloc(sizeof(Dict_node));
 }
@@ -371,7 +371,7 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
  *
  * The returned list must be freed with file_free_lookup().
  */
-static Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
+Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 {
 	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
 }
@@ -405,7 +405,7 @@ Exp *Exp_create_dup(Pool_desc *mp, Exp *old_e)
  * This creates a node with zero children.  Initializes
  * the cost to zero.
  */
-static Exp * make_zeroary_node(Pool_desc *mp)
+Exp * make_zeroary_node(Pool_desc *mp)
 {
 	Exp * n = Exp_create(mp);
 	n->type = AND_type;  /* these must be AND types */
@@ -434,7 +434,7 @@ Exp *make_unary_node(Pool_desc *mp, Exp * e)
  * Create an AND_type expression. The expressions nl, nr will be
  * AND-ed together.
  */
-static Exp * make_and_node(Pool_desc *mp, Exp* nl, Exp* nr)
+Exp * make_and_node(Pool_desc *mp, Exp* nl, Exp* nr)
 {
 	Exp* n;
 
@@ -450,7 +450,7 @@ static Exp * make_and_node(Pool_desc *mp, Exp* nl, Exp* nr)
 	return n;
 }
 
-static Exp *make_op_Exp(Pool_desc *mp, Exp_type t)
+Exp *make_op_Exp(Pool_desc *mp, Exp_type t)
 {
 	Exp * n = Exp_create(mp);
 	n->type = t;
@@ -465,7 +465,7 @@ static Exp *make_op_Exp(Pool_desc *mp, Exp_type t)
  * Create an OR_type expression. The expressions nl, nr will be
  * OR-ed together.
  */
-static Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr)
+Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr)
 {
 	Exp* n;
 
@@ -486,7 +486,7 @@ static Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr)
  * and the other as zeroary node.  This has the effect of creating
  * what used to be called an optional node.
  */
-static Exp *make_optional_node(Pool_desc *mp, Exp *e)
+Exp *make_optional_node(Pool_desc *mp, Exp *e)
 {
 	return make_or_node(mp, make_zeroary_node(mp), e);
 }
@@ -515,7 +515,7 @@ static Dict_node *rotate_right(Dict_node *root)
 	return pivot;
 }
 
-static Dict_node * dsw_tree_to_vine (Dict_node *root)
+Dict_node * dsw_tree_to_vine (Dict_node *root)
 {
 	Dict_node *vine_tail, *vine_head, *rest;
 	Dict_node vh;
@@ -570,7 +570,7 @@ static inline unsigned int full_tree_size (unsigned int size)
 	return pk/2;
 }
 
-static Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
+Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
 {
 	Dict_node vine_head;
 	unsigned int full_count = full_tree_size(size +1);
@@ -623,8 +623,13 @@ static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 
 	if (!contains_underbar(newnode->string) || dup_idioms)
 	{
+/*
 		dict_error2(dict, "Ignoring word which has been multiply defined:",
 		            newnode->string);
+*/
+prt_error("Error: Ignoring word which has been multiply defined: %s\n"
+"(This error message should be fixed to print dict name and line)\n",
+newnode->string);
 		/* Too late to skip insertion - insert it with a null expression. */
 		newnode->exp = &null_exp;
 
@@ -726,67 +731,7 @@ static void insert_length_limit(Dictionary dict, Dict_node *dn)
 	add_condesc_length_limit(dict, dn, length_limit);
 }
 
-/**
- * insert_list() -
- * p points to a list of dict_nodes connected by their left pointers.
- * l is the length of this list (the last ptr may not be NULL).
- * It inserts the list into the dictionary.
- * It does the middle one first, then the left half, then the right.
- *
- * Note: I think this "insert middle, then left, then right" algo has
- * its origins as a lame attempt to hack around the fact that the
- * resulting binary tree is rather badly unbalanced. This has been
- * fixed by using the DSW rebalancing algo. Now, that would seem
- * to render this crazy bisected-insertion algo obsolete, but ..
- * oddly enough, it seems to make the DSW balancing go really fast!
- * Faster than a simple insertion. Go figure. I think this has
- * something to do with the fact that the dictionaries are in
- * alphabetical order! This subdivision helps randomize a bit.
- */
-void insert_list(Dictionary dict, Dict_node * p, int l)
-{
-	Dict_node * dn, *dn_second_half;
-	int k, i; /* length of first half */
-
-	if (l == 0) return;
-
-	k = (l-1)/2;
-	dn = p;
-	for (i = 0; i < k; i++)
-	{
-		dn = dn->left;
-	}
-
-	/* dn now points to the middle element */
-	dn_second_half = dn->left;
-	dn->left = dn->right = NULL;
-
-	const char *sm = get_word_subscript(dn->string);
-	if ((NULL != sm) && ('_' == sm[1]))
-	{
-		prt_error("Warning: Word \"%s\" found near line %d of \"%s\".\n"
-		        "\tWords ending \"._\" are reserved for internal use.\n"
-		        "\tThis word will be ignored.\n",
-		        dn->string, dict->line_number, dict->name);
-		free(dn);
-	}
-	else
-	{
-		if (contains_underbar(dn->string))
-		{
-			insert_idiom(dict, dn);
-		}
-
-		dict->root = insert_dict(dict, dict->root, dn);
-		insert_length_limit(dict, dn);
-		dict->num_entries++;
-	}
-
-	insert_list(dict, p, k);
-	insert_list(dict, dn_second_half, l-k-1);
-}
-
-static void add_define(Dictionary dict, const char *name, const char *value)
+void add_define(Dictionary dict, const char *name, const char *value)
 {
 	int id = string_id_add(name, dict->dfine.set);
 
@@ -823,7 +768,7 @@ static bool is_correction(const char *s)
 	return strstr(s, correction_mark) != 0;
 }
 
-static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
+void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 {
 	if (n == 1)
 	{
@@ -876,6 +821,7 @@ static void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 
 void print_dictionary_defines(Dictionary dict)
 {
+	#define SPECIAL "(){};[]&^|:"
 	for (size_t i = 0; i < dict->dfine.size; i++)
 	{
 		const char *value = dict->dfine.value[i];
