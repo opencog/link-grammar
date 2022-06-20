@@ -248,12 +248,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 			if (t->exp->type != OR_type)
 			{
 				/* Prepend an OR element. */
-				Exp *or = Exp_create(dict->Exp_pool);
-				or->type = OR_type;
-				or->cost = 0.0;
-				or->operand_next = NULL;
-				or->operand_first = t->exp;
-				t->exp = or;
+				t->exp = make_or_node(dict->Exp_pool, t->exp, NULL);
 			}
 
 			/* Prepend the word's expression to dict expression OR'ed elements. */
