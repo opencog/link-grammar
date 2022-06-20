@@ -30,6 +30,7 @@
 #include "dict-common/dict-utils.h"      // patch_subscript()
 #include "dict-common/file-utils.h"
 #include "dict-file/read-dict.h"         // dictionary_six()
+#include "dict-ram/dict-ram.h"           // make_connector_node()
 #include "error.h"
 #include "externs.h"
 #include "memory-pool.h"
@@ -76,25 +77,18 @@ static const char * make_expression(Dictionary dict,
 				"Missing direction character in connector string: %s", con_start);
 
 		/* Create an expression to hold the connector */
-		Exp* e = Exp_create(dict->Exp_pool);
-		e->dir = *p;
-		e->type = CONNECTOR_type;
-		e->operand_next = NULL;
-		e->cost = 0.0;
 		char * constr = NULL;
+		bool multi = false;
 		if ('@' == *con_start)
 		{
 			constr = strndupa(con_start+1, p-con_start-1);
-			e->multi = true;
+			multi = true;
 		}
 		else
-		{
 			constr = strndupa(con_start, p-con_start);
-			e->multi = false;
-		}
 
-		e->condesc = condesc_add(&dict->contable,
-		                           string_set_add(constr, dict->string_set));
+		Exp* e = make_connector_node(dict, constr, *p, multi);
+
 		*pex = e;
 	}
 
