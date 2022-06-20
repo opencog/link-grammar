@@ -30,7 +30,6 @@
 #include "dict-common/dict-utils.h"      // patch_subscript()
 #include "dict-common/file-utils.h"
 #include "dict-file/read-dict.h"         // dictionary_six()
-#include "dict-ram/dict-ram.h"           // make_connector_node()
 #include "error.h"
 #include "externs.h"
 #include "memory-pool.h"
@@ -181,13 +180,7 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	/* If the second expression, OR-it with the existing expression. */
 	if (OR_type != bs->exp->type)
 	{
-		Exp* orn = Exp_create(dict->Exp_pool);
-		orn->type = OR_type;
-		orn->cost = 0.0;
-
-		orn->operand_first = exp;
-		exp->operand_next = bs->exp;
-		bs->exp = orn;
+		bs->exp = make_or_node(dict->Exp_pool, exp, bs->exp);
 		return 0;
 	}
 
