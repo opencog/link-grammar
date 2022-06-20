@@ -369,6 +369,8 @@ Exp *Exp_create(Pool_desc *mp)
 {
 	Exp *e = pool_alloc(mp);
 	e->tag_type = Exptag_none;
+	e->operand_next = NULL;
+	e->cost = 0.0;
 	return e;
 }
 
@@ -379,7 +381,7 @@ Exp *Exp_create(Pool_desc *mp)
  */
 Exp *Exp_create_dup(Pool_desc *mp, Exp *old_e)
 {
-	Exp *new_e = Exp_create(mp);
+	Exp *new_e = pool_alloc(mp);
 
 	*new_e = *old_e;
 
@@ -394,9 +396,7 @@ Exp * make_zeroary_node(Pool_desc *mp)
 {
 	Exp * n = Exp_create(mp);
 	n->type = AND_type;  /* these must be AND types */
-	n->cost = 0.0;
 	n->operand_first = NULL;
-	n->operand_next = NULL;
 	return n;
 }
 
@@ -409,8 +409,6 @@ Exp *make_unary_node(Pool_desc *mp, Exp * e)
 	Exp * n;
 	n = Exp_create(mp);
 	n->type = AND_type;  /* these must be AND types */
-	n->operand_next = NULL;
-	n->cost = 0.0;
 	n->operand_first = e;
 	return n;
 }
@@ -419,8 +417,6 @@ Exp *make_op_Exp(Pool_desc *mp, Exp_type t)
 {
 	Exp * n = Exp_create(mp);
 	n->type = t;
-	n->operand_next = NULL;
-	n->cost = 0.0;
 
 	/* The caller is supposed to assign n->operand->first. */
 	return n;
@@ -436,12 +432,10 @@ Exp * make_join_node(Pool_desc *mp, Exp_type t, Exp* nl, Exp* nr)
 
 	n = Exp_create(mp);
 	n->type = t;
-	n->operand_next = NULL;
-	n->cost = 0.0;
 
 	n->operand_first = nl;
 	nl->operand_next = nr;
-	nr->operand_next = NULL;
+	// nr->operand_next = NULL;
 
 	return n;
 }
@@ -469,8 +463,6 @@ Exp * make_connector_node(Dictionary dict, Pool_desc *mp,
 {
 	Exp* n = Exp_create(mp);
 	n->type = CONNECTOR_type;
-	n->operand_next = NULL;
-	n->cost = 0.0;
 
 	n->condesc = condesc_add(&dict->contable,
 		string_set_add(linktype, dict->string_set));
