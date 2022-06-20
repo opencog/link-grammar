@@ -235,4 +235,4 @@ void as_free_llist(Dictionary dict, Dict_node *llist)
 		llist = dn;
 	}
 }
-#endif /* HAVE_ATOMSPACE */
+#endif /* HAVE_ATOMESE */
