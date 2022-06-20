@@ -13,20 +13,11 @@
 
 #include <string.h>
 
-#include "api-structures.h"             // Sentence_s (add_empty_word)
-#include "connectors.h"
-#include "dict-common/dialect.h"
-#include "dict-common/dict-affix.h"     // is_stem
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-utils.h"     // patch_subscript
-#include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
-#include "error.h"
-#include "externs.h"
-#include "print/print.h"
+#include "string-id.h"
 #include "string-set.h"
-#include "tokenize/tok-structures.h"    // MT_WALL
-#include "utilities.h"
 
 #include "dict-ram.h"
 
