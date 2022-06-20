@@ -174,7 +174,7 @@ void free_lookup_list(const Dictionary dict, Dict_node *llist)
 
 bool dict_has_word(const Dictionary dict, const char *s)
 {
-	return dict->lookup(dict, s);
+	return dict->exists_lookup(dict, s);
 }
 
 /**

@@ -141,7 +141,7 @@ struct Dictionary_s
 	Dict_node* (*lookup_list)(Dictionary, const char*);
 	Dict_node* (*lookup_wild)(Dictionary, const char*);
 	void (*free_lookup)(Dictionary, Dict_node*);
-	bool (*lookup)(Dictionary, const char*);
+	bool (*exists_lookup)(Dictionary, const char*);
 	void (*close)(Dictionary);
 
 	pp_knowledge  * base_knowledge;    /* Core post-processing rules */

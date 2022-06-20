@@ -501,7 +501,7 @@ static Exp * make_connector(Dictionary dict)
 		dn = strict_lookup_list(dict, dict->token);
 		if (dn == NULL)
 		{
-			file_free_lookup(dn);
+			dict_node_free_list(dn);
 			dict_error2(dict, "Perhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the subscript on a word.\n"
 			                 "Or perhaps the word is used before it is defined:",
@@ -510,7 +510,7 @@ static Exp * make_connector(Dictionary dict)
 		}
 		if (dn->right != NULL)
 		{
-			file_free_lookup(dn);
+			dict_node_free_list(dn);
 			dict_error2(dict, "Referencing a duplicate word:", dict->token);
 			/* Note: A word which becomes duplicate latter evades this check. */
 			return NULL;
@@ -521,7 +521,7 @@ static Exp * make_connector(Dictionary dict)
 		n->tag_id = exptag_macro_add(dict, dn->string);
 		if (n->tag_id != 0) n->tag_type = Exptag_macro;
 
-		file_free_lookup(dn);
+		dict_node_free_list(dn);
 	}
 	else
 	{
@@ -955,7 +955,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
 			insert_idiom(dict, dn);
 		}
 
-		dict->root = insert_dict(dict, dict->root, dn);
+		dict->root = dict_node_insert(dict, dict->root, dn);
 		insert_length_limit(dict, dn);
 		dict->num_entries++;
 	}

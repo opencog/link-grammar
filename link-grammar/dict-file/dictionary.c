@@ -82,11 +82,6 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 	}
 }
 
-static void free_llist(Dictionary dict, Dict_node *llist)
-{
-	file_free_lookup(llist);
-}
-
 /**
  * Dummy lookup function for the affix dictionary -
  * compile_regexs() needs it.
@@ -147,10 +142,10 @@ dictionary_six_str(const char * lang,
 		dict->current_idiom[IDIOM_LINK_SZ-1] = 0;
 
 		dict->insert_entry = insert_list;
-		dict->lookup_list = file_lookup_list;
-		dict->lookup_wild = file_lookup_wild;
-		dict->free_lookup = free_llist;
-		dict->lookup = file_boolean_lookup;
+		dict->lookup_list = dict_node_lookup;
+		dict->lookup_wild = dict_node_wild_lookup;
+		dict->free_lookup = dict_node_free_lookup;
+		dict->exists_lookup = dict_node_exists_lookup;
 		dict->dialect_tag.set = string_id_create();
 		condesc_init(dict, 1<<13);
 		Exp_pool_size = 1<<13;
@@ -168,7 +163,7 @@ dictionary_six_str(const char * lang,
 		 */
 		afclass_init(dict);
 		dict->insert_entry = load_affix;
-		dict->lookup = return_true;
+		dict->exists_lookup = return_true;
 		condesc_init(dict, 1<<9);
 		Exp_pool_size = 1<<5;
 	}

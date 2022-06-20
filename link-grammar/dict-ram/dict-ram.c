@@ -267,26 +267,26 @@ rdictionary_lookup(Dict_node * restrict llist,
 }
 
 /**
- * file_lookup_list() - return list of words in the file-backed dictionary.
+ * dict_node_lookup() - return list of words in the RAM-cached dictionary.
  *
  * Returns a pointer to a lookup list of the words in the dictionary.
  *
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
  *
- * The returned list must be freed with file_free_lookup().
+ * The returned list must be freed with dict_node_free_lookup().
  */
-Dict_node * file_lookup_list(const Dictionary dict, const char *s)
+Dict_node * dict_node_lookup(const Dictionary dict, const char *s)
 {
 	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
 }
 
-bool file_boolean_lookup(Dictionary dict, const char *s)
+bool dict_node_exists_lookup(Dictionary dict, const char *s)
 {
 	return !!rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);
 }
 
-void file_free_lookup(Dict_node *llist)
+void dict_node_free_list(Dict_node *llist)
 {
 	Dict_node * n;
 	while (llist != NULL)
@@ -297,11 +297,16 @@ void file_free_lookup(Dict_node *llist)
 	}
 }
 
+void dict_node_free_lookup(Dictionary dict, Dict_node *llist)
+{
+	dict_node_free_list(llist);
+}
+
 /**
- * file_lookup_wild -- allows for wildcard searches (globs)
+ * dict_node_wild_lookup -- allows for wildcard searches (globs)
  * Used to support the !! command in the parser command-line tool.
  */
-Dict_node * file_lookup_wild(Dictionary dict, const char *s)
+Dict_node * dict_node_wild_lookup(Dictionary dict, const char *s)
 {
 	char * ds = strrchr(s, SUBSCRIPT_DOT); /* Only the rightmost dot is a
 	                                          candidate for SUBSCRIPT_DOT */
@@ -330,7 +335,7 @@ Dict_node * file_lookup_wild(Dictionary dict, const char *s)
  * This list is made up of Dict_nodes, linked by their right pointers.
  * The node, file and string fields are copied from the dictionary.
  *
- * The returned list must be freed with file_free_lookup().
+ * The returned list must be freed with dict_node_free_lookup().
  */
 static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
 {
@@ -349,7 +354,7 @@ static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
  * The list normally has 0 or 1 elements, unless the given word
  * appears more than once in the dictionary.
  *
- * The returned list must be freed with file_free_lookup().
+ * The returned list must be freed with dict_node_free_lookup().
  */
 Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 {
@@ -629,7 +634,7 @@ newnode->string);
  * before being used.  The DSW algo below is ideal for that.
  */
 NO_SAN_DICT
-Dict_node *insert_dict(Dictionary dict, Dict_node *n, Dict_node *newnode)
+Dict_node *dict_node_insert(Dictionary dict, Dict_node *n, Dict_node *newnode)
 {
 	if (NULL == n) return newnode;
 
@@ -645,7 +650,7 @@ Dict_node *insert_dict(Dictionary dict, Dict_node *n, Dict_node *newnode)
 			n->left = newnode;
 			return n;
 		}
-		n->left = insert_dict(dict, n->left, newnode);
+		n->left = dict_node_insert(dict, n->left, newnode);
 	}
 	else
 	{
@@ -654,7 +659,7 @@ Dict_node *insert_dict(Dictionary dict, Dict_node *n, Dict_node *newnode)
 			n->right = newnode;
 			return n;
 		}
-		n->right = insert_dict(dict, n->right, newnode);
+		n->right = dict_node_insert(dict, n->right, newnode);
 	}
 
 	return n;
