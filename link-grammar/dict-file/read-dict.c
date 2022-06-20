@@ -431,29 +431,20 @@ static bool check_connector(Dictionary dict, const char * s)
  */
 static Exp * make_dir_connector(Dictionary dict, int i)
 {
-	Exp* n = Exp_create(dict->Exp_pool);
 	char *constring;
+	bool multi = false;
 
-	n->dir = dict->token[i];
 	dict->token[i] = '\0';   /* get rid of the + or - */
 	if (dict->token[0] == '@')
 	{
 		constring = dict->token+1;
-		n->multi = true;
+		multi = true;
 	}
 	else
-	{
 		constring = dict->token;
-		n->multi = false;
-	}
 
-	n->condesc = condesc_add(&dict->contable,
-	                         string_set_add(constring, dict->string_set));
-	if (NULL == n->condesc) return NULL; /* Table ovf */
-	n->type = CONNECTOR_type;
-	n->operand_next = NULL; /* unused, but accessed by copy_Exp() and some more */
-	n->cost = 0.0;
-	return n;
+	return  make_connector_node(dict, dict->Exp_pool,
+	                            constring, dict->token[i], multi);
 }
 
 /* ======================================================================== */
