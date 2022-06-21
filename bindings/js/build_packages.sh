@@ -9,7 +9,7 @@ pushd "$(dirname "$0")"
 # Compile LLVM bitcode
 pushd ../..
 emconfigure ./configure --disable-editline --disable-sat-solver --disable-java-bindings --disable-python-bindings
-emmake clean
+emmake make clean
 emmake make
 popd
 
