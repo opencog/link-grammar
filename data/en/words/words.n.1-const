@@ -1533,6 +1533,7 @@ continent.n
 contingency.s
 contingent.n
 continuation.s
+continue.n
 continuum.n
 contortion.n
 contour.n
@@ -1958,6 +1959,7 @@ debenture.s
 debit.n
 debt.s
 debugger.n
+debug.n
 debut.n
 decameter.n
 decanter.n
@@ -2194,6 +2196,7 @@ dirigible.n
 dirndl.n
 disability.s
 disadvantage.s
+disaffection.n
 disagreement.s
 disambiguation.n
 disappearance.n
@@ -2202,6 +2205,7 @@ disassembly.n
 disaster.s
 disbursement.s
 discard.n
+discarding.n
 discharge.s
 disciple.n
 discipline.s
@@ -2230,6 +2234,7 @@ disincentive.n
 disinclination.s
 disinfectant.s
 disjunction.n
+disjunct.n
 disk.n
 dislocation.s
 disloyalty.s
@@ -2518,6 +2523,7 @@ fake.n
 fakir.n
 falcon.n
 fall.s
+fallback.n
 fallthrough.n
 falsehood.s
 falsetto.s
@@ -3416,6 +3422,7 @@ harpsichord.s
 harrow.n
 hart.n
 harvest.n
+hash.n
 hashtag.n
 hassle.n
 hatband.n
@@ -4469,6 +4476,7 @@ mentality.s
 mention.s
 mentorship.n
 menu.n
+merge.n
 merger.s
 meridian.n
 meringue.s
@@ -5563,6 +5571,7 @@ portrait.n
 portrayal.n
 port.s
 pose.n
+positive.n
 posse.n
 possession.s
 possum.n
@@ -5625,6 +5634,7 @@ precis.s
 preconception.n
 precondition.n
 precursor.n
+predate.n
 predetermination.n
 predicament.n
 predicate.n
@@ -5640,6 +5650,7 @@ preference.s
 prefix.n
 preform.n
 pregnancy.s
+prehistory.n
 prejudgement.n
 prejudice.s
 prelate.n
@@ -5795,6 +5806,7 @@ prow.n
 proxy.s
 prude.n
 prune.n
+pruning.n
 psalm.n
 psalter.n
 psaltery.s
@@ -6088,6 +6100,7 @@ redeclaration.n
 redevelopment.s
 redhead.n
 rediscovery.s
+redistribution.n
 redoubt.n
 redraft.n
 redshirt.n
@@ -6457,6 +6470,7 @@ runaway.n
 rundown.n
 rune.n
 run.n
+runing.n
 runin.n
 run-in.n
 runoff.n
@@ -7768,7 +7782,7 @@ target.n
 tariff.n
 tarogato.s
 tarpaulin.n
-tar.s
+tar.n
 tartan.n
 tart.n
 tarweed.n
@@ -8185,7 +8199,7 @@ trigger.n
 trill.n
 trilogy.n
 trimester.n
-trim.s
+trim.n
 trinity.n
 trinket.n
 trio.n

@@ -8204,6 +8204,7 @@ portrayals.n
 ports.n
 posers.n
 poses.n
+positives.n
 positivists.n
 posses.n
 possessions.n
