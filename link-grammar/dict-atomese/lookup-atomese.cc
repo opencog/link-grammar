@@ -27,6 +27,7 @@ using namespace opencog;
 class Local
 {
 public:
+	const char* url;
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;
 	Handle linkp;
@@ -36,6 +37,9 @@ public:
 void as_open(Dictionary dict, const char* url)
 {
 	Local* local = new Local;
+
+	local->url = string_set_add(url, dict->string_set);
+
 	local->asp = createAtomSpace();
 
 	// Create the connector predicate.
@@ -218,4 +222,26 @@ printf("duuude called as_lookup_wild for %s\n", s);
 	return NULL;
 }
 
+// Zap all the Dict_nodes that we've added earlier.
+// This clears out everything hanging on dict->root
+// as well as the expression pool.
+// And also the local AtomSpace.
+//
+void as_clear_cache(Dictionary dict)
+{
+	free_dictionary_root(dict);
+	dict->num_entries = 0;
+	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
+	                             sizeof(Exp), /*zero_out*/false,
+	                             /*align*/false, /*exact*/false);
+
+	// Clear the local AtomSpace too.
+	// Easiest way to do this is to just close and reopen
+	// the connection.
+	Local* local = (Local*) (dict->as_server);
+	const char* url = local->url;
+	as_close(dict);
+	as_open(dict, url);
+	as_boolean_lookup(dict, LEFT_WALL_WORD);
+}
 #endif /* HAVE_ATOMESE */
