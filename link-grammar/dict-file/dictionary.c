@@ -146,6 +146,7 @@ dictionary_six_str(const char * lang,
 		dict->lookup_wild = dict_node_wild_lookup;
 		dict->free_lookup = dict_node_free_lookup;
 		dict->exists_lookup = dict_node_exists_lookup;
+		dict->clear_cache = dict_node_noop;
 		dict->dialect_tag.set = string_id_create();
 		condesc_init(dict, 1<<13);
 		Exp_pool_size = 1<<13;

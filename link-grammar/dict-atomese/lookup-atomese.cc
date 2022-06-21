@@ -228,4 +228,10 @@ void as_free_llist(Dictionary dict, Dict_node *llist)
 		llist = dn;
 	}
 }
+
+void as_clear_cache(Dictionary dict)
+{
+	printf("duude call clear cache\n");
+}
+
 #endif /* HAVE_ATOMESE */

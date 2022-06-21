@@ -151,6 +151,10 @@ Dict_node * dict_node_new(void)
 	return (Dict_node*) malloc(sizeof(Dict_node));
 }
 
+void dict_node_noop(Dict_node* x)
+{
+}
+
 /* ======================================================================== */
 #if 0
 /**

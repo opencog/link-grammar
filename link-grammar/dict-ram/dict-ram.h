@@ -21,6 +21,7 @@ Dict_node * dict_node_wild_lookup(Dictionary dict, const char *s);
 bool dict_node_exists_lookup(Dictionary dict, const char *s);
 void dict_node_free_lookup(Dictionary dict, Dict_node *llist);
 void dict_node_free_list(Dict_node *llist);
+void dict_node_noop(Dict_node *);
 
 Exp * Exp_create(Pool_desc *);
 Exp * Exp_create_dup(Pool_desc *, Exp *);

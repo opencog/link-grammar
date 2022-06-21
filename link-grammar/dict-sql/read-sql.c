@@ -587,6 +587,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->lookup_wild = db_lookup_wild;
 	dict->free_lookup = db_free_llist;
 	dict->exists_lookup = db_lookup;
+	dict->clear_cache = dict_node_noop;
 	dict->close = db_close;
 
 	dict->dynamic_lookup = true;
