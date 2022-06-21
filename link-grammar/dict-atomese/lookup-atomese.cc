@@ -168,13 +168,22 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	{
 		Exp* exp = nullptr;
 
-		// The connector sequence the secnd atom.
+		// The germ is the first Atom.
+		const Handle& germ = sect->getOutgoingAtom(0);
+
+		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
 		const Handle& conseq = sect->getOutgoingAtom(1);
 		for (const Handle& ctcr : reverse(conseq->getOutgoingSet()))
 		{
-			const Handle& lnk = ctcr->getOutgoingAtom(0);
+			// The connection target is the first Atom in the connector
+			const Handle& tgt = ctcr->getOutgoingAtom(0);
 			const Handle& dir = ctcr->getOutgoingAtom(1);
+
+			// The link is the connection of both of these.
+			const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt);
+
+			// Assign an upper-case name to the link.
 			std::string slnk = get_linkname(local, lnk);
 			const std::string& sdir = dir->get_name();
 

@@ -29,16 +29,15 @@ The above may take an hour or two to complete.
 Then `cd lang-model` and read and follow the instructions in
 `Dockerfile`.  This will result in a running CogServer with
 some minimalist, bare-bones language data in it.  Start the
-link-parser as `link-parser demo-atomese`. Simple, short
-sentences using common English words should parse. Be sure to
-end sentences with punctuation (a period, exclamation, etc.)
+link-parser as `link-parser demo-atomese`. Only a very small
+number of simple, short sentences parse; this is a low-quality
+dataset. (A bettter one will be published "soon").
 
 Some working sentences with the above dataset:
 ```
-this is a test .
-she looked out the window .
-why are you here ?
-this is a very long sentence of some kind that says something dull .
+her !
+who are
+what is it
 ```
 This is a low-quality dataset, so don't exepect much. Other datasets
 are better but are not publicly available.
