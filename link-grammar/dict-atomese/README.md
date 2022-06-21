@@ -79,6 +79,7 @@ TODO
 Remaining work items:
 
 * Verify minus-direction connector order.
+* Implement costs
 * Implement gram class support.
 * Expire local cache entries (given by dict_node_lookup) after some time
   frame, forcing a frewsh lookup from the server.
