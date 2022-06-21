@@ -237,8 +237,8 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 
 			andex = make_and_node(dict->Exp_pool, e, andex);
 		}
-		// print_section(dict, sect);
-		// printf("Word %s expression %s\n", ssc, lg_exp_stringify(andex));
+		print_section(dict, sect);
+		printf("Word %s expression %s\n", ssc, lg_exp_stringify(andex));
 
 		if (nullptr == exp)
 			exp = andex;
@@ -270,10 +270,21 @@ dict->num_entries, ssc, sects.size());
 	return dn;
 }
 
+// This is supposed to provide a wild-card lookup.  However,
+// There is currently no way to support a wild-card lookup in the
+// atomspace: there is no way to ask for all WordNodes that match
+// a given regex.  There's no regex predicate... this can be hacked
+// around in various elegant and inelegant ways, e.g. adding a
+// regex predicate to the AtomSpace. Punt for now. This is used
+// only for the !! command in the parser command-line tool.
+// XXX FIXME. But low priority.
 Dict_node * as_lookup_wild(Dictionary dict, const char *s)
 {
-printf("duuude called as_lookup_wild for %s\n", s);
-	return NULL;
+	Dict_node * dn = dict_node_wild_lookup(dict, s);
+	if (dn) return dn;
+
+	as_lookup_list(dict, s);
+	return dict_node_wild_lookup(dict, s);
 }
 
 // Zap all the Dict_nodes that we've added earlier.
