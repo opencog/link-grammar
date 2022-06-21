@@ -22,6 +22,28 @@
 #include "dict-ram.h"
 
 /* ======================================================================== */
+
+static void free_dict_node_recursive(Dict_node * dn)
+{
+	if (dn == NULL) return;
+	free_dict_node_recursive(dn->left);
+	free_dict_node_recursive(dn->right);
+	free(dn);
+}
+
+void free_dictionary_root(Dictionary dict)
+{
+	free_dict_node_recursive(dict->root);
+	pool_delete(dict->Exp_pool);
+	dict->root = NULL;
+	dict->Exp_pool = NULL;
+}
+
+void dict_node_noop(Dictionary dict)
+{
+}
+
+/* ======================================================================== */
 /**
  * Dictionary entry comparison and ordering functions.
  *
@@ -149,10 +171,6 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
 Dict_node * dict_node_new(void)
 {
 	return (Dict_node*) malloc(sizeof(Dict_node));
-}
-
-void dict_node_noop(Dictionary dict)
-{
 }
 
 /* ======================================================================== */

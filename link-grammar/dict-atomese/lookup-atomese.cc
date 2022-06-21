@@ -218,20 +218,4 @@ printf("duuude called as_lookup_wild for %s\n", s);
 	return NULL;
 }
 
-void as_free_llist(Dictionary dict, Dict_node *llist)
-{
-	Dict_node * dn;
-	while (llist != NULL)
-	{
-		dn = llist->right;
-		free(llist);
-		llist = dn;
-	}
-}
-
-void as_clear_cache(Dictionary dict)
-{
-	printf("duude call clear cache\n");
-}
-
 #endif /* HAVE_ATOMESE */

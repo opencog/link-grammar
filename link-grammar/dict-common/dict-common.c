@@ -300,21 +300,6 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 }
 #endif /* USEFUL_BUT_NOT_CURRENTLY_USED */
 
-static void free_dict_node_recursive(Dict_node * dn)
-{
-	if (dn == NULL) return;
-	free_dict_node_recursive(dn->left);
-	free_dict_node_recursive(dn->right);
-	free(dn);
-}
-
-static void free_dictionary(Dictionary dict)
-{
-	free_dict_node_recursive(dict->root);
-	free_Word_file(dict->word_file_header);
-	pool_delete(dict->Exp_pool);
-}
-
 static void affix_list_delete(Dictionary dict)
 {
 	if (NULL == dict->afdict_class) return;
@@ -366,7 +351,8 @@ void dictionary_delete(Dictionary dict)
 	free(dict->dfine.value);
 	free_regexs(dict->regex_root);
 	free_anysplit(dict);
-	free_dictionary(dict);
+	free_Word_file(dict->word_file_header);
+	free_dictionary_root(dict);
 
 	/* Free sentence generation stuff. */
 	for (unsigned int i = 1; i <= dict->num_categories; i++)

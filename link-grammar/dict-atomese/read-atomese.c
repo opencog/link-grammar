@@ -129,4 +129,25 @@ failure:
 	return NULL;
 }
 
+void as_free_llist(Dictionary dict, Dict_node *llist)
+{
+	Dict_node * dn;
+	while (llist != NULL)
+	{
+		dn = llist->right;
+		free(llist);
+		llist = dn;
+	}
+}
+
+void as_clear_cache(Dictionary dict)
+{
+	Dict_node * dn = dict->root;
+printf("duude call clear cache %p %p\n", dn->left, dn->right);
+	free_dictionary_root(dict);
+	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
+	                             sizeof(Exp), /*zero_out*/false,
+	                             /*align*/false, /*exact*/false);
+}
+
 #endif /* HAVE_ATOMESE */
