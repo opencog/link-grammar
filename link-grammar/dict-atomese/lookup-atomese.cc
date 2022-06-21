@@ -76,15 +76,13 @@ void as_close(Dictionary dict)
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
 {
-	Local* local = (Local*) (dict->as_server);
-
-printf("duuude called as_boolean_lookup for >>%s<<\n", s);
 	bool found = dict_node_exists_lookup(dict, s);
 	if (found) return true;
 
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
 
+	Local* local = (Local*) (dict->as_server);
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
 	if (nullptr == wrd)
 		wrd = local->asp->add_node(WORD_NODE, s);
@@ -98,7 +96,7 @@ printf("duuude called as_boolean_lookup for >>%s<<\n", s);
 	}
 
 	nsects = wrd->getIncomingSetSizeByType(SECTION);
-printf("duuude as_boolean_lookup for >>%s<< sects=%lu\n", s, nsects);
+printf("duuude as_boolean_lookup for >>%s<< found sects=%lu\n", s, nsects);
 	return 0 != nsects;
 }
 
@@ -150,7 +148,6 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	// the cache.
 	Dict_node * dn = dict_node_lookup(dict, s);
 
-printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	if (dn) return dn;
 
 	const char* ssc = string_set_add(s, dict->string_set);
@@ -211,10 +208,13 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	// Cache the result; avoid repeated lookups.
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
+printf("duuude as_lookup_list %d for >>%s<< had=%lu\n",
+dict->num_entries, ssc, sects.size());
 
 	// Rebalance the tree every now and then.
-	if (0 == dict->num_entries % 30)
+	if (0 == dict->num_entries% 30)
 	{
+printf("duuude rebalance\n");
 		dict->root = dsw_tree_to_vine(dict->root);
 		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
 	}
@@ -238,6 +238,10 @@ printf("duuude called as_lookup_wild for %s\n", s);
 //
 void as_clear_cache(Dictionary dict)
 {
+	Local* local = (Local*) (dict->as_server);
+	printf("Prior to clear, dict has %d entries, Atomspace has %lu Atoms\n",
+		dict->num_entries, local->asp->size());
+
 	free_dictionary_root(dict);
 	dict->num_entries = 0;
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
@@ -247,7 +251,6 @@ void as_clear_cache(Dictionary dict)
 	// Clear the local AtomSpace too.
 	// Easiest way to do this is to just close and reopen
 	// the connection.
-	Local* local = (Local*) (dict->as_server);
 	const char* url = local->url;
 	as_close(dict);
 	as_open(dict, url);
