@@ -22,6 +22,9 @@ bool dict_node_exists_lookup(Dictionary dict, const char *s);
 void dict_node_free_lookup(Dictionary dict, Dict_node *llist);
 void dict_node_free_list(Dict_node *llist);
 
+void free_dictionary_root(Dictionary dict);
+void dict_node_noop(Dictionary dict);
+
 Exp * Exp_create(Pool_desc *);
 Exp * Exp_create_dup(Pool_desc *, Exp *);
 Exp * make_zeroary_node(Pool_desc *mp);

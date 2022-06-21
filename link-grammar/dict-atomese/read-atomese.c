@@ -102,6 +102,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	dict->lookup_wild = as_lookup_wild;
 	dict->free_lookup = as_free_llist;
 	dict->exists_lookup = as_boolean_lookup;
+	dict->clear_cache = as_clear_cache;
 	dict->close = as_close;
 
 	dict->dynamic_lookup = true;
@@ -126,6 +127,17 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 failure:
 	dictionary_delete(dict);
 	return NULL;
+}
+
+void as_free_llist(Dictionary dict, Dict_node *llist)
+{
+	Dict_node * dn;
+	while (llist != NULL)
+	{
+		dn = llist->right;
+		free(llist);
+		llist = dn;
+	}
 }
 
 #endif /* HAVE_ATOMESE */

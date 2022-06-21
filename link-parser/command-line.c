@@ -62,12 +62,13 @@ static const char *value_type[] =
 	"(integer) ", "(Boolean) ", "(float) ", "(string) ", "(command) ", ""
 };
 
-static int panic_variables_cmd(const Switch*, int);
-static int variables_cmd(const Switch*, int);
+static int clear_cmd(const Switch*, int);
+static int exit_cmd(const Switch*, int);
 static int file_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
-static int exit_cmd(const Switch*, int);
 static int info_cmd(const Switch*, int);
+static int panic_variables_cmd(const Switch*, int);
+static int variables_cmd(const Switch*, int);
 
 Switch default_switches[] =
 {
@@ -110,6 +111,7 @@ Switch default_switches[] =
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
 	{"wordgraph",  Int,  "Display sentence word-graph",     &local.display_wordgraph},
+	{"clear",      Cmd,  "Clear the AtomSpace cache",              clear_cmd},
 	{"exit",       Cmd,  "Exit the program",                       exit_cmd},
 	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
@@ -704,6 +706,11 @@ static int variables_cmd(const Switch *uc, int n)
 static int exit_cmd(const Switch *uc, int n)
 {
 	return 'e';
+}
+
+static int clear_cmd(const Switch *uc, int n)
+{
+	return 'k';
 }
 
 static int file_cmd(const Switch *uc, int n)
