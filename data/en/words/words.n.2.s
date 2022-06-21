@@ -1032,6 +1032,7 @@ bistros.n
 bitches.n
 bitcoins.n
 bites.n
+bitfields.n
 bitmaps.n
 bits.n
 bivouacs.n
@@ -1826,6 +1827,7 @@ chanceries.n
 chandeliers.n
 chandlers.n
 changelings.n
+changelogs.n
 changeovers.n
 changers.n
 changes.n
@@ -5519,6 +5521,7 @@ indices.n
 indictments.n
 indies.n
 indignities.n
+indirections.n
 indiscretions.n
 individualists.n
 individualities.n
@@ -6424,6 +6427,7 @@ maisonnettes.n
 majorities.n
 majors.n
 makefiles.n
+make_files
 makeovers.n
 makers.n
 makeshifts.n
@@ -8204,6 +8208,7 @@ portrayals.n
 ports.n
 posers.n
 poses.n
+positives.n
 positivists.n
 posses.n
 possessions.n
@@ -11097,6 +11102,7 @@ tonsures.n
 toolbars.n
 toolboxs.n
 toolkits.n
+toolsets.n
 tools.n
 toothaches.n
 toothbrushes.n

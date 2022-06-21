@@ -12,7 +12,10 @@ mkdir dist
 
 # Compile link-parser.js & link-parser.wasm
 cp ../../../link-parser/.libs/link-parser link-parser.bc
-emcc -O3 link-parser.bc ../../../link-grammar/.libs/liblink-grammar.so \
+# Originally, this had `emcc liblink-grammar.so` but the .so
+# is not available on Apple Mac's (I guess it's called .shlib ??)
+# So change to .a which should work for all OS'es.
+emcc -O3 link-parser.bc ../../../link-grammar/.libs/liblink-grammar.a \
 	--pre-js pre.js \
 	-s WASM=1 \
 	-s ALLOW_MEMORY_GROWTH=1 \
