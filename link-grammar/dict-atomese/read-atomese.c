@@ -140,10 +140,12 @@ void as_free_llist(Dictionary dict, Dict_node *llist)
 	}
 }
 
+/* Zap all the Dict_nodes that we've added earlier.
+ * This clears out everything hanging on dict->root
+ * as well as the expression pool.
+ */
 void as_clear_cache(Dictionary dict)
 {
-	Dict_node * dn = dict->root;
-printf("duude call clear cache %p %p\n", dn->left, dn->right);
 	free_dictionary_root(dict);
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
 	                             sizeof(Exp), /*zero_out*/false,
