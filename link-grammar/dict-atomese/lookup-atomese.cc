@@ -197,6 +197,14 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 
 	// Cache the result; avoid repeated lookups.
 	dict->root = dict_node_insert(dict, dict->root, dn);
+	dict->num_entries++;
+
+	// Rebalance the tree every now and then.
+	if (0 == dict->num_entries % 30)
+	{
+		dict->root = dsw_tree_to_vine(dict->root);
+		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
+	}
 
 	// Perform the lookup. We cannot return the dn above, as the
 	// as_free_llist() below will delete it, leading to mem corruption.
