@@ -83,9 +83,7 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 		s = "###LEFT-WALL###";
 
 	Local* local = (Local*) (dict->as_server);
-	Handle wrd = local->asp->get_node(WORD_NODE, s);
-	if (nullptr == wrd)
-		wrd = local->asp->add_node(WORD_NODE, s);
+	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
 	// Are there any Sections in the local atomspace?
 	size_t nsects = wrd->getIncomingSetSizeByType(SECTION);
@@ -165,9 +163,6 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	{
 		Exp* exp = nullptr;
 
-		// The germ is the first Atom.
-		const Handle& germ = sect->getOutgoingAtom(0);
-
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
 		const Handle& conseq = sect->getOutgoingAtom(1);
@@ -178,7 +173,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 			const Handle& dir = ctcr->getOutgoingAtom(1);
 
 			// The link is the connection of both of these.
-			const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt);
+			const Handle& lnk = local->asp->add_link(SET_LINK, wrd, tgt);
 
 			// Assign an upper-case name to the link.
 			std::string slnk = get_linkname(local, lnk);
@@ -240,7 +235,7 @@ void as_clear_cache(Dictionary dict)
 {
 	Local* local = (Local*) (dict->as_server);
 	printf("Prior to clear, dict has %d entries, Atomspace has %lu Atoms\n",
-		dict->num_entries, local->asp->size());
+		dict->num_entries, local->asp->get_size());
 
 	free_dictionary_root(dict);
 	dict->num_entries = 0;
