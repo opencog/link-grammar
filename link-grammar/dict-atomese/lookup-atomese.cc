@@ -203,11 +203,13 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
 	if (nullptr == wrd) return nullptr;
 
+	Exp* exp = nullptr;
+
 	// Loop over all Sections on the word.
 	HandleSeq sects = wrd->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
 	{
-		Exp* exp = nullptr;
+		Exp* andex = nullptr;
 
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
@@ -227,25 +229,27 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 
 			Exp* e = make_connector_node(dict, dict->Exp_pool,
 			                 slnk.c_str(), sdir.c_str()[0], false);
-			if (nullptr == exp)
+			if (nullptr == andex)
 			{
-				exp = e;
+				andex = e;
 				continue;
 			}
 
-			exp = make_and_node(dict->Exp_pool, e, exp);
+			andex = make_and_node(dict->Exp_pool, e, andex);
 		}
-		print_section(dict, sect);
-		printf("Word %s expression %s\n", ssc, lg_exp_stringify(exp));
+		// print_section(dict, sect);
+		// printf("Word %s expression %s\n", ssc, lg_exp_stringify(andex));
 
-		Dict_node *sdn = (Dict_node*) malloc(sizeof(Dict_node));
-		memset(sdn, 0, sizeof(Dict_node));
-		sdn->string = ssc;
-		sdn->exp = exp;
-		sdn->right = dn;
-		sdn->left = NULL;
-		dn = sdn;
+		if (nullptr == exp)
+			exp = andex;
+		else
+			exp = make_or_node(dict->Exp_pool, exp, andex);
 	}
+
+	dn = (Dict_node*) malloc(sizeof(Dict_node));
+	memset(dn, 0, sizeof(Dict_node));
+	dn->string = ssc;
+	dn->exp = exp;
 
 	// Cache the result; avoid repeated lookups.
 	dict->root = dict_node_insert(dict, dict->root, dn);
