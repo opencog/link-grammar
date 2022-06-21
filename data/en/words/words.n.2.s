@@ -6427,6 +6427,7 @@ maisonnettes.n
 majorities.n
 majors.n
 makefiles.n
+make_files
 makeovers.n
 makers.n
 makeshifts.n
