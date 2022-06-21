@@ -345,6 +345,7 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 				if ((verbosity > 0) && (!copts->batch_mode) && isatty_io)
 				{
 					fprintf(stdout, "Press RETURN for the next linkage.\n");
+					fflush(stdout);
 				}
 				char *rc = fget_input_string(use_prompt(verbosity),  stdin, stdout,
 				                             isatty_io, /*check_return*/true);
