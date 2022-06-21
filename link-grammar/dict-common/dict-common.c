@@ -201,6 +201,14 @@ const Category *dictionary_get_categories(const Dictionary dict)
 	return dict->category + 1; /* First entry is not used */
 }
 
+/**
+ * If the dictionary is caching anything, clear that cache.
+ */
+void dictionary_clear_cache(const Dictionary dict)
+{
+	if (dict) dict->clear_cache(dict);
+}
+
 /* ======================================================================== */
 /* the following functions are for handling deletion */
 

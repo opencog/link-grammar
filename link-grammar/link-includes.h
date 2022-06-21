@@ -118,6 +118,9 @@ link_public_api(void)
      dictionary_delete(Dictionary);
 
 link_public_api(void)
+     dictionary_clear_cache(Dictionary);
+
+link_public_api(void)
      dictionary_set_data_dir(const char * path);
 link_public_api(char *)
      dictionary_get_data_dir(void);

@@ -742,6 +742,17 @@ int main(int argc, char * argv[])
 		if ('c' == command) continue; /* It was another command */
 		if (-1 == command) continue;  /* It was a bad command */
 
+		/* Not sure how else to handle this!? */
+		/* We need the dict, and the x_issue_special_command code
+		 * has it, but ... doesn't pass it to the command.
+		 * So we handle it here, based on the return code. Yikes!
+		 */
+		if ('k' == command)
+		{
+			dictionary_clear_cache(dict);
+			continue;
+		}
+
 		/* We have to handle the !file command inline; it's too hairy
 		 * otherwise ... */
 		if ('f' == command)
