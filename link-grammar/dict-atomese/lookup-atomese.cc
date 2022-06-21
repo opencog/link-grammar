@@ -72,6 +72,8 @@ void as_close(Dictionary dict)
 	dict->as_server = nullptr;
 }
 
+// ===============================================================
+
 /// Return true if the given word can be found in the dictionary,
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
@@ -97,6 +99,8 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 printf("duuude as_boolean_lookup for >>%s<< found sects=%lu\n", s, nsects);
 	return 0 != nsects;
 }
+
+// ===============================================================
 
 /// int to base-26 capital letters.
 static std::string idtostr(uint64_t aid)
@@ -139,6 +143,48 @@ public:
   auto begin() const { return std::rbegin(iterable_); }
   auto end() const { return std::rend(iterable_); }
 };
+
+// Debugging utility
+void print_section(Dictionary dict, const Handle& sect)
+{
+	Local* local = (Local*) (dict->as_server);
+
+	const Handle& germ = sect->getOutgoingAtom(0);
+	printf("(%s: ", germ->get_name().c_str());
+
+	const Handle& conseq = sect->getOutgoingAtom(1);
+	for (const Handle& ctcr : conseq->getOutgoingSet())
+	{
+		// The connection target is the first Atom in the connector
+		const Handle& tgt = ctcr->getOutgoingAtom(0);
+		const Handle& dir = ctcr->getOutgoingAtom(1);
+		const std::string& sdir = dir->get_name();
+		printf("%s%c ", tgt->get_name().c_str(), sdir[0]);
+	}
+	printf(") == ");
+
+	bool first = true;
+	for (const Handle& ctcr : conseq->getOutgoingSet())
+	{
+		// The connection target is the first Atom in the connector
+		const Handle& tgt = ctcr->getOutgoingAtom(0);
+		const Handle& dir = ctcr->getOutgoingAtom(1);
+
+		// The link is the connection of both of these.
+		const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt);
+
+		// Assign an upper-case name to the link.
+		std::string slnk = get_linkname(local, lnk);
+		const std::string& sdir = dir->get_name();
+		if (not first) printf("& ");
+		first = false;
+		printf("%s%c ", slnk.c_str(), sdir[0]);
+	}
+	printf("\n");
+	fflush(stdout);
+}
+
+// ===============================================================
 
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
@@ -189,7 +235,8 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 
 			exp = make_and_node(dict->Exp_pool, e, exp);
 		}
-		// printf("Word %s expression %s\n", ssc, lg_exp_stringify(exp));
+		print_section(dict, sect);
+		printf("Word %s expression %s\n", ssc, lg_exp_stringify(exp));
 
 		Dict_node *sdn = (Dict_node*) malloc(sizeof(Dict_node));
 		memset(sdn, 0, sizeof(Dict_node));
@@ -209,7 +256,6 @@ dict->num_entries, ssc, sects.size());
 	// Rebalance the tree every now and then.
 	if (0 == dict->num_entries% 30)
 	{
-printf("duuude rebalance\n");
 		dict->root = dsw_tree_to_vine(dict->root);
 		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
 	}
