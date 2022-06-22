@@ -68,6 +68,7 @@ dataset. (A bettter one will be published "soon").
 Some working sentences with the above dataset:
 ```
 I saw it .
+XVII .
 ```
 This is a low-quality dataset, so don't exepect much. Other datasets
 are better but are not publicly available.
@@ -87,18 +88,18 @@ parse are encoded as:
 	(Section
 		(Word "level")
 		(ConnectorSeq
-			(Connector (Word "playing") (Direction "+"))))
+			(Connector (Word "playing") (ConnectorDir "+"))))
 
 	(Section
 		(Word "playing")
 		(ConnectorSeq
-			(Connector (Word "level") (Direction "-"))
-			(Connector (Word "field") (Direction "+"))))
+			(Connector (Word "level") (ConnectorDir "-"))
+			(Connector (Word "field") (ConnectorDir "+"))))
 
 	(Section
 		(Word "field")
 		(ConnectorSeq
-			(Connector (Word "playing") (Direction "-"))))
+			(Connector (Word "playing") (ConnectorDir "-"))))
 ```
 
 Grammatical classes are similar, except that the `WordNode`s are
