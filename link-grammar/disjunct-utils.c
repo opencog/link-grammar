@@ -715,6 +715,18 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 	{
 		newc = NULL;
 
+		/* The shallow indication is used only for pruning, but mark it
+		 * also for parsing anyway. tracon_set_add() uses it if
+		 * tracon_set_shallow() has been called (it is called if the
+		 * encoding is for pruning, but not when it is for parsing). The
+		 * shallow indication is also copied to the cblock connector (see
+		 * "No sharing yet" below), to be cached in the tracon_set and be
+		 * used by power_prune(). Note that due to memory sharing of the
+		 * original connectors (done in build_disjunct()), there is a need
+		 * to reset here the shallow indicator in non-shallow ones.
+		 * See also: Connector encoding, sharing and packing. */
+		o->shallow = (o == origc);
+
 		if (NULL != ts->csid[dir])
 		{
 			/* Encoding is used - share tracons. */

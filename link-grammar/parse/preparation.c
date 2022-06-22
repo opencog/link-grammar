@@ -44,8 +44,7 @@ static int set_dist_fields(Connector * c, size_t w, int delta)
 /**
  * Initialize the word fields of the connectors,
  * eliminate those disjuncts that are so long, that they
- * would need to connect past the end of the sentence,
- * and mark the shallow connectors.
+ * would need to connect past the end of the sentence.
  */
 static void setup_connectors(Sentence sent)
 {
@@ -67,9 +66,6 @@ static void setup_connectors(Sentence sent)
 			{
 				d->next = head;
 				head = d;
-				if (NULL != d->left) d->left->shallow = true;
-				if (NULL != d->right) d->right->shallow = true;
-
 			}
 		}
 		sent->word[w].d = head;
