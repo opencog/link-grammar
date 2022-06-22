@@ -1013,7 +1013,7 @@ exprint_constituent_structure(con_context_t *ctxt,
 			 * if hostile. Truncate these to finite size.
 			 */
 			char s[MAX_WORD];
-			strncpy(s, linkage->word[w], MAX_WORD);
+			strncpy(s, linkage->word[w], MAX_WORD-1);
 			s[MAX_WORD-1] = 0;
 
 			/* Constituent processing will crash if the sentence contains
