@@ -3082,7 +3082,7 @@ rest.w: Ix- & Pv+;
   ({@EBm+} & ((
       ([{CV-} & B**t-]
       or (B**t- & <verb-wall>)
-      or [K+]
+      or [<verb-wall> & K+]
       or (<verb-wall> & BI+)
       or (<verb-wall> & OF+)
       or (Osi+ & R+ & Bs+ & <verb-wall>)
