@@ -155,7 +155,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 					if ((c_head == NULL) && (c_last != NULL)) *c_last = c;
 					c->cost = c3->cost + c4->cost;
 					c->maxcost = maxcost;
-					c->c = catenate(c3->c, c4->c, ct->Tconnector_pool);
+					c->c = catenate(c4->c, c3->c, ct->Tconnector_pool);
 					c->next = c_head;
 					c_head = c;
 				}
@@ -259,16 +259,18 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 		ndis->left = ndis->right = NULL;
 
 		/* Build a list of connectors from the Tconnectors. */
+		Connector **jet[2] = { &ndis->left, &ndis->right };
 		for (Tconnector *t = cl->c; t != NULL; t = t->next)
 		{
+			int idir = ('+' == t->e->dir);
 			Connector *n = connector_new(connector_pool, t->e->condesc, opts);
-			Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
 
 			n->exp_pos = t->e->pos;
 			n->multi = t->e->multi;
 			n->farthest_word = t->e->farthest_word;
-			n->next = *loc;   /* prepend the connector to the current list */
-			*loc = n;         /* update the connector list */
+
+			*(jet[idir]) = n;
+			jet[idir] = &n->next;
 		}
 
 		/* XXX add_category() starts category strings by ' '.
