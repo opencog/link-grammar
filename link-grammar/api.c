@@ -566,7 +566,9 @@ void sentence_delete(Sentence sent)
 		pool_delete(sent->Tconnector_pool);
 	}
 
-	if (IS_DYNAMIC_DICT(sent->dict))
+	// This is a hack. Should just ask the backend to "do the right
+	// thing".
+	if (IS_SQL_DICT(sent->dict))
 	{
 #if 0 /* Cannot reuse in case a previous sentence is not deleted yet. */
 		We could fix this by putting a use-count in the dict.

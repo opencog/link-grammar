@@ -17,6 +17,38 @@ in the [OpenCog learn repo](https://github.com/opencog/learn).
 **Version 0.7.0** -- The basic code has been laid down. Use of gram classes
 not yet implemented.
 
+Building
+--------
+To build this code, you must first do the following:
+```
+sudo apt install guile-3.0-dev
+sudo apt install libboost-dev, libboost-filesystem-dev, libboost-program-options-dev, libboost-system-dev, libboost-thread-dev
+
+git clone https://github.com/opencog/cogutil
+cd cogutil ; mkdir build ; cd build ; cmake ..
+make -j
+sudo make install
+cd ../..
+
+git clone https://github.com/opencog/atomspace
+cd atomspace ; mkdir build ; cd build ; cmake ..
+make -j
+sudo make install
+cd ../..
+
+git clone https://github.com/opencog/atomspace-cog
+cd atomspace-cog ; mkdir build ; cd build ; cmake ..
+make -j
+sudo make install
+cd ../..
+
+cd link-grammar
+./autogen.sh --no-configure
+mkdir build; cd build; ../configure
+make -j
+sudo make install
+```
+
 Demo
 ----
 A working demo can be created as follows:
@@ -29,16 +61,14 @@ The above may take an hour or two to complete.
 Then `cd lang-model` and read and follow the instructions in
 `Dockerfile`.  This will result in a running CogServer with
 some minimalist, bare-bones language data in it.  Start the
-link-parser as `link-parser demo-atomese`. Simple, short
-sentences using common English words should parse. Be sure to
-end sentences with punctuation (a period, exclamation, etc.)
+link-parser as `link-parser demo-atomese`. Only a very small
+number of simple, short sentences parse; this is a low-quality
+dataset. (A bettter one will be published "soon").
 
 Some working sentences with the above dataset:
 ```
-this is a test .
-she looked out the window .
-why are you here ?
-this is a very long sentence of some kind that says something dull .
+I saw it .
+XVII .
 ```
 This is a low-quality dataset, so don't exepect much. Other datasets
 are better but are not publicly available.
@@ -58,18 +88,18 @@ parse are encoded as:
 	(Section
 		(Word "level")
 		(ConnectorSeq
-			(Connector (Word "playing") (Direction "+"))))
+			(Connector (Word "playing") (ConnectorDir "+"))))
 
 	(Section
 		(Word "playing")
 		(ConnectorSeq
-			(Connector (Word "level") (Direction "-"))
-			(Connector (Word "field") (Direction "+"))))
+			(Connector (Word "level") (ConnectorDir "-"))
+			(Connector (Word "field") (ConnectorDir "+"))))
 
 	(Section
 		(Word "field")
 		(ConnectorSeq
-			(Connector (Word "playing") (Direction "-"))))
+			(Connector (Word "playing") (ConnectorDir "-"))))
 ```
 
 Grammatical classes are similar, except that the `WordNode`s are
@@ -79,6 +109,8 @@ TODO
 ====
 Remaining work items:
 
+* Verify minus-direction connector order.
+* Implement costs
 * Implement gram class support.
 * Expire local cache entries (given by dict_node_lookup) after some time
   frame, forcing a frewsh lookup from the server.

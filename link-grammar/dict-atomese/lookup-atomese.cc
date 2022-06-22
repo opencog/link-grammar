@@ -70,24 +70,26 @@ void as_close(Dictionary dict)
 	local->stnp->close();
 	delete local;
 	dict->as_server = nullptr;
+
+	// Clear the cache as well
+	free_dictionary_root(dict);
+	dict->num_entries = 0;
 }
+
+// ===============================================================
 
 /// Return true if the given word can be found in the dictionary,
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
 {
-	Local* local = (Local*) (dict->as_server);
-
-printf("duuude called as_boolean_lookup for >>%s<<\n", s);
 	bool found = dict_node_exists_lookup(dict, s);
 	if (found) return true;
 
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
 
-	Handle wrd = local->asp->get_node(WORD_NODE, s);
-	if (nullptr == wrd)
-		wrd = local->asp->add_node(WORD_NODE, s);
+	Local* local = (Local*) (dict->as_server);
+	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
 	// Are there any Sections in the local atomspace?
 	size_t nsects = wrd->getIncomingSetSizeByType(SECTION);
@@ -98,9 +100,11 @@ printf("duuude called as_boolean_lookup for >>%s<<\n", s);
 	}
 
 	nsects = wrd->getIncomingSetSizeByType(SECTION);
-printf("duuude as_boolean_lookup for >>%s<< sects=%lu\n", s, nsects);
+printf("duuude as_boolean_lookup for >>%s<< found sects=%lu\n", s, nsects);
 	return 0 != nsects;
 }
+
+// ===============================================================
 
 /// int to base-26 capital letters.
 static std::string idtostr(uint64_t aid)
@@ -144,13 +148,72 @@ public:
   auto end() const { return std::rend(iterable_); }
 };
 
+// Debugging utility
+void print_section(Dictionary dict, const Handle& sect)
+{
+	Local* local = (Local*) (dict->as_server);
+
+	const Handle& germ = sect->getOutgoingAtom(0);
+	printf("(%s: ", germ->get_name().c_str());
+
+	const Handle& conseq = sect->getOutgoingAtom(1);
+	for (const Handle& ctcr : conseq->getOutgoingSet())
+	{
+		// The connection target is the first Atom in the connector
+		const Handle& tgt = ctcr->getOutgoingAtom(0);
+		const Handle& dir = ctcr->getOutgoingAtom(1);
+		const std::string& sdir = dir->get_name();
+		printf("%s%c ", tgt->get_name().c_str(), sdir[0]);
+	}
+	printf(") == ");
+
+	bool first = true;
+	for (const Handle& ctcr : conseq->getOutgoingSet())
+	{
+		// The connection target is the first Atom in the connector
+		const Handle& tgt = ctcr->getOutgoingAtom(0);
+		const Handle& dir = ctcr->getOutgoingAtom(1);
+
+		// The link is the connection of both of these.
+		const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt);
+
+		// Assign an upper-case name to the link.
+		std::string slnk = get_linkname(local, lnk);
+		const std::string& sdir = dir->get_name();
+		if (not first) printf("& ");
+		first = false;
+		printf("%s%c ", slnk.c_str(), sdir[0]);
+	}
+	printf("\n");
+	fflush(stdout);
+}
+
+// ===============================================================
+
+#define INNER_LOOP                                                \
+	/* The connection target is the first Atom in the connector */ \
+	const Handle& tgt = ctcr->getOutgoingAtom(0);                  \
+	                                                               \
+	/* The link is the connection of both of these. */             \
+	const Handle& lnk = local->asp->add_link(SET_LINK, wrd, tgt);  \
+	                                                               \
+	/* Assign an upper-case name to the link. */                   \
+	std::string slnk = get_linkname(local, lnk);                   \
+	                                                               \
+	Exp* e = make_connector_node(dict, dict->Exp_pool,             \
+	                 slnk.c_str(), cdir, false);                   \
+	if (nullptr == andex) {                                        \
+		andex = e;                                                  \
+		continue;                                                   \
+	}                                                              \
+	andex = make_and_node(dict->Exp_pool, e, andex);
+
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
 	// Do we already have this word cached? If so, pull from
 	// the cache.
 	Dict_node * dn = dict_node_lookup(dict, s);
 
-printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	if (dn) return dn;
 
 	const char* ssc = string_set_add(s, dict->string_set);
@@ -162,49 +225,59 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
 	if (nullptr == wrd) return nullptr;
 
+	Exp* exp = nullptr;
+
 	// Loop over all Sections on the word.
 	HandleSeq sects = wrd->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
 	{
-		Exp* exp = nullptr;
+		Exp* andex = nullptr;
 
-		// The connector sequence the secnd atom.
+		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
+		// Loop twice, because the atomspace stores connectors
+		// in word-order, while LG stores them as distance-from
+		// given word.  So we have to reverse the order when
+		// building the disjunct.
 		const Handle& conseq = sect->getOutgoingAtom(1);
+		for (const Handle& ctcr : conseq->getOutgoingSet())
+		{
+			// The direction is the second Atom in the connector
+			const Handle& dir = ctcr->getOutgoingAtom(1);
+			char cdir = dir->get_name().c_str()[0];
+			if ('+' == cdir) continue;
+			INNER_LOOP;
+		}
 		for (const Handle& ctcr : reverse(conseq->getOutgoingSet()))
 		{
-			const Handle& lnk = ctcr->getOutgoingAtom(0);
+			// The direction is the second Atom in the connector
 			const Handle& dir = ctcr->getOutgoingAtom(1);
-			std::string slnk = get_linkname(local, lnk);
-			const std::string& sdir = dir->get_name();
-
-			Exp* e = make_connector_node(dict, dict->Exp_pool,
-			                 slnk.c_str(), sdir.c_str()[0], false);
-			if (nullptr == exp)
-			{
-				exp = e;
-				continue;
-			}
-
-			exp = make_and_node(dict->Exp_pool, e, exp);
+			char cdir = dir->get_name().c_str()[0];
+			if ('-' == cdir) continue;
+			INNER_LOOP;
 		}
-		// printf("Word %s expression %s\n", ssc, lg_exp_stringify(exp));
+		print_section(dict, sect);
+		printf("Word %s expression %s\n", ssc, lg_exp_stringify(andex));
 
-		Dict_node *sdn = (Dict_node*) malloc(sizeof(Dict_node));
-		memset(sdn, 0, sizeof(Dict_node));
-		sdn->string = ssc;
-		sdn->exp = exp;
-		sdn->right = dn;
-		sdn->left = NULL;
-		dn = sdn;
+		if (nullptr == exp)
+			exp = andex;
+		else
+			exp = make_or_node(dict->Exp_pool, exp, andex);
 	}
+
+	dn = (Dict_node*) malloc(sizeof(Dict_node));
+	memset(dn, 0, sizeof(Dict_node));
+	dn->string = ssc;
+	dn->exp = exp;
 
 	// Cache the result; avoid repeated lookups.
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
+printf("duuude as_lookup_list %d for >>%s<< had=%lu\n",
+dict->num_entries, ssc, sects.size());
 
 	// Rebalance the tree every now and then.
-	if (0 == dict->num_entries % 30)
+	if (0 == dict->num_entries% 30)
 	{
 		dict->root = dsw_tree_to_vine(dict->root);
 		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
@@ -216,10 +289,21 @@ printf("duuude called as_lookup_list for >>%s<< dn=%p\n", s, dn);
 	return dn;
 }
 
+// This is supposed to provide a wild-card lookup.  However,
+// There is currently no way to support a wild-card lookup in the
+// atomspace: there is no way to ask for all WordNodes that match
+// a given regex.  There's no regex predicate... this can be hacked
+// around in various elegant and inelegant ways, e.g. adding a
+// regex predicate to the AtomSpace. Punt for now. This is used
+// only for the !! command in the parser command-line tool.
+// XXX FIXME. But low priority.
 Dict_node * as_lookup_wild(Dictionary dict, const char *s)
 {
-printf("duuude called as_lookup_wild for %s\n", s);
-	return NULL;
+	Dict_node * dn = dict_node_wild_lookup(dict, s);
+	if (dn) return dn;
+
+	as_lookup_list(dict, s);
+	return dict_node_wild_lookup(dict, s);
 }
 
 // Zap all the Dict_nodes that we've added earlier.
@@ -229,8 +313,10 @@ printf("duuude called as_lookup_wild for %s\n", s);
 //
 void as_clear_cache(Dictionary dict)
 {
-	free_dictionary_root(dict);
-	dict->num_entries = 0;
+	Local* local = (Local*) (dict->as_server);
+	printf("Prior to clear, dict has %d entries, Atomspace has %lu Atoms\n",
+		dict->num_entries, local->asp->get_size());
+
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
 	                             sizeof(Exp), /*zero_out*/false,
 	                             /*align*/false, /*exact*/false);
@@ -238,7 +324,6 @@ void as_clear_cache(Dictionary dict)
 	// Clear the local AtomSpace too.
 	// Easiest way to do this is to just close and reopen
 	// the connection.
-	Local* local = (Local*) (dict->as_server);
 	const char* url = local->url;
 	as_close(dict);
 	as_open(dict, url);
