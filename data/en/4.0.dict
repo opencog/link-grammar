@@ -6961,11 +6961,13 @@ gets.v:
   (<verb-and-sp-i-> & ([<vc-get>]0.2 or ())) or
   ((<vc-get>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
+
+% <verb-x-sp> & Pv+:  "got handled recently"
 got.v-d: 
   ((<verb-sp,pp> & (<vc-get>)) or
   (<verb-and-sp-i-> & ([<vc-get>]0.2 or ())) or
   ((<vc-get>) & <verb-and-sp-i+>) or
-  <verb-and-sp-t>);
+  <verb-and-sp-t>) or (<verb-x-sp> & Pv+);
 
 % basilect
 % "I gotta go now"

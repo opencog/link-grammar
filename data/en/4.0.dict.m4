@@ -5548,7 +5548,9 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 
 get.v: VERB_PLI(<vc-get>);
 gets.v: VERB_S_T(<vc-get>);
-got.v-d: VERB_SPPP_T(<vc-get>);
+
+% <verb-x-sp> & Pv+:  "got handled recently"
+got.v-d: VERB_SPPP_T(<vc-get>) or (<verb-x-sp> & Pv+);
 
 % basilect
 % "I gotta go now"
