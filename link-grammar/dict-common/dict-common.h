@@ -79,6 +79,12 @@ struct Afdict_class_struct
 #define IS_DYNAMIC_DICT(dict) false
 #endif /* HAVE_SQLITE3 or HAVE_ATOMESE */
 
+#ifdef HAVE_SQLITE3
+#define IS_SQL_DICT(dict) (NULL != dict->db_handle)
+#else
+#define IS_SQL_DICT(dict) false
+#endif /* HAVE_SQLITE3 */
+
 /* "#define name value" */
 typedef struct
 {
