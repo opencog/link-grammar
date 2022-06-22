@@ -190,6 +190,24 @@ void print_section(Dictionary dict, const Handle& sect)
 
 // ===============================================================
 
+#define INNER_LOOP                                                \
+	/* The connection target is the first Atom in the connector */ \
+	const Handle& tgt = ctcr->getOutgoingAtom(0);                  \
+	                                                               \
+	/* The link is the connection of both of these. */             \
+	const Handle& lnk = local->asp->add_link(SET_LINK, wrd, tgt);  \
+	                                                               \
+	/* Assign an upper-case name to the link. */                   \
+	std::string slnk = get_linkname(local, lnk);                   \
+	                                                               \
+	Exp* e = make_connector_node(dict, dict->Exp_pool,             \
+	                 slnk.c_str(), cdir, false);                   \
+	if (nullptr == andex) {                                        \
+		andex = e;                                                  \
+		continue;                                                   \
+	}                                                              \
+	andex = make_and_node(dict->Exp_pool, e, andex);
+
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
 	// Do we already have this word cached? If so, pull from
@@ -217,29 +235,26 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
+		// Loop twice, because the atomspace stores connectors
+		// in word-order, while LG stores them as distance-from
+		// given word.  So we have to reverse the order when
+		// building the disjunct.
 		const Handle& conseq = sect->getOutgoingAtom(1);
+		for (const Handle& ctcr : conseq->getOutgoingSet())
+		{
+			// The direction is the second Atom in the connector
+			const Handle& dir = ctcr->getOutgoingAtom(1);
+			char cdir = dir->get_name().c_str()[0];
+			if ('+' == cdir) continue;
+			INNER_LOOP;
+		}
 		for (const Handle& ctcr : reverse(conseq->getOutgoingSet()))
 		{
-			// The connection target is the first Atom in the connector
-			const Handle& tgt = ctcr->getOutgoingAtom(0);
+			// The direction is the second Atom in the connector
 			const Handle& dir = ctcr->getOutgoingAtom(1);
-
-			// The link is the connection of both of these.
-			const Handle& lnk = local->asp->add_link(SET_LINK, wrd, tgt);
-
-			// Assign an upper-case name to the link.
-			std::string slnk = get_linkname(local, lnk);
-			const std::string& sdir = dir->get_name();
-
-			Exp* e = make_connector_node(dict, dict->Exp_pool,
-			                 slnk.c_str(), sdir.c_str()[0], false);
-			if (nullptr == andex)
-			{
-				andex = e;
-				continue;
-			}
-
-			andex = make_and_node(dict->Exp_pool, e, andex);
+			char cdir = dir->get_name().c_str()[0];
+			if ('-' == cdir) continue;
+			INNER_LOOP;
 		}
 		print_section(dict, sect);
 		printf("Word %s expression %s\n", ssc, lg_exp_stringify(andex));
