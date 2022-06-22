@@ -70,6 +70,10 @@ void as_close(Dictionary dict)
 	local->stnp->close();
 	delete local;
 	dict->as_server = nullptr;
+
+	// Clear the cache as well
+	free_dictionary_root(dict);
+	dict->num_entries = 0;
 }
 
 // ===============================================================
@@ -298,8 +302,6 @@ void as_clear_cache(Dictionary dict)
 	printf("Prior to clear, dict has %d entries, Atomspace has %lu Atoms\n",
 		dict->num_entries, local->asp->get_size());
 
-	free_dictionary_root(dict);
-	dict->num_entries = 0;
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
 	                             sizeof(Exp), /*zero_out*/false,
 	                             /*align*/false, /*exact*/false);
