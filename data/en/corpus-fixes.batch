@@ -520,6 +520,7 @@ Do whatever the fuck pleases you.
 % NOUNS misclassified and mangled
 %
 % Miscellaneous missing nouns.
+With this commit executables will overlink with uninstalled indirect libraries.
 The result was a false postive
 The test returns false positives
 He picked up the game die.

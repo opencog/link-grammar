@@ -3887,6 +3887,7 @@ excommunications.n
 excrescences.n
 excretions.n
 excursions.n
+executables.n
 executants.n
 executioners.n
 executions.n
