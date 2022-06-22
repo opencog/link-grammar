@@ -17,6 +17,38 @@ in the [OpenCog learn repo](https://github.com/opencog/learn).
 **Version 0.7.0** -- The basic code has been laid down. Use of gram classes
 not yet implemented.
 
+Building
+--------
+To build this code, you must first do the following:
+```
+sudo apt install guile-3.0-dev
+sudo apt install libboost-dev, libboost-filesystem-dev, libboost-program-options-dev, libboost-system-dev, libboost-thread-dev
+
+git clone https://github.com/opencog/cogutil
+cd cogutil ; mkdir build ; cd build ; cmake ..
+make -j
+sudo make install
+cd ../..
+
+git clone https://github.com/opencog/atomspace
+cd atomspace ; mkdir build ; cd build ; cmake ..
+make -j
+sudo make install
+cd ../..
+
+git clone https://github.com/opencog/atomspace-cog
+cd atomspace-cog ; mkdir build ; cd build ; cmake ..
+make -j
+sudo make install
+cd ../..
+
+cd link-grammar
+./autogen.sh --no-configure
+mkdir build; cd build; ../configure
+make -j
+sudo make install
+```
+
 Demo
 ----
 A working demo can be created as follows:
@@ -35,9 +67,7 @@ dataset. (A bettter one will be published "soon").
 
 Some working sentences with the above dataset:
 ```
-her !
-who are
-what is it
+I saw it .
 ```
 This is a low-quality dataset, so don't exepect much. Other datasets
 are better but are not publicly available.
