@@ -14,15 +14,17 @@ dictionary maintained in the AtomSpace.  This provides several benefits:
 This is meant to work with dictionaries created by the code located
 in the [OpenCog learn repo](https://github.com/opencog/learn).
 
-**Version 0.7.0** -- The basic code has been laid down. Use of gram classes
-not yet implemented.
+**Version 0.7.1** -- The basic code has been laid down. Use of gram classes
+not yet implemented. Costs not yet implemented. And other stuff is
+missing.
 
 Building
 --------
 To build this code, you must first do the following:
 ```
 sudo apt install guile-3.0-dev
-sudo apt install libboost-dev, libboost-filesystem-dev, libboost-program-options-dev, libboost-system-dev, libboost-thread-dev
+sudo apt install libboost-dev libboost-filesystem-dev libboost-program-options-dev
+sudo apt install libboost-system-dev libboost-thread-dev
 
 git clone https://github.com/opencog/cogutil
 cd cogutil ; mkdir build ; cd build ; cmake ..
