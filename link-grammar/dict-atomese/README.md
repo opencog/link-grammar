@@ -136,6 +136,39 @@ generalizations that allow visual and audio data to be encoded in the
 same format, and for such sensory information to be correlated with
 language information. This is an area of ongoing research.
 
+System diagram
+--------------
+Stacked boxes represent shared-libraries, with shared-library calls going
+downwards. Note that AtomSpaces start out empty, so the data has to come
+"from somewhere". In this case, the data comes from another AtomSpace, running
+remotely (in the demo, its in a Docker container).  That AtomSpace in turn
+loads its data from a
+[RocksStorageNode](https://github.com/opencog/opencog-rocks), which uses
+[RocksDB](https://rocksdb.org) to work with the local disk drive.
+The network connection is provided by a
+[CogServer](https://github.com/opencog/cogserver) to
+[CogStorageNode](https://github.com/opencog/opencog-cog) pairing.
+```
+                                            +----------------+
+                                            |  Link Grammar  |
+                                            |    parser      |
+                                            +----------------+
+                                            |   AtomSpace    |
+    +-------------+                         +----------------+
+    |             |                         |                |
+    |  CogServer  | <<==== Internet ====>>  | CogStorageNode |
+    |             |                         |                |
+    +-------------+                         +----------------+
+    |  AtomSpace  |
+    +-------------+
+    |    Rocks    |
+    | StorageNode |
+    +-------------+
+    |   RocksDB   |
+    +-------------+
+    | disk drive  |
+    +-------------+
+```
 
 TODO
 ====
