@@ -819,7 +819,7 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 {
 	Disjunct *newd;
-	uintptr_t token = (uintptr_t)w;
+	uintptr_t token;
 
 	newd = (ts->dblock)++;
 	newd->word_string = d->word_string;
@@ -828,15 +828,20 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	newd->originating_gword = d->originating_gword;
 	newd->ordinal = d->ordinal;
 
-	if (NULL == ts->tracon_list)
-		 token = (uintptr_t)d->originating_gword;
-
-	if ((token != ts->last_token) && (NULL != ts->csid[0]))
+	if (NULL != ts->csid[0])
 	{
-		ts->last_token = token;
-		//printf("Token %ld\n", token);
-		tracon_set_reset(ts->csid[0]);
-		tracon_set_reset(ts->csid[1]);
+		if (NULL == ts->tracon_list)
+			token = (uintptr_t)d->originating_gword;
+		else
+			token = (uintptr_t)w;
+
+		if (token != ts->last_token)
+		{
+			ts->last_token = token;
+			//printf("Token %ld\n", token);
+			tracon_set_reset(ts->csid[0]);
+			tracon_set_reset(ts->csid[1]);
+		}
 	}
 	newd->left = pack_connectors(ts, d->left, 0, w);
 	newd->right = pack_connectors(ts, d->right, 1,  w);
