@@ -325,7 +325,7 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	clause_context ct = { 0 };
 
 	ct.cost_cutoff = cost_cutoff;
-	if (sent->Clause_pool == NULL)
+	if (unlikely(sent->Clause_pool == NULL))
 	{
 		ct.Clause_pool = pool_new(__func__, "Clause",
 		                          /*num_elements*/4096, sizeof(Clause),
