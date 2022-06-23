@@ -109,8 +109,16 @@ TODO
 ====
 Remaining work items:
 
-* Verify minus-direction connector order.
-* Implement costs
+* Implement costs. Pull from PredicateNode.
 * Implement gram class support.
+
+* Close the loop w/ parsing, so that LG disjuncts arising from a given
+  parse an be matched up with the Atomese disjuncts.  Increment/send
+  the updated counts.
+
+* Do a count of utilized disjuncts *before* trimming; seems that
+  trimming discarded needed disjuncts.... or something. Bug?
+
+* Make the remote AtomSpace optional. Or URL-dependent.
 * Expire local cache entries (given by dict_node_lookup) after some time
   frame, forcing a frewsh lookup from the server.
