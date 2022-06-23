@@ -821,7 +821,7 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	Disjunct *newd;
 	uintptr_t token;
 
-	newd = (ts->dblock)++;
+	newd = ts->dblock++;
 	newd->word_string = d->word_string;
 	newd->cost = d->cost;
 	newd->is_category = d->is_category;
