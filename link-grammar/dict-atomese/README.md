@@ -172,3 +172,70 @@ Several important tasks lie ahead:
   a write-back system, so that local count updates are not only pushed
   back to the cogserver (this is easy/trivial) but also written from the
   cogserver, to it's open storage node.
+
+### LG-Atomese Disjunct pairing
+After LG parsing is completed, the chosen disjuncts are easily converted
+into unique strings. These need to be paired with Atomese disjuncts. The
+obvious format would seem to be:
+```
+   (Evaluation (Predicate "LG-Atomese Disjunct pair")
+      (Concept "A+ & B- & C+") (ConnectorSeq ...))
+```
+This allows the `ConnectorSeq` to be easily found, given only the LG
+disjunct string.
+
+* Side note: we need a `get-incoming-by-predicate` function!
+
+### Counting
+After a parse is performed, the above lookup is done, and the count on
+the Atomese `Section` must be updated. This count must be written to the
+CogServer. The count is sent as an increment-count message, since it is
+impractical to implement an atomic read-increment-write over the net.
+This is a new extension to the `StorageNode`.
+
+### Pass-through of Writes
+Every update that the CogServer receives must then be performed on the
+Rocks StorageNode that it is attached to. The correct framework for this
+has already been started at https://github.com/opencog/atomspace-agents
+
+There are two ways to implement this idea:
+* Top-down command. This module (link-grammar) tells the CogServer what
+  to do, and the CogServer obeys orders, and just does it. There are two
+  problems with this design:
+  - How to send orders telling the CogServer what to do? There is no
+    infrastructure for this.
+  - What happens if two different subsystems (this one, and some other
+    system) are sending conflicting orders? How can one avoid trampling?
+
+* Policy agents. This module (link-grammar) attaches to a server that
+  implements the desired policy (which is a write-through from network
+  to disk storage).  Ths solves both problems above, as the policy agent
+  knows wha to do, and it knows how to resolve conflicts that
+  link-grammar might not even be aware of.
+
+### Restarts
+Over short periods of time, and in limited use, the above is enough.
+However, it might be desirable to restart LG, and re-use the link names
+and disjuncts that were previously used. This adds considerable new
+complexity, and is probably not worth doing. The following would be
+needed:
+
+* Link names need to be stored. These can be recorded as
+```
+   (Evaluation (Predicate "LG link name")
+      (Concept "XXX") (Set (Word...) (Word ..)))
+
+```
+* Prior to use, such pairing need to be queried. This can add a hefty
+  network load and latency overhead. LG code is more complicated,
+  because this query needs to be performed, with new pairings generated
+  if they don't already exist. Fallbacks for errors. All this code has
+  to be debugged. Yuck.
+
+* Same, but for the disjunct pairings.
+
+* The Cogserver needs to queried for a block of new link names that can
+  be assigned. Need to get a block, as otherwise multiple parsers could
+  be assigning the same names and trampling on one-another. This could
+  be done with an atomic increment of a Value: incrementing by 100 lets
+  the next 100 ints to be safely used.
