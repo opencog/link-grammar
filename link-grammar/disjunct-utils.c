@@ -263,6 +263,12 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2, bool ignore_string)
 {
 	Connector *e1, *e2;
 
+	/* A shortcut to detect NULL and non-NULL jets on the same side.
+	 * Note that it is not possible to share memory between the
+	 * right/left jets due to filed value differences (sharing would
+	 * invalidate this check). */
+	if (d1->left == d2->right) return false;
+
 	e1 = d1->left;
 	e2 = d2->left;
 	while ((e1 != NULL) && (e2 != NULL)) {
