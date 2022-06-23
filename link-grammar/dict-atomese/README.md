@@ -65,14 +65,14 @@ Then `cd lang-model` and read and follow the instructions in
 some minimalist, bare-bones language data in it.  Start the
 link-parser as `link-parser demo-atomese`. Only a very small
 number of simple, short sentences parse; this is a low-quality
-dataset. (A bettter one will be published "soon").
+dataset. (A better one will be published "soon").
 
 Some working sentences with the above dataset:
 ```
 I saw it .
 XVII .
 ```
-This is a low-quality dataset, so don't exepect much. Other datasets
+This is a low-quality dataset, so don't expect much. Other datasets
 are better but are not publicly available.
 
 Custom CogServer locations can be specified by altering the
@@ -109,7 +109,7 @@ dictionary entries using the abstract concept of disjuncts. These are
 conceptually similar to LG disjuncts, but have a completely different
 storage format.
 
-Disjuncts are Atoms of type `ConnectorSeq`. Word-disjunt pairings are
+Disjuncts are Atoms of type `ConnectorSeq`. Word-disjunct pairings are
 Atoms of type `Section`.  For example, three single-word entries that
 allow "level playing field" to parse are encoded in Atomese as:
 ```
@@ -132,7 +132,7 @@ allow "level playing field" to parse are encoded in Atomese as:
 
 This is just an example. Grammatical classes are similar, except that
 the `WordNode`s are replaced by `WordClassNode`s. There are additional
-generalizations that allow visual and audo data to be encoded in the
+generalizations that allow visual and audio data to be encoded in the
 same format, and for such sensory information to be correlated with
 language information. This is an area of ongoing research.
 
@@ -209,8 +209,8 @@ There are two ways to implement this idea:
 
 * Policy agents. This module (link-grammar) attaches to a server that
   implements the desired policy (which is a write-through from network
-  to disk storage).  Ths solves both problems above, as the policy agent
-  knows wha to do, and it knows how to resolve conflicts that
+  to disk storage).  This solves both problems above, as the policy agent
+  knows what to do, and it knows how to resolve conflicts that
   link-grammar might not even be aware of.
 
 ### Restarts
