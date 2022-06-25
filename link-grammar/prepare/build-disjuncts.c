@@ -148,7 +148,8 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 				for (c4 = c2; c4 != NULL; c4 = c4->next)
 				{
 					float maxcost = MAX(c3->maxcost,c4->maxcost);
-					if (maxcost + e->cost > ct->cost_cutoff) continue;
+					/* Cannot use this shortcut due to negative costs. */
+					//if (maxcost + e->cost > ct->cost_cutoff) continue;
 
 					c = pool_alloc(ct->Clause_pool);
 					if ((c_head == NULL) && (c_last != NULL)) *c_last = c;
