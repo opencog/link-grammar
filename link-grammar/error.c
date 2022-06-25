@@ -436,7 +436,7 @@ const char *feature_enabled(const char * list, ...)
 /**
  * Issue the assert() macro (see error.h) error message.
  */
-link_public_api(void) (* lg_assert_failure_trap)(void);
+void (*lg_library_failure_hook)(void);
 void assert_failure(const char cond_str[], const char func[],
                     const char *src_location, const char *fmt, ...)
 {
@@ -463,10 +463,10 @@ void assert_failure(const char cond_str[], const char func[],
 	}
 	va_end(args);
 
-	if (lg_assert_failure_trap == NULL)
+	if (lg_library_failure_hook == NULL)
 		DEBUG_TRAP;  /* leave stack trace in debugger */                      \
 	else
-		lg_assert_failure_trap();
+		lg_library_failure_hook();
 
 	exit(1);
 }
@@ -508,4 +508,11 @@ const char *syserror_msg(int errno)
 	TLS static char errbuf[64];
 	lg_strerror(errno, errbuf, sizeof(errbuf));
 	return errbuf;
+}
+
+void lg_lib_failure(void)
+{
+	if (lg_library_failure_hook != NULL)
+		lg_library_failure_hook();
+	exit(1);
 }

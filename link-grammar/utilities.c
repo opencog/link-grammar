@@ -254,7 +254,7 @@ static int wctomb_check(char *s, wchar_t wc)
 	nr = wcrtomb(s, wc, &mbss);
 	if (nr < 0) {
 		prt_error("Fatal Error: unknown character set %s\n", nl_langinfo(CODESET));
-		exit(1);
+		lg_lib_failure();
 	}
 #endif /* _WIN32 */
 	return nr;
