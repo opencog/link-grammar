@@ -218,6 +218,7 @@ void pool_reuse(Pool_desc *mp)
 	        mp->curr_elements, mp->name, mp->func);
 	mp->ring = mp->chain;
 	mp->alloc_next = mp->ring;
+	if ((mp->ring != NULL) && (mp->zero_out)) memset(mp->ring, 0, mp->data_size);
 	mp->curr_elements = 0;
 #ifdef POOL_FREE
 	mp->free_list = NULL;
