@@ -502,3 +502,10 @@ void debug_msg(int level, int v, char print_func, const char func[],
 		va_end(args);
 	}
 }
+
+const char *syserror_msg(int errno)
+{
+	TLS static char errbuf[64];
+	lg_strerror(errno, errbuf, sizeof(errbuf));
+	return errbuf;
+}
