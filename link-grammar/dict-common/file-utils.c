@@ -530,11 +530,9 @@ char *get_file_contents(const char * dict_name)
 
 			if (err)
 			{
-				char errbuf[64];
-
-				lg_strerror(errno, errbuf, sizeof(errbuf));
+				prt_error("Error: %s: Read error (%s)\n", dict_name,
+				          syserror_msg(errno));
 				fclose(fp);
-				prt_error("Error: %s: Read error (%s)\n", dict_name, errbuf);
 				free(contents);
 				return NULL;
 			}
