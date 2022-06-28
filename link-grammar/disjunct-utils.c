@@ -475,6 +475,7 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 	}
 
 	lgdebug(+D_DISJ+(0==count)*1024, "w%zu: Killed %u duplicates%s\n",
+	        dw->originating_gword == NULL ? 0 :
 	        dw->originating_gword->o_gword->sent_wordidx, count,
 	        multi_string ? " (different word-strings)" : "");
 

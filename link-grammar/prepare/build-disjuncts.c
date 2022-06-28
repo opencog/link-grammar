@@ -148,7 +148,8 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 				for (c4 = c2; c4 != NULL; c4 = c4->next)
 				{
 					float maxcost = MAX(c3->maxcost,c4->maxcost);
-					if (maxcost + e->cost > ct->cost_cutoff) continue;
+					/* Cannot use this shortcut due to negative costs. */
+					//if (maxcost + e->cost > ct->cost_cutoff) continue;
 
 					c = pool_alloc(ct->Clause_pool);
 					if ((c_head == NULL) && (c_last != NULL)) *c_last = c;
@@ -232,6 +233,11 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 {
 	Disjunct *dis, *ndis;
 	Pool_desc *connector_pool = NULL;
+	bool sat_solver = false;
+
+#if USE_SAT_SOLVER
+		sat_solver = (opts != NULL) && opts->use_sat_solver;
+#endif /* USE_SAT_SOLVER */
 
 	dis = NULL;
 	for (; cl != NULL; cl = cl->next)
@@ -240,7 +246,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 		if (cl->maxcost > cost_cutoff) continue;
 
 #if USE_SAT_SOLVER
-		if (opts->use_sat_solver) /* For the SAT-parser, until fixed. */
+		if (sat_solver) /* For the SAT-parser, until fixed. */
 		{
 			ndis = xalloc(sizeof(Disjunct));
 		}
@@ -264,11 +270,6 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			n->next = *loc;   /* prepend the connector to the current list */
 			*loc = n;         /* update the connector list */
 		}
-
-		bool sat_solver = false;
-#if USE_SAT_SOLVER
-		sat_solver = opts->use_sat_solver;
-#endif /* USE_SAT_SOLVER */
 
 		/* XXX add_category() starts category strings by ' '.
 		 * FIXME Replace it by a better indication. */

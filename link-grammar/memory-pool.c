@@ -13,7 +13,7 @@
 
 #include "error.h"
 #include "memory-pool.h"
-#include "utilities.h"                  // MIN/MAX, aligned_alloc, lg_strerror
+#include "utilities.h"                  // MIN/MAX, aligned_alloc
 
 /* TODO: Add valgrind descriptions. See:
  * http://valgrind.org/docs/manual/mc-manual.html#mc-manual.mempools */
@@ -178,15 +178,11 @@ void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 		{
 			/* Allocate a new block and chain it. */
 			mp->ring = aligned_alloc(mp->alignment, mp->block_size);
-			if (NULL == mp->ring)
-			{
-				/* aligned_alloc() has strict requirements. */
-				char errbuf[64];
-				lg_strerror(errno, errbuf, sizeof(errbuf));
-				prt_error("Fatal error: aligned_alloc(%zu, %zu): %s",
-				          mp->block_size, mp->element_size, errbuf);
-				exit(1);
-			}
+
+			/* aligned_alloc() has strict requirements. */
+			assert(NULL != mp->ring, "Aligned_alloc(%zu, %zu): %s",
+			       mp->block_size, mp->element_size, syserror_msg(errno));
+
 			if (NULL == mp->alloc_next)
 				mp->chain = mp->ring; /* This is the start of the chain. */
 			else
@@ -218,6 +214,7 @@ void pool_reuse(Pool_desc *mp)
 	        mp->curr_elements, mp->name, mp->func);
 	mp->ring = mp->chain;
 	mp->alloc_next = mp->ring;
+	if ((mp->ring != NULL) && (mp->zero_out)) memset(mp->ring, 0, mp->data_size);
 	mp->curr_elements = 0;
 #ifdef POOL_FREE
 	mp->free_list = NULL;
@@ -344,11 +341,7 @@ void pool_delete (const char *func, Pool_desc *mp)
 void pool_free(Pool_desc *mp, void *e)
 {
 	mp->curr_elements--;
-	if (ASAN_ADDRESS_IS_POISONED(e))
-	{
-		prt_error("Fatal error: Double pool free of %p\n", e);
-		exit(1);
-	}
+	assert(!ASAN_ADDRESS_IS_POISONED(e), "Double pool free of %p\n", e);
 	ASAN_POISON_MEMORY_REGION(e, sizeof(alloc_attr) + ((alloc_attr *)e)->size);
 }
 #endif // POOL_FREE

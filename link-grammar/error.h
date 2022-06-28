@@ -38,6 +38,8 @@ const char *feature_enabled(const char *, ...);
 void debug_msg(int, int, char, const char[], const char[], const char *fmt, ...)
 	GNUC_PRINTF(6,7);
 bool verbosity_check(int, int, char, const char[], const char[], const char *);
+const char *syserror_msg(int);
+void lg_lib_failure(void);
 
 /**
  * Print a debug messages according to their level.

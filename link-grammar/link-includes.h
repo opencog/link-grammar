@@ -101,6 +101,8 @@ link_public_api(int)
 link_public_api(bool)
      lg_error_flush(void);
 
+link_public_api(extern void) (*lg_library_failure_hook)(void);
+
 /**********************************************************************
  *
  * Functions to manipulate Dictionaries
