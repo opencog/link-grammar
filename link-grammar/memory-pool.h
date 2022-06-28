@@ -103,6 +103,14 @@ typedef struct
 	size_t element_number;
 } Pool_location;
 
+/**
+ * Return the number of allocated elements in the given pool.
+ */
+static inline size_t pool_num_elements_alloced(Pool_desc *mp)
+{
+	return mp->curr_elements;
+}
+
 static inline void *pool_alloc(Pool_desc *mp)
 {
 	return pool_alloc_vec(mp, 1);

@@ -26,6 +26,7 @@ struct Tconnector_struct
 {
 	Tconnector * next;
 	Exp *e; /* a CONNECTOR_type element from which to get the connector  */
+	Connector *tracon; /* the created tracon, set through memory sharing */
 };
 
 typedef struct clause_struct Clause;
@@ -93,7 +94,7 @@ static Tconnector * catenate(Tconnector * e1, Tconnector * e2, Pool_desc *tp)
 		preve = newe;
 	}
 
-	preve->next = e2;
+	preve->next = e2; /* tracon memory sharing */
 	return head.next;
 }
 
@@ -106,6 +107,7 @@ static Tconnector * build_terminal(Exp *e, clause_context *ct)
 	c->e = e;
 	c->next = NULL;
 	c->e->pos = ct->exp_pos++;
+	c->tracon = NULL;
 	return c;
 }
 
@@ -155,7 +157,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 					if ((c_head == NULL) && (c_last != NULL)) *c_last = c;
 					c->cost = c3->cost + c4->cost;
 					c->maxcost = maxcost;
-					c->c = catenate(c3->c, c4->c, ct->Tconnector_pool);
+					c->c = catenate(c4->c, c3->c, ct->Tconnector_pool);
 					c->next = c_head;
 					c_head = c;
 				}
@@ -259,16 +261,30 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 		ndis->left = ndis->right = NULL;
 
 		/* Build a list of connectors from the Tconnectors. */
+		Connector **jet[2] = { &ndis->left, &ndis->right };
+		bool is_tracon[2] = { false, false };
 		for (Tconnector *t = cl->c; t != NULL; t = t->next)
 		{
+			int idir = ('+' == t->e->dir);
+
+			if (is_tracon[idir]) continue; /* this direction is complete */
+			if (NULL != t->tracon)
+			{
+				/* Use the cashed tracon and mark this direction as complete. */
+				*(jet[idir]) = t->tracon;
+				is_tracon[idir] = true;
+				continue;
+			}
+
 			Connector *n = connector_new(connector_pool, t->e->condesc, opts);
-			Connector **loc = ('-' == t->e->dir) ? &ndis->left : &ndis->right;
+			t->tracon = n; /* cache this tracon */
 
 			n->exp_pos = t->e->pos;
 			n->multi = t->e->multi;
 			n->farthest_word = t->e->farthest_word;
-			n->next = *loc;   /* prepend the connector to the current list */
-			*loc = n;         /* update the connector list */
+
+			*(jet[idir]) = n;
+			jet[idir] = &n->next;
 		}
 
 		/* XXX add_category() starts category strings by ' '.
@@ -309,7 +325,7 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	clause_context ct = { 0 };
 
 	ct.cost_cutoff = cost_cutoff;
-	if (sent->Clause_pool == NULL)
+	if (unlikely(sent->Clause_pool == NULL))
 	{
 		ct.Clause_pool = pool_new(__func__, "Clause",
 		                          /*num_elements*/4096, sizeof(Clause),
