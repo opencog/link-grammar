@@ -314,7 +314,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 
 		/* Create a new Regex_node and add to the list. */
 		new_re = malloc(sizeof(*new_re));
-		new_re->name    = strdup(afdict_classname[classnum]);
+		new_re->name    = afdict_classname[classnum];
 		new_re->re      = NULL;
 		new_re->next    = NULL;
 		new_re->neg     = ('!' == r[0]);
