@@ -1470,6 +1470,7 @@ def linkage_testfile(self, lgdict, popt, desc=''):
         else:
             self.fail('\nTest file "{}": Invalid opcode "{}" (ord={})'.format(testfile, line[0], ord(line[0])))
 
+    self.assertIsNotNone(last_opcode, "Missing opcode in " + testfile)
     self.assertIn(last_opcode, 'OCP', "Missing result comparison in " + testfile)
 
 def warning(*msg):
