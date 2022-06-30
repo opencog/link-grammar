@@ -754,7 +754,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				if (MT_PUNC == morpheme_type) /* It's a terminal token */
 					tokenization_done(sent, subword);
 
-				if (!sent->dict->affix_table->pre_suf_class_exists && last_split)
+				if (!sent->dict->affix_table->pre_suf_class_exists && last_split &&
+				    !(sent->dict->affix_table && sent->dict->affix_table->anysplit))
 				{
 					/* XXX The "tr" and "kz" dictionaries depend on specifying
 					 * compound suffixes which are not in the dict file, in the
