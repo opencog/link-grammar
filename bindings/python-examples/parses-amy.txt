@@ -1,0 +1,31 @@
+% This file contains test sentences, and the expected parses
+% for the "amy" language, for splitting up to 3 parts
+% (REGPARTS definition in amy/4.0.affix).
+
+Ithis is a test
+O
+O    +-----ANY----+------ANY-----+-----ANY-----+-----ANY-----+
+O    |            |              |             |             |
+OLEFT-WALL this[!ANY-WORD] is[!ANY-WORD] a[!ANY-WORD] test[!ANY-WORD]
+O
+N
+O
+O                                              +-------------ANY------------+
+O    +-----ANY----+------ANY-----+-----ANY-----+             +------LL------+
+O    |            |              |             |             |              |
+OLEFT-WALL this[!ANY-WORD] is[!ANY-WORD] a[!ANY-WORD] t[!MOR-STEM].= =est[!MOR-SUFF]
+O
+N
+O
+O                                              +-------------ANY-------------+
+O    +-----ANY----+------ANY-----+-----ANY-----+              +------LL------+
+O    |            |              |             |              |              |
+OLEFT-WALL this[!ANY-WORD] is[!ANY-WORD] a[!ANY-WORD] tes[!MOR-STEM].= =t[!MOR-SUFF]
+O
+N
+O
+O                                              +-------------ANY-------------+
+O    +-----ANY----+------ANY-----+-----ANY-----+             +-------LL------+
+O    |            |              |             |             |               |
+OLEFT-WALL this[!ANY-WORD] is[!ANY-WORD] a[!ANY-WORD] te[!MOR-STEM].= =st[!MOR-SUFF]
+O

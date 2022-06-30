@@ -27,6 +27,8 @@ EXTRA_DIST =               \
    parses-en.txt           \
    parses-lt.txt           \
    parses-th.txt           \
+   parses-amy.txt          \
+   parses-any.txt          \
    parses-pos-en.txt       \
    parses-pos-he.txt       \
    parses-pos-ru.txt       \
