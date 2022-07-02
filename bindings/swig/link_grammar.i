@@ -22,6 +22,8 @@
 %ignore parse_options_get_max_memory(Parse_Options opts);
 // End of ignored API calls.
 
+%ignore lg_library_failure_hook;     /* Not supported. */
+
 %nodefaultdtor lg_errinfo;
 
 #define link_public_api(x) x
