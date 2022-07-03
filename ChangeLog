@@ -2,6 +2,8 @@ Version 5.11.0 (XXX 2022)
  * Prototype support for dictionary in the AtomSpace.
  * English dict: assorted missing nouns, verbs. #1289
  * Performance improvements. #1309
+ * Fix Windows build break in 5.10.4, 5.10.5 fixed in #1313
+ * Fix "amy" language #1312
 
 Version 5.10.5 (17 June 2022)
  * Updated Docker files. #1288
