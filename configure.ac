@@ -66,7 +66,7 @@ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])], [AC_SUBST([AM_DEFAULT_VERB
 
 dnl "Undefined AX_ macro" is checked in autogen.sh, so if this message
 dnl is changed here it should be changed there too.
-m4_pattern_forbid([^AX_(COMPILER_VENDOR|TLS|AX_CHECK_ZLIB|PKG_SWIG)\b],
+m4_pattern_forbid([^AX_(COMPILER_VENDOR|TLS|PKG_SWIG)\b],
 	[Undefined AX_ macro. Please install the "autoconf-archive" package.])
 m4_pattern_forbid([^PKG_],
 	[Undefined PKG_ macro. Please install the "pkg-config"
@@ -362,7 +362,7 @@ AC_ARG_ENABLE( sat-solver,
 	   enable_sat_solver=yes
 	fi], [enable_sat_solver=no])
 
-if test "x$enable_sat_solver" = xyes; then
+AS_IF([test "x$enable_sat_solver" = xyes], [
 	# The sat-solver code is in C++; so the link-grammar library should now
 	# directly require libstdc++ instead of indirectly depend on its
 	# availability via the minisat2 library.
@@ -374,17 +374,7 @@ if test "x$enable_sat_solver" = xyes; then
 	AC_CHECK_HEADER([stdio.h],,
 		[AC_MSG_ERROR([C++ compiler not found; it is needed for the SAT parser])])
 
-	dnl 1. Abort and notify if no zlib.h. 2. Adapt for non-standard location.
-	AC_MSG_NOTICE([The minisat2 headers include zlib.h])
-	dnl The bundled library doesn't actually need -lz
-	AX_CHECK_ZLIB([ZLIB_CPPFLAGS="-isystem $ZLIB_HOME/include"],
-		[AC_MSG_NOTICE([No zlib library found - not building sat solver])
-		enable_sat_solver=no])
-fi
-
-# If zlib not found, then don't continue with minisat.
-if test "x$enable_sat_solver" = xyes; then
-	test "x$ZLIB_CPPFLAGS" = "x-isystem /usr/include" && ZLIB_CPPFLAGS=
+	PKG_CHECK_MODULES([ZLIB], [zlib])
 
 	CPPFLAGS_SAVE="$CPPFLAGS"
 
@@ -396,7 +386,7 @@ if test "x$enable_sat_solver" = xyes; then
 		dnl FIXME: Allow using --with-minisat2=DIR
 		dnl and/or specifying specific include/library locations.
 		minisat_headers="-isystem /usr/include/minisat"
-		CPPFLAGS="$CPPFLAGS $minisat_headers $ZLIB_CPPFLAGS"
+		CPPFLAGS="$CPPFLAGS $minisat_headers $ZLIB_CFLAGS"
 
 		AC_CHECK_LIB(minisat, main, [MINISAT_LIBS=-lminisat],
 			[ use_minisat_bundled_library=yes ]
@@ -440,8 +430,7 @@ if test "x$enable_sat_solver" = xyes; then
 	AC_LANG([C])
 	CPPFLAGS="$CPPFLAGS_SAVE"
 	AC_DEFINE(USE_SAT_SOLVER, 1, [Define for compilation])
-	AC_SUBST(ZLIB_CPPFLAGS)
-fi
+])
 
 AM_CONDITIONAL(LIBMINISAT_BUNDLED, test -n "$use_minisat_bundled_library")
 AM_CONDITIONAL(WITH_SAT_SOLVER, test "x$enable_sat_solver" = xyes)
