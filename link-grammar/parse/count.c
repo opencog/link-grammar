@@ -469,7 +469,7 @@ static Count_bin table_store(count_context_t *ctxt,
                            int lw, int rw,
                            const Connector *le, const Connector *re,
                            unsigned int null_count,
-                           size_t hash, Count_bin c)
+                           size_t hash, w_Count_bin c)
 {
 	if (ctxt->table_available_count == 0) table_grow(ctxt);
 
@@ -485,11 +485,11 @@ static Count_bin table_store(count_context_t *ctxt,
 	n->r_id = r_id;
 	n->null_count = null_count;
 	n->next = ctxt->table[i];
-	n->count = c;
+	n->count = (Count_bin)c; /* c is already clamped (by parse_count_clamp()) */
 	n->hash = hash;
 	ctxt->table[i] = n;
 
-	return c;
+	return n->count;
 }
 
 /**

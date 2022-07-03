@@ -171,6 +171,15 @@
     <ClCompile Include="..\link-grammar\dict-file\read-dialect.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\link-grammar\dict-ram\dict-ram.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\dict-atomese\lookup-atomese.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\link-grammar\dict-atomese\read-atomese.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\link-grammar\api-structures.h">
@@ -345,6 +354,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\link-grammar\dict-common\dialect.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\dict-ram\dict-ram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\dict-atomese\lookup-atomese.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\link-grammar\dict-atomese\read-atomese.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

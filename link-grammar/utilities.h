@@ -130,7 +130,7 @@ typedef SSIZE_T ssize_t;
 #define iswspace_l  _iswspace_l
 #define towlower_l  _towlower_l
 #define towupper_l  _towupper_l
-#define strtod_l    _strtod_l
+#define strtof_l    _strtof_l
 #define freelocale _free_locale
 #endif /* HAVE_LOCALE_T */
 
