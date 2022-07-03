@@ -1134,6 +1134,35 @@ class YGenerationTestCase(unittest.TestCase):
         self.assertTrue(len(linkages) > 0, "No linkages")
 
 
+class ZANYAMYTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.amy_dict = Dictionary(lang='amy')
+        cls.any_dict = Dictionary(lang='any')
+        cls.amy_po = ParseOptions(display_morphology=True, linkage_limit=20000)
+        cls.any_po = ParseOptions(display_morphology=False, linkage_limit=200)
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.any_dict
+        del cls.amy_dict
+
+    def find_num_linkages(self, sentense_text, dict, po):
+        return len(Sentence(sentense_text, dict, po).parse())
+
+    def test_amy_num_linkages(self):
+       self.assertEqual(5292, self.find_num_linkages('this is a test', self.amy_dict, self.amy_po))
+
+    def test_amy(self):
+        linkage_testfile(self, self.amy_dict, self.amy_po)
+
+    def test_any_num_linkages(self):
+       self.assertEqual(156, self.find_num_linkages('this is a test', self.any_dict, self.any_po))
+
+    def test_any(self):
+        linkage_testfile(self, self.any_dict, self.any_po)
+
+
 class ZENConstituentsCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -1441,6 +1470,7 @@ def linkage_testfile(self, lgdict, popt, desc=''):
         else:
             self.fail('\nTest file "{}": Invalid opcode "{}" (ord={})'.format(testfile, line[0], ord(line[0])))
 
+    self.assertIsNotNone(last_opcode, "Missing opcode in " + testfile)
     self.assertIn(last_opcode, 'OCP', "Missing result comparison in " + testfile)
 
 def warning(*msg):

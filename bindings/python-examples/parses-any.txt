@@ -1,0 +1,30 @@
+% This file contains test sentences, and the expected parses
+% for the "any" language.
+
+Ithis is a test
+O
+O    +---ANY--+--ANY-+-ANY-+-ANY-+
+O    |        |      |     |     |
+OLEFT-WALL this[!] is[!] a[!] test[!]
+O
+N
+O
+O                    +----ANY----+
+O    +---ANY--+--ANY-+     +-ANY-+
+O    |        |      |     |     |
+OLEFT-WALL this[!] is[!] a[!] test[!]
+O
+N
+O
+O                    +----ANY----+
+O    +---ANY--+--ANY-+-ANY-+     |
+O    |        |      |     |     |
+OLEFT-WALL this[!] is[!] a[!] test[!]
+O
+N
+O
+O                    +----ANY----+
+O    +---ANY--+--ANY-+-ANY-+-ANY-+
+O    |        |      |     |     |
+OLEFT-WALL this[!] is[!] a[!] test[!]
+O
