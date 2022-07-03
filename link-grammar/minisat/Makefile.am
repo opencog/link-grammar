@@ -1,4 +1,4 @@
-libminisat_la_CPPFLAGS = $(ZLIB_CPPFLAGS)
+libminisat_la_CPPFLAGS = $(ZLIB_CFLAGS)
 
 noinst_LTLIBRARIES = libminisat.la
 
