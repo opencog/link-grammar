@@ -35,6 +35,8 @@ Found 4748 linkages (1000 of 1000 random linkages had no P.P. violations)
 LEFT-WALL ผม.pr ได้.x ติดต่อ.v เจ้าหน้าที่.n ไป.r  แล้ว.r || แต่.pvv ยัง.x ไม่.ng ได้.x  ตาม.v เรื่อง.n
 ```
 
+**FYI:** As of 5 July 2022, the space is also treated as a candidate of sentence delimiters.
+
 ## POS-Annotated Text
 
 This parser also accepts linguistically annotated texts. Once tokenized, some words in a sentence can be annotated with Link POS tags to increase the accuracy. The format of Link POS annotation is *word*`.`*tag*. For example, เมื่อวานนี้มีคนมาติดต่อคุณครับ 'Yesterday, someone came to contact you' is parsed as follows.
