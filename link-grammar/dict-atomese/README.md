@@ -1,12 +1,13 @@
 
 Experimental Atomese Dictionary
 ===============================
-This directory provides code that implements a connection to an
-AtomSpace CogServer, from which dictionary data can be fetched. The goal
-of this dictionary is to enable access to a dynamically-changing, live
-dictionary maintained in the AtomSpace.  This provides several benefits:
+This directory provides code that can access dictionary data held in
+[AtomSpace](https://wiki.opencog.org/w/AtomSpace)
+[StorageNodes](https://wiki.opencog.org/w/StorageNode).
+The goal is to be able to access to dynamically-changing, live
+dictionaries maintained in the AtomSpace.  This provides several benefits:
 
- * Avoids the need for a batch dump of the AtomSpace data to a DB file
+ * Avoids the need for a batch dump of the AtomSpace data to a DB file.
  * Enables "lifelong learning": as new language uses are learned, the
    AtomSpace contents are changed, and those changes become visible to
    the parser.
@@ -14,7 +15,7 @@ dictionary maintained in the AtomSpace.  This provides several benefits:
 This is meant to work with dictionaries created by the code located
 in the [OpenCog learn repo](https://github.com/opencog/learn).
 
-**Version 0.7.1** -- The basic code has been laid down. Use of gram classes
+**Version 0.7.2** -- The basic code has been laid down. Use of gram classes
 not yet implemented. Costs not yet implemented. And other stuff is
 missing.
 
@@ -40,6 +41,12 @@ cd ../..
 
 git clone https://github.com/opencog/atomspace-cog
 cd atomspace-cog ; mkdir build ; cd build ; cmake ..
+make -j
+sudo make install
+cd ../..
+
+git clone https://github.com/opencog/atomspace-rocks
+cd atomspace-rocks ; mkdir build ; cd build ; cmake ..
 make -j
 sudo make install
 cd ../..
@@ -75,8 +82,8 @@ XVII .
 This is a low-quality dataset, so don't expect much. Other datasets
 are better but are not publicly available.
 
-Custom CogServer locations can be specified by altering the
-[demo dictionary file](../../data/demo-atomese/cogserver.dict).
+Other StorageNodes can be specified by altering the
+[demo dictionary file](../../data/demo-atomese/storage.dict).
 
 
 Design
@@ -140,14 +147,33 @@ System diagram
 --------------
 Stacked boxes represent shared-libraries, with shared-library calls going
 downwards. Note that AtomSpaces start out empty, so the data has to come
-"from somewhere". In this case, the data comes from another AtomSpace, running
-remotely (in the demo, its in a Docker container).  That AtomSpace in turn
-loads its data from a
+"from somewhere".  AtomSpaces load data from
+[StorageNodes](https://wiki.opencog.org/w/StorageNode).
+There are half-a-dozen of these; one of them is the
 [RocksStorageNode](https://github.com/opencog/opencog-rocks), which uses
-[RocksDB](https://rocksdb.org) to work with the local disk drive.
-The network connection is provided by a
-[CogServer](https://github.com/opencog/cogserver) to
-[CogStorageNode](https://github.com/opencog/opencog-cog) pairing.
+[RocksDB](https://rocksdb.org) to work with the local disk drive. The
+software layers are as depicted below.
+```
+    +----------------+
+    |  Link Grammar  |
+    |    parser      |
+    +----------------+
+    |   AtomSpace    |
+    +----------------+
+    |     Rocks      |
+    |  StorageNode   |
+    +----------------+
+    |    RocksDB     |
+    +----------------+
+    |   disk drive   |
+    +----------------+
+```
+
+Another StorageNode is the
+[CogStorageNode](https://github.com/opencog/opencog-cog),
+which provides a network connection via the
+[CogServer](https://github.com/opencog/cogserver).
+This system is depicted below.
 ```
                                             +----------------+
                                             |  Link Grammar  |
@@ -169,6 +195,9 @@ The network connection is provided by a
     | disk drive  |
     +-------------+
 ```
+In the demo, the CogServer and the associated dataset are in a Docker
+container. The primary reason for using Docker is to make the demo as
+simple as possible.
 
 TODO
 ====
@@ -187,12 +216,10 @@ Remaining work items:
   parse. This requires significant pipeline changes; see the todo list
   below.
 
-* Handle both Rocks and Cogserver URL's. Look at the URL, and use the
-  appropriate `StorageNode`. (Or create a `StorageNode` dispatcher in
-  Atomese.)
-
-* Expire local cache entries (given by `dict_node_lookup`) after some time
-  frame, forcing a fresh lookup from the server.
+* Expire local cache entries (given by `dict_node_lookup`) after some
+  time frame, forcing a fresh lookup from the server. (Only for
+  CogStorage!) (Maybe this should involve some proxy agent? Maybe a
+  `ProxyStorageNode`?)
 
 Design Notes
 ------------
