@@ -13,4 +13,4 @@ which provides hard-drive access, via RocksDB.
 This dictionary is currently experimental, and subject to change at any
 time.
 
-Edit the `storage.cfg` file and specify the StorageNode URL.
+Edit the `storage.dict` file and specify the StorageNode URL.

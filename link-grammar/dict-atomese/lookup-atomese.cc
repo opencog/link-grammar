@@ -37,6 +37,7 @@ public:
 void as_open(Dictionary dict, const char* url)
 {
 	Local* local = new Local;
+printf("duuude its %s\n", url);
 
 	local->url = string_set_add(url, dict->string_set);
 

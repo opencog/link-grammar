@@ -8,7 +8,7 @@
 
 #include "../dict-common/dict-api.h"
 
-void as_open(Dictionary dict, const char* url);
+void as_open(Dictionary dict, const char* storage_node);
 void as_close(Dictionary dict);
 
 bool as_boolean_lookup(Dictionary dict, const char *s);
