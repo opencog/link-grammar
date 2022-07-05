@@ -47,6 +47,7 @@ There are 22 function-word types as shown below.
 | `cn`    | Noun conjunction |
 | `cv`    | Verb conjunction |
 | `cp`    | Preposition conjunction |
+| `cs`    | Sentence delimiter |
 | `cd`    | Discontinuous conjunction |
 | `pt`    | Particle |
 | `ij`    | Interjection |

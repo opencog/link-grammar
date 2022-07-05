@@ -810,9 +810,15 @@ LEFT-WALL :
 RIGHT-WALL :
     RW-;
 
-/th/words/words.sentsep :
+<sentsep>:
     RW-
     & {LW+};
+
+/th/words/words.sentsep :
+    <sentsep>;
+
+_.cs _@PU.cs :
+    [<sentsep>];
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
