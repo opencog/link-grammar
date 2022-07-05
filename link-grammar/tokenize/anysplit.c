@@ -560,8 +560,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
 				affix[b] = '\0';
 			}
-			else
-			if (0 == cpos)   /* The first, but not the only morpheme */
+			else if (0 == cpos)   /* The first, but not the only morpheme */
 			{
 				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
 				affix[b] = '\0';
