@@ -246,39 +246,16 @@ disjunct string.
 
 * Side note: we need a `get-incoming-by-predicate` function!
 
-### Counting
-After a parse is performed, the above lookup is done, and the count on
-the Atomese `Section` must be updated. This count must be written to the
-CogServer. The count is sent as an increment-count message, since it is
-impractical to implement an atomic read-increment-write over the net.
-This is a new extension to the `StorageNode`.
+### Reproducible Connector Names
+There is a (mild!?) design flaw in the current implementation. The
+connector names are dynamically generated, on-the-fly, by incrementing
+a counter.  That means the connector names are never the same, two runs
+in a row.
 
-### Pass-through of Writes
-Every update that the CogServer receives must then be performed on the
-Rocks StorageNode that it is attached to. The correct framework for this
-has already been started at https://github.com/opencog/atomspace-agents
-
-There are two ways to implement this idea:
-* Top-down command. This module (link-grammar) tells the CogServer what
-  to do, and the CogServer obeys orders, and just does it. There are two
-  problems with this design:
-  - How to send orders telling the CogServer what to do? There is no
-    infrastructure for this.
-  - What happens if two different subsystems (this one, and some other
-    system) are sending conflicting orders? How can one avoid trampling?
-
-* Policy agents. This module (link-grammar) attaches to a server that
-  implements the desired policy (which is a write-through from network
-  to disk storage).  This solves both problems above, as the policy agent
-  knows what to do, and it knows how to resolve conflicts that
-  link-grammar might not even be aware of.
-
-### Restarts
-Over short periods of time, and in limited use, the above is enough.
-However, it might be desirable to restart LG, and re-use the link names
-and disjuncts that were previously used. This adds considerable new
-complexity, and is probably not worth doing. The following would be
-needed:
+It might be desirable to be able to have reproducible connector names,
+*i.e.* to get the same names after a restart of LG. Implementing this
+adds considerable new complexity, and is probably not worth doing. The
+following would be needed:
 
 * Link names need to be stored. These can be recorded as
 ```
