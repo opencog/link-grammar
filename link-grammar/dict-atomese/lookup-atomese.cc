@@ -12,6 +12,7 @@
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/persist/api/StorageNode.h>
 #include <opencog/persist/cog-storage/CogStorage.h>
+#include <opencog/persist/rocks/RocksStorage.h>
 #include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
 #undef STRINGIFY
@@ -57,13 +58,19 @@ void as_open(Dictionary dict, const char* store_str)
 	Handle hsn = Sexpr::decode_atom(local->node_str);
 	hsn = local->asp->add_atom(hsn);
 	local->stnp = StorageNodeCast(hsn);
-printf("duuude hand %p %s\n", local->stnp.get(), hsn->to_string().c_str());
 
-#if 0
+#define SHLIB_CTOR_HACK 1
+#ifdef SHLIB_CTOR_HACK
 	/* The cast below forces the shared lib constructor to run. */
 	/* That's needed to force the factory to get installed. */
-	Handle hsn = local->asp->add_node(COG_STORAGE_NODE, url);
-	local->stnp = CogStorageNodeCast(hsn);
+	/* We need a more elegant solution to this. */
+	Type snt = hsn->get_type();
+	if (COG_STORAGE_NODE == snt)
+		local->stnp = CogStorageNodeCast(hsn);
+	else if (ROCKS_STORAGE_NODE == snt)
+		local->stnp = RocksStorageNodeCast(hsn);
+	else
+		printf("Unknown storage %s\n", local->node_str);
 #endif
 
 	local->stnp->open();

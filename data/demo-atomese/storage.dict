@@ -15,7 +15,7 @@
 % The default port for CogServers is 17001
 % Here `localhost` is just 127.0.0.1
 % Replace `localhost` by `example.com` or a dotted IPv4 address.
-#define storage-node "(CogStorageNode \"cog://localhost:17001\")";
+% #define storage-node "(CogStorageNode \"cog://localhost:17001\")";
 
 % -----------------------
 % RocksStorageNode
@@ -25,7 +25,7 @@
 % The URL is just a path into the local filesystem.
 %
 % Uncomment this, and provide a correct file-path.
-% #define storage-node "(RocksStorageNode \"rocks:///tmp/all-in-one-r13.rdb\")";
+#define storage-node "(RocksStorageNode \"rocks:///home2/linas/x13-all-in-one.rdb\")";
 
 % -----------------------
 % At least one bogus entry is needed.
