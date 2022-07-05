@@ -2,7 +2,7 @@
 ; Demo Atomese Dictionary.
 ;
 ; This file contains some example Atomese dictionary entries,
-; written in the style of scheme expressions. This is NOT a great
+; written in the style of scheme s-expressions. This is NOT a great
 ; way to encode dictionaries, but it does give a general flavor
 ; of what Atomese looks like.
 ;

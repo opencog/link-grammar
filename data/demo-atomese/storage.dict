@@ -25,7 +25,17 @@
 % The URL is just a path into the local filesystem.
 %
 % Uncomment this, and provide a correct file-path.
-#define storage-node "(RocksStorageNode \"rocks:///home2/linas/x13-all-in-one.rdb\")";
+% #define storage-node "(RocksStorageNode \"rocks:///home2/linas/x13-all-in-one.rdb\")";
+
+% -----------------------
+% FileStorageNode
+% This will access a file containing an AtomSpace encoded with
+% s-expressions. The file must hold appropriate language data.
+%
+% The URL is just a path into the local filesystem.
+%
+% Uncomment this, and provide a correct file-path.
+#define storage-node "(FileStorageNode \"atomese-dict.scm\")";
 
 % -----------------------
 % At least one bogus entry is needed.
