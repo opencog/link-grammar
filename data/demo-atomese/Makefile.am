@@ -1,6 +1,6 @@
 
 DICTS=                           \
-      cogserver.dict             \
+      storage.dict               \
       4.0.affix
 
 dictdir=$(pkgdatadir)/demo-atomese

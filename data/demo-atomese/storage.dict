@@ -1,0 +1,33 @@
+
+#define dictionary-lang           en;
+#define dictionary-locale         en_US.UTF-8;
+#define dictionary-version-number 5.11.0;
+
+% Two examples follow; one shows the use of the CogStorageNode, which
+% provides network access, and another using RocksStorageNode, which
+% provides access to dictionaries located on the local hard drive.
+
+% -----------------------
+% CogStorageNode
+% This will access an AtomSpace over the network, via a CogServer. The
+% CogServer must be running, and must be loaded with language data.
+%
+% The default port for CogServers is 17001
+% Here `localhost` is just 127.0.0.1
+% Replace `localhost` by `example.com` or a dotted IPv4 address.
+#define storage-node "(CogStorageNode \"cog://localhost:17001\")";
+
+% -----------------------
+% RocksStorageNode
+% This will access an AtomSpace on a local hard drive, stored in a
+% RocksDB database. The database must hold appropriate language data.
+%
+% The URL is just a path into the local filesystem.
+%
+% Uncomment this, and provide a correct file-path.
+% #define storage-node "(RocksStorageNode \"rocks:///tmp/all-in-one-r13.rdb\")";
+
+% -----------------------
+% At least one bogus entry is needed.
+% This file is read as an affix file, so only affix names are allowed.
+foo: UNITS+;
