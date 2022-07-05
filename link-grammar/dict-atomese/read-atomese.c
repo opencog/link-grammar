@@ -33,12 +33,13 @@
 #include "read-atomese.h"
 #include "lookup-atomese.h"
 
-#define COGSERVER_URL "cogserver-url"
+#define ATOMESE_DICT "storage.dict"
+#define STORAGE_NODE_STRING "storage-node"
 
 Dictionary dictionary_create_from_atomese(const char *dictdir)
 {
 	/* Read basic configuration */
-	char *cfg_name = join_path (dictdir, "cogserver.dict");
+	char *cfg_name = join_path (dictdir, ATOMESE_DICT);
 	Dictionary cfgd =
 		dictionary_six(dictdir, cfg_name, NULL, NULL, NULL, NULL);
 	if (cfgd == NULL)
@@ -60,7 +61,6 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	cfgd = NULL;
 
 	/* --------------------------------------------- */
-	const char* url;
 	Dictionary dict = (Dictionary) malloc(sizeof(struct Dictionary_s));
 	memset(dict, 0, sizeof(struct Dictionary_s));
 
@@ -91,11 +91,12 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	free(affix_name);
 	if (!afdict_init(dict)) goto failure;
 
-	url = linkgrammar_get_dict_define(dict, COGSERVER_URL);
-	if (NULL == url) goto failure;
+	const char* sto_node =
+		linkgrammar_get_dict_define(dict, STORAGE_NODE_STRING);
+	if (NULL == sto_node) goto failure;
 
 	/* Set up the server connection */
-	as_open(dict, url);
+	as_open(dict, sto_node);
 
 	/* Install backend methods */
 	dict->lookup_list = as_lookup_list;
@@ -111,7 +112,6 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
 	                          sizeof(Exp), /*zero_out*/false,
 	                          /*align*/false, /*exact*/false);
-
 
 	if (!dictionary_setup_defines(dict))
 		goto failure;

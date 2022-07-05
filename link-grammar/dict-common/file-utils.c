@@ -454,9 +454,11 @@ bool check_db(const char *lang)
 	return retval;
 }
 
+#define ATOMESE_DICT "storage.dict"   /* See also same define elsewhere */
+
 bool check_atomspace(const char *lang)
 {
-	char *cfgfile = join_path (lang, "cogserver.dict");
+	char *cfgfile = join_path (lang, ATOMESE_DICT);
 	bool retval = file_exists(cfgfile);
 #if !HAVE_ATOMESE
 	if (retval)

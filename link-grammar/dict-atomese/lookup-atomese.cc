@@ -12,6 +12,8 @@
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/persist/api/StorageNode.h>
 #include <opencog/persist/cog-storage/CogStorage.h>
+#include <opencog/persist/rocks/RocksStorage.h>
+#include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
 #undef STRINGIFY
 
@@ -27,18 +29,25 @@ using namespace opencog;
 class Local
 {
 public:
-	const char* url;
+	const char* node_str; // (StorageNode \"foo://bar/baz\")
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;
 	Handle linkp;
 };
 
-/// Open a connection to a CogServer located at url.
-void as_open(Dictionary dict, const char* url)
+/// Open a connection to a StorageNode.
+void as_open(Dictionary dict, const char* store_str)
 {
+	// Brute-force unescape quotes. Simple, dumb.
+	char* unescaped = (char*) alloca(strlen(store_str)+1);
+	const char* p = store_str;
+	char* q = unescaped;
+	while (*p) { if ('\\' != *p) { *q = *p; q++; } p++; }
+	*q = 0x0;
+
 	Local* local = new Local;
 
-	local->url = string_set_add(url, dict->string_set);
+	local->node_str = string_set_add(unescaped, dict->string_set);
 
 	local->asp = createAtomSpace();
 
@@ -46,18 +55,31 @@ void as_open(Dictionary dict, const char* url)
 	local->linkp = local->asp->add_node(PREDICATE_NODE,
 		"*-LG connector string-*");
 
+	Handle hsn = Sexpr::decode_atom(local->node_str);
+	hsn = local->asp->add_atom(hsn);
+	local->stnp = StorageNodeCast(hsn);
+
+#define SHLIB_CTOR_HACK 1
+#ifdef SHLIB_CTOR_HACK
 	/* The cast below forces the shared lib constructor to run. */
 	/* That's needed to force the factory to get installed. */
-	Handle hsn = local->asp->add_node(COG_STORAGE_NODE, url);
-	local->stnp = CogStorageNodeCast(hsn);
+	/* We need a more elegant solution to this. */
+	Type snt = hsn->get_type();
+	if (COG_STORAGE_NODE == snt)
+		local->stnp = CogStorageNodeCast(hsn);
+	else if (ROCKS_STORAGE_NODE == snt)
+		local->stnp = RocksStorageNodeCast(hsn);
+	else
+		printf("Unknown storage %s\n", local->node_str);
+#endif
 
 	local->stnp->open();
 
 	// XXX FIXME -- if we cannot connect, then should hard-fail.
 	if (local->stnp->connected())
-		printf("Connected to %s\n", url);
+		printf("Connected to %s\n", local->node_str);
 	else
-		printf("Failed to connect to %s\n", url);
+		printf("Failed to connect to %s\n", local->node_str);
 
 	dict->as_server = (void*) local;
 }
@@ -324,9 +346,9 @@ void as_clear_cache(Dictionary dict)
 	// Clear the local AtomSpace too.
 	// Easiest way to do this is to just close and reopen
 	// the connection.
-	const char* url = local->url;
+	const char* storn = local->node_str;
 	as_close(dict);
-	as_open(dict, url);
+	as_open(dict, storn);
 	as_boolean_lookup(dict, LEFT_WALL_WORD);
 }
 #endif /* HAVE_ATOMESE */
