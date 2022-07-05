@@ -275,7 +275,7 @@ static bool link_advance(Dictionary dict)
 {
 	utf8char c;
 	int nr, i;
-	int quote_mode;
+	bool quote_mode = false;
 
 	dict->is_special = false;
 
@@ -299,8 +299,6 @@ static bool link_advance(Dictionary dict)
 	}
 	while (lg_isspace((unsigned char)c[0]));
 
-	quote_mode = false;
-
 	i = 0;
 	for (;;)
 	{
@@ -308,7 +306,20 @@ static bool link_advance(Dictionary dict)
 			dict_error(dict, "Token too long.");
 			return false;
 		}
+
+		/* Everything quoted is part of the token, until a matching
+		 * close-quote is found. A closing quote is a quote that is
+		 * followed by whitespace, or by ':' or by ';'. Everything
+		 * between the inital quote and the closing quote is copied
+		 * into the token. This includes embedded white-space.
+		 *
+		 * This is slightly awkward, and is NOT conventional
+		 * programming practice of quotes. It does allow quotes to be
+		 * embedded into the middle of tokens. It misbehaves mildly
+		 * when a quotes string is used with a #define statement.
+		 */
 		if (quote_mode) {
+
 			if (c[0] == '"' &&
 			    /* Check the next character too, to allow " in words */
 			    (*dict->pin == ':' || *dict->pin == ';' ||
@@ -317,16 +328,14 @@ static bool link_advance(Dictionary dict)
 				dict->token[i] = '\0';
 				return true;
 			}
-			if (lg_isspace((unsigned char)c[0])) {
-				dict_error(dict, "White space inside of token.");
-				return false;
-			}
+
 			if (c[0] == '\0')
 			{
 				dict_error(dict, "EOF while reading quoted token.");
 				return false;
 			}
 
+			/* Copy all of the UTF8 bytes. */
 			nr = 0;
 			while (c[nr]) {dict->token[i] = c[nr]; i++; nr++; }
 		} else {
