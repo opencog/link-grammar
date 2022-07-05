@@ -12,6 +12,7 @@
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/persist/api/StorageNode.h>
 #include <opencog/persist/cog-storage/CogStorage.h>
+#include <opencog/persist/file/FileStorage.h>
 #include <opencog/persist/rocks/RocksStorage.h>
 #include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
@@ -69,6 +70,8 @@ void as_open(Dictionary dict, const char* store_str)
 		local->stnp = CogStorageNodeCast(hsn);
 	else if (ROCKS_STORAGE_NODE == snt)
 		local->stnp = RocksStorageNodeCast(hsn);
+	else if (FILE_STORAGE_NODE == snt)
+		local->stnp = FileStorageNodeCast(hsn);
 	else
 		printf("Unknown storage %s\n", local->node_str);
 #endif
