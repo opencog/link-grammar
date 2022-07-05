@@ -23,7 +23,7 @@ Building
 --------
 To build this code, you must first do the following:
 ```
-sudo apt install guile-3.0-dev
+sudo apt install guile-3.0-dev librocksdb-dev
 sudo apt install libboost-dev libboost-filesystem-dev libboost-program-options-dev
 sudo apt install libboost-system-dev libboost-thread-dev
 
