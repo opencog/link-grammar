@@ -110,6 +110,22 @@ and make sure that the `RocksStorageNode` line is uncommented,
 and the URL specifies the correct database location. Make sure
 the other `StorageNode`s are commented out.
 
+### Going the other way
+You can also get Link Grammar parse results into the AtomSpace.
+The following works:
+```
+$ guile
+> (use-modules (opencog) (opencog exec))
+> (use-modules (opencog nlp))
+> (use-modules (opencog nlp-parse))
+> (define pda (LgParseDisjuncts
+      (PhraseNode "level playing field")
+      (LgDictNode "demo-atomese")))
+> (cog-execute! pda)
+```
+See the
+[LgParse examples](https://github.com/opencog/lg-atomese/tree/master/examples)
+for more info.
 
 Design
 ======
