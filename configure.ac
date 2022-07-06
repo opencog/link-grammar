@@ -851,8 +851,21 @@ define([AC_MSG_ERROR],
 PythonFound=no
 if test "x$enable_python_bindings" = xyes; then
 	AM_PATH_PYTHON(PYTHON3_REQUIRED, [PythonFound=yes])
-	AX_PYTHON_DEVEL(>= 'PYTHON3_REQUIRED')
-	test -n "$lg_python_unusable" && PythonFound=no
+	AX_PYTHON_DEVEL()
+	AX_COMPARE_VERSION($PYTHON_VERSION, [ge], 'PYTHON3_REQUIRED',,
+							 [lg_python_unusable=yes])
+	if test -n "$lg_python_unusable"; then
+		dnl Use the message from AX_PYTHON_DEVEL, but with " instead of ''
+		dnl so (for debug) we can know it is from here.
+		AC_MSG_NOTICE([
+this package requires Python >= ]'PYTHON3_REQUIRED'[
+If you have it installed, but it isn't the default Python
+interpreter in your system path, please pass the PYTHON_VERSION
+variable to configure. See "configure --help" for reference.
+		])
+		PythonFound=no
+		PYTHON_VERSION= # Avoid confusion
+	fi
 	if test x$PythonFound = xyes; then
 		PythonFound=$PYTHON_VERSION
 		lg_display_PYTHON=" ($PYTHON)"
