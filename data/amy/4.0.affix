@@ -42,6 +42,9 @@
 % whole word for an alternative with no partitioning), and REGSUF always
 % for the last partition.
 
+% These regexes use the PCRE2 pattern syntax.
+% The LG library must be configured with PCRE2 in order to use them.
+
 %"" : REGPRE+;
 "^(?:(?=\p{Xan})\X|')+$" : REGPRE+;
 
