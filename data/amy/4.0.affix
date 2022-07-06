@@ -44,6 +44,8 @@
 
 % These regexes use the PCRE2 pattern syntax.
 % The LG library must be configured with PCRE2 in order to use them.
+% For ASCII input, the empty regexes can be used.
+% See the commenst in 4.0.affix.
 
 %"" : REGPRE+;
 "^(?:(?=\p{Xan})\X|')+$" : REGPRE+;
