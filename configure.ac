@@ -495,7 +495,7 @@ AM_CONDITIONAL(HAVE_ATOMSPACE, test x${AtomSpaceFound} = xyes)
 
 if test x"${AtomSpaceFound}" = xyes; then
 	AC_DEFINE(HAVE_ATOMESE, 1, [Define for compilation])
-	ATOMSPACE_LIBS="-lnlp-types -lstorage-types -lsexpr -Wl,--no-as-needed -lpersist-rocks -lpersist-cog -Wl,--as-needed -lpersist -latomspace -L/usr/local/lib/opencog/"
+	ATOMSPACE_LIBS="-lnlp-types -lstorage-types -lsexpr -Wl,--no-as-needed -lpersist-rocks -lpersist-cog -lpersist-file -Wl,--as-needed -lpersist -latomspace -L/usr/local/lib/opencog/"
 fi
 AC_SUBST(ATOMSPACE_LIBS)
 

@@ -1,5 +1,6 @@
 
 DICTS=                           \
+      atomese-dict.scm           \
       storage.dict               \
       4.0.affix
 
