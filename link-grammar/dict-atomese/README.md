@@ -117,7 +117,7 @@ The following works:
 $ guile
 > (use-modules (opencog) (opencog exec))
 > (use-modules (opencog nlp))
-> (use-modules (opencog nlp-parse))
+> (use-modules (opencog nlp lg-parse))
 > (define pda (LgParseDisjuncts
       (PhraseNode "level playing field")
       (LgDictNode "demo-atomese")))

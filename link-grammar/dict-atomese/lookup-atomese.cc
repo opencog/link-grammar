@@ -8,7 +8,6 @@
 #ifdef HAVE_ATOMESE
 
 #include <cstdlib>
-#include <opencog/atoms/value/StringValue.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/persist/api/StorageNode.h>
 #include <opencog/persist/cog-storage/CogStorage.h>
@@ -130,6 +129,22 @@ printf("duuude as_boolean_lookup for >>%s<< found sects=%lu\n", s, nsects);
 }
 
 // ===============================================================
+/// Mapping LG connectors to AtomSpace connectors, and v.v.
+///
+/// An LG connector is a string of capital letters. It's generated on
+/// the fly. It's associated with a `(Set (Word ..) (Word ...))`. There
+/// are two lookup tasks. In this blob of code, when given the Set, we
+/// need to find the matching LG string. For users of LG, we have the
+/// inverse problem: given the LG string, what's the Set?
+///
+/// As of just right now, the best solution seems to be the traditional
+/// one:
+///
+///    (Evaluation (Predicate "*-LG connector string-*")
+///       (LgConnNode "ABC") (Set (Word ..) (Word ...)))
+///
+/// As of just right now, the above is held only in the local AtomSpace;
+/// it is never written back to storage.
 
 /// int to base-26 capital letters.
 static std::string idtostr(uint64_t aid)
@@ -145,20 +160,32 @@ static std::string idtostr(uint64_t aid)
 	return s;
 }
 
-// Return a cached LG-compatible link string.
-// Assisgn a new name, if one does not exist.
+/// Given a `(Set (Word ...) (Word ...))` denoting a link, find the
+/// corresponding LgConnNode, if it exists.
+static Handle get_lg_conn(const Handle& wset, const Handle& key)
+{
+	for (const Handle& ev : wset->getIncomingSetByType(EVALUATION_LINK))
+	{
+		if (ev->getOutgoingAtom(0) == key)
+			return ev->getOutgoingAtom(1);
+	}
+	return Handle::UNDEFINED;
+}
+
+/// Return a cached LG-compatible link string.
+/// Assisgn a new name, if one does not exist.
 static std::string get_linkname(Local* local, const Handle& lnk)
 {
 	// If we've already cached a connector string for this,
 	// just return it.  Else build and cache a string.
-	StringValuePtr vname = StringValueCast(lnk->getValue(local->linkp));
-	if (vname)
-		return vname->value()[0];
+	Handle lgc = get_lg_conn(lnk, local->linkp);
+	if (lgc)
+		return lgc->get_name();
 
 	static uint64_t lid = 0;
 	std::string slnk = idtostr(lid++);
-	vname = createStringValue(slnk);
-	lnk->setValue(local->linkp, ValueCast(vname));
+	lgc = createNode(LG_CONN_NODE, slnk);
+	local->asp->add_link(EVALUATION_LINK, local->linkp, lgc, lnk);
 	return slnk;
 }
 
