@@ -60,6 +60,21 @@ sudo make install
 
 Demo
 ----
+At this time, there are three possible demos.
+
+### Trite demo
+Build and install link-grammar. Take a look at the file
+[`atomese-dict.scm`](../../data/demo-atomese/atomese-dict.scm)
+to get a taste of basic Atomese.  Then edit the
+[demo dictionary file](../../data/demo-atomese/storage.dict)
+and make sure that the URL points to the install location of
+`atomese-dict.scm`.
+
+Start link-parser as `link-parser demo-atomese`. There is one and only
+one sentence that will parse: "level playing field". That's it.
+
+### CogServer demo
+
 A working demo can be created as follows:
 ```
 git clone https://github.com/opencog/docker
@@ -69,7 +84,12 @@ cd docker/opencog
 The above may take an hour or two to complete.
 Then `cd lang-model` and read and follow the instructions in
 `Dockerfile`.  This will result in a running CogServer with
-some minimalist, bare-bones language data in it.  Start the
+some minimalist, bare-bones language data in it.
+
+Next, edit the
+[demo dictionary file](../../data/demo-atomese/storage.dict)
+and comment out the `FileStorageNode` line, and uncomment the
+`CogStorageNode` line. Adjust the URL, if needed.  Start the
 link-parser as `link-parser demo-atomese`. Only a very small
 number of simple, short sentences parse; this is a low-quality
 dataset. (A better one will be published "soon").
@@ -82,8 +102,13 @@ XVII .
 This is a low-quality dataset, so don't expect much. Other datasets
 are better but are not publicly available.
 
-Other StorageNodes can be specified by altering the
-[demo dictionary file](../../data/demo-atomese/storage.dict).
+### RockStorage demo
+Download a dataset from `https://linas.org/datasets`. Untar it.
+Edit the
+[demo dictionary file](../../data/demo-atomese/storage.dict),
+and make sure that the `RocksStorageNode` line is uncommented,
+and the URL specifies the correct database location. Make sure
+the other `StorageNode`s are commented out.
 
 
 Design
@@ -142,6 +167,10 @@ the `WordNode`s are replaced by `WordClassNode`s. There are additional
 generalizations that allow visual and audio data to be encoded in the
 same format, and for such sensory information to be correlated with
 language information. This is an area of ongoing research.
+
+The above example can be found in the file
+[atomese-dict.scm](../../data/demo-atomese/atomese-dict.scm)
+and can be used live, in the demo.
 
 System diagram
 --------------

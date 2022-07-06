@@ -9,6 +9,7 @@
 
 % -----------------------
 % CogStorageNode
+%
 % This will access an AtomSpace over the network, via a CogServer. The
 % CogServer must be running, and must be loaded with language data.
 %
@@ -19,6 +20,7 @@
 
 % -----------------------
 % RocksStorageNode
+%
 % This will access an AtomSpace on a local hard drive, stored in a
 % RocksDB database. The database must hold appropriate language data.
 %
@@ -29,13 +31,16 @@
 
 % -----------------------
 % FileStorageNode
+%
 % This will access a file containing an AtomSpace encoded with
 % s-expressions. The file must hold appropriate language data.
 %
 % The URL is just a path into the local filesystem.
 %
-% Uncomment this, and provide a correct file-path.
-#define storage-node "(FileStorageNode \"atomese-dict.scm\")";
+% If you are getting errors, then verify that the path below
+% is correct.
+
+#define storage-node "(FileStorageNode \"file:///usr/local/share/link-grammar/demo-atomese/atomese-dict.scm\")";
 
 % -----------------------
 % At least one bogus entry is needed.
