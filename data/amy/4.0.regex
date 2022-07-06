@@ -41,3 +41,8 @@ MOR-SUFF: /^=(?:(?=\p{Xan})\X|')+$/
 % the affixes (trailing commas, etc) correctly.
 JUNK: !/[[:punct:]]/
 JUNK: /^/
+
+% How to debug:
+% link-parser amy -m -v=10 -debug=anysplit.c
+% If needed, you can add to -debug (comma separated) one of more
+% from the following: separate_word,regex-morph.c,read-regex.c
