@@ -527,6 +527,8 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		lgdebug(D_AS+1, "(new)");
 		rndtried++;
 		as->scl[lutf].p_tried[sample_point] = true;
+		/* The regexes in the affix file can be used to reject partitioning
+		 * that break graphemes. */
 		if (morpheme_match(sent, word, lutf, &as->scl[lutf].sp[sample_point*as->nparts]))
 		{
 			as->scl[lutf].p_selected[sample_point] = true;

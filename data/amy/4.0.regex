@@ -12,6 +12,8 @@
 % (?:(?=\p{Xan}) specifies that it should start with a letter or number.
 % \x03 matches the internal representation of the dot in STEMSUBSCR
 % (See 4.0.affix).
+%
+% For information on graphemes see: http://www.unicode.org/reports/tr29/
 
 % Want to match apostrophes, for abbreviations (I'm I've, etc.) since
 % these cannot be auto-split with the current splitter.
