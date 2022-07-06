@@ -538,7 +538,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		}
 	}
 
-	lgdebug(D_AS, "Results: word '%s' (byte-length=%zu utf-chars=%zu): %zu/%zu:\n",
+	lgdebug(D_AS, "Results: word '%s' (utf-char=%zu utf-byte-length=%zu): %zu/%zu:\n",
 	        word, lutf, l, rndissued, nsplits);
 
 	for (i = 0; i < nsplits; i++)
