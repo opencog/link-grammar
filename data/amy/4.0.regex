@@ -8,14 +8,14 @@
 % Want to match apostrophes, for abbreviations (I'm I've, etc.) since
 % these cannot be auto-split with the current splitter.
 % Hyphenated words, and words with underbars in them, get split.
-ANY-WORD:  /^[[:alnum:]']+$/
-ANY-PUNCT:  /^[[:punct:]]+$/
+ANY-WORD:  /^(?:(?=\p{Xan})\X|')+$/
+ANY-PUNCT: /^[[:punct:]]+$/
 
 % Multi-part random morphology: match any string as prefix, stem, or
 % suffix.
-MOR-PREF: /^[[:alnum:]']+=$/
-MOR-STEM: /^[[:alnum:]']+.=$/
-MOR-SUFF: /^=[[:alnum:]']+$/
+MOR-PREF: /^(?:(?=\p{Xan})\X|')+=$/
+MOR-STEM: /^(?:(?=\p{Xan})\X|')+\x03=$/
+MOR-SUFF: /^=(?:(?=\p{Xan})\X|')+$/
 
 % Match anything that doesn't match the above.
 % Match anything that isn't white-space.

@@ -36,13 +36,16 @@
 % (null morphemes are not supported).
 
 % Regex to match the prefix
-"" : REGPRE+;
+%"" : REGPRE+;
+"^(?:(?=\p{Xan})\X|')+$" : REGPRE+;
 
 % Regex to match the middle parts (not including the prefix or the suffix)
-"": REGMID+;
+%"" : REGMID+;
+"^(?:(?=\p{Xan})\X|')+$" : REGMID+;
 %".{2,}": REGMID+;
 
 % Regex to match the suffix
-"": REGSUF+;
+%"" : REGSUF+;
+"^(?:(?=\p{Xan})\X|')+$" : REGSUF+;
 
 % End of Anysplit parameters
