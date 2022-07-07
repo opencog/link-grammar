@@ -41,7 +41,7 @@
 #include "anysplit.h"
 
 
-#define MAX_WORD_TO_SPLIT 31 /* in codepoints */
+#define MAX_WORD_TO_SPLIT 63 /* in codepoints */
 
 extern const char * const afdict_classname[];
 
