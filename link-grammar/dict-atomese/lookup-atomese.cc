@@ -89,7 +89,8 @@ void as_open(Dictionary dict, const char* store_str)
 
 	if (external_storage)
 	{
-		local->stnp = external_storage;
+		Handle hsn = local->asp->add_atom(external_storage);
+		local->stnp = StorageNodeCast(hsn);
 	}
 	else
 	{
