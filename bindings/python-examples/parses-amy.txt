@@ -29,3 +29,47 @@ O    +-----ANY----+------ANY-----+-----ANY-----+             +-------LL------+
 O    |            |              |             |             |               |
 OLEFT-WALL this[!ANY-WORD] is[!ANY-WORD] a[!ANY-WORD] te[!MOR-STEM].= =st[!MOR-SUFF]
 O
+
+% Test a Unicode script with graphemes.
+
+Iपरीकषण
+O
+O    +-----ANY-----+
+O    |             |
+OLEFT-WALL परीकषण[!ANY-WORD]
+O
+N
+O
+O    +--------------ANY-------------+
+O    |              +-------LL------+
+O    |              |               |
+OLEFT-WALL परीकष[!MOR-STEM].= =ण[!MOR-SUFF]
+O
+N
+O
+O    +--------------ANY-------------+
+O    |             +-------LL-------+
+O    |             |                |
+OLEFT-WALL परीक[!MOR-STEM].= =षण[!MOR-SUFF]
+O
+N
+O
+O    +-------------ANY------------+
+O    |            +-------LL------+
+O    |            |               |
+OLEFT-WALL प[!MOR-STEM].= =रीकषण[!MOR-SUFF]
+O
+N
+O
+O    +-------------ANY-------------+
+O    |             +-------LL------+
+O    |             |               |
+OLEFT-WALL परी[!MOR-STEM].= =कषण[!MOR-SUFF]
+O
+N
+O
+O    +--------------------ANY-------------------+
+O    |           +------PL------+-------LL------+
+O    |           |              |               |
+OLEFT-WALL प=[!MOR-PREF] री[!MOR-STEM].= =कषण[!MOR-SUFF]
+O

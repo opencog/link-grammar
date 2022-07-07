@@ -5,6 +5,9 @@
  %                                                                           %
  %***************************************************************************%
 
+% For Unicode scripts that use graphemes, use the corresponding regexes
+% from amy/4.0.regex.
+
 % Want to match apostrophes, for abbreviations (I'm I've, etc.) since
 % these cannot be auto-split with the current splitter.
 % Hyphenated words, and words with underbars in them, get split.

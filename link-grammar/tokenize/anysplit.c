@@ -527,6 +527,8 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		lgdebug(D_AS+1, "(new)");
 		rndtried++;
 		as->scl[lutf].p_tried[sample_point] = true;
+		/* The regexes in the affix file can be used to reject partitioning
+		 * that break graphemes. */
 		if (morpheme_match(sent, word, lutf, &as->scl[lutf].sp[sample_point*as->nparts]))
 		{
 			as->scl[lutf].p_selected[sample_point] = true;
@@ -538,7 +540,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		}
 	}
 
-	lgdebug(D_AS, "Results: word '%s' (byte-length=%zu utf-chars=%zu): %zu/%zu:\n",
+	lgdebug(D_AS, "Results: word '%s' (utf-char=%zu utf-byte-length=%zu): %zu/%zu:\n",
 	        word, lutf, l, rndissued, nsplits);
 
 	for (i = 0; i < nsplits; i++)
@@ -560,8 +562,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
 				affix[b] = '\0';
 			}
-			else
-			if (0 == cpos)   /* The first, but not the only morpheme */
+			else if (0 == cpos)   /* The first, but not the only morpheme */
 			{
 				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
 				affix[b] = '\0';
