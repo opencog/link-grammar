@@ -24,16 +24,27 @@ extern "C" {
 #include "lookup-atomese.h"
 };
 
+#include "dict-atomese.h"
+
 using namespace opencog;
 
 class Local
 {
 public:
+	bool using_external_as;
 	const char* node_str; // (StorageNode \"foo://bar/baz\")
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;
 	Handle linkp;
 };
+
+/// Shared global
+static AtomSpacePtr external_atomspace;
+
+void dict_set_atomspace(Dictionary dict, AtomSpacePtr asp)
+{
+	external_atomspace = asp;
+}
 
 /// Open a connection to a StorageNode.
 void as_open(Dictionary dict, const char* store_str)
@@ -49,11 +60,28 @@ void as_open(Dictionary dict, const char* store_str)
 
 	local->node_str = string_set_add(unescaped, dict->string_set);
 
-	local->asp = createAtomSpace();
+	// If an external atompsace is specified, then use that.
+	if (external_atomspace)
+	{
+		local->asp = external_atomspace;
+		local->using_external_as = true;
+	}
+	else
+	{
+		local->using_external_as = false;
+	}
 
 	// Create the connector predicate.
 	local->linkp = local->asp->add_node(PREDICATE_NODE,
 		"*-LG connector string-*");
+
+	dict->as_server = (void*) local;
+
+	if (local->using_external_as) return;
+
+	// --------------------
+	// If we are here, then we manage our own private AtomSpace.
+	local->asp = createAtomSpace();
 
 	Handle hsn = Sexpr::decode_atom(local->node_str);
 	hsn = local->asp->add_atom(hsn);
@@ -82,8 +110,6 @@ void as_open(Dictionary dict, const char* store_str)
 		printf("Connected to %s\n", local->node_str);
 	else
 		printf("Failed to connect to %s\n", local->node_str);
-
-	dict->as_server = (void*) local;
 }
 
 /// Close the connection to the cogserver.
@@ -91,7 +117,9 @@ void as_close(Dictionary dict)
 {
 	if (nullptr == dict->as_server) return;
 	Local* local = (Local*) (dict->as_server);
-	local->stnp->close();
+	if (not local->using_external_as)
+		local->stnp->close();
+
 	delete local;
 	dict->as_server = nullptr;
 
@@ -377,8 +405,14 @@ void as_clear_cache(Dictionary dict)
 	// Easiest way to do this is to just close and reopen
 	// the connection.
 	const char* storn = local->node_str;
+
+	AtomSpacePtr save = external_atomspace;
+	if (local->using_external_as)
+		external_atomspace = local->asp;
+
 	as_close(dict);
 	as_open(dict, storn);
+	external_atomspace = save;
 	as_boolean_lookup(dict, LEFT_WALL_WORD);
 }
 #endif /* HAVE_ATOMESE */

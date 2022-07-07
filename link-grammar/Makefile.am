@@ -165,8 +165,9 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/word-file.h            \
 	dict-ram/dict-ram.h              \
 	dict-sql/read-sql.h              \
-	dict-atomese/read-atomese.h      \
+	dict-atomese/dict-atomese.h      \
 	dict-atomese/lookup-atomese.h    \
+	dict-atomese/read-atomese.h      \
 	disjunct-utils.h                 \
 	error.h                          \
 	externs.h                        \
@@ -210,6 +211,7 @@ liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS =   \
 	link-features.h                  \
 	link-includes.h                  \
+	dict-atomese/dict-atomese.h      \
 	dict-common/dict-api.h           \
 	dict-common/dict-defines.h       \
 	dict-common/dict-structures.h
