@@ -45,18 +45,18 @@
 % These regexes use the PCRE2 pattern syntax.
 % The LG library must be configured with PCRE2 in order to use them.
 % For ASCII input, the empty regexes can be used.
-% See the commenst in 4.0.affix.
+% See the comments in 4.0.affix.
 
 %"" : REGPRE+;
-"^(?:(?=\p{Xan})\X|')+$" : REGPRE+;
+"^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$" : REGPRE+;
 
 % Regex to match the middle parts.
 %"" : REGMID+;
-"^(?:(?=\p{Xan})\X|')+$" : REGMID+;
+"^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$" : REGMID+;
 %".{2,}": REGMID+;
 
 % Regex to match the suffix.
 %"" : REGSUF+;
-"^(?:(?=\p{Xan})\X|')+$" : REGSUF+;
+"^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$" : REGSUF+;
 
 % End of Anysplit parameters.
