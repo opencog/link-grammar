@@ -1,6 +1,6 @@
 Link Grammar Parser
 ===================
-***Version 5.10.5***
+***Version 5.11.0***
 
 ![Main](https://github.com/opencog/link-grammar/actions/workflows/main.yml/badge.svg)
 ![node.js](https://github.com/opencog/link-grammar/actions/workflows/bindings-js.yml/badge.svg)

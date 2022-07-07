@@ -68,6 +68,7 @@ void as_open(Dictionary dict, const char* store_str)
 	}
 	else
 	{
+		local->asp = createAtomSpace();
 		local->using_external_as = false;
 	}
 
@@ -81,7 +82,6 @@ void as_open(Dictionary dict, const char* store_str)
 
 	// --------------------
 	// If we are here, then we manage our own private AtomSpace.
-	local->asp = createAtomSpace();
 
 	Handle hsn = Sexpr::decode_atom(local->node_str);
 	hsn = local->asp->add_atom(hsn);

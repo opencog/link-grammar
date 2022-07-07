@@ -16,6 +16,7 @@ extern "C" {
 };
 
 using namespace opencog;
-void dict_set_atomspace(Dictionary dict, AtomSpacePtr);
+link_public_api(void)
+	dict_set_atomspace(Dictionary dict, AtomSpacePtr);
 
 #endif // _LG_DICT_ATOMESE_H_
