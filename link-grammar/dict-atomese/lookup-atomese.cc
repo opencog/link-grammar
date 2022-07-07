@@ -40,10 +40,12 @@ public:
 
 /// Shared global
 static AtomSpacePtr external_atomspace;
+static StorageNodePtr external_storage;
 
-void dict_set_atomspace(Dictionary dict, AtomSpacePtr asp)
+void lg_config_atomspace(AtomSpacePtr asp, StorageNodePtr sto)
 {
 	external_atomspace = asp;
+	external_storage = sto;
 }
 
 /// Open a connection to a StorageNode.
@@ -64,6 +66,8 @@ void as_open(Dictionary dict, const char* store_str)
 	if (external_atomspace)
 	{
 		local->asp = external_atomspace;
+		Handle hsn = local->asp->add_atom(external_storage);
+		local->stnp = StorageNodeCast(hsn);
 		local->using_external_as = true;
 	}
 	else
@@ -83,33 +87,42 @@ void as_open(Dictionary dict, const char* store_str)
 	// --------------------
 	// If we are here, then we manage our own private AtomSpace.
 
-	Handle hsn = Sexpr::decode_atom(local->node_str);
-	hsn = local->asp->add_atom(hsn);
-	local->stnp = StorageNodeCast(hsn);
+	if (external_storage)
+	{
+		local->stnp = external_storage;
+	}
+	else
+	{
+		Handle hsn = Sexpr::decode_atom(local->node_str);
+		hsn = local->asp->add_atom(hsn);
+		local->stnp = StorageNodeCast(hsn);
+	}
+
+	const char* stoname = local->stnp->to_short_string().c_str();
 
 #define SHLIB_CTOR_HACK 1
 #ifdef SHLIB_CTOR_HACK
 	/* The cast below forces the shared lib constructor to run. */
 	/* That's needed to force the factory to get installed. */
 	/* We need a more elegant solution to this. */
-	Type snt = hsn->get_type();
+	Type snt = local->stnp->get_type();
 	if (COG_STORAGE_NODE == snt)
-		local->stnp = CogStorageNodeCast(hsn);
+		local->stnp = CogStorageNodeCast(local->stnp);
 	else if (ROCKS_STORAGE_NODE == snt)
-		local->stnp = RocksStorageNodeCast(hsn);
+		local->stnp = RocksStorageNodeCast(local->stnp);
 	else if (FILE_STORAGE_NODE == snt)
-		local->stnp = FileStorageNodeCast(hsn);
+		local->stnp = FileStorageNodeCast(local->stnp);
 	else
-		printf("Unknown storage %s\n", local->node_str);
+		printf("Unknown storage %s\n", stoname);
 #endif
 
 	local->stnp->open();
 
 	// XXX FIXME -- if we cannot connect, then should hard-fail.
 	if (local->stnp->connected())
-		printf("Connected to %s\n", local->node_str);
+		printf("Connected to %s\n", stoname);
 	else
-		printf("Failed to connect to %s\n", local->node_str);
+		printf("Failed to connect to %s\n", stoname);
 }
 
 /// Close the connection to the cogserver.
@@ -145,7 +158,7 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 
 	// Are there any Sections in the local atomspace?
 	size_t nsects = wrd->getIncomingSetSizeByType(SECTION);
-	if (0 == nsects)
+	if (0 == nsects and local->stnp)
 	{
 		local->stnp->fetch_incoming_by_type(wrd, SECTION);
 		local->stnp->barrier();
@@ -406,13 +419,18 @@ void as_clear_cache(Dictionary dict)
 	// the connection.
 	const char* storn = local->node_str;
 
-	AtomSpacePtr save = external_atomspace;
+	AtomSpacePtr savea = external_atomspace;
+	StorageNodePtr saves = external_storage;
 	if (local->using_external_as)
+	{
 		external_atomspace = local->asp;
+		external_storage = local->stnp;
+	}
 
 	as_close(dict);
 	as_open(dict, storn);
-	external_atomspace = save;
+	external_atomspace = savea;
+	external_storage = saves;
 	as_boolean_lookup(dict, LEFT_WALL_WORD);
 }
 #endif /* HAVE_ATOMESE */
