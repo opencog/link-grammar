@@ -20,6 +20,7 @@
 extern "C" {
 #include "../link-includes.h"            // For Dictionary
 #include "../dict-common/dict-common.h"  // for Dictionary_s
+#include "../dict-common/dict-utils.h"   // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
 #include "lookup-atomese.h"
 };
@@ -315,7 +316,7 @@ void print_section(Dictionary dict, const Handle& sect)
 	const Handle& tgt = ctcr->getOutgoingAtom(0);                  \
 	                                                               \
 	/* The link is the connection of both of these. */             \
-	const Handle& lnk = local->asp->add_link(SET_LINK, wrd, tgt);  \
+	const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt); \
 	                                                               \
 	/* Assign an upper-case name to the link. */                   \
 	std::string slnk = get_linkname(local, lnk);                   \
@@ -328,27 +329,13 @@ void print_section(Dictionary dict, const Handle& sect)
 	}                                                              \
 	andex = make_and_node(dict->Exp_pool, e, andex);
 
-Dict_node * as_lookup_list(Dictionary dict, const char *s)
+static Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
-	// Do we already have this word cached? If so, pull from
-	// the cache.
-	Dict_node * dn = dict_node_lookup(dict, s);
-
-	if (dn) return dn;
-
-	const char* ssc = string_set_add(s, dict->string_set);
 	Local* local = (Local*) (dict->as_server);
-
-	if (0 == strcmp(s, LEFT_WALL_WORD))
-		s = "###LEFT-WALL###";
-
-	Handle wrd = local->asp->get_node(WORD_NODE, s);
-	if (nullptr == wrd) return nullptr;
-
 	Exp* exp = nullptr;
 
 	// Loop over all Sections on the word.
-	HandleSeq sects = wrd->getIncomingSetByType(SECTION);
+	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
 	{
 		Exp* andex = nullptr;
@@ -386,6 +373,27 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		else
 			exp = make_or_node(dict->Exp_pool, exp, andex);
 	}
+	return exp;
+}
+
+Dict_node * as_lookup_list(Dictionary dict, const char *s)
+{
+	// Do we already have this word cached? If so, pull from
+	// the cache.
+	Dict_node * dn = dict_node_lookup(dict, s);
+
+	if (dn) return dn;
+
+	const char* ssc = string_set_add(s, dict->string_set);
+	Local* local = (Local*) (dict->as_server);
+
+	if (0 == strcmp(s, LEFT_WALL_WORD))
+		s = "###LEFT-WALL###";
+
+	Handle wrd = local->asp->get_node(WORD_NODE, s);
+	if (nullptr == wrd) return nullptr;
+
+	Exp* exp = make_exprs(dict, wrd);
 
 	dn = (Dict_node*) malloc(sizeof(Dict_node));
 	memset(dn, 0, sizeof(Dict_node));
@@ -395,8 +403,8 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	// Cache the result; avoid repeated lookups.
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
-printf("duuude as_lookup_list %d for >>%s<< had=%lu\n",
-dict->num_entries, ssc, sects.size());
+printf("duuude as_lookup_list %d for >>%s<< had=%d\n",
+dict->num_entries, ssc, size_of_expression(exp));
 
 	// Rebalance the tree every now and then.
 	if (0 == dict->num_entries% 30)
