@@ -173,10 +173,27 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
 	// Are there any Sections for this word in the local atomspace?
-	size_t nsects = count_sections(local, wrd);
+	size_t nwrdsects = count_sections(local, wrd);
 
-printf("duuude as_boolean_lookup for >>%s<< found sects=%lu\n", s, nsects);
-	return 0 != nsects;
+	// Does this word belong to any classes?
+	size_t nclass = wrd->getIncomingSetSizeByType(MEMBER_LINK);
+	if (0 == nclass and local->stnp)
+	{
+		local->stnp->fetch_incoming_by_type(wrd, MEMBER_LINK);
+		local->stnp->barrier();
+	}
+
+	size_t nclssects = 0;
+	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+	{
+		const Handle& wcl = memb->getOutgoingAtom(1);
+		if (WORD_CLASS_NODE != wcl->get_type()) continue;
+		nclssects += count_sections(local, wcl);
+	}
+
+printf("duuude as_boolean_lookup for >>%s<< found class=%lu sects=%lu %lu\n",
+s, nclass, nwrdsects, nclssects);
+	return 0 != (nwrdsects + nclssects);
 }
 
 // ===============================================================
@@ -359,8 +376,10 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 			if ('-' == cdir) continue;
 			INNER_LOOP;
 		}
+#if DEBUG
 		print_section(dict, sect);
 		printf("Word %s expression %s\n", ssc, lg_exp_stringify(andex));
+#endif
 
 		if (nullptr == exp)
 			exp = andex;
