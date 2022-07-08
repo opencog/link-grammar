@@ -9,37 +9,37 @@
 % The LG library must be configured with PCRE2 in order to use them.
 
 % \X matches any Unicode grapheme.
-% (?:(?=\p{Xan}) specifies that it should start with a letter or number.
-% Similarly, \pM allows it to start with a mark character.
 % Since most of the script-specific punctuation characters are not in
 % the affix-punc file, they are allowed here to join to the end word/parts
-% Most probably these regexes still reject valid word graphemes in some languages.
 %
 % For information on graphemes see: http://www.unicode.org/reports/tr29/
 
-% Want to match apostrophes, for abbreviations (I'm I've, etc.) since
-% these cannot be auto-split with the current splitter.
-% Hyphenated words, and words with underbars in them, get split.
-ANY-WORD:  /^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$/
+% Hyphenated words, contractions, and words with underbars in them, get split,
+% along with many other punctuation characters that get strip from start
+% and end of words. See the "any/affix-punc" file. These punctuation
+% characters will match here.
 ANY-PUNCT: /^[[:punct:]]+$/
 
-% Multi-part random morphology: match any string as prefix, stem, or
-% suffix.
+% Multi-part random morphology: match any string as prefix, stem, or suffix.
 % \x03 matches the internal representation of the dot in STEMSUBSCR
 % (See 4.0.affix).
 
-MOR-STEM: /^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*\x03=$/
-MOR-PREF: /^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*=$/
-MOR-SUFF: /^=(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*/
+MOR-STEM: /^\X+\x03=$/
+MOR-PREF: /^\X+=$/
+MOR-SUFF: /^=\X+/
 
-% For ASCII input, the following is enough (and it works even if the
-% LG library is configured with a regex library other then PCRE2).
-% To use it, uncomment it out and comment out the previous definitions.
-% ANY-WORD: /^[[:alnum:]']+$/
+% Reject anything that contains punctuation, so that the tokenizer will
+% have a chance to split them off as affixes.
+% Most of the script-dependent punctuation characters are not mentioned in
+% the "any/affix-punc" file and thus may be included in words.
+ANY-WORD: /^[^[:punct:]]+$/
+
+% For ASCII input and non-PCRE2 regex libraries you can use these instead:
+% ANY-WORD: /^[[:alnum:]]+$/
 % ANY-PUNCT: /^[[:punct:]]+$/
-% MOR-PREF: /^[[:alnum:]']+=$/
-% MOR-STEM: /^[[:alnum:]']+.=$/
-% MOR-SUFF: /^=[[:alnum:]']+$/
+% MOR-PREF: /^[[:alnum:]]+=$/
+% MOR-STEM: /^[[:alnum:]]+.=$/
+% MOR-SUFF: /^=[[:alnum:]]+$/
 
 % Match anything that doesn't match the above.
 % Match anything that isn't white-space.

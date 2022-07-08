@@ -48,15 +48,15 @@
 % See the comments in 4.0.affix.
 
 %"" : REGPRE+;
-"^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$" : REGPRE+;
+"^\X+$" : REGPRE+;
 
 % Regex to match the middle parts.
 %"" : REGMID+;
-"^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$" : REGMID+;
+"^\X+$" : REGMID+;
 %".{2,}": REGMID+;
 
 % Regex to match the suffix.
 %"" : REGSUF+;
-"^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$" : REGSUF+;
+"^\X+$" : REGSUF+;
 
 % End of Anysplit parameters.
