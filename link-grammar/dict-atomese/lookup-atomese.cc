@@ -311,25 +311,32 @@ void print_section(Dictionary dict, const Handle& sect)
 
 // ===============================================================
 
-#define INNER_LOOP                                                \
-	/* The connection target is the first Atom in the connector */ \
-	const Handle& tgt = ctcr->getOutgoingAtom(0);                  \
-	                                                               \
-	/* The link is the connection of both of these. */             \
-	const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt); \
-	                                                               \
-	/* Assign an upper-case name to the link. */                   \
-	std::string slnk = get_linkname(local, lnk);                   \
-	                                                               \
-	Exp* e = make_connector_node(dict, dict->Exp_pool,             \
-	                 slnk.c_str(), cdir, false);                   \
-	if (nullptr == andex) {                                        \
-		andex = e;                                                  \
-		continue;                                                   \
-	}                                                              \
-	andex = make_and_node(dict->Exp_pool, e, andex);
+#define INNER_LOOP                                                   \
+   std::string slnk;                                                 \
+                                                                     \
+   /* The connection target is the first Atom in the connector */    \
+   const Handle& tgt = ctcr->getOutgoingAtom(0);                     \
+                                                                     \
+   /* If it and the germ are both words, we have to fake a link */   \
+   if (iswrd and WORD_NODE == tgt->get_type()) {                     \
+                                                                     \
+      /* The link is the connection of both of these. */             \
+      const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt); \
+                                                                     \
+      /* Assign an upper-case name to the link. */                   \
+      slnk = get_linkname(local, lnk);                               \
+   } else {                                                          \
+      slnk = get_linkname(local, tgt);                               \
+   }                                                                 \
+   Exp* e = make_connector_node(dict, dict->Exp_pool,                \
+                    slnk.c_str(), cdir, false);                      \
+   if (nullptr == andex) {                                           \
+      andex = e;                                                     \
+      continue;                                                      \
+   }                                                                 \
+   andex = make_and_node(dict->Exp_pool, e, andex);
 
-static Exp* make_exprs(Dictionary dict, const Handle& germ)
+static Exp* make_exprs(Dictionary dict, const Handle& germ, bool iswrd)
 {
 	Local* local = (Local*) (dict->as_server);
 	Exp* exp = nullptr;
@@ -393,7 +400,19 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	Handle wrd = local->asp->get_node(WORD_NODE, s);
 	if (nullptr == wrd) return nullptr;
 
-	Exp* exp = make_exprs(dict, wrd);
+	// Get expressions, where the word itself is the germ.
+	Exp* exp = make_exprs(dict, wrd, true);
+
+	// Get expressions, where the word is in some class.
+	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+	{
+		const Handle& wcl = memb->getOutgoingAtom(1);
+		if (WORD_CLASS_NODE != wcl->get_type()) continue;
+
+		Exp* exp = make_exprs(dict, wcl, false);
+printf("duuude as_lookup_list class for >>%s<< had=%d\n", ssc,
+size_of_expression(exp));
+	}
 
 	dn = (Dict_node*) malloc(sizeof(Dict_node));
 	memset(dn, 0, sizeof(Dict_node));
