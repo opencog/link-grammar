@@ -187,27 +187,6 @@ static int split_and_cache(int word_length, int nparts, split_cache *scl)
 	return maxindex+1;
 }
 
-void free_anysplit(Dictionary afdict)
-{
-	size_t i;
-	anysplit_params *as = afdict->anysplit;
-
-	if (NULL == as) return;
-
-	for (i = 0; i < ARRAY_SIZE(as->scl); i++)
-	{
-		if (NULL == as->scl[i].sp) continue;
-		free(as->scl[i].sp);
-		free(as->scl[i].p_selected);
-		free(as->scl[i].p_tried);
-	}
-	free_regexs(as->regpre);
-	free_regexs(as->regmid);
-	free_regexs(as->regsuf);
-	free(as);
-	afdict->anysplit = NULL;
-}
-
 /*
  * Returns: Number of splits.
  */
@@ -327,6 +306,26 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 	return regex_root;
 }
 
+void free_anysplit(Dictionary afdict)
+{
+	size_t i;
+	anysplit_params *as = afdict->anysplit;
+
+	if (NULL == as) return;
+
+	for (i = 0; i < ARRAY_SIZE(as->scl); i++)
+	{
+		if (NULL == as->scl[i].sp) continue;
+		free(as->scl[i].sp);
+		free(as->scl[i].p_selected);
+		free(as->scl[i].p_tried);
+	}
+	free_regexs(as->regpre);
+	free_regexs(as->regmid);
+	free_regexs(as->regsuf);
+	free(as);
+	afdict->anysplit = NULL;
+}
 
 /**
  * Affix classes:
