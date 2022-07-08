@@ -145,6 +145,20 @@ void as_close(Dictionary dict)
 
 // ===============================================================
 
+static size_t count_sections(Local* local, const Handle& germ)
+{
+	// Are there any Sections in the local atomspace?
+	size_t nsects = germ->getIncomingSetSizeByType(SECTION);
+	if (0 == nsects and local->stnp)
+	{
+		local->stnp->fetch_incoming_by_type(germ, SECTION);
+		local->stnp->barrier();
+	}
+
+	nsects = germ->getIncomingSetSizeByType(SECTION);
+	return nsects;
+}
+
 /// Return true if the given word can be found in the dictionary,
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
@@ -158,15 +172,9 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	Local* local = (Local*) (dict->as_server);
 	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
-	// Are there any Sections in the local atomspace?
-	size_t nsects = wrd->getIncomingSetSizeByType(SECTION);
-	if (0 == nsects and local->stnp)
-	{
-		local->stnp->fetch_incoming_by_type(wrd, SECTION);
-		local->stnp->barrier();
-	}
+	// Are there any Sections for this word in the local atomspace?
+	size_t nsects = count_sections(local, wrd);
 
-	nsects = wrd->getIncomingSetSizeByType(SECTION);
 printf("duuude as_boolean_lookup for >>%s<< found sects=%lu\n", s, nsects);
 	return 0 != nsects;
 }
