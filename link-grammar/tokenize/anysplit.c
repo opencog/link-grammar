@@ -245,13 +245,13 @@ static bool morpheme_match(Sentence sent,
 	int p;
 	Regex_node *re;
 	size_t blen = strlen(word);
-	char *prefix_string = alloca(blen+1);
+	char *word_part = alloca(blen+1);
 
 	lgdebug(+D_MM, "word=%s: ", word);
 	for (p = 0; p < as->nparts; p++)
 	{
-		size_t b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
-		prefix_string[b] = '\0';
+		size_t b = utf8_strncpy(word_part, &word[bos], pl[p]-cpos);
+		word_part[b] = '\0';
 		bos += b;
 
 		/* For flexibility, REGRPE is matched only to the prefix part,
@@ -260,10 +260,10 @@ static bool morpheme_match(Sentence sent,
 		if (0 == p) re = as->regpre;
 		else if (pl[p] == (int) lutf) re = as->regsuf;
 		else re = as->regmid;
-		lgdebug(D_MM, "re=%s part%d=%s: ", re?re->name:"(nil)", p, prefix_string);
+		lgdebug(D_MM, "re=%s part%d=%s: ", re?re->name:"(nil)", p, word_part);
 
 		/* A NULL regex always matches */
-		if ((NULL != re) && (NULL == match_regex(re, prefix_string)))
+		if ((NULL != re) && (NULL == match_regex(re, word_part)))
 		{
 			lgdebug(D_MM, "No match\n");
 			return false;
