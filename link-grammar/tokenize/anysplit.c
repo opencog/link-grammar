@@ -570,7 +570,6 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 
 			bos += b;
 			cpos = pl[p];
-			// if (cpos == lutf) break; /* Same thing as below...*/
 			if (bos == l) break;
 		}
 
