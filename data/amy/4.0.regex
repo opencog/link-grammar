@@ -10,22 +10,27 @@
 
 % \X matches any Unicode grapheme.
 % (?:(?=\p{Xan}) specifies that it should start with a letter or number.
-% \x03 matches the internal representation of the dot in STEMSUBSCR
-% (See 4.0.affix).
+% Similarly, \pM allows it to start with a mark character.
+% Since most of the script-specific punctuation characters are not in
+% the affix-punc file, they are allowed here to join to the end word/parts
+% Most probably these regexes still reject valid word graphemes in some languages.
 %
 % For information on graphemes see: http://www.unicode.org/reports/tr29/
 
 % Want to match apostrophes, for abbreviations (I'm I've, etc.) since
 % these cannot be auto-split with the current splitter.
 % Hyphenated words, and words with underbars in them, get split.
-ANY-WORD:  /^(?:(?=\p{Xan})\X|')+$/
+ANY-WORD:  /^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$/
 ANY-PUNCT: /^[[:punct:]]+$/
 
 % Multi-part random morphology: match any string as prefix, stem, or
 % suffix.
-MOR-PREF: /^(?:(?=\p{Xan})\X|')+=$/
-MOR-STEM: /^(?:(?=\p{Xan})\X|')+\x03=$/
-MOR-SUFF: /^=(?:(?=\p{Xan})\X|')+$/
+% \x03 matches the internal representation of the dot in STEMSUBSCR
+% (See 4.0.affix).
+
+MOR-STEM: /^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*\x03=$/
+MOR-PREF: /^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*=$/
+MOR-SUFF: /^=(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*/
 
 % For ASCII input, the following is enough (and it works even if the
 % LG library is configured with a regex library other then PCRE2).
