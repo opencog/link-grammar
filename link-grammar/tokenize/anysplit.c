@@ -433,9 +433,12 @@ bool anysplit_init(Dictionary afdict)
 #define D_AS 5
 bool anysplit(Sentence sent, Gword *unsplit_word)
 {
-	const char * word = unsplit_word->subword;
 	Dictionary afdict = sent->dict->affix_table;
-	anysplit_params *as;
+	if (NULL == afdict) return false;
+	anysplit_params * as = afdict->anysplit;
+	if ((NULL == as) || (0 == as->nparts)) return false; /* Anysplit disabled */
+
+	const char * word = unsplit_word->subword;
 	Afdict_class * stemsubscr;
 
 	size_t l = strlen(word);
@@ -451,11 +454,6 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	unsigned int seed = sent->rand_state;
 	char *affix = alloca(l+2+1); /* word + ".=" + NUL: Max. affix length */
 	bool use_sampling = true;
-
-	if (NULL == afdict) return false;
-	as = afdict->anysplit;
-
-	if ((NULL == as) || (0 == as->nparts)) return false; /* Anysplit disabled */
 
 	if (lutf > MAX_WORD_TO_SPLIT)
 	{
