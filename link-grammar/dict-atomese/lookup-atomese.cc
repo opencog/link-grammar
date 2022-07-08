@@ -99,7 +99,8 @@ void as_open(Dictionary dict, const char* store_str)
 		local->stnp = StorageNodeCast(hsn);
 	}
 
-	const char* stoname = local->stnp->to_short_string().c_str();
+	std::string stone = local->stnp->to_short_string();
+	const char * stoname = stone.c_str();
 
 #define SHLIB_CTOR_HACK 1
 #ifdef SHLIB_CTOR_HACK
