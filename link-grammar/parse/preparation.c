@@ -44,8 +44,7 @@ static int set_dist_fields(Connector * c, size_t w, int delta)
 /**
  * Initialize the word fields of the connectors,
  * eliminate those disjuncts that are so long, that they
- * would need to connect past the end of the sentence,
- * and mark the shallow connectors.
+ * would need to connect past the end of the sentence.
  */
 static void setup_connectors(Sentence sent)
 {
@@ -67,9 +66,6 @@ static void setup_connectors(Sentence sent)
 			{
 				d->next = head;
 				head = d;
-				if (NULL != d->left) d->left->shallow = true;
-				if (NULL != d->right) d->right->shallow = true;
-
 			}
 		}
 		sent->word[w].d = head;
@@ -96,7 +92,7 @@ void gword_record_in_connector(Sentence sent)
  * Turn sentence expressions into disjuncts.
  * Sentence expressions must have been built, before calling this routine.
  */
-static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
+static void build_sentence_disjuncts(Sentence sent, float cost_cutoff,
                                      Parse_Options opts)
 {
 	Disjunct * d;
@@ -110,6 +106,10 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
 	                   /*num_elements*/8192, sizeof(Connector),
 	                   /*zero_out*/true, /*align*/false, /*exact*/false);
 
+#ifdef DEBUG
+	size_t num_con_alloced = pool_num_elements_alloced(sent->Connector_pool);
+#endif
+
 	for (w = 0; w < sent->length; w++)
 	{
 		d = NULL;
@@ -121,6 +121,19 @@ static void build_sentence_disjuncts(Sentence sent, double cost_cutoff,
 		}
 		sent->word[w].d = d;
 	}
+
+#ifdef DEBUG
+	unsigned int dcnt, ccnt;
+	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
+	lgdebug(+D_PREP, "%u disjucts, %u connectors (%zu allocated)\n",
+	        dcnt, ccnt,
+	        pool_num_elements_alloced(sent->Connector_pool) - num_con_alloced);
+#endif
+
+	/* Delete the memory pools created in build_disjuncts_for_exp(). */
+	pool_delete(sent->Clause_pool);
+	pool_delete(sent->Tconnector_pool);
+	sent->Clause_pool = NULL;
 }
 
 

@@ -331,6 +331,7 @@ bison.s
 bistro.n
 bitcoin.n
 bite.n
+bitfield.n
 bitmap.n
 bivouac.n
 blabbermouth.n
@@ -644,6 +645,7 @@ bugbear.n
 buggy.n
 bugle.s
 bug.n
+build.s
 bulb.n
 bulge.n
 bulldog.n
@@ -1011,6 +1013,7 @@ chancel.n
 chancery.n
 chandelier.n
 changeling.n
+changelog.n
 changeover.n
 changer.n
 change.s
@@ -1532,6 +1535,7 @@ continent.n
 contingency.s
 contingent.n
 continuation.s
+continue.n
 continuum.n
 contortion.n
 contour.n
@@ -1957,6 +1961,7 @@ debenture.s
 debit.n
 debt.s
 debugger.n
+debug.n
 debut.n
 decameter.n
 decanter.n
@@ -2193,6 +2198,7 @@ dirigible.n
 dirndl.n
 disability.s
 disadvantage.s
+disaffection.n
 disagreement.s
 disambiguation.n
 disappearance.n
@@ -2201,6 +2207,7 @@ disassembly.n
 disaster.s
 disbursement.s
 discard.n
+discarding.n
 discharge.s
 disciple.n
 discipline.s
@@ -2229,6 +2236,7 @@ disincentive.n
 disinclination.s
 disinfectant.s
 disjunction.n
+disjunct.n
 disk.n
 dislocation.s
 disloyalty.s
@@ -2517,6 +2525,7 @@ fake.n
 fakir.n
 falcon.n
 fall.s
+fallback.n
 fallthrough.n
 falsehood.s
 falsetto.s
@@ -3415,6 +3424,7 @@ harpsichord.s
 harrow.n
 hart.n
 harvest.n
+hash.n
 hashtag.n
 hassle.n
 hatband.n
@@ -4276,6 +4286,7 @@ mainstay.n
 mainstream.n
 maisonnette.n
 makefile.n
+make_file
 makeover.n
 makeshift.n
 make-up.s
@@ -4468,6 +4479,7 @@ mentality.s
 mention.s
 mentorship.n
 menu.n
+merge.n
 merger.s
 meridian.n
 meringue.s
@@ -5106,6 +5118,7 @@ partisan.n
 partition.s
 partnership.s
 partridge.s
+part.s
 party.n
 parvenu.n
 pasha.n
@@ -5562,6 +5575,7 @@ portrait.n
 portrayal.n
 port.s
 pose.n
+positive.n
 posse.n
 possession.s
 possum.n
@@ -5624,6 +5638,7 @@ precis.s
 preconception.n
 precondition.n
 precursor.n
+predate.n
 predetermination.n
 predicament.n
 predicate.n
@@ -5639,6 +5654,7 @@ preference.s
 prefix.n
 preform.n
 pregnancy.s
+prehistory.n
 prejudgement.n
 prejudice.s
 prelate.n
@@ -5794,6 +5810,7 @@ prow.n
 proxy.s
 prude.n
 prune.n
+pruning.n
 psalm.n
 psalter.n
 psaltery.s
@@ -6087,6 +6104,7 @@ redeclaration.n
 redevelopment.s
 redhead.n
 rediscovery.s
+redistribution.n
 redoubt.n
 redraft.n
 redshirt.n
@@ -6456,6 +6474,7 @@ runaway.n
 rundown.n
 rune.n
 run.n
+runing.n
 runin.n
 run-in.n
 runoff.n
@@ -7767,7 +7786,7 @@ target.n
 tariff.n
 tarogato.s
 tarpaulin.n
-tar.s
+tar.n
 tartan.n
 tart.n
 tarweed.n
@@ -8021,6 +8040,7 @@ tonsure.n
 toolbar.n
 toolbox.n
 toolkit.n
+toolset.n
 tool.n
 toothache.s
 toothbrush.n
@@ -8184,7 +8204,7 @@ trigger.n
 trill.n
 trilogy.n
 trimester.n
-trim.s
+trim.n
 trinity.n
 trinket.n
 trio.n
@@ -8376,6 +8396,7 @@ vermouth.s
 vernacular.n
 verse.s
 version.n
+versioning.n
 vertebrate.n
 vertex.n
 vertex.s

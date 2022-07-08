@@ -445,12 +445,27 @@ bool check_db(const char *lang)
 {
 	char *dbname = join_path (lang, "dict.db");
 	bool retval = file_exists(dbname);
-	free(dbname);
 #if !HAVE_SQLITE3
 	if (retval)
 		prt_error("Error: Could not open dictionary \"%s\" "
 		          "(not configured with SQLite support)\n", dbname);
 #endif /* !HAVE_SQLITE3 */
+	free(dbname);
+	return retval;
+}
+
+#define ATOMESE_DICT "storage.dict"   /* See also same define elsewhere */
+
+bool check_atomspace(const char *lang)
+{
+	char *cfgfile = join_path (lang, ATOMESE_DICT);
+	bool retval = file_exists(cfgfile);
+#if !HAVE_ATOMESE
+	if (retval)
+		prt_error("Error: Could not open dictionary \"%s\" "
+		          "(not configured with AtomSpace support)\n", cfgfile);
+#endif /* !HAVE_ATOMESE */
+	free(cfgfile);
 	return retval;
 }
 
@@ -517,11 +532,9 @@ char *get_file_contents(const char * dict_name)
 
 			if (err)
 			{
-				char errbuf[64];
-
-				lg_strerror(errno, errbuf, sizeof(errbuf));
+				prt_error("Error: %s: Read error (%s)\n", dict_name,
+				          syserror_msg(errno));
 				fclose(fp);
-				prt_error("Error: %s: Read error (%s)\n", dict_name, errbuf);
 				free(contents);
 				return NULL;
 			}

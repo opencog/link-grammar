@@ -30,7 +30,7 @@
 #include "utilities.h"                  // GNU_UNUSED
 /* ======================================================================== */
 
-bool cost_eq(double cost1, double cost2)
+bool cost_eq(float cost1, float cost2)
 {
 	return (fabs(cost1 - cost2) < cost_epsilon);
 }
@@ -38,7 +38,7 @@ bool cost_eq(double cost1, double cost2)
 /**
  * Convert cost to a string with at most cost_max_dec_places decimal places.
  */
-const char *cost_stringify(double cost)
+const char *cost_stringify(float cost)
 {
 	static TLS char buf[16];
 
@@ -119,7 +119,7 @@ static void print_expression_tag_end(Dictionary dict, dyn_str *e, const Exp *n,
 	}
 }
 
-static void get_expression_cost(const Exp *e, unsigned int *icost, double *dcost)
+static void get_expression_cost(const Exp *e, unsigned int *icost, float *dcost)
 {
 	if (e->cost < -cost_epsilon)
 	{
@@ -170,7 +170,7 @@ static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
                                     bool need_parens, int *indent)
 {
 	unsigned int icost;
-	double dcost;
+	float dcost;
 	get_expression_cost(n, &icost, &dcost);
 	for (unsigned int i = 0; i < icost; i++) dyn_strcat(e, "[");
 	print_expression_tag_start(dict, e, n, indent);
@@ -352,6 +352,7 @@ const char *exp_stringify(const Exp *n)
 	static TLS char *s;
 
 	free(s);
+	s = NULL;
 	if (n == NULL) return ("(null)");
 	s = lg_exp_stringify_with_tags(NULL, n, false);
 	return s;
@@ -638,6 +639,8 @@ static void dyn_print_disjunct_list(dyn_str *s, const Disjunct *dj,
 {
 	int djn = 0;
 	char word[MAX_WORD + 32];
+	int max_ccnt = 0;
+	int *exp_pos = NULL;
 	bool print_disjunct_address = test_enabled("disjunct-address");
 
 	for (;dj != NULL; dj=dj->next)
@@ -666,6 +669,7 @@ static void dyn_print_disjunct_list(dyn_str *s, const Disjunct *dj,
 		dyn_print_connector_list(l, dj->right, /*dir*/1, flags);
 
 		char *ls = dyn_str_take(l);
+
 		if ((NULL == select) || select(ls, criterion))
 		{
 			dyn_strcat(s, ls);
@@ -673,14 +677,19 @@ static void dyn_print_disjunct_list(dyn_str *s, const Disjunct *dj,
 
 			if ((criterion != NULL) && (criterion->exp != NULL))
 			{
-				int ccnt = 1;
+				int ccnt = 1; /* 1 for exp_pos -1 terminator. */
 				for (Connector *c = dj->left; c != NULL; c = c->next)
 					ccnt++;
 				for (Connector *c = dj->right; c != NULL; c = c->next)
 					ccnt++;
 
-				int *exp_pos = alloca(ccnt * sizeof(int));
+				if (ccnt > max_ccnt)
+				{
+					max_ccnt = (ccnt == 0) ? 32 : ccnt;
+					exp_pos = alloca(max_ccnt * sizeof(int));
+				}
 				int *i = exp_pos;
+
 				for (Connector *c = dj->left; c != NULL; c = c->next)
 					*i++ = c->exp_pos;
 				for (Connector *c = dj->right; c != NULL; c = c->next)
@@ -775,7 +784,7 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 	const Regex_node *rn = arg[0];
 	const char *flags = arg[1];
 	const Parse_Options opts = (Parse_Options)arg[2];
-	double max_cost = opts->disjunct_cost;
+	float max_cost = opts->disjunct_cost;
 	uint32_t int_flags = make_flags(flags);;
 
 	/* build_disjuncts_for_exp() needs memory pools for efficiency. */
@@ -918,7 +927,7 @@ static Regex_node *make_disjunct_pattern(const char *pattern, const char *flags)
 		for (size_t i = 0; i < pat_len; i++)
 		{
 			const char *c =  &pattern[i];
-			if (!isalnum(*c) && (strchr("*+- ", *c) == NULL))
+			if (!isalnum((unsigned char)*c) && (strchr("*+- ", *c) == NULL))
 			{
 				prt_error("Warning: Invalid character \"%.*s\" in full "
 				          "disjunct specification.\n",
@@ -1147,9 +1156,9 @@ display_word_split_error:
  * Only one minor cheat here: we are ignoring the cost_cutoff, so
  * this potentially over-counts if the cost_cutoff is set low.
  */
-static unsigned int count_clause(Exp *e)
+uint64_t count_clause(const Exp *e)
 {
-	unsigned int cnt = 0;
+	uint64_t cnt;
 
 	assert(e != NULL, "count_clause called with null parameter");
 	if (e->type == AND_type)
@@ -1162,6 +1171,7 @@ static unsigned int count_clause(Exp *e)
 	else if (e->type == OR_type)
 	{
 		/* Just additive */
+		cnt = 0;
 		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 			cnt += count_clause(opd);
 	}
@@ -1180,7 +1190,7 @@ static unsigned int count_clause(Exp *e)
 /**
  * Count number of disjuncts given the dict node dn.
  */
-static unsigned int count_disjunct_for_dict_node(Dict_node *dn)
+static uint64_t count_disjunct_for_dict_node(Dict_node *dn)
 {
 	return (NULL == dn) ? 0 : count_clause(dn->exp);
 }
@@ -1195,7 +1205,7 @@ static char *display_counts(const char *word, Dict_node *dn)
 	dyn_strcat(s, "matches:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
-		append_string(s, "    %-*s %8u  disjuncts",
+		append_string(s, "    %-*s %8zu  disjuncts",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
 		              count_disjunct_for_dict_node(dn));
 

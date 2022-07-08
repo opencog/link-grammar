@@ -5,7 +5,7 @@ with link-grammar version RC 5.5.2.
 
 Language bindings
 -----------------
-The build system produces successful Python2&3 and Java bindings.
+The build system produces successful Python3 and Java bindings.
 Other language bindings have not been tested.
 
 For the Java bindings, install Java and Ant under Windows.

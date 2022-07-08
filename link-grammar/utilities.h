@@ -130,7 +130,7 @@ typedef SSIZE_T ssize_t;
 #define iswspace_l  _iswspace_l
 #define towlower_l  _towlower_l
 #define towupper_l  _towupper_l
-#define strtod_l    _strtod_l
+#define strtof_l    _strtof_l
 #define freelocale _free_locale
 #endif /* HAVE_LOCALE_T */
 
@@ -166,7 +166,7 @@ int strncasecmp(const char *s1, const char *s2, size_t n);
 #ifdef HAVE_LOCALE_T
 locale_t newlocale_LC_CTYPE(const char *);
 #else
-typedef int locale_t;
+typedef void *locale_t;
 #define iswupper_l(c, l) iswupper(c)
 #define iswalpha_l(c, l) iswalpha(c)
 #define iswdigit_l(c, l) iswdigit(c)
@@ -218,7 +218,7 @@ void *aligned_alloc(size_t alignment, size_t size);
 #define strndupa(s, n) _strndupa3(alloca((n)+1), s, n)
 static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 {
-	strncpy(new_s, s, n);
+	memcpy(new_s, s, n);
 	new_s[n] = '\0';
 
 	return new_s;

@@ -28,6 +28,7 @@
 #include "dict-sql/read-sql.h"
 #include "dict-file/read-dict.h"
 #include "dict-file/word-file.h"
+#include "dict-atomese/read-atomese.h"
 
 /* Stems, by definition, end with ".=x" (when x is usually an empty
  * string, i.e. ".="). The STEMSUBSCR definition in the affix file
@@ -45,7 +46,7 @@
  */
 bool is_stem(const char* w)
 {
-	const char *subscrmark = strchr(w, SUBSCRIPT_MARK);
+	const char *subscrmark = get_word_subscript(w);
 
 	if (NULL == subscrmark) return false;
 	if (subscrmark == w) return false;
@@ -118,6 +119,15 @@ Dictionary dictionary_create_lang(const char * lang)
 #endif /* HAVE_SQLITE3 */
 	}
 
+	else if (check_atomspace(lang))
+	{
+#if HAVE_ATOMESE
+		dictionary = dictionary_create_from_atomese(lang);
+#else
+		return NULL;
+#endif /* HAVE_ATOMESE */
+	}
+
 	/* Fallback to a plain-text dictionary */
 	if (NULL == dictionary)
 	{
@@ -164,7 +174,7 @@ void free_lookup_list(const Dictionary dict, Dict_node *llist)
 
 bool dict_has_word(const Dictionary dict, const char *s)
 {
-	return dict->lookup(dict, s);
+	return dict->exists_lookup(dict, s);
 }
 
 /**
@@ -189,6 +199,14 @@ const Category *dictionary_get_categories(const Dictionary dict)
 {
 	if (dict->category == NULL) return NULL;
 	return dict->category + 1; /* First entry is not used */
+}
+
+/**
+ * If the dictionary is caching anything, clear that cache.
+ */
+void dictionary_clear_cache(const Dictionary dict)
+{
+	if (dict) dict->clear_cache(dict);
 }
 
 /* ======================================================================== */
@@ -282,23 +300,10 @@ int delete_dictionary_words(Dictionary dict, const char * s)
 }
 #endif /* USEFUL_BUT_NOT_CURRENTLY_USED */
 
-static void free_dict_node_recursive(Dict_node * dn)
-{
-	if (dn == NULL) return;
-	free_dict_node_recursive(dn->left);
-	free_dict_node_recursive(dn->right);
-	free(dn);
-}
-
-static void free_dictionary(Dictionary dict)
-{
-	free_dict_node_recursive(dict->root);
-	free_Word_file(dict->word_file_header);
-	pool_delete(dict->Exp_pool);
-}
-
 static void affix_list_delete(Dictionary dict)
 {
+	if (NULL == dict->afdict_class) return;
+
 	int i;
 	Afdict_class * atc;
 	for (i=0, atc = dict->afdict_class; i < AFDICT_NUM_ENTRIES; i++, atc++)
@@ -321,6 +326,8 @@ void dictionary_delete(Dictionary dict)
 		affix_list_delete(dict->affix_table);
 		dictionary_delete(dict->affix_table);
 	}
+	affix_list_delete(dict);
+
 	spellcheck_destroy(dict->spell_checker);
 	if ((locale_t) 0 != dict->lctype) {
 		freelocale(dict->lctype);
@@ -339,12 +346,13 @@ void dictionary_delete(Dictionary dict)
 	string_id_delete(dict->dialect_tag.set);
 	if (dict->macro_tag != NULL) free(dict->macro_tag->name);
 	free(dict->macro_tag);
-	string_id_delete(dict->define.set);
-	free(dict->define.name);
-	free(dict->define.value);
+	string_id_delete(dict->dfine.set);
+	free(dict->dfine.name);
+	free(dict->dfine.value);
 	free_regexs(dict->regex_root);
 	free_anysplit(dict);
-	free_dictionary(dict);
+	free_Word_file(dict->word_file_header);
+	free_dictionary_root(dict);
 
 	/* Free sentence generation stuff. */
 	for (unsigned int i = 1; i <= dict->num_categories; i++)

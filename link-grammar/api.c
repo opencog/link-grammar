@@ -556,9 +556,22 @@ void sentence_delete(Sentence sent)
 	pool_delete(sent->wordvec_pool);
 	pool_delete(sent->Exp_pool);
 	pool_delete(sent->X_node_pool);
-	if (IS_DB_DICT(sent->dict))
+
+	/* Usually the memory pools created in build_disjuncts_for_exp() are
+	 * deleted in build_sentence_disjuncts(). Delete them here inn case
+	 * build_disjuncts_for_exp() is directly called. */
+	if (sent->Clause_pool != NULL)
+	{
+		pool_delete(sent->Clause_pool);
+		pool_delete(sent->Tconnector_pool);
+	}
+
+	// This is a hack. Should just ask the backend to "do the right
+	// thing".
+	if (IS_SQL_DICT(sent->dict))
 	{
 #if 0 /* Cannot reuse in case a previous sentence is not deleted yet. */
+		We could fix this by putting a use-count in the dict.
 		condesc_reuse(sent->dict);
 #endif
 		pool_reuse(sent->dict->Exp_pool);
@@ -684,9 +697,9 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 
 	resources_reset(opts->resources);
 
-	/* When the SQL dict is used, expressions are read on demand, so
-	 * the connector descriptor table is not yet ready at this point. */
-	if (IS_DB_DICT(sent->dict))
+	/* When a dynamic dictionary is used, expressions are read on demand,
+	 * so the connector descriptor table is not yet ready at this point. */
+	if (IS_DYNAMIC_DICT(sent->dict))
 		condesc_setup(sent->dict);
 
 	for (WordIdx w = 0; w < sent->length; w++)

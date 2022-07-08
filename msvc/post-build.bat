@@ -6,12 +6,13 @@
 %= Argument is project target.                                         =%
 
 if "%1"=="" (echo "%~f0: Missing argument" 1>&2 & exit /b)
+if "%2"=="" (echo "%~f0: Missing argument" 1>&2 & exit /b)
 
 setlocal
 if defined ProgramW6432 set ProgramFiles=%ProgramW6432%
 
 %= Command name to create. =%
-set lgcmd=link-parser
+set lgcmd=%1
 
 echo %~f0: Info: Creating %lgcmd%.bat in %cd%
 
@@ -30,18 +31,27 @@ echo %~f0: Info: Creating %lgcmd%.bat in %cd%
 	echo REM Copy it to a directory in your PATH and modify it if needed.
 	echo.
 
-	echo REM The following prepends LG_DDLPATH from msvc\Local.props
-	echo set "PATH=%LG_DLLPATH%;%%PATH%%"
-	echo.
-	echo REM For USE_WORDGRAPH_DISPLAY
-	echo REM Path for "dot.exe"
-	echo REM set "PATH=%%PATH%%;C:\cygwin64\bin"
-	echo set "PATH=%%PATH%%;%ProgramFiles(x86)%\Graphviz2.38\bin"
-	echo REM Path for "PhotoViewer.dll"
-	echo set "PATH=%%PATH%%;%ProgramFiles%\Windows Photo Viewer"
-	echo.
+	if not "%LG_DLLPATH%"=="" (
+		echo REM The following prepends LG_DDLPATH from msvc\Local.props
+		echo set "PATH=%LG_DLLPATH%;%%PATH%%"
+		echo.
+	) else (
+		echo REM Prepends DLL path
+		echo REM set "PATH=%DLLPATH%;%%PATH%%"
+		echo.
+	)
+
+	if "%lgcmd%"=="link-parser" (
+		echo REM For USE_WORDGRAPH_DISPLAY
+		echo REM Path for "dot.exe"
+		echo REM set "PATH=%%PATH%%;C:\cygwin64\bin"
+		echo set "PATH=%%PATH%%;%ProgramFiles(x86)%\Graphviz2.38\bin"
+		echo REM Path for "PhotoViewer.dll"
+		echo set "PATH=%%PATH%%;%ProgramFiles%\Windows Photo Viewer"
+		echo.
+	)
 
 	echo REM Chdir to the link-grammar source directory so the data directory is found.
 	echo cd /D %cd%\..
-	echo %1 %%*
+	echo %2 %%*
 ) > %lgcmd%.bat

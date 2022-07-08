@@ -121,7 +121,7 @@ static void section_add(Dialect *di, const char *token, unsigned int *size,
 * @return Table index of the added entry.
 */
 static unsigned int dialect_table_add(Dialect *di, const char *token,
-                                      unsigned int *size, double cost)
+                                      unsigned int *size, float cost)
 {
 	if (di->num_table_tags == *size)
 	{
@@ -163,7 +163,7 @@ static char *get_label(dialect_file_status *dfile)
 	/* Trim spaces from end of label. */
 	char *p;
 	for (p = dfile->pin-1; p > label; p--)
-		if (!lg_isspace(*p)) break;
+		if (!lg_isspace((unsigned char)*p)) break;
 	p[1] = '\0';
 
 	const char *bad = valid_dialect_name(label);
@@ -209,7 +209,7 @@ static bool require_delimiter(dialect_file_status *dfile, char *s, char *buf)
 static void skip_space(dialect_file_status *dfile)
 {
 	while ((*dfile->pin != '\n') && (*dfile->pin != '\0') &&
-	       lg_isspace(*dfile->pin))
+	       lg_isspace((unsigned char)*dfile->pin))
 	{
 		dfile->pin++;
 	}
@@ -398,6 +398,7 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	{
 		prt_error("Warning: "
 		          "File '%s' found but no dialects in the dictionary.\n", fname);
+		free(input);
 		return true;
 	}
 
@@ -420,9 +421,10 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	bool rc = dialect_read_from_str(dict, di, &dfile);
 	if (!rc) return false;
 
-	if ((di->num_sections == 0) && verbosity_level(D_USER_FILES))
+	if (di->num_sections == 0)
 	{
-		prt_error("Warning: Dialect file: No definitions found.\n");
+		if (verbosity_level(D_USER_FILES))
+			prt_error("Warning: Dialect file: No definitions found.\n");
 		return true;
 	}
 

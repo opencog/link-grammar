@@ -23,6 +23,7 @@
 #include <stdarg.h>
 
 #include "link-includes.h"
+#include "dict-common/dict-common.h"  /* get_word_subscript */
 #include "dict-common/dict-defines.h" /* SUBSCRIPT_MARK, SUBSCRIPT_DOT */
 #include "error.h"
 #include "utilities.h"
@@ -36,14 +37,14 @@ int utf8_charwidth(const char *);
 
 static inline void patch_subscript_mark(char *s)
 {
-	s = strchr(s, SUBSCRIPT_MARK);
+	s = get_word_subscript(s);
 	if (NULL != s)
 		*s = SUBSCRIPT_DOT;
 }
 
 static inline void patch_subscript_marks(char *s)
 {
-	while (NULL != (s = strchr(s, SUBSCRIPT_MARK)))
+	while (NULL != (s = get_word_subscript(s)))
 		*s = SUBSCRIPT_DOT;
 }
 

@@ -41,7 +41,7 @@
 #include "anysplit.h"
 
 
-#define MAX_WORD_TO_SPLIT 31 /* in codepoins */
+#define MAX_WORD_TO_SPLIT 63 /* in codepoints */
 
 extern const char * const afdict_classname[];
 
@@ -314,7 +314,7 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 
 		/* Create a new Regex_node and add to the list. */
 		new_re = malloc(sizeof(*new_re));
-		new_re->name    = strdup(afdict_classname[classnum]);
+		new_re->name    = afdict_classname[classnum];
 		new_re->re      = NULL;
 		new_re->next    = NULL;
 		new_re->neg     = ('!' == r[0]);
@@ -527,6 +527,8 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		lgdebug(D_AS+1, "(new)");
 		rndtried++;
 		as->scl[lutf].p_tried[sample_point] = true;
+		/* The regexes in the affix file can be used to reject partitioning
+		 * that break graphemes. */
 		if (morpheme_match(sent, word, lutf, &as->scl[lutf].sp[sample_point*as->nparts]))
 		{
 			as->scl[lutf].p_selected[sample_point] = true;
@@ -538,7 +540,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		}
 	}
 
-	lgdebug(D_AS, "Results: word '%s' (byte-length=%zu utf-chars=%zu): %zu/%zu:\n",
+	lgdebug(D_AS, "Results: word '%s' (utf-char=%zu utf-byte-length=%zu): %zu/%zu:\n",
 	        word, lutf, l, rndissued, nsplits);
 
 	for (i = 0; i < nsplits; i++)
@@ -560,8 +562,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
 				affix[b] = '\0';
 			}
-			else
-			if (0 == cpos)   /* The first, but not the only morpheme */
+			else if (0 == cpos)   /* The first, but not the only morpheme */
 			{
 				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
 				affix[b] = '\0';

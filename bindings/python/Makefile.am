@@ -17,7 +17,7 @@ built_py_sources = $(top_builddir)/bindings/python/clinkgrammar.py
 # Over-ride the install location, so as to remove the dash in the
 # directory "link-grammar".  Turns out python cannot tolerate dashes.
 # Thus, typically, it will install into
-# /usr/local/lib/python2.7/dist-packages/linkgrammar (without the dash)
+# /usr/local/lib/python3.x/dist-packages/linkgrammar (without the dash)
 pkgpythondir=$(pythondir)/linkgrammar
 pkgpyexecdir=$(pyexecdir)/linkgrammar
 
@@ -83,6 +83,9 @@ AVOID_VERSION = -avoid-version
 if !OS_CYGWIN
 PYMODULE_EXT = -shrext .pyd
 endif
+endif
+if OS_NETBSD
+AVOID_VERSION = -avoid-version
 endif
 _clinkgrammar_la_LDFLAGS =                        \
     -version-info @VERSION_INFO@ $(AVOID_VERSION) \

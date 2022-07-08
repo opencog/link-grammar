@@ -20,11 +20,15 @@ EXTRA_DIST =               \
    LICENSE                 \
    README.md               \
    example.py              \
+   gen-parses-file.py      \
    sentence-check.py       \
    parses-demo-sql.txt     \
    parses-dialect-en.txt   \
    parses-en.txt           \
    parses-lt.txt           \
+   parses-th.txt           \
+   parses-amy.txt          \
+   parses-any.txt          \
    parses-pos-en.txt       \
    parses-pos-he.txt       \
    parses-pos-ru.txt       \

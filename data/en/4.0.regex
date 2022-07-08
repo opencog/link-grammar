@@ -242,13 +242,14 @@
 % n-amino-3-azabicyclo[3.3.0]octane
 % 3'-Amino-2',3'-dideoxyguanosine
 % N-Phenylsulphonyl-N'-(3-azabicycloalkyl)
-% []...] means "match right-bracket"
+% []...] means "match right-bracket" -> Replaced by |\] because it
+% doesn't work in c++ <regex>.
 % Explicitly call out (5'|3') so that we don't all a generic match to 'll
 %  /^[[:alnum:]][][:alnum:],:.\[-]*-[][:alnum:],:.\[-]*[[:alnum:]]$/
 <HYPHENATED-WORDS>: !/--/
 <HYPHENATED-WORDS>: !/[[:punct:]]$/
 <HYPHENATED-WORDS>:
-  /^([[:alnum:]]|5'|3'|2'|N')([][:alnum:],:.()[-]|5'|3'|2'|N')*-[][:alnum:],:.()[-]*[[:alnum:]]*$/
+  /^([[:alnum:]]|5'|3'|2'|N')([[:alnum:],:.()[-]|\]|5'|3'|2'|N')*-([[:alnum:],:.()[-]|\])*[[:alnum:]]*$/
 
 % Emoticon checks must come *after* the above, so that the above take precedence.
 % See Wikipedia List_of_emoticons (also the References section).

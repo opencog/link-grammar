@@ -16,7 +16,7 @@
 
 #include "api-structures.h"
 #include "dict-common/dict-common.h"    // Dictionary_s
-#include "dict-common/dict-defines.h"   // RIGHT_WALL_WORD, MAX_WORD
+#include "dict-common/dict-defines.h"   // RIGHT_WALL_WORD
 #include "error.h"
 #include "linkage/linkage.h"
 #include "post-process/post-process.h"
@@ -965,7 +965,6 @@ exprint_constituent_structure(con_context_t *ctxt,
 	bool *leftdone = alloca(numcon_total * sizeof(bool));
 	bool *rightdone = alloca(numcon_total * sizeof(bool));
 	int best, bestright, bestleft;
-	char s[MAX_WORD];
 	dyn_str * cs = dyn_str_new();
 
 	assert (numcon_total < ctxt->conlen, "Too many constituents (b)");
@@ -1007,7 +1006,14 @@ exprint_constituent_structure(con_context_t *ctxt,
 		if (w < linkage->num_words - 1)
 		{
 			char *p;
-			strncpy(s, linkage->word[w], MAX_WORD);
+
+			/* All dict words are smaller than MAX_WORD;
+			 * However, user-inputs may be unknown-words of
+			 * unbounded length, and could overflow the stack,
+			 * if hostile. Truncate these to finite size.
+			 */
+			char s[MAX_WORD];
+			strncpy(s, linkage->word[w], MAX_WORD-1);
 			s[MAX_WORD-1] = 0;
 
 			/* Constituent processing will crash if the sentence contains

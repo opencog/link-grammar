@@ -38,21 +38,21 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -124,7 +124,7 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>post-build.bat $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-parser $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
       <Message>Performing post-build commands</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -150,7 +150,7 @@
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\link-grammar-x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>post-build.bat $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-parser $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Performing post-build commands</Message>
@@ -183,7 +183,7 @@
       </Command>
     </PreBuildEvent>
     <PostBuildEvent>
-      <Command>post-build.bat $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-parser $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
       <Message>Performing post-build commands</Message>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -210,7 +210,7 @@
       <AdditionalDependencies>$(SolutionDir)$(Platform)\$(Configuration)\link-grammar-x64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>post-build.bat $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
+      <Command>post-build.bat link-parser $(SolutionDir)$(Platform)\$(Configuration)\$(TargetName)$(TargetExt)</Command>
     </PostBuildEvent>
     <PostBuildEvent>
       <Message>Performing post-build commands</Message>

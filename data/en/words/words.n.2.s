@@ -474,6 +474,7 @@ archetypes.n
 archipelagos.n
 architects.n
 architectures.n
+archives.n
 archivists.n
 archlutes.n
 archways.n
@@ -1032,6 +1033,7 @@ bistros.n
 bitches.n
 bitcoins.n
 bites.n
+bitfields.n
 bitmaps.n
 bits.n
 bivouacs.n
@@ -1405,6 +1407,7 @@ bugles.n
 bugs.n
 builders.n
 buildings.n
+builds.n
 bulbs.n
 Bulgarians.n
 bulges.n
@@ -1825,6 +1828,7 @@ chanceries.n
 chandeliers.n
 chandlers.n
 changelings.n
+changelogs.n
 changeovers.n
 changers.n
 changes.n
@@ -2439,6 +2443,7 @@ contingencies.n
 contingents.n
 continua.n
 continuations.n
+continues.n
 contortionists.n
 contortions.n
 contours.n
@@ -2943,6 +2948,7 @@ debits.n
 debtors.n
 debts.n
 debuggers.n
+debugs.n
 debutantes.n
 debuts.n
 decanters.n
@@ -3212,6 +3218,7 @@ dirigibles.n
 dirndls.n
 disabilities.n
 disadvantages.n
+disaffections.n
 disagreements.n
 disambiguations.n
 disappearances.n
@@ -3219,6 +3226,7 @@ disappointments.n
 disassembblies.n
 disasters.n
 disbursements.n
+discardings.n
 discards.n
 discharges.n
 disciples.n
@@ -3252,6 +3260,7 @@ disincentives.n
 disinclinations.n
 disinfectants.n
 disjunctions.n
+disjuncts.n
 disks.n
 dislocations.n
 disloyalties.n
@@ -3878,6 +3887,7 @@ excommunications.n
 excrescences.n
 excretions.n
 excursions.n
+executables.n
 executants.n
 executioners.n
 executions.n
@@ -3994,6 +4004,7 @@ fajitas.n
 fakes.n
 fakirs.n
 falcons.n
+fallbacks.n
 fallthroughs.n
 falsehoods.n
 falsettos.n
@@ -5029,6 +5040,7 @@ harrows.n
 harts.n
 harvesters.n
 harvests.n
+hashes.n
 hashtags.n
 hassles.n
 hatbands.n
@@ -5518,6 +5530,7 @@ indices.n
 indictments.n
 indies.n
 indignities.n
+indirections.n
 indiscretions.n
 individualists.n
 individualities.n
@@ -5761,6 +5774,7 @@ isthmuses.n
 Italians.n
 itches.n
 items.n
+iterables.n
 iterations.n
 itineraries.n
 Ivorians.n
@@ -6423,6 +6437,7 @@ maisonnettes.n
 majorities.n
 majors.n
 makefiles.n
+make_files
 makeovers.n
 makers.n
 makeshifts.n
@@ -6664,6 +6679,7 @@ menus.n
 mercenaries.n
 merchants.n
 mergers.n
+merges.n
 meridians.n
 meringues.n
 meritocracies.n
@@ -7395,6 +7411,7 @@ optimisations.n
 optimists.n
 optimizations.n
 optimums.n
+optionals.n
 oracles.n
 orals.n
 oranges.n
@@ -7457,6 +7474,7 @@ outfields.n
 outfits.n
 outfitters.n
 outflows.n
+outgoings.n
 outgrowths.n
 outhouses.n
 outings.n
@@ -7519,6 +7537,7 @@ packages.n
 packets.n
 packhorses.n
 pacts.n
+paddings.n
 paddles.n
 paddocks.n
 padlocks.n
@@ -8203,6 +8222,7 @@ portrayals.n
 ports.n
 posers.n
 poses.n
+positives.n
 positivists.n
 posses.n
 possessions.n
@@ -8277,6 +8297,7 @@ precis.p
 preconceptions.n
 preconditions.n
 precursors.n
+predates.n
 predators.n
 predecessors.n
 predeterminations.n
@@ -8294,6 +8315,7 @@ preferences.n
 prefixes.n
 preforms.n
 pregnancies.n
+prehistories.n
 prejudgements.n
 prejudices.n
 prelates.n
@@ -8497,6 +8519,7 @@ prows.n
 proxies.n
 prudes.n
 prunes.n
+prunings.n
 psalmists.n
 psalms.n
 psalteries.n
@@ -8846,6 +8869,7 @@ redeemers.n
 redevelopments.n
 redheads.n
 rediscoveries.n
+redistributions.n
 redoubts.n
 redrafts.n
 redshirts.n
@@ -9262,6 +9286,7 @@ runaways.n
 rundowns.n
 runes.n
 rungs.n
+runings.n
 runners.n
 runoffs.n
 runs.n
@@ -11096,6 +11121,7 @@ tonsures.n
 toolbars.n
 toolboxs.n
 toolkits.n
+toolsets.n
 tools.n
 toothaches.n
 toothbrushes.n
@@ -11600,6 +11626,7 @@ vermilions.n
 vermouths.n
 vernaculars.n
 verses.n
+versionings.n
 versions.n
 vertebrates.n
 vertecies.n

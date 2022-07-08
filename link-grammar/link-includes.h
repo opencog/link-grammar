@@ -101,6 +101,8 @@ link_public_api(int)
 link_public_api(bool)
      lg_error_flush(void);
 
+link_public_api(extern void) (*lg_library_failure_hook)(void);
+
 /**********************************************************************
  *
  * Functions to manipulate Dictionaries
@@ -116,6 +118,9 @@ link_public_api(const char *)
 
 link_public_api(void)
      dictionary_delete(Dictionary);
+
+link_public_api(void)
+     dictionary_clear_cache(Dictionary);
 
 link_public_api(void)
      dictionary_set_data_dir(const char * path);

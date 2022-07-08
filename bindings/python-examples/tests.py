@@ -1018,6 +1018,8 @@ class XLookupListTestCase(unittest.TestCase):
 
     def test_file_lookup_list_no_subscr(self):
         dictnode = clg.dictionary_lookup_list(self.d_en._obj, 'test')
+        # The following supposes there are no idioms with the word "test".
+        # If such idioms are added, filter out the subscript "._I".
         self.assertEqual(sorted([dictnode[i].string for i in range(len(dictnode))]), [sm('test.n'), sm('test.v')])
         for i in range(len(dictnode)):
             self.assertIn("(", str(dictnode[i].exp), "Missing expression")
@@ -1130,6 +1132,35 @@ class YGenerationTestCase(unittest.TestCase):
     def test_getting_linkages_sql_dict(self):
         linkages = Sentence((clg.WILDCARD_WORD + ' ') * 4, Dictionary(lang='demo-sql'), self.po).parse()
         self.assertTrue(len(linkages) > 0, "No linkages")
+
+
+class ZANYAMYTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.amy_dict = Dictionary(lang='amy')
+        cls.any_dict = Dictionary(lang='any')
+        cls.amy_po = ParseOptions(display_morphology=True, linkage_limit=20000)
+        cls.any_po = ParseOptions(display_morphology=False, linkage_limit=200)
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.any_dict
+        del cls.amy_dict
+
+    def find_num_linkages(self, sentense_text, dict, po):
+        return len(Sentence(sentense_text, dict, po).parse())
+
+    def test_amy_num_linkages(self):
+       self.assertEqual(5292, self.find_num_linkages('this is a test', self.amy_dict, self.amy_po))
+
+    def test_amy(self):
+        linkage_testfile(self, self.amy_dict, self.amy_po)
+
+    def test_any_num_linkages(self):
+       self.assertEqual(156, self.find_num_linkages('this is a test', self.any_dict, self.any_po))
+
+    def test_any(self):
+        linkage_testfile(self, self.any_dict, self.any_po)
 
 
 class ZENConstituentsCase(unittest.TestCase):
@@ -1249,9 +1280,76 @@ class ZRULangTestCase(unittest.TestCase):
              'облачк.=', '=а.ndnpi',
              '.', 'RIGHT-WALL'])
 
+
+class ZTHLangTestCase(unittest.TestCase):
+    def test_thai(self):
+        linkage_testfile(self, Dictionary(lang='th'), ParseOptions())
+
+
 class ZXDictDialectTestCase(unittest.TestCase):
     def test_dialect(self):
         linkage_testfile(self, Dictionary(lang='en'), ParseOptions(dialect='headline'), 'dialect')
+
+
+# Test for some catastrophic failures in displaying word expressions.
+# FIXME: This is a very small subset of the tests that are needed to
+# cover the correctness of dict_display_word_expr().
+class ZZdict_display_word_expr(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+       cls.d, cls.po = Dictionary(), ParseOptions()
+
+    @classmethod
+    def tearDownClass(cls):
+       del cls.d, cls.po
+
+    def test_nonexistent_word(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'xxxdummy', self.po._obj)
+       self.assertIsNone(out)
+
+    def test_unsubscripted_word(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'test', self.po._obj)
+       self.assertIsNotNone(out, 'Word "test" not found')
+       self.assertIn(' test.n ', out)
+
+    def test_subscripted_word(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'test.v', self.po._obj)
+       self.assertIsNotNone(out, 'Word "test.v" not found')
+       self.assertIn(' test.v ', out)
+       self.assertNotIn(' test.n ', out)
+
+    def test_wildcard(self):
+       ltdict = Dictionary('lt')
+       out = clg.dict_display_word_expr(ltdict._obj, '*', self.po._obj)
+       # The output contains at least this number of non-empty lines.
+       self.assertTrue(len(list(out.splitlines())) > 1800)
+
+    def test_macros(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'test/m', self.po._obj)
+       self.assertIn('<common-const-noun>:', out)
+       self.assertIn('<verb-pl,i>', out)
+
+    def test_disjuncts(self):
+       # dict_display_word_expr doesn't trigger reading the default cost_max.
+       self.po.disjunct_cost = clg.linkgrammar_get_dict_max_disjunct_cost(self.d._obj)
+
+       out = clg.dict_display_word_expr(self.d._obj, 'a//', self.po._obj)
+       self.assertIn('Token "a" disjuncts:', out)
+       #self.assertRegex(out, r'a: \[\d+] \d+\.\d+\s*=  <> Ds\*\*x\+')
+       self.assertIn(' a.eq ', out)
+
+    def test_disjunct_macros(self):
+       self.po.disjunct_cost = clg.linkgrammar_get_dict_max_disjunct_cost(self.d._obj)
+       # Here we use the word "test" that has many disjuncts, in a try to
+       # trigger memory handling bugs, if exist.
+       out = clg.dict_display_word_expr(self.d._obj, 'test//m', self.po._obj)
+       self.assertIn('Token "test" disjuncts:', out)
+       self.assertIn('<b-minus>: B*w- &', out)
+
+    def test_low_level_exp(self):
+       out = clg.dict_display_word_expr(self.d._obj, 'a/l', self.po._obj)
+       self.assertRegex(out, r'e=(0[xX])?[0-9a-fA-F]+: CONNECTOR Ds\*\*x\+ cost=0.000')
+
 
 #############################################################################
 
@@ -1372,6 +1470,7 @@ def linkage_testfile(self, lgdict, popt, desc=''):
         else:
             self.fail('\nTest file "{}": Invalid opcode "{}" (ord={})'.format(testfile, line[0], ord(line[0])))
 
+    self.assertIsNotNone(last_opcode, "Missing opcode in " + testfile)
     self.assertIn(last_opcode, 'OCP', "Missing result comparison in " + testfile)
 
 def warning(*msg):

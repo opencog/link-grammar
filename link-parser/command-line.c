@@ -62,12 +62,13 @@ static const char *value_type[] =
 	"(integer) ", "(Boolean) ", "(float) ", "(string) ", "(command) ", ""
 };
 
-static int panic_variables_cmd(const Switch*, int);
-static int variables_cmd(const Switch*, int);
+static int clear_cmd(const Switch*, int);
+static int exit_cmd(const Switch*, int);
 static int file_cmd(const Switch*, int);
 static int help_cmd(const Switch*, int);
-static int exit_cmd(const Switch*, int);
 static int info_cmd(const Switch*, int);
+static int panic_variables_cmd(const Switch*, int);
+static int variables_cmd(const Switch*, int);
 
 Switch default_switches[] =
 {
@@ -110,6 +111,7 @@ Switch default_switches[] =
 	{"walls",      Bool, "Display wall words",              &local.display_walls},
 	{"width",      Int,  "The width of the display",        &local.screen_width},
 	{"wordgraph",  Int,  "Display sentence word-graph",     &local.display_wordgraph},
+	{"clear",      Cmd,  "Clear the AtomSpace cache",              clear_cmd},
 	{"exit",       Cmd,  "Exit the program",                       exit_cmd},
 	{"file",       Cmd,  "Read input from the specified filename", file_cmd},
 	{"help",       Cmd,  "List the commands and what they do",     help_cmd},
@@ -445,7 +447,7 @@ void display_1line_help(const Switch *sp, bool is_completion)
 	}
 
 	int n; /* actual varname and optional varvalue print length */
-	printf("%s%s%s%n", sp->string, display_eq ? "=" : " ", value, &n);
+	n = printf("%s%s%s", sp->string, display_eq ? "=" : " ", value);
 	if (is_completion) printf("%*s", MAX(0, vnw - n), "");
 	printf("%*s- %s\n", vtw, value_type[sp->param_type], sp->description+undoc);
 }
@@ -642,8 +644,7 @@ void setup_panic_parse_options(Command_Options *copts, int sentence_length)
 
 	if (local.verbosity > 1)
 	{
-		int n = 0;
-		fprintf(stdout, "Panic mode setup: %n", &n); /* Remember alignment. */
+		int n = fprintf(stdout, "Panic mode setup: "); /* Remember alignment. */
 		fprintf(stdout,
 		        "!cost-max=%.2f !limit=%d !timeout=%d " "!spell=%d !short=%d\n"
 		        "%*s(all_short=%d min_null_count=%d max_null_count=%d)\n",
@@ -705,6 +706,11 @@ static int variables_cmd(const Switch *uc, int n)
 static int exit_cmd(const Switch *uc, int n)
 {
 	return 'e';
+}
+
+static int clear_cmd(const Switch *uc, int n)
+{
+	return 'k';
 }
 
 static int file_cmd(const Switch *uc, int n)

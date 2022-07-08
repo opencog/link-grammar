@@ -22,6 +22,7 @@
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
 #include "dict-common/regex-morph.h"
+#include "dict-ram/dict-ram.h"
 #include "post-process/pp_knowledge.h"
 #include "read-dialect.h"
 #include "read-dict.h"
@@ -79,11 +80,6 @@ static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 		dnx = dn->left;
 		free(dn);
 	}
-}
-
-static void free_llist(Dictionary dict, Dict_node *llist)
-{
-	file_free_lookup(llist);
 }
 
 /**
@@ -146,10 +142,11 @@ dictionary_six_str(const char * lang,
 		dict->current_idiom[IDIOM_LINK_SZ-1] = 0;
 
 		dict->insert_entry = insert_list;
-		dict->lookup_list = file_lookup_list;
-		dict->lookup_wild = file_lookup_wild;
-		dict->free_lookup = free_llist;
-		dict->lookup = file_boolean_lookup;
+		dict->lookup_list = dict_node_lookup;
+		dict->lookup_wild = dict_node_wild_lookup;
+		dict->free_lookup = dict_node_free_lookup;
+		dict->exists_lookup = dict_node_exists_lookup;
+		dict->clear_cache = dict_node_noop;
 		dict->dialect_tag.set = string_id_create();
 		condesc_init(dict, 1<<13);
 		Exp_pool_size = 1<<13;
@@ -159,8 +156,6 @@ dictionary_six_str(const char * lang,
 			dict->macro_tag = malloc(sizeof(*dict->macro_tag));
 			memset(dict->macro_tag, 0, sizeof(*dict->macro_tag));
 		}
-
-		dict->define.set = string_id_create();
 	}
 	else
 	{
@@ -169,10 +164,12 @@ dictionary_six_str(const char * lang,
 		 */
 		afclass_init(dict);
 		dict->insert_entry = load_affix;
-		dict->lookup = return_true;
+		dict->exists_lookup = return_true;
 		condesc_init(dict, 1<<9);
 		Exp_pool_size = 1<<5;
 	}
+
+	dict->dfine.set = string_id_create();
 
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/Exp_pool_size,
 	                          sizeof(Exp), /*zero_out*/false,
@@ -227,7 +224,7 @@ dictionary_six_str(const char * lang,
 	 * We have to compile regexs using the dictionary locale,
 	 * so make a temporary locale swap.
 	 */
-	if (read_regex_file(dict, regex_name)) goto failure;
+	if (!read_regex_file(dict, regex_name)) goto failure;
 
 	const char *locale = setlocale(LC_CTYPE, NULL); /* Save current locale. */
 	locale = strdupa(locale); /* setlocale() uses its own memory. */

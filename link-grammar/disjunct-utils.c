@@ -263,6 +263,12 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2, bool ignore_string)
 {
 	Connector *e1, *e2;
 
+	/* A shortcut to detect NULL and non-NULL jets on the same side.
+	 * Note that it is not possible to share memory between the
+	 * right/left jets due to filed value differences (sharing would
+	 * invalidate this check). */
+	if (d1->left == d2->right) return false;
+
 	e1 = d1->left;
 	e2 = d2->left;
 	while ((e1 != NULL) && (e2 != NULL)) {
@@ -475,6 +481,7 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 	}
 
 	lgdebug(+D_DISJ+(0==count)*1024, "w%zu: Killed %u duplicates%s\n",
+	        dw->originating_gword == NULL ? 0 :
 	        dw->originating_gword->o_gword->sent_wordidx, count,
 	        multi_string ? " (different word-strings)" : "");
 
@@ -714,6 +721,18 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 	{
 		newc = NULL;
 
+		/* The shallow indication is used only for pruning, but mark it
+		 * also for parsing anyway. tracon_set_add() uses it if
+		 * tracon_set_shallow() has been called (it is called if the
+		 * encoding is for pruning, but not when it is for parsing). The
+		 * shallow indication is also copied to the cblock connector (see
+		 * "No sharing yet" below), to be cached in the tracon_set and be
+		 * used by power_prune(). Note that due to memory sharing of the
+		 * original connectors (done in build_disjunct()), there is a need
+		 * to reset here the shallow indicator in non-shallow ones.
+		 * See also: Connector encoding, sharing and packing. */
+		o->shallow = (o == origc);
+
 		if (NULL != ts->csid[dir])
 		{
 			/* Encoding is used - share tracons. */
@@ -806,24 +825,29 @@ static Connector *pack_connectors(Tracon_sharing *ts, Connector *origc, int dir,
 static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 {
 	Disjunct *newd;
-	uintptr_t token = (uintptr_t)w;
+	uintptr_t token;
 
-	newd = (ts->dblock)++;
+	newd = ts->dblock++;
 	newd->word_string = d->word_string;
 	newd->cost = d->cost;
 	newd->is_category = d->is_category;
 	newd->originating_gword = d->originating_gword;
 	newd->ordinal = d->ordinal;
 
-	if (NULL == ts->tracon_list)
-		 token = (uintptr_t)d->originating_gword;
-
-	if ((token != ts->last_token) && (NULL != ts->csid[0]))
+	if (NULL != ts->csid[0])
 	{
-		ts->last_token = token;
-		//printf("Token %ld\n", token);
-		tracon_set_reset(ts->csid[0]);
-		tracon_set_reset(ts->csid[1]);
+		if (NULL == ts->tracon_list)
+			token = (uintptr_t)d->originating_gword;
+		else
+			token = (uintptr_t)w;
+
+		if (token != ts->last_token)
+		{
+			ts->last_token = token;
+			//printf("Token %ld\n", token);
+			tracon_set_reset(ts->csid[0]);
+			tracon_set_reset(ts->csid[1]);
+		}
 	}
 	newd->left = pack_connectors(ts, d->left, 0, w);
 	newd->right = pack_connectors(ts, d->right, 1,  w);

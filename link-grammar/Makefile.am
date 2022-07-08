@@ -59,6 +59,10 @@ if HAVE_SQLITE3
 liblink_grammar_la_LIBADD  +=  ${SQLITE3_LIBS}
 endif
 
+if HAVE_ATOMSPACE
+liblink_grammar_la_LIBADD  +=  ${ATOMSPACE_LIBS}
+endif
+
 if WITH_SAT_SOLVER
 # Dummy C++ source to cause C++ linking.
 nodist_EXTRA_liblink_grammar_la_SOURCES = dummy.cxx
@@ -98,7 +102,10 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/read-dict.c            \
 	dict-file/read-regex.c           \
 	dict-file/word-file.c            \
+	dict-ram/dict-ram.c              \
 	dict-sql/read-sql.c              \
+	dict-atomese/read-atomese.c      \
+	dict-atomese/lookup-atomese.cc   \
 	disjunct-utils.c                 \
 	error.c                          \
 	linkage/analyze-linkage.c        \
@@ -156,7 +163,11 @@ liblink_grammar_la_SOURCES =        \
 	dict-file/read-dict.h            \
 	dict-file/read-regex.h           \
 	dict-file/word-file.h            \
+	dict-ram/dict-ram.h              \
 	dict-sql/read-sql.h              \
+	dict-atomese/dict-atomese.h      \
+	dict-atomese/lookup-atomese.h    \
+	dict-atomese/read-atomese.h      \
 	disjunct-utils.h                 \
 	error.h                          \
 	externs.h                        \
@@ -200,8 +211,9 @@ liblink_grammar_includedir = $(includedir)/link-grammar
 liblink_grammar_include_HEADERS =   \
 	link-features.h                  \
 	link-includes.h                  \
+	dict-atomese/dict-atomese.h      \
 	dict-common/dict-api.h           \
-	dict-common/dict-defines.h           \
+	dict-common/dict-defines.h       \
 	dict-common/dict-structures.h
 
 uninstall-hook:
@@ -209,9 +221,11 @@ uninstall-hook:
 
 EXTRA_DIST=                         \
 	README.md                        \
+	dict-ram/README.md               \
 	dict-sql/dict.sql                \
 	dict-sql/demo.sql                \
 	dict-sql/README.md               \
+	dict-atomese/README.md           \
 	tokenize/README.md
 
 # -----------------------------------------------------------

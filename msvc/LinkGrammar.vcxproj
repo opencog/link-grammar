@@ -27,19 +27,19 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
@@ -235,6 +235,8 @@
     <ClInclude Include="..\link-grammar\api-structures.h" />
     <ClInclude Include="..\link-grammar\api-types.h" />
     <ClInclude Include="..\link-grammar\connectors.h" />
+    <ClInclude Include="..\link-grammar\dict-atomese\lookup-atomese.h" />
+    <ClInclude Include="..\link-grammar\dict-atomese\read-atomese.h" />
     <ClInclude Include="..\link-grammar\dict-common\dialect.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-affix.h" />
     <ClInclude Include="..\link-grammar\dict-common\dict-api.h" />
@@ -250,6 +252,7 @@
     <ClInclude Include="..\link-grammar\dict-file\read-dict.h" />
     <ClInclude Include="..\link-grammar\dict-file\read-regex.h" />
     <ClInclude Include="..\link-grammar\dict-file\word-file.h" />
+    <ClInclude Include="..\link-grammar\dict-ram\dict-ram.h" />
     <ClInclude Include="..\link-grammar\dict-sql\read-sql.h" />
     <ClInclude Include="..\link-grammar\disjunct-utils.h" />
     <ClInclude Include="..\link-grammar\error.h" />
@@ -294,6 +297,8 @@
   <ItemGroup>
     <ClCompile Include="..\link-grammar\api.c" />
     <ClCompile Include="..\link-grammar\connectors.c" />
+    <ClCompile Include="..\link-grammar\dict-atomese\lookup-atomese.cc" />
+    <ClCompile Include="..\link-grammar\dict-atomese\read-atomese.c" />
     <ClCompile Include="..\link-grammar\dict-common\dialect.c" />
     <ClCompile Include="..\link-grammar\dict-common\dict-common.c" />
     <ClCompile Include="..\link-grammar\dict-common\dict-impl.c" />
@@ -312,6 +317,7 @@
     <ClCompile Include="..\link-grammar\dict-file\read-dict.c" />
     <ClCompile Include="..\link-grammar\dict-file\read-regex.c" />
     <ClCompile Include="..\link-grammar\dict-file\word-file.c" />
+    <ClCompile Include="..\link-grammar\dict-ram\dict-ram.c" />
     <ClCompile Include="..\link-grammar\disjunct-utils.c" />
     <ClCompile Include="..\link-grammar\error.c" />
     <ClCompile Include="..\link-grammar\linkage\analyze-linkage.c" />

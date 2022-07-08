@@ -1,6 +1,6 @@
 Link Grammar Parser
 ===================
-***Version 5.10.2***
+***Version 5.11.0***
 
 ![Main](https://github.com/opencog/link-grammar/actions/workflows/main.yml/badge.svg)
 ![node.js](https://github.com/opencog/link-grammar/actions/workflows/bindings-js.yml/badge.svg)
@@ -132,7 +132,8 @@ suffixes that carry all of the syntactic structure, and not the stems.
 The Russian lexis is
 [documented here](https://www.abisource.com/projects/link-grammar/russian/doc/).
 
-And here is an example in Thai:
+The Thai dictionary is now fully developed, effectively covering the
+entire language.  An example in Thai:
 ```
 linkparser> นายกรัฐมนตรี ขึ้น กล่าว สุนทรพจน์
 	Linkage 1, cost vector = (UNUSED=0 DIS= 2.00 LEN=2)
@@ -143,9 +144,13 @@ linkparser> นายกรัฐมนตรี ขึ้น กล่าว �
 LEFT-WALL นายกรัฐมนตรี.n ขึ้น.v กล่าว.v สุนทรพจน์.n
 ```
 
-The `VS` link connects two verbs 'ขึ้น' and 'กล่าว' in a serial verb construction. A summary of link types is [documented here](https://github.com/kaamanita/link-grammar/blob/master/data/th/README.md). A full documentation of Thai Link Grammar can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/LINKDOC.md).
+The `VS` link connects two verbs 'ขึ้น' and 'กล่าว' in a serial verb
+construction. A summary of link types is
+[documented here](data/th/README.md). Full documentation of Thai Link
+Grammar can be [found here](data/th/LINKDOC.md).
 
-Thai Link Grammar also accepts POS-tagged and named-entity-tagged inputs. Each word can be annotated with the Link POS tag. For example:
+Thai Link Grammar also accepts POS-tagged and named-entity-tagged
+inputs. Each word can be annotated with the Link POS tag. For example:
 
 ```
 linkparser> เมื่อวานนี้.n มี.ve คน.n มา.x ติดต่อ.v คุณ.pr ครับ.pt
@@ -159,9 +164,12 @@ Found 1 linkage (1 had no P.P. violations)
 LEFT-WALL เมื่อวานนี้.n[!] มี.ve[!] คน.n[!] มา.x[!] ติดต่อ.v[!] คุณ.pr[!] ครับ.pt[!]
 ```
 
-A full documentation for the input formats can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/INPUT_FORMATS.md).
+Full documentation for the Thai dictionary can be
+[found here](th/INPUT_FORMATS.md).
 
-Moreover, it accepts LST20 tagsets for POS and named entities to bridge the gap between fundamental NLP tools and the Link Parser. For example:
+The Thai dictionary accepts LST20 tagsets for POS and named entities,
+to bridge the gap between fundamental NLP tools and the Link Parser.
+For example:
 
 ```
 linkparser> linkparser> วันที่_25_ธันวาคม@DTM ของ@PS ทุก@AJ ปี@NN เป็น@VV วัน@NN คริสต์มาส@NN
@@ -176,7 +184,11 @@ Found 348 linkages (348 had no P.P. violations)
 LEFT-WALL วันที่_25_ธันวาคม@DTM[!] ของ@PS[!].pnn ทุก@AJ[!].jl ปี@NN[!].n เป็น@VV[!].v วัน@NN[!].na คริสต์มาส@NN[!].n
 ```
 
-Note that each word above is annotated with LST20 POS tags and NE tags. A full documentation for both the Link POS tags and the LST20 tagsets can be [found here](https://github.com/kaamanita/link-grammar/blob/master/data/th/TAGSETS.md). More information about LST20, e.g. annotation guideline and data statistics, can be [found here](https://arxiv.org/abs/2008.05055).
+Note that each word above is annotated with LST20 POS tags and NE tags.
+Full documentation for both the Link POS tags and the LST20 tagsets can
+be [found here](data/th/TAGSETS.md). More information about LST20, e.g.
+annotation guideline and data statistics, can be
+[found here](https://arxiv.org/abs/2008.05055).
 
 Theory and Documentation
 ------------------------
@@ -274,7 +286,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.10.2.tar.gz.asc`
+`gpg --verify link-grammar-5.10.5.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
@@ -289,7 +301,7 @@ verify the check-sums, issue `md5sum -c MD5SUM` at the command line.
 Tags in `git` can be verified by performing the following:
 ```
 gpg --recv-keys --keyserver keyserver.ubuntu.com EB6AA534E0C0651C
-git tag -v link-grammar-5.10.2
+git tag -v link-grammar-5.10.5
 ```
 
 
@@ -484,7 +496,7 @@ Tools that may need installation before you can build link-grammar:
 `autoconf`<br>
 `libtool`<br>
 `autoconf-archive`<br>
-`pkg-config`<br>
+`pkg-config` (may be named `pkgconf` or `pkgconfig`)<br>
 `pip3` (for the Python bindings)<br>
 
 Optional:<br>
@@ -517,8 +529,7 @@ It adds some verification debug code and functions that can
 pretty-print several data structures.
 
 A feature that may be useful for debugging is the word-graph
-display.  Use the `configure` option `--enable-wordgraph-display` to enable
-it. For more details on this feature, see
+display.  It is enabled by default. For more details on this feature, see
 [Word-graph display](link-grammar/tokenize/README.md#word-graph-display).
 
 
@@ -579,23 +590,7 @@ Windows systems from Vista on.
 The Cygwin way currently produces the best result, as it supports line editing
 with command completion and history and also supports word-graph displaying on
 X-windows. (MinGW currently doesn't  have `libedit`, and the MSVC port
-currently doesn't support command completion and history, spelling and
-X-Windows word-graph display.)
-
-Link-grammar requires a working version of POSIX-standard regex
-libraries.  Since these are not provided by Microsoft, a copy must
-be obtained elsewhere.  One popular choice is
-[TRE](http://gnuwin32.sourceforge.net/packages/tre.htm).
-
-Another popular choice is PCRE, 'Perl-Compatible Regular Expressions',
-available at: http://www.pcre.org/ .<br>
-For building on Windows: https://github.com/rivy/PCRE .<br>
-Another popular choice is
-[PCRE, 'Perl-Compatible Regular Expressions'](http://www.pcre.org/).<br>
-Older 32-bit binaries are at:
-http://gnuwin32.sourceforge.net/packages/regex.htm .<br>
-See also:
-http://ftp.gnome.org/pub/gnome/binaries/win32/dependencies/regex.README .
+currently doesn't support command completion and history, and also spelling.
 
 ### BUILDING on Windows (Cygwin)
 The easiest way to have link-grammar working on MS Windows is to
@@ -646,7 +641,7 @@ directory in that order, directly or under a directory names `data`:
    command, which may be a script).
 
 If link-parser cannot find the desired dictionary, use verbosity
-level 3 to debug the problem; for example:
+level 4 to debug the problem; for example:
 ```
 link-parser ru -verbosity=4
 ```
@@ -1263,6 +1258,21 @@ Some complex phantom constructions:
  * Perhaps he will (do it), if he sees enough of her.
 
 See also [github issue #224](https://github.com/opencog/link-grammar/issues/224).
+
+Actual ellipsis:
+ * At first, it seemed like ...
+ * It became clear that ...
+
+Here, the ellipsis stands for a subordinate clause, which attaches
+with not one, but two links: `C+ & CV+`, and thus requires two words,
+not one. There is no way to have the ellipsis word to sink two
+connectors starting from the same word, and so some more complex
+mechanism is needed. The solution is to infer a second phantom ellipsis:
+
+ * It became clear that ... (...)
+
+where the first ellipsis is a stand in for the subject of a subordinate
+clause, and the second stands in for an unknown verb.
 
 #### Elision of syllables
 Many (unstressed) syllables can be elided; in modern English, this occurs

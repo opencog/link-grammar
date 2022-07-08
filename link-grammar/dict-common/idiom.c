@@ -14,7 +14,7 @@
 #include "api-types.h"
 #include "dict-api.h"
 #include "dict-common.h"
-#include "dict-defines.h" // For MAX_WORD
+#include "dict-ram/dict-ram.h"
 #include "error.h"
 #include "idiom.h"
 #include "string-set.h"
@@ -74,9 +74,10 @@ static bool is_idiom_string(const char * s)
  * This is the same as s, but with a postfix of ".I". */
 static const char * build_idiom_word_name(Dictionary dict, const char * s)
 {
-	char buff[2*MAX_WORD];
+	size_t n = strlen(s);
+	char *buff = alloca(n+5);
 
-	size_t n = lg_strlcpy(buff, s, sizeof(buff));
+	strcpy(buff, s);
 	buff[n] = SUBSCRIPT_MARK;
 	buff[n + 1] = '_';
 	buff[n + 2] = 'I';
@@ -101,7 +102,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 	Dict_node * dn = NULL;
 	char * s = strdupa(string);
 	const char * t;
-	const char *sm = strchr(s, SUBSCRIPT_MARK);
+	const char *sm = get_word_subscript(s);
 
 	for (t = s; NULL != s; t = s)
 	{
@@ -169,12 +170,9 @@ static const char * generate_id_connector(Dictionary dict)
  */
 void insert_idiom(Dictionary dict, Dict_node * dn)
 {
-	Exp * nc, * no, * n1;
-	const char * s;
 	Dict_node * dn_list, * xdn, * start_dn_list;
 
-	no = dn->exp;
-	s = dn->string;
+	const char * s = dn->string;
 
 	if (!is_idiom_string(s))
 	{
@@ -194,69 +192,32 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 	/* note that the last word of the idiom is first in our list */
 
 	/* ----- this code just sets up the node fields of the dn_list ----*/
-	nc = Exp_create(dict->Exp_pool);
-	nc->condesc = condesc_add(&dict->contable, generate_id_connector(dict));
-	nc->dir = '-';
-	nc->multi = false;
-	nc->type = CONNECTOR_type;
-	nc->operand_next = no;
-	nc->cost = 0;
+	Exp* nc = make_connector_node(dict, dict->Exp_pool,
+	                  generate_id_connector(dict), '-', false);
 
-	n1 = Exp_create(dict->Exp_pool);
-	n1->operand_first = nc;
-	n1->type = AND_type;
-	n1->operand_next = NULL;
-	n1->cost = 0;
-
-	dn_list->exp = n1;
+	dn_list->exp = make_and_node(dict->Exp_pool, nc, dn->exp);
 
 	dn_list = dn_list->right;
 
 	while(dn_list->right != NULL)
 	{
 		/* generate the expression for a middle idiom word */
-
-		n1 = Exp_create(dict->Exp_pool);
-		n1->type = AND_type;
-		n1->operand_next = NULL;
-		n1->cost = 0;
-
-		nc = Exp_create(dict->Exp_pool);
-		nc->condesc = condesc_add(&dict->contable, generate_id_connector(dict));
-		nc->dir = '+';
-		nc->multi = false;
-		nc->type = CONNECTOR_type;
-		nc->operand_next = NULL;
-		nc->cost = 0;
-		n1->operand_first = nc;
+		nc = make_connector_node(dict, dict->Exp_pool,
+		                generate_id_connector(dict), '+', false);
 
 		increment_current_name(dict);
 
-		no = Exp_create(dict->Exp_pool);
-		no->condesc = condesc_add(&dict->contable, generate_id_connector(dict));
-		no->dir = '-';
-		no->multi = false;
-		no->type = CONNECTOR_type;
-		no->operand_next = NULL;
-		no->cost = 0;
+		Exp* no = make_connector_node(dict, dict->Exp_pool,
+		                 generate_id_connector(dict), '-', false);
 
-		nc->operand_next = no;
-
-		dn_list->exp = n1;
+		dn_list->exp = make_and_node(dict->Exp_pool, nc, no);
 
 		dn_list = dn_list->right;
 	}
 	/* now generate the last one */
 
-	nc = Exp_create(dict->Exp_pool);
-	nc->condesc = condesc_add(&dict->contable, generate_id_connector(dict));
-	nc->dir = '+';
-	nc->multi = false;
-	nc->type = CONNECTOR_type;
-	nc->operand_next = NULL;
-	nc->cost = 0;
-
-	dn_list->exp = nc;
+	dn_list->exp = make_connector_node(dict, dict->Exp_pool,
+	                         generate_id_connector(dict), '+', false);
 
 	increment_current_name(dict);
 
@@ -277,7 +238,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 			/* The word doesn't participate yet in any idiom. Just insert it. */
 			dn_list->left = dn_list->right = NULL;
 			dn_list->string = word_name;
-			dict->root = insert_dict(dict, dict->root, dn_list);
+			dict->root = dict_node_insert(dict, dict->root, dn_list);
 			dict->num_entries++;
 		}
 		else
@@ -287,12 +248,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 			if (t->exp->type != OR_type)
 			{
 				/* Prepend an OR element. */
-				Exp *or = Exp_create(dict->Exp_pool);
-				or->type = OR_type;
-				or->cost = 0.0;
-				or->operand_next = NULL;
-				or->operand_first = t->exp;
-				t->exp = or;
+				t->exp = make_or_node(dict->Exp_pool, t->exp, NULL);
 			}
 
 			/* Prepend the word's expression to dict expression OR'ed elements. */
@@ -312,7 +268,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
  */
 bool is_idiom_word(const char * s)
 {
-	const char *sm = strchr(s, SUBSCRIPT_MARK);
+	const char *sm = get_word_subscript(s);
 
 	if (NULL == sm) return false;
 	if ((sm[1] == '_') && (sm[2] == 'I') && (sm[3] == '\0')) return true;

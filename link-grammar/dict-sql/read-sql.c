@@ -57,7 +57,7 @@ static const char * make_expression(Dictionary dict,
 	/* Search for the start of a connector */
 	Exp_type etype = CONNECTOR_type;
 	const char * p = exp_str;
-	while (*p && (lg_isspace(*p))) p++;
+	while (*p && (lg_isspace((unsigned char)*p))) p++;
 	if (0 == *p) return p;
 
 	/* If it's an open paren, assume its the beginning of a new list */
@@ -69,38 +69,31 @@ static const char * make_expression(Dictionary dict,
 	{
 		/* Search for the end of a connector */
 		const char * con_start = p;
-		while (*p && (isalnum(*p) || '*' == *p)) p++;
+		while (*p && (isalnum((unsigned char)*p) || '*' == *p)) p++;
 
 		/* Connectors always end with a + or - */
 		assert (('+' == *p) || ('-' == *p),
 				"Missing direction character in connector string: %s", con_start);
 
 		/* Create an expression to hold the connector */
-		Exp* e = Exp_create(dict->Exp_pool);
-		e->dir = *p;
-		e->type = CONNECTOR_type;
-		e->operand_next = NULL;
-		e->cost = 0.0;
 		char * constr = NULL;
+		bool multi = false;
 		if ('@' == *con_start)
 		{
 			constr = strndupa(con_start+1, p-con_start-1);
-			e->multi = true;
+			multi = true;
 		}
 		else
-		{
 			constr = strndupa(con_start, p-con_start);
-			e->multi = false;
-		}
 
-		e->condesc = condesc_add(&dict->contable,
-		                           string_set_add(constr, dict->string_set));
+		Exp* e = make_connector_node(dict, dict->Exp_pool, constr, *p, multi);
+
 		*pex = e;
 	}
 
 	/* Is there any more? If not, return what we've got. */
 	p++;
-	while (*p && (lg_isspace(*p))) p++;
+	while (*p && (lg_isspace((unsigned char)*p))) p++;
 	if (')' == *p || 0 == *p)
 	{
 		return p;
@@ -125,14 +118,7 @@ static const char * make_expression(Dictionary dict,
 	assert(NULL != rest, "Badly formed expression %s", exp_str);
 
 	/* Join it all together. */
-	Exp* join = Exp_create(dict->Exp_pool);
-	join->type = etype;
-	join->operand_next = NULL;
-	join->cost = 0.0;
-
-	join->operand_first = *pex;
-	(*pex)->operand_next = rest;
-	rest->operand_next = NULL;
+	Exp* join = make_join_node(dict->Exp_pool, etype, *pex, rest);
 
 	*pex = join;
 
@@ -194,13 +180,7 @@ static int exp_cb(void *user_data, int argc, char **argv, char **colName)
 	/* If the second expression, OR-it with the existing expression. */
 	if (OR_type != bs->exp->type)
 	{
-		Exp* orn = Exp_create(dict->Exp_pool);
-		orn->type = OR_type;
-		orn->cost = 0.0;
-
-		orn->operand_first = exp;
-		exp->operand_next = bs->exp;
-		bs->exp = orn;
+		bs->exp = make_or_node(dict->Exp_pool, exp, bs->exp);
 		return 0;
 	}
 
@@ -423,8 +403,10 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	dict->num_categories++;
 	dict->category[dict->num_categories].num_words = 0;
 	dict->category[dict->num_categories].word = NULL;
+	char* esc = escape_quotes(argv[0]);
 	dict->category[dict->num_categories].name =
-		string_set_add(argv[0], dict->string_set);
+		string_set_add(esc, dict->string_set);
+	if (esc != argv[0]) free(esc);
 
 	char category_string[16];     /* For the tokenizer - not used here */
 	snprintf(category_string, sizeof(category_string), " %x",
@@ -604,9 +586,14 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->lookup_list = db_lookup_list;
 	dict->lookup_wild = db_lookup_wild;
 	dict->free_lookup = db_free_llist;
-	dict->lookup = db_lookup;
+	dict->exists_lookup = db_lookup;
+	dict->clear_cache = dict_node_noop;
 	dict->close = db_close;
+
+	dict->dynamic_lookup = true;
 	condesc_init(dict, 1<<8);
+
+	dict->dfine.set = string_id_create();
 
 	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
 	                          sizeof(Exp), /*zero_out*/false,

@@ -6,8 +6,6 @@
 #
 # Note: this dependency on Perl is fine: only developers use autogen.sh
 #       and we can state that dev people need Perl on their machine
-#
-# TODO: make sure that ac_pkg_swig.m4 gets installed in m4 directory ...
 
 rm -f autogen.err
 

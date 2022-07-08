@@ -269,7 +269,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 
 	if (verbosity >= D_USER_INFO)
 	{
-		prt_error("Info: sane_morphism(): %zu of %d linkages had "
+		lgdebug(0, "Info: sane_morphism(): %zu of %d linkages had "
 		        "invalid morphology construction\n", N_invalid_morphism,
 		        itry + (itry != maxtries));
 	}

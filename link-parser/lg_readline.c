@@ -434,8 +434,8 @@ char *lg_readline(const char *mb_prompt)
 	free(mb_line);
 	if (byte_len == (size_t)-1)
 	{
-		printf("Error: Unable to process UTF8 in input string.\n");
-		mb_line = strdup(""); /* Just ignore it. */
+		prt_error("Error: Unable to process UTF8 in input string.\n");
+		mb_line = strdup(""); /* Just ignore the input line. */
 		return mb_line;
 	}
 	mb_line = malloc(byte_len);

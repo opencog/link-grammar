@@ -22,7 +22,7 @@
 #include "dict-common/dict-affix.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-defines.h" // for MAX_WORD
+#include "dict-common/dict-defines.h" // for RIGHT_WALL_WORD
 #include "dict-common/dict-utils.h"
 #include "dict-common/regex-morph.h"
 #include "error.h"
@@ -754,7 +754,8 @@ Gword *issue_word_alternative(Sentence sent, Gword *unsplit_word,
 				if (MT_PUNC == morpheme_type) /* It's a terminal token */
 					tokenization_done(sent, subword);
 
-				if (!sent->dict->affix_table->pre_suf_class_exists && last_split)
+				if (!sent->dict->affix_table->pre_suf_class_exists && last_split &&
+				    !(sent->dict->affix_table && sent->dict->affix_table->anysplit))
 				{
 					/* XXX The "tr" and "kz" dictionaries depend on specifying
 					 * compound suffixes which are not in the dict file, in the
@@ -1318,7 +1319,7 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 			suflen = strlen(*suffix);
 			 /* The remaining w is too short for a possible match.
 			  * In addition, don't allow empty stems. */
-			if ((wend-suflen) < (w+1)) continue;
+			if ((size_t) (wend-w) < suflen+1) continue;
 
 			/* A lang like Russian allows empty suffixes, which have a real
 			 * morphological linkage. In the following check, the empty suffix
@@ -1362,16 +1363,13 @@ static bool suffix_split(Sentence sent, Gword *unsplit_word, const char *w)
 			for (j = 0; j < p_strippable; j++)
 			{
 				size_t prelen = strlen(prefix[j]);
-				/* The remaining w is too short for a possible match.
-				 * NOTE: A zero length "stem" is not allowed here. In any
-				 * case, it cannot be handled (yet) by the rest of the code. */
-				if ((wend-w) - suflen <= prelen) continue;
-				if (strncmp(w, prefix[j], prelen) == 0)
-				{
-					size_t sz = MIN((wend-w) - suflen - prelen, MAX_WORD);
 
-					strncpy(newword, w+prelen, sz);
-					newword[sz] = '\0';
+				/* A zero length "stem" is not allowed here. In any case,
+				 * it cannot be handled (yet) by the rest of the code. */
+				if (suflen+prelen < (size_t) (wend-w)
+				    && strncmp(w, prefix[j], prelen) == 0)
+				{
+					strcpy(newword, w+prelen);
 					/* ??? Do we need a regex match? */
 					if (dict_has_word(dict, newword))
 					{
@@ -1464,7 +1462,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 	memset(pseen, 0, mp_strippable * sizeof(*pseen));
 
 	w = word;
-	wordlen = strlen(word);  /* guaranteed < MAX_WORD by separate_word() */
+	wordlen = strlen(word);
 	do
 	{
 		pfound = -1;
@@ -3068,7 +3066,7 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		else
 		{
 			dyn_str *xs = dyn_str_new();
-			const char *sm = strrchr(dn->string, SUBSCRIPT_MARK);
+			const char *sm = get_word_subscript(dn->string);
 
 			dyn_strcat(xs, w->subword);
 			if (NULL != sm) dyn_strcat(xs, sm);

@@ -19,7 +19,7 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-#define dictionary-version-number 5.10.2;
+#define dictionary-version-number 5.10.5;
 #define dictionary-locale         en_US.UTF-8;
 
 % The default largest disjunct cost to consider during parsing.
@@ -3097,7 +3097,7 @@ rest.w: Ix- & Pv+;
   ({@EBm+} & ((
       ([{CV-} & B**t-]
       or (B**t- & <verb-wall>)
-      or [K+]
+      or [<verb-wall> & K+]
       or (<verb-wall> & BI+)
       or (<verb-wall> & OF+)
       or (Osi+ & R+ & Bs+ & <verb-wall>)
@@ -5548,7 +5548,9 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 
 get.v: VERB_PLI(<vc-get>);
 gets.v: VERB_S_T(<vc-get>);
-got.v-d: VERB_SPPP_T(<vc-get>);
+
+% <verb-x-sp> & Pv+:  "got handled recently"
+got.v-d: VERB_SPPP_T(<vc-get>) or (<verb-x-sp> & Pv+);
 
 % basilect
 % "I gotta go now"
@@ -7458,7 +7460,7 @@ unlike:
 % Mf- & MVp+: "She was a girl of about John's age"
 of:
   ({JQ+}
-    & (Js+ or Jp+ or Ju+ or Mgp+ or (QI+ & {CV+}))
+    & (Js+ or Jp+ or Ju+ or Jr+ or Mgp+ or (QI+ & {CV+}))
     & (Mp-
       or Mf-
       or OFj-
@@ -11012,9 +11014,11 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 
 % ellipsis ... at the end, trailing off ...
 % D- & O+: "He is such a ..."
+% J-: "She was thinking of ..."
 ....y ….y:
   (hCO- & Wd-)
   or ({D-} & O-)
+  or J-
   or Xx-;
 
 % ellipsis ... at the start
@@ -11023,8 +11027,12 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 % S+ has a cost so that the infinitive I+ is preferred.
 % BI+, QI+: "... how those two should work together"
 % TH+: "... that it rained."
+% LI+: "... like it would rain"
 ....x ….x:
-  We- & (J+ or [S+] or I+ or M+ or MV+ or BI+ or TH+ or QI+ or (R+ & B+ & {S+}));
+  We- & (
+    J+ or [S+] or I+ or M+ or MV+ or BI+
+    or LI+ or TH+ or QI+ or (R+ & B+ & {S+})
+  );
 
 % Ellipsis as verb: "Lud, son of Shem, ..."
 % Qp-: "In what way...?
@@ -11045,6 +11053,11 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 ....n ….n:
   ({D+} & dSJl+) or
   ({D+} & dSJr-);
+
+% subordinate clause "It became clear that ... ..."
+% Note that two ellipses are needed for this to appear.
+....s ….s:
+  C- & S+;
 
 % The percent sign following a number (also basis pt, per mil)
 % Also -- see above, for handling of 12ft. 12in. not just 12%

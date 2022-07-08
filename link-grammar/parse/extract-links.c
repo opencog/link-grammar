@@ -56,7 +56,7 @@ struct Parse_set_struct
 #ifdef RECOUNT
 	count_t recount;  /* Exactly the same as above, but counted at a later stage. */
 	count_t cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
-	//double cost_cutoff;
+	//float cost_cutoff;
 #undef RECOUNT
 #define RECOUNT(X) X
 #else
@@ -482,7 +482,14 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 		}
 		/* End of nonzero leftcount/rightcount range cache check. */
 
-		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw);
+		Disjunct ***mlcl = NULL, ***mlcr = NULL;
+
+		if (le != NULL)
+			mlcl = get_cached_match_list(ctxt, 0, w, le);
+		if (re != NULL && ((le == NULL) || (re->farthest_word <= w)))
+			mlcr = get_cached_match_list(ctxt, 1, w, re);
+
+		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw, mlcl, mlcr);
 		if (pex->sort_match_list) sort_match_list(mchxt, mlb);
 
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)

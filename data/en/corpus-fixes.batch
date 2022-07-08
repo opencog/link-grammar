@@ -27,6 +27,9 @@ an eerie quiet preceded the explosion.
 he had an easy calmness about him
 
 % Missing or miscategorized verbs
+it will reenable on its own
+And she flounced out.
+And she flounces out.
 Don't overexcite him!
 Don't overextend yourself!
 This code deadlocks.
@@ -95,6 +98,12 @@ he cut class after fifth period
 he cut out when the phone rang
 he dropped out after fifth grade
 they wick the moisture through
+
+I am told that "tombstoning" can be tricky to avoid
+it happens when the placement is off
+in my past experience, tombstoning happens when the part placement is off
+the part will tombstone
+In this case, surface tension of the liquid solder will pull on one side more than the other, and the part will tombstone.
 
 we deliver!
 he really delivers, doesn't he?
@@ -379,6 +388,9 @@ we are going to arrive exactly on time
 we are going to arrive about on time
 we are going to arrive just about on time
 
+% prepositions in relative phrases
+The doctors, many of whom are surgeons, were angry
+
 % words.v.4.1 -- some predicative-adjective stuff in here
 It reduced chances that profits could equal their earlier performance
 It reduced chances that profits could affect the outcome
@@ -514,6 +526,9 @@ Do whatever the fuck pleases you.
 % NOUNS misclassified and mangled
 %
 % Miscellaneous missing nouns.
+With this commit executables will overlink with uninstalled indirect libraries.
+The result was a false postive
+The test returns false positives
 He picked up the game die.
 People use espresso to make other coffee drinks.
 Espresso is a coffee drink.
@@ -552,6 +567,9 @@ he eats shoots and leaves
 he eats, shoots and leaves
 
 In upper crustal levels, deformation causes brittle failure
+
+I fixed a build break.
+There were three build breaks last week.
 
 I got to first base
 I got to first base with her.
@@ -1321,6 +1339,13 @@ I'll go get that
 I'll come listen to you
 Come listen to him
 come walk with me
+
+% "got" as an auxilliary
+it got added as a bonus
+it got saved as a bonus
+it got handled recently
+Yep, got handled recently
+got handled
 
 % Look-at, listen-to to focus and pay attention to an action-verb
 % Similar to "go watch them play ball" except its LOOK_AT, LISTEN_TO
@@ -6284,6 +6309,13 @@ until yesterday ...
 ... how those two should work together
 ... the 60's.
 
+... like it would rain.
+
+% Currently, this requires two sets of ellipsis to work.
+% Phantom words could fix this:
+It became clear that ... ...
+It seems as if ... ...
+
 I need to find someone who ...
 I need to find someone who...
 He is such a ...
@@ -6292,6 +6324,8 @@ I will...
 I'll ...
 I'll...
 Maybe it works now...
+
+She was thinking of ...
 
 % Conjunctions
 He said that ... and that ...
