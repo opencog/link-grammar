@@ -15,8 +15,9 @@ dictionaries maintained in the AtomSpace.  This provides several benefits:
 This is meant to work with dictionaries created by the code located
 in the [OpenCog learn repo](https://github.com/opencog/learn).
 
-**Version 0.7.3** -- The basic code has been laid down.
-Costs not yet implemented. And other stuff is missing.
+**Version 0.8.0** -- The basic code has been laid down.
+The cost predicate needs to be configurable.
+A better demo dict needs to be prepared.
 
 Building
 --------
@@ -254,8 +255,6 @@ simple as possible.
 TODO
 ====
 Remaining work items:
-
-* Implement costs. Pull from PredicateNode.
 
 * Close the loop w/ parsing, so that LG disjuncts arising from a given
   parse an be matched up with the Atomese disjuncts.  Increment/send
