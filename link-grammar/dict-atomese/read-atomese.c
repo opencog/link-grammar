@@ -91,7 +91,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	if (!afdict_init(dict)) goto failure;
 
 	/* Set up the server connection */
-	if (not as_open(dict)) goto failure;
+	if (!as_open(dict)) goto failure;
 
 	/* Install backend methods */
 	dict->lookup_list = as_lookup_list;

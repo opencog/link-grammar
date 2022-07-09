@@ -56,7 +56,7 @@ void lg_config_atomspace(AtomSpacePtr asp, StorageNodePtr sto)
 	external_storage = sto;
 }
 
-static const char* get_dict_define(Dictionary dict, const share* namestr)
+static const char* get_dict_define(Dictionary dict, const char* namestr)
 {
 	const char* val_str =
 		linkgrammar_get_dict_define(dict, namestr);
@@ -64,7 +64,7 @@ static const char* get_dict_define(Dictionary dict, const share* namestr)
 
 	// Brute-force unescape quotes. Simple, dumb.
 	char* unescaped = (char*) alloca(strlen(val_str)+1);
-	const char* p = store_str;
+	const char* p = val_str;
 	char* q = unescaped;
 	while (*p) { if ('\\' != *p) { *q = *p; q++; } p++; }
 	*q = 0x0;
@@ -76,7 +76,7 @@ static const char* get_dict_define(Dictionary dict, const share* namestr)
 bool as_open(Dictionary dict)
 {
 	const char * stns = get_dict_define(dict, STORAGE_NODE_STRING);
-	if (nullptr = stns) return false;
+	if (nullptr == stns) return false;
 
 	Local* local = new Local;
 	local->node_str = stns;
@@ -532,7 +532,6 @@ void as_clear_cache(Dictionary dict)
 	// Clear the local AtomSpace too.
 	// Easiest way to do this is to just close and reopen
 	// the connection.
-	const char* storn = local->node_str;
 
 	AtomSpacePtr savea = external_atomspace;
 	StorageNodePtr saves = external_storage;
@@ -543,7 +542,7 @@ void as_clear_cache(Dictionary dict)
 	}
 
 	as_close(dict);
-	as_open(dict, storn);
+	as_open(dict);
 	external_atomspace = savea;
 	external_storage = saves;
 	as_boolean_lookup(dict, LEFT_WALL_WORD);
