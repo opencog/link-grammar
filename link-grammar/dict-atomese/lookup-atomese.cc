@@ -347,17 +347,12 @@ void print_section(Dictionary dict, const Handle& sect)
    /* The connection target is the first Atom in the connector */    \
    const Handle& tgt = ctcr->getOutgoingAtom(0);                     \
                                                                      \
-   /* If it and the germ are both words, we have to fake a link */   \
-   if (iswrd and WORD_NODE == tgt->get_type()) {                     \
+   /* The link is the connection of both of these. */                \
+   const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt);    \
                                                                      \
-      /* The link is the connection of both of these. */             \
-      const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt); \
+   /* Assign an upper-case name to the link. */                      \
+   slnk = get_linkname(local, lnk);                                  \
                                                                      \
-      /* Assign an upper-case name to the link. */                   \
-      slnk = get_linkname(local, lnk);                               \
-   } else {                                                          \
-      slnk = get_linkname(local, tgt);                               \
-   }                                                                 \
    Exp* e = make_connector_node(dict, dict->Exp_pool,                \
                     slnk.c_str(), cdir, false);                      \
    if (nullptr == andex) {                                           \
