@@ -3,6 +3,9 @@
 #define dictionary-locale         en_US.UTF-8;
 #define dictionary-version-number 5.11.0;
 
+% Sections with missing MI default to an MI=-4 and costs are minus MI.
+#define max-disjunct-cost 10;
+
 % Two examples follow; one shows the use of the CogStorageNode, which
 % provides network access, and another using RocksStorageNode, which
 % provides access to dictionaries located on the local hard drive.

@@ -106,10 +106,6 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	dict->clear_cache = as_clear_cache;
 	dict->close = as_close;
 
-	// If MI values are missing, every disjunct gets a cost of 4.0
-	// Search for MISSING_MI in the other file.
-	dict->default_max_disjunct_cost = 10.0;
-
 	dict->dynamic_lookup = true;
 	condesc_init(dict, 1<<8);
 

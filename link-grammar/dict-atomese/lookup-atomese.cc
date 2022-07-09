@@ -352,6 +352,8 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ, bool iswrd)
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
 	{
+// This is harsh. It must be less #define max-disjunct-cost
+// in the dict file (currently set to 10 in the demo dict)
 #define MISSING_MI -4.0   // This is harsh
 		double mi = MISSING_MI;
 
