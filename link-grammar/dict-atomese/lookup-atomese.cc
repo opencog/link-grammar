@@ -38,7 +38,13 @@ public:
 	StorageNodePtr stnp;
 	Handle linkp; // (Predicate "*-LG connector string-*")
 	Handle mikp;  // (Predicate "*-Mutual Info Key cover-section")
+	int mi_offset; // Offset into the FloatValue
 };
+
+// Strings we expect to find in the dictionary.
+#define STORAGE_NODE_STRING "storage-node"
+#define MI_KEY_STRING "mi-key"
+#define MI_OFFSET_STRING "mi-offset"
 
 /// Shared global
 static AtomSpacePtr external_atomspace;
@@ -50,19 +56,30 @@ void lg_config_atomspace(AtomSpacePtr asp, StorageNodePtr sto)
 	external_storage = sto;
 }
 
-/// Open a connection to a StorageNode.
-void as_open(Dictionary dict, const char* store_str)
+static const char* get_dict_define(Dictionary dict, const char* namestr)
 {
+	const char* val_str =
+		linkgrammar_get_dict_define(dict, namestr);
+	if (nullptr == val_str) return nullptr;
+
 	// Brute-force unescape quotes. Simple, dumb.
-	char* unescaped = (char*) alloca(strlen(store_str)+1);
-	const char* p = store_str;
+	char* unescaped = (char*) alloca(strlen(val_str)+1);
+	const char* p = val_str;
 	char* q = unescaped;
 	while (*p) { if ('\\' != *p) { *q = *p; q++; } p++; }
 	*q = 0x0;
 
-	Local* local = new Local;
+	return string_set_add(unescaped, dict->string_set);
+}
 
-	local->node_str = string_set_add(unescaped, dict->string_set);
+/// Open a connection to a StorageNode.
+bool as_open(Dictionary dict)
+{
+	const char * stns = get_dict_define(dict, STORAGE_NODE_STRING);
+	if (nullptr == stns) return false;
+
+	Local* local = new Local;
+	local->node_str = stns;
 
 	// If an external atompsace is specified, then use that.
 	if (external_atomspace)
@@ -83,14 +100,18 @@ void as_open(Dictionary dict, const char* store_str)
 	local->linkp = local->asp->add_node(PREDICATE_NODE,
 		"*-LG connector string-*");
 
-	// This is where costs are stored.
-	// XXX FIXME this needs to be configurable.
-	local->mikp = local->asp->add_node(PREDICATE_NODE,
-		"*-Mutual Info Key cover-section");
+	// Costs are assumed to be minus the MI located at some key.
+	const char* miks = get_dict_define(dict, MI_KEY_STRING);
+	Handle mikh = Sexpr::decode_atom(miks);
+	local->mikp = local->asp->add_atom(mikh);
+
+	const char* off_str =
+		linkgrammar_get_dict_define(dict, MI_OFFSET_STRING);
+	local->mi_offset = atoi(off_str);
 
 	dict->as_server = (void*) local;
 
-	if (local->using_external_as) return;
+	if (local->using_external_as) return true;
 
 	// --------------------
 	// If we are here, then we manage our own private AtomSpace.
@@ -133,6 +154,8 @@ void as_open(Dictionary dict, const char* store_str)
 		printf("Connected to %s\n", stoname);
 	else
 		printf("Failed to connect to %s\n", stoname);
+
+	return true;
 }
 
 /// Close the connection to the cogserver.
@@ -368,7 +391,7 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ, bool iswrd)
 		{
 			// MI is the second entry in the list.
 			const FloatValuePtr& fmivp = FloatValueCast(mivp);
-			mi = fmivp->value()[1];
+			mi = fmivp->value()[local->mi_offset];
 		}
 
 		Exp* andex = nullptr;
@@ -509,7 +532,6 @@ void as_clear_cache(Dictionary dict)
 	// Clear the local AtomSpace too.
 	// Easiest way to do this is to just close and reopen
 	// the connection.
-	const char* storn = local->node_str;
 
 	AtomSpacePtr savea = external_atomspace;
 	StorageNodePtr saves = external_storage;
@@ -520,7 +542,7 @@ void as_clear_cache(Dictionary dict)
 	}
 
 	as_close(dict);
-	as_open(dict, storn);
+	as_open(dict);
 	external_atomspace = savea;
 	external_storage = saves;
 	as_boolean_lookup(dict, LEFT_WALL_WORD);

@@ -34,7 +34,6 @@
 #include "lookup-atomese.h"
 
 #define ATOMESE_DICT "storage.dict"
-#define STORAGE_NODE_STRING "storage-node"
 
 Dictionary dictionary_create_from_atomese(const char *dictdir)
 {
@@ -91,12 +90,8 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	free(affix_name);
 	if (!afdict_init(dict)) goto failure;
 
-	const char* sto_node =
-		linkgrammar_get_dict_define(dict, STORAGE_NODE_STRING);
-	if (NULL == sto_node) goto failure;
-
 	/* Set up the server connection */
-	as_open(dict, sto_node);
+	if (!as_open(dict)) goto failure;
 
 	/* Install backend methods */
 	dict->lookup_list = as_lookup_list;
