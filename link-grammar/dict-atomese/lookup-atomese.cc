@@ -409,9 +409,15 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		const Handle& wcl = memb->getOutgoingAtom(1);
 		if (WORD_CLASS_NODE != wcl->get_type()) continue;
 
-		Exp* exp = make_exprs(dict, wcl, false);
+		Exp* clexp = make_exprs(dict, wcl, false);
+		if (nullptr == clexp) continue;
+
 printf("duuude as_lookup_list class for >>%s<< had=%d\n", ssc,
-size_of_expression(exp));
+size_of_expression(clexp));
+		if (nullptr == exp)
+			exp = clexp;
+		else
+			exp = make_or_node(dict->Exp_pool, exp, clexp);
 	}
 
 	dn = (Dict_node*) malloc(sizeof(Dict_node));
