@@ -74,6 +74,7 @@ struct Exp_struct
 		};
 	};
 	float cost;            /* The cost of using this expression. */
+	/* On 64-bit aligned machines, there's 32 more unused bits here. */
 	union
 	{
 		Exp *operand_first; /* First operand (for non-terminals). */

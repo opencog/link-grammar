@@ -36,7 +36,8 @@ public:
 	const char* node_str; // (StorageNode \"foo://bar/baz\")
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;
-	Handle linkp;
+	Handle linkp; // (Predicate "*-LG connector string-*")
+	Handle mikp;  // (Predicate "*-Mutual Info Key cover-section")
 };
 
 /// Shared global
@@ -78,8 +79,14 @@ void as_open(Dictionary dict, const char* store_str)
 	}
 
 	// Create the connector predicate.
+	// This will be used to cache LG connector strings.
 	local->linkp = local->asp->add_node(PREDICATE_NODE,
 		"*-LG connector string-*");
+
+	// This is where costs are stored.
+	// XXX FIXME this needs to be configurable.
+	local->mikp = local->asp->add_node(PREDICATE_NODE,
+		"*-Mutual Info Key cover-section");
 
 	dict->as_server = (void*) local;
 
@@ -345,6 +352,25 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ, bool iswrd)
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
 	{
+// This is harsh. It must be less #define max-disjunct-cost
+// in the dict file (currently set to 10 in the demo dict)
+#define MISSING_MI -4.0   // This is harsh
+		double mi = MISSING_MI;
+
+		// If there's no MI on this secion, just skip it.
+		// It's presumably not a valid part of the dataset (???)
+		const ValuePtr& mivp = sect->getValue(local->mikp);
+		// if (nullptr == mivp) continue;
+
+		// XXX FIXME ... why are the MI's sometimes missing?
+		// Did we forget to run a post-processing step?
+		if (mivp)
+		{
+			// MI is the second entry in the list.
+			const FloatValuePtr& fmivp = FloatValueCast(mivp);
+			mi = fmivp->value()[1];
+		}
+
 		Exp* andex = nullptr;
 
 		// The connector sequence the second Atom.
@@ -370,6 +396,10 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ, bool iswrd)
 			if ('-' == cdir) continue;
 			INNER_LOOP;
 		}
+
+		// Cost is minus the MI.
+		andex->cost = -mi;
+
 #if DEBUG
 		print_section(dict, sect);
 		printf("Word %s expression %s\n", ssc, lg_exp_stringify(andex));
