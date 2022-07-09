@@ -273,17 +273,20 @@ Remaining work items:
 
 Design Notes
 ------------
-Several important tasks lie ahead:
-* LG disjuncts must be associated with Atomese disjuncts, so that when
-  LG produces a parse, we can know which Atomese disjunct was used in
-  that parse (and thus increment the use count on it).
-
-* Such increments and updates can be done locally, but there needs to be
-  a write-back system, so that local count updates are not only pushed
-  back to the cogserver (this is easy/trivial) but also written from the
-  cogserver, to it's open storage node.
+Some notes.
 
 ### LG-Atomese Disjunct pairing
+LG disjuncts must be associated with Atomese disjuncts, so that when
+LG produces a parse, we can know which Atomese disjunct was used in
+that parse (and thus increment the use count on it).
+
+This needs to happen in the `learn` codebase, and not here.
+The `(PredicateNode "*-LG connector string-*")` implemented here
+is enough to perform that pairing, and the guile demo above shows
+that this works fine. See also examples in `lg-atomese`.
+
+Remove this note when above is finished!
+
 After LG parsing is completed, the chosen disjuncts are easily converted
 into unique strings. These need to be paired with Atomese disjuncts. The
 obvious format would seem to be:
