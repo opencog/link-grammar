@@ -130,7 +130,7 @@ $ guile
       fsn))
   (cog-execute! pda)
   (cog-prt-atomspace)
-  (cog-incomming-set (Predicate "*-LG connector string-*"))
+  (cog-incoming-set (Predicate "*-LG connector string-*"))
 ```
 See the
 [LgParse examples](https://github.com/opencog/lg-atomese/tree/master/examples)
