@@ -361,7 +361,7 @@ void print_section(Dictionary dict, const Handle& sect)
    }                                                                 \
    andex = make_and_node(dict->Exp_pool, e, andex);
 
-static Exp* make_exprs(Dictionary dict, const Handle& germ, bool iswrd)
+static Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 	Exp* exp = nullptr;
@@ -449,7 +449,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	if (nullptr == wrd) return nullptr;
 
 	// Get expressions, where the word itself is the germ.
-	Exp* exp = make_exprs(dict, wrd, true);
+	Exp* exp = make_exprs(dict, wrd);
 
 	// Get expressions, where the word is in some class.
 	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
@@ -457,7 +457,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		const Handle& wcl = memb->getOutgoingAtom(1);
 		if (WORD_CLASS_NODE != wcl->get_type()) continue;
 
-		Exp* clexp = make_exprs(dict, wcl, false);
+		Exp* clexp = make_exprs(dict, wcl);
 		if (nullptr == clexp) continue;
 
 printf("duuude as_lookup_list class for >>%s<< had=%d\n", ssc,
