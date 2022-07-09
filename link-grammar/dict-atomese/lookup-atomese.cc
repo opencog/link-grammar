@@ -52,23 +52,30 @@ void lg_config_atomspace(AtomSpacePtr asp, StorageNodePtr sto)
 	external_storage = sto;
 }
 
-/// Open a connection to a StorageNode.
-bool as_open(Dictionary dict)
+static const char* get_dict_define(Dictionary dict, const share* namestr)
 {
-	const char* store_str =
-		linkgrammar_get_dict_define(dict, STORAGE_NODE_STRING);
-	if (nullptr == store_str) return false;
+	const char* val_str =
+		linkgrammar_get_dict_define(dict, namestr);
+	if (nullptr == val_str) return nullptr;
 
 	// Brute-force unescape quotes. Simple, dumb.
-	char* unescaped = (char*) alloca(strlen(store_str)+1);
+	char* unescaped = (char*) alloca(strlen(val_str)+1);
 	const char* p = store_str;
 	char* q = unescaped;
 	while (*p) { if ('\\' != *p) { *q = *p; q++; } p++; }
 	*q = 0x0;
 
-	Local* local = new Local;
+	return string_set_add(unescaped, dict->string_set);
+}
 
-	local->node_str = string_set_add(unescaped, dict->string_set);
+/// Open a connection to a StorageNode.
+bool as_open(Dictionary dict)
+{
+	const char * stns = get_dict_define(dict, STORAGE_NODE_STRING);
+	if (nullptr = stns) return false;
+
+	Local* local = new Local;
+	local->node_str = stns;
 
 	// If an external atompsace is specified, then use that.
 	if (external_atomspace)
@@ -96,7 +103,7 @@ bool as_open(Dictionary dict)
 
 	dict->as_server = (void*) local;
 
-	if (local->using_external_as) return;
+	if (local->using_external_as) return true;
 
 	// --------------------
 	// If we are here, then we manage our own private AtomSpace.
@@ -139,6 +146,8 @@ bool as_open(Dictionary dict)
 		printf("Connected to %s\n", stoname);
 	else
 		printf("Failed to connect to %s\n", stoname);
+
+	return true;
 }
 
 /// Close the connection to the cogserver.
