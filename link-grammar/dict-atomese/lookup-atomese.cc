@@ -38,9 +38,13 @@ public:
 	StorageNodePtr stnp;
 	Handle linkp; // (Predicate "*-LG connector string-*")
 	Handle mikp;  // (Predicate "*-Mutual Info Key cover-section")
+	int mi_offset; // Offset into the FloatValue
 };
 
+// Strings we expect to find in the dictionary.
 #define STORAGE_NODE_STRING "storage-node"
+#define MI_KEY_STRING "mi-key"
+#define MI_OFFSET_STRING "mi-offset"
 
 /// Shared global
 static AtomSpacePtr external_atomspace;
@@ -96,10 +100,14 @@ bool as_open(Dictionary dict)
 	local->linkp = local->asp->add_node(PREDICATE_NODE,
 		"*-LG connector string-*");
 
-	// This is where costs are stored.
-	// XXX FIXME this needs to be configurable.
-	local->mikp = local->asp->add_node(PREDICATE_NODE,
-		"*-Mutual Info Key cover-section");
+	// Costs are assumed to be minus the MI located at some key.
+	const char* miks = get_dict_define(dict, MI_KEY_STRING);
+	Handle mikh = Sexpr::decode_atom(miks);
+	local->mikp = local->asp->add_atom(mikh);
+
+	const char* off_str =
+		linkgrammar_get_dict_define(dict, MI_OFFSET_STRING);
+	local->mi_offset = atoi(off_str);
 
 	dict->as_server = (void*) local;
 
@@ -383,7 +391,7 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ, bool iswrd)
 		{
 			// MI is the second entry in the list.
 			const FloatValuePtr& fmivp = FloatValueCast(mivp);
-			mi = fmivp->value()[1];
+			mi = fmivp->value()[local->mi_offset];
 		}
 
 		Exp* andex = nullptr;

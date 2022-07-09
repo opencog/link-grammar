@@ -3,12 +3,11 @@
 #define dictionary-locale         en_US.UTF-8;
 #define dictionary-version-number 5.11.0;
 
-% Sections with missing MI default to an MI=-4 and costs are minus MI.
-#define max-disjunct-cost 10;
-
-% Two examples follow; one shows the use of the CogStorageNode, which
+% Three examples follow; one shows the use of the CogStorageNode, which
 % provides network access, and another using RocksStorageNode, which
 % provides access to dictionaries located on the local hard drive.
+% The last uses the FileStorageNode, which is actually used for the
+% demo.
 
 % -----------------------
 % CogStorageNode
@@ -44,6 +43,19 @@
 % is correct.
 
 #define storage-node "(FileStorageNode \"file:///usr/local/share/link-grammar/demo-atomese/atomese-dict.scm\")";
+
+% -----------------------
+% Additional configuration parameters.
+
+% Sections with missing MI default to an MI=-4 and costs are minus MI.
+#define max-disjunct-cost 10;
+
+% Location where costs are stored. The cost will be taken to be
+% minus the mutual info (or other additive value) located at the
+% the `mi-key` on the Sections. It's assumed that this is a FloatValue,
+% which is a vector; the offset is the index into this vector.
+#define mi-key "(Predicate \"*-Mutual Info Key cover-section\")";
+#define mi-offset 1;
 
 % -----------------------
 % At least one bogus entry is needed.
