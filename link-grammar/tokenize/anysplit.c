@@ -234,8 +234,9 @@ static int rng_uniform(unsigned int *seedp, size_t nsplits)
 
 }
 
-/* lutf is the length of the string, measured in code-points,
- * blen is the length of the string, measured in bytes.
+/**
+ * Match the \p word parts \p pl to REGPRE, REGMID, and REGSUF.
+ * All the parts must match.
  */
 #define D_MM 7
 static bool morpheme_match(Sentence sent,
