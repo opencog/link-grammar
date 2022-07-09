@@ -20,6 +20,7 @@
 extern "C" {
 #include "../link-includes.h"            // For Dictionary
 #include "../dict-common/dict-common.h"  // for Dictionary_s
+#include "../dict-common/dict-utils.h"   // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
 #include "lookup-atomese.h"
 };
@@ -99,7 +100,8 @@ void as_open(Dictionary dict, const char* store_str)
 		local->stnp = StorageNodeCast(hsn);
 	}
 
-	const char* stoname = local->stnp->to_short_string().c_str();
+	std::string stone = local->stnp->to_short_string();
+	const char * stoname = stone.c_str();
 
 #define SHLIB_CTOR_HACK 1
 #ifdef SHLIB_CTOR_HACK
@@ -144,6 +146,20 @@ void as_close(Dictionary dict)
 
 // ===============================================================
 
+static size_t count_sections(Local* local, const Handle& germ)
+{
+	// Are there any Sections in the local atomspace?
+	size_t nsects = germ->getIncomingSetSizeByType(SECTION);
+	if (0 == nsects and local->stnp)
+	{
+		local->stnp->fetch_incoming_by_type(germ, SECTION);
+		local->stnp->barrier();
+	}
+
+	nsects = germ->getIncomingSetSizeByType(SECTION);
+	return nsects;
+}
+
 /// Return true if the given word can be found in the dictionary,
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
@@ -157,17 +173,28 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	Local* local = (Local*) (dict->as_server);
 	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
-	// Are there any Sections in the local atomspace?
-	size_t nsects = wrd->getIncomingSetSizeByType(SECTION);
-	if (0 == nsects and local->stnp)
+	// Are there any Sections for this word in the local atomspace?
+	size_t nwrdsects = count_sections(local, wrd);
+
+	// Does this word belong to any classes?
+	size_t nclass = wrd->getIncomingSetSizeByType(MEMBER_LINK);
+	if (0 == nclass and local->stnp)
 	{
-		local->stnp->fetch_incoming_by_type(wrd, SECTION);
+		local->stnp->fetch_incoming_by_type(wrd, MEMBER_LINK);
 		local->stnp->barrier();
 	}
 
-	nsects = wrd->getIncomingSetSizeByType(SECTION);
-printf("duuude as_boolean_lookup for >>%s<< found sects=%lu\n", s, nsects);
-	return 0 != nsects;
+	size_t nclssects = 0;
+	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+	{
+		const Handle& wcl = memb->getOutgoingAtom(1);
+		if (WORD_CLASS_NODE != wcl->get_type()) continue;
+		nclssects += count_sections(local, wcl);
+	}
+
+printf("duuude as_boolean_lookup for >>%s<< found class=%lu sects=%lu %lu\n",
+s, nclass, nwrdsects, nclssects);
+	return 0 != (nwrdsects + nclssects);
 }
 
 // ===============================================================
@@ -284,45 +311,38 @@ void print_section(Dictionary dict, const Handle& sect)
 
 // ===============================================================
 
-#define INNER_LOOP                                                \
-	/* The connection target is the first Atom in the connector */ \
-	const Handle& tgt = ctcr->getOutgoingAtom(0);                  \
-	                                                               \
-	/* The link is the connection of both of these. */             \
-	const Handle& lnk = local->asp->add_link(SET_LINK, wrd, tgt);  \
-	                                                               \
-	/* Assign an upper-case name to the link. */                   \
-	std::string slnk = get_linkname(local, lnk);                   \
-	                                                               \
-	Exp* e = make_connector_node(dict, dict->Exp_pool,             \
-	                 slnk.c_str(), cdir, false);                   \
-	if (nullptr == andex) {                                        \
-		andex = e;                                                  \
-		continue;                                                   \
-	}                                                              \
-	andex = make_and_node(dict->Exp_pool, e, andex);
+#define INNER_LOOP                                                   \
+   std::string slnk;                                                 \
+                                                                     \
+   /* The connection target is the first Atom in the connector */    \
+   const Handle& tgt = ctcr->getOutgoingAtom(0);                     \
+                                                                     \
+   /* If it and the germ are both words, we have to fake a link */   \
+   if (iswrd and WORD_NODE == tgt->get_type()) {                     \
+                                                                     \
+      /* The link is the connection of both of these. */             \
+      const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt); \
+                                                                     \
+      /* Assign an upper-case name to the link. */                   \
+      slnk = get_linkname(local, lnk);                               \
+   } else {                                                          \
+      slnk = get_linkname(local, tgt);                               \
+   }                                                                 \
+   Exp* e = make_connector_node(dict, dict->Exp_pool,                \
+                    slnk.c_str(), cdir, false);                      \
+   if (nullptr == andex) {                                           \
+      andex = e;                                                     \
+      continue;                                                      \
+   }                                                                 \
+   andex = make_and_node(dict->Exp_pool, e, andex);
 
-Dict_node * as_lookup_list(Dictionary dict, const char *s)
+static Exp* make_exprs(Dictionary dict, const Handle& germ, bool iswrd)
 {
-	// Do we already have this word cached? If so, pull from
-	// the cache.
-	Dict_node * dn = dict_node_lookup(dict, s);
-
-	if (dn) return dn;
-
-	const char* ssc = string_set_add(s, dict->string_set);
 	Local* local = (Local*) (dict->as_server);
-
-	if (0 == strcmp(s, LEFT_WALL_WORD))
-		s = "###LEFT-WALL###";
-
-	Handle wrd = local->asp->get_node(WORD_NODE, s);
-	if (nullptr == wrd) return nullptr;
-
 	Exp* exp = nullptr;
 
 	// Loop over all Sections on the word.
-	HandleSeq sects = wrd->getIncomingSetByType(SECTION);
+	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
 	{
 		Exp* andex = nullptr;
@@ -350,13 +370,54 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 			if ('-' == cdir) continue;
 			INNER_LOOP;
 		}
+#if DEBUG
 		print_section(dict, sect);
 		printf("Word %s expression %s\n", ssc, lg_exp_stringify(andex));
+#endif
 
 		if (nullptr == exp)
 			exp = andex;
 		else
 			exp = make_or_node(dict->Exp_pool, exp, andex);
+	}
+	return exp;
+}
+
+Dict_node * as_lookup_list(Dictionary dict, const char *s)
+{
+	// Do we already have this word cached? If so, pull from
+	// the cache.
+	Dict_node * dn = dict_node_lookup(dict, s);
+
+	if (dn) return dn;
+
+	const char* ssc = string_set_add(s, dict->string_set);
+	Local* local = (Local*) (dict->as_server);
+
+	if (0 == strcmp(s, LEFT_WALL_WORD))
+		s = "###LEFT-WALL###";
+
+	Handle wrd = local->asp->get_node(WORD_NODE, s);
+	if (nullptr == wrd) return nullptr;
+
+	// Get expressions, where the word itself is the germ.
+	Exp* exp = make_exprs(dict, wrd, true);
+
+	// Get expressions, where the word is in some class.
+	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+	{
+		const Handle& wcl = memb->getOutgoingAtom(1);
+		if (WORD_CLASS_NODE != wcl->get_type()) continue;
+
+		Exp* clexp = make_exprs(dict, wcl, false);
+		if (nullptr == clexp) continue;
+
+printf("duuude as_lookup_list class for >>%s<< had=%d\n", ssc,
+size_of_expression(clexp));
+		if (nullptr == exp)
+			exp = clexp;
+		else
+			exp = make_or_node(dict->Exp_pool, exp, clexp);
 	}
 
 	dn = (Dict_node*) malloc(sizeof(Dict_node));
@@ -367,8 +428,8 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	// Cache the result; avoid repeated lookups.
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
-printf("duuude as_lookup_list %d for >>%s<< had=%lu\n",
-dict->num_entries, ssc, sects.size());
+printf("duuude as_lookup_list %d for >>%s<< had=%d\n",
+dict->num_entries, ssc, size_of_expression(exp));
 
 	// Rebalance the tree every now and then.
 	if (0 == dict->num_entries% 30)
