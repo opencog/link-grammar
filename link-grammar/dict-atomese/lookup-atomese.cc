@@ -40,6 +40,8 @@ public:
 	Handle mikp;  // (Predicate "*-Mutual Info Key cover-section")
 };
 
+#define STORAGE_NODE_STRING "storage-node"
+
 /// Shared global
 static AtomSpacePtr external_atomspace;
 static StorageNodePtr external_storage;
@@ -51,8 +53,12 @@ void lg_config_atomspace(AtomSpacePtr asp, StorageNodePtr sto)
 }
 
 /// Open a connection to a StorageNode.
-void as_open(Dictionary dict, const char* store_str)
+bool as_open(Dictionary dict)
 {
+	const char* store_str =
+		linkgrammar_get_dict_define(dict, STORAGE_NODE_STRING);
+	if (nullptr == store_str) return false;
+
 	// Brute-force unescape quotes. Simple, dumb.
 	char* unescaped = (char*) alloca(strlen(store_str)+1);
 	const char* p = store_str;
