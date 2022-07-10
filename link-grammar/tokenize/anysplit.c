@@ -9,6 +9,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#define D_ANYS 5               /* Debug level for this file (6 for more) */
+
 /**
  * anysplit.c -- code that splits words into random morphemes.
  * This is used for the language-learning/morpheme-learning project.
@@ -432,7 +434,6 @@ bool anysplit_init(Dictionary afdict)
  * - an error occurs (the behavior then is undefined).
  *   Such an error has not been observed yet.
  */
-#define D_AS 5
 bool anysplit(Sentence sent, Gword *unsplit_word)
 {
 	Dictionary afdict = sent->dict->affix_table;
@@ -493,7 +494,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		use_sampling = false;
 	}
 
-	lgdebug(+D_AS, "Start%s sampling: word=%s, nsplits=%zu, maxsplits=%d, "
+	lgdebug(+D_ANYS, "Start%s sampling: word=%s, nsplits=%zu, maxsplits=%d, "
 	        "as->altsmin=%zu, as->altsmax=%zu\n", use_sampling ? "" : " no",
 	        word, nsplits, as->nparts, as->altsmin, as->altsmax);
 
@@ -514,13 +515,13 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 			sample_point++;
 		}
 
-		lgdebug(D_AS, "Sample: %d ", sample_point);
 		if (as->scl[lutf].p_tried[sample_point])
+		lgdebug(D_ANYS, "Sample: %d ", sample_point);
 		{
-			lgdebug(D_AS+1, "(repeated)\n");
+			lgdebug(D_ANYS+1, "(repeated)\n");
 			continue;
 		}
-		lgdebug(D_AS+1, "(new)");
+		lgdebug(D_ANYS+1, "(new)");
 		rndtried++;
 		as->scl[lutf].p_tried[sample_point] = true;
 		/* The regexes in the affix file can be used to reject partitioning
@@ -532,11 +533,11 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		}
 		else
 		{
-			lgdebug(D_AS, "\n");
+			lgdebug(D_ANYS, "\n");
 		}
 	}
 
-	lgdebug(D_AS, "Results: word '%s' (utf-char=%zu utf-byte-length=%zu): %zu/%zu:\n",
+	lgdebug(D_ANYS, "Results: word '%s' (utf-char=%zu utf-byte-length=%zu): %zu/%zu:\n",
 	        word, lutf, l, rndissued, nsplits);
 
 	for (i = 0; i < nsplits; i++)
@@ -622,4 +623,3 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	if (0 != sent->rand_state) sent->rand_state = seed;
 	return true;
 }
-#undef D_AS
