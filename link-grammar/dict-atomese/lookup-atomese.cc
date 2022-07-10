@@ -272,8 +272,9 @@ static Handle get_lg_conn(const Handle& wset, const Handle& key)
 }
 
 /// Return a cached LG-compatible link string.
-/// Assisgn a new name, if one does not exist.
-static std::string get_linkname(Local* local, const Handle& lnk)
+/// Assigns a new name, if one does not exist.
+/// The Handle `lnk` is an ordered pair, left-right, two words/classes.
+static std::string cached_linkname(Local* local, const Handle& lnk)
 {
 	// If we've already cached a connector string for this,
 	// just return it.  Else build and cache a string.
@@ -286,6 +287,29 @@ static std::string get_linkname(Local* local, const Handle& lnk)
 	lgc = createNode(LG_CONN_NODE, slnk);
 	local->asp->add_link(EVALUATION_LINK, local->linkp, lgc, lnk);
 	return slnk;
+}
+
+/// Return a cached LG-compatible link string.
+/// Assigns a new name, if one does not exist.
+/// `germ` is the germ of the section, `ctcr` is one of the connectors.
+static std::string get_linkname(Local* local, const Handle& germ,
+                                const Handle& ctcr)
+{
+	// The connection target is the first Atom in the connector
+	const Handle& tgt = ctcr->getOutgoingAtom(0);
+	const Handle& dir = ctcr->getOutgoingAtom(1);
+	const std::string& sdir = dir->get_name();
+
+	// The link is the connection of both of these.
+	if ('+' == sdir[0])
+	{
+		const Handle& lnk = local->asp->add_link(LIST_LINK, germ, tgt);
+		return cached_linkname(local, lnk);
+	}
+
+	// Else direction is '-' and tgt comes before germ.
+	const Handle& lnk = local->asp->add_link(LIST_LINK, tgt, germ);
+	return cached_linkname(local, lnk);
 }
 
 // Cheap hack until c++20 ranges are generally available.
@@ -321,16 +345,12 @@ void print_section(Dictionary dict, const Handle& sect)
 	bool first = true;
 	for (const Handle& ctcr : conseq->getOutgoingSet())
 	{
-		// The connection target is the first Atom in the connector
-		const Handle& tgt = ctcr->getOutgoingAtom(0);
-		const Handle& dir = ctcr->getOutgoingAtom(1);
-
-		// The link is the connection of both of these.
-		const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt);
-
 		// Assign an upper-case name to the link.
-		std::string slnk = get_linkname(local, lnk);
+		std::string slnk = get_linkname(local, germ, ctcr);
+
+		const Handle& dir = ctcr->getOutgoingAtom(1);
 		const std::string& sdir = dir->get_name();
+
 		if (not first) printf("& ");
 		first = false;
 		printf("%s%c ", slnk.c_str(), sdir[0]);
@@ -342,16 +362,8 @@ void print_section(Dictionary dict, const Handle& sect)
 // ===============================================================
 
 #define INNER_LOOP                                                   \
-   std::string slnk;                                                 \
-                                                                     \
-   /* The connection target is the first Atom in the connector */    \
-   const Handle& tgt = ctcr->getOutgoingAtom(0);                     \
-                                                                     \
-   /* The link is the connection of both of these. */                \
-   const Handle& lnk = local->asp->add_link(SET_LINK, germ, tgt);    \
-                                                                     \
    /* Assign an upper-case name to the link. */                      \
-   slnk = get_linkname(local, lnk);                                  \
+   const std::string& slnk = get_linkname(local, germ, ctcr);        \
                                                                      \
    Exp* e = make_connector_node(dict, dict->Exp_pool,                \
                     slnk.c_str(), cdir, false);                      \
@@ -375,7 +387,7 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ)
 #define MISSING_MI -4.0   // This is harsh
 		double mi = MISSING_MI;
 
-		// If there's no MI on this secion, just skip it.
+		// If there's no MI on this section, just skip it.
 		// It's presumably not a valid part of the dataset (???)
 		const ValuePtr& mivp = sect->getValue(local->mikp);
 		// if (nullptr == mivp) continue;
