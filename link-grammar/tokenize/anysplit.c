@@ -47,7 +47,7 @@
 #include "anysplit.h"
 
 
-#define MAX_WORD_TO_SPLIT 63 /* in codepoints */
+#define MAX_WORD_TO_SPLIT 63 /* in codepoints (or graphemes if HAVE_PCRE2_H) */
 
 extern const char * const afdict_classname[];
 
@@ -62,12 +62,23 @@ typedef struct split_cache /* split cached by word length */
 	bool *p_selected;    /* list of selected splits */
 } split_cache;
 
+#if HAVE_PCRE2_H
+typedef struct {
+	char *pattern;
+	pcre2_code *code;
+	pcre2_match_data* match_data;
+} grapheme_regex;
+#endif
+
 typedef struct anysplit_params
 {
 	int nparts;                /* maximum number of suffixes to split to */
 	size_t altsmin;            /* minimum number of alternatives to generate */
 	size_t altsmax;            /* maximum number of alternatives to generate */
 	Regex_node *regpre, *regmid, *regsuf; /* issue matching combinations  */
+#if HAVE_PCRE2_H
+	grapheme_regex gr;
+#endif // HAVE_PCRE2_H
 	split_cache scl[MAX_WORD_TO_SPLIT+1]; /* split cache according to word length */
 } anysplit_params;
 
