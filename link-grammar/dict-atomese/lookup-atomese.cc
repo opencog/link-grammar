@@ -432,7 +432,8 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ)
 
 #if DEBUG
 		print_section(dict, sect);
-		printf("Word %s expression %s\n", ssc, lg_exp_stringify(andex));
+		const char* wrd = germ->get_name().c_str();
+		printf("Word: '%s'  Exp: %s\n", wrd, lg_exp_stringify(andex));
 #endif
 
 		if (nullptr == exp)

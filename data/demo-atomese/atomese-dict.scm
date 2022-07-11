@@ -73,8 +73,8 @@
 (Section
 	(WordClass "animal")
 	(ConnectorSeq
-		(Connector (WordClass "determiner") (ConnectorDir "-"))
-		(Connector (WordClass "verb") (ConnectorDir "-"))))
+		(Connector (WordClass "verb") (ConnectorDir "-"))
+		(Connector (WordClass "determiner") (ConnectorDir "-"))))
 
 (Member (Word "the") (WordClass "determiner"))
 (Member (Word "a") (WordClass "determiner"))
