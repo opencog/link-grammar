@@ -403,7 +403,8 @@ void free_anysplit(Dictionary afdict)
 	free_regexs(as->regsuf);
 
 #if HAVE_PCRE2_H
-	gr_pcre2_free(&as->gr);
+	if (as->gr.pattern != NULL)
+		gr_pcre2_free(&as->gr);
 #endif // HAVE_PCRE2_H
 
 	free(as);
@@ -501,25 +502,32 @@ bool anysplit_init(Dictionary afdict)
 	}
 
 #if HAVE_PCRE2_H
-	const char upat[] = "\\X";
-	const char bpat[] = "^(?>";
-	const char epat[] = "(.+)?)$";
+	const char *upat = linkgrammar_get_dict_define(afdict, "atomic-unit");
+	if (upat == NULL)
+	{
+		as->gr.pattern = NULL;
+	}
+	else
+	{
+		const char bpat[] = "^(?>";
+		const char epat[] = "(.+)?)$";
 
-	// Build an optional match fore a single grapheme.
-	const unsigned int ubuf_strlen = strlen(upat) + /*()?*/3;
-	char *ubuf = alloca(ubuf_strlen + 1);
-	snprintf(ubuf, ubuf_strlen + 1, "(%s)?", upat);
+		// Build an optional match for a single grapheme.
+		const unsigned int ubuf_strlen = strlen(upat) + /*()?*/3;
+		char *ubuf = alloca(ubuf_strlen + 1);
+		snprintf(ubuf, ubuf_strlen + 1, "(%s)?", upat);
 
-	// Build a pattern to match all the graphemes in a word: "^(>(\\X)?...)$"
-	as->gr.pattern =
-		malloc(sizeof(bpat)-1 + ubuf_strlen * MAX_WORD_TO_SPLIT + sizeof(epat));
-	strcpy(as->gr.pattern, bpat);
-	unsigned int n = strlen(as->gr.pattern);
-	for (i = 0; i < MAX_WORD_TO_SPLIT; i++, n+= ubuf_strlen)
-		strcpy(&as->gr.pattern[n], ubuf);
-	strcpy(&as->gr.pattern[n], epat);
+		// Build a pattern to match all the graphemes in a word: "^(>(\\X)?...)$"
+		as->gr.pattern =
+			malloc(sizeof(bpat)-1 + ubuf_strlen * MAX_WORD_TO_SPLIT + sizeof(epat));
+		strcpy(as->gr.pattern, bpat);
+		unsigned int n = strlen(as->gr.pattern);
+		for (i = 0; i < MAX_WORD_TO_SPLIT; i++, n+= ubuf_strlen)
+			strcpy(&as->gr.pattern[n], ubuf);
+		strcpy(&as->gr.pattern[n], epat);
 
-	if (!gr_reg_comp(&as->gr)) return false;
+		if (!gr_reg_comp(&as->gr)) return false;
+	}
 #endif // HAVE_PCRE2_H
 
 	return true;
@@ -528,19 +536,21 @@ bool anysplit_init(Dictionary afdict)
 
 /*
  * Return the number of units (codepoints or graphemes) in \p word.
- * On error, return 0;
+ * Since \p word shouldn't be a null string, returned 0 means an error.
  */
 static unsigned int strlen_units(anysplit_params *as, const char *word)
 {
-#if !HAVE_PCRE2_H
+#if HAVE_PCRE2_H
+	if (as->gr.pattern != NULL)
+	{
+		// Number of graphemes.
+		int rc = gr_reg_match(word, &as->gr);
+		if (rc <= 1) return 0;
+		return (unsigned int)(rc - 1);
+	}
+#endif // HAVE_PCRE2_H
 	// Number of codepoints.
 	return (unsigned int)utf8_strlen(word);
-#else // HAVE_PCRE2_H
-	// Number of graphemes.
-	int rc = gr_reg_match(word, &as->gr);
-	if (rc <= 1) return 0;
-	return (unsigned int)(rc - 1);
-#endif // !HAVE_PCRE2_H
 }
 
 /**
@@ -554,22 +564,25 @@ static void	build_unit_positions(anysplit_params *as, const char *word,
 	 const unsigned int *word_pos_base = word_pos;
 
 #if HAVE_PCRE2_H
-	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(as->gr.match_data);
-
-	/* The first [start,end) is of the whole match (the word in this case). */
-	for (unsigned int i = 1; i < nunits + 1; i++)
-		*word_pos++ = (unsigned int)ovector[2*i + 1];
-
-#else
-	unsigned int pos = 0;
-
-	for (unsigned int i = 0; word[i] != '\0'; i = pos)
+	if (as->gr.pattern != NULL)
 	{
-		pos += utf8_charlen(&word[i]);
-		*word_pos++ = pos;
-	}
+		PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(as->gr.match_data);
 
+		/* The first [start,end) is of the whole match (the word in this case). */
+		for (unsigned int i = 1; i < nunits + 1; i++)
+			*word_pos++ = (unsigned int)ovector[2*i + 1];
+	}
+	else
 #endif // HAVE_PCRE2_H
+	{
+		unsigned int pos = 0;
+
+		for (unsigned int i = 0; word[i] != '\0'; i = pos)
+		{
+			pos += utf8_charlen(&word[i]);
+			*word_pos++ = pos;
+		}
+	}
 
 	if (verbosity_level(D_ANYS+1))
 	{
