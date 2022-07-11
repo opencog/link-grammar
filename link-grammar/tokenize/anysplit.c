@@ -444,7 +444,6 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	const char * word = unsplit_word->subword;
 	Afdict_class * stemsubscr;
 
-	size_t l = strlen(word);
 	size_t lutf = utf8_strlen(word);
 	p_list pl;
 	size_t bos, cpos; /* byte offset, codepoint offset */
@@ -455,10 +454,18 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	size_t rndissued = 0;
 	size_t i;
 	unsigned int seed = sent->rand_state;
-	char *affix = alloca(l+2+1); /* word + ".=" + NUL: Max. affix length */
 	bool use_sampling = true;
 
+	size_t l = strlen(word);
+	char *affix = alloca(l+2+1); /* word + ".=" + NUL: Max. affix length */
+
 	if (lutf > MAX_WORD_TO_SPLIT)
+	if (0 == l)
+	{
+		prt_error("Warning: anysplit(): word length 0\n");
+		return false;
+	}
+
 	{
 		Gword *alt = issue_word_alternative(sent, unsplit_word, "AS>",
 		                       0,NULL, 1,&word, 0,NULL);
