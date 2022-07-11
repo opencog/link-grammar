@@ -53,16 +53,13 @@
 % For ASCII input, the empty regexes can be used.
 % See the comments in 4.0.affix.
 
-%"" : REGPRE+;
-"^\X+$" : REGPRE+;
+"" : REGPRE+;
 
 % Regex to match the middle parts.
-%"" : REGMID+;
-"^\X+$" : REGMID+;
+"" : REGMID+;
 %".{2,}": REGMID+;
 
 % Regex to match the suffix.
-%"" : REGSUF+;
-"^\X+$" : REGSUF+;
+"" : REGSUF+;
 
 % End of Anysplit parameters.
