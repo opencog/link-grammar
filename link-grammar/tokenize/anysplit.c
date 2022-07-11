@@ -29,6 +29,10 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <time.h>
+#if HAVE_PCRE2_H // use it to split in grapheme boundaries
+#define PCRE2_CODE_UNIT_WIDTH 8
+#include <pcre2.h>
+#endif // HAVE_PCRE2_H
 
 #include "api-structures.h"
 #include "dict-common/dict-affix.h"
