@@ -45,8 +45,8 @@
 
 extern const char * const afdict_classname[];
 
-typedef int p_start;     /* partition end in a word (end char position + 1) */
-typedef p_start *p_list; /* list of partitions in a word */
+typedef int p_end;     /* partition end in a word (end char position + 1) */
+typedef p_end *p_list; /* list of partitions in a word */
 
 typedef struct split_cache /* split cached by word length */
 {
@@ -102,7 +102,7 @@ static void printps(int *ps, int n)
 
 static void cache_partitions(p_list pl, int *ps, int p)
 {
-	memcpy(pl, ps, sizeof(p_start) * p);
+	memcpy(pl, ps, sizeof(p_end) * p);
 }
 
 	/* p = 5      */
@@ -126,7 +126,7 @@ static int split_and_cache(int word_length, int nparts, split_cache *scl)
 
 	int n;
 	int maxindex;
-	p_list ps = alloca(sizeof(p_start)*nparts); /* partition start */
+	p_list ps = alloca(sizeof(p_end)*nparts);
 
 	if (0 == word_length) return 0;
 
@@ -206,7 +206,7 @@ static int split(int word_length, int nparts, split_cache *scl)
 				word_length, nparts);
 			return 0;
 		}
-		scl->sp = malloc(sizeof(p_start)*nparts * nsplits);
+		scl->sp = malloc(sizeof(p_end)*nparts * nsplits);
 		scl->p_selected = malloc(sizeof(*(scl->p_selected)) * nsplits);
 		scl->p_tried = malloc(sizeof(*(scl->p_tried)) * nsplits);
 		split_and_cache(word_length, nparts, scl);
@@ -260,7 +260,7 @@ static bool morpheme_match(Sentence sent,
 		 * REGMID only to the middle suffixes, and REGSUF only to the
 		 * suffix part - which cannot be the prefix. */
 		if (0 == p) re = as->regpre;
-		else if (pl[p] == (int) lutf) re = as->regsuf;
+		else if (pl[p] == (p_end)lutf) re = as->regsuf;
 		else re = as->regmid;
 		lgdebug(D_MM, "re=%s part%d=%s: ", re?re->name:"(nil)", p, word_part);
 
