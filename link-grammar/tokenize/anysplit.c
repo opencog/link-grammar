@@ -326,6 +326,64 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 	return regex_root;
 }
 
+#if HAVE_PCRE2_H
+static bool gr_reg_comp(grapheme_regex *re)
+{
+	PCRE2_SIZE erroffset;
+	int rc;
+
+	re->code = pcre2_compile((PCRE2_SPTR)re->pattern, PCRE2_ZERO_TERMINATED,
+	                         PCRE2_UTF, &rc, &erroffset, NULL);
+	if (re->code != NULL)
+	{
+		re->match_data = pcre2_match_data_create_from_pattern(re->code, NULL);
+		if (re->match_data == NULL)
+		{
+			prt_error("Error: pcre2_match_data_create_from_pattern() failed\n");
+			pcre2_code_free(re->code);
+			return false;
+		}
+		return true;
+	}
+
+	/* We have an error. */
+#define ERRBUFFLEN 120
+	PCRE2_UCHAR errbuf[ERRBUFFLEN];
+	pcre2_get_error_message(rc, errbuf, ERRBUFFLEN);
+	prt_error("Error: Failed to compile grapheme regex \"%s\": %s (code %d) at %d\n",
+	          re->pattern, errbuf, rc, (int)erroffset);
+	return false;
+}
+
+static int gr_reg_match(const char *word, grapheme_regex *re)
+{
+	int rc = pcre2_match(re->code, (PCRE2_SPTR)word,
+	                     PCRE2_ZERO_TERMINATED, /*startoffset*/0,
+	                     PCRE2_NO_UTF_CHECK, re->match_data, NULL);
+	if (rc == PCRE2_ERROR_NOMATCH) return rc;
+	if (rc > 0) return rc;
+	if (rc == 0)
+	{
+		prt_error("Error: pcre2_match(): ovector: Internal error\"\n");
+		return rc;
+	}
+
+	/* We have an error. */
+	PCRE2_UCHAR errbuf[ERRBUFFLEN];
+	pcre2_get_error_message(rc, errbuf, ERRBUFFLEN);
+	prt_error("Error: pcre2_match(): \"%s\": %s (code %d)\n",
+	          re->pattern, errbuf, rc);
+	return rc;
+}
+
+static void gr_pcre2_free(grapheme_regex *re)
+{
+	free(re->pattern);
+	pcre2_match_data_free(re->match_data);
+	pcre2_code_free(re->code);
+}
+#endif // HAVE_PCRE2_H
+
 void free_anysplit(Dictionary afdict)
 {
 	size_t i;
