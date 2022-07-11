@@ -21,7 +21,8 @@
 % The LG library must be configured with PCRE2 in order to use it. If not,
 % or if this definition is missing, a single utf8 codpoint is used  as a
 % byte sequence that should not get split.
-#define atomic_unit "\X";
+%#define atomic-unit "\X";       % split at grapheme boundaries.
+#define atomic-unit "\X\pM*";   % ... but include trailing mark codepoints.
 
 % Maximum number of word partitions
 % FYI: 3 barely works, 4 and higher mostly do not work.
