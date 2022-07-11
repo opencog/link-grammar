@@ -93,6 +93,9 @@
 ; key, and specifies the zero-based index into the vector as 1.  The
 ; number is taken to be the MI, so minux the cost.  The larger the MI,
 ; the lower the cost.
+;
+; Reminder: the costs below can be views by saying `!!saw` and `!!the`
+; at the LG command-line prompt.
 
 (cog-set-value!
 	(Section
