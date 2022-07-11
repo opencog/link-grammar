@@ -51,10 +51,10 @@
 
 extern const char * const afdict_classname[];
 
-typedef int p_end;     /* partition end in a word (end char position + 1) */
-typedef p_end *p_list; /* list of partitions in a word */
+typedef unsigned int p_end; /* partition end in a word (end char position +1) */
+typedef p_end *p_list;      /* list of partitions in a word */
 
-typedef struct split_cache /* split cached by word length */
+typedef struct split_cache  /* split cached by word length */
 {
 	size_t nsplits;      /* number of splits */
 	p_list sp;           /* list of splits */
@@ -117,7 +117,7 @@ static void printps(int *ps, int n)
 }
 #endif
 
-static void cache_partitions(p_list pl, int *ps, int p)
+static void cache_partitions(p_list pl, unsigned int *ps, int p)
 {
 	memcpy(pl, ps, sizeof(p_end) * p);
 }
@@ -289,7 +289,7 @@ static bool morpheme_match(Sentence sent, const char *word, unsigned int nunits,
 			return false;
 		}
 
-		if (pl[p] == (int)nunits) break;
+		if (pl[p] == nunits) break;
 		upos = word_upos[pl[p] - 1];
 	}
 
