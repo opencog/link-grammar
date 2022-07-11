@@ -85,3 +85,30 @@
 	(WordClass "determiner")
 	(ConnectorSeq
 		(Connector (WordClass "animal") (ConnectorDir "+"))))
+
+; ---------------------------------------------------------------------
+; The LG 'cost' can be taken from any FloatValue located on a Section.
+; The location of that cost is configurable in the dict file; the demo
+; uses `(Predicate "*-Mutual Info Key cover-section")` as the location
+; key, and specifies the zero-based index into the vector as 1.  The
+; number is taken to be the MI, so minux the cost.  The larger the MI,
+; the lower the cost.
+
+(cog-set-value!
+	(Section
+		(WordClass "determiner")
+		(ConnectorSeq
+			(Connector (WordClass "animal") (ConnectorDir "+"))))
+	(Predicate "*-Mutual Info Key cover-section")
+	(FloatValue 0 3.1))
+
+(cog-set-value!
+	(Section
+		(WordClass "verb")
+		(ConnectorSeq
+			(Connector (WordClass "person") (ConnectorDir "-"))
+			(Connector (WordClass "animal") (ConnectorDir "+"))))
+	(Predicate "*-Mutual Info Key cover-section")
+	(FloatValue 555 2.4))  ; The `555` is meaningles and ignored.
+
+; ---------------------------------------------------------------------
