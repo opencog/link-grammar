@@ -1,6 +1,6 @@
 
-Experimental Atomese Dictionary
-===============================
+(Experimental) AtomSpace Dictionary
+===================================
 This directory provides code that can access dictionary data held in
 [AtomSpace](https://wiki.opencog.org/w/AtomSpace)
 [StorageNodes](https://wiki.opencog.org/w/StorageNode).
@@ -15,8 +15,8 @@ dictionaries maintained in the AtomSpace.  This provides several benefits:
 This is meant to work with dictionaries created by the code located
 in the [OpenCog learn repo](https://github.com/opencog/learn).
 
-**Version 0.8.0** -- The basic code has been laid down.
-The cost predicate needs to be configurable.
+**Version 0.9.0** -- All basic features have been implemented.
+All known bugs have been fixed.
 A better demo dict needs to be prepared.
 
 Building
@@ -110,7 +110,7 @@ and make sure that the `RocksStorageNode` line is uncommented,
 and the URL specifies the correct database location. Make sure
 the other `StorageNode`s are commented out.
 
-### Going the other way
+### Going in the other direction
 You can also get Link Grammar parse results into the AtomSpace.
 The following works:
 ```
@@ -142,9 +142,10 @@ The current design works as follows:
 
 * The dictionary is directly attached (as a shared library) to a local
   AtomSpace. On startup, this AtomSpace is empty.
-* On dictionary open, a connection is established to a remote cogserver.
-* On word lookup, a query is sent to the remote cogserver, asking for
-  all Atomese disjuncts for which the word is the "germ". The cogserver
+* On dictionary open, a connection is established to a StorageNode,
+  which can be a remote AtomSpace CogServer, or local storage.
+* On word lookup, a query is sent to the StorageNode, asking for all
+  Atomese disjuncts for which the word is the "germ". The StoreageNode
   returns these, and so they are instantiated in the local AtomSpace.
 * The Atomese disjuncts are converted to LG disjuncts. This is a
   two-step process: First, a LG link name is generated for the
@@ -187,11 +188,16 @@ allow "level playing field" to parse are encoded in Atomese as:
 			(Connector (Word "playing") (ConnectorDir "-"))))
 ```
 
-This is just an example. Grammatical classes are similar, except that
-the `WordNode`s are replaced by `WordClassNode`s. There are additional
-generalizations that allow visual and audio data to be encoded in the
-same format, and for such sensory information to be correlated with
-language information. This is an area of ongoing research.
+This example just connects single words together. One may also have
+`WordClassNode`s in place of `WordNode`s in the above. The membership of
+an individual word in a grammatical class is denoted by
+```
+   (Member (Word "word") (WordClass "foo"))
+```
+There are additional (experimental) generalizations that allow visual
+and audio data to be encoded in the same format, and for such sensory
+information to be correlated with language information. This is an
+area of ongoing research.
 
 The above example can be found in the file
 [atomese-dict.scm](../../data/demo-atomese/atomese-dict.scm)
@@ -205,12 +211,12 @@ downwards. Note that AtomSpaces start out empty, so the data has to come
 [StorageNodes](https://wiki.opencog.org/w/StorageNode).
 There are half-a-dozen of these; one of them is the
 [RocksStorageNode](https://github.com/opencog/opencog-rocks), which uses
-[RocksDB](https://rocksdb.org) to work with the local disk drive. The
-software layers are as depicted below.
+[RocksDB](https://rocksdb.org) to work with the local disk drive. An
+instance of LG parser using Rocks is depicted below.
 ```
     +----------------+
     |  Link Grammar  |
-    |    parser      |
+    |     parser     |
     +----------------+
     |   AtomSpace    |
     +----------------+
@@ -231,7 +237,7 @@ This system is depicted below.
 ```
                                             +----------------+
                                             |  Link Grammar  |
-                                            |    parser      |
+                                            |     parser     |
                                             +----------------+
                                             |   AtomSpace    |
     +-------------+                         +----------------+
@@ -250,12 +256,14 @@ This system is depicted below.
     +-------------+
 ```
 In the demo, the CogServer and the associated dataset are in a Docker
-container. The primary reason for using Docker is to make the demo as
-simple as possible.
+container. The primary reason for using Docker is to make setting up
+the demo as simple as possible.
 
 TODO
 ====
 Remaining work items:
+
+* Provide a high-quality demo ditionary.
 
 * Close the loop w/ parsing, so that LG disjuncts arising from a given
   parse an be matched up with the Atomese disjuncts.  Increment/send
