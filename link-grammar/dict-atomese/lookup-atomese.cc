@@ -365,17 +365,43 @@ void print_section(Dictionary dict, const Handle& sect)
 
 // ===============================================================
 
+// This is a minimalist version of `lg_exp_stringify()` because
+// we want the string, without the costs on it. We also know that
+// it's just a list of and's with connectors.
+static std::string prt_andex(Exp* e)
+{
+	std::string str;
+
+	while (e)
+	{
+		// Last connector in the list.
+		if (CONNECTOR_type == e->type)
+		{
+			str += e->condesc->string;
+			str += e->dir;
+			return str;
+		}
+
+		// Else AND_type == e->type and the connector is the "first"
+		// operand. Oddly, e->operand_next is null. So it goes.
+		Exp* con = e->operand_first;
+		str += con->condesc->string;
+		str += con->dir;
+		str += " & ";
+
+		e = con->operand_next;
+	}
+
+	return str;
+}
+
 static void cache_disjunct_string(Local* local,
                                   const Handle& sect, Exp* andex)
 {
-	printf("duuude its: '%s'  Exp: %s\n",
-		sect->to_short_string().c_str(), lg_exp_stringify(andex));
-#if 0
 	local->asp->add_link(
 		EVALUATION_LINK, local->djp,
-		createNode(ITEM_NODE, str),
+		createNode(ITEM_NODE, prt_andex(andex)),
 		sect);
-#endif
 }
 
 // ===============================================================
