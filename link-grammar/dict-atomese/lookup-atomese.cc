@@ -37,6 +37,7 @@ public:
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;
 	Handle linkp; // (Predicate "*-LG connector string-*")
+	Handle djp;   // (Predicate "*-LG disjunct string-*")
 	Handle mikp;  // (Predicate "*-Mutual Info Key cover-section")
 	int mi_offset; // Offset into the FloatValue
 };
@@ -99,6 +100,9 @@ bool as_open(Dictionary dict)
 	// This will be used to cache LG connector strings.
 	local->linkp = local->asp->add_node(PREDICATE_NODE,
 		"*-LG connector string-*");
+
+	local->djp = local->asp->add_node(PREDICATE_NODE,
+		"*-LG disjunct string-*");
 
 	// Costs are assumed to be minus the MI located at some key.
 	const char* miks = get_dict_define(dict, MI_KEY_STRING);
@@ -361,6 +365,21 @@ void print_section(Dictionary dict, const Handle& sect)
 
 // ===============================================================
 
+static void cache_disjunct_string(Local* local,
+                                  const Handle& sect, Exp* andex)
+{
+	printf("duuude its: '%s'  Exp: %s\n",
+		sect->to_short_string().c_str(), lg_exp_stringify(andex));
+#if 0
+	local->asp->add_link(
+		EVALUATION_LINK, local->djp,
+		createNode(ITEM_NODE, str),
+		sect);
+#endif
+}
+
+// ===============================================================
+
 #define INNER_LOOP                                                   \
    /* Assign an upper-case name to the link. */                      \
    const std::string& slnk = get_linkname(local, germ, ctcr);        \
@@ -429,6 +448,9 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ)
 
 		// Cost is minus the MI.
 		andex->cost = -mi;
+
+		// Save the exp-section pairing in the AtomSpace.
+		cache_disjunct_string(local, sect, andex);
 
 #if DEBUG
 		print_section(dict, sect);

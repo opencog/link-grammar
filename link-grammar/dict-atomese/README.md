@@ -309,7 +309,7 @@ code. This, it seems easiest to cache the disjunct string, and attach
 it to each Section.  It would appear thus:
 ```
    (Evaluation
-      (Predicate "*-LG-Atomese Disjunct string-*")
+      (Predicate "*-LG disjunct string-*")
       (ItemNode "A+ & B- & C+")
       (Section ...))
 ```
