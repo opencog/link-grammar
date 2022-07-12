@@ -37,6 +37,7 @@ public:
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;
 	Handle linkp; // (Predicate "*-LG connector string-*")
+	Handle djp;   // (Predicate "*-LG disjunct string-*")
 	Handle mikp;  // (Predicate "*-Mutual Info Key cover-section")
 	int mi_offset; // Offset into the FloatValue
 };
@@ -99,6 +100,9 @@ bool as_open(Dictionary dict)
 	// This will be used to cache LG connector strings.
 	local->linkp = local->asp->add_node(PREDICATE_NODE,
 		"*-LG connector string-*");
+
+	local->djp = local->asp->add_node(PREDICATE_NODE,
+		"*-LG disjunct string-*");
 
 	// Costs are assumed to be minus the MI located at some key.
 	const char* miks = get_dict_define(dict, MI_KEY_STRING);
@@ -259,7 +263,7 @@ static std::string idtostr(uint64_t aid)
 	return s;
 }
 
-/// Given a `(Set (Word ...) (Word ...))` denoting a link, find the
+/// Given a `(List (Word ...) (Word ...))` denoting a link, find the
 /// corresponding LgConnNode, if it exists.
 static Handle get_lg_conn(const Handle& wset, const Handle& key)
 {
@@ -284,7 +288,7 @@ static std::string cached_linkname(Local* local, const Handle& lnk)
 
 	static uint64_t lid = 0;
 	std::string slnk = idtostr(lid++);
-	lgc = createNode(LG_CONN_NODE, slnk);
+	lgc = createNode(LG_LINK_NODE, slnk);
 	local->asp->add_link(EVALUATION_LINK, local->linkp, lgc, lnk);
 	return slnk;
 }
@@ -361,6 +365,47 @@ void print_section(Dictionary dict, const Handle& sect)
 
 // ===============================================================
 
+// This is a minimalist version of `lg_exp_stringify()` because
+// we want the string, without the costs on it. We also know that
+// it's just a list of and's with connectors.
+static std::string prt_andex(Exp* e)
+{
+	std::string str;
+
+	while (e)
+	{
+		// Last connector in the list.
+		if (CONNECTOR_type == e->type)
+		{
+			str += e->condesc->string;
+			str += e->dir;
+			return str;
+		}
+
+		// Else AND_type == e->type and the connector is the "first"
+		// operand. Oddly, e->operand_next is null. So it goes.
+		Exp* con = e->operand_first;
+		str += con->condesc->string;
+		str += con->dir;
+		str += " & ";
+
+		e = con->operand_next;
+	}
+
+	return str;
+}
+
+static void cache_disjunct_string(Local* local,
+                                  const Handle& sect, Exp* andex)
+{
+	local->asp->add_link(
+		EVALUATION_LINK, local->djp,
+		createNode(ITEM_NODE, prt_andex(andex)),
+		sect);
+}
+
+// ===============================================================
+
 #define INNER_LOOP                                                   \
    /* Assign an upper-case name to the link. */                      \
    const std::string& slnk = get_linkname(local, germ, ctcr);        \
@@ -410,14 +455,6 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ)
 		// given word.  So we have to reverse the order when
 		// building the disjunct.
 		const Handle& conseq = sect->getOutgoingAtom(1);
-		for (const Handle& ctcr : conseq->getOutgoingSet())
-		{
-			// The direction is the second Atom in the connector
-			const Handle& dir = ctcr->getOutgoingAtom(1);
-			char cdir = dir->get_name().c_str()[0];
-			if ('+' == cdir) continue;
-			INNER_LOOP;
-		}
 		for (const Handle& ctcr : reverse(conseq->getOutgoingSet()))
 		{
 			// The direction is the second Atom in the connector
@@ -426,9 +463,20 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ)
 			if ('-' == cdir) continue;
 			INNER_LOOP;
 		}
+		for (const Handle& ctcr : conseq->getOutgoingSet())
+		{
+			// The direction is the second Atom in the connector
+			const Handle& dir = ctcr->getOutgoingAtom(1);
+			char cdir = dir->get_name().c_str()[0];
+			if ('+' == cdir) continue;
+			INNER_LOOP;
+		}
 
 		// Cost is minus the MI.
 		andex->cost = -mi;
+
+		// Save the exp-section pairing in the AtomSpace.
+		cache_disjunct_string(local, sect, andex);
 
 #if DEBUG
 		print_section(dict, sect);
