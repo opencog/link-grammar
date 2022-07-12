@@ -15,7 +15,7 @@ dictionaries maintained in the AtomSpace.  This provides several benefits:
 This is meant to work with dictionaries created by the code located
 in the [OpenCog learn repo](https://github.com/opencog/learn).
 
-**Version 0.9.0** -- All basic features have been implemented.
+**Version 0.9.1** -- All basic features have been implemented.
 All known bugs have been fixed.
 A better demo dict needs to be prepared.
 
@@ -123,7 +123,7 @@ $ guile
     (FileStorage "/usr/local/share/link-grammar/demo-atomese/atomese-dict.scm"))
   (cog-open fsn)
   (define pda (LgParseDisjuncts
-      (PhraseNode "level playing field")
+      (PhraseNode "Mary saw a bird")
       (LgDictNode "demo-atomese")
       (Number 4)
       (cog-atomspace)
@@ -131,6 +131,7 @@ $ guile
   (cog-execute! pda)
   (cog-prt-atomspace)
   (cog-incoming-set (Predicate "*-LG connector string-*"))
+  (cog-incoming-set (Predicate "*-LG disjunct string-*"))
 ```
 See the
 [LgParse examples](https://github.com/opencog/lg-atomese/tree/master/examples)
@@ -305,12 +306,12 @@ that show how above can be accessed.
 
 The above is enough to recreate an association between LG disjuncts
 and Atomese Sections; however, computing this requires some painful
-code. This, it seems easiest to cache the disjunct string, and attach
+code. Thus, it seems easiest to cache the disjunct string, and attach
 it to each Section.  It would appear thus:
 ```
    (Evaluation
       (Predicate "*-LG disjunct string-*")
-      (ItemNode "A+ & B- & C+")
+      (ItemNode "A- & B- & C+")
       (Section ...))
 ```
 
