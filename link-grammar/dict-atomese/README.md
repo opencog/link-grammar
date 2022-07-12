@@ -289,22 +289,36 @@ LG disjuncts must be associated with Atomese disjuncts, so that when
 LG produces a parse, we can know which Atomese disjunct was used in
 that parse (and thus increment the use count on it).
 
-This needs to happen in the `learn` codebase, and not here.
-The `(PredicateNode "*-LG connector string-*")` implemented here
-is enough to perform that pairing, and the guile demo above shows
-that this works fine. See also examples in `lg-atomese`.
-
-Remove this note when above is finished!
-
-After LG parsing is completed, the chosen disjuncts are easily converted
-into unique strings. These need to be paired with Atomese disjuncts. The
-obvious format would seem to be:
+This is currently done in several steps. First, an `LgConnNode`
+is associated to a germ-connector pair, ass follows:
 ```
-   (Evaluation (Predicate "LG-Atomese Disjunct pair")
-      (Concept "A+ & B- & C+") (ConnectorSeq ...))
+   (Evaluation
+      (Predicate "*-LG connector string-*")
+      (LgLinkNode ...)   ; The name is the LG link type.
+      (List
+         (Word ...)      ; The left word (from germ or connector)
+         (Word ...)      ; The right word.
 ```
-This allows the `ConnectorSeq` to be easily found, given only the LG
-disjunct string.
+In the above, the two Words/WordClasses appear as germ-connector or
+connector-germ in the Atomese disjuncts.  See examples in `lg-atomese`
+that show how above can be accessed.
+
+The above is enough to recreate an association between LG disjuncts
+and Atomese Sections; however, computing this requires some painful
+code. This, it seems easiest to cache the disjunct string, and attach
+it to each Section.  It would appear thus:
+```
+   (Evaluation
+      (Predicate "*-LG-Atomese Disjunct string-*")
+      (ItemNode "A+ & B- & C+")
+      (Section ...))
+```
+
+After an LG parse is performed, the resulting `LgDisjunct` can be
+easily converted to a string, that string can be used to search for
+the above `ItemNode` and thus find the `Section`. This seems to be
+the easiest thing to do, avoiding the need to create complicated
+code to convert from `LgDisjunct`s to `Section`s.
 
 * Side note: we need a `get-incoming-by-predicate` function!
 
@@ -316,25 +330,16 @@ in a row.
 
 It might be desirable to be able to have reproducible connector names,
 *i.e.* to get the same names after a restart of LG. Implementing this
-adds considerable new complexity, and is probably not worth doing. The
-following would be needed:
+adds considerable new complexity. Is it worth doing?
+The following would be needed:
 
-* Link names need to be stored. These can be recorded as
-```
-   (Evaluation (Predicate "LG link name")
-      (Concept "XXX") (Set (Word...) (Word ..)))
+* The `(Predicate "*-LG connector string-*")` described above need to be
+  fetched. This can add significant network overhead.
 
-```
-* Prior to use, such pairing need to be queried. This can add a hefty
-  network load and latency overhead. LG code is more complicated,
-  because this query needs to be performed, with new pairings generated
-  if they don't already exist. Fallbacks for errors. All this code has
-  to be debugged. Yuck.
+* The StorageNode needs to queried for a block of unused link names
+  that can be assigned. Need to get a block, as otherwise multiple
+  parsers could be assigning the same names and trampling on one-another.
+  This could be done with an atomic increment of a Value: incrementing
+  by 100 lets the next 100 ints to be safely used.
 
-* Same, but for the disjunct pairings.
-
-* The Cogserver needs to queried for a block of new link names that can
-  be assigned. Need to get a block, as otherwise multiple parsers could
-  be assigning the same names and trampling on one-another. This could
-  be done with an atomic increment of a Value: incrementing by 100 lets
-  the next 100 ints to be safely used.
+----------

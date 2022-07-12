@@ -259,7 +259,7 @@ static std::string idtostr(uint64_t aid)
 	return s;
 }
 
-/// Given a `(Set (Word ...) (Word ...))` denoting a link, find the
+/// Given a `(List (Word ...) (Word ...))` denoting a link, find the
 /// corresponding LgConnNode, if it exists.
 static Handle get_lg_conn(const Handle& wset, const Handle& key)
 {
@@ -284,7 +284,7 @@ static std::string cached_linkname(Local* local, const Handle& lnk)
 
 	static uint64_t lid = 0;
 	std::string slnk = idtostr(lid++);
-	lgc = createNode(LG_CONN_NODE, slnk);
+	lgc = createNode(LG_LINK_NODE, slnk);
 	local->asp->add_link(EVALUATION_LINK, local->linkp, lgc, lnk);
 	return slnk;
 }
