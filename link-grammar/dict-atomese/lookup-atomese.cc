@@ -455,20 +455,20 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ)
 		// given word.  So we have to reverse the order when
 		// building the disjunct.
 		const Handle& conseq = sect->getOutgoingAtom(1);
-		for (const Handle& ctcr : conseq->getOutgoingSet())
-		{
-			// The direction is the second Atom in the connector
-			const Handle& dir = ctcr->getOutgoingAtom(1);
-			char cdir = dir->get_name().c_str()[0];
-			if ('+' == cdir) continue;
-			INNER_LOOP;
-		}
 		for (const Handle& ctcr : reverse(conseq->getOutgoingSet()))
 		{
 			// The direction is the second Atom in the connector
 			const Handle& dir = ctcr->getOutgoingAtom(1);
 			char cdir = dir->get_name().c_str()[0];
 			if ('-' == cdir) continue;
+			INNER_LOOP;
+		}
+		for (const Handle& ctcr : conseq->getOutgoingSet())
+		{
+			// The direction is the second Atom in the connector
+			const Handle& dir = ctcr->getOutgoingAtom(1);
+			char cdir = dir->get_name().c_str()[0];
+			if ('+' == cdir) continue;
 			INNER_LOOP;
 		}
 
