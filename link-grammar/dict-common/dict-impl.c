@@ -551,8 +551,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 		{
 			affix_list_add(afdict, &afdict->afdict_class[AFDICT_SUF], wtrunc+1);
 		}
-		else
-		if (infix_mark == w[w_len-1])
+		else if (infix_mark == w[w_len-1])
 		{
 			wtrunc[w_len-1] = '\0';
 			affix_list_add(afdict, &afdict->afdict_class[AFDICT_PRE], wtrunc);
