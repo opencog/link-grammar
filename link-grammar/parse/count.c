@@ -1354,7 +1354,7 @@ static Count_bin do_count(
 
 #define CACHE_COUNT(c, how_to_count, do_count) \
 	{ \
-		w_Count_bin count = (hist_total(&c) == NO_COUNT) ? \
+		Count_bin count = (hist_total(&c) == NO_COUNT) ? \
 			TRACE_LABEL(c, do_count) : c; \
 		how_to_count; \
 	}
