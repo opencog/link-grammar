@@ -1130,7 +1130,6 @@ static Count_bin do_count(
 		Count_bin *l_cache = NULL;
 		Count_bin *r_cache = NULL;
 		unsigned int lcount_index = 0; /* Cached left count index */
-#define S(c) (!c?"(nil)":connector_string(c))
 
 		if (ctxt->is_short)
 		{
