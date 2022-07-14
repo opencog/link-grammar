@@ -1065,6 +1065,12 @@ static Count_bin do_count(
 		 * rest of the sentence must contain one less null-word. Else
 		 * the rest of the sentence still contains the required number
 		 * of null words. */
+
+		/* total (w_Count_bin which is int64_t) cannot overflow in this
+		 * loop since the number of disjuncts in the inner loop is
+		 * surely < 2^31, the outer loop can be iterated at most twice,
+		 * and do_count() may return at most 2^31-1. However, it may
+		 * become > 2^31-1 and hence needs to be clamped after the loop. */
 		w = lw + 1;
 		for (int opt = 0; opt <= (int)ctxt->sent->word[w].optional; opt++)
 		{
@@ -1412,6 +1418,13 @@ static Count_bin do_count(
 				 * in the count multiplication is zero,
 				 * we know that the true total is zero. So we don't
 				 * bother counting the other term at all, in that case. */
+
+				/* To enable 31-bit overflow detection, total, leftcount and
+				 * rightcount are signed 64-bit, and are , a clamped cached
+				 * value, or are clamped below before they are used. total is
+				 * initially 0 and is clamped at the end of each iteration.
+				 * So the result will not be more than (2^31-1)+((2^31-1)*(2^31-1))
+				 * which is less than 2^63-1. */
 				if (leftpcount &&
 				    (!lcnt_optimize || rightpcount || (0 != hist_total(&l_bnr))))
 				{
@@ -1432,7 +1445,7 @@ static Count_bin do_count(
 
 					if (0 < hist_total(&leftcount))
 					{
-						parse_count_clamp(&leftcount); /* May be up to 4*INT_MAX. */
+						parse_count_clamp(&leftcount); /* May be up to 4*2^31. */
 						lrcnt_found = true;
 						d->match_left = true;
 
