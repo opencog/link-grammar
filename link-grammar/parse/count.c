@@ -1024,12 +1024,6 @@ static Count_bin do_count(
 					hist_accumv(&total, d->cost,
 						do_count(ctxt, w, rw, d->right, NULL, try_null_count-1));
 				}
-				if (parse_count_clamp(&total))
-				{
-#if 0
-					printf("OVERFLOW 1\n");
-#endif
-				}
 			}
 
 			hist_accumv(&total, 0.0,
@@ -1037,7 +1031,7 @@ static Count_bin do_count(
 			if (parse_count_clamp(&total))
 			{
 #if 0
-				printf("OVERFLOW 2\n");
+				printf("OVERFLOW 1\n");
 #endif
 			}
 		}
