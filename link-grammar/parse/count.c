@@ -1377,6 +1377,7 @@ static Count_bin do_count(
 
 					if (0 < hist_total(&leftcount))
 					{
+						parse_count_clamp(&leftcount); /* May be up to 4*INT_MAX. */
 						lrcnt_found = true;
 						d->match_left = true;
 
@@ -1406,6 +1407,7 @@ static Count_bin do_count(
 
 					if (0 < hist_total(&rightcount))
 					{
+						parse_count_clamp(&rightcount); /* May be up to 4*INT_MAX. */
 						if (le == NULL)
 						{
 							lrcnt_found = true;
