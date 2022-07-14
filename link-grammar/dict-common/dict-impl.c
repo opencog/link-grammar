@@ -732,10 +732,9 @@ bool afdict_init(Dictionary dict)
 	 * up. e.g. split 7gram before 7am before 7m.
 	 * Another example: The ellipsis "..." must appear before the dot ".".
 	 */
-	afdict_classnum af[] = {AFDICT_UNITS, AFDICT_LPUNC, AFDICT_RPUNC, AFDICT_MPUNC};
-	for (size_t i = 0; i < ARRAY_SIZE(af); i++)
+	for (size_t i = 0; i < ARRAY_SIZE(affix_strippable); i++)
 	{
-		ac = AFCLASS(afdict, af[i]);
+		ac = AFCLASS(afdict, affix_strippable[i]);
 		if (0 < ac->length)
 		{
 			qsort(ac->string, ac->length, sizeof(char *), split_order);

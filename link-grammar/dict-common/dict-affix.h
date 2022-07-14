@@ -83,4 +83,7 @@ typedef enum {
 
 Afdict_class * afdict_find(Dictionary, const char *, bool);
 
+static const afdict_classnum affix_strippable[] =
+	{AFDICT_UNITS, AFDICT_LPUNC, AFDICT_RPUNC, AFDICT_MPUNC};
+
 #endif /* _LG_DICT_AFFIX_H_ */
