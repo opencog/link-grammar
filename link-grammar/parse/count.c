@@ -1028,12 +1028,13 @@ static Count_bin do_count(
 
 			hist_accumv(&total, 0.0,
 				do_count(ctxt, w, rw, NULL, NULL, try_null_count-1));
-			if (parse_count_clamp(&total))
-			{
+		}
+
+		if (parse_count_clamp(&total))
+		{
 #if 0
-				printf("OVERFLOW 1\n");
+			printf("OVERFLOW 1\n");
 #endif
-			}
 		}
 		return table_store(ctxt, lw, rw, le, re, null_count, h, total);
 	}
