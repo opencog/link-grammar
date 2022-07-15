@@ -72,6 +72,8 @@ typedef enum {
 #define AFDICT_CLASSNAMES AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2 "last classname"
 #define AFCLASS(afdict, class) (&afdict->afdict_class[class])
 
+Afdict_class * afdict_find(Dictionary, const char *, bool);
+
 /* Suffixes start with it.
  * This is needed to distinguish suffixes that were stripped off from
  * ordinary words that just happen to be the same as the suffix.
@@ -80,8 +82,6 @@ typedef enum {
  */
 #define INFIX_MARK(afdict) \
 	((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
-
-Afdict_class * afdict_find(Dictionary, const char *, bool);
 
 static const afdict_classnum affix_strippable[] =
 	{AFDICT_UNITS, AFDICT_LPUNC, AFDICT_RPUNC, AFDICT_MPUNC};
