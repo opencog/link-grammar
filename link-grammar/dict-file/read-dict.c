@@ -980,12 +980,14 @@ static bool read_entry(Dictionary dict)
 		 * used in equations (.v means verb-like) */
 		if ((dict->token[0] == '/') && (dict->token[1] != '.'))
 		{
-			dn = read_word_file(dict, dn, dict->token);
-			if (dn == NULL)
+			Dict_node *new_dn = read_word_file(dict, dn, dict->token);
+			if (new_dn == NULL)
 			{
 				prt_error("Error: Cannot open word file \"%s\".\n", dict->token);
-				return false;
+
+				goto syntax_error; /* not a syntax error, but need to free dn */
 			}
+			dn = new_dn;
 		}
 		else if (0 == strcmp(dict->token, "#include"))
 		{
