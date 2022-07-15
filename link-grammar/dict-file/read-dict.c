@@ -857,8 +857,7 @@ static void insert_length_limit(Dictionary dict, Dict_node *dn)
 	{
 		length_limit = UNLIMITED_LEN;
 	}
-	else
-	if (0 == strncmp(LIMITED_CONNECTORS_WORD, dn->string,
+	else if (0 == strncmp(LIMITED_CONNECTORS_WORD, dn->string,
 	                 sizeof(LIMITED_CONNECTORS_WORD)-1))
 	{
 		char *endp;
