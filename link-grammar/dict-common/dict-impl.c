@@ -608,10 +608,10 @@ static int split_order(const void *a, const void *b)
 	const char * const *sa = a;
 	const char * const *sb = b;
 
-	size_t len_a = strcspn(*sb, subscript_mark_str());
-	size_t len_b = strcspn(*sa, subscript_mark_str());
+	size_t len_a = strcspn(*sa, subscript_mark_str());
+	size_t len_b = strcspn(*sb, subscript_mark_str());
 
-	int len_order = (int)(len_a - len_b);
+	int len_order = (int)(len_b - len_a);
 	if (0 == len_order) return strncmp(*sa, *sb, len_a);
 
 	return len_order;
