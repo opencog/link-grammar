@@ -1102,7 +1102,7 @@ Type Theory
 -----------
 Link Grammar can be understood in the context of type theory.
 A simple introduction to type theory can be found in chapter 1
-of the [HoTT book](https://homotopytypetheory.org/book/).<br>
+of the [HoTT book](https://homotopytypetheory.org/book/).
 This book is freely available online and strongly recommended if
 you are interested in types.
 
@@ -1111,7 +1111,9 @@ The nice thing about link-grammar is that the link types form a type
 system that is much easier to use and comprehend than that of categorial
 grammar, and yet can be directly converted to that system!  That is,
 link-grammar is completely compatible with categorial grammar, and is
-easier-to-use.
+easier-to-use. See the paper
+[<i>"Combinatory Categorial Grammar and Link Grammar are Equivalent"</i>](https://github.com/opencog/atomspace/raw/master/opencog/sheaf/docs/ccg.pdf)
+for details.
 
 The foundational LG papers make comments to this effect; however, see
 also work by Bob Coecke on category theory and grammar.  Coecke's
