@@ -32,6 +32,10 @@ if re.search(r'_MSC_FULL_VER', clg.linkgrammar_get_configuration()) and \
    not re.search(r'USE_SQLITE', clg.linkgrammar_get_configuration()):
     NO_SQLITE_ERROR = 'Library is not configures with SQLite support'
 
+NOT_COMPILED_WITH_PCRE2 = ''
+if not re.search(r'HAVE_PCRE2_H', clg.linkgrammar_get_configuration()):
+   NOT_COMPILED_WITH_PCRE2 = 'Library not configured with PCRE2 support'
+
 # Show the location and version of the bindings modules
 for imported_module in 'linkgrammar$', 'clinkgrammar', '_clinkgrammar', 'lg_testutils':
     module_found = False
@@ -1137,22 +1141,26 @@ class YGenerationTestCase(unittest.TestCase):
 class ZANYAMYTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.amy_dict = Dictionary(lang='amy')
+        if NOT_COMPILED_WITH_PCRE2 == '':
+           cls.amy_dict = Dictionary(lang='amy')
+           cls.amy_po = ParseOptions(display_morphology=True, linkage_limit=20000)
         cls.any_dict = Dictionary(lang='any')
-        cls.amy_po = ParseOptions(display_morphology=True, linkage_limit=20000)
         cls.any_po = ParseOptions(display_morphology=False, linkage_limit=200)
 
     @classmethod
     def tearDownClass(cls):
+        if NOT_COMPILED_WITH_PCRE2 == '':
+            del cls.amy_dict
         del cls.any_dict
-        del cls.amy_dict
 
     def find_num_linkages(self, sentense_text, dict, po):
         return len(Sentence(sentense_text, dict, po).parse())
 
+    @unittest.skipIf(NOT_COMPILED_WITH_PCRE2, NOT_COMPILED_WITH_PCRE2)
     def test_amy_num_linkages(self):
        self.assertEqual(5292, self.find_num_linkages('this is a test', self.amy_dict, self.amy_po))
 
+    @unittest.skipIf(NOT_COMPILED_WITH_PCRE2, NOT_COMPILED_WITH_PCRE2)
     def test_amy(self):
         linkage_testfile(self, self.amy_dict, self.amy_po)
 
