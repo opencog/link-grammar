@@ -304,11 +304,10 @@ static void affix_list_delete(Dictionary dict)
 {
 	if (NULL == dict->afdict_class) return;
 
-	int i;
-	Afdict_class * atc;
-	for (i=0, atc = dict->afdict_class; i < AFDICT_NUM_ENTRIES; i++, atc++)
+	Afdict_class * atc = dict->afdict_class;
+	for (size_t i = 0;  i < AFDICT_NUM_ENTRIES; i++)
 	{
-		if (atc->string) free(atc->string);
+		if (atc[i].length > 0) free(atc[i].string);
 	}
 	free(dict->afdict_class);
 	dict->afdict_class = NULL;

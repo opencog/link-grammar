@@ -371,16 +371,13 @@ static bool is_contraction_word(Dictionary dict, const char *s)
 static bool is_afdict_punc(const Dictionary afdict, const char *word)
 {
 	if (NULL == afdict) return false;
-	int punc_type[] = {AFDICT_RPUNC, AFDICT_MPUNC, AFDICT_LPUNC};
 
-	for (size_t affix_punc = 0; affix_punc < ARRAY_SIZE(punc_type); affix_punc++)
+	for (size_t punc = 0; punc < ARRAY_SIZE(affix_strippable); punc++)
 	{
-		const Afdict_class * punc_list = AFCLASS(afdict, punc_type[affix_punc]);
-		size_t l_strippable = punc_list->length;
-		const char * const * punc = punc_list->string;
+		const Afdict_class * punc_list = AFCLASS(afdict, affix_strippable[punc]);
 
-		for (size_t i = 0; i < l_strippable; i++)
-			if (0 == strcmp(word, punc[i])) return true;
+		for (size_t i = 0; i < punc_list->length; i++)
+			if (0 == strcmp(word, punc_list->string[i])) return true;
 	}
 
 	return false;
