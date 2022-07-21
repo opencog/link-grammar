@@ -2359,16 +2359,12 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			issue_word_alternative(sent, unsplit_word, "rL",
 			                       0,NULL, n_stripped,x_stripped, 0,NULL);
 
-			/* Its possible that the token consisted entirely of
-			 * left-punctuation, in which case, wp is an empty-string.
-			 * In case this is a single token (n_stripped == 1), we have
-			 * to continue processing, because it may match a regex. */
-			if ('\0' == *wp && n_stripped != 1)
+			if ('\0' == *wp)
 			{
-				/* Suppose no more alternatives in such a case. */
-				lgdebug(+D_SW, "1: Word '%s' all left-puncts - done\n",
+				/* The token consists entirely of left-punctuation. */
+				lgdebug(+D_SW, "1: Word '%s' all left-puncts - "
+				        "continue for possible regex alternative\n",
 						  unsplit_word->subword);
-				return;
 			}
 
 			n_stripped = 0;
