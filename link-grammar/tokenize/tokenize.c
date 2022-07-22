@@ -374,10 +374,17 @@ static bool is_afdict_punc(const Dictionary afdict, const char *word)
 
 	for (size_t punc = 0; punc < ARRAY_SIZE(affix_strippable); punc++)
 	{
-		const Afdict_class * punc_list = AFCLASS(afdict, affix_strippable[punc]);
+		if (AFDICT_UNITS == affix_strippable[punc]) continue;
+		const Afdict_class *punc_list = AFCLASS(afdict, affix_strippable[punc]);
 
 		for (size_t i = 0; i < punc_list->length; i++)
-			if (0 == strcmp(word, punc_list->string[i])) return true;
+		{
+			/* If the word is subscripted, the affix must be too. */
+			const char *p = punc_list->string[i];
+			const char *w = word;
+			while ((*w == *p) && (*w != '\0')) { w++; p++; }
+			if (*w == *p) return true;
+		}
 	}
 
 	return false;
@@ -1770,7 +1777,8 @@ static int split_mpunc(Sentence sent, const char *word, char *w,
 	{
 		for (size_t i = 0; i < l_strippable; i++)
 		{
-			size_t sz = strlen(mpunc[i]);
+			/* Find the token length, but stop at the subscript mark if exists. */
+			size_t sz = strcspn(mpunc[i], subscript_mark_str());
 			if (0 == strncmp(sep, mpunc[i], sz))
 			{
 				if ('\0' == sep[sz]) continue; // mpunc in end position
@@ -1826,7 +1834,8 @@ static const char *strip_left(Sentence sent, const char * w,
 	{
 		for (i=0; i<l_strippable; i++)
 		{
-			size_t sz = strlen(lpunc[i]);
+			/* Find the token length, but stop at the subscript mark if exists. */
+			size_t sz = strcspn(lpunc[i], subscript_mark_str());
 
 			if (strncmp(w, lpunc[i], sz) == 0)
 			{
@@ -1961,8 +1970,7 @@ static bool strip_right(Sentence sent,
 		{
 			const char *t = rword[i];
 
-			/* Units contain a subscript mark. Punctuation do not contain it.
-			 * Find the token length, but stop at the subscript mark if exists. */
+			/* Find the token length, but stop at the subscript mark if exists. */
 			len = strcspn(t, subscript_mark_str());
 
 			/* The remaining word is too short for a possible match */
