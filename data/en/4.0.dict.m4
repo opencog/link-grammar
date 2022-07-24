@@ -10886,7 +10886,7 @@ changequote dnl
   or Xi-
   or <sent-split>;
 
-% Optional RW: "Is this a test?" she asked.
+% Question marks: Optional RW: "Is this a test?" she asked.
 "!" "?" ‽ ؟ ？ ！ :
    (Xp- & RW+)
    or ({@Xca-} & Xc- & {[RW+]})
@@ -11005,8 +11005,9 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 
 % 、 is the "enumeration-comma" used like a dash ...
 % ‧ is the "middle dot"
-% The four dashes are e28092 e28093 e28094 e28095
-‒ – — ― ━ ー --.r -.r 、 ～.r ~.r ‧.r :
+% The first two short dashes are e28090 e28091
+% The next four long dashes are e28092 e28093 e28094 e28095
+‐ ‑ ‒ – — ― ━ ー --.r -.r 、 ～.r ~.r ‧.r :
   [[<colon>]]
   or ({@Xca-} & (({EBx+} & Xd+) or Xc-))
   or (Wd- & W+)
