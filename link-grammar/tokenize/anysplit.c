@@ -43,8 +43,6 @@
 
 #define MAX_WORD_TO_SPLIT 63 /* in codepoints */
 
-extern const char * const afdict_classname[];
-
 typedef int p_start;     /* partition start in a word */
 typedef p_start *p_list; /* list of partitions in a word */
 

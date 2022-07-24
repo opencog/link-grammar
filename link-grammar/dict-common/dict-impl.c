@@ -450,14 +450,11 @@ bool dictionary_setup_defines(Dictionary dict)
 }
 
 /* ======================================================================= */
-/* ======================================================================= */
 
 /* The affix dictionary is represented as a dynamically allocated array with
  * an element for each class (connector type) in the affix file. Each element
  * has a pointer to an array of strings which are the punctuation/affix
  * names. */
-
-const char * afdict_classname[] = { AFDICT_CLASSNAMES };
 
 /** initialize the affix class table */
 void afclass_init(Dictionary dict)
@@ -480,7 +477,7 @@ void afclass_init(Dictionary dict)
  */
 Afdict_class * afdict_find(Dictionary afdict, const char * con, bool notify_err)
 {
-	const char ** ac;
+	const char * const * ac;
 
 	for (ac = afdict_classname;
 	     ac < &afdict_classname[ARRAY_SIZE(afdict_classname)]; ac++)

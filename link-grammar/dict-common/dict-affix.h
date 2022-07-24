@@ -66,7 +66,9 @@ typedef enum {
 	"REGALTS",     /* Min&max number of alternatives to issue for a word */\
 	"REGPARTS",    /* Max number of word partitions */
 
-#define AFDICT_CLASSNAMES AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2
+static const char * const afdict_classname[] =
+	{AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2};
+
 #define AFCLASS(afdict, class) (&afdict->afdict_class[class])
 
 Afdict_class * afdict_find(Dictionary, const char *, bool);

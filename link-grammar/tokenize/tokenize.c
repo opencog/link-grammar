@@ -1929,7 +1929,6 @@ static const char *strip_left(Sentence sent, const char * w,
  *
  * p is a mark of the invocation position, for debugging.
  */
-extern const char *const afdict_classname[]; /* For debug message only */
 static bool strip_right(Sentence sent,
                         const char *w,
                         const char **wend,
