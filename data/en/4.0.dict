@@ -13241,7 +13241,13 @@ so_on the_like vice_versa v.v.:
 % XXX that is, change <WALL> to just WV+.
 %
 <sent-start>:
-  (<wo-wall> or <wi-wall>) & {hCPx+ or hCPi+ or hCPu+} & {([Xx+]0.06 or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
+  (<wo-wall> or <wi-wall>)
+    & {hCPx+ or hCPi+ or hCPu+}
+    & {([Xx+]0.06 or Xo- or Xp+ or Xs+) & {hWV+}}
+    & {RW+ or Xp+};
+
+% Espagnol sentence starters
+¿ ¡: Xo- & <sent-start>;
 
 % <sent-start>: "So, don't do it!"
 %    The cost on sent-start is to force preference for CV over WV,
@@ -13258,6 +13264,7 @@ so.ij:
 % hWl+ is here, not elsewhere, to avoid use together with Xx+
 LEFT-WALL:
   <sent-start>
+  or Xo+
   or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or (hWl+ & {Xj+} & (RW+ or Xp+))
   or (QUd+ & hWl+ & {Xj+} & (Xc+ or [()]) & QUc+)
@@ -13502,9 +13509,6 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
 
 % service mark, trademark.
 ℠ ™ : G- ;
-
-% Espagnol stuff
-% ¿ ¡:
 
 "&": G- & {Xd- & G-} & G+;
 
