@@ -7637,7 +7637,7 @@ later earlier:
     (Wt- & {Xc+}) or
     [({Xc+ & {Xd-}} & dCO+)] or
     (Xd- & Xc+ & (MX*x- or MVx-)) or
-    ({[[@Ec-]]} & {Xc+} & A+) or
+    ({[[@Ec-]]} & {{Xdp-} & Xc+} & A+) or
     dAJrc- or dAJlc+)) or
   (Yt- & (<advcl-verb> or Qe+));
 
@@ -9021,7 +9021,7 @@ just_not: <COMP-OPENER>;
 % Macro, for all the common parts of an A+ connection, with
 % the phonetic attachment as a variable.
 define(`ADJ_PH',`'
-  ({EA- or ({($1)} & {EF+ or MX*ta+})} & {[[@Ec-]]} & {Xc+} & A+))
+  ({EA- or ({($1)} & {EF+ or MX*ta+})} & {[[@Ec-]]} & {{Xdp-} & Xc+} & A+))
 
 % PH-: connect, phonetically, to a/an if it is there.
 <adj-consn>: ADJ_PH(<wantPHc>);
@@ -9064,7 +9064,7 @@ frank.a:
 % [A-]0.2: "a big green apple" want "big" to modify "apple", not "green"
 <color-adj>:
   ({EA- or EF+} & {(AN- or [A-]0.2) & {Ds-}} &
-    (({[[@Ec-]]} & {Xc+} & A+)
+    (({[[@Ec-]]} & {{Xdp-} & Xc+} & A+)
     or ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & dMJla+)
     or AA+
@@ -9212,7 +9212,7 @@ unusual.a useful.a impossible.a annoying.a unfair.a unuseful.a:
 
 a_bitch :
   <adj-good>
-  or ({EA- or EF+} & {[[@Ec-]]} & {Xc+} & A+);
+  or ({EA- or EF+} & {[[@Ec-]]} & {{Xdp-} & Xc+} & A+);
 
 % Surely this is incomplete...
 one_and_only in_situ:
@@ -9942,7 +9942,7 @@ next.a:
   or ({Xc+} & {[[@Ec-]]} & L-)
   or (DD- & <noun-rel-x> & {<ton-verb>} & <noun-main-x>);
 
-past.a previous.a: ({[[@Ec-]]} & {Xc+} & A+) or L- or (Pa- & {@MV+});
+past.a previous.a: ({[[@Ec-]]} & {{Xdp-} & Xc+} & A+) or L- or (Pa- & {@MV+});
 
 following.a remaining.a top.i: L-;
 
