@@ -7637,7 +7637,7 @@ later earlier:
     (Wt- & {Xc+}) or
     [({Xc+ & {Xd-}} & dCO+)] or
     (Xd- & Xc+ & (MX*x- or MVx-)) or
-    ({[[@Ec-]]} & {Xc+} & A+) or
+    ({[[@Ec-]]} & {{Xdp-} & Xc+} & A+) or
     dAJrc- or dAJlc+)) or
   (Yt- & (<advcl-verb> or Qe+));
 
@@ -9021,7 +9021,7 @@ just_not: <COMP-OPENER>;
 % Macro, for all the common parts of an A+ connection, with
 % the phonetic attachment as a variable.
 define(`ADJ_PH',`'
-  ({EA- or ({($1)} & {EF+ or MX*ta+})} & {[[@Ec-]]} & {Xc+} & A+))
+  ({EA- or ({($1)} & {EF+ or MX*ta+})} & {[[@Ec-]]} & {{Xdp-} & Xc+} & A+))
 
 % PH-: connect, phonetically, to a/an if it is there.
 <adj-consn>: ADJ_PH(<wantPHc>);
@@ -9064,7 +9064,7 @@ frank.a:
 % [A-]0.2: "a big green apple" want "big" to modify "apple", not "green"
 <color-adj>:
   ({EA- or EF+} & {(AN- or [A-]0.2) & {Ds-}} &
-    (({[[@Ec-]]} & {Xc+} & A+)
+    (({[[@Ec-]]} & {{Xdp-} & Xc+} & A+)
     or ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {<tot-verb>})
     or ({@MV+} & dMJla+)
     or AA+
@@ -9212,7 +9212,7 @@ unusual.a useful.a impossible.a annoying.a unfair.a unuseful.a:
 
 a_bitch :
   <adj-good>
-  or ({EA- or EF+} & {[[@Ec-]]} & {Xc+} & A+);
+  or ({EA- or EF+} & {[[@Ec-]]} & {{Xdp-} & Xc+} & A+);
 
 % Surely this is incomplete...
 one_and_only in_situ:
@@ -9942,7 +9942,7 @@ next.a:
   or ({Xc+} & {[[@Ec-]]} & L-)
   or (DD- & <noun-rel-x> & {<ton-verb>} & <noun-main-x>);
 
-past.a previous.a: ({[[@Ec-]]} & {Xc+} & A+) or L- or (Pa- & {@MV+});
+past.a previous.a: ({[[@Ec-]]} & {{Xdp-} & Xc+} & A+) or L- or (Pa- & {@MV+});
 
 following.a remaining.a top.i: L-;
 
@@ -10817,7 +10817,13 @@ so_on the_like vice_versa v.v.:
 % XXX that is, change <WALL> to just WV+.
 %
 <sent-start>:
-  (<wo-wall> or <wi-wall>) & {hCPx+ or hCPi+ or hCPu+} & {([Xx+]0.06 or Xp+ or Xs+) & {hWV+}} & {RW+ or Xp+};
+  (<wo-wall> or <wi-wall>)
+    & {hCPx+ or hCPi+ or hCPu+}
+    & {([Xx+]0.06 or Xo- or Xp+ or Xs+) & {hWV+}}
+    & {RW+ or Xp+};
+
+% Espagnol sentence starters
+¿ ¡: Xo- & <sent-start>;
 
 % <sent-start>: "So, don't do it!"
 %    The cost on sent-start is to force preference for CV over WV,
@@ -10834,6 +10840,7 @@ so.ij:
 % hWl+ is here, not elsewhere, to avoid use together with Xx+
 LEFT-WALL:
   <sent-start>
+  or Xo+
   or (QUd+ & <sent-start> & (Xc+ or [()]) & QUc+)
   or (hWl+ & {Xj+} & (RW+ or Xp+))
   or (QUd+ & hWl+ & {Xj+} & (Xc+ or [()]) & QUc+)
@@ -10858,9 +10865,9 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 <post-quote>:
   QUc- & {<wo-wall> or <wi-wall> or CP+};
 
-« 《 【 『 „ “:
+« 《 【 『 「 „ “ ''.x ’’.x :
   QUd-;
-» 》 】 』 ”:
+» 》 】 』 」 ” ''.y ’’.y :
   <post-quote>;
 
 % For now, using ".x and ".y in the above definitions multiplies the number
@@ -10868,7 +10875,8 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 
 % [[ZZZ-]]: link to "random" quotation marks that show up "for no reason".
 % Cannot use a blanket W+ here to pick up all W connectors, because ... ??
-""": QUd- or <post-quote> or [[ZZZ-]];
+% Underbar used like a quote-mark, e.g. for _bold text_
+""" "_": QUd- or <post-quote> or [[ZZZ-]];
 
 % Using backtic.x and backtic.y in the above definitions multiplies the
 % number of linkages by 2^(number of backtics). So it is treated as a
@@ -10886,8 +10894,8 @@ changequote dnl
   or Xi-
   or <sent-split>;
 
-% Optional RW: "Is this a test?" she asked.
-"!" "?" ‽ ؟ ？！:
+% Question marks: Optional RW: "Is this a test?" she asked.
+"!" "?" ‽ ؟ ？ ！ :
    (Xp- & RW+)
    or ({@Xca-} & Xc- & {[RW+]})
    or ({@Xca-} & Xq+)
@@ -11005,8 +11013,9 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 
 % 、 is the "enumeration-comma" used like a dash ...
 % ‧ is the "middle dot"
-% The four dashes are e28092 e28093 e28094 e28095
-‒ – — ― ━ ー --.r -.r 、 ～.r ~.r ‧.r :
+% The first two short dashes are e28090 e28091
+% The next four long dashes are e28092 e28093 e28094 e28095
+‐ ‑ ‒ – — ― ━ ー --.r -.r 、 ～.r ~.r ‧.r :
   [[<colon>]]
   or ({@Xca-} & (({EBx+} & Xd+) or Xc-))
   or (Wd- & W+)
@@ -11070,7 +11079,7 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 
 % See also /en/words/currency for currency names that follow a number.
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
-£ ₤ € ¤ ₳ ฿ ¢ ₵ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ₸ ₮ ₩ ¥ ៛ 호점
+£ ₤ € ¤ ₳ ฿ ¢ ₵ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼  ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#":
   NM*x+ & (AN+ or NM*y- or [[G+]] or (NIfu+ or NItu-) or
     ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
@@ -11078,10 +11087,7 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
         (<noun-main-p> or <noun-and-p> or [[(Ss+ & <CLAUSE>) or SIs-]])))));
 
 % service mark, trademark.
-% ℠ ™ :
-
-% Espagnol stuff
-% ¿ ¡:
+℠ ™ : G- ;
 
 "&": G- & {Xd- & G-} & G+;
 
@@ -11099,9 +11105,9 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
   YS- & (({AL-} & {@L+} & (D+ or DD+)) or [[<noun-main-x>]] or DP+);
 
 % Wd-: allows "(1 + 1) = 2"
-"(" "[": {Wd-} & {EBx+} & dXdp+;
+"(" "{" "[" "<" 〈 （ 〔 ［ : {Wd-} & {EBx+} & dXdp+;
 
-")" "]": {@Xca-} & dXcp-;
+")" "}" "]" ">" 〉 ） 〕 ］: {@Xca-} & dXcp-;
 
 % foo: F+;
 
