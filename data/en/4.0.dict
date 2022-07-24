@@ -13309,7 +13309,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
   or <sent-split>;
 
 % Optional RW: "Is this a test?" she asked.
-"!" "?" ‽ ؟ ？！:
+"!" "?" ‽ ؟ ？ ！ :
    (Xp- & RW+)
    or ({@Xca-} & Xc- & {[RW+]})
    or ({@Xca-} & Xq+)
@@ -13492,7 +13492,7 @@ but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
 
 % See also /en/words/currency for currency names that follow a number.
 $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
-£ ₤ € ¤ ₳ ฿ ¢ ₵ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ₸ ₮ ₩ ¥ ៛ 호점
+£ ₤ € ¤ ₳ ฿ ¢ ₵ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼  ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#":
   NM*x+ & (AN+ or NM*y- or [[G+]] or (NIfu+ or NItu-) or
     ({EN- or NIc- or [[A- & NSa-]]} & {@MX+} &
