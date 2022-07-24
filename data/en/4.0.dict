@@ -13501,7 +13501,7 @@ $ USD.c US$.c C$.c AUD.c AUD$.c HK.c HK$.c
         (<noun-main-p> or <noun-and-p> or [[(Ss+ & <CLAUSE>) or SIs-]])))));
 
 % service mark, trademark.
-% ℠ ™ :
+℠ ™ : G- ;
 
 % Espagnol stuff
 % ¿ ¡:
