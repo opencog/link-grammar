@@ -7,7 +7,7 @@
  %                                                                           %
  %***************************************************************************%
 
-#define dictionary-version-number 5.9.0;
+#define dictionary-version-number 5.11.0;
 #define dictionary-locale         de_DE.UTF-8;
 
 % NOUNS, PRONOUNS
@@ -520,4 +520,8 @@ PL-CAPITALIZED-WORDS:    BZZT+;
 % skip over (null-link) unknown words. If you remove it, the parser
 % will output an error for any unknown words.
 <UNKNOWN-WORD>: NO+;
+
+% Unhandled, but getting split according to 4.0.affix.
+")" ":" ";" "'" „ « ....y: <UNKNOWN-WORD>;     % RPUNC
+"(" “ » ....x: <UNKNOWN-WORD>;                 % LPUNC
 
