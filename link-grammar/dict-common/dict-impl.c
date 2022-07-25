@@ -627,6 +627,7 @@ bool afdict_init(Dictionary dict)
 {
 	Afdict_class * ac;
 	Dictionary afdict = dict->affix_table;
+	bool error_found = false;
 
 	/* FIXME: read_entry() builds word lists in reverse order (can we
 	 * just create the list top-down without breaking anything?). Unless
@@ -718,10 +719,13 @@ bool afdict_init(Dictionary dict)
 			prt_error("Error: afdict_init: Failed to compile "
 			          "regex /%s/ in file \"%s\"\n",
 			          afdict_classname[AFDICT_SANEMORPHISM], afdict->name);
-			return false;
+			error_found = true;
 		}
-		lgdebug(+D_AI, "%s regex %s\n",
-		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
+		else
+		{
+			lgdebug(+D_AI, "%s regex %s\n",
+			        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
+		}
 	}
 
 	if (!IS_DYNAMIC_DICT(dict))
@@ -807,6 +811,6 @@ bool afdict_init(Dictionary dict)
 		lg_error_flush();
 	}
 
-	return true;
+	return !error_found;
 }
 #undef D_AI
