@@ -10865,7 +10865,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 <post-quote>:
   QUc- & {<wo-wall> or <wi-wall> or CP+};
 
-« 《 【 『 「 „ “ ''.x ’’.x :
+« 《 【 『 「 „ “ ‘ ''.x ’’.x :
   QUd-;
 » 》 】 』 」 ” ''.y ’’.y :
   <post-quote>;
@@ -10882,7 +10882,7 @@ RIGHT-WALL: RW- or ({@Xca-} & [[Xc-]]);
 % number of linkages by 2^(number of backtics). So it is treated as a
 % single item, below.
 changequote(\,/)dnl
-`: QUd- or <post-quote>;
+` ``: QUd- or <post-quote>;
 changequote dnl
 
 % Cost on Xc- because Xc is intended for commas, not periods.
