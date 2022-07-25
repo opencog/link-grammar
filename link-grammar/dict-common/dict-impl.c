@@ -18,6 +18,7 @@
 #include "dict-api.h"
 #include "dict-defines.h"
 #include "dict-impl.h"
+#include "print/print-util.h"           // patch_subscript_mark
 #include "regex-morph.h"
 #include "dict-structures.h"
 #include "string-set.h"
@@ -721,6 +722,42 @@ bool afdict_init(Dictionary dict)
 		}
 		lgdebug(+D_AI, "%s regex %s\n",
 		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
+	}
+
+	if (!IS_DYNAMIC_DICT(dict))
+	{
+		/* Validate that the strippable tokens are in the dict.
+		 * UNITS are assumed to be from the dict only.
+		 * Possible FIXME: Allow also tokens that match a regex (a tokenizer
+		 * change is needed to recognize them). */
+		for (size_t i = 0; i < ARRAY_SIZE(affix_strippable); i++)
+		{
+			if (AFDICT_UNITS != affix_strippable[i])
+			{
+				ac = AFCLASS(afdict, affix_strippable[i]);
+				bool not_in_dict = false;
+
+				for (size_t n = 0;  n < ac->length; n++)
+				{
+					if (!dict_has_word(dict, ac->string[n]))
+					{
+						if (!not_in_dict)
+						{
+							not_in_dict = true;
+							prt_error("Warning: afdict_init: Class %s in file %s: "
+							          "Token(s) not in the dictionary:",
+							          afdict_classname[affix_strippable[i]],
+							          afdict->name);
+						}
+
+						char *s = strdupa(ac->string[n]);
+						patch_subscript_mark(s);
+						prt_error(" \"%s\"", s);
+					}
+				}
+				if (not_in_dict) prt_error("\n");
+			}
+		}
 	}
 
 	/* Sort the affix-classes of tokens to be stripped. */
