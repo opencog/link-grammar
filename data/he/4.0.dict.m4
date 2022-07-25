@@ -45,9 +45,8 @@ changecom(`%')dnl
 % Among numerous other things, changes to handle count/uncountable changes
 % have not been done yet. The created infrastructure for that may still need changes.
 
-% Dictionary version number is 5.3.15 (formatted as V5v3v15+)
-<dictionary-version-number>: V5v3v15+;
-<dictionary-locale>: HE4il+;
+#define dictionary-version-number 5.11.0;
+#define dictionary-locale         he_IL.UTF-8;
 
 % For now.
 LEFT-WALL: {Wa+} or {Wd+} or ();
@@ -458,4 +457,8 @@ or Ds+ or (R- & (C+ or RS+)) or SIs- or (Ss+ &
 % With the following line in the dictionary, the parser will simply
 % skip over (null-link) unknown words. If you remove it, the parser
 % will output an error for any unknown words.
-UNKNOWN-WORD: XXX+;
+<UNKNOWN-WORD>: XXX+;
+
+% Punctuations that get strip but are yet unhandled.
+ "." "–" "‐" ")" "".y" "....y" ":" ";" "?" "!" ₪: <UNKNOWN-WORD>;    % RPUNC
+"(" „ “ "".x" ....x: <UNKNOWN-WORD>;                                 % LPUNC
