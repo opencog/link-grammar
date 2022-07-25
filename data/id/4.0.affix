@@ -17,7 +17,7 @@
 % Punctuation appearing on the left-side of words.
 "(" "{" "[" "<" « 〈 （ 〔 《 【 ［ 『 「 、.x ` `` „ “ ‘ ''.x '.x ….x ....x
 ¿ ¡ "$" US$ USD C$ 
-£ ₤ € ¤ ₳ ฿ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼ ₸ ₮ ₩ ¥ ៛ 호점
+£ ₤ € ¤ ₳ ฿ ₡ ₢ ₠ ₫ ৳ ƒ ₣ ₲ ₴ ₭ ₺  ℳ  ₥ ₦ ₧ ₱ ₰ ₹ ₨ ₪ ﷼  ₸ ₮ ₩ ¥ ៛ 호점
 † †† ‡ § ¶ © ® ℗ № "#"
 * • ⁂ ❧ ☞ ◊ ※  ○  。.x ゜ ✿ ☆ ＊ ◕ ● ∇ □ ◇ ＠ ◎ 
 –.x ━.x ー.x -- - ‧.x
@@ -44,4 +44,3 @@
 % units.6 contains just a single, sole slash in it. This allows units
 % such as mL/s to be split at the slash.
 /en/words/units.6: UNITS+;
-
