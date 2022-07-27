@@ -1760,30 +1760,26 @@ static int split_mpunc(Sentence sent, const char *word, char *w,
                                 stripped_t stripped)
 {
 	const Dictionary afdict = sent->dict->affix_table;
-	const Afdict_class * mpunc_list;
-	const char * const * mpunc;
-	size_t l_strippable;
-	int n_stripped = 0;
-
 	if (NULL == afdict) return 0;
-	mpunc_list = AFCLASS(afdict, AFDICT_MPUNC);
-	l_strippable = mpunc_list->length;
-	mpunc = mpunc_list->string;
+
+	const Afdict_class *mpunc = AFCLASS(afdict, AFDICT_MPUNC);
+	size_t l_strippable = mpunc->length;
+	int n_stripped = 0;
 
 	strcpy(w, word);
 
-	// +1: mpunc in start position is not allowed
+	// +1:      mpunc at start position is not allowed
 	for (char *sep = w+1; '\0' != *sep; sep++)
 	{
 		for (size_t i = 0; i < l_strippable; i++)
 		{
 			/* Find the token length, but stop at the subscript mark if exists. */
-			size_t sz = strcspn(mpunc[i], subscript_mark_str());
-			if (0 == strncmp(sep, mpunc[i], sz))
+			size_t sz = strcspn(mpunc->string[i], subscript_mark_str());
+
+			if (0 == strncmp(sep, mpunc->string[i], sz))
 			{
 				if ('\0' == sep[sz]) continue; // mpunc in end position
-
-				lgdebug(D_UN, "w='%s' found mpunc '%s'\n", w, mpunc[i]);
+				lgdebug(D_UN, "w='%s' found mpunc '%s'\n", w, mpunc->string[i]);
 
 				if (sep != w)
 				{
@@ -1792,7 +1788,7 @@ static int split_mpunc(Sentence sent, const char *word, char *w,
 					stripped[n_stripped++] = w;
 				}
 				if (n_stripped >= MAX_STRIP-1) goto max_strip_ovfl;
-				stripped[n_stripped++] = mpunc[i];
+				stripped[n_stripped++] = mpunc->string[i];
 
 				w = sep + sz;
 				sep += sz - 1;
