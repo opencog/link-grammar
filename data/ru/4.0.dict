@@ -7,10 +7,10 @@
 %%
 %% This file uses the utf8 encoding
 
-#define dictionary-version-number 5.9.0;
+#define dictionary-version-number 5.11.0;
 #define dictionary-locale         ru_RU.UTF-8;
 #define max-disjunct-cost         2.7;
-#define panic_max-disjunct-cost   4.0;
+#define panic-max-disjunct-cost   4.0;
 
 <costly-null>: [[[[]]]];
 
@@ -1096,3 +1096,7 @@ LENGTH-LIMIT-1: LL*+;
 % skip over (null-link) unknown words. If you remove it, the parser
 % will output an error for any unknown words.
 <UNKNOWN-WORD>: XXX+;
+
+% Unhandled, but getting split according to 4.0.affix.
+"%" "'": <UNKNOWN-WORD>;        % RPUNC
+"$": <UNKNOWN-WORD>;            % LPUNC

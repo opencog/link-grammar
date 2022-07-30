@@ -18,6 +18,7 @@
 #include "dict-api.h"
 #include "dict-defines.h"
 #include "dict-impl.h"
+#include "print/print-util.h"           // patch_subscript_mark
 #include "regex-morph.h"
 #include "dict-structures.h"
 #include "string-set.h"
@@ -450,14 +451,11 @@ bool dictionary_setup_defines(Dictionary dict)
 }
 
 /* ======================================================================= */
-/* ======================================================================= */
 
 /* The affix dictionary is represented as a dynamically allocated array with
  * an element for each class (connector type) in the affix file. Each element
  * has a pointer to an array of strings which are the punctuation/affix
  * names. */
-
-const char * afdict_classname[] = { AFDICT_CLASSNAMES };
 
 /** initialize the affix class table */
 void afclass_init(Dictionary dict)
@@ -480,7 +478,7 @@ void afclass_init(Dictionary dict)
  */
 Afdict_class * afdict_find(Dictionary afdict, const char * con, bool notify_err)
 {
-	const char ** ac;
+	const char * const * ac;
 
 	for (ac = afdict_classname;
 	     ac < &afdict_classname[ARRAY_SIZE(afdict_classname)]; ac++)
@@ -551,8 +549,7 @@ static void get_dict_affixes(Dictionary dict, Dict_node * dn,
 		{
 			affix_list_add(afdict, &afdict->afdict_class[AFDICT_SUF], wtrunc+1);
 		}
-		else
-		if (infix_mark == w[w_len-1])
+		else if (infix_mark == w[w_len-1])
 		{
 			wtrunc[w_len-1] = '\0';
 			affix_list_add(afdict, &afdict->afdict_class[AFDICT_PRE], wtrunc);
@@ -609,10 +606,10 @@ static int split_order(const void *a, const void *b)
 	const char * const *sa = a;
 	const char * const *sb = b;
 
-	size_t len_a = strcspn(*sb, subscript_mark_str());
-	size_t len_b = strcspn(*sa, subscript_mark_str());
+	size_t len_a = strcspn(*sa, subscript_mark_str());
+	size_t len_b = strcspn(*sb, subscript_mark_str());
 
-	int len_order = (int)(len_a - len_b);
+	int len_order = (int)(len_b - len_a);
 	if (0 == len_order) return strncmp(*sa, *sb, len_a);
 
 	return len_order;
@@ -630,6 +627,7 @@ bool afdict_init(Dictionary dict)
 {
 	Afdict_class * ac;
 	Dictionary afdict = dict->affix_table;
+	bool error_found = false;
 
 	/* FIXME: read_entry() builds word lists in reverse order (can we
 	 * just create the list top-down without breaking anything?). Unless
@@ -721,10 +719,49 @@ bool afdict_init(Dictionary dict)
 			prt_error("Error: afdict_init: Failed to compile "
 			          "regex /%s/ in file \"%s\"\n",
 			          afdict_classname[AFDICT_SANEMORPHISM], afdict->name);
-			return false;
+			error_found = true;
 		}
-		lgdebug(+D_AI, "%s regex %s\n",
-		        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
+		else
+		{
+			lgdebug(+D_AI, "%s regex %s\n",
+			        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
+		}
+	}
+
+	if (!IS_DYNAMIC_DICT(dict))
+	{
+		/* Validate that the strippable tokens are in the dict.
+		 * UNITS are assumed to be from the dict only.
+		 * Possible FIXME: Allow also tokens that match a regex (a tokenizer
+		 * change is needed to recognize them). */
+		for (size_t i = 0; i < ARRAY_SIZE(affix_strippable); i++)
+		{
+			if (AFDICT_UNITS != affix_strippable[i])
+			{
+				ac = AFCLASS(afdict, affix_strippable[i]);
+				bool not_in_dict = false;
+
+				for (size_t n = 0;  n < ac->length; n++)
+				{
+					if (!dict_has_word(dict, ac->string[n]))
+					{
+						if (!not_in_dict)
+						{
+							not_in_dict = true;
+							prt_error("Warning: afdict_init: Class %s in file %s: "
+							          "Token(s) not in the dictionary:",
+							          afdict_classname[affix_strippable[i]],
+							          afdict->name);
+						}
+
+						char *s = strdupa(ac->string[n]);
+						patch_subscript_mark(s);
+						prt_error(" \"%s\"", s);
+					}
+				}
+				if (not_in_dict) prt_error("\n");
+			}
+		}
 	}
 
 	/* Sort the affix-classes of tokens to be stripped. */
@@ -733,10 +770,9 @@ bool afdict_init(Dictionary dict)
 	 * up. e.g. split 7gram before 7am before 7m.
 	 * Another example: The ellipsis "..." must appear before the dot ".".
 	 */
-	afdict_classnum af[] = {AFDICT_UNITS, AFDICT_LPUNC, AFDICT_RPUNC, AFDICT_MPUNC};
-	for (size_t i = 0; i < ARRAY_SIZE(af); i++)
+	for (size_t i = 0; i < ARRAY_SIZE(affix_strippable); i++)
 	{
-		ac = AFCLASS(afdict, af[i]);
+		ac = AFCLASS(afdict, affix_strippable[i]);
 		if (0 < ac->length)
 		{
 			qsort(ac->string, ac->length, sizeof(char *), split_order);
@@ -775,6 +811,6 @@ bool afdict_init(Dictionary dict)
 		lg_error_flush();
 	}
 
-	return true;
+	return !error_found;
 }
 #undef D_AI

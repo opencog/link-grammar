@@ -1,7 +1,7 @@
 %
 % Turkish dictionary -- experimental -- 2016 -- Tatiana Batura, Maria Mitkovskaya, Natalya Semenova
 %
-#define dictionary-version-number 5.9.0;
+#define dictionary-version-number 5.11.0;
 #define dictionary-locale         tr_TR.UTF-8;
 
 % adjectives
@@ -119,3 +119,7 @@ PL-GREEK-LETTER-AND-NUMBER: XXX-;
 CAPITALIZED-WORDS: XXX-;
 HYPHENATED-WORDS: XXX-;
 <UNKNOWN-WORD>: XXX-;
+
+% Unhandled, but getting split according to 4.0.affix.
+")" "%" "." ":" ";" "?" "!" "'": <UNKNOWN-WORD>;      % RPUNC
+"(" "$": <UNKNOWN-WORD>;                              % LPUNC

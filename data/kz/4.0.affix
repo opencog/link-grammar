@@ -1,3 +1,4 @@
+% From these affixes, only "," is handled in the dictionary.
 ")" "%" "," "." ":" ";" "?" "!" "''" "'" : RPUNC+;
 "(" "$" "``": LPUNC+;
 

@@ -21,7 +21,7 @@
 /* Connector names for the affix class lists in the affix file */
 
 typedef enum {
-	AFDICT_RPUNC=1,
+	AFDICT_RPUNC,
 	AFDICT_LPUNC,
 	AFDICT_MPUNC,
 	AFDICT_UNITS,
@@ -41,13 +41,10 @@ typedef enum {
 	AFDICT_REGALTS,
 	AFDICT_REGPARTS,
 
-	/* Have to have one last entry, to get the array size correct */
-	AFDICT_LAST_ENTRY,
 	AFDICT_NUM_ENTRIES
 } afdict_classnum;
 
 #define AFDICT_CLASSNAMES1 \
-	"invalid classname", \
 	"RPUNC", \
 	"LPUNC", \
 	"MPUNC", \
@@ -69,8 +66,12 @@ typedef enum {
 	"REGALTS",     /* Min&max number of alternatives to issue for a word */\
 	"REGPARTS",    /* Max number of word partitions */
 
-#define AFDICT_CLASSNAMES AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2 "last classname"
+static const char * const afdict_classname[] =
+	{AFDICT_CLASSNAMES1 AFDICT_CLASSNAMES2};
+
 #define AFCLASS(afdict, class) (&afdict->afdict_class[class])
+
+Afdict_class * afdict_find(Dictionary, const char *, bool);
 
 /* Suffixes start with it.
  * This is needed to distinguish suffixes that were stripped off from
@@ -81,6 +82,7 @@ typedef enum {
 #define INFIX_MARK(afdict) \
 	((NULL == afdict) ? '\0' : (AFCLASS(afdict, AFDICT_INFIXMARK)->string[0][0]))
 
-Afdict_class * afdict_find(Dictionary, const char *, bool);
+static const afdict_classnum affix_strippable[] =
+	{AFDICT_UNITS, AFDICT_LPUNC, AFDICT_RPUNC, AFDICT_MPUNC};
 
 #endif /* _LG_DICT_AFFIX_H_ */

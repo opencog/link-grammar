@@ -77,11 +77,11 @@ class AADictionaryTestCase(unittest.TestCase):
 
         save_stderr = divert_start(2)
         self.assertRaises(LG_DictionaryError, Dictionary, dummy_lang + '1')
-        self.assertIn(dummy_lang + '1', save_stderr.divert_end())
+        self.assertIn(dummy_lang + '1', str(save_stderr.divert_end()))
 
         save_stderr = divert_start(2)
         self.assertRaises(LG_Error, Dictionary, dummy_lang + '2')
-        self.assertIn(dummy_lang + '2', save_stderr.divert_end())
+        self.assertIn(dummy_lang + '2', str(save_stderr.divert_end()))
 
 # Check absolute and relative dictionary access.
 # Check also that the dictionary language is set correctly.
@@ -506,7 +506,7 @@ class EErrorFacilityTestCase(unittest.TestCase):
         dummy_lang = "a dummy dict name (bad param test)"
         self.assertRaises(LG_Error, Dictionary, dummy_lang)
         LG_Error.printall(self.error_handler_test, self) # grab a valid errinfo
-        #self.assertIn(dummy_lang, save_stderr.divert_end())
+        #self.assertIn(dummy_lang, str(save_stderr.divert_end()))
         self.assertRaisesRegexp(TypeError, "must be an integer",
                                 self.__class__.handler["default"],
                                 self.errinfo, "bad param")
@@ -520,7 +520,7 @@ class EErrorFacilityTestCase(unittest.TestCase):
             self.param_ok = False
             save_stdout = divert_start(1) # Note: Handler parameter is stdout
             self.__class__.handler["default"](self.errinfo, 1)
-            self.assertIn(dummy_lang, save_stdout.divert_end())
+            self.assertIn(dummy_lang, str(save_stdout.divert_end()))
             self.param_ok = True
         except (TypeError, ValueError):
             self.assertTrue(self.param_ok)
@@ -598,7 +598,7 @@ class EErrorFacilityTestCase(unittest.TestCase):
         dummy_lang = "a dummy dict name (default handler test)"
         save_stderr = divert_start(2)
         self.assertRaises(LG_Error, Dictionary, dummy_lang)
-        self.assertIn(dummy_lang, save_stderr.divert_end())
+        self.assertIn(dummy_lang, str(save_stderr.divert_end()))
         self.assertEqual(self.errinfo, "dummy")
 
 class FSATsolverTestCase(unittest.TestCase):
@@ -1281,9 +1281,16 @@ class ZRULangTestCase(unittest.TestCase):
              '.', 'RIGHT-WALL'])
 
 
+# The Thai 4.0.affix files currently contain strippable affixes that are
+# not in the dict. This causes an annoying multiline error output that are
+# filtered out here using divert().
 class ZTHLangTestCase(unittest.TestCase):
     def test_thai(self):
+        save_stderr = divert_start(2)
         linkage_testfile(self, Dictionary(lang='th'), ParseOptions())
+        for line in save_stderr.divert_end().decode().split("\n"):
+           if 'Token(s) not in the dictionary' not in line:
+              print(line)
 
 
 class ZXDictDialectTestCase(unittest.TestCase):
@@ -1501,7 +1508,7 @@ class divert_start(object):
         os.close(self.savedfd)
         os.unlink(self.filename)
         self.filename = None
-        return str(content)
+        return content
 
     __del__ = divert_end
 

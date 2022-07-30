@@ -2,7 +2,7 @@
 % Kazakh dictionary -- experimental -- 2016
 % -- Tatiana Batura, Aigerim Bakiyeva, Aigerim Yerimbetova
 %
-#define dictionary-version-number 5.9.0;
+#define dictionary-version-number 5.11.0;
 #define dictionary-locale         kk_KZ.UTF-8;
 
 мен.pron: {W-} & S1s+;
@@ -133,3 +133,7 @@ LATIN-ADJ-P-NOUN-WORDS: XXX-;
 LATIN-ADJ-S-NOUN-WORDS: XXX-;
 HYPHENATED-WORDS: XXX-;
 <UNKNOWN-WORD>: XXX-;
+
+% Unhandled, but getting split according to 4.0.affix.
+")" "%" "." ":" ";" "?" "!" "''" "'" : <UNKNOWN-WORD>;    % RPUNC
+"(" "$" "``": <UNKNOWN-WORD>;                             % LPUNC

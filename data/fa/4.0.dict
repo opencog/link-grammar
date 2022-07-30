@@ -10,7 +10,7 @@
 %
 %*****************************************************************************
 
-#define dictionary-version-number 5.9.0;
+#define dictionary-version-number 5.11.0;
 #define dictionary-locale         fa_IR.UTF-8;
 
 % PERSIAN SYNTAX NOTES:
@@ -835,10 +835,10 @@ or
 
 ;
 
+% Unhandled, but getting split according to 4.0.affix.
+")" "%" ";" "'": ();                      % RPUNC
+"(" "$": ();                              % LPUNC
 
-
-%":" ";" :	% Colon and Semicolon
-%;
 
 %NUMBERS:   ;
 LEFT-WALL: ( Wcc+ or [Wi+] or [[Wd+]] ) & {Xp+}; % Connects to the Subject in declarative sentence, or Verb in subjectless or imperative sentence

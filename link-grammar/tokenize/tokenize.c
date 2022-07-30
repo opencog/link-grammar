@@ -371,16 +371,20 @@ static bool is_contraction_word(Dictionary dict, const char *s)
 static bool is_afdict_punc(const Dictionary afdict, const char *word)
 {
 	if (NULL == afdict) return false;
-	int punc_types[] = { AFDICT_RPUNC, AFDICT_MPUNC, AFDICT_LPUNC, 0 };
 
-	for (int affix_punc = 0; punc_types[affix_punc] != 0; affix_punc++)
+	for (size_t punc = 0; punc < ARRAY_SIZE(affix_strippable); punc++)
 	{
-		const Afdict_class * punc_list = AFCLASS(afdict, punc_types[affix_punc]);
-		size_t l_strippable = punc_list->length;
-		const char * const * punc = punc_list->string;
+		if (AFDICT_UNITS == affix_strippable[punc]) continue;
+		const Afdict_class *punc_list = AFCLASS(afdict, affix_strippable[punc]);
 
-		for (size_t i = 0; i < l_strippable; i++)
-			if (0 == strcmp(word, punc[i])) return true;
+		for (size_t i = 0; i < punc_list->length; i++)
+		{
+			/* If the word is subscripted, the affix must be too. */
+			const char *p = punc_list->string[i];
+			const char *w = word;
+			while ((*w == *p) && (*w != '\0')) { w++; p++; }
+			if (*w == *p) return true;
+		}
 	}
 
 	return false;
@@ -1773,7 +1777,8 @@ static int split_mpunc(Sentence sent, const char *word, char *w,
 	{
 		for (size_t i = 0; i < l_strippable; i++)
 		{
-			size_t sz = strlen(mpunc[i]);
+			/* Find the token length, but stop at the subscript mark if exists. */
+			size_t sz = strcspn(mpunc[i], subscript_mark_str());
 			if (0 == strncmp(sep, mpunc[i], sz))
 			{
 				if ('\0' == sep[sz]) continue; // mpunc in end position
@@ -1829,7 +1834,8 @@ static const char *strip_left(Sentence sent, const char * w,
 	{
 		for (i=0; i<l_strippable; i++)
 		{
-			size_t sz = strlen(lpunc[i]);
+			/* Find the token length, but stop at the subscript mark if exists. */
+			size_t sz = strcspn(lpunc[i], subscript_mark_str());
 
 			if (strncmp(w, lpunc[i], sz) == 0)
 			{
@@ -1923,7 +1929,6 @@ static const char *strip_left(Sentence sent, const char * w,
  *
  * p is a mark of the invocation position, for debugging.
  */
-extern const char *const afdict_classname[]; /* For debug message only */
 static bool strip_right(Sentence sent,
                         const char *w,
                         const char **wend,
@@ -1964,8 +1969,7 @@ static bool strip_right(Sentence sent,
 		{
 			const char *t = rword[i];
 
-			/* Units contain a subscript mark. Punctuation do not contain it.
-			 * Find the token length, but stop at the subscript mark if exists. */
+			/* Find the token length, but stop at the subscript mark if exists. */
 			len = strcspn(t, subscript_mark_str());
 
 			/* The remaining word is too short for a possible match */
@@ -3220,8 +3224,8 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 				 w->regex_name ? w->regex_name : "");
 		while (we)
 		{
-			prt_error("Debug:  string='%s' expr=%s\n",
-			          we->string, exp_stringify(we->exp));
+			prt_error("Debug:  string='%s' status=%s expr=%s\n",
+			          we->string, gword_status(sent, w), exp_stringify(we->exp));
 			we = we->next;
 		}
 	}
