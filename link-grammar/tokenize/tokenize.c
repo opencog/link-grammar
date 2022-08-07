@@ -2045,8 +2045,8 @@ static bool strip_right(Sentence sent,
 	 * off "h." from "20th.". Only the last byte is checked here. */
 	if (rootdigit && (sz > 0) && !isdigit((unsigned int)temp_wend[-1]))
 	{
-		lgdebug(+D_UN, "%d: %s: return FALSE; root='%s' (%c is not a digit)\n",
-			 p, afdict_classname[classnum], word, temp_wend[-1]);
+		lgdebug(+D_UN, "%d: %s: return FALSE; root='%s' (0x%02x is not a digit)\n",
+			 p, afdict_classname[classnum], word, (unsigned char)temp_wend[-1]);
 		return false;
 	}
 
