@@ -594,6 +594,7 @@ static void concat_class(Dictionary afdict, int classno)
  * Sort order:
  * 1. Longest base words first.
  * 2. Equal base words one after the other.
+ * 3. Regexes last, in file order.
  */
 static int split_order(const void *a, const void *b)
 {
@@ -602,6 +603,12 @@ static int split_order(const void *a, const void *b)
 
 	size_t len_a = strcspn(*sa, subscript_mark_str());
 	size_t len_b = strcspn(*sb, subscript_mark_str());
+	bool is_regex_a = (get_affix_regex_cg(*sa) >= 0);
+	bool is_regex_b = (get_affix_regex_cg(*sb) >= 0);
+
+	if (is_regex_a && is_regex_b) return 0;
+	if (is_regex_a) return 1;
+	if (is_regex_b) return -1;
 
 	int len_order = (int)(len_b - len_a);
 	if (0 == len_order) return strncmp(*sa, *sb, len_a);
