@@ -65,6 +65,20 @@ struct Regex_node_s
 	int ovector[2];  /* 0: start offset; 1: end offset */
 };
 
+static inline Regex_node *regex_new(const char *name, const char *pattern)
+{
+	Regex_node *rn = (Regex_node *)malloc(sizeof(Regex_node));
+
+	rn->name = name;
+	rn->pattern = strdup(pattern);
+	rn->re = NULL;
+	rn->neg = false;
+	rn->capture_group = -1;
+	rn->next = NULL;
+
+	return rn;
+}
+
 struct Afdict_class_struct
 {
 	uint16_t mem_elems;     /* number of memory elements allocated */

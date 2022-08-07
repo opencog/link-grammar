@@ -689,7 +689,6 @@ bool afdict_init(Dictionary dict)
 	ac = AFCLASS(afdict, AFDICT_SANEMORPHISM);
 	if (0 != ac->length)
 	{
-		Regex_node *sm_re = malloc(sizeof(*sm_re));
 		dyn_str *rebuf = dyn_str_new();
 
 		/* The regex used to be converted to: ^((original-regex)b)+$
@@ -706,15 +705,11 @@ bool afdict_init(Dictionary dict)
 #else
 		dyn_strcat(rebuf, ")+$");
 #endif
-		sm_re->pattern = strdup(rebuf->str);
+
+		afdict->regex_root = regex_new(afdict_classname[AFDICT_SANEMORPHISM],
+		                               rebuf->str);
 		dyn_str_delete(rebuf);
 
-		afdict->regex_root = sm_re;
-		sm_re->name = string_set_add(afdict_classname[AFDICT_SANEMORPHISM],
-		                             afdict->string_set);
-		sm_re->re = NULL;
-		sm_re->next = NULL;
-		sm_re->neg = false;
 		if (!compile_regexs(afdict->regex_root, afdict))
 		{
 			prt_error("Error: afdict_init: Failed to compile "
@@ -724,8 +719,8 @@ bool afdict_init(Dictionary dict)
 		}
 		else
 		{
-			lgdebug(+D_AI, "%s regex %s\n",
-			        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
+			lgdebug(+D_AI, "%s regex %s\n", afdict_classname[AFDICT_SANEMORPHISM],
+			        afdict->regex_root->pattern);
 		}
 	}
 

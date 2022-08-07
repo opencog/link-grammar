@@ -882,12 +882,7 @@ static size_t copy_quoted(const char *q, char *dst, const char *src, size_t len)
 
 static Regex_node *new_disjunct_regex_node(Regex_node *current, char *regpat)
 {
-	Regex_node *rn = malloc(sizeof(Regex_node));
-
-	rn->name = "Disjunct regex";
-	rn->pattern = strdup(regpat);
-	rn->re = NULL;
-	rn->neg = false;
+	Regex_node *rn = regex_new("Disjunct regex", regpat);
 	rn->next = current;
 
 	return rn;
