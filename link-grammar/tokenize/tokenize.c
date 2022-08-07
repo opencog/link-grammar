@@ -2042,10 +2042,8 @@ static bool strip_right(Sentence sent,
 
 	/* If there is a non-null root, we require that it ends with a number,
 	 * to ensure we stripped off all units. This prevents striping
-	 * off "h." from "20th.".
-	 * FIXME: is_utf8_digit(temp_wend-1, dict) here can only check ASCII digits,
-	 * since it is invoked with the last byte... */
-	if (rootdigit && (sz > 0) && !is_utf8_digit(temp_wend-1, dict->lctype))
+	 * off "h." from "20th.". Only the last byte is checked here. */
+	if (rootdigit && (sz > 0) && !isdigit((unsigned int)temp_wend[-1]))
 	{
 		lgdebug(+D_UN, "%d: %s: return FALSE; root='%s' (%c is not a digit)\n",
 			 p, afdict_classname[classnum], word, temp_wend[-1]);
