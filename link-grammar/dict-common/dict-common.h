@@ -54,13 +54,15 @@ struct Regex_node_s
 {
 	const char *name;/* The identifying name of the regex */
 	char *pattern;   /* The regular expression pattern */
-	bool neg;        /* Negate the match */
 	void *re;        /* The compiled regex. void * to avoid
 	                    having re library details invading the
 	                    rest of the LG system; regex-morph.c
 	                    takes care of all matching.
 	                  */
 	Regex_node *next;
+	bool neg;        /* Negate the match */
+	int capture_group;  /* Capture group number (-1 if none) for ovector */
+	int ovector[2];  /* 0: start offset; 1: end offset */
 };
 
 struct Afdict_class_struct
