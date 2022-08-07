@@ -85,4 +85,29 @@ Afdict_class * afdict_find(Dictionary, const char *, bool);
 static const afdict_classnum affix_strippable[] =
 	{AFDICT_UNITS, AFDICT_LPUNC, AFDICT_RPUNC, AFDICT_MPUNC};
 
+/**
+ * Return a positive number if \p s is in affix regex format, else return -1.
+ * Regex format: /regex/.\N (N is a digit).
+ * \N denotes the capture group that should match an affix
+ * (the whole pattern is capture group 0).
+ *
+ * The regex much contain at least one character.
+ */
+static inline int get_affix_regex_cg(const char *s)
+{
+	if (s[0] != '/') return -1;
+
+	const char *endslash = strrchr(s, '/');
+	if ((endslash == NULL) || (endslash < s + 3)) return -1;
+
+	if (((endslash[1] == '.') || (endslash[1] == SUBSCRIPT_MARK)) &&
+	    (endslash[2] == '\\'))
+	{
+		if ((endslash[3] >= '0') && (endslash[3] <= '9'))
+			return (endslash[3] - '0');
+	}
+
+	return -1;
+}
+
 #endif /* _LG_DICT_AFFIX_H_ */
