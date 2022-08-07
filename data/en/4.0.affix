@@ -5,6 +5,11 @@
 % Some of the funky UTF-8 parenthesis are used in Asian texts.
 % 。is an end-of-sentence marker used in Japanese texts.
 
+% An LPUNC/RPUNC/MPUNC token can be specified as "/regex/.\N", when \N is
+% the capture group that should match the affix (the whole pattern is
+% capture group 0). Disregarding the position in which they appear, they
+% are checked last - but in the same order. (Experimental.)
+
 % Punctuation appearing on the right-side of words.
 ")" "}" "]" ">" """ » 〉 ） 〕 》 】 ］ 』 」 "’’" "’" ” '' ' `
 "%" "," ... "." 。 ‧ ":" ";" "?" "!" ‽ ؟ ？ ！
@@ -28,15 +33,20 @@ _ ‐ ‑ ‒ – — ― ～ – ━ ー -- - ‧
   : LPUNC+;
 
 % Split words that contain the following tokens in the middle of them.
-% We don't want comma's in this list; it tends to mess up numbers. e.g.
-% "The enzyme has a weight of 125,000 to 130,000"
-% We don't want colon's in this list, it tends to mess up time
-% expressions: "The train arriaves at 13:42"
-% Some kind of fancier technique is needed for tokenizing those.
 %
 % TODO: this list should be expanded with other "typical"(?) junk
 % that is commonly (?) in broken texts.
 -- ‒ – — ― "(" ")" "[" "]" ... ";" ±: MPUNC+;
+% Split on commas, but be careful with numbers:
+% "The enzyme has a weight of 125,000 to 130,000"
+% Also split on colons, but be careful not to mess up time
+% expressions: "The train arrives at 13:42"
+"/[^0-9]([,:])/.\1" "/([,:])[^0-9]/.\1": MPUNC+;
+
+
+% This also selectively splits on [,:] but is only supported by the PCRE2
+% regex library.
+%"/(?<!\d)[,:]|[,:](?!\d)/.\0": MPUNC+;
 
 % Suffixes
 % 't and ’t show up as Shakesperean contractions of "it", but collide
