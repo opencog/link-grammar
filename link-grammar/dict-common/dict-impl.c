@@ -460,16 +460,10 @@ bool dictionary_setup_defines(Dictionary dict)
 /** initialize the affix class table */
 void afclass_init(Dictionary dict)
 {
-	size_t i;
+	const size_t sz = sizeof(*dict->afdict_class) * AFDICT_NUM_ENTRIES;
 
-	dict->afdict_class =
-		malloc(sizeof(*dict->afdict_class) * AFDICT_NUM_ENTRIES);
-	for (i = 0; i < AFDICT_NUM_ENTRIES; i++)
-	{
-		dict->afdict_class[i].mem_elems = 0;
-		dict->afdict_class[i].length = 0;
-		dict->afdict_class[i].string = NULL;
-	}
+	dict->afdict_class = malloc(sz);
+	memset(dict->afdict_class, 0, sz);
 }
 
 /**

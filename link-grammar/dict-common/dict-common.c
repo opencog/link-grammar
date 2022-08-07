@@ -308,6 +308,12 @@ static void affix_list_delete(Dictionary dict)
 	for (size_t i = 0;  i < AFDICT_NUM_ENTRIES; i++)
 	{
 		if (atc[i].length > 0) free(atc[i].string);
+		if (atc[i].Nregexes > 0)
+		{
+			for (size_t r = 0; r < atc[i].Nregexes; r++)
+				free_regexs(atc[i].regex[r]);
+			free(atc[i].regex);
+		}
 	}
 	free(dict->afdict_class);
 	dict->afdict_class = NULL;
