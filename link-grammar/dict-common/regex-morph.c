@@ -62,6 +62,20 @@ typedef struct {
 /* ========================================================================= */
 #if HAVE_REGEX_H
 /**
+ * Find an upper limit to the number of capture groups in the pattern.
+ */
+static unsigned int max_capture_groups(const Regex_node *rn)
+{
+	if (rn->capture_group < 0) return 0;
+
+	int Nov = 1;
+	for (const char *p = rn->pattern; *p != '\0'; p++)
+		if (*p == '(') Nov++;
+
+	return Nov;
+}
+
+/**
  * Compile the given regex..
  * Return \c true on success, \c false otherwise.
  */
