@@ -726,10 +726,8 @@ bool afdict_init(Dictionary dict)
 
 	if (!IS_DYNAMIC_DICT(dict))
 	{
-		/* Validate that the strippable tokens are in the dict.
-		 * UNITS are assumed to be from the dict only.
-		 * Possible FIXME: Allow also tokens that match a regex (a tokenizer
-		 * change is needed to recognize them). */
+		/* Validate that the strippable tokens are in the dict. UNITS are
+		 * assumed to be from the dict only. */
 		for (size_t i = 0; i < ARRAY_SIZE(affix_strippable); i++)
 		{
 			if (AFDICT_UNITS != affix_strippable[i])
@@ -737,7 +735,7 @@ bool afdict_init(Dictionary dict)
 				ac = AFCLASS(afdict, affix_strippable[i]);
 				bool not_in_dict = false;
 
-				for (size_t n = 0;  n < ac->length; n++)
+				for (int n = 0;  n < ac->length - ac->Nregexes; n++)
 				{
 					if (!dict_has_word(dict, ac->string[n]))
 					{
