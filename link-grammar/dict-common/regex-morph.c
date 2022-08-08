@@ -318,6 +318,35 @@ static void reg_free(Regex_node *rn)
 }
 #endif // USE_CXXREGEX
 
+/**
+ * Check the specified capture group of the pattern (if any).
+ * Return true if no capture group specified if it is valid,
+ * and -1 on error.
+ *
+ * Algo: Append the specified capture group specification to the pattern
+ * and compile it. If it doesn't exist in the pattern, an error will
+ * occur.
+ */
+static bool check_capture_group(const Regex_node *rn)
+{
+	if (rn->capture_group <= 0) return true;
+
+	Regex_node check_cg = *rn;
+	const size_t pattern_len = strlen(rn->pattern);
+
+	check_cg.pattern = (char *)alloca(pattern_len + 2/* \N */ + 1/* \0 */);
+	strcpy(check_cg.pattern, rn->pattern);
+
+	check_cg.pattern[pattern_len] = '\\';
+	check_cg.pattern[pattern_len + 1] = '0' + rn->capture_group;
+	check_cg.pattern[pattern_len + 2] = '\0';
+
+	bool rc = reg_comp(&check_cg);
+	if (rc) free(check_cg.re);
+
+	return rc;
+}
+
 /* ============================== Internal API ============================= */
 
 /**
@@ -338,6 +367,8 @@ bool compile_regexs(Regex_node *rn, Dictionary dict)
 				rn->re = NULL;
 				return false;
 			}
+
+			if (!check_capture_group(rn)) return false;
 
 			/* Check that the regex name is defined in the dictionary. */
 			if ((dict != NULL) && !dict_has_word(dict, rn->name))
