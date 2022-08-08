@@ -136,16 +136,16 @@ static bool reg_comp(Regex_node *rn)
 
 static bool reg_match(const char *s, const Regex_node *rn)
 {
-	reg_info *reinfo = (reg_info *)rn->re;
-	int nmatch = (rn->capture_group < 0) ? 0 : reinfo->Nre_md;
-	int rc = regexec(&reinfo->re_code, s, nmatch, reinfo->re_md, /*eflags*/0);
+	reg_info *re = (reg_info *)rn->re;
+	int nmatch = (rn->capture_group < 0) ? 0 : re->Nre_md;
+	int rc = regexec(&re->re_code, s, nmatch, re->re_md, /*eflags*/0);
 
 	if (rc == REG_NOMATCH) return false;
 	if (rc == 0) return true;
 
 	/* We have an error. */
 	char errbuf[ERRBUFFLEN];
-	regerror(rc, &reinfo->re_code, errbuf, ERRBUFFLEN);
+	regerror(rc, &re->re_code, errbuf, ERRBUFFLEN);
 	prt_error("Error: Regex matching error: \"%s\" (pattern \"%s\"): %s "
 	          "(code %d)\n", rn->name, rn->pattern, errbuf, rc);
 	return false;
@@ -154,7 +154,7 @@ static bool reg_match(const char *s, const Regex_node *rn)
 static void reg_span(Regex_node *rn)
 {
 	int cgn = rn->capture_group;
-	reg_info *reinfo = rn->re;
+	reg_info *re = rn->re;
 
 	if (unlikely(cgn > rn->capture_group))
 	{
@@ -162,16 +162,17 @@ static void reg_span(Regex_node *rn)
 	}
 	else
 	{
-		rn->ovector[0] = reinfo->re_md[cgn].rm_so;
-		rn->ovector[1] = reinfo->re_md[cgn].rm_eo;
+		rn->ovector[0] = re->re_md[cgn].rm_so;
+		rn->ovector[1] = re->re_md[cgn].rm_eo;
 	}
 }
 
 static void reg_free(Regex_node *rn)
 {
-	regex_t *re_code = &((reg_info *)rn->re)->re_code;
-	regfree(re_code);
-	free(rn->re);
+	reg_info *re = rn->re;
+
+	regfree(&re->re_code);
+	free(re);
 }
 #endif // HAVE_REGEX_H
 
@@ -212,11 +213,11 @@ static bool reg_comp(Regex_node *rn)
 
 static int reg_match(const char *s, const Regex_node *rn)
 {
-	reg_info *reinfo = rn->re;
+	reg_info *re = rn->re;
 
-	int rc = pcre2_match(reinfo->re_code, (PCRE2_SPTR)s,
+	int rc = pcre2_match(re->re_code, (PCRE2_SPTR)s,
 	                     PCRE2_ZERO_TERMINATED, /*startoffset*/0,
-	                     PCRE2_NO_UTF_CHECK, reinfo->re_md, NULL);
+	                     PCRE2_NO_UTF_CHECK, re->re_md, NULL);
 	if (rc == PCRE2_ERROR_NOMATCH) return false;
 	if (rc >= 0) return true;
 
@@ -231,10 +232,10 @@ static int reg_match(const char *s, const Regex_node *rn)
 static void reg_span(Regex_node *rn)
 {
 	int cgn = rn->capture_group;
-	reg_info *reinfo = rn->re;
-	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(reinfo->re_md);
+	reg_info *re = rn->re;
+	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(re->re_md);
 
-	if (unlikely(cgn >= (int)pcre2_get_ovector_count(reinfo->re_md)))
+	if (unlikely(cgn >= (int)pcre2_get_ovector_count(re->re_md)))
 	{
 		rn->ovector[0] = rn->ovector[1] = -1;
 	}
@@ -277,13 +278,13 @@ static bool reg_comp(Regex_node *rn)
 
 static bool reg_match(const char *s, const Regex_node *rn)
 {
-	/* "nosub" not used, as no time difference found w/o using reinfo->re_md. */
+	/* "nosub" not used, as no time difference found w/o using re->re_md. */
 	bool match;
-	reg_info *reinfo = (reg_info *)rn->re;
+	reg_info *re = (reg_info *)rn->re;
 
 	try
 	{
-		match = std::regex_search(s, reinfo->re_md, *reinfo->re_code);
+		match = std::regex_search(s, re->re_md, *re->re_code);
 	}
 	catch (const std::regex_error& e)
 	{
@@ -313,8 +314,10 @@ static void reg_span(Regex_node *rn)
 
 static void reg_free(Regex_node *rn)
 {
-	delete ((reg_info *)rn->re)->re_code;
-	delete (reg_info *)rn->re;
+	reg_info *re = (reg_info *)rn->re;
+
+	delete re->re_code;
+	delete re;
 }
 #endif // USE_CXXREGEX
 
