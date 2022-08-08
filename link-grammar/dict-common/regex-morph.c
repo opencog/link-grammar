@@ -173,6 +173,7 @@ static void reg_free(Regex_node *rn)
 
 	regfree(&re->re_code);
 	free(re);
+	rn->re = NULL;
 }
 #endif // HAVE_REGEX_H
 
@@ -253,6 +254,7 @@ static void reg_free(Regex_node *rn)
 	pcre2_match_data_free(re->re_md);
 	pcre2_code_free(re->re_code);
 	free(re);
+	rn->re = NULL;
 }
 #endif // HAVE_PCRE2_H
 
@@ -318,6 +320,7 @@ static void reg_free(Regex_node *rn)
 
 	delete re->re_code;
 	delete re;
+	rn->re = NULL;
 }
 #endif // USE_CXXREGEX
 
