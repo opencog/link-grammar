@@ -364,8 +364,9 @@ static bool is_contraction_word(Dictionary dict, const char *s)
  *
  * FIXME:
  * We cannot directly find if a word is an AFDICT_xPUNC, because
- * we have no way to mark that in strip_left()/strip_right()/split_mpunc(),
- * and we don't have a direct search function in the afdict (since it
+ * we have no way to mark that in strip_left()/strip_right()/split_mpunc()
+ * (as they don't allocate Gwords for bow),
+ * We also don't have a lookup function for the afdict (since it
  * doesn't have an in-memory tree structure).
  */
 static bool is_afdict_punc(const Dictionary afdict, const char *word)
@@ -376,14 +377,31 @@ static bool is_afdict_punc(const Dictionary afdict, const char *word)
 	{
 		if (AFDICT_UNITS == affix_strippable[punc]) continue;
 		const Afdict_class *punc_list = AFCLASS(afdict, affix_strippable[punc]);
+		size_t l_strippable = punc_list->length;
 
-		for (size_t i = 0; i < punc_list->length; i++)
+		for (size_t i = 0; i < l_strippable - punc_list->Nregexes; i++)
 		{
 			/* If the word is subscripted, the affix must be too. */
 			const char *p = punc_list->string[i];
 			const char *w = word;
 			while ((*w == *p) && (*w != '\0')) { w++; p++; }
 			if (*w == *p) return true;
+		}
+	}
+
+	for (size_t punc = 0; punc < ARRAY_SIZE(affix_strippable); punc++)
+	{
+		if (AFDICT_UNITS == affix_strippable[punc]) continue;
+		const Afdict_class *punc_list = AFCLASS(afdict, affix_strippable[punc]);
+
+		for (size_t i = 0; i < punc_list->Nregexes; i++)
+		{
+			/* XXX May miss detection due to no match after stripping. */
+			int start, end;
+			bool match_found =
+				matchspan_regex(punc_list->regex[i], word, &start, &end);
+			if (match_found && (start == 0) && (word[end] == '\0'))
+				return true;
 		}
 	}
 
@@ -1756,50 +1774,155 @@ static bool guess_misspelled_word(Sentence sent, Gword *unsplit_word,
 }
 #endif /* HAVE_HUNSPELL */
 
-static int split_mpunc(Sentence sent, const char *word, char *w,
-                                stripped_t stripped)
+static bool matchspan_fixed(const Afdict_class *mpunc, const char *w,
+                            int *start, int *end)
 {
-	const Dictionary afdict = sent->dict->affix_table;
-	if (NULL == afdict) return 0;
+	const char *wend = &w[strlen(w)];
 
-	const Afdict_class *mpunc = AFCLASS(afdict, AFDICT_MPUNC);
-	size_t l_strippable = mpunc->length;
-	int n_stripped = 0;
-
-	strcpy(w, word);
-
-	// +1:      mpunc at start position is not allowed
-	for (char *sep = w+1; '\0' != *sep; sep++)
+	for (int i = 0;  i < mpunc->length - mpunc->Nregexes; i++)
 	{
-		for (size_t i = 0; i < l_strippable; i++)
+		const char *affix = mpunc->string[i];
+		int f_start, f_end;
+
+		/* Offset 1 to disallow split at word start. */
+		for (f_start = 1; w + f_start <  wend; f_start++)
 		{
-			/* Find the token length, but stop at the subscript mark if exists. */
-			size_t sz = strcspn(mpunc->string[i], subscript_mark_str());
+			/* Find the bare affix length. */
+			size_t sz = strcspn(affix, subscript_mark_str());
 
-			if (0 == strncmp(sep, mpunc->string[i], sz))
+			f_end = f_start + sz;
+			if (w + f_end > wend)
+				break; /* at end position or doesn't fit */
+
+			if (0 == strncmp(w + f_start, affix, sz))
 			{
-				if ('\0' == sep[sz]) continue; // mpunc in end position
-				lgdebug(D_UN, "w='%s' found mpunc '%s'\n", w, mpunc->string[i]);
-
-				if (sep != w)
-				{
-					*sep = '\0';
-					if (n_stripped >= MAX_STRIP-1) goto max_strip_ovfl;
-					stripped[n_stripped++] = w;
-				}
-				if (n_stripped >= MAX_STRIP-1) goto max_strip_ovfl;
-				stripped[n_stripped++] = mpunc->string[i];
-
-				w = sep + sz;
-				sep += sz - 1;
-				break;
+				*start = f_start;
+				*end = f_end;
+				return true;
 			}
 		}
 	}
 
-	if (n_stripped > 0) stripped[n_stripped++] = w;
+	return false;
+}
 
-	return n_stripped;
+/**
+ * Split \p w according to fixed strings (\p rnum < 0) or the regex number
+ * \p rnum (starts by 0).
+ *
+ * If LPUNC, RPUNC and MPUNC have an overlap in their affixes,
+ * separate_word() may generate a lot of alternatives by re-splitting,
+ * a thing that causes a high parsing overhead for long sentences,
+ * This is especially happens if split_mpunc() is allowed to
+ * split at the start and the end of the word.
+ *
+ * To solve that, for now disallow such matches.
+ * This covers the case of regex zero-matches at word start and end,
+ * that are useless anyway.
+ */
+static bool mpunc_find(const Afdict_class *mpunc, int rnum, const char *w,
+                       int *start, int *end)
+{
+	bool rc;
+	if (rnum < 0)
+		rc = matchspan_fixed(mpunc, w, start, end);
+	else
+		rc = matchspan_regex(mpunc->regex[rnum], w, start, end);
+
+	/* Disallow matches at word start and end. */
+	if (unlikely(rc) && (unlikely(*start == 0) || unlikely(w[*end] == '\0')))
+	    return false;
+
+	return rc;
+}
+
+static void prt_debug_mpunc(const char *label, const Afdict_class *mpunc,
+                            int rnum, const char *w, int start, int end)
+{
+	if (verbosity_level(+D_UN))
+	{
+		if (label != NULL)
+			prt_error("%s: ", label);
+		if (rnum >= 0)
+			prt_error("regex=/%s/ ", mpunc->regex[rnum]->pattern);
+		prt_error("matched \"%.*s\" in \"%s\" at [%d, %d)\n",
+		          end-start, w+start, w, start, end);
+	}
+}
+
+/*
+ * Split a word according to a token (fixed one or regex) in the MPUNC list.
+ * The token can also be at the start or end of the word.
+ * Splitting on zero-match is experimental (remove if not needed).
+ */
+static int split_mpunc(Sentence sent, const char *word, stripped_t split)
+{
+	const Dictionary afdict = sent->dict->affix_table;
+	if (NULL == afdict) return 0;
+	if (utf8_strlen(word) <= 2) return 0; /* cannot split 1 and 2 characters */
+
+	const Afdict_class *mpunc = AFCLASS(afdict, AFDICT_MPUNC);
+	int Nsplit = 0;
+
+	while(*word != '\0')
+	{
+#define NO_MATCH INT_MAX
+		int start = NO_MATCH, end = 0;
+		int matched_rnum = NO_MATCH;
+
+		/* rnum=-1 tries the fixed mpunc strings. */
+		for (int rnum = -1;  rnum < mpunc->Nregexes; rnum++)
+		{
+			int ms, me;
+			if (unlikely(mpunc_find(mpunc, rnum, word, &ms, &me)))
+			{
+				/* Select the earlier match, or in the same position but longer. */
+				if ((ms < start) || ((ms == start) && (me > end)))
+				{
+					start = ms;
+					end = me;
+					matched_rnum = rnum;
+				}
+				prt_debug_mpunc((matched_rnum == rnum) ? "Selected tmp":"Neglected",
+				                mpunc, rnum, word, start, end);
+			}
+		}
+
+		if (start == NO_MATCH) break; /* no matches at all */
+		prt_debug_mpunc("Found", mpunc, matched_rnum, word, start, end);
+
+		const char *affix;
+		if (unlikely(start == end))
+		{
+			affix = NULL; /* zero-match */
+		}
+		else
+		{
+			char *tmp = strndupa(word + start, end - start);
+			affix = string_set_add(tmp, sent->string_set);
+		}
+
+		if (start != 0)
+		{
+			if (Nsplit >= MAX_STRIP-1) goto max_strip_ovfl;
+
+			char *tmp = strndupa(word, start);
+			split[Nsplit++] = string_set_add(tmp, sent->string_set);
+		}
+
+		if (likely(affix != NULL)) /* likely since zero-match is unlikely. */
+		{
+			if (Nsplit >= MAX_STRIP-1) goto max_strip_ovfl;
+			split[Nsplit++] = affix;
+		}
+
+		word += end;
+	}
+
+	if (unlikely(Nsplit > 0) && (*word != '\0'))
+		split[Nsplit++] = string_set_add(word, sent->string_set);
+
+	return Nsplit;
 
 max_strip_ovfl:
 	lgdebug(+D_SW, "Too many tokens (>%d)\n", MAX_STRIP);
@@ -1814,29 +1937,57 @@ static const char *strip_left(Sentence sent, const char * w,
                        size_t *n_stripped)
 {
 	const Dictionary afdict = sent->dict->affix_table;
-	const Afdict_class * lpunc_list;
-	const char * const * lpunc;
-	size_t l_strippable;
-	size_t i;
-
 	if (NULL == afdict) return (w);
-	lpunc_list = AFCLASS(afdict, AFDICT_LPUNC);
-	l_strippable = lpunc_list->length;
-	lpunc = lpunc_list->string;
+
+	const Afdict_class *lpunc = AFCLASS(afdict, AFDICT_LPUNC);
+	size_t l_strippable = lpunc->length;
+	size_t i;
 
 	*n_stripped = 0;
 
 	do
 	{
-		for (i=0; i<l_strippable; i++)
+		size_t rnum = 0;
+		for (i = 0; i < l_strippable; i++)
 		{
-			/* Find the token length, but stop at the subscript mark if exists. */
-			size_t sz = strcspn(lpunc[i], subscript_mark_str());
+			bool match_found = false;
+			const char *affix;
+			size_t sz;
 
-			if (strncmp(w, lpunc[i], sz) == 0)
+			if (i < l_strippable - lpunc->Nregexes)
 			{
-				lgdebug(D_UN, "w='%s' found lpunc '%s'\n", w, lpunc[i]);
-				stripped[(*n_stripped)++] = lpunc[i];
+				affix = lpunc->string[i];
+				/* Find the bare affix length. */
+				sz = strcspn(affix, subscript_mark_str());
+
+				/* The remaining word is too short for a possible match */
+				if (strlen(w) < sz) continue;
+
+				match_found = (strncmp(w, affix, sz) == 0);
+			}
+			else
+			{
+				int start, end;
+				match_found = matchspan_regex(lpunc->regex[rnum], w, &start, &end);
+				if (unlikely(match_found && start != 0))
+				{
+					lgdebug(+D_UN, "/%s/ matches \"%s\" not at string start: "
+					        "[%d, %d)\n", lpunc->regex[rnum]->pattern, w,
+					        start, end);
+					match_found = false;
+				}
+				if (match_found)
+				{
+					sz = end - start;
+					affix = string_set_add(strndupa(w, sz), sent->string_set);
+				}
+				rnum++;
+			}
+
+			if (match_found)
+			{
+				lgdebug(+D_UN, "w='%s' found lpunc '%s'\n", w, affix);
+				stripped[(*n_stripped)++] = affix;
 				w += sz;
 				break;
 			}
@@ -1934,98 +2085,123 @@ static bool strip_right(Sentence sent,
                         bool rootdigit,
                         int p)
 {
-	Dictionary dict = sent->dict;
-	Dictionary afdict = dict->affix_table;
-	const char * temp_wend = *wend;
-	char *word = alloca(temp_wend-w+1);
-	size_t sz;
-	size_t i;
-	size_t nrs = 0;
-	size_t len = 0;
-
-	Afdict_class *rword_list;
-	size_t rword_num;
-	const char * const * rword;
+	const Dictionary dict = sent->dict;
+	const Dictionary afdict = dict->affix_table;
+	if (NULL == afdict) return false;
 
 	if (*n_stripped >= MAX_STRIP-1)
 		return false;
 
+	const char * temp_wend = *wend;
 	assert(temp_wend>w, "strip_right: unexpected empty-string word");
-	if (NULL == afdict) return false;
+	char *word = alloca(temp_wend-w+1);
 
-	rword_list = AFCLASS(afdict, classnum);
-	rword_num = rword_list->length;
-	rword = rword_list->string;
+	Afdict_class *rword_list = AFCLASS(afdict, classnum);
+	size_t l_strippable = rword_list->length;
+	const char * const * rword = rword_list->string;
+
+	size_t sz;
+	size_t nrs = 0;
+	size_t i;
 
 	do
 	{
 		size_t altn = 0;
+		size_t rnum = 0;
 
-		for (i = 0; i < rword_num; i++)
+		for (i = 0; i < l_strippable; i++)
 		{
-			const char *t = rword[i];
-
-			/* Find the token length, but stop at the subscript mark if exists. */
-			len = strcspn(t, subscript_mark_str());
-
-			/* The remaining word is too short for a possible match */
-			if ((temp_wend-w) < (int)len) continue;
-
-			if (strncmp(temp_wend-len, t, len) == 0)
+			if (i < l_strippable - rword_list->Nregexes)
 			{
-				if (0 == altn)
+				const char *t = rword[i];
+
+				/* Find the bare affix length. */
+				size_t len = strcspn(t, subscript_mark_str());
+
+				/* The remaining word is too short for a possible match */
+				if ((temp_wend-w) < (int)len) continue;
+
+				if (strncmp(temp_wend-len, t, len) == 0)
 				{
-					lgdebug(+D_UN, "%d: %s: w='%s' rword '%.*s' at stripped[0,%zu]\n",
-						p, afdict_classname[classnum], temp_wend-len, (int)len, t, nrs);
-					stripped[1][*n_stripped+nrs] = NULL;
-					if (SUBSCRIPT_MARK == t[len])
+					if (0 == altn)
 					{
-						/* stripped[0][] are the unsubscripted word parts. */
-						stripped[0][*n_stripped+nrs] =
-							string_set_add(strndupa(t, len), sent->string_set);
+						lgdebug(+D_UN, "%d: %s: w='%s' rword '%.*s' at stripped[0,%zu]\n",
+						        p, afdict_classname[classnum], temp_wend-len, (int)len, t, nrs);
+						stripped[1][*n_stripped+nrs] = NULL;
+						if (SUBSCRIPT_MARK == t[len])
+						{
+							/* stripped[0][] are the unsubscripted word parts. */
+							stripped[0][*n_stripped+nrs] =
+								string_set_add(strndupa(t, len), sent->string_set);
+						}
+						else
+						{
+							/* This is an unsubscripted token. We are not going to
+							 * have alternatives to it.*/
+							stripped[0][*n_stripped+nrs] = t;
+							nrs++;
+							temp_wend -= len;
+							break;
+						}
+						altn = 1;
+					}
+					/* The stripped[1..MAX_STRIP_ALT-1][] elements are subscripted. */
+					lgdebug(+D_UN, "%d: %s: w='%s' rword '%s' at stripped[%zu,%zu]\n",
+					        p, afdict_classname[classnum], temp_wend-len, t, altn, nrs);
+					stripped[altn][*n_stripped+nrs] = t;
+					if (altn < MAX_STRIP_ALT-1)
+						stripped[altn+1][*n_stripped+nrs] = NULL;
+
+					/* Note: rword_list is reverse-sorted by len. */
+					if ((i+1 < l_strippable) && (0 == strncmp(rword[i+1], rword[i], len)))
+					{
+						/* Next rword has same base word, different subscript.
+						 * Assign it in the next loop round as an alternative.
+						 * To that end altn is incremented but not nrs. */
+						altn++;
+						if (altn >= MAX_STRIP_ALT)
+						{
+							/* It is not supposed to happen...  */
+							lgdebug(+1, "Warning: Ignoring %s: Too many %.*s units (>%d)\n",
+							        rword[i], (int)len, rword[i], MAX_STRIP_ALT);
+							break;
+						}
 					}
 					else
 					{
-						/* This is an unsubscripted token. We are not going to
-						 * have alternatives to it.*/
-						stripped[0][*n_stripped+nrs] = t;
 						nrs++;
 						temp_wend -= len;
 						break;
 					}
-					altn = 1;
-				}
-				/* The stripped[1..MAX_STRIP_ALT-1][] elements are subscripted. */
-				lgdebug(+D_UN, "%d: %s: w='%s' rword '%s' at stripped[%zu,%zu]\n",
-					p, afdict_classname[classnum], temp_wend-len, t, altn, nrs);
-				stripped[altn][*n_stripped+nrs] = t;
-				if (altn < MAX_STRIP_ALT-1)
-					stripped[altn+1][*n_stripped+nrs] = NULL;
-
-				/* Note: rword_list is reverse-sorted by len. */
-				if ((i+1 < rword_num) && (0 == strncmp(rword[i+1], rword[i], len)))
-				{
-					/* Next rword has same base word, different subscript.
-					 * Assign it in the next loop round as an alternative.
-					 * To that end altn is incremented but not nrs. */
-					altn++;
-					if (altn >= MAX_STRIP_ALT)
-					{
-						/* It is not supposed to happen...  */
-						lgdebug(+1, "Warning: Ignoring %s: Too many %.*s units (>%d)\n",
-						          rword[i], (int)len, rword[i], MAX_STRIP_ALT);
-						break;
-					}
-				}
-				else
-				{
-					nrs++;
-					temp_wend -= len;
-					break;
 				}
 			}
+			else if (classnum != AFDICT_UNITS)
+			{
+				int start, end;
+				word = strndupa(w, temp_wend - w);
+				bool match_found =
+					matchspan_regex(rword_list->regex[rnum], word, &start, &end);
+				if (unlikely(match_found && word[end] != '\0'))
+				{
+					lgdebug(+D_UN, "/%s/ matches \"%s\" not at string end: "
+					        "[%d, %d)\n",
+					        rword_list->regex[rnum]->pattern, word, start, end);
+					match_found = false;
+				}
+
+				if (match_found)
+				{
+					stripped[0][*n_stripped+nrs] =
+						string_set_add(word + start, sent->string_set);
+					stripped[1][*n_stripped+nrs] = NULL;
+					nrs++;
+					temp_wend -= end - start;
+					break;
+				}
+				rnum++;
+			}
 		}
-	} while ((i < rword_num) && (temp_wend > w) && rootdigit &&
+	} while ((i < l_strippable) && (temp_wend > w) && rootdigit &&
 	         (*n_stripped+nrs < MAX_STRIP));
 	assert(w <= temp_wend, "A word should never start after its end...");
 
@@ -2357,10 +2533,16 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 
 			if ('\0' == *wp)
 			{
-				/* The token consists entirely of left-punctuation. */
-				lgdebug(+D_SW, "1: Word '%s' all left-puncts - "
+				if (n_stripped == 1)
+				{
+					lgdebug(+D_SW, "1: Word '%s' s a single token - done\n",
+					        unsplit_word->subword);
+					return;
+				}
+				/* The token consists entirely of left-punctuations. */
+				lgdebug(+D_SW, "1: Word '%s' consists of %zu left-puncts - "
 				        "continue for possible regex alternative\n",
-						  unsplit_word->subword);
+						  unsplit_word->subword, n_stripped);
 			}
 
 			n_stripped = 0;
@@ -2499,7 +2681,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		}
 	}
 
-	n_stripped = split_mpunc(sent, word, temp_word, x_stripped);
+	n_stripped = split_mpunc(sent, word, x_stripped);
 	if (n_stripped > 0)
 	{
 		issue_word_alternative(sent, unsplit_word, "M", 0,NULL,
