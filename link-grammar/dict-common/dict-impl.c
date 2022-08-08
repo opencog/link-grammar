@@ -747,6 +747,8 @@ bool afdict_init(Dictionary dict)
 			if (ac->Nregexes > 0)
 			{
 				ac->regex = malloc(ac->Nregexes * sizeof(Regex_node *));
+				/* Zero-out to prevent uninitialized access on error. */
+				memset(ac->regex, 0, ac->Nregexes * sizeof(Regex_node *));
 
 				size_t re_index = 0;
 				for (size_t n = 0;  n < ac->length; n++)

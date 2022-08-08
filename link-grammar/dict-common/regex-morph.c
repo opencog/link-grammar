@@ -272,6 +272,7 @@ static bool reg_comp(Regex_node *rn)
 	{
 		prt_error("Error: Failed to compile regex \"%s\" (pattern \"%s\"): %s "
 		          "(code %d)\n", rn->pattern, rn->name, e.what(), e.code());
+		delete (reg_info *)rn->re;
 		return false;
 	}
 
@@ -348,7 +349,7 @@ static bool check_capture_group(const Regex_node *rn)
 	check_cg.pattern[pattern_len + 2] = '\0';
 
 	bool rc = reg_comp(&check_cg);
-	if (rc) free(check_cg.re);
+	if (rc) reg_free(&check_cg);
 
 	return rc;
 }
@@ -373,7 +374,6 @@ bool compile_regexs(Regex_node *rn, Dictionary dict)
 				rn->re = NULL;
 				return false;
 			}
-
 			if (!check_capture_group(rn)) return false;
 
 			/* Check that the regex name is defined in the dictionary. */
