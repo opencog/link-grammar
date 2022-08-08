@@ -413,6 +413,52 @@ const char *match_regex(const Regex_node *rn, const char *s)
 
 	return NULL; /* No matches. */
 }
+
+/**
+ * Like match_regex(), but also return the match offsets.
+ * If there is no match, \p start and \c end remain the same.
+ */
+const char *matchspan_regex(Regex_node *rn, const char *s,
+                            int *start, int *end)
+{
+	assert(rn->capture_group >= 0, "No capture");
+
+	while (rn != NULL)
+	{
+		if (rn->re == NULL) continue; // Make sure the regex has been compiled.
+
+		if (reg_match(s, rn))
+		{
+			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!rn->neg], rn->name, s);
+			if (!rn->neg)
+			{
+				reg_span(rn);
+				lgdebug(+D_MRE, " [%d, %d)\n", rn->ovector[0], rn->ovector[1]);
+				*start = rn->ovector[0];
+				*end = rn->ovector[1];
+
+				if (unlikely(*start == -1))
+				{
+					lgdebug(+D_USER_INFO, "Regex \"%s\": "
+					        "Specified capture group %d didn't match \"%s\"\n",
+					        rn->name, rn->capture_group, s);
+					return NULL;
+				}
+				return rn->name; /* Match found - return--no multiple matches. */
+			}
+
+			/* Negative match - skip this regex name. */
+			for (const char *nre_name = rn->name; rn->next != NULL; rn = rn->next)
+			{
+				if (!string_set_cmp(nre_name, rn->next->name)) break;
+			}
+		}
+
+		rn = rn->next;
+	}
+
+	return NULL; /* No matches. */
+}
 #undef D_MRE
 
 /**
