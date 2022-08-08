@@ -236,7 +236,9 @@ static void reg_free(Regex_node *rn)
 
 /**
  * Compile all the given regexs.
- * Return \c true on success, else \c false.
+ * @param rn Regex list
+ * @param dict Validate that the pattern is in the given dict.
+ * @retrun \c true on success, else \c false.
  */
 bool compile_regexs(Regex_node *rn, Dictionary dict)
 {
