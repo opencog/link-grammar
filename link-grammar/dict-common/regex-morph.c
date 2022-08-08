@@ -83,8 +83,8 @@ static bool reg_comp(Regex_node *rn)
 	{
 		char errbuf[ERRBUFFLEN];
 		regerror(rc, re, errbuf, ERRBUFFLEN);
-		prt_error("Error: Failed to compile regex: \"%s: %s\": %s (code %d)\n)",
-		          rn->name, rn->pattern, errbuf, rc);
+		prt_error("Error: Failed to compile regex: \"%s\" (pattern \"%s\"): %s "
+		          "(code %d)\n", rn->name, rn->pattern, errbuf, rc);
 		free(re);
 		return false;
 	}
@@ -103,8 +103,8 @@ static bool reg_match(const char *s, const Regex_node *rn)
 	/* We have an error. */
 	char errbuf[ERRBUFFLEN];
 	regerror(rc, (regex_t *)rn->re, errbuf, ERRBUFFLEN);
-	prt_error("Error: Regex matching error: \"%s: %s\": %s (code %d)\n)",
-	          rn->name, rn->pattern, errbuf, rc);
+	prt_error("Error: Regex matching error: \"%s\" (pattern \"%s\"): %s "
+	          "(code %d)\n", rn->name, rn->pattern, errbuf, rc);
 	return false;
 }
 
@@ -131,7 +131,7 @@ static bool reg_comp(Regex_node *rn)
 		re->re_md = pcre2_match_data_create(0, NULL);
 		if (re->re_md == NULL)
 		{
-			prt_error("Error: pcre2_match_data_create(0, NULL) failed\n");
+			prt_error("Error: pcre2_match_data_create failed\n");
 			free(re);
 			return false;
 		}
@@ -141,7 +141,8 @@ static bool reg_comp(Regex_node *rn)
 	/* We have an error. */
 	PCRE2_UCHAR errbuf[ERRBUFFLEN];
 	pcre2_get_error_message(rc, errbuf, ERRBUFFLEN);
-	prt_error("Error: Failed to compile regex: \"%s: %s\": %s (code %d) at %d\n",
+	prt_error("Error: Failed to compile regex: \"%s\" (pattern \"%s\": %s "
+	          "(code %d) at %d\n",
 	          rn->name, rn->pattern, errbuf, rc, (int)erroffset);
 	free(re);
 	return false;
@@ -160,8 +161,8 @@ static int reg_match(const char *s, const Regex_node *rn)
 	/* We have an error. */
 	PCRE2_UCHAR errbuf[ERRBUFFLEN];
 	pcre2_get_error_message(rc, errbuf, ERRBUFFLEN);
-	prt_error("Error: Regex matching error: \"%s: %s\": %s (code %d)\n",
-	          rn->name, rn->pattern, errbuf, rc);
+	prt_error("Error: Regex matching error: \"%s\" (pattern \"%s\"): %s "
+	          "(code %d)\n", rn->name, rn->pattern, errbuf, rc);
 	return false;
 }
 
@@ -185,8 +186,8 @@ static bool reg_comp(Regex_node *rn)
 	}
 	catch (const std::regex_error& e)
 	{
-		prt_error("Error: Failed to compile regex '%s' (%s): %s (code %d)",
-		          rn->pattern, rn->name, e.what(), e.code());
+		prt_error("Error: Failed to compile regex \"%s\" (pattern \"%s\"): %s "
+		          "(code %d)\n", rn->pattern, rn->name, e.what(), e.code());
 		return false;
 	}
 
@@ -203,8 +204,8 @@ static bool reg_match(const char *s, const Regex_node *rn)
 	}
 	catch (const std::regex_error& e)
 	{
-		prt_error("Error: Regex matching error '%s' (%s): %s (code %d)",
-		          rn->pattern, rn->name, e.what(), e.code());
+		prt_error("Error: Regex matching error \"%s\" (pattern \"%s\"): %s "
+		          "(code %d)\n", rn->pattern, rn->name, e.what(), e.code());
 		match = false;
 	}
 
@@ -240,7 +241,7 @@ bool compile_regexs(Regex_node *rn, Dictionary dict)
 			if ((dict != NULL) && !dict_has_word(dict, rn->name))
 			{
 				/* TODO: better error handing. Maybe remove the regex? */
-				prt_error("Error: Regex name %s not found in dictionary!\n",
+				prt_error("Error: Regex name \"%s\" not found in dictionary!\n",
 				          rn->name);
 			}
 		}
