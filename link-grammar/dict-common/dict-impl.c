@@ -724,6 +724,72 @@ bool afdict_init(Dictionary dict)
 		}
 	}
 
+	for (size_t i = 0; i < ARRAY_SIZE(affix_strippable); i++)
+	{
+		ac = AFCLASS(afdict, affix_strippable[i]);
+		int *capture_group = alloca(ac->length * sizeof(*capture_group));
+		ac->Nregexes = 0;
+
+		if (AFDICT_UNITS != affix_strippable[i])
+		{
+			/* Locate the affix regexes, find their capture
+			 * groups and count them for memory allocation. */
+			for (size_t n = 0;  n < ac->length; n++)
+			{
+				capture_group[n] = get_affix_regex_cg(ac->string[n]);
+				if (capture_group[n] < 0) continue;
+
+				ac->Nregexes++;
+			}
+
+			/* Allocate the regexes at the end of the existing string pointer
+			 * memory block, and compile them. */
+			if (ac->Nregexes > 0)
+			{
+				ac->regex = malloc(ac->Nregexes * sizeof(Regex_node *));
+
+				size_t re_index = 0;
+				for (size_t n = 0;  n < ac->length; n++)
+				{
+					if (capture_group[n] < 0) continue;
+
+					/* Extract the regex pattern. */
+					const size_t regex_len =
+						strlen(ac->string[n]) - (sizeof("//.\\N") - 1/* \0 */);
+					const char *pattern = strndupa(ac->string[n] + 1, regex_len);
+
+					ac->regex[re_index] = regex_new(ac->string[n], pattern);
+					ac->regex[re_index]->capture_group = capture_group[n];
+					if (!compile_regexs(ac->regex[re_index], afdict))
+					{
+						prt_error("Error: afdict_init: Class %s in file %s: "
+						          "regex \"%s\" Failed to compile\n",
+						          afdict_classname[affix_strippable[i]],
+						          afdict->name, ac->regex[re_index]->name);
+						return false;
+					}
+					re_index++;
+				}
+			}
+		}
+
+		/* Sort the affix-classes of tokens to be stripped. */
+		/* Longer unit names must get split off before shorter ones.
+		 * This prevents single-letter splits from screwing things
+		 * up. e.g. split 7gram before 7am before 7m.
+		 * Another example: The ellipsis "..." must appear before the dot ".".
+		 * Regexes are just being moved to the end, at the same order.
+		 */
+		for (size_t s = 0; s < ARRAY_SIZE(affix_strippable); s++)
+		{
+			ac = AFCLASS(afdict, affix_strippable[i]);
+			if (0 < ac->length)
+			{
+				qsort(ac->string, ac->length, sizeof(char *), split_order);
+			}
+		}
+	}
+
 	if (!IS_DYNAMIC_DICT(dict))
 	{
 		/* Validate that the strippable tokens are in the dict. UNITS are
@@ -758,21 +824,6 @@ bool afdict_init(Dictionary dict)
 		}
 	}
 
-	/* Sort the affix-classes of tokens to be stripped. */
-	/* Longer unit names must get split off before shorter ones.
-	 * This prevents single-letter splits from screwing things
-	 * up. e.g. split 7gram before 7am before 7m.
-	 * Another example: The ellipsis "..." must appear before the dot ".".
-	 */
-	for (size_t i = 0; i < ARRAY_SIZE(affix_strippable); i++)
-	{
-		ac = AFCLASS(afdict, affix_strippable[i]);
-		if (0 < ac->length)
-		{
-			qsort(ac->string, ac->length, sizeof(char *), split_order);
-		}
-	}
-
 #ifdef AFDICT_ORDER_NOT_PRESERVED
 	/* pre-sort the MPRE list */
 	ac = AFCLASS(afdict, AFDICT_MPRE);
@@ -796,7 +847,7 @@ bool afdict_init(Dictionary dict)
 		     ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
 		{
 			if (0 == ac->length) continue;
-			lgdebug(+0, "Class %s, %zu items:",
+			lgdebug(+0, "Class %s, %d items:",
 			        afdict_classname[ac-afdict->afdict_class], ac->length);
 			for (l = 0; l < ac->length; l++)
 				lgdebug(0, " '%s'", ac->string[l]);
