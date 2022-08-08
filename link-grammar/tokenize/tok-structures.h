@@ -51,7 +51,7 @@ struct gword_set
 
 typedef enum
 {
-	MT_INVALID,            /* Zero, to be changed to the correct type */
+	MT_NOT_SET,            /* Zero, to be changed to the correct type */
 	MT_WORD,               /* Regular word */
 	MT_FEATURE,            /* Pseudo morpheme, currently capitalization marks */
 	MT_INFRASTRUCTURE,     /* Start and end Wordgraph pseudo-words */
