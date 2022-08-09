@@ -122,6 +122,16 @@ struct Dictionary_s
 	bool         shuffle_linkages;
 	bool         dynamic_lookup;
 
+	/* Duplicate words are disallowed in 4.0.dict unless
+	 * allow_duplicate_words is defined to "true".
+	 * Duplicate idioms are allowed, unless the "test" parse option
+	 * is set to "disalow-dup-idioms" (listing them for debug).
+	 * If these variables are 0, they get their allow/disallow values
+	 * when the first duplicate word/idiom is encountered.
+	 * 0: not set; 1: allow; -1: disallow */
+	int8_t       allow_duplicate_words;
+	int8_t       allow_duplicate_idioms;
+
 	Dialect *dialect;                  /* "4.0.dialect" info */
 	expression_tag dialect_tag;        /* Expression dialect tag info */
 	expression_tag *macro_tag;         /* Macro tags for expression debug */
