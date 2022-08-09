@@ -127,6 +127,21 @@ void dict_error2(Dictionary dict, const char * s, const char *s2)
 	int pos = 1;
 	int i;
 
+	if (IS_DYNAMIC_DICT(dict))
+	{
+		if (s2)
+		{
+			prt_error("Error: While handling storage-node\n  \"%s\":\n"
+			          "%s \"%s\"\n", dict->name, s, s2);
+		}
+		else
+		{
+			prt_error("Error: While handling storage-node\n  \"%s\":\n"
+			          "%s\n", dict->name, s);
+		}
+		return;
+	}
+
 	/* The link_advance used to print the error message can
 	 * throw more errors while printing... */
 	if (dict->recursive_error) return;
