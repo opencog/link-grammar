@@ -16,6 +16,7 @@
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-utils.h"     // patch_subscript
 #include "dict-common/idiom.h"
+#include "dict-file/read-dict.h"        // dict_error2
 #include "string-id.h"
 #include "string-set.h"
 
@@ -652,13 +653,9 @@ static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 
 	if (dup_word_status(dict, newnode) == -1)
 	{
-/*
 		dict_error2(dict, "Ignoring word which has been multiply defined:",
 		            newnode->string);
-*/
-prt_error("Error: Ignoring word which has been multiply defined: %s\n"
-"(This error message should be fixed to print dict name and line)\n",
-newnode->string);
+
 		/* Too late to skip insertion - insert it with a null expression. */
 		newnode->exp = &null_exp;
 
