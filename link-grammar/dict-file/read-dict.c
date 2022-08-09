@@ -120,7 +120,7 @@
 
 static bool link_advance(Dictionary dict);
 
-static void dict_error2(Dictionary dict, const char * s, const char *s2)
+void dict_error2(Dictionary dict, const char * s, const char *s2)
 {
 #define ERRBUFLEN 1024
 	char tokens[ERRBUFLEN], t[ERRBUFLEN];
