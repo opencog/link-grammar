@@ -1,3 +1,11 @@
+% Affixes get stripped off the left and right side of words
+% i.e. spaces are inserted between the affix and the word itself.
+
+% An LPUNC/RPUNC/MPUNC token can be specified as "/regex/.\N", when \N is
+% the capture group that should match the affix (the whole pattern is
+% capture group 0). Disregarding the position in which they appear, they
+% are checked last - but in the same order. (Experimental.)
+
 "’’" ''.y ….y ....y "/[[:punct:]]$/.\0": RPUNC+;
 
 `` ''.x ….x ....x †† "/^[[:punct:]]/.\0": LPUNC+;
