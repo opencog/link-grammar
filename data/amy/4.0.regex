@@ -18,7 +18,7 @@
 % along with many other punctuation characters that get strip from start
 % and end of words. See the "any/affix-punc" file. These punctuation
 % characters will match here.
-ANY-PUNCT: /^[[:punct:]]+$/
+ANY-PUNCT: /^[[:punct:]]+(:?\x03|$)/
 
 % Multi-part random morphology: match any string as prefix, stem, or suffix.
 % \x03 matches the internal representation of the dot in STEMSUBSCR
