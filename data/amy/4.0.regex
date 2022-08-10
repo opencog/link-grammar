@@ -8,21 +8,19 @@
 % The regexes here use the PCRE2 pattern syntax.
 % The LG library must be configured with PCRE2 in order to use them.
 
-% \X matches any Unicode grapheme.
-% Since most of the script-specific punctuation characters are not in
-% the affix-punc file, they are allowed here to join to the end word/parts
+% \X matches any Unicode grapheme. \x03  matches the internal representation
+% of the dot in STEMSUBSCR (See 4.0.affix).
 %
 % For information on graphemes see: http://www.unicode.org/reports/tr29/
 
-% Hyphenated words, contractions, and words with underbars in them, get split,
-% along with many other punctuation characters that get strip from start
-% and end of words. See the "any/affix-punc" file. These punctuation
-% characters will match here.
+% Punctuation characters are getting strip from start and end of words,
+% and words that contain punctuation are getting split at them.  See the
+% "any/affix-punc" file.
+% These punctuation characters will match here. The \x03 is to match
+% subscripted punctuation that may be specified in this file.
 ANY-PUNCT: /^[[:punct:]]+(:?\x03|$)/
 
 % Multi-part random morphology: match any string as prefix, stem, or suffix.
-% \x03 matches the internal representation of the dot in STEMSUBSCR
-% (See 4.0.affix).
 
 MOR-STEM: /^\X+\x03=$/
 MOR-PREF: /^\X+=$/
@@ -36,7 +34,7 @@ ANY-WORD: /^[^[:punct:]]+$/
 
 % For ASCII input and non-PCRE2 regex libraries you can use these instead:
 % ANY-WORD: /^[[:alnum:]]+$/
-% ANY-PUNCT: /^[[:punct:]]+$/
+% ANY-PUNCT: /^[[:punct:]].*$/  % The .* is to match an optional subscript.
 % MOR-PREF: /^[[:alnum:]]+=$/
 % MOR-STEM: /^[[:alnum:]]+.=$/
 % MOR-SUFF: /^=[[:alnum:]]+$/
