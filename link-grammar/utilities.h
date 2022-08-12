@@ -253,12 +253,14 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
  * support C11. So it already supports all the features below. */
 
 /* Optimizations etc. that only gcc understands */
+/* FIXME: Change to ATTR_* and define also for MSVC. */
 #if __GNUC__
 #define GCC_DIAGNOSTIC
 #define UNREACHABLE(x) (__extension__ ({if (x) __builtin_unreachable();}))
 #define GNUC_MALLOC __attribute__ ((__malloc__))
 #define GNUC_UNUSED __attribute__ ((__unused__))
 #define GNUC_NORETURN __attribute__ ((__noreturn__))
+#define ATTR_PURE __attribute__ ((__pure__))
 #define NO_SAN __attribute__ ((no_sanitize_address, no_sanitize_undefined))
 
 /* Define when configuring with ASAN/UBSAN - for fast dict load (of course
@@ -280,6 +282,7 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #define GNUC_MALLOC
 #define GNUC_UNUSED
 #define GNUC_NORETURN
+#define ATTR_PURE
 #define NO_SAN_DICT
 
 #define likely(x) x

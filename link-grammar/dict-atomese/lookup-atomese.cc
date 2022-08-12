@@ -78,6 +78,7 @@ bool as_open(Dictionary dict)
 {
 	const char * stns = get_dict_define(dict, STORAGE_NODE_STRING);
 	if (nullptr == stns) return false;
+	dict->name = stns;
 
 	Local* local = new Local;
 	local->node_str = stns;

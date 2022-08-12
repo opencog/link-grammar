@@ -16,6 +16,7 @@
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-utils.h"     // patch_subscript
 #include "dict-common/idiom.h"
+#include "dict-file/read-dict.h"        // dict_error2
 #include "string-id.h"
 #include "string-set.h"
 
@@ -600,21 +601,46 @@ Dict_node * dsw_vine_to_tree (Dict_node *root, int size)
  *
  * The following dictionary definition allows duplicate words:
  * #define allow-duplicate-words true
- * An idiom duplicate check can be requested using the test "dup-idioms".
+ * An idiom duplicate check can be requested using the test:
+ * "disallow_dup-idioms"
  */
+
+/**
+ * Return the relevant status of allow_duplicate_words/idioms.
+ */
+static int dup_word_status(Dictionary dict, const Dict_node *newnode)
+{
+	if (dict->allow_duplicate_words == dict->allow_duplicate_idioms)
+		return dict->allow_duplicate_words;
+
+	if (contains_underbar(newnode->string))
+	{
+		return dict->allow_duplicate_idioms;
+	}
+	else
+	{
+		return dict->allow_duplicate_words;
+	}
+}
+
 static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 {
-	static int dup_idioms = -1;
-	static int allow_duplicate_words = -1;
 
-	if (allow_duplicate_words == 1) return false;
-	if (allow_duplicate_words == -1)
+	if (dup_word_status(dict, newnode) == 1) return false;
+
+	if (dict->allow_duplicate_words == 0)
 	{
 		const char *s = linkgrammar_get_dict_define(dict, "allow-duplicate-words");
+		dict->allow_duplicate_words =
+			((s != NULL) && (0 == strcasecmp(s, "true"))) ? 1 : -1;
 
-		allow_duplicate_words = ((s != NULL) && (0 == strcasecmp(s, "true")));
-		if (allow_duplicate_words) return false;
-		if (dup_idioms == -1) dup_idioms = !!test_enabled("dup-idioms");
+		if (dict->allow_duplicate_idioms == 0)
+		{
+			bool disallow_dup_idioms = !!test_enabled("disallow-dup-idioms");
+			dict->allow_duplicate_idioms = disallow_dup_idioms ? -1 : 1;
+		}
+
+		if (dup_word_status(dict, newnode) == 1) return true;
 	}
 
 	/* FIXME: Make central. */
@@ -625,15 +651,11 @@ static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 		.operand_next = NULL,
 	};
 
-	if (!contains_underbar(newnode->string) || dup_idioms)
+	if (dup_word_status(dict, newnode) == -1)
 	{
-/*
 		dict_error2(dict, "Ignoring word which has been multiply defined:",
 		            newnode->string);
-*/
-prt_error("Error: Ignoring word which has been multiply defined: %s\n"
-"(This error message should be fixed to print dict name and line)\n",
-newnode->string);
+
 		/* Too late to skip insertion - insert it with a null expression. */
 		newnode->exp = &null_exp;
 
