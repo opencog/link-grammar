@@ -805,7 +805,7 @@ bool afdict_init(Dictionary dict)
 
 				for (int n = 0;  n < ac->length - ac->Nregexes; n++)
 				{
-					if (!dict_has_word(dict, ac->string[n]))
+					if (!dictionary_word_is_known(dict, ac->string[n]))
 					{
 						if (!not_in_dict)
 						{
