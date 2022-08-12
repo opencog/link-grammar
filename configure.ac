@@ -480,7 +480,6 @@ AC_SUBST(SQLITE3_CFLAGS)
 # ====================================================================
 # The AtomSpace dictionary backend
 # TODO - use pkg_config for find the libs.
-# TODO - check for opencog/nlp/types/atom_types.h
 # TODO - do NOT specify -lpersist-rocks -lpersist-cog  here,
 #        they need to be dynmically loaded instead (for proper
 #        initialization of the shared library ctors these contain).
@@ -491,9 +490,16 @@ AC_LANG_PUSH([C++])
 AC_CHECK_HEADER([opencog/atomspace/AtomSpace.h], [AtomSpaceFound=yes], AtomSpaceFound=no)
 AC_LANG_POP()
 
-AM_CONDITIONAL(HAVE_ATOMSPACE, test x${AtomSpaceFound} = xyes)
+AC_LANG_PUSH([C++])
+AC_CHECK_HEADER([opencog/nlp/types/atom_types.h], [NLPTypesFound=yes], NLPTypesFound=no)
+AC_LANG_POP()
 
-if test x"${AtomSpaceFound}" = xyes; then
+AM_CONDITIONAL(HAVE_ATOMSPACE, test x${AtomSpaceFound} = xyes)
+AM_CONDITIONAL(HAVE_NLPTYPES, test x${NLPTypesFound} = xyes)
+
+HaveAtomese=no
+if test x"${AtomSpaceFound}" = xyes && test x"${NLPTypesFound}" = xyes; then
+	HaveAtomese=yes
 	AC_DEFINE(HAVE_ATOMESE, 1, [Define for compilation])
 	ATOMSPACE_LIBS="-lnlp-types -lstorage-types -lsexpr -Wl,--no-as-needed -lpersist-rocks -lpersist-cog -lpersist-file -Wl,--as-needed -lpersist -latomspace -L/usr/local/lib/opencog/"
 fi
@@ -1103,7 +1109,7 @@ $PACKAGE-$VERSION  build configuration settings
 	HunSpell dictionary location:   ${HunSpellDictDir}${HunSpellDictDir_status}
 	Boolean SAT parser:             ${enable_sat_solver}${use_minisat_bundled_library}
 	SQLite-backed dictionary:       ${SQLiteFound}
-	AtomSpace-backed dictionary:    ${AtomSpaceFound}
+	AtomSpace-backed dictionary:    ${HaveAtomese}
 	Definitions:                    ${LG_DEFS}
 	Libraries:                      ${lglibs}
 ])"
