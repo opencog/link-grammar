@@ -162,7 +162,6 @@ static bool expand_character_ranges(const char *file_name, int line,
 bool read_regex_file(Dictionary dict, const char *file_name)
 {
 	Regex_node **tail = &dict->regex_root; /* Last Regex_node * in list */
-	Regex_node *new_re;
 	int c,prev,i,line=1;
 	FILE *fp;
 	bool no_expand = false;
@@ -294,12 +293,9 @@ bool read_regex_file(Dictionary dict, const char *file_name)
 			goto failure;
 
 		/* Create new Regex_node and add to dict list. */
-		new_re = (Regex_node *) malloc(sizeof(Regex_node));
-		new_re->name    = string_set_add(name, dict->string_set);
-		new_re->pattern = strdup(regex);
-		new_re->neg     = neg;
-		new_re->re      = NULL;
-		new_re->next    = NULL;
+		Regex_node *new_re =
+			regex_new(string_set_add(name, dict->string_set), regex);
+		new_re->neg = neg;
 		*tail = new_re;
 		tail = &new_re->next;
 	}
@@ -310,4 +306,3 @@ failure:
 	fclose(fp);
 	return false;
 }
-

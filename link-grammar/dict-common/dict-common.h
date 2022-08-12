@@ -54,20 +54,38 @@ struct Regex_node_s
 {
 	const char *name;/* The identifying name of the regex */
 	char *pattern;   /* The regular expression pattern */
-	bool neg;        /* Negate the match */
 	void *re;        /* The compiled regex. void * to avoid
 	                    having re library details invading the
 	                    rest of the LG system; regex-morph.c
 	                    takes care of all matching.
 	                  */
 	Regex_node *next;
+	bool neg;        /* Negate the match */
+	int capture_group;  /* Capture group number (-1 if none) for ovector */
+	int ovector[2];  /* 0: start offset; 1: end offset */
 };
+
+static inline Regex_node *regex_new(const char *name, const char *pattern)
+{
+	Regex_node *rn = (Regex_node *)malloc(sizeof(Regex_node));
+
+	rn->name = name;
+	rn->pattern = strdup(pattern);
+	rn->re = NULL;
+	rn->neg = false;
+	rn->capture_group = -1;
+	rn->next = NULL;
+
+	return rn;
+}
 
 struct Afdict_class_struct
 {
-	size_t mem_elems;     /* number of memory elements allocated */
-	size_t length;        /* number of strings */
-	char const ** string;
+	uint16_t mem_elems;     /* number of memory elements allocated */
+	uint16_t length;        /* number of elements */
+	uint16_t Nregexes;      /* number of regexes */
+	const char ** string;   /* indexed by [0..length) */
+	Regex_node ** regex;    /* indexed by [0..Nregexes) */
 };
 
 #define MAX_TOKEN_LENGTH 250     /* Maximum number of chars in a token */

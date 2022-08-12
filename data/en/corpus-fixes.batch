@@ -6713,6 +6713,14 @@ He tried but failed to acheive his goal.
 *Therefo, I declare I love Computer Science.
 !spell=0
 
+% Test tokenization by affix regexes.
+% Sentence that should not be affected.
+The enzyme has a weight of 125,000 to 130,000
+The train arrives at 13:42
+% Sentences that use punctuation without a trailing whitespace.
+We used the same colors (red,blue,yellow).
+The price of this item:$100
+
 % The very long sentences that take forever to  parse are now in the
 % file 4.0.fix-long.batch
 % --------------------------------------------------------------------

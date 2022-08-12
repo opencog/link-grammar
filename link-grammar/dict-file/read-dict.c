@@ -976,8 +976,10 @@ static bool read_entry(Dictionary dict)
 
 		/* If it's a word-file name */
 		/* However, be careful to reject "/.v" which is the division symbol
-		 * used in equations (.v means verb-like) */
-		if ((dict->token[0] == '/') && (dict->token[1] != '.'))
+		 * used in equations (.v means verb-like). Also reject an affix regex
+		 * specification (may appear only in the affix file). */
+		if ((dict->token[0] == '/') &&
+		    (dict->token[1] != '.') && (get_affix_regex_cg(dict->token) < 0))
 		{
 			Dict_node *new_dn = read_word_file(dict, dn, dict->token);
 			if (new_dn == NULL)

@@ -47,20 +47,55 @@ LINK_BEGIN_DECLS
 #include "dict-common/regex-morph.h"
 LINK_END_DECLS
 
+/* ovector     - returned start and end offsets.
+ * re_code     - compiled regex.
+ * re_md       - match data.
+ */
+
 #if HAVE_PCRE2_H
 typedef struct {
 	pcre2_code *re_code;
 	pcre2_match_data* re_md;
-} regex_t;
+} reg_info;
+#endif
+
+#if HAVE_REGEX_H
+typedef struct {
+	regex_t re_code;
+	unsigned int Nre_md;
+	regmatch_t re_md[];
+} reg_info;
+#endif
+
+#if USE_CXXREGEX
+typedef struct {
+	std::regex *re_code;
+	std::cmatch re_md;
+} reg_info;
 #endif
 
 #define ERRBUFFLEN 120
 
-/* Define reg_comp(), reg_match() and reg_free() for the selected
- * regex implementation. */
+/* Define reg_comp(), reg_match() and reg_free(), and reg_span()
+ * for the selected regex implementation. */
 
 /* ========================================================================= */
+
 #if HAVE_REGEX_H
+/**
+ * Find an upper limit to the number of capture groups in the pattern.
+ */
+static unsigned int max_capture_groups(const Regex_node *rn)
+{
+	if (rn->capture_group < 0) return 0;
+
+	int Nov = 1;
+	for (const char *p = rn->pattern; *p != '\0'; p++)
+		if (*p == '(') Nov++;
+
+	return Nov;
+}
+
 /**
  * Compile the given regex..
  * Return \c true on success, \c false otherwise.
@@ -74,17 +109,23 @@ static bool reg_comp(Regex_node *rn)
 #define REG_GNU 0
 #endif
 
-	regex_t *re = (regex_t *)malloc(sizeof(regex_t));
+	const bool nosub = (rn->capture_group < 0);
+	const unsigned int Novector = nosub ? 0 : (max_capture_groups(rn) + 1);
+	int options = REG_EXTENDED|REG_ENHANCED|REG_GNU|(nosub ? REG_NOSUB : 0);
 
-	int rc =
-		regcomp(re, rn->pattern, REG_NOSUB|REG_EXTENDED|REG_ENHANCED|REG_GNU);
+	reg_info *re = malloc(sizeof(reg_info) + sizeof(regmatch_t) * 2 * Novector);
+	memset(re, 0, sizeof(reg_info)); /* No need to initialize re_md. */
 
-	if (rc)
+	re->Nre_md = Novector;
+
+	int rc = regcomp(&re->re_code, rn->pattern, options);
+
+	if (rc != 0)
 	{
 		char errbuf[ERRBUFFLEN];
-		regerror(rc, re, errbuf, ERRBUFFLEN);
-		prt_error("Error: Failed to compile regex: \"%s: %s\": %s (code %d)\n)",
-		          rn->name, rn->pattern, errbuf, rc);
+		regerror(rc, &re->re_code, errbuf, ERRBUFFLEN);
+		prt_error("Error: Failed to compile regex: \"%s\" (pattern \"%s\"): %s "
+		          "(code %d)\n", rn->name, rn->pattern, errbuf, rc);
 		free(re);
 		return false;
 	}
@@ -95,24 +136,44 @@ static bool reg_comp(Regex_node *rn)
 
 static bool reg_match(const char *s, const Regex_node *rn)
 {
-	int rc = regexec((regex_t *)rn->re, s, 0, NULL, /*eflags*/0);
+	reg_info *re = (reg_info *)rn->re;
+	int nmatch = (rn->capture_group < 0) ? 0 : re->Nre_md;
+	int rc = regexec(&re->re_code, s, nmatch, re->re_md, /*eflags*/0);
 
 	if (rc == REG_NOMATCH) return false;
 	if (rc == 0) return true;
 
 	/* We have an error. */
 	char errbuf[ERRBUFFLEN];
-	regerror(rc, (regex_t *)rn->re, errbuf, ERRBUFFLEN);
-	prt_error("Error: Regex matching error: \"%s: %s\": %s (code %d)\n)",
-	          rn->name, rn->pattern, errbuf, rc);
+	regerror(rc, &re->re_code, errbuf, ERRBUFFLEN);
+	prt_error("Error: Regex matching error: \"%s\" (pattern \"%s\"): %s "
+	          "(code %d)\n", rn->name, rn->pattern, errbuf, rc);
 	return false;
+}
+
+static void reg_span(Regex_node *rn)
+{
+	int cgn = rn->capture_group;
+	reg_info *re = rn->re;
+
+	if (unlikely(cgn > rn->capture_group))
+	{
+		rn->ovector[0] = rn->ovector[1] = -1;
+	}
+	else
+	{
+		rn->ovector[0] = re->re_md[cgn].rm_so;
+		rn->ovector[1] = re->re_md[cgn].rm_eo;
+	}
 }
 
 static void reg_free(Regex_node *rn)
 {
-	regex_t *re = (regex_t *)rn->re;
-	regfree(re);
+	reg_info *re = rn->re;
+
+	regfree(&re->re_code);
 	free(re);
+	rn->re = NULL;
 }
 #endif // HAVE_REGEX_H
 
@@ -120,18 +181,21 @@ static void reg_free(Regex_node *rn)
 #if HAVE_PCRE2_H
 static bool reg_comp(Regex_node *rn)
 {
-	regex_t *re = rn->re = malloc(sizeof(regex_t));
+	reg_info *re = rn->re = malloc(sizeof(reg_info));
 	PCRE2_SIZE erroffset;
 	int rc;
 
+	const bool nosub = (rn->capture_group < 0);
+	uint32_t options = PCRE2_UTF|PCRE2_UCP| (nosub ? PCRE2_NO_AUTO_CAPTURE : 0);
+
 	re->re_code = pcre2_compile((PCRE2_SPTR)rn->pattern, PCRE2_ZERO_TERMINATED,
-	                            PCRE2_UTF|PCRE2_UCP, &rc, &erroffset, NULL);
+	                            options, &rc, &erroffset, NULL);
 	if (re->re_code != NULL)
 	{
-		re->re_md = pcre2_match_data_create(0, NULL);
+		re->re_md = pcre2_match_data_create_from_pattern(re->re_code, NULL);
 		if (re->re_md == NULL)
 		{
-			prt_error("Error: pcre2_match_data_create(0, NULL) failed\n");
+			prt_error("Error: pcre2_match_data_create failed\n");
 			free(re);
 			return false;
 		}
@@ -141,7 +205,8 @@ static bool reg_comp(Regex_node *rn)
 	/* We have an error. */
 	PCRE2_UCHAR errbuf[ERRBUFFLEN];
 	pcre2_get_error_message(rc, errbuf, ERRBUFFLEN);
-	prt_error("Error: Failed to compile regex: \"%s: %s\": %s (code %d) at %d\n",
+	prt_error("Error: Failed to compile regex: \"%s\" (pattern \"%s\": %s "
+	          "(code %d) at %d\n",
 	          rn->name, rn->pattern, errbuf, rc, (int)erroffset);
 	free(re);
 	return false;
@@ -149,7 +214,7 @@ static bool reg_comp(Regex_node *rn)
 
 static int reg_match(const char *s, const Regex_node *rn)
 {
-	regex_t *re = rn->re;
+	reg_info *re = rn->re;
 
 	int rc = pcre2_match(re->re_code, (PCRE2_SPTR)s,
 	                     PCRE2_ZERO_TERMINATED, /*startoffset*/0,
@@ -160,18 +225,36 @@ static int reg_match(const char *s, const Regex_node *rn)
 	/* We have an error. */
 	PCRE2_UCHAR errbuf[ERRBUFFLEN];
 	pcre2_get_error_message(rc, errbuf, ERRBUFFLEN);
-	prt_error("Error: Regex matching error: \"%s: %s\": %s (code %d)\n",
-	          rn->name, rn->pattern, errbuf, rc);
+	prt_error("Error: Regex matching error: \"%s\" (pattern \"%s\"): %s "
+	          "(code %d)\n", rn->name, rn->pattern, errbuf, rc);
 	return false;
+}
+
+static void reg_span(Regex_node *rn)
+{
+	int cgn = rn->capture_group;
+	reg_info *re = rn->re;
+	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(re->re_md);
+
+	if (unlikely(cgn >= (int)pcre2_get_ovector_count(re->re_md)))
+	{
+		rn->ovector[0] = rn->ovector[1] = -1;
+	}
+	else
+	{
+		rn->ovector[0] = ovector[2*cgn];
+		rn->ovector[1] = ovector[2*cgn + 1];
+	}
 }
 
 static void reg_free(Regex_node *rn)
 {
-	regex_t *re = rn->re;
+	reg_info *re = rn->re;
 
 	pcre2_match_data_free(re->re_md);
 	pcre2_code_free(re->re_code);
 	free(re);
+	rn->re = NULL;
 }
 #endif // HAVE_PCRE2_H
 
@@ -179,14 +262,17 @@ static void reg_free(Regex_node *rn)
 #if USE_CXXREGEX
 static bool reg_comp(Regex_node *rn)
 {
+	rn->re = new reg_info;
+
 	try
 	{
-		rn->re = new std::regex(rn->pattern);
+		((reg_info *)rn->re)->re_code = new std::regex(rn->pattern);
 	}
 	catch (const std::regex_error& e)
 	{
-		prt_error("Error: Failed to compile regex '%s' (%s): %s (code %d)",
-		          rn->pattern, rn->name, e.what(), e.code());
+		prt_error("Error: Failed to compile regex \"%s\" (pattern \"%s\"): %s "
+		          "(code %d)\n", rn->pattern, rn->name, e.what(), e.code());
+		delete (reg_info *)rn->re;
 		return false;
 	}
 
@@ -195,33 +281,86 @@ static bool reg_comp(Regex_node *rn)
 
 static bool reg_match(const char *s, const Regex_node *rn)
 {
+	/* "nosub" not used, as no time difference found w/o using re->re_md. */
 	bool match;
+	reg_info *re = (reg_info *)rn->re;
 
 	try
 	{
-		match = std::regex_search(s, *(std::regex*)rn->re);
+		match = std::regex_search(s, re->re_md, *re->re_code);
 	}
 	catch (const std::regex_error& e)
 	{
-		prt_error("Error: Regex matching error '%s' (%s): %s (code %d)",
-		          rn->pattern, rn->name, e.what(), e.code());
+		prt_error("Error: Regex matching error \"%s\" (pattern \"%s\"): %s "
+		          "(code %d)\n", rn->pattern, rn->name, e.what(), e.code());
 		match = false;
 	}
 
 	return match;
 }
 
+static void reg_span(Regex_node *rn)
+{
+	int cgn = rn->capture_group;
+	std::cmatch re_md = ((reg_info *)rn->re)->re_md;
+
+	if (unlikely(cgn >= (int)re_md.size()))
+	{
+		rn->ovector[0] = rn->ovector[1] = -1;
+	}
+	else
+	{
+		rn->ovector[0] = re_md.position(cgn);
+		rn->ovector[1] = rn->ovector[0] + re_md.length(cgn);
+	}
+}
+
 static void reg_free(Regex_node *rn)
 {
-	delete (std::regex *)rn->re;
+	reg_info *re = (reg_info *)rn->re;
+
+	delete re->re_code;
+	delete re;
+	rn->re = NULL;
 }
 #endif // USE_CXXREGEX
+
+/**
+ * Check the specified capture group of the pattern (if any).
+ * Return true if no capture group specified if it is valid,
+ * and -1 on error.
+ *
+ * Algo: Append the specified capture group specification to the pattern
+ * and compile it. If it doesn't exist in the pattern, an error will
+ * occur.
+ */
+static bool check_capture_group(const Regex_node *rn)
+{
+	if (rn->capture_group <= 0) return true;
+
+	Regex_node check_cg = *rn;
+	const size_t pattern_len = strlen(rn->pattern);
+
+	check_cg.pattern = (char *)alloca(pattern_len + 2/* \N */ + 1/* \0 */);
+	strcpy(check_cg.pattern, rn->pattern);
+
+	check_cg.pattern[pattern_len] = '\\';
+	check_cg.pattern[pattern_len + 1] = '0' + rn->capture_group;
+	check_cg.pattern[pattern_len + 2] = '\0';
+
+	bool rc = reg_comp(&check_cg);
+	if (rc) reg_free(&check_cg);
+
+	return rc;
+}
 
 /* ============================== Internal API ============================= */
 
 /**
  * Compile all the given regexs.
- * Return \c true on success, else \c false.
+ * @param rn Regex list
+ * @param dict Validate that the pattern is in the given dict.
+ * @retrun \c true on success, else \c false.
  */
 bool compile_regexs(Regex_node *rn, Dictionary dict)
 {
@@ -235,12 +374,13 @@ bool compile_regexs(Regex_node *rn, Dictionary dict)
 				rn->re = NULL;
 				return false;
 			}
+			if (!check_capture_group(rn)) return false;
 
 			/* Check that the regex name is defined in the dictionary. */
 			if ((dict != NULL) && !dict_has_word(dict, rn->name))
 			{
 				/* TODO: better error handing. Maybe remove the regex? */
-				prt_error("Error: Regex name %s not found in dictionary!\n",
+				prt_error("Error: Regex name \"%s\" not found in dictionary!\n",
 				          rn->name);
 			}
 		}
@@ -266,6 +406,52 @@ const char *match_regex(const Regex_node *rn, const char *s)
 			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!rn->neg], rn->name, s);
 			if (!rn->neg)
 				return rn->name; /* Match found - return--no multiple matches. */
+
+			/* Negative match - skip this regex name. */
+			for (const char *nre_name = rn->name; rn->next != NULL; rn = rn->next)
+			{
+				if (!string_set_cmp(nre_name, rn->next->name)) break;
+			}
+		}
+
+		rn = rn->next;
+	}
+
+	return NULL; /* No matches. */
+}
+
+/**
+ * Like match_regex(), but also return the match offsets.
+ * If there is no match, \p start and \c end remain the same.
+ */
+const char *matchspan_regex(Regex_node *rn, const char *s,
+                            int *start, int *end)
+{
+	assert(rn->capture_group >= 0, "No capture");
+
+	while (rn != NULL)
+	{
+		if (rn->re == NULL) continue; // Make sure the regex has been compiled.
+
+		if (reg_match(s, rn))
+		{
+			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!rn->neg], rn->name, s);
+			if (!rn->neg)
+			{
+				reg_span(rn);
+				lgdebug(+D_MRE, " [%d, %d)\n", rn->ovector[0], rn->ovector[1]);
+				*start = rn->ovector[0];
+				*end = rn->ovector[1];
+
+				if (unlikely(*start == -1))
+				{
+					lgdebug(+D_USER_INFO, "Regex \"%s\": "
+					        "Specified capture group %d didn't match \"%s\"\n",
+					        rn->name, rn->capture_group, s);
+					return NULL;
+				}
+				return rn->name; /* Match found - return--no multiple matches. */
+			}
 
 			/* Negative match - skip this regex name. */
 			for (const char *nre_name = rn->name; rn->next != NULL; rn = rn->next)

@@ -460,16 +460,10 @@ bool dictionary_setup_defines(Dictionary dict)
 /** initialize the affix class table */
 void afclass_init(Dictionary dict)
 {
-	size_t i;
+	const size_t sz = sizeof(*dict->afdict_class) * AFDICT_NUM_ENTRIES;
 
-	dict->afdict_class =
-		malloc(sizeof(*dict->afdict_class) * AFDICT_NUM_ENTRIES);
-	for (i = 0; i < AFDICT_NUM_ENTRIES; i++)
-	{
-		dict->afdict_class[i].mem_elems = 0;
-		dict->afdict_class[i].length = 0;
-		dict->afdict_class[i].string = NULL;
-	}
+	dict->afdict_class = malloc(sz);
+	memset(dict->afdict_class, 0, sz);
 }
 
 /**
@@ -600,6 +594,7 @@ static void concat_class(Dictionary afdict, int classno)
  * Sort order:
  * 1. Longest base words first.
  * 2. Equal base words one after the other.
+ * 3. Regexes last, in file order.
  */
 static int split_order(const void *a, const void *b)
 {
@@ -608,6 +603,12 @@ static int split_order(const void *a, const void *b)
 
 	size_t len_a = strcspn(*sa, subscript_mark_str());
 	size_t len_b = strcspn(*sb, subscript_mark_str());
+	bool is_regex_a = (get_affix_regex_cg(*sa) >= 0);
+	bool is_regex_b = (get_affix_regex_cg(*sb) >= 0);
+
+	if (is_regex_a && is_regex_b) return 0;
+	if (is_regex_a) return 1;
+	if (is_regex_b) return -1;
 
 	int len_order = (int)(len_b - len_a);
 	if (0 == len_order) return strncmp(*sa, *sb, len_a);
@@ -688,7 +689,6 @@ bool afdict_init(Dictionary dict)
 	ac = AFCLASS(afdict, AFDICT_SANEMORPHISM);
 	if (0 != ac->length)
 	{
-		Regex_node *sm_re = malloc(sizeof(*sm_re));
 		dyn_str *rebuf = dyn_str_new();
 
 		/* The regex used to be converted to: ^((original-regex)b)+$
@@ -705,15 +705,11 @@ bool afdict_init(Dictionary dict)
 #else
 		dyn_strcat(rebuf, ")+$");
 #endif
-		sm_re->pattern = strdup(rebuf->str);
+
+		afdict->regex_root = regex_new(afdict_classname[AFDICT_SANEMORPHISM],
+		                               rebuf->str);
 		dyn_str_delete(rebuf);
 
-		afdict->regex_root = sm_re;
-		sm_re->name = string_set_add(afdict_classname[AFDICT_SANEMORPHISM],
-		                             afdict->string_set);
-		sm_re->re = NULL;
-		sm_re->next = NULL;
-		sm_re->neg = false;
 		if (!compile_regexs(afdict->regex_root, afdict))
 		{
 			prt_error("Error: afdict_init: Failed to compile "
@@ -723,17 +719,83 @@ bool afdict_init(Dictionary dict)
 		}
 		else
 		{
-			lgdebug(+D_AI, "%s regex %s\n",
-			        afdict_classname[AFDICT_SANEMORPHISM], sm_re->pattern);
+			lgdebug(+D_AI, "%s regex %s\n", afdict_classname[AFDICT_SANEMORPHISM],
+			        afdict->regex_root->pattern);
+		}
+	}
+
+	for (size_t i = 0; i < ARRAY_SIZE(affix_strippable); i++)
+	{
+		ac = AFCLASS(afdict, affix_strippable[i]);
+		int *capture_group = alloca(ac->length * sizeof(*capture_group));
+		ac->Nregexes = 0;
+
+		if (AFDICT_UNITS != affix_strippable[i])
+		{
+			/* Locate the affix regexes, find their capture
+			 * groups and count them for memory allocation. */
+			for (size_t n = 0;  n < ac->length; n++)
+			{
+				capture_group[n] = get_affix_regex_cg(ac->string[n]);
+				if (capture_group[n] < 0) continue;
+
+				ac->Nregexes++;
+			}
+
+			/* Allocate the regexes at the end of the existing string pointer
+			 * memory block, and compile them. */
+			if (ac->Nregexes > 0)
+			{
+				ac->regex = malloc(ac->Nregexes * sizeof(Regex_node *));
+				/* Zero-out to prevent uninitialized access on error. */
+				memset(ac->regex, 0, ac->Nregexes * sizeof(Regex_node *));
+
+				size_t re_index = 0;
+				for (size_t n = 0;  n < ac->length; n++)
+				{
+					if (capture_group[n] < 0) continue;
+
+					/* Extract the regex pattern. */
+					const size_t regex_len =
+						strlen(ac->string[n]) - (sizeof("//.\\N") - 1/* \0 */);
+					const char *pattern = strndupa(ac->string[n] + 1, regex_len);
+
+					ac->regex[re_index] = regex_new(ac->string[n], pattern);
+					ac->regex[re_index]->capture_group = capture_group[n];
+					if (!compile_regexs(ac->regex[re_index], afdict))
+					{
+						prt_error("Error: afdict_init: Class %s in file %s: "
+						          "regex \"%s\" Failed to compile\n",
+						          afdict_classname[affix_strippable[i]],
+						          afdict->name, ac->regex[re_index]->name);
+						return false;
+					}
+					re_index++;
+				}
+			}
+		}
+
+		/* Sort the affix-classes of tokens to be stripped. */
+		/* Longer unit names must get split off before shorter ones.
+		 * This prevents single-letter splits from screwing things
+		 * up. e.g. split 7gram before 7am before 7m.
+		 * Another example: The ellipsis "..." must appear before the dot ".".
+		 * Regexes are just being moved to the end, at the same order.
+		 */
+		for (size_t s = 0; s < ARRAY_SIZE(affix_strippable); s++)
+		{
+			ac = AFCLASS(afdict, affix_strippable[i]);
+			if (0 < ac->length)
+			{
+				qsort(ac->string, ac->length, sizeof(char *), split_order);
+			}
 		}
 	}
 
 	if (!IS_DYNAMIC_DICT(dict))
 	{
-		/* Validate that the strippable tokens are in the dict.
-		 * UNITS are assumed to be from the dict only.
-		 * Possible FIXME: Allow also tokens that match a regex (a tokenizer
-		 * change is needed to recognize them). */
+		/* Validate that the strippable tokens are in the dict. UNITS are
+		 * assumed to be from the dict only. */
 		for (size_t i = 0; i < ARRAY_SIZE(affix_strippable); i++)
 		{
 			if (AFDICT_UNITS != affix_strippable[i])
@@ -741,7 +803,7 @@ bool afdict_init(Dictionary dict)
 				ac = AFCLASS(afdict, affix_strippable[i]);
 				bool not_in_dict = false;
 
-				for (size_t n = 0;  n < ac->length; n++)
+				for (int n = 0;  n < ac->length - ac->Nregexes; n++)
 				{
 					if (!dict_has_word(dict, ac->string[n]))
 					{
@@ -761,21 +823,6 @@ bool afdict_init(Dictionary dict)
 				}
 				if (not_in_dict) prt_error("\n");
 			}
-		}
-	}
-
-	/* Sort the affix-classes of tokens to be stripped. */
-	/* Longer unit names must get split off before shorter ones.
-	 * This prevents single-letter splits from screwing things
-	 * up. e.g. split 7gram before 7am before 7m.
-	 * Another example: The ellipsis "..." must appear before the dot ".".
-	 */
-	for (size_t i = 0; i < ARRAY_SIZE(affix_strippable); i++)
-	{
-		ac = AFCLASS(afdict, affix_strippable[i]);
-		if (0 < ac->length)
-		{
-			qsort(ac->string, ac->length, sizeof(char *), split_order);
 		}
 	}
 
@@ -802,7 +849,7 @@ bool afdict_init(Dictionary dict)
 		     ac < &afdict->afdict_class[ARRAY_SIZE(afdict_classname)]; ac++)
 		{
 			if (0 == ac->length) continue;
-			lgdebug(+0, "Class %s, %zu items:",
+			lgdebug(+0, "Class %s, %d items:",
 			        afdict_classname[ac-afdict->afdict_class], ac->length);
 			for (l = 0; l < ac->length; l++)
 				lgdebug(0, " '%s'", ac->string[l]);

@@ -46,8 +46,8 @@ GNUC_UNUSED const char *gword_morpheme(Sentence sent, const Gword *w)
 
 	switch (w->morpheme_type)
 	{
-		case MT_INVALID:
-			mt = "MT_INVALID";
+		case MT_NOT_SET:
+			mt = "MT_NOT_SET";
 			break;
 		case MT_WORD:
 			mt = "MT_WORD";
