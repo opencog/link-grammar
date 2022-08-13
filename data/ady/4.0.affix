@@ -19,6 +19,13 @@
 
 % Anysplit parameters
 
+% A PCRE2 regex defining a character sequence that shouldn't get split.
+% The LG library must be configured with PCRE2 in order to use it. If not,
+% or if this definition is missing, a single utf8 codpoint is used  as a
+% byte sequence that should not get split.
+%#define atomic-unit "\X";       % split at grapheme boundaries.
+#define atomic-unit "\X\pM*";   % ... but include trailing mark codepoints.
+
 % Number of alternatives to issue for a word. Two values: minimum and maximum.
 % If the word has more possibilities to split than the minimum, but less
 % than the maximum, then issue them without sampling. Else use pseudo-random
