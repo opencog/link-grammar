@@ -17,6 +17,13 @@
 
 % Anysplit parameters
 
+% A PCRE2 regex defining a character sequence that shouldn't get split.
+% The LG library must be configured with PCRE2 in order to use it. If not,
+% or if this definition is missing, a single utf8 codpoint is used  as a
+% byte sequence that should not get split.
+%#define atomic-unit "\X";       % split at grapheme boundaries.
+#define atomic-unit "\X\pM*";   % ... but include trailing mark codepoints.
+
 % Maximum number of word partitions
 % FYI: 3 barely works, 4 and higher mostly do not work.
 % 6: REGPARTS+;
@@ -47,16 +54,13 @@
 % For ASCII input, the empty regexes can be used.
 % See the comments in 4.0.affix.
 
-%"" : REGPRE+;
-"^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$" : REGPRE+;
+"" : REGPRE+;
 
 % Regex to match the middle parts.
-%"" : REGMID+;
-"^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$" : REGMID+;
+"" : REGMID+;
 %".{2,}": REGMID+;
 
 % Regex to match the suffix.
-%"" : REGSUF+;
-"^(?=\p{Xan})\X(?:(?=\p{Xan}|\pM|\p{Po})\X)*$" : REGSUF+;
+"" : REGSUF+;
 
 % End of Anysplit parameters.

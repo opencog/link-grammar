@@ -9,6 +9,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#define D_ANYS 5               /* Debug level for this file (6 for more) */
+
 /**
  * anysplit.c -- code that splits words into random morphemes.
  * This is used for the language-learning/morpheme-learning project.
@@ -27,6 +29,10 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <time.h>
+#if HAVE_PCRE2_H // use it to split in grapheme boundaries
+#define PCRE2_CODE_UNIT_WIDTH 8
+#include <pcre2.h>
+#endif // HAVE_PCRE2_H
 
 #include "api-structures.h"
 #include "dict-common/dict-affix.h"
@@ -41,12 +47,14 @@
 #include "anysplit.h"
 
 
-#define MAX_WORD_TO_SPLIT 63 /* in codepoints */
+#define MAX_WORD_TO_SPLIT 63 /* in codepoints (or graphemes if HAVE_PCRE2_H) */
 
-typedef int p_start;     /* partition start in a word */
-typedef p_start *p_list; /* list of partitions in a word */
+extern const char * const afdict_classname[];
 
-typedef struct split_cache /* split cached by word length */
+typedef unsigned int p_end; /* partition end in a word (end char position +1) */
+typedef p_end *p_list;      /* list of partitions in a word */
+
+typedef struct split_cache  /* split cached by word length */
 {
 	size_t nsplits;      /* number of splits */
 	p_list sp;           /* list of splits */
@@ -54,12 +62,23 @@ typedef struct split_cache /* split cached by word length */
 	bool *p_selected;    /* list of selected splits */
 } split_cache;
 
+#if HAVE_PCRE2_H
+typedef struct {
+	char *pattern;
+	pcre2_code *code;
+	pcre2_match_data* match_data;
+} grapheme_regex;
+#endif
+
 typedef struct anysplit_params
 {
 	int nparts;                /* maximum number of suffixes to split to */
 	size_t altsmin;            /* minimum number of alternatives to generate */
 	size_t altsmax;            /* maximum number of alternatives to generate */
 	Regex_node *regpre, *regmid, *regsuf; /* issue matching combinations  */
+#if HAVE_PCRE2_H
+	grapheme_regex gr;
+#endif // HAVE_PCRE2_H
 	split_cache scl[MAX_WORD_TO_SPLIT+1]; /* split cache according to word length */
 } anysplit_params;
 
@@ -98,9 +117,9 @@ static void printps(int *ps, int n)
 }
 #endif
 
-static void cache_partitions(p_list pl, int *ps, int p)
+static void cache_partitions(p_list pl, unsigned int *ps, int p)
 {
-	memcpy(pl, ps, sizeof(p_start) * p);
+	memcpy(pl, ps, sizeof(p_end) * p);
 }
 
 	/* p = 5      */
@@ -124,7 +143,7 @@ static int split_and_cache(int word_length, int nparts, split_cache *scl)
 
 	int n;
 	int maxindex;
-	p_list ps = alloca(sizeof(p_start)*nparts); /* partition start */
+	p_list ps = alloca(sizeof(p_end)*nparts);
 
 	if (0 == word_length) return 0;
 
@@ -187,27 +206,6 @@ static int split_and_cache(int word_length, int nparts, split_cache *scl)
 	return maxindex+1;
 }
 
-void free_anysplit(Dictionary afdict)
-{
-	size_t i;
-	anysplit_params *as = afdict->anysplit;
-
-	if (NULL == as) return;
-
-	for (i = 0; i < ARRAY_SIZE(as->scl); i++)
-	{
-		if (NULL == as->scl[i].sp) continue;
-		free(as->scl[i].sp);
-		free(as->scl[i].p_selected);
-		free(as->scl[i].p_tried);
-	}
-	free_regexs(as->regpre);
-	free_regexs(as->regmid);
-	free_regexs(as->regsuf);
-	free(as);
-	afdict->anysplit = NULL;
-}
-
 /*
  * Returns: Number of splits.
  */
@@ -225,7 +223,7 @@ static int split(int word_length, int nparts, split_cache *scl)
 				word_length, nparts);
 			return 0;
 		}
-		scl->sp = malloc(sizeof(p_start)*nparts * nsplits);
+		scl->sp = malloc(sizeof(p_end)*nparts * nsplits);
 		scl->p_selected = malloc(sizeof(*(scl->p_selected)) * nsplits);
 		scl->p_tried = malloc(sizeof(*(scl->p_tried)) * nsplits);
 		split_and_cache(word_length, nparts, scl);
@@ -253,45 +251,46 @@ static int rng_uniform(unsigned int *seedp, size_t nsplits)
 
 }
 
-/* lutf is the length of the string, measured in code-points,
- * blen is the length of the string, measured in bytes.
+/**
+ * Match the \p word parts \p pl to REGPRE, REGMID, and REGSUF.
+ * All the parts must match.
  */
 #define D_MM 7
-static bool morpheme_match(Sentence sent,
-	const char *word, size_t lutf, p_list pl)
+static bool morpheme_match(Sentence sent, const char *word, unsigned int nunits,
+                           unsigned int *word_upos, p_list pl)
 {
 	Dictionary afdict = sent->dict->affix_table;
 	anysplit_params *as = afdict->anysplit;
-	size_t bos = 0, cpos = 0; /* byte offset, code-point offset */
-	int p;
-	Regex_node *re;
-	size_t blen = strlen(word);
-	char *prefix_string = alloca(blen+1);
+	char *word_part = alloca(strlen(word) + 1);
 
 	lgdebug(+D_MM, "word=%s: ", word);
-	for (p = 0; p < as->nparts; p++)
+	for (int p = 0; p < as->nparts; p++)
 	{
-		size_t b = utf8_strncpy(prefix_string, &word[bos], pl[p]-cpos);
-		prefix_string[b] = '\0';
+		size_t bos = 0, upos = 0; /* word offset, unit offset (both in bytes) */
+		size_t b = word_upos[pl[p] - 1] - upos;
+		Regex_node *re;
+
+		memcpy(word_part, &word[bos], b);
+		word_part[b] = '\0';
 		bos += b;
 
 		/* For flexibility, REGRPE is matched only to the prefix part,
 		 * REGMID only to the middle suffixes, and REGSUF only to the
 		 * suffix part - which cannot be the prefix. */
 		if (0 == p) re = as->regpre;
-		else if (pl[p] == (int) lutf) re = as->regsuf;
+		else if (pl[p] == (p_end)nunits) re = as->regsuf;
 		else re = as->regmid;
-		lgdebug(D_MM, "re=%s part%d=%s: ", re?re->name:"(nil)", p, prefix_string);
+		lgdebug(D_MM, "re=%s part%d=%s: ", re?re->name:"(nil)", p, word_part);
 
 		/* A NULL regex always matches */
-		if ((NULL != re) && (NULL == match_regex(re, prefix_string)))
+		if ((NULL != re) && (NULL == match_regex(re, word_part)))
 		{
 			lgdebug(D_MM, "No match\n");
 			return false;
 		}
 
-		cpos = pl[p];
-		if (cpos == lutf) break;
+		if (pl[p] == nunits) break;
+		upos = word_upos[pl[p] - 1];
 	}
 
 	lgdebug(D_MM, "Match\n");
@@ -327,6 +326,90 @@ static Regex_node * regbuild(const char **regstring, int n, int classnum)
 	return regex_root;
 }
 
+#if HAVE_PCRE2_H
+static bool gr_reg_comp(grapheme_regex *re)
+{
+	PCRE2_SIZE erroffset;
+	int rc;
+
+	re->code = pcre2_compile((PCRE2_SPTR)re->pattern, PCRE2_ZERO_TERMINATED,
+	                         PCRE2_UTF, &rc, &erroffset, NULL);
+	if (re->code != NULL)
+	{
+		re->match_data = pcre2_match_data_create_from_pattern(re->code, NULL);
+		if (re->match_data == NULL)
+		{
+			prt_error("Error: pcre2_match_data_create_from_pattern() failed\n");
+			pcre2_code_free(re->code);
+			return false;
+		}
+		return true;
+	}
+
+	/* We have an error. */
+#define ERRBUFFLEN 120
+	PCRE2_UCHAR errbuf[ERRBUFFLEN];
+	pcre2_get_error_message(rc, errbuf, ERRBUFFLEN);
+	prt_error("Error: Failed to compile grapheme regex \"%s\": %s (code %d) at %d\n",
+	          re->pattern, errbuf, rc, (int)erroffset);
+	return false;
+}
+
+static int gr_reg_match(const char *word, grapheme_regex *re)
+{
+	int rc = pcre2_match(re->code, (PCRE2_SPTR)word,
+	                     PCRE2_ZERO_TERMINATED, /*startoffset*/0,
+	                     PCRE2_NO_UTF_CHECK, re->match_data, NULL);
+	if (rc == PCRE2_ERROR_NOMATCH) return rc;
+	if (rc > 0) return rc;
+	if (rc == 0)
+	{
+		prt_error("Error: pcre2_match(): ovector: Internal error\"\n");
+		return rc;
+	}
+
+	/* We have an error. */
+	PCRE2_UCHAR errbuf[ERRBUFFLEN];
+	pcre2_get_error_message(rc, errbuf, ERRBUFFLEN);
+	prt_error("Error: pcre2_match(): \"%s\": %s (code %d)\n",
+	          re->pattern, errbuf, rc);
+	return rc;
+}
+
+static void gr_pcre2_free(grapheme_regex *re)
+{
+	free(re->pattern);
+	pcre2_match_data_free(re->match_data);
+	pcre2_code_free(re->code);
+}
+#endif // HAVE_PCRE2_H
+
+void free_anysplit(Dictionary afdict)
+{
+	size_t i;
+	anysplit_params *as = afdict->anysplit;
+
+	if (NULL == as) return;
+
+	for (i = 0; i < ARRAY_SIZE(as->scl); i++)
+	{
+		if (NULL == as->scl[i].sp) continue;
+		free(as->scl[i].sp);
+		free(as->scl[i].p_selected);
+		free(as->scl[i].p_tried);
+	}
+	free_regexs(as->regpre);
+	free_regexs(as->regmid);
+	free_regexs(as->regsuf);
+
+#if HAVE_PCRE2_H
+	if (as->gr.pattern != NULL)
+		gr_pcre2_free(&as->gr);
+#endif // HAVE_PCRE2_H
+
+	free(as);
+	afdict->anysplit = NULL;
+}
 
 /**
  * Affix classes:
@@ -418,9 +501,104 @@ bool anysplit_init(Dictionary afdict)
 		return false;
 	}
 
+#if HAVE_PCRE2_H
+	const char *upat = linkgrammar_get_dict_define(afdict, "atomic-unit");
+	if (upat == NULL)
+	{
+		as->gr.pattern = NULL;
+	}
+	else
+	{
+		const char bpat[] = "^(?>";
+		const char epat[] = "(.+)?)$";
+
+		// Build an optional match for a single grapheme.
+		const unsigned int ubuf_strlen = strlen(upat) + /*()?*/3;
+		char *ubuf = alloca(ubuf_strlen + 1);
+		snprintf(ubuf, ubuf_strlen + 1, "(%s)?", upat);
+
+		// Build a pattern to match all the graphemes in a word: "^(>(\\X)?...)$"
+		as->gr.pattern =
+			malloc(sizeof(bpat)-1 + ubuf_strlen * MAX_WORD_TO_SPLIT + sizeof(epat));
+		strcpy(as->gr.pattern, bpat);
+		unsigned int n = strlen(as->gr.pattern);
+		for (i = 0; i < MAX_WORD_TO_SPLIT; i++, n+= ubuf_strlen)
+			strcpy(&as->gr.pattern[n], ubuf);
+		strcpy(&as->gr.pattern[n], epat);
+
+		if (!gr_reg_comp(&as->gr)) return false;
+	}
+#endif // HAVE_PCRE2_H
+
 	return true;
 }
 #undef D_AI
+
+/*
+ * Return the number of units (codepoints or graphemes) in \p word.
+ * Since \p word shouldn't be a null string, returned 0 means an error.
+ */
+static unsigned int strlen_units(anysplit_params *as, const char *word)
+{
+#if HAVE_PCRE2_H
+	if (as->gr.pattern != NULL)
+	{
+		// Number of graphemes.
+		int rc = gr_reg_match(word, &as->gr);
+		if (rc <= 1) return 0;
+		return (unsigned int)(rc - 1);
+	}
+#endif // HAVE_PCRE2_H
+	// Number of codepoints.
+	return (unsigned int)utf8_strlen(word);
+}
+
+/**
+ * Set the elements of \p word_pos (containing \p nunits elements) to the
+ * end positions (last char position + 1) of the atomic units in \p word.
+ */
+static void	build_unit_positions(anysplit_params *as, const char *word,
+											unsigned int nunits, unsigned int *word_pos)
+{
+	 dassert(nunits != 0, "At least one atomic unit is expected");
+	 const unsigned int *word_pos_base = word_pos;
+
+#if HAVE_PCRE2_H
+	if (as->gr.pattern != NULL)
+	{
+		PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(as->gr.match_data);
+
+		/* The first [start,end) is of the whole match (the word in this case). */
+		for (unsigned int i = 1; i < nunits + 1; i++)
+			*word_pos++ = (unsigned int)ovector[2*i + 1];
+	}
+	else
+#endif // HAVE_PCRE2_H
+	{
+		unsigned int pos = 0;
+
+		for (unsigned int i = 0; word[i] != '\0'; i = pos)
+		{
+			pos += utf8_charlen(&word[i]);
+			*word_pos++ = pos;
+		}
+	}
+
+	if (verbosity_level(D_ANYS+1))
+	{
+		unsigned int bos = 0;
+
+		prt_error("Debug: %u atomic units:\n\\", nunits);
+		for (unsigned int i = 0; i < nunits; i ++)
+		{
+			prt_error("%u) %.*s\n\\", i+1,(int)(word_pos_base[i]-bos), &word[bos]);
+			bos = word_pos_base[i];
+		}
+		prt_error("\n");
+
+	}
+	dassert(word_pos[-1] == strlen(word), "Inconsistent word end");
+}
 
 /**
  * Split randomly.
@@ -430,34 +608,35 @@ bool anysplit_init(Dictionary afdict)
  * - an error occurs (the behavior then is undefined).
  *   Such an error has not been observed yet.
  */
-#define D_AS 5
 bool anysplit(Sentence sent, Gword *unsplit_word)
 {
-	const char * word = unsplit_word->subword;
 	Dictionary afdict = sent->dict->affix_table;
-	anysplit_params *as;
+	if (NULL == afdict) return false;
+	anysplit_params * as = afdict->anysplit;
+	if ((NULL == as) || (0 == as->nparts)) return false; /* Anysplit disabled */
+
+	const char * word = unsplit_word->subword;
 	Afdict_class * stemsubscr;
 
-	size_t l = strlen(word);
-	size_t lutf = utf8_strlen(word);
-	p_list pl;
-	size_t bos, cpos; /* byte offset, codepoint offset */
-	int p;
 	int sample_point;
 	size_t nsplits;
 	size_t rndtried = 0;
 	size_t rndissued = 0;
 	size_t i;
 	unsigned int seed = sent->rand_state;
-	char *affix = alloca(l+2+1); /* word + ".=" + NUL: Max. affix length */
 	bool use_sampling = true;
+	unsigned int nunits = strlen_units(as, word);
 
-	if (NULL == afdict) return false;
-	as = afdict->anysplit;
+	size_t l = strlen(word);
+	char *affix = alloca(l+2+1); /* word + ".=" + NUL: Max. affix length */
 
-	if ((NULL == as) || (0 == as->nparts)) return false; /* Anysplit disabled */
+	if (0 == l)
+	{
+		prt_error("Warning: anysplit(): word length 0\n");
+		return false;
+	}
 
-	if (lutf > MAX_WORD_TO_SPLIT)
+	if ((nunits > MAX_WORD_TO_SPLIT) || (nunits == 0))
 	{
 		Gword *alt = issue_word_alternative(sent, unsplit_word, "AS>",
 		                       0,NULL, 1,&word, 0,NULL);
@@ -465,11 +644,8 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		return true;
 	}
 
-	if (0 == l)
-	{
-		prt_error("Warning: anysplit(): word length 0\n");
-		return false;
-	}
+	unsigned int *word_upos = alloca(sizeof(int) * nunits);
+	build_unit_positions(as, word, nunits, word_upos);
 
 	stemsubscr = AFCLASS(afdict, AFDICT_STEMSUBSCR);
 
@@ -479,7 +655,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	gw = word;
 #endif
 
-	nsplits = split(lutf, as->nparts, &as->scl[lutf]);
+	nsplits = split(nunits, as->nparts, &as->scl[nunits]);
 	if (0 == nsplits)
 	{
 		prt_error("Warning: anysplit(): split() failed (shouldn't happen)\n");
@@ -493,7 +669,7 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 		use_sampling = false;
 	}
 
-	lgdebug(+D_AS, "Start%s sampling: word=%s, nsplits=%zu, maxsplits=%d, "
+	lgdebug(+D_ANYS, "Start%s sampling: word=%s, nsplits=%zu, maxsplits=%d, "
 	        "as->altsmin=%zu, as->altsmax=%zu\n", use_sampling ? "" : " no",
 	        word, nsplits, as->nparts, as->altsmin, as->altsmax);
 
@@ -514,67 +690,53 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 			sample_point++;
 		}
 
-		lgdebug(D_AS, "Sample: %d ", sample_point);
-		if (as->scl[lutf].p_tried[sample_point])
+		lgdebug(D_ANYS, "Sample: %d ", sample_point);
+		if (as->scl[nunits].p_tried[sample_point])
 		{
-			lgdebug(D_AS+1, "(repeated)\n");
+			lgdebug(D_ANYS+1, "(repeated)\n");
 			continue;
 		}
-		lgdebug(D_AS+1, "(new)");
+		lgdebug(D_ANYS+1, "(new)");
 		rndtried++;
-		as->scl[lutf].p_tried[sample_point] = true;
+		as->scl[nunits].p_tried[sample_point] = true;
 		/* The regexes in the affix file can be used to reject partitioning
 		 * that break graphemes. */
-		if (morpheme_match(sent, word, lutf, &as->scl[lutf].sp[sample_point*as->nparts]))
+		if (morpheme_match(sent, word, nunits, word_upos, &as->scl[nunits].sp[sample_point*as->nparts]))
 		{
-			as->scl[lutf].p_selected[sample_point] = true;
+			as->scl[nunits].p_selected[sample_point] = true;
 			rndissued++;
 		}
 		else
 		{
-			lgdebug(D_AS, "\n");
+			lgdebug(D_ANYS, "\n");
 		}
 	}
 
-	lgdebug(D_AS, "Results: word '%s' (utf-char=%zu utf-byte-length=%zu): %zu/%zu:\n",
-	        word, lutf, l, rndissued, nsplits);
+	lgdebug(D_ANYS, "Results: word '%s' (units=%u byte-length=%zu): %zu/%zu:\n",
+	        word, nunits, l, rndissued, nsplits);
 
 	for (i = 0; i < nsplits; i++)
 	{
+		size_t bos = 0, upos = 0; /* byte offset, codepoint offset */
 		const char **affixes = NULL;
 		int num_sufixes;
 		int num_affixes = 0;
 
-		if (!as->scl[lutf].p_selected[i]) continue;
+		if (!as->scl[nunits].p_selected[i]) continue;
 
-		pl = &as->scl[lutf].sp[i*as->nparts];
-		bos = 0;
-		cpos = 0;
-		for (p = 0; p < as->nparts; p++)
+		p_list pl = &as->scl[nunits].sp[i*as->nparts];
+		for (int p = 0; p < as->nparts; p++)
 		{
-			size_t b = 0;
-			if (pl[0] == (int)lutf)  /* This is the whole word */
-			{
-				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
-				affix[b] = '\0';
-			}
-			else if (0 == cpos)   /* The first, but not the only morpheme */
-			{
-				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
-				affix[b] = '\0';
-			}
-			else           /* 2nd and subsequent morphemes */
-			{
-				b = utf8_strncpy(affix, &word[bos], pl[p]-cpos);
-				affix[b] = '\0';
-				num_affixes++;
-			}
+			size_t b = word_upos[pl[p] - 1] - upos;
+
+			memcpy(affix, &word[bos], b);
+			affix[b] = '\0';
+			bos += b;
 			altappend(sent, &affixes, affix);
 
-			bos += b;
-			cpos = pl[p];
-			// if (cpos == lutf) break; /* Same thing as below...*/
 			if (bos == l) break;
+			upos = word_upos[pl[p] - 1];
+			num_affixes++;
 		}
 
 		const char **prefix_position, **stem_position , **suffix_position;
@@ -623,4 +785,3 @@ bool anysplit(Sentence sent, Gword *unsplit_word)
 	if (0 != sent->rand_state) sent->rand_state = seed;
 	return true;
 }
-#undef D_AS
