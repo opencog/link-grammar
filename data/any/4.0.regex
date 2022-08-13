@@ -5,14 +5,26 @@
  %                                                                           %
  %***************************************************************************%
 
-% For Unicode scripts that use graphemes, use the corresponding regexes
-% from amy/4.0.regex.
+% The regexes here use the PCRE2 pattern syntax.
+% The LG library must be configured with PCRE2 in order to use them.
 
-% Want to match apostrophes, for abbreviations (I'm I've, etc.) since
-% these cannot be auto-split with the current splitter.
-% Hyphenated words, and words with underbars in them, get split.
-ANY-WORD:  /^[[:alnum:]]+$/
-ANY-PUNCT:  /^[[:punct:]]+$/
+% Punctuation characters are getting strip from start and end of words,
+% and words that contain punctuation are getting split at them. See the
+% "any/affix-punc" file.
+% These punctuation characters will match here. The \x03 is to match
+% subscripted punctuation that may be specified in this file.
+ANY-PUNCT: /^[[:punct:]]+(:?\x03|$)/
+
+% Reject anything that contains punctuation, so that the tokenizer will
+% have a chance to split them off as affixes.
+ANY-WORD: /^[^[:punct:]]+$/
+
+% The regexes below don't need the PCRE2 regex library, but:
+% 1. They work fine only with ASCII.
+% 2. They are not checked to work fine with the latest changes
+%    to the other configuration files.
+% ANY-WORD:  /^[[:alnum:]]+$/
+% ANY-PUNCT:  /^[[:punct:]]+$/
 
 % Match anything that doesn't match the above.
 % Match anything that isn't white-space.
