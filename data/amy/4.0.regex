@@ -28,8 +28,6 @@ MOR-SUFF: /^=\X+/
 
 % Reject anything that contains punctuation, so that the tokenizer will
 % have a chance to split them off as affixes.
-% Most of the script-dependent punctuation characters are not mentioned in
-% the "any/affix-punc" file and thus may be included in words.
 ANY-WORD: /^[^[:punct:]]+$/
 
 % For ASCII input and non-PCRE2 regex libraries you can use these instead:
