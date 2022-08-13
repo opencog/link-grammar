@@ -30,7 +30,10 @@ MOR-SUFF: /^=\X+/
 % have a chance to split them off as affixes.
 ANY-WORD: /^[^[:punct:]]+$/
 
-% For ASCII input and non-PCRE2 regex libraries you can use these instead:
+% The regexes below don't need the PCRE2 regex library, but:
+% 1. They work fine only with ASCII.
+% 2. They are not checked to work fine with the latest changes
+%    to the other configuration files.
 % ANY-WORD: /^[[:alnum:]]+$/
 % ANY-PUNCT: /^[[:punct:]].*$/  % The .* is to match an optional subscript.
 % MOR-PREF: /^[[:alnum:]]+=$/
