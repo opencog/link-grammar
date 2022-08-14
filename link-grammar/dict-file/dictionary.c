@@ -92,6 +92,32 @@ static bool return_true(Dictionary dict, const char *name)
 }
 
 /**
+ * Process the regex file.
+ * We have to compile regexs using the dictionary locale,
+ * so make a temporary locale swap. XXX FIXME: Thread safety.
+ */
+static bool load_regexes(Dictionary dict, const char *regex_name)
+{
+	if (!read_regex_file(dict, regex_name)) return false;
+
+	const char *locale = setlocale(LC_CTYPE, NULL); /* Save current locale. */
+	locale = strdupa(locale); /* setlocale() uses its own memory. */
+	setlocale(LC_CTYPE, dict->locale);
+	lgdebug(+D_DICT, "Regexs locale \"%s\"\n", setlocale(LC_CTYPE, NULL));
+
+	if (!compile_regexs(dict->regex_root, dict))
+	{
+		locale = setlocale(LC_CTYPE, locale);         /* Restore the locale. */
+		assert(NULL != locale, "Cannot restore program locale");
+		return false;
+	}
+	locale = setlocale(LC_CTYPE, locale);            /* Restore the locale. */
+	assert(NULL != locale, "Cannot restore program locale");
+
+	return true;
+}
+
+/**
  * Read dictionary entries from a wide-character string "input".
  * All other parts are read from files.
  */
@@ -207,6 +233,8 @@ dictionary_six_str(const char * lang,
 	if (!dictionary_setup_defines(dict))
 		goto failure;
 
+	if (!load_regexes(dict, regex_name)) goto failure;
+
 	dict->affix_table = dictionary_six(lang, affix_name, NULL, NULL, NULL, NULL);
 	if (dict->affix_table == NULL)
 	{
@@ -218,27 +246,6 @@ dictionary_six_str(const char * lang,
 
 	if (! anysplit_init(dict->affix_table))
 		goto failure;
-
-	/*
-	 * Process the regex file.
-	 * We have to compile regexs using the dictionary locale,
-	 * so make a temporary locale swap.
-	 */
-	if (!read_regex_file(dict, regex_name)) goto failure;
-
-	const char *locale = setlocale(LC_CTYPE, NULL); /* Save current locale. */
-	locale = strdupa(locale); /* setlocale() uses its own memory. */
-	setlocale(LC_CTYPE, dict->locale);
-	lgdebug(+D_DICT, "Regexs locale \"%s\"\n", setlocale(LC_CTYPE, NULL));
-
-	if (!compile_regexs(dict->regex_root, dict))
-	{
-		locale = setlocale(LC_CTYPE, locale);         /* Restore the locale. */
-		assert(NULL != locale, "Cannot restore program locale");
-		goto failure;
-	}
-	locale = setlocale(LC_CTYPE, locale);            /* Restore the locale. */
-	assert(NULL != locale, "Cannot restore program locale");
 
 	dict->base_knowledge  = pp_knowledge_open(pp_name);
 	dict->hpsg_knowledge  = pp_knowledge_open(cons_name);
