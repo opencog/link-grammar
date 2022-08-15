@@ -669,18 +669,22 @@ AC_ARG_ENABLE(pcre2,
 	                           [test "$with_regexlib" = pcre2 && with_regexlib=],
 	                           [check_pcre2=1])
 
+pcre2_message='PCRE2 is strongly recommended. If you wish to compile without this, then say "configure --disable-pcre2"'
+
 lgregexlib=--with-regexlib="$with_regexlib"
 
 case "$with_regexlib" in
 	'')
 		break
 		;;
-	pcre2)
-		AC_CHECK_HEADERS([pcre2.h], ,
-		                 [AC_MSG_ERROR([$lgregexlib: pcre2.h not found])],
-							  [#define PCRE2_CODE_UNIT_WIDTH 8])
-		PKG_CHECK_MODULES([PCRE2], [libpcre2-8], [],
-								[AC_MSG_ERROR([$lgregexlib: libpcre2-8 not found])])
+	  pcre2)
+	   AC_CHECK_HEADERS([pcre2.h], ,
+	                    [AS_BOX(m4_normalize($pcre2_message))]
+	                    [AC_MSG_ERROR([$lgregexlib: pcre2.h not found])],
+	                    [#define PCRE2_CODE_UNIT_WIDTH 8])
+	   PKG_CHECK_MODULES([PCRE2], [libpcre2-8], [],
+	                     [AS_BOX(m4_normalize($pcre2_message))]
+	                     [AC_MSG_ERROR([$lgregexlib: libpcre2-8 not found])])
 		;;
 	tre)
 		AC_CHECK_HEADERS([tre/regex.h], ,
