@@ -662,6 +662,13 @@ AC_ARG_WITH([regexlib],
 	                         [],
 	                         [with_regexlib=pcre2])
 
+AC_ARG_ENABLE(pcre2,
+	          [AS_HELP_STRING([--disable-pcre2],
+	                          [disable the use of the PCRE2 regex library
+	                           (default is enabled)])],
+	                           [test "$with_regexlib" = pcre2 && with_regexlib=],
+	                           [check_pcre2=1])
+
 lgregexlib=--with-regexlib="$with_regexlib"
 
 case "$with_regexlib" in
@@ -711,7 +718,7 @@ dnl libpcre2-8, libtre, libregex, libc.
 if test -n "$regexlib_cxx"; then
 	AC_MSG_RESULT([... using C++ regex])
 else
-	if test -z "$REGEX_LIBS"; then
+	if test -z "$REGEX_LIBS" -a -n "$check_pcre2"; then
 		AC_CHECK_HEADER([pcre2.h],
 			[PKG_CHECK_MODULES([REGEX], [libpcre2-8],
 									 [AC_DEFINE([HAVE_PCRE2_H], 1)],
