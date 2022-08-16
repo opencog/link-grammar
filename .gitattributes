@@ -1,0 +1,11 @@
+.gitattributes     text export-ignore
+.gitignore         text export-ignore
+.editorconfig      text
+
+data/*                      linguist-documentation
+data/*/*                    linguist-documentation
+data/*/*.scm               -linguist-documentation
+data/*/words/*              linguist-documentation
+data/*/tools/*             -linguist-documentation
+data/**/[Ma]akefile*       -linguist-documentation
+*.m4                       -linguist-documentation
