@@ -655,9 +655,21 @@ fi
 dnl AC_CHECK_HEADERS defines HAVE_FILENAME_H if found.
 
 AC_ARG_WITH([regexlib],
-	[AS_HELP_STRING([--with-regexlib=pcre2|tre|regex|c|c++],
-	[Use the specified regex library (default=first found)])],
-	[], with_regexlib=)
+	        [AS_HELP_STRING([--with-regexlib=pcre2|tre|regex|c|c++],
+	                        [use the specified regex library (pcre2 is the
+	                         default unless --disable-pcre2 is specified).
+	                         The use of PCRE2 is strongly recommended.])],
+	                         [],
+	                         [with_regexlib=pcre2])
+
+AC_ARG_ENABLE(pcre2,
+	          [AS_HELP_STRING([--disable-pcre2],
+	                          [disable the use of the PCRE2 regex library
+	                           (default is enabled)])],
+	                           [test "$with_regexlib" = pcre2 && with_regexlib=],
+	                           [check_pcre2=1])
+
+pcre2_message='PCRE2 is strongly recommended. If you wish to compile without this, then say "configure --disable-pcre2"'
 
 lgregexlib=--with-regexlib="$with_regexlib"
 
@@ -665,16 +677,20 @@ case "$with_regexlib" in
 	'')
 		break
 		;;
-	pcre2)
-		AC_CHECK_HEADERS([pcre2.h], ,
-		                 [AC_MSG_ERROR([$lgregexlib: pcre2.h not found])],
-							  [#define PCRE2_CODE_UNIT_WIDTH 8])
-		PKG_CHECK_MODULES([REGEX], [libpcre2-8])
+	  pcre2)
+	   AC_CHECK_HEADERS([pcre2.h], ,
+	                    [AS_BOX(m4_normalize($pcre2_message))]
+	                    [AC_MSG_ERROR([$lgregexlib: pcre2.h not found])],
+	                    [#define PCRE2_CODE_UNIT_WIDTH 8])
+	   PKG_CHECK_MODULES([PCRE2], [libpcre2-8], [],
+	                     [AS_BOX(m4_normalize($pcre2_message))]
+	                     [AC_MSG_ERROR([$lgregexlib: libpcre2-8 not found])])
 		;;
 	tre)
 		AC_CHECK_HEADERS([tre/regex.h], ,
 		                 [AC_MSG_ERROR([$lgregexlib: tre/regex.h not found])])
-		PKG_CHECK_MODULES([REGEX], [tre])
+		PKG_CHECK_MODULES([TRE], [tre], [],
+								[AC_MSG_ERROR([$lgregexlib: libtre not found])])
 		;;
 	regex)
 		AC_CHECK_HEADERS([regex.h], ,[AC_MSG_ERROR([No regex.h header found])])
@@ -706,7 +722,7 @@ dnl libpcre2-8, libtre, libregex, libc.
 if test -n "$regexlib_cxx"; then
 	AC_MSG_RESULT([... using C++ regex])
 else
-	if test -z "$REGEX_LIBS"; then
+	if test -z "$REGEX_LIBS" -a -n "$check_pcre2"; then
 		AC_CHECK_HEADER([pcre2.h],
 			[PKG_CHECK_MODULES([REGEX], [libpcre2-8],
 									 [AC_DEFINE([HAVE_PCRE2_H], 1)],

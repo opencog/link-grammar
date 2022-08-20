@@ -344,8 +344,10 @@ be without it altogether. The library names may be without the prefix `lib`.
 * `libz1g-dev` or `libz-devel` (currently needed for the bundled `minisat2`)<br>
 * `libedit-dev` (see [Editline](#Editline))<br>
 * `libhunspell-dev` or `libaspell-dev` (and the corresponding English dictionary).<br>
-* `libtre-dev` or `libpcre2-dev` (usually much faster than the libc REGEX
-implementation, and needed for correctness on FreeBSD and Cygwin)
+* `libtre-dev` or `libpcre2-dev` (much faster than the libc REGEX
+implementation, and needed for correctness on FreeBSD and Cygwin).<br>
+Using `libpcre2-dev` is strongly recommended. It must be used on certain
+systems (as specified in their BUILDING sections).
 
 Note: BSD-derived operating systems (including macOS) need the
 `argp-standalone` library in order to build the `link-generator` program.
