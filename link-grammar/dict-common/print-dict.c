@@ -35,8 +35,9 @@ bool cost_eq(float cost1, float cost2)
 	return (fabs(cost1 - cost2) < cost_epsilon);
 }
 
-#define COMBINE(a, b) a ## b
-#define EXP10(a, s) COMBINE(a ## e, s)
+/* Create a float constant with mantissa a and exponent s. */
+#define COMBINE(a, b, c) a ## b ## c
+#define EXP10(a, s) COMBINE(a ## e, s, F)
 /**
  * Convert \p cost to a string with COST_MAX_DEC_PLACES decimal places.
  * Always use dot as a radix character.
