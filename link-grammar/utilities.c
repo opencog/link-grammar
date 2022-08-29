@@ -761,8 +761,8 @@ bool strtofC(const char *s, float *r)
 		FP_BY_POS(10), FP_BY_POS(1), FP_BY_POS(0.1f), FP_BY_POS(0.01f),
 		FP_BY_POS(0.001f), FP_BY_POS(0.0001f)
 	};
-	static const unsigned int max_int_digits = 2;
-	static const unsigned int max_frac_digits = 4;
+	static const int max_int_digits = 2;
+	static const int max_frac_digits = 4;
 	static const char max_str[] = "99.9999";
 
 	const char *si = s;
@@ -824,7 +824,7 @@ bool strtofC(const char *s, float *r)
 			lgdebug(+D_SITOF, "\"%s\": Invalid digit \"%c\"\n", s, *si);
 			return false;
 		}
-		if ((int)(decpoint - si) >= (int)-max_frac_digits)
+		if ((int)(decpoint - si) >= -max_frac_digits)
 			total += fpconv[pos][d];
 		pos++;
 	}
