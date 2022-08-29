@@ -367,7 +367,7 @@ static int there_was_an_error(Label label, Sentence sent, Parse_Options opts)
 			batch_errors++;
 			return UNGRAMMATICAL;
 		}
-		if ((sentence_disjunct_cost(sent, 0) == 0.0) &&
+		if ((sentence_disjunct_cost(sent, 0) == 0.0F) &&
 			(label == PARSE_WITH_DISJUNCT_COST_GT_0)) {
 			batch_errors++;
 			return PARSE_WITH_DISJUNCT_COST_GT_0;
@@ -618,7 +618,7 @@ int main(int argc, char * argv[])
 	{
 		const char *locale =  setlocale(LC_NUMERIC, "C");
 		char *err;
-		double panic_max_cost = strtod(panic_max_cost_str, &err);
+		float panic_max_cost = strtof(panic_max_cost_str, &err);
 		setlocale(LC_NUMERIC, locale);
 
 		if ('\0' == *err)

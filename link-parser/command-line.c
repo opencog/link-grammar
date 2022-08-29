@@ -41,7 +41,7 @@ static struct
 #endif
 	int echo_on;
 	Cost_Model_type cost_model;
-	double max_cost;
+	float max_cost;
 	int screen_width;
 	int display_on;
 	ConstituentDisplayStyle display_constituents;
@@ -239,7 +239,7 @@ static const char *switch_value_string(const Switch *as)
 	switch (as->param_type)
 	{
 		case Float: /* Float point print! */
-			snprintf(buf, sizeof(buf), "%.2f", *((double *)as->ptr));
+			snprintf(buf, sizeof(buf), "%.2f", *((float *)as->ptr));
 			break;
 		case Bool:
 			/* FALLTHRU */
@@ -946,7 +946,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 		if (as[j].param_type == Float)
 		{
 			char *err;
-			double val = strtod(y, &err);
+			float val = strtof(y, &err);
 			if (('\0' == *y) || ('\0' != *err))
 			{
 				prt_error("Error: Invalid value \"%s\" for variable \"%s\". %s\n",
@@ -954,7 +954,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 				return -1;
 			}
 
-			*((double *) as[j].ptr) = val;
+			*((float *) as[j].ptr) = val;
 			printf("%s set to %5.2f\n", as[j].string, val);
 			return 'c';
 		}
