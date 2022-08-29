@@ -12,7 +12,7 @@
 /*************************************************************************/
 
 #include <ctype.h>
-#include <math.h>                       // fabs signbit
+#include <math.h>                       // fabsf signbit
 
 #include "api-structures.h"             // Parse_Options_s  (seems hacky to me)
 #include "dict-common.h"
@@ -32,7 +32,7 @@
 
 bool cost_eq(float cost1, float cost2)
 {
-	return (fabs(cost1 - cost2) < cost_epsilon);
+	return (fabsf(cost1 - cost2) < cost_epsilon);
 }
 
 /* Create a float constant with mantissa a and exponent s. */
@@ -50,7 +50,7 @@ const char *cost_stringify(float cost)
 	const int scale = (int)EXP10F(1, COST_MAX_DEC_PLACES);
 	const bool sign = signbit(cost);
 	const float roundinc = (1 / EXP10F(2, COST_MAX_DEC_PLACES));
-	int c = (int)((fabs(cost) + roundinc) * scale);
+	int c = (int)((fabsf(cost) + roundinc) * scale);
 
 	int l = snprintf(buf, sizeof(buf), "%s%d.%0*d", sign ? "-" : "",
 	                 c / scale, COST_MAX_DEC_PLACES, c - c / scale * scale);
