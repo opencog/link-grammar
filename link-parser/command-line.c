@@ -239,7 +239,7 @@ static const char *switch_value_string(const Switch *as)
 	switch (as->param_type)
 	{
 		case Float: /* Float point print! */
-			snprintf(buf, sizeof(buf), "%.2f", *((float *)as->ptr));
+			snprintf(buf, sizeof(buf), "%.3f", *((float *)as->ptr));
 			break;
 		case Bool:
 			/* FALLTHRU */
@@ -955,7 +955,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 			}
 
 			*((float *) as[j].ptr) = val;
-			printf("%s set to %5.2f\n", as[j].string, val);
+			printf("%s set to %5.3f\n", as[j].string, val);
 			return 'c';
 		}
 		else
