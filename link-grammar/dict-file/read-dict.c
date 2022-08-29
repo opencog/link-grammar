@@ -720,7 +720,7 @@ static Exp *make_expression(Dictionary dict)
 				else
 				{
 					warning(dict, "Invalid cost (using 1.0)\n");
-					nl->cost += 1.0;
+					nl->cost += 1.0F;
 				}
 				if (!link_advance(dict)) {
 					return NULL;
@@ -750,7 +750,7 @@ static Exp *make_expression(Dictionary dict)
 			}
 			else
 			{
-				nl->cost += 1.0;
+				nl->cost += 1.0F;
 			}
 		}
 		else if (!dict->is_special)
