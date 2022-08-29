@@ -47,7 +47,7 @@ const char *cost_stringify(float cost)
 {
 	static TLS char buf[16];
 
-	const int scale = EXP10F(1, COST_MAX_DEC_PLACES);
+	const int scale = (int)EXP10F(1, COST_MAX_DEC_PLACES);
 	const bool sign = signbit(cost);
 	const float roundinc = (1 / EXP10F(2, COST_MAX_DEC_PLACES));
 	int c = (int)((fabs(cost) + roundinc) * scale);
