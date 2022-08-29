@@ -37,7 +37,7 @@ bool cost_eq(float cost1, float cost2)
 
 /* Create a float constant with mantissa a and exponent s. */
 #define COMBINE(a, b, c) a ## b ## c
-#define EXP10(a, s) COMBINE(a ## e, s, F)
+#define EXP10F(a, s) COMBINE(a ## e, s, F)
 /**
  * Convert \p cost to a string with COST_MAX_DEC_PLACES decimal places.
  * Always use dot as a radix character.
@@ -47,9 +47,9 @@ const char *cost_stringify(float cost)
 {
 	static TLS char buf[16];
 
-	const int scale = EXP10(1, COST_MAX_DEC_PLACES);
+	const int scale = EXP10F(1, COST_MAX_DEC_PLACES);
 	const bool sign = signbit(cost);
-	const float roundinc = (1 / EXP10(2, COST_MAX_DEC_PLACES));
+	const float roundinc = (1 / EXP10F(2, COST_MAX_DEC_PLACES));
 	int c = (int)((fabs(cost) + roundinc) * scale);
 
 	int l = snprintf(buf, sizeof(buf), "%s%d.%0*d", sign ? "-" : "",
