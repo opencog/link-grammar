@@ -334,7 +334,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	return dict->version;
 }
 
-double linkgrammar_get_dict_max_disjunct_cost(Dictionary dict)
+float linkgrammar_get_dict_max_disjunct_cost(Dictionary dict)
 {
 	return dict->default_max_disjunct_cost;
 }

@@ -287,11 +287,11 @@ int parse_options_get_linkage_limit(Parse_Options opts)
 	return opts->linkage_limit;
 }
 
-void parse_options_set_disjunct_cost(Parse_Options opts, double dummy)
+void parse_options_set_disjunct_cost(Parse_Options opts, float dummy)
 {
 	opts->disjunct_cost = dummy;
 }
-double parse_options_get_disjunct_cost(Parse_Options opts)
+float parse_options_get_disjunct_cost(Parse_Options opts)
 {
 	return opts->disjunct_cost;
 }
@@ -626,7 +626,7 @@ int sentence_num_violations(Sentence sent, LinkageIdx i)
 	return sent->lnkages[i].lifo.N_violations;
 }
 
-double sentence_disjunct_cost(Sentence sent, LinkageIdx i)
+float sentence_disjunct_cost(Sentence sent, LinkageIdx i)
 {
 	if (!sent) return 0.0;
 
