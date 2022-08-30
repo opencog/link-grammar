@@ -640,7 +640,7 @@ static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 			dict->allow_duplicate_idioms = disallow_dup_idioms ? -1 : 1;
 		}
 
-		if (dup_word_status(dict, newnode) == 1) return true;
+		if (dup_word_status(dict, newnode) == 1) return false;
 	}
 
 	/* FIXME: Make central. */
