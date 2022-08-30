@@ -337,6 +337,7 @@ static void reg_free(Regex_node *rn)
 static bool check_capture_group(const Regex_node *rn)
 {
 	if (rn->capture_group <= 0) return true;
+	assert(rn->capture_group <= 9, "Bogus capture group %d", rn->capture_group);
 
 	Regex_node check_cg = *rn;
 	const size_t pattern_len = strlen(rn->pattern);
