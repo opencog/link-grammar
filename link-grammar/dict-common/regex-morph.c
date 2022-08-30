@@ -89,7 +89,7 @@ static unsigned int max_capture_groups(const Regex_node *rn)
 {
 	if (rn->capture_group < 0) return 0;
 
-	int Nov = 1;
+	unsigned int Nov = 1;
 	for (const char *p = rn->pattern; *p != '\0'; p++)
 		if (*p == '(') Nov++;
 
@@ -137,7 +137,7 @@ static bool reg_comp(Regex_node *rn)
 static bool reg_match(const char *s, const Regex_node *rn)
 {
 	reg_info *re = (reg_info *)rn->re;
-	int nmatch = (rn->capture_group < 0) ? 0 : re->Nre_md;
+	size_t nmatch = (rn->capture_group < 0) ? 0 : re->Nre_md;
 	int rc = regexec(&re->re_code, s, nmatch, re->re_md, /*eflags*/0);
 
 	if (rc == REG_NOMATCH) return false;
@@ -242,8 +242,8 @@ static void reg_span(Regex_node *rn)
 	}
 	else
 	{
-		rn->ovector[0] = ovector[2*cgn];
-		rn->ovector[1] = ovector[2*cgn + 1];
+		rn->ovector[0] = (int)ovector[2*cgn];
+		rn->ovector[1] = (int)ovector[2*cgn + 1];
 	}
 }
 
@@ -310,8 +310,8 @@ static void reg_span(Regex_node *rn)
 	}
 	else
 	{
-		rn->ovector[0] = re_md.position(cgn);
-		rn->ovector[1] = rn->ovector[0] + re_md.length(cgn);
+		rn->ovector[0] = (int)re_md.position(cgn);
+		rn->ovector[1] = rn->ovector[0] + (int)re_md.length(cgn);
 	}
 }
 
@@ -345,7 +345,7 @@ static bool check_capture_group(const Regex_node *rn)
 	strcpy(check_cg.pattern, rn->pattern);
 
 	check_cg.pattern[pattern_len] = '\\';
-	check_cg.pattern[pattern_len + 1] = '0' + rn->capture_group;
+	check_cg.pattern[pattern_len + 1] = '0' + (char)rn->capture_group;
 	check_cg.pattern[pattern_len + 2] = '\0';
 
 	bool rc = reg_comp(&check_cg);
