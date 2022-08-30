@@ -52,7 +52,7 @@ link_public_api(const char *)
 link_public_api(const char *)
 	linkgrammar_get_dict_locale(Dictionary);
 
-link_public_api(double)
+link_public_api(float)
 	linkgrammar_get_dict_max_disjunct_cost(Dictionary);
 
 #define LG_PANIC_DISJUNCT_COST "panic-max-disjunct-cost"
@@ -163,8 +163,8 @@ link_public_api(void)
 link_public_api(int)
      parse_options_get_linkage_limit(Parse_Options opts);
 link_public_api(void)
-     parse_options_set_disjunct_cost(Parse_Options opts, double disjunct_cost);
-link_public_api(double)
+     parse_options_set_disjunct_cost(Parse_Options opts, float disjunct_cost);
+link_public_api(float)
      parse_options_get_disjunct_cost(Parse_Options opts);
 link_public_api(void)
      parse_options_set_min_null_count(Parse_Options opts, int null_count);
@@ -282,7 +282,7 @@ link_public_api(int)
      sentence_num_linkages_post_processed(Sentence sent);
 link_public_api(int)
      sentence_num_violations(Sentence sent, LinkageIdx linkage_num);
-link_public_api(double)
+link_public_api(float)
      sentence_disjunct_cost(Sentence sent, LinkageIdx linkage_num);
 link_public_api(int)
      sentence_link_cost(Sentence sent, LinkageIdx linkage_num);
@@ -331,7 +331,7 @@ link_public_api(const char **)
      linkage_get_words(const Linkage linkage);
 link_public_api(const char *)
      linkage_get_disjunct_str(const Linkage linkage, WordIdx word_num);
-link_public_api(double)
+link_public_api(float)
      linkage_get_disjunct_cost(const Linkage linkage, WordIdx word_num);
 link_public_api(const char *)
      linkage_get_word(const Linkage linkage, WordIdx word_num);
@@ -361,7 +361,7 @@ link_public_api(void)
      linkage_free_pp_msgs(char * str);
 link_public_api(int)
      linkage_unused_word_cost(const Linkage linkage);
-link_public_api(double)
+link_public_api(float)
      linkage_disjunct_cost(const Linkage linkage);
 link_public_api(int)
      linkage_link_cost(const Linkage linkage);

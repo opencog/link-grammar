@@ -521,7 +521,7 @@ size_t get_max_space_used(void);
 char * get_default_locale(void);
 void set_utf8_program_locale(void);
 bool try_locale(const char *);
-bool strtodC(const char *, float *);
+bool strtofC(const char *, float *);
 
 /**
  * Returns the smallest power of two that is at least i and at least 1

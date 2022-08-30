@@ -334,7 +334,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	return dict->version;
 }
 
-double linkgrammar_get_dict_max_disjunct_cost(Dictionary dict)
+float linkgrammar_get_dict_max_disjunct_cost(Dictionary dict)
 {
 	return dict->default_max_disjunct_cost;
 }
@@ -404,9 +404,9 @@ static bool dictionary_setup_max_disjunct_cost(Dictionary dict)
 	else
 	{
 		float disjunct_cost_value;
-		if (!strtodC(disjunct_cost_str, &disjunct_cost_value))
+		if (!strtofC(disjunct_cost_str, &disjunct_cost_value))
 		{
-			prt_error("Error: %s: Invalid cost \"%s\"", LG_DISJUNCT_COST,
+			prt_error("Error: %s: Invalid cost \"%s\"\n", LG_DISJUNCT_COST,
 			          disjunct_cost_str);
 			return false;
 		}

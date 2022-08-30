@@ -31,7 +31,7 @@
 
 typedef struct
 {
-	double max_cost;
+	float max_cost;
 	int linkage_limit;
 	int max_null_count;
 	int short_length;

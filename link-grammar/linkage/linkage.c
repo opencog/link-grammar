@@ -894,7 +894,7 @@ const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 	return linkage->disjunct_list_str[w];
 }
 
-double linkage_get_disjunct_cost(const Linkage linkage, WordIdx w)
+float linkage_get_disjunct_cost(const Linkage linkage, WordIdx w)
 {
 	Disjunct *dj;
 
@@ -921,7 +921,7 @@ int linkage_unused_word_cost(const Linkage linkage)
 	return linkage->lifo.unused_word_cost;
 }
 
-double linkage_disjunct_cost(const Linkage linkage)
+float linkage_disjunct_cost(const Linkage linkage)
 {
 	/* The sat solver (currently) fails to fill in info */
 	if (!linkage) return 0.0;

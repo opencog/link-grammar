@@ -203,10 +203,6 @@ dictionary_six_str(const char * lang,
 
 	/* Read dictionary from the input string. */
 
-	/* Make sure "." is used in string conversion to floating point.
-	 * FIXME: Use a locale-agnostic conversion function. */
-	setlocale(LC_NUMERIC, "C");
-
 	dict->input = input;
 	dict->pin = dict->input;
 	if (!read_dictionary(dict))

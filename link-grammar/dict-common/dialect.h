@@ -20,10 +20,10 @@
 #include "string-id.h"
 
 /* dialect_tag costs with a special meaning. See also link-includes.h. */
-#define DIALECT_COST_MAX         9999.0    /* Less than that is a real cost */
-#define DIALECT_COST_DISABLE    10000.0
-#define DIALECT_SUB             10001.0    /* Sub-dialect (a vector name) */
-#define DIALECT_SECTION         10002.0    /* Section header (a vector name) */
+#define DIALECT_COST_MAX         9999.0F    /* Less than that is a real cost */
+#define DIALECT_COST_DISABLE    10000.0F
+#define DIALECT_SUB             10001.0F    /* Sub-dialect (a vector name) */
+#define DIALECT_SECTION         10002.0F    /* Section header (a vector name) */
 
 
 /* Used for dialect table entries and Dialect_Option component cost array. */
