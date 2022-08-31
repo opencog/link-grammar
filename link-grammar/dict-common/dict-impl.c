@@ -18,11 +18,11 @@
 #include "dict-api.h"
 #include "dict-defines.h"
 #include "dict-impl.h"
+#include "dict-structures.h"
 #include "print/print-util.h"           // patch_subscript_mark
 #include "regex-morph.h"
-#include "dict-structures.h"
-#include "string-set.h"
 #include "string-id.h"
+#include "string-set.h"
 #include "utilities.h"
 
 /* ======================================================================= */
