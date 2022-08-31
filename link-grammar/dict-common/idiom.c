@@ -129,7 +129,7 @@ static void increment_current_name(Dictionary dict)
 		if (dict->current_idiom[i] <= 'Z') return;
 		dict->current_idiom[i] = 'A';
 	} while (i-- > 0);
-	assert(0, "increment_current_name: Overflow");
+	assert(0, "Overflow");
 }
 
 /**

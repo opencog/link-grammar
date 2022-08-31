@@ -505,7 +505,7 @@ static PER_GWORD_FUNC(set_word_status)//(Sentence sent, Gword *w, int *arg)
 #endif /* HAVE_HUNSPELL */
 
 		default:
-			assert(0, "set_dict_word_status: Invalid status 0x%x\n", status);
+			assert(0, "Invalid status 0x%x\n", status);
 	}
 
 	lgdebug(+D_SW, "Word %s: status=%s\n", w->subword, gword_status(sent, w));
@@ -2093,7 +2093,7 @@ static bool strip_right(Sentence sent,
 		return false;
 
 	const char * temp_wend = *wend;
-	assert(temp_wend>w, "strip_right: unexpected empty-string word");
+	assert(temp_wend>w, "Unexpected empty-string word");
 	char *word = alloca(temp_wend-w+1);
 
 	Afdict_class *rword_list = AFCLASS(afdict, classnum);

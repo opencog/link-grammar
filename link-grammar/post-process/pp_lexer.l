@@ -83,7 +83,7 @@ PPLexTable *pp_lexer_open(FILE *f)
   PPLexTable *lt;
   bool yylex_ok = false;
 
-  assert(f, "pp_lexer_open: passed a NULL file pointer");
+  assert(f, "Passed a NULL file pointer");
 
   lt = (PPLexTable*) malloc (sizeof(PPLexTable));
   setup(lt);
