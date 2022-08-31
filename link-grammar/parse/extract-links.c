@@ -486,7 +486,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 		if (le != NULL)
 			mlcl = get_cached_match_list(ctxt, 0, w, le);
-		if (re != NULL && ((le == NULL) || (re->farthest_word <= w)))
+		if (fml_re != NULL && ((le == NULL) || (re->farthest_word <= w)))
 			mlcr = get_cached_match_list(ctxt, 1, w, re);
 
 		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw, mlcl, mlcr);
