@@ -303,7 +303,6 @@ static void free_table_lrcnt(count_context_t *ctxt)
 
 static void init_table_lrcnt(count_context_t *ctxt)
 {
-	if (ctxt->is_short) return;
 	Sentence sent = ctxt->sent;
 
 	for (unsigned int dir = 0; dir < 2; dir++)
@@ -1583,11 +1582,14 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	ctxt->is_short =
 		(sent->length <= min_len_word_vector) && !IS_GENERATION(ctxt->sent->dict);
 
-	/* next_id keeps the last tracon_id used, so we need +1 for array size.  */
-	for (unsigned int dir = 0; dir < 2; dir++)
-		ctxt->table_lrcnt[dir].sz = ts->next_id[!dir] + 1;
+	if (!ctxt->is_short)
+	{
+		/* next_id keeps the last tracon_id used, so we need +1 for array size.  */
+		for (unsigned int dir = 0; dir < 2; dir++)
+			ctxt->table_lrcnt[dir].sz = ts->next_id[!dir] + 1;
 
-	init_table_lrcnt(ctxt);
+		init_table_lrcnt(ctxt);
+	}
 
 	/* consecutive blocks of this many words are considered as
 	 * one null link. */
