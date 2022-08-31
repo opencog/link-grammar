@@ -83,11 +83,10 @@ static Tconnector * catenate(Tconnector * e1, Tconnector * e2, Pool_desc *tp)
 {
 	Tconnector head;
 	Tconnector *preve = &head;
-	Tconnector *newe = &head;
 
 	for (;e1 != NULL; e1 = e1->next)
 	{
-		newe = pool_alloc(tp);
+		Tconnector *newe = pool_alloc(tp);
 		*newe = *e1;
 
 		preve->next = newe;
