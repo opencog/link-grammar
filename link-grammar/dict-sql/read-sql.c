@@ -486,7 +486,7 @@ static void add_categories(Dictionary dict)
 
 		dict->category[i].num_words = bs.count;
 		dict->category[i].word =
-			malloc(bs.count * sizeof(dict->category[0].word));
+			malloc(bs.count * sizeof(*dict->category[0].word));
 
 		/* ------------------ */
 		/* For each category, get the (subscripted) words in the category */

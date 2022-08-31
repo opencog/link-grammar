@@ -748,7 +748,7 @@ void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 			        sizeof(*dict->category) * dict->num_categories_alloced);
 	}
 	dict->category[dict->num_categories].word =
-		malloc(sizeof(dict->category[0].word) * n);
+		malloc(sizeof(*dict->category[0].word) * n);
 
 	n = 0;
 	for (Dict_node *dnx = dn; dnx != NULL; dnx = dnx->left)
