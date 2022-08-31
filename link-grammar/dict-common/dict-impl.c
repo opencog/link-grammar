@@ -499,7 +499,7 @@ void affix_list_add(Dictionary afdict, Afdict_class * ac,
 		size_t new_sz;
 		ac->mem_elems += AFFIX_COUNT_MEM_INCREMENT;
 		new_sz = ac->mem_elems * sizeof(const char *);
-		ac->string = (char const **) realloc((void *)ac->string, new_sz);
+		ac->string = realloc(ac->string, new_sz);
 	}
 	ac->string[ac->length] = string_set_add(affix, afdict->string_set);
 	ac->length++;
@@ -656,7 +656,7 @@ bool afdict_init(Dictionary dict)
 		prt_error("Error: afdict_init: Invalid value for class %s in file %s"
 		          " (should have been one ASCII punctuation - ignored)\n",
 		          afdict_classname[AFDICT_INFIXMARK], afdict->name);
-		free((void *)ac->string);
+		free(ac->string);
 		ac->length = 0;
 		ac->mem_elems = 0;
 		ac->string = NULL;
