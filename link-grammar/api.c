@@ -25,6 +25,7 @@
 #include "post-process/post-process.h"  // post_process_new
 #include "prepare/exprune.h"
 #include "string-set.h"
+#include "tokenize//wordgraph.h"        // wordgraph_delete
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"
 #include "tokenize/tokenize.h"

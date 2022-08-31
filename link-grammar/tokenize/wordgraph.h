@@ -30,6 +30,7 @@ Gword *wg_get_sentence_word(const Sentence, Gword *);
 void gwordlist_append_list(const Gword ***, const Gword **);
 #endif
 
+void wordgraph_delete(Sentence);
 const Gword **wordgraph_hier_position(Gword *);
 void print_hier_position(const Gword *);
 bool in_same_alternative(Gword *, Gword *);
