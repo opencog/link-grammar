@@ -3264,16 +3264,9 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		 * result is valid (in case of "\*" it means an empty dict or a dict
 		 * only with walls that are not used).  Use a null-expression
 		 * instead, to prevent an error at the caller. */
-		static Exp null_exp =
-		{
-			.type = AND_type,
-			.operand_first = NULL,
-			.operand_next = NULL,
-		};
-
 		y = pool_alloc(sent->X_node_pool);
 		y->next = NULL;
-		y->exp = &null_exp;
+		y->exp = make_zeroary_node(sent->Exp_pool);
 	}
 
 	return x;

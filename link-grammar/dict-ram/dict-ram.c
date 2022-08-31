@@ -640,19 +640,11 @@ static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 		if (dup_word_status(dict, newnode) == 1) return false;
 	}
 
-	/* FIXME: Make central. */
-	static Exp null_exp =
-	{
-		.type = AND_type,
-		.operand_first = NULL,
-		.operand_next = NULL,
-	};
-
 	dict_error2(dict, "Ignoring word which has been multiply defined:",
 	            newnode->string);
 
 	/* Too late to skip insertion - insert it with a null expression. */
-	newnode->exp = &null_exp;
+	newnode->exp = make_zeroary_node(dict->Exp_pool);
 
 	return true;
 }
