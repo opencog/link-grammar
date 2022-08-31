@@ -558,7 +558,7 @@ void sentence_delete(Sentence sent)
 	pool_delete(sent->X_node_pool);
 
 	/* Usually the memory pools created in build_disjuncts_for_exp() are
-	 * deleted in build_sentence_disjuncts(). Delete them here inn case
+	 * deleted in build_sentence_disjuncts(). Delete them here in case
 	 * build_disjuncts_for_exp() is directly called. */
 	if (sent->Clause_pool != NULL)
 	{

@@ -1475,7 +1475,7 @@ static Count_bin do_count(
 
 					if (0 < hist_total(&rightcount))
 					{
-						parse_count_clamp(&rightcount); /* May be up to 4*INT_MAX. */
+						parse_count_clamp(&rightcount); /* May be up to 4*2^31. */
 						if (le == NULL)
 						{
 							lrcnt_found = true;

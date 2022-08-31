@@ -27,7 +27,7 @@
 #include "regex-morph.h"
 #include "tokenize/tokenize.h"          // word_add
 #include "tokenize/word-structures.h"   // Word_struct
-#include "utilities.h"                  // GNU_UNUSED
+#include "utilities.h"                  // GNUC_UNUSED
 /* ======================================================================== */
 
 bool cost_eq(float cost1, float cost2)

@@ -2664,7 +2664,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		 * true:
 		 * - If the root word (temp_word) is known.
 		 * - If the unsplit_word is unknown. This happens with an unknown word
-		 *   that has punctuation after it). */
+		 *   that has punctuation after it. */
 		if (n_stripped > 0)
 		{
 			sz = wend-word;
