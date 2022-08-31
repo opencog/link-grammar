@@ -634,11 +634,8 @@ static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 		dict->allow_duplicate_words =
 			((s != NULL) && (0 == strcasecmp(s, "true"))) ? 1 : -1;
 
-		if (dict->allow_duplicate_idioms == 0)
-		{
-			bool disallow_dup_idioms = !!test_enabled("disallow-dup-idioms");
-			dict->allow_duplicate_idioms = disallow_dup_idioms ? -1 : 1;
-		}
+		bool disallow_dup_idioms = !!test_enabled("disallow-dup-idioms");
+		dict->allow_duplicate_idioms = disallow_dup_idioms ? -1 : 1;
 
 		if (dup_word_status(dict, newnode) == 1) return false;
 	}
@@ -651,18 +648,13 @@ static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 		.operand_next = NULL,
 	};
 
-	if (dup_word_status(dict, newnode) == -1)
-	{
-		dict_error2(dict, "Ignoring word which has been multiply defined:",
-		            newnode->string);
+	dict_error2(dict, "Ignoring word which has been multiply defined:",
+	            newnode->string);
 
-		/* Too late to skip insertion - insert it with a null expression. */
-		newnode->exp = &null_exp;
+	/* Too late to skip insertion - insert it with a null expression. */
+	newnode->exp = &null_exp;
 
-		return true;
-	}
-
-	return false;
+	return true;
 }
 
 /**
