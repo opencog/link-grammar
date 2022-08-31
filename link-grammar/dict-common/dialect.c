@@ -186,7 +186,7 @@ static void print_cost_table(Dictionary dict, Dialect *di, dialect_info *dinfo)
 		return;
 	}
 
-	prt_error("Dialect cost table (%u components%s):\n\\",
+	prt_error("Dialect cost table (%u component%s):\n\\",
 	          dt->num, dt->num == 1 ? "" : "s");
 	prt_error("%-15s %s\n", "component", "cost");
 
