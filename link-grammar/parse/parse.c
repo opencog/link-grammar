@@ -503,10 +503,10 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 			if (verbosity >= D_USER_INFO)
 			{
-				if ((sent->num_valid_linkages == 0) &&
-				    (sent->num_linkages_post_processed > 0) &&
+				if ((sent->num_linkages_post_processed > 0) &&
+				    (sent->num_linkages_post_processed == sent->num_linkages_alloced) &&
 				    ((int)opts->linkage_limit < sent->num_linkages_found) &&
-				    (PARSE_NUM_OVERFLOW >= sent->num_linkages_found))
+				    !IS_GENERATION(sent->dict))
 					prt_error("Info: All examined linkages (%zu) had P.P. violations.\n"
 					          "Consider increasing the linkage limit.\n"
 					          "At the command line, use !limit\n",
