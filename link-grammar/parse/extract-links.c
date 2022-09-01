@@ -811,8 +811,7 @@ static void list_random_links(Linkage lkg, unsigned int *rand_state,
 		new_index = rand_r(rand_state) % num_pc;
 
 		num_pc = 0;
-		for (pc = set->first; pc != NULL; pc = pc->next) {
-			if (new_index == num_pc) break;
+		for (pc = set->first; new_index != num_pc; pc = pc->next) {
 			num_pc++;
 		}
 	}
