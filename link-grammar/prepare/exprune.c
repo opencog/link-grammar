@@ -11,6 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <inttypes.h>                    // format macros
+
 #include "api-structures.h"              // for Sentence_s
 #include "connectors.h"
 #include "dict-common/dict-structures.h" // expression_stringify
@@ -404,11 +406,11 @@ static void print_expression_disjunct_count(Sentence sent)
 		dcnt = 0;
 		for (const X_node *x = sent->word[i].x; x != NULL; x = x->next)
 			dcnt += count_clause(x->exp);
-		prt_error("%s(%zu) ", sent->word[i].alternatives[0], dcnt);
+		prt_error("%s(%"PRIu64") ", sent->word[i].alternatives[0], dcnt);
 		t += dcnt;
 	}
 	prt_error("\n\\");
-	prt_error("Total: %zu disjuncts\n\n", t);
+	prt_error("Total: %"PRIu64" disjuncts\n\n", t);
 }
 
 void expression_prune(Sentence sent, Parse_Options opts)

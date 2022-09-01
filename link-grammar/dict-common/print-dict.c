@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <ctype.h>
+#include <inttypes.h>                   // format macros
 #include <math.h>                       // fabsf signbit
 
 #include "api-structures.h"             // Parse_Options_s  (seems hacky to me)
@@ -1211,7 +1212,7 @@ static char *display_counts(const char *word, Dict_node *dn)
 	dyn_strcat(s, "matches:\n");
 	for (; dn != NULL; dn = dn->right)
 	{
-		append_string(s, "    %-*s %8zu  disjuncts",
+		append_string(s, "    %-*s %8"PRIu64" disjuncts",
 		              display_width(DJ_COL_WIDTH, dn->string), dn->string,
 		              count_disjunct_for_dict_node(dn));
 
