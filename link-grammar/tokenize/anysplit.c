@@ -262,11 +262,11 @@ static bool morpheme_match(Sentence sent, const char *word, unsigned int nunits,
 	Dictionary afdict = sent->dict->affix_table;
 	anysplit_params *as = afdict->anysplit;
 	char *word_part = alloca(strlen(word) + 1);
+	size_t bos = 0, upos = 0; /* word offset, unit offset (both in bytes) */
 
 	lgdebug(+D_MM, "word=%s: ", word);
 	for (int p = 0; p < as->nparts; p++)
 	{
-		size_t bos = 0, upos = 0; /* word offset, unit offset (both in bytes) */
 		size_t b = word_upos[pl[p] - 1] - upos;
 		Regex_node *re;
 

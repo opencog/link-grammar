@@ -992,7 +992,7 @@ static bool read_entry(Dictionary dict)
 			goto syntax_error;
 		}
 
-		/* If it's a word-file name */
+		/* If it's a word-file name. */
 		/* However, be careful to reject "/.v" which is the division symbol
 		 * used in equations (.v means verb-like). Also reject an affix regex
 		 * specification (may appear only in the affix file). */

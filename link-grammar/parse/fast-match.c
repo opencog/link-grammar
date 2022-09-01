@@ -484,10 +484,10 @@ typedef struct
  * An optimization for English checks if one of the connectors belongs
  * to an original sentence word (c2 is checked first for an inline
  * optimization opportunity).
- * If a wordgraph word of the checked connector is the same
- * as of the previously checked one, use the cached result.
- * (The first wordgraph word is used for cache validity indication,
- * but there is only one most of the times anyway.)
+ * If the first wordgraph word of the checked connector is the same as
+ * of the previously checked one, use the cached result. (Using more
+ * than the first one would increase the cache hit, but there is only
+ * one most of the times so this would be an overhead.)
  */
 #define OPTIMIZE_EN
 static bool alt_connection_possible(Connector *c1, Connector *c2,

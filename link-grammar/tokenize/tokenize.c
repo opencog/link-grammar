@@ -505,7 +505,7 @@ static PER_GWORD_FUNC(set_word_status)//(Sentence sent, Gword *w, int *arg)
 #endif /* HAVE_HUNSPELL */
 
 		default:
-			assert(0, "set_dict_word_status: Invalid status 0x%x\n", status);
+			assert(0, "Invalid status 0x%x\n", status);
 	}
 
 	lgdebug(+D_SW, "Word %s: status=%s\n", w->subword, gword_status(sent, w));
@@ -2093,7 +2093,7 @@ static bool strip_right(Sentence sent,
 		return false;
 
 	const char * temp_wend = *wend;
-	assert(temp_wend>w, "strip_right: unexpected empty-string word");
+	assert(temp_wend>w, "Unexpected empty-string word");
 	char *word = alloca(temp_wend-w+1);
 
 	Afdict_class *rword_list = AFCLASS(afdict, classnum);
@@ -2664,7 +2664,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		 * true:
 		 * - If the root word (temp_word) is known.
 		 * - If the unsplit_word is unknown. This happens with an unknown word
-		 *   that has punctuation after it). */
+		 *   that has punctuation after it. */
 		if (n_stripped > 0)
 		{
 			sz = wend-word;
@@ -3264,16 +3264,9 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		 * result is valid (in case of "\*" it means an empty dict or a dict
 		 * only with walls that are not used).  Use a null-expression
 		 * instead, to prevent an error at the caller. */
-		static Exp null_exp =
-		{
-			.type = AND_type,
-			.operand_first = NULL,
-			.operand_next = NULL,
-		};
-
 		y = pool_alloc(sent->X_node_pool);
 		y->next = NULL;
-		y->exp = &null_exp;
+		y->exp = make_zeroary_node(sent->Exp_pool);
 	}
 
 	return x;

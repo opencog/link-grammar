@@ -67,7 +67,7 @@ static unsigned int find_prime_for(size_t count)
 	for (i = 0; i < MAX_S_PRIMES; i ++)
 	   if (count < MAX_TRACON_SET_TABLE_SIZE(s_prime[i])) return i;
 
-	assert(0, "find_prime_for(%zu): Absurdly big count", count);
+	assert(0, "%zu: Absurdly big count", count);
 	return 0;
 }
 
@@ -205,7 +205,7 @@ void tracon_set_shallow(bool shallow, Tracon_set *ss)
 
 Connector **tracon_set_add(Connector *clist, Tracon_set *ss)
 {
-	assert(clist != NULL, "Connector-ID: Can't insert a null list");
+	assert(clist != NULL, "Can't insert a null list");
 
 	/* We may need to add it to the table. If the table got too big,
 	 * first we grow it. */

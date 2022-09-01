@@ -4,6 +4,12 @@
 * shared (dynamic) library.
 *
 ***********************************************************************/
+%begin %{
+#ifdef _WIN32
+#define _STL_CRT_SECURE_INVALID_PARAMETER _CRT_SECURE_INVALID_PARAMETER
+#endif
+%}
+
 %module clinkgrammar
 %{
 

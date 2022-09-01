@@ -697,7 +697,7 @@ case "$with_regexlib" in
 		AC_CHECK_LIB([regex], [regexec], [REGEX_LIBS=-lregex],
 		             [AC_MSG_ERROR([$lgregexlib: regexec() not found])])
 		;;
-	c)
+	c|C)
 		AC_CHECK_HEADERS([regex.h], ,[AC_MSG_ERROR([No regex.h header found])])
 		AC_CHECK_FUNCS(regexec, [REGEX_LIBS=-lc],
 		               [AC_MSG_ERROR([$lgregexlib: regexec() not found])])

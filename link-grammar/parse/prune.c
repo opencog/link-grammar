@@ -276,7 +276,7 @@ static void put_into_power_table(Pool_desc *mp, unsigned int size, C_list **t,
 {
 	C_list **e = get_power_table_entry(size, t, c);
 
-	assert(NULL != e, "put_into_power_table: Overflow");
+	assert(NULL != e, "Overflow");
 	assert(c->refcount > 0, "refcount %d", c->refcount);
 
 	C_list *m = pool_alloc(mp);
@@ -466,7 +466,7 @@ static void clean_table(unsigned int size, C_list **t)
 
 		while (NULL != *m)
 		{
-			assert(0 <= (*m)->c->refcount, "clean_table: refcount < 0 (%d)",
+			assert(0 <= (*m)->c->refcount, "refcount < 0 (%d)",
 			       (*m)->c->refcount);
 			if (0 == (*m)->c->refcount)
 			{

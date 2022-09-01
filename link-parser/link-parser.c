@@ -925,6 +925,12 @@ open_error:
 						parse_options_set_min_null_count(opts, 1);
 						parse_options_set_max_null_count(opts, sentence_length(sent));
 						num_linkages = sentence_parse(sent, opts);
+						if (num_linkages < 0)
+						{
+							sentence_delete(sent);
+							sent = NULL;
+							continue;
+						}
 					}
 				}
 			}

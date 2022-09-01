@@ -33,9 +33,7 @@ word at once.
 The tokenizing code is still based much on the old code and further
 work is needed to clean it up (or to replace it, e.g. by a
 regex-tokenizer). It still doesn't use the full power of the word-graph,
-and there are constructs that need to be tokenized but they are not (they
-are also not in the sentence test batches). E.g. `--` between words without
-whitespace.
+and there are constructs that need to be tokenized but they are not.
 
 There is still no API to get information from the word-graph. In particular,
 it is not possible to find out the sentence words after punctuation

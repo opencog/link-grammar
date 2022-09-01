@@ -486,7 +486,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 		if (le != NULL)
 			mlcl = get_cached_match_list(ctxt, 0, w, le);
-		if (re != NULL && ((le == NULL) || (re->farthest_word <= w)))
+		if (fml_re != NULL && ((le == NULL) || (re->farthest_word <= w)))
 			mlcr = get_cached_match_list(ctxt, 1, w, re);
 
 		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw, mlcl, mlcr);
@@ -811,8 +811,7 @@ static void list_random_links(Linkage lkg, unsigned int *rand_state,
 		new_index = rand_r(rand_state) % num_pc;
 
 		num_pc = 0;
-		for (pc = set->first; pc != NULL; pc = pc->next) {
-			if (new_index == num_pc) break;
+		for (pc = set->first; new_index != num_pc; pc = pc->next) {
 			num_pc++;
 		}
 	}

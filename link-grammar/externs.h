@@ -12,7 +12,7 @@
 
 #ifndef _EXTERNS_H
 #define _EXTERNS_H
-/* verbosity global is held in api.c */
+/* These globals are held in api.c */
 extern int verbosity;          /* the verbosity level for error messages */
 extern char * debug;           /* comma-separated functions/files to debug */
 extern char * test;            /* comma-separated features to test */

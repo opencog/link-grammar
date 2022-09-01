@@ -86,12 +86,13 @@ static const afdict_classnum affix_strippable[] =
 	{AFDICT_UNITS, AFDICT_LPUNC, AFDICT_RPUNC, AFDICT_MPUNC};
 
 /**
- * Return a positive number if \p s is in affix regex format, else return -1.
+ * Return the capture group number if \p s is in affix regex format,
+ * else return -1.
  * Regex format: /regex/.\N (N is a digit).
  * \N denotes the capture group that should match an affix
  * (the whole pattern is capture group 0).
  *
- * The regex much contain at least one character.
+ * The regex must contain at least one character.
  */
 static inline int get_affix_regex_cg(const char *s)
 {
