@@ -503,6 +503,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 			if (verbosity >= D_USER_INFO)
 			{
+				/* FIXME:
+				 * 1. Issue this message if verbosity != 0.
+				 * 2. Don't continue parsing with higher null counts. */
 				if ((sent->num_linkages_post_processed > 0) &&
 				    (sent->num_linkages_post_processed == sent->num_linkages_alloced) &&
 				    ((int)opts->linkage_limit < sent->num_linkages_found) &&
