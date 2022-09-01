@@ -11,7 +11,7 @@
 % If editing with "vi", be sure to "set encoding=utf-8"
 % and also be sure to configure the terminal to use utf-8 encoding.
 %
-#define dictionary-version-number 5.9.0;
+#define dictionary-version-number 5.11.0;
 #define dictionary-locale         lt_LT.UTF-8;
 
 % Ženklai:
@@ -1030,11 +1030,11 @@ namo: PV+ or (PV- & {Xp+});
 % Sakinio pradžia ir galūnė
 %
 % taškas
-".": Xp-;
+"." "!" "?": Xp-;
 
 % kablęlis
 % Xx- & Wi+:  "Broli, ename namo."
-",": Xx- & Wi+;
+"," ";" ":": Xx- & Wi+;
 
 % Žodžiai, kurie gali pradėti sakini.
 CAPITALIZED-WORDS: Wd-;
