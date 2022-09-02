@@ -37,7 +37,7 @@ AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
 AM_CFLAGS = $(WARN_CFLAGS) $(HUNSPELL_CFLAGS) $(REGEX_CFLAGS) $(SQLITE3_CFLAGS) $(PTHREAD_CFLAGS)
 
 post-process/pp_lexer.lo: AM_CPPFLAGS += -I$(top_srcdir)/link-grammar/post-process
-MAINTAINERCLEANFILES = $(top_srcdir)/link-grammar/post-process/pp_lexer.c
+DISTCLEANFILES = $(top_builddir)/link-grammar/post-process/pp_lexer.c
 
 lib_LTLIBRARIES = liblink-grammar.la
 
