@@ -1,4 +1,4 @@
-Version 5.11.0 (XXX 2022)
+Version 5.11.0 (27 Sept 2022)
  * Prototype support for dictionary in the AtomSpace.
  * English dict: assorted missing nouns, verbs. #1289
  * Performance improvements. #1309
