@@ -1,7 +1,7 @@
 Demo Atomese dictionary
 -----------------------
 This is an example configuration for an AtomSpace-backed dictionary.
-The AtomSpae must contain appropriate language data, in the expected
+The AtomSpace must contain appropriate language data, in the expected
 format. See the
 [dict-atomese README](../../link-grammar/dict-atomese/README.md) for
 more info.
