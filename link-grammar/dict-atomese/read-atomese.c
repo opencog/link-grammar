@@ -88,7 +88,6 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 		goto failure;
 	}
 	free(affix_name);
-	if (!afdict_init(dict)) goto failure;
 
 	/* Set up the server connection */
 	if (!as_open(dict)) goto failure;
@@ -110,6 +109,9 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 
 	if (!dictionary_setup_defines(dict))
 		goto failure;
+
+	/* Delay affix init until after the above has all been set up. */
+	if (!afdict_init(dict)) goto failure;
 
 #if 0
 	/* Initialize word categories, for text generation. */
