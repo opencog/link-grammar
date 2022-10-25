@@ -3686,7 +3686,8 @@ bool sentence_in_dictionary(Sentence sent)
 		for (ialt=0; NULL != sent->word[w].alternatives[ialt]; ialt++)
 		{
 			s = sent->word[w].alternatives[ialt];
-			if (!dictionary_word_is_known(dict, s))
+			if (!dictionary_word_is_known(dict, s) &&
+			    !(IS_GENERATION(dict) && (NULL != strstr(s, WILDCARD_WORD))))
 			{
 				if (ok_so_far)
 				{
