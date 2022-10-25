@@ -3326,23 +3326,18 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 			          w->subword);
 		}
 #endif /* DEBUG */
-		if (dict->unknown_word_defined && dict->use_unknown_word)
-		{
-			bool is_wildcard = IS_GENERATION(dict) &&
-				(NULL != strstr(s, WILDCARD_WORD));
 
-			if (!IS_GENERATION(dict) || !is_wildcard)
-			{
-				we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
-				assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
-				w->status |= WS_UNKNOWN;
-			}
-			else
-			{
-				lgdebug(+D_DWE, "Wildcard word %s\n", s);
-				we = build_word_expressions(sent, w, NULL, opts);
-				w->status = WS_INDICT; /* Prevent marking as "unknown word". */
-			}
+		if (IS_GENERATION(dict) && (NULL != strstr(s, WILDCARD_WORD)))
+		{
+			lgdebug(+D_DWE, "Wildcard word %s\n", s);
+			we = build_word_expressions(sent, w, NULL, opts);
+			w->status = WS_INDICT; /* Prevent marking as "unknown word". */
+		}
+		else if (dict->unknown_word_defined && dict->use_unknown_word)
+		{
+			we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
+			assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
+			w->status |= WS_UNKNOWN;
 		}
 		else
 		{
