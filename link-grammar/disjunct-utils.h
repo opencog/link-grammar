@@ -77,7 +77,9 @@ struct Disjunct_struct
 };
 
 /* Disjunct utilities ... */
+#ifdef USE_SAT_SOLVER
 void free_disjuncts(Disjunct *);
+#endif // USE_SAT_SOLVER
 void free_sentence_disjuncts(Sentence, bool);
 void free_categories(Sentence);
 void free_categories_from_disjunct_array(Disjunct *, unsigned int);
