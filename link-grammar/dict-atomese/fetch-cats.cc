@@ -45,26 +45,40 @@ printf("duude got %lu cats\n", ncat);
 	HandleSeq allcl;
 	local->asp->get_handles_by_type(allcl, WORD_CLASS_NODE);
 
-	for (size_t i=0; i<=allcl.size(); i++)
+	for (size_t i=0; i<allcl.size(); i++)
 	{
+		const Handle& wcl = allcl[i];
+
 		size_t j = i + 1;
 		dict->category[j].name =
-			string_set_add(allcl[i]->get_name().c_str(), dict->string_set);
+			string_set_add(wcl->get_name().c_str(), dict->string_set);
 printf("duude %lu catcl=%s\n", j, dict->category[j].name);
 
-		dict->category[j].exp = make_exprs(dict, allcl[i]);
-#if 0
-		dict->category[j].num_words
-		dict->category[j].word = (const char**)
-			malloc(bs.count * sizeof(*dict->category[0].word));
+		dict->category[j].exp = make_exprs(dict, wcl);
 
-#endif
+		size_t nwo = wcl->getIncomingSetSizeByType(MEMBER_LINK);
+		dict->category[j].word = (const char**)
+			malloc(nwo * sizeof(*dict->category[0].word));
+
+		nwo = 0;
+		for (const Handle& memb : wcl->getIncomingSetByType(MEMBER_LINK))
+		{
+			const Handle& wrd = memb->getOutgoingAtom(0);
+			if (WORD_NODE != wrd->get_type()) continue;
+
+			dict->category[j].word[nwo] =
+				string_set_add(wrd->get_name().c_str(), dict->string_set);
+printf("duude %lu catl= %s %lu %s\n", j, dict->category[j].name, nwo,
+dict->category[j].word[nwo]);
+			nwo++;
+		}
+		dict->category[j].num_words = nwo;
 	}
 
 	HandleSeq allwo;
 	local->asp->get_handles_by_type(allwo, WORD_NODE);
 
-	for (size_t i=0; i<=allwo.size(); i++)
+	for (size_t i=0; i<allwo.size(); i++)
 	{
 		size_t j = i + nclasses + 1;
 		dict->category[j].name =
