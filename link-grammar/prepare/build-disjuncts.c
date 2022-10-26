@@ -173,13 +173,13 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 	}
 	else if (e->type == OR_type)
 	{
-		Clause *or_last = NULL;;
-		Clause *last;
+		Clause *or_last = NULL;
 
 		c = build_clause(e->operand_first, ct, &or_last);
 		/* we'll catenate the lists of clauses */
 		for (Exp *opd = e->operand_first->operand_next; opd != NULL; opd = opd->operand_next)
 		{
+			Clause *last;
 			c1 = build_clause(opd, ct, &last);
 			if (c1 == NULL) continue;
 			if (c == NULL)
@@ -189,7 +189,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 			or_last = last;
 		}
 
-		if (c_last != NULL) *c_last = (or_last == NULL) ? last : or_last;
+		if (c_last != NULL) *c_last = or_last;
 		debug_last(c, c_last, "OR_type");
 	}
 	else if (e->type == CONNECTOR_type)
