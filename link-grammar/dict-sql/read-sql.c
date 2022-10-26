@@ -438,7 +438,7 @@ static int classword_cb(void *user_data, int argc, char **argv, char **colName)
  * a wild-card appearing in the generator forces a loop over all
  * categories, so we may as well have them instantly available.
  */
-static void add_categories(Dictionary dict)
+static void db_add_categories(Dictionary dict)
 {
 	sqlite3 *db = dict->db_handle;
 	cbdata bs;
@@ -617,7 +617,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 
 	/* Initialize word categories, for text generation. */
 	if (dictionary_generation_request(dict))
-		add_categories(dict);
+		db_add_categories(dict);
 
 	return dict;
 

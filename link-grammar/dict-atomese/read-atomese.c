@@ -113,11 +113,9 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	/* Delay affix init until after the above has all been set up. */
 	if (!afdict_init(dict)) goto failure;
 
-#if 0
 	/* Initialize word categories, for text generation. */
 	if (dictionary_generation_request(dict))
-		add_categories(dict);
-#endif
+		as_add_categories(dict);
 
 	return dict;
 
