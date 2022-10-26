@@ -14,20 +14,35 @@ extern "C" {
 };
 
 #include "local-as.h"
+#include <opencog/nlp/types/atom_types.h>
 
 using namespace opencog;
 
 void as_add_categories(Dictionary dict)
 {
-printf ("hello world\n");
-
 	Local* local = (Local*) (dict->as_server);
 
-	dict->num_categories = 0;
-	dict->num_categories_alloced = 3; // XXX
+	// Get all sections.
+	if (local->stnp)
+	{
+		local->stnp->fetch_all_atoms_of_type(SECTION);
+		local->stnp->barrier();
+	}
+
+	// Assume one category per word and word-class.
+	// (i.e. that all words will have sections)
+	size_t nclasses = local->asp->get_num_atoms_of_type(WORD_CLASS_NODE);
+	size_t nwords = local->asp->get_num_atoms_of_type(WORD_NODE);
+	size_t ncat = nclasses + nwords;
+
+	dict->num_categories = ncat;
+	dict->num_categories_alloced = ncat + 2;
 	dict->category = (Category*) malloc(dict->num_categories_alloced *
 	                        sizeof(*dict->category));
 
+printf("duude got %lu cats\n", ncat);
+	for (size_t i=0; i<=ncat; i++)
+	{
 #if 0
 		dict->category[i].name =
 			string_set_add(argv[0], dict->string_set);
@@ -38,6 +53,7 @@ printf ("hello world\n");
 
 		dict->num_categories = i;
 #endif
+	}
 
 	/* Set the termination entry. */
 	dict->category[dict->num_categories + 1].num_words = 0;
