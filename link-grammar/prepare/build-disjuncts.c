@@ -181,11 +181,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 		{
 			Clause *last;
 			c1 = build_clause(opd, ct, &last);
-			if (c1 == NULL) continue;
-			if (c == NULL)
-				c = c1;
-			else
-				or_last->next = c1;
+			or_last->next = c1;
 			or_last = last;
 		}
 
