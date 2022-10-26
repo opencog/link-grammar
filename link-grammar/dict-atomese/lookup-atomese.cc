@@ -406,7 +406,7 @@ static void cache_disjunct_string(Local* local,
    }                                                                 \
    andex = make_and_node(dict->Exp_pool, e, andex);
 
-static Exp* make_exprs(Dictionary dict, const Handle& germ)
+Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 	Exp* exp = nullptr;

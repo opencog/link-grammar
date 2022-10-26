@@ -24,3 +24,5 @@ public:
 	Handle mikp;  // (Predicate "*-Mutual Info Key cover-section")
 	int mi_offset; // Offset into the FloatValue
 };
+
+Exp* make_exprs(Dictionary dict, const Handle& germ);

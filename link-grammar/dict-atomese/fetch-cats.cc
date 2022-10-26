@@ -41,18 +41,41 @@ void as_add_categories(Dictionary dict)
 	                        sizeof(*dict->category));
 
 printf("duude got %lu cats\n", ncat);
-	for (size_t i=0; i<=ncat; i++)
+
+	HandleSeq allcl;
+	local->asp->get_handles_by_type(allcl, WORD_CLASS_NODE);
+
+	for (size_t i=0; i<=allcl.size(); i++)
 	{
+		size_t j = i + 1;
+		dict->category[j].name =
+			string_set_add(allcl[i]->get_name().c_str(), dict->string_set);
+printf("duude %lu catcl=%s\n", j, dict->category[j].name);
+
+		dict->category[j].exp = make_exprs(dict, allcl[i]);
 #if 0
-		dict->category[i].name =
-			string_set_add(argv[0], dict->string_set);
-		dict->category[i].exp
-		dict->category[i].num_words
-		dict->category[i].word =
+		dict->category[j].num_words
+		dict->category[j].word = (const char**)
 			malloc(bs.count * sizeof(*dict->category[0].word));
 
-		dict->num_categories = i;
 #endif
+	}
+
+	HandleSeq allwo;
+	local->asp->get_handles_by_type(allwo, WORD_NODE);
+
+	for (size_t i=0; i<=allwo.size(); i++)
+	{
+		size_t j = i + nclasses + 1;
+		dict->category[j].name =
+			string_set_add(allwo[i]->get_name().c_str(), dict->string_set);
+printf("duude %lu catwo=%s\n", j, dict->category[j].name);
+
+		dict->category[j].exp = make_exprs(dict, allwo[i]);
+		dict->category[j].num_words = 1;
+		dict->category[j].word =
+			(const char**) malloc(sizeof(*dict->category[0].word));
+		dict->category[j].word[0] = dict->category[j].name;
 	}
 
 	/* Set the termination entry. */
