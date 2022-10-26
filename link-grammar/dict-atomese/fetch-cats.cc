@@ -37,8 +37,8 @@ void as_add_categories(Dictionary dict)
 
 	dict->num_categories = ncat;
 	dict->num_categories_alloced = ncat + 2;
-	dict->category = (Category*) malloc(dict->num_categories_alloced *
-	                        sizeof(*dict->category));
+	dict->category = (Category*) malloc(
+		dict->num_categories_alloced * sizeof(*dict->category));
 
 printf("duude got %lu cats\n", ncat);
 
@@ -90,7 +90,7 @@ dict->category[j].word[nwo]);
 		dict->category[j].name =
 			string_set_add(allwo[i]->get_name().c_str(), dict->string_set);
 
-printf("duude %lu catwo=%s exp=%p\n", j, dict->category[j].name, dict->category[j].exp);
+printf("duude %lu catwo=%s\n", j, dict->category[j].name);
 		dict->category[j].num_words = 1;
 		dict->category[j].word =
 			(const char**) malloc(sizeof(*dict->category[0].word));
@@ -99,7 +99,13 @@ printf("duude %lu catwo=%s exp=%p\n", j, dict->category[j].name, dict->category[
 	}
 
 	j--;
-printf("actual num cats=%lu\n", j);
+printf("Expected num cats: %lu  Actual num cats: %lu\n", ncat, j);
+
+	/* Free excess memory, if any */
+	dict->num_categories_alloced = j + 2;
+	dict->category = (Category*) realloc(dict->category,
+		dict->num_categories_alloced * sizeof(*dict->category));
+
 	/* Set the termination entry. */
 	dict->num_categories = j;
 	dict->category[j + 1].num_words = 0;
