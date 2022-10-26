@@ -827,7 +827,7 @@ static Exp *make_expression(Dictionary dict)
 		 * expression level. */
 		if (e_head == NULL)
 		{
-			e_head = make_join_node(dict->Exp_pool, op, nl, NULL);
+			e_head = make_join_node(dict->Exp_pool, nl, NULL, op);
 		}
 		else
 		{
