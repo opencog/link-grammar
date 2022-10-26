@@ -440,7 +440,7 @@ Exp *make_unary_node(Pool_desc *mp, Exp * e)
  * Create an expression that joins together `nl` and `nr`.
  * The join type can be either `AND_type` or `OR_type`.
  */
-Exp * make_join_node(Pool_desc *mp, Exp_type t, Exp* nl, Exp* nr)
+Exp * make_join_node(Pool_desc *mp, Exp* nl, Exp* nr, Exp_type t)
 {
 	Exp* n;
 
@@ -460,7 +460,7 @@ Exp * make_join_node(Pool_desc *mp, Exp_type t, Exp* nl, Exp* nr)
  */
 Exp * make_and_node(Pool_desc *mp, Exp* nl, Exp* nr)
 {
-	return make_join_node(mp, AND_type, nl, nr);
+	return make_join_node(mp, nl, nr, AND_type);
 }
 
 /**
@@ -469,7 +469,7 @@ Exp * make_and_node(Pool_desc *mp, Exp* nl, Exp* nr)
  */
 Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr)
 {
-	return make_join_node(mp, OR_type, nl, nr);
+	return make_join_node(mp, nl, nr, OR_type);
 }
 
 Exp * make_connector_node(Dictionary dict, Pool_desc *mp,

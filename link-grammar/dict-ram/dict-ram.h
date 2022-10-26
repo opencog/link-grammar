@@ -29,7 +29,7 @@ Exp * Exp_create(Pool_desc *);
 Exp * Exp_create_dup(Pool_desc *, Exp *);
 Exp * make_zeroary_node(Pool_desc *mp);
 Exp * make_unary_node(Pool_desc *, Exp *);
-Exp * make_join_node(Pool_desc *mp, Exp_type t, Exp* nl, Exp* nr);
+Exp * make_join_node(Pool_desc *mp, Exp* nl, Exp* nr, Exp_type t);
 Exp * make_and_node(Pool_desc *mp, Exp* nl, Exp* nr);
 Exp * make_or_node(Pool_desc *mp, Exp* nl, Exp* nr);
 Exp * make_optional_node(Pool_desc *mp, Exp *e);
