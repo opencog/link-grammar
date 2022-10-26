@@ -26,21 +26,9 @@ extern "C" {
 };
 
 #include "dict-atomese.h"
+#include "local-as.h"
 
 using namespace opencog;
-
-class Local
-{
-public:
-	bool using_external_as;
-	const char* node_str; // (StorageNode \"foo://bar/baz\")
-	AtomSpacePtr asp;
-	StorageNodePtr stnp;
-	Handle linkp; // (Predicate "*-LG connector string-*")
-	Handle djp;   // (Predicate "*-LG disjunct string-*")
-	Handle mikp;  // (Predicate "*-Mutual Info Key cover-section")
-	int mi_offset; // Offset into the FloatValue
-};
 
 // Strings we expect to find in the dictionary.
 #define STORAGE_NODE_STRING "storage-node"

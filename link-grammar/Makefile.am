@@ -167,6 +167,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-ram/dict-ram.h              \
 	dict-sql/read-sql.h              \
 	dict-atomese/dict-atomese.h      \
+	dict-atomese/local-as.h          \
 	dict-atomese/lookup-atomese.h    \
 	dict-atomese/read-atomese.h      \
 	disjunct-utils.h                 \
