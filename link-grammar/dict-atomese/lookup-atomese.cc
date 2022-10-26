@@ -529,6 +529,9 @@ size_of_expression(clexp));
 			exp = make_or_node(dict->Exp_pool, exp, clexp);
 	}
 
+	if (nullptr == exp)
+		return nullptr;
+
 	dn = (Dict_node*) malloc(sizeof(Dict_node));
 	memset(dn, 0, sizeof(Dict_node));
 	dn->string = ssc;
