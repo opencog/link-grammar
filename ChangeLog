@@ -1,5 +1,6 @@
 Version 5.11.1 (XXX 2022)
  * Fix crash when using the Atomese backend.
+ * Fix generation tokenization bug when dict has no unknown word token.
 
 Version 5.11.0 (27 Sept 2022)
  * Prototype support for dictionary in the AtomSpace.

@@ -185,13 +185,12 @@ static size_t count_sections(Local* local, const Handle& germ)
 {
 	// Are there any Sections in the local atomspace?
 	size_t nsects = germ->getIncomingSetSizeByType(SECTION);
-	if (0 == nsects and local->stnp)
-	{
-		local->stnp->fetch_incoming_by_type(germ, SECTION);
-		local->stnp->barrier();
-	}
+	if (0 < nsects or nullptr == local->stnp) return nsects;
 
+	local->stnp->fetch_incoming_by_type(germ, SECTION);
+	local->stnp->barrier();
 	nsects = germ->getIncomingSetSizeByType(SECTION);
+
 	return nsects;
 }
 

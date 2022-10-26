@@ -112,9 +112,11 @@ Disjunct ** sentence_unused_disjuncts(Sentence sent)
 
 #define D_DISJ 5                        /* Verbosity level for this file. */
 
+#ifdef USE_SAT_SOLVER
 /**
  * free_disjuncts() -- free the list of disjuncts pointed to by c
  * (does not free any strings)
+ * Almost dead code -- not used anywhere, except by the SAT solver.
  */
 void free_disjuncts(Disjunct *c)
 {
@@ -126,6 +128,7 @@ void free_disjuncts(Disjunct *c)
 		xfree((char *)c, sizeof(Disjunct));
 	}
 }
+#endif // USE_SAT_SOLVER
 
 void free_categories_from_disjunct_array(Disjunct *dbase,
                                          unsigned int num_disjuncts)
