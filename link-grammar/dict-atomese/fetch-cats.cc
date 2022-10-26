@@ -45,16 +45,18 @@ printf("duude got %lu cats\n", ncat);
 	HandleSeq allcl;
 	local->asp->get_handles_by_type(allcl, WORD_CLASS_NODE);
 
+	size_t j = 1;
 	for (size_t i=0; i<allcl.size(); i++)
 	{
 		const Handle& wcl = allcl[i];
 
-		size_t j = i + 1;
+		dict->category[j].exp = make_exprs(dict, wcl);
+		if (nullptr == dict->category[j].exp)
+			continue;
+
 		dict->category[j].name =
 			string_set_add(wcl->get_name().c_str(), dict->string_set);
 printf("duude %lu catcl=%s\n", j, dict->category[j].name);
-
-		dict->category[j].exp = make_exprs(dict, wcl);
 
 		size_t nwo = wcl->getIncomingSetSizeByType(MEMBER_LINK);
 		dict->category[j].word = (const char**)
@@ -73,6 +75,7 @@ dict->category[j].word[nwo]);
 			nwo++;
 		}
 		dict->category[j].num_words = nwo;
+		j++;
 	}
 
 	HandleSeq allwo;
@@ -80,20 +83,26 @@ dict->category[j].word[nwo]);
 
 	for (size_t i=0; i<allwo.size(); i++)
 	{
-		size_t j = i + nclasses + 1;
+		dict->category[j].exp = make_exprs(dict, allwo[i]);
+		if (nullptr == dict->category[j].exp)
+			continue;
+
 		dict->category[j].name =
 			string_set_add(allwo[i]->get_name().c_str(), dict->string_set);
-printf("duude %lu catwo=%s\n", j, dict->category[j].name);
 
-		dict->category[j].exp = make_exprs(dict, allwo[i]);
+printf("duude %lu catwo=%s exp=%p\n", j, dict->category[j].name, dict->category[j].exp);
 		dict->category[j].num_words = 1;
 		dict->category[j].word =
 			(const char**) malloc(sizeof(*dict->category[0].word));
 		dict->category[j].word[0] = dict->category[j].name;
+		j++;
 	}
 
+	j--;
+printf("actual num cats=%lu\n", j);
 	/* Set the termination entry. */
-	dict->category[dict->num_categories + 1].num_words = 0;
+	dict->num_categories = j;
+	dict->category[j + 1].num_words = 0;
 }
 
 #endif // HAVE_ATOMESE
