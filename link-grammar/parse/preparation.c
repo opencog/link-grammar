@@ -221,6 +221,13 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 				/* Also with different word_string. */
 				sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, true);
 
+				/* XXX This ordinal numbering is just plain wrong.
+				 * Most of the disjuncts have already been pruned away,
+				 * and what is left here can no longer match the ordinal
+				 * numbering in the wild-card.  XXX FIXME, although the fix
+				 * is not obvious. FWIW, this is not used anywhere, except
+				 * to report unused disjuncts if the -u flag is specified.
+				 */
 				int nord = 0;
 				for (Disjunct *d = sent->word[i].d; d != NULL; d = d->next)
 					d->ordinal = nord++;
