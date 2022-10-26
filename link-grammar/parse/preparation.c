@@ -208,7 +208,6 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Built disjuncts");
 
-	bool wildcard_word_found = false;
 	int nord = 0;
 	for (i=0; i<sent->length; i++)
 	{
@@ -222,12 +221,6 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 
 				for (Disjunct *d = sent->word[i].d; d != NULL; d = d->next)
 					d->ordinal = nord++;
-
-				if (!wildcard_word_found)
-				{
-					wildcard_word_found = true;
-					create_wildcard_word_disjunct_list(sent, opts);
-				}
 			}
 			else
 			{
@@ -248,6 +241,10 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 			return;
 #endif
 	}
+
+	if (IS_GENERATION(sent->dict))
+		create_wildcard_word_disjunct_list(sent, opts);
+
 	print_time(opts, "Eliminated duplicate disjuncts");
 
 	if (verbosity_level(D_PREP))
