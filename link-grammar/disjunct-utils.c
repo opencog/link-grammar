@@ -830,12 +830,15 @@ static Disjunct *pack_disjunct(Tracon_sharing *ts, Disjunct *d, int w)
 	Disjunct *newd;
 	uintptr_t token;
 
+	size_t off = ts->dblock - ts->dblock_base;
 	newd = ts->dblock++;
 	newd->word_string = d->word_string;
 	newd->cost = d->cost;
 	newd->is_category = d->is_category;
 	newd->originating_gword = d->originating_gword;
 	newd->ordinal = d->ordinal;
+	if (0 == d->ordinal)
+		newd->ordinal = off;
 
 	if (NULL != ts->csid[0])
 	{

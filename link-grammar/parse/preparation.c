@@ -208,7 +208,6 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Built disjuncts");
 
-	int nord = 0;
 	for (i=0; i<sent->length; i++)
 	{
 		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, false);
@@ -218,17 +217,13 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 			{
 				/* Also with different word_string. */
 				sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, true);
-
 				for (Disjunct *d = sent->word[i].d; d != NULL; d = d->next)
-					d->ordinal = nord++;
+					d->ordinal = 0;
 			}
 			else
 			{
 				for (Disjunct *d = sent->word[i].d; d != NULL; d = d->next)
-				{
-					nord++;
-					d->ordinal = -nord;
-				}
+					d->ordinal = -1;
 			}
 		}
 #if 0
