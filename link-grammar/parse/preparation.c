@@ -225,7 +225,10 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 			else
 			{
 				for (Disjunct *d = sent->word[i].d; d != NULL; d = d->next)
-					d->ordinal = -1;
+				{
+					nord++;
+					d->ordinal = -nord;
+				}
 			}
 		}
 #if 0

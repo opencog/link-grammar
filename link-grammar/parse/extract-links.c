@@ -851,7 +851,7 @@ static void mark_used_disjunct(Parse_set *set, bool *disjunct_used)
 
 	for (Parse_choice *pc = set->first; pc != NULL; pc = pc->next)
 	{
-		if (pc->md->ordinal != -1)
+		if (0 <= pc->md->ordinal)
 			disjunct_used[pc->md->ordinal] = true;
 	}
 }
