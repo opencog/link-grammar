@@ -130,7 +130,7 @@ static void debug_last(Clause *c, Clause **c_last, const char *type)
  */
 static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 {
-	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
+	Clause *c = NULL, *c1, *c_head;
 
 	assert(e != NULL, "build_clause called with null parameter");
 	if (e->type == AND_type)
@@ -142,11 +142,11 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 		c1->maxcost = 0.0;
 		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 		{
-			c2 = build_clause(opd, ct, NULL);
+			Clause *c2 = build_clause(opd, ct, NULL);
 			c_head = NULL;
-			for (c3 = c1; c3 != NULL; c3 = c3->next)
+			for (Clause *c3 = c1; c3 != NULL; c3 = c3->next)
 			{
-				for (c4 = c2; c4 != NULL; c4 = c4->next)
+				for (Clause *c4 = c2; c4 != NULL; c4 = c4->next)
 				{
 					float maxcost = MAX(c3->maxcost,c4->maxcost);
 					/* Cannot use this shortcut due to negative costs. */
@@ -180,8 +180,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 		for (Exp *opd = e->operand_first->operand_next; opd != NULL; opd = opd->operand_next)
 		{
 			Clause *last;
-			c1 = build_clause(opd, ct, &last);
-			or_last->next = c1;
+			or_last->next = build_clause(opd, ct, &last);
 			or_last = last;
 		}
 
