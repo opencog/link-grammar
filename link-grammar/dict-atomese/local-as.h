@@ -19,10 +19,14 @@ public:
 	const char* node_str; // (StorageNode \"foo://bar/baz\")
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;
-	Handle linkp; // (Predicate "*-LG connector string-*")
-	Handle djp;   // (Predicate "*-LG disjunct string-*")
-	Handle mikp;  // (Predicate "*-Mutual Info Key cover-section")
-	int mi_offset; // Offset into the FloatValue
+	Handle linkp;   // (Predicate "*-LG connector string-*")
+	Handle djp;     // (Predicate "*-LG disjunct string-*")
+	Handle mikp;    // (Predicate "*-Mutual Info Key cover-section")
+	int cost_index;   // Offset into the FloatValue
+	double cost_scale;
+	double cost_offset;
+	double cost_cutoff;
+	double cost_default;
 };
 
 Exp* make_exprs(Dictionary dict, const Handle& germ);
