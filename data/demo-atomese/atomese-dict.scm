@@ -9,6 +9,10 @@
 ; It is intended that this file can be read in using the
 ; FileStorageNode provided by the AtomSpace.
 ;
+; CAUTION: IF YOU EDIT THIS FILE, BE SRE TO `MAKE INSTALL` AFTERWARDS.
+; That is because the `storage.dict` is configured to get this file
+; from the install location, and not the source tree!
+;
 ; ---------------------------------------------------------------------
 ; The four sections below allow one and only one phrase to be parsed:
 ; "level playing field".
@@ -113,5 +117,58 @@
 			(Connector (WordClass "animal") (ConnectorDir "+"))))
 	(Predicate "*-Mutual Info Key cover-section")
 	(FloatValue 555 2.4))  ; The `555` is meaningles and ignored.
+
+; ---------------------------------------------------------------------
+;
+; Crazy data used for unit testing, to veryify connector order.
+; This should allow the sentence "1 2 3 fountain 4 5 6" to parse,
+; with a fountain from the center to each of the numbers.
+; The name comes from the following parse diagram:
+;
+;        +-------A-------+
+;        |     +----D----+----G---+
+;        |     | +---E---+---H--+ |
+;        |     | | +--F--+--I-+ | |
+;        |     | | |     |    | | |
+;    LEFT-WALL 1 2 3 fountain 4 5 6
+;
+; The expected disjunct on the word 'fountain' is
+;
+;      F- & E- & D- & A- & I+ & H+ & G+
+;
+
+(Section
+	(Word "###LEFT-WALL###")
+	(ConnectorSeq
+		(Connector (Word "fountain") (ConnectorDir "+"))))
+
+(Section
+	(Word "fountain")
+	(ConnectorSeq
+		(Connector (Word "###LEFT-WALL###") (ConnectorDir "-"))
+		(Connector (Word "1") (ConnectorDir "-"))
+		(Connector (Word "2") (ConnectorDir "-"))
+		(Connector (Word "3") (ConnectorDir "-"))
+		(Connector (Word "4") (ConnectorDir "+"))
+		(Connector (Word "5") (ConnectorDir "+"))
+		(Connector (Word "6") (ConnectorDir "+"))))
+
+(Section (Word "1")
+	(ConnectorSeq (Connector (Word "fountain") (ConnectorDir "+"))))
+
+(Section (Word "2")
+	(ConnectorSeq (Connector (Word "fountain") (ConnectorDir "+"))))
+
+(Section (Word "3")
+	(ConnectorSeq (Connector (Word "fountain") (ConnectorDir "+"))))
+
+(Section (Word "4")
+	(ConnectorSeq (Connector (Word "fountain") (ConnectorDir "-"))))
+
+(Section (Word "5")
+	(ConnectorSeq (Connector (Word "fountain") (ConnectorDir "-"))))
+
+(Section (Word "6")
+	(ConnectorSeq (Connector (Word "fountain") (ConnectorDir "-"))))
 
 ; ---------------------------------------------------------------------
