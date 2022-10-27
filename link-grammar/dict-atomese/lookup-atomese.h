@@ -16,3 +16,5 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s);
 Dict_node * as_lookup_wild(Dictionary dict, const char *s);
 void as_free_llist(Dictionary dict, Dict_node *llist);
 void as_clear_cache(Dictionary dict);
+
+void as_add_categories(Dictionary dict);

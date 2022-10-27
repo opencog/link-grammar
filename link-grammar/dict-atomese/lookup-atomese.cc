@@ -26,21 +26,9 @@ extern "C" {
 };
 
 #include "dict-atomese.h"
+#include "local-as.h"
 
 using namespace opencog;
-
-class Local
-{
-public:
-	bool using_external_as;
-	const char* node_str; // (StorageNode \"foo://bar/baz\")
-	AtomSpacePtr asp;
-	StorageNodePtr stnp;
-	Handle linkp; // (Predicate "*-LG connector string-*")
-	Handle djp;   // (Predicate "*-LG disjunct string-*")
-	Handle mikp;  // (Predicate "*-Mutual Info Key cover-section")
-	int mi_offset; // Offset into the FloatValue
-};
 
 // Strings we expect to find in the dictionary.
 #define STORAGE_NODE_STRING "storage-node"
@@ -410,18 +398,24 @@ static void cache_disjunct_string(Local* local,
    /* Assign an upper-case name to the link. */                      \
    const std::string& slnk = get_linkname(local, germ, ctcr);        \
                                                                      \
-   Exp* e = make_connector_node(dict, dict->Exp_pool,                \
+   Exp* eee = make_connector_node(dict, dict->Exp_pool,              \
                     slnk.c_str(), cdir, false);                      \
-   if (nullptr == andex) {                                           \
-      andex = e;                                                     \
-      continue;                                                      \
-   }                                                                 \
-   andex = make_and_node(dict->Exp_pool, e, andex);
+   /* Link new connectors to the head */                             \
+   if (unary) {                                                      \
+      if (nullptr == andhead)                                        \
+         andhead = make_and_node(dict->Exp_pool, eee, unary);        \
+      else {                                                         \
+         eee->operand_next = andhead->operand_first;                 \
+         andhead->operand_first = eee;                               \
+      }                                                              \
+   } else                                                            \
+      unary = eee;
 
-static Exp* make_exprs(Dictionary dict, const Handle& germ)
+Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
-	Exp* exp = nullptr;
+	Exp* orhead = nullptr;
+	Exp* ortail = nullptr;
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
@@ -446,7 +440,8 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ)
 			mi = fmivp->value()[local->mi_offset];
 		}
 
-		Exp* andex = nullptr;
+		Exp* andhead = nullptr;
+		Exp* unary = nullptr;
 
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
@@ -471,25 +466,33 @@ static Exp* make_exprs(Dictionary dict, const Handle& germ)
 			if ('+' == cdir) continue;
 			INNER_LOOP;
 		}
+		if (nullptr == andhead) andhead = unary;
 
 		// Cost is minus the MI.
-		andex->cost = -mi;
+		andhead->cost = -mi;
 
 		// Save the exp-section pairing in the AtomSpace.
-		cache_disjunct_string(local, sect, andex);
+		cache_disjunct_string(local, sect, andhead);
 
 #if DEBUG
 		print_section(dict, sect);
 		const char* wrd = germ->get_name().c_str();
-		printf("Word: '%s'  Exp: %s\n", wrd, lg_exp_stringify(andex));
+		printf("Word: '%s'  Exp: %s\n", wrd, lg_exp_stringify(andhead));
 #endif
 
-		if (nullptr == exp)
-			exp = andex;
-		else
-			exp = make_or_node(dict->Exp_pool, exp, andex);
+		// If there are two or more and-expressions,
+		// they get appended to a list hanging on a single OR-node.
+		if (ortail)
+		{
+			if (nullptr == orhead)
+				orhead = make_or_node(dict->Exp_pool, ortail, andhead);
+			else
+				ortail->operand_next = andhead;
+		}
+		ortail = andhead;
 	}
-	return exp;
+	if (nullptr == orhead) return ortail;
+	return orhead;
 }
 
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
