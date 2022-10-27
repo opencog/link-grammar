@@ -54,13 +54,17 @@ printf("duude got %lu cats\n", ncat);
 		if (nullptr == dict->category[j].exp)
 			continue;
 
+		// Crufty dicts can contain empty cats.
+		size_t nwo = wcl->getIncomingSetSizeByType(MEMBER_LINK);
+		if (0 == nwo)
+			continue;
+
+		dict->category[j].word = (const char**)
+			malloc(nwo * sizeof(*dict->category[0].word));
+
 		dict->category[j].name =
 			string_set_add(wcl->get_name().c_str(), dict->string_set);
 // printf("duude %lu catcl=%s\n", j, dict->category[j].name);
-
-		size_t nwo = wcl->getIncomingSetSizeByType(MEMBER_LINK);
-		dict->category[j].word = (const char**)
-			malloc(nwo * sizeof(*dict->category[0].word));
 
 		nwo = 0;
 		for (const Handle& memb : wcl->getIncomingSetByType(MEMBER_LINK))
