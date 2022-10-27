@@ -453,16 +453,14 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 				dict->Exp_pool, slnk.c_str(), cdir, false);
 
 			if (nullptr == andhead)
-			{
 				andhead = make_and_node(dict->Exp_pool, eee, NULL);
-				andtail = andhead;
-			}
 			else
 			if ('+' == cdir)
 			{
 				/* Link new connectors to the tail */
-				if (andhead == andtail)
+				if (nullptr == andtail)
 				{
+					andtail = andhead;
 					eee->operand_next = andhead->operand_first;
 					andhead->operand_first = eee;
 				}
@@ -478,7 +476,7 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 				eee->operand_next = andhead->operand_first;
 				andhead->operand_first = eee;
 
-				if (andhead == andtail)
+				if (nullptr == andtail)
 					andtail = eee->operand_next;
 			}
 		}
