@@ -460,7 +460,7 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 			else
 			if ('+' == cdir)
 			{
-				/* Link new connectors in front of the tail */
+				/* Link new connectors to the tail */
 				if (andhead == andtail)
 				{
 					eee->operand_next = andhead->operand_first;
@@ -468,8 +468,8 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 				}
 				else
 				{
-					eee->operand_next = andtail;
 					andtail->operand_next = eee;
+					andtail = eee;
 				}
 			}
 			else if ('-' == cdir)
