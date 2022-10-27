@@ -34,8 +34,10 @@ using namespace opencog;
 #define STORAGE_NODE_STRING "storage-node"
 #define COST_KEY_STRING "cost-key"
 #define COST_INDEX_STRING "cost-index"
-#define MI_CUTOFF "mi-offset"
-#define MI_MISSING "mi-offset"
+#define COST_SCALE_STRING "cost-scale"
+#define COST_OFFSET_STRING "cost-offset"
+#define COST_CUTOFF_STRING "cost-cutoff"
+#define COST_DEFAULT_STRING "cost-default"
 
 /// Shared global
 static AtomSpacePtr external_atomspace;
@@ -100,9 +102,13 @@ bool as_open(Dictionary dict)
 	Handle mikh = Sexpr::decode_atom(miks);
 	local->mikp = local->asp->add_atom(mikh);
 
-	const char* off_str =
-		linkgrammar_get_dict_define(dict, COST_INDEX_STRING);
-	local->mi_offset = atoi(off_str);
+#define LDEF(NAME) linkgrammar_get_dict_define(dict, NAME)
+
+	local->cost_index = atoi(LDEF(COST_INDEX_STRING));
+	local->cost_scale = atof(LDEF(COST_SCALE_STRING));
+	local->cost_offset = atof(LDEF(COST_OFFSET_STRING));
+	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING));
+	local->cost_default = atof(LDEF(COST_DEFAULT_STRING));
 
 	dict->as_server = (void*) local;
 
@@ -439,7 +445,7 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		{
 			// MI is the second entry in the list.
 			const FloatValuePtr& fmivp = FloatValueCast(mivp);
-			mi = fmivp->value()[local->mi_offset];
+			mi = fmivp->value()[local->cost_index];
 		}
 
 		Exp* andhead = nullptr;

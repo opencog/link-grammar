@@ -58,10 +58,24 @@
 % the index specifies the location in this vector.
 #define cost-key "(Predicate \"*-Mutual Info Key cover-section\")";
 #define cost-index 1;
-#define cost-sign -1;
 
-% Sections with missing MI default to an MI=-4 and costs are minus MI.
-#define max-disjunct-cost 10;
+% In the demo dictionary, the costs are provided by the MI, which is
+% "better", the more positive it is.  The LG costs, however, are
+% "better" when they are smaller (more negative). Thus, the value
+% obtained above can be rescaled linearly befor being used as a cost.
+% The rescaling is as usual: y=mx+b where m==`cost-scale` and
+% b==`cost-offset`.
+#define cost-scale -1.0;
+#define cost-offset 0.0;
+
+% Sections whose computed cost is greater than this will not be added
+% to the local dictionary.
+#define cost-cutoff 20.0;
+
+% Sections with a missing cost will be assigned this default. To ignore
+% sections with a missing cost, set it to some value greater than
+% `cost-max`.
+#define cost-default 4.0;
 
 % -----------------------
 % For this file to be read, at least one bogus entry is needed. It is
