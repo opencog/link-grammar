@@ -409,7 +409,8 @@ static void cache_disjunct_string(Local* local,
 Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
-	Exp* exp = nullptr;
+	Exp* ehead = nullptr;
+	Exp* etail = nullptr;
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
@@ -472,12 +473,19 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		printf("Word: '%s'  Exp: %s\n", wrd, lg_exp_stringify(andex));
 #endif
 
-		if (nullptr == exp)
-			exp = andex;
-		else
-			exp = make_or_node(dict->Exp_pool, exp, andex);
+		// If there are two or more and-expressions,
+		// they get appended to a list hanging on a single OR-node.
+		if (etail)
+		{
+			if (nullptr == ehead)
+				ehead = make_or_node(dict->Exp_pool, etail, andex);
+			else
+				etail->operand_next = andex;
+		}
+		etail = andex;
 	}
-	return exp;
+	if (nullptr == ehead) return etail;
+	return ehead;
 }
 
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
