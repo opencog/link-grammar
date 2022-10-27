@@ -398,19 +398,24 @@ static void cache_disjunct_string(Local* local,
    /* Assign an upper-case name to the link. */                      \
    const std::string& slnk = get_linkname(local, germ, ctcr);        \
                                                                      \
-   Exp* e = make_connector_node(dict, dict->Exp_pool,                \
+   Exp* eee = make_connector_node(dict, dict->Exp_pool,              \
                     slnk.c_str(), cdir, false);                      \
-   if (nullptr == andex) {                                           \
-      andex = e;                                                     \
-      continue;                                                      \
-   }                                                                 \
-   andex = make_and_node(dict->Exp_pool, e, andex);
+   /* Link new connectors to the head */                             \
+   if (unary) {                                                      \
+      if (nullptr == andhead)                                        \
+         andhead = make_and_node(dict->Exp_pool, eee, unary);        \
+      else {                                                         \
+         eee->operand_next = andhead->operand_first;                 \
+         andhead->operand_first = eee;                               \
+      }                                                              \
+   } else                                                            \
+      unary = eee;
 
 Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
-	Exp* ehead = nullptr;
-	Exp* etail = nullptr;
+	Exp* orhead = nullptr;
+	Exp* ortail = nullptr;
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
@@ -435,7 +440,8 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 			mi = fmivp->value()[local->mi_offset];
 		}
 
-		Exp* andex = nullptr;
+		Exp* andhead = nullptr;
+		Exp* unary = nullptr;
 
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
@@ -460,32 +466,33 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 			if ('+' == cdir) continue;
 			INNER_LOOP;
 		}
+		if (nullptr == andhead) andhead = unary;
 
 		// Cost is minus the MI.
-		andex->cost = -mi;
+		andhead->cost = -mi;
 
 		// Save the exp-section pairing in the AtomSpace.
-		cache_disjunct_string(local, sect, andex);
+		cache_disjunct_string(local, sect, andhead);
 
 #if DEBUG
 		print_section(dict, sect);
 		const char* wrd = germ->get_name().c_str();
-		printf("Word: '%s'  Exp: %s\n", wrd, lg_exp_stringify(andex));
+		printf("Word: '%s'  Exp: %s\n", wrd, lg_exp_stringify(andhead));
 #endif
 
 		// If there are two or more and-expressions,
 		// they get appended to a list hanging on a single OR-node.
-		if (etail)
+		if (ortail)
 		{
-			if (nullptr == ehead)
-				ehead = make_or_node(dict->Exp_pool, etail, andex);
+			if (nullptr == orhead)
+				orhead = make_or_node(dict->Exp_pool, ortail, andhead);
 			else
-				etail->operand_next = andex;
+				ortail->operand_next = andhead;
 		}
-		etail = andex;
+		ortail = andhead;
 	}
-	if (nullptr == ehead) return etail;
-	return ehead;
+	if (nullptr == orhead) return ortail;
+	return orhead;
 }
 
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
