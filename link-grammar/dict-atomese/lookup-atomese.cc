@@ -477,6 +477,9 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 				/* Link new connectors to the head */
 				eee->operand_next = andhead->operand_first;
 				andhead->operand_first = eee;
+
+				if (andhead == andtail)
+					andtail = eee->operand_next;
 			}
 		}
 
