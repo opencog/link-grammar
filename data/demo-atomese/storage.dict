@@ -1,13 +1,18 @@
-
-#define dictionary-lang           en;
-#define dictionary-locale         en_US.UTF-8;
-#define dictionary-version-number 5.11.0;
-
+%
+% Example configuration file for an Atomspace-based dictionary.
+%
 % Three examples follow; one shows the use of the CogStorageNode, which
 % provides network access, and another using RocksStorageNode, which
 % provides access to dictionaries located on the local hard drive.
 % The last uses the FileStorageNode, which is actually used for the
 % demo.
+
+% But first, begin with boilerplate: The dictionary is for English,
+% the English locale should be used, and a version number.
+
+#define dictionary-lang           en;
+#define dictionary-locale         en_US.UTF-8;
+#define dictionary-version-number 5.11.0;
 
 % -----------------------
 % CogStorageNode
@@ -39,8 +44,8 @@
 %
 % The URL is just a path into the local filesystem.
 %
-% If you are getting errors, then verify that the path below
-% is correct.
+% This is the one actually used in the demo. If you are getting errors,
+% then verify that the path below is correct.
 
 #define storage-node "(FileStorageNode \"file:///usr/local/share/link-grammar/demo-atomese/atomese-dict.scm\")";
 
@@ -58,6 +63,7 @@
 #define mi-offset 1;
 
 % -----------------------
-% At least one bogus entry is needed.
+% For this file to be read, at least one bogus entry is needed. It is
+% meaningless; we only need to trick the code into reading this file.
 % This file is read as an affix file, so only affix names are allowed.
 foo: UNITS+;
