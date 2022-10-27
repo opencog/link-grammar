@@ -32,8 +32,10 @@ using namespace opencog;
 
 // Strings we expect to find in the dictionary.
 #define STORAGE_NODE_STRING "storage-node"
-#define MI_KEY_STRING "mi-key"
-#define MI_OFFSET_STRING "mi-offset"
+#define COST_KEY_STRING "cost-key"
+#define COST_INDEX_STRING "cost-index"
+#define MI_CUTOFF "mi-offset"
+#define MI_MISSING "mi-offset"
 
 /// Shared global
 static AtomSpacePtr external_atomspace;
@@ -94,12 +96,12 @@ bool as_open(Dictionary dict)
 		"*-LG disjunct string-*");
 
 	// Costs are assumed to be minus the MI located at some key.
-	const char* miks = get_dict_define(dict, MI_KEY_STRING);
+	const char* miks = get_dict_define(dict, COST_KEY_STRING);
 	Handle mikh = Sexpr::decode_atom(miks);
 	local->mikp = local->asp->add_atom(mikh);
 
 	const char* off_str =
-		linkgrammar_get_dict_define(dict, MI_OFFSET_STRING);
+		linkgrammar_get_dict_define(dict, COST_INDEX_STRING);
 	local->mi_offset = atoi(off_str);
 
 	dict->as_server = (void*) local;

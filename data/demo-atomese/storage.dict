@@ -52,15 +52,16 @@
 % -----------------------
 % Additional configuration parameters.
 
+% Location where costs are stored. The cost will be obtained from
+% the floating point value located at the `cost-key` Value on the
+% Sections. It's assumed that this is a FloatValue, which is a vector;
+% the index specifies the location in this vector.
+#define cost-key "(Predicate \"*-Mutual Info Key cover-section\")";
+#define cost-index 1;
+#define cost-sign -1;
+
 % Sections with missing MI default to an MI=-4 and costs are minus MI.
 #define max-disjunct-cost 10;
-
-% Location where costs are stored. The cost will be taken to be
-% minus the mutual info (or other additive value) located at the
-% the `mi-key` on the Sections. It's assumed that this is a FloatValue,
-% which is a vector; the offset is the index into this vector.
-#define mi-key "(Predicate \"*-Mutual Info Key cover-section\")";
-#define mi-offset 1;
 
 % -----------------------
 % For this file to be read, at least one bogus entry is needed. It is
