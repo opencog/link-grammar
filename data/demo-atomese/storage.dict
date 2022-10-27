@@ -65,17 +65,17 @@
 % obtained above can be rescaled linearly befor being used as a cost.
 % The rescaling is as usual: y=mx+b where m==`cost-scale` and
 % b==`cost-offset`.
-#define cost-scale -1.0;
+#define cost-scale -0.5;
 #define cost-offset 0.0;
 
 % Sections whose computed cost is greater than this will not be added
 % to the local dictionary.
-#define cost-cutoff 20.0;
+#define cost-cutoff 8.0;
 
 % Sections with a missing cost will be assigned this default. To ignore
 % sections with a missing cost, set it to some value greater than
 % `cost-max`.
-#define cost-default 4.0;
+#define cost-default 2.0;
 
 % -----------------------
 % For this file to be read, at least one bogus entry is needed. It is
