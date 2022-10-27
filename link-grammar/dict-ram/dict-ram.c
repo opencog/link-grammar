@@ -385,6 +385,55 @@ Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 }
 
 /* ======================================================================== */
+/*
+ * "Expressions" -- these encode the binary-tree structure of the
+ * hand-written dictionaries. These are binary trees, with leaves of
+ * connectors joined up by the binary operators `&`, `or`.
+ *
+ * The in-RAM representation is NOT a binary tree; instead it is a tree
+ * of lists. An Exp node contains a tag: `AND_type`, `OR_type`, etc.
+ * The `operand_next` field is used to hold a linked list which is
+ * joined up with the given Exp type. This is more efficent to traverse,
+ * and also saves space, as compared to an ordinary binary tree.
+ *
+ * Example:  (A or B or C or D) becomes
+ *
+ *   or
+ *    \
+ *     A -> B -> C -> D
+ *
+ * The slash \ is the `operand_first` field. The horizontal arrows are
+ * the `operand_next` field. Here's a more complicated example:
+ *
+ *    (A or (E & F) or C or D)
+ *
+ * becomes
+ *
+ *   or
+ *    \
+ *     A -> and -> C -> D
+ *            \
+ *             E -> F
+ *
+ * This structure has performance implications: the `build_disjuncts()`
+ * code will traverse the `operand_next` fields in a loop, but will make
+ * a recursive call for each `operand_first` (thus buying a stack frame.)
+ * The original example (A or B or C or D) could have been written as
+ * (A or (B or (C or D))) and so
+ *
+ *   or
+ *    \
+ *     A -> or
+ *           \
+ *            B -> or
+ *                  \
+ *                   C -> D
+ *
+ * But this would be a bad idea, since (1) more Exp nodes are required,
+ * and (2) the recursive calls in `build_disjuncts()` really do add up
+ * for large expressions.
+ */
+
 /**
  * Allocate a new Exp node.
  */
