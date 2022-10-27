@@ -1,7 +1,7 @@
 /*
  * fetch-cats.cc
  *
- * Fetch everything; needed for generation.
+ * Fetch the entire contents of the dict; needed for generation.
  *
  * Copyright (c) 2022 Linas Vepstas <linasvepstas@gmail.com>
  */
@@ -40,8 +40,7 @@ void as_add_categories(Dictionary dict)
 	dict->category = (Category*) malloc(
 		dict->num_categories_alloced * sizeof(*dict->category));
 
-printf("duude got %lu cats\n", ncat);
-
+	// First, loop over all word-classes
 	HandleSeq allcl;
 	local->asp->get_handles_by_type(allcl, WORD_CLASS_NODE);
 
@@ -50,6 +49,7 @@ printf("duude got %lu cats\n", ncat);
 	{
 		const Handle& wcl = allcl[i];
 
+		// Some word-classes might not be in any sections.
 		dict->category[j].exp = make_exprs(dict, wcl);
 		if (nullptr == dict->category[j].exp)
 			continue;
@@ -59,12 +59,12 @@ printf("duude got %lu cats\n", ncat);
 		if (0 == nwo)
 			continue;
 
-		dict->category[j].word = (const char**)
-			malloc(nwo * sizeof(*dict->category[0].word));
-
 		dict->category[j].name =
 			string_set_add(wcl->get_name().c_str(), dict->string_set);
-// printf("duude %lu catcl=%s\n", j, dict->category[j].name);
+
+		// Copy the words into the cateory.
+		dict->category[j].word = (const char**)
+			malloc(nwo * sizeof(*dict->category[0].word));
 
 		nwo = 0;
 		for (const Handle& memb : wcl->getIncomingSetByType(MEMBER_LINK))
@@ -74,13 +74,13 @@ printf("duude got %lu cats\n", ncat);
 
 			dict->category[j].word[nwo] =
 				string_set_add(wrd->get_name().c_str(), dict->string_set);
-//printf("duude %lu catl= %s %lu %s\n", j, dict->category[j].name, nwo, dict->category[j].word[nwo]);
 			nwo++;
 		}
 		dict->category[j].num_words = nwo;
 		j++;
 	}
 
+	// Add individual words.
 	HandleSeq allwo;
 	local->asp->get_handles_by_type(allwo, WORD_NODE);
 
@@ -93,8 +93,6 @@ printf("duude got %lu cats\n", ncat);
 		dict->category[j].name =
 			string_set_add(allwo[i]->get_name().c_str(), dict->string_set);
 
-// printf("duude %lu catwo=>>%s<<\n", j, dict->category[j].name);
-
 		dict->category[j].num_words = 1;
 		dict->category[j].word =
 			(const char**) malloc(sizeof(*dict->category[0].word));
@@ -102,8 +100,7 @@ printf("duude got %lu cats\n", ncat);
 		j++;
 	}
 
-	j--;
-printf("Expected num cats: %lu  Actual num cats: %lu\n", ncat, j);
+	j--;  // First j was empty (on purpose)
 
 	/* Free excess memory, if any */
 	dict->num_categories_alloced = j + 2;
