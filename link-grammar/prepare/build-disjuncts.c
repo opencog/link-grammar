@@ -130,38 +130,38 @@ static void debug_last(Clause *c, Clause **c_last, const char *type)
  */
 static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 {
-	Clause *c = NULL, *c1, *c2, *c3, *c4, *c_head;
+	Clause *c = NULL;
 
 	assert(e != NULL, "build_clause called with null parameter");
 	if (e->type == AND_type)
 	{
-		c1 = pool_alloc(ct->Clause_pool);
+		Clause *c1 = pool_alloc(ct->Clause_pool);
 		c1->c = NULL;
 		c1->next = NULL;
 		c1->cost = 0.0;
 		c1->maxcost = 0.0;
 		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 		{
-			c2 = build_clause(opd, ct, NULL);
-			c_head = NULL;
-			for (c3 = c1; c3 != NULL; c3 = c3->next)
+			Clause *c2 = build_clause(opd, ct, NULL);
+			Clause *c_head = NULL;
+			for (Clause *c3 = c1; c3 != NULL; c3 = c3->next)
 			{
-				for (c4 = c2; c4 != NULL; c4 = c4->next)
+				for (Clause *c4 = c2; c4 != NULL; c4 = c4->next)
 				{
 					float maxcost = MAX(c3->maxcost,c4->maxcost);
 					/* Cannot use this shortcut due to negative costs. */
 					//if (maxcost + e->cost > ct->cost_cutoff) continue;
 
-					c = pool_alloc(ct->Clause_pool);
-					if ((c_head == NULL) && (c_last != NULL)) *c_last = c;
-					c->cost = c3->cost + c4->cost;
-					c->maxcost = maxcost;
-					c->c = catenate(c4->c, c3->c, ct->Tconnector_pool);
-					c->next = c_head;
-					c_head = c;
+					Clause *c5 = pool_alloc(ct->Clause_pool);
+					if ((c_head == NULL) && (c_last != NULL)) *c_last = c5;
+					c5->cost = c3->cost + c4->cost;
+					c5->maxcost = maxcost;
+					c5->c = catenate(c4->c, c3->c, ct->Tconnector_pool);
+					c5->next = c_head;
+					c_head = c5;
 				}
 			}
-#if BUILD_DISJUNCTS_FREE_INETERMEDIATE_MEMOEY /* Undefined - CPU overhead. */
+#if BUILD_DISJUNCTS_FREE_INETERMEDIATE_MEMORY /* Undefined - CPU overhead. */
 			free_clause_list(c1, ct);
 			free_clause_list(c2, ct);
 #endif
@@ -173,23 +173,18 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 	}
 	else if (e->type == OR_type)
 	{
-		Clause *or_last = NULL;;
-		Clause *last;
+		Clause *or_last = NULL;
 
 		c = build_clause(e->operand_first, ct, &or_last);
-		/* we'll catenate the lists of clauses */
+		/* We'll concatenate the lists of clauses. */
 		for (Exp *opd = e->operand_first->operand_next; opd != NULL; opd = opd->operand_next)
 		{
-			c1 = build_clause(opd, ct, &last);
-			if (c1 == NULL) continue;
-			if (c == NULL)
-				c = c1;
-			else
-				or_last->next = c1;
+			Clause *last;
+			or_last->next = build_clause(opd, ct, &last);
 			or_last = last;
 		}
 
-		if (c_last != NULL) *c_last = (or_last == NULL) ? last : or_last;
+		if (c_last != NULL) *c_last = or_last;
 		debug_last(c, c_last, "OR_type");
 	}
 	else if (e->type == CONNECTOR_type)
@@ -207,7 +202,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 	}
 
 	/* c now points to the list of clauses */
-	for (c1 = c; c1 != NULL; c1 = c1->next)
+	for (Clause *c1 = c; c1 != NULL; c1 = c1->next)
 	{
 		c1->cost += e->cost;
 		/* c1->maxcost = MAX(c1->maxcost,e->cost);  */
