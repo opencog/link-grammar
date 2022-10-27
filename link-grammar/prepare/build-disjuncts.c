@@ -161,7 +161,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 					c_head = c5;
 				}
 			}
-#if BUILD_DISJUNCTS_FREE_INETERMEDIATE_MEMOEY /* Undefined - CPU overhead. */
+#if BUILD_DISJUNCTS_FREE_INETERMEDIATE_MEMORY /* Undefined - CPU overhead. */
 			free_clause_list(c1, ct);
 			free_clause_list(c2, ct);
 #endif
@@ -176,7 +176,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 		Clause *or_last = NULL;
 
 		c = build_clause(e->operand_first, ct, &or_last);
-		/* we'll catenate the lists of clauses */
+		/* We'll concatenate the lists of clauses. */
 		for (Exp *opd = e->operand_first->operand_next; opd != NULL; opd = opd->operand_next)
 		{
 			Clause *last;
