@@ -402,23 +402,6 @@ static void cache_disjunct_string(Local* local,
 
 // ===============================================================
 
-#define INNER_LOOP                                                   \
-   /* Assign an upper-case name to the link. */                      \
-   const std::string& slnk = get_linkname(local, germ, ctcr);        \
-                                                                     \
-   Exp* eee = make_connector_node(dict, dict->Exp_pool,              \
-                    slnk.c_str(), cdir, false);                      \
-   /* Link new connectors to the head */                             \
-   if (unary) {                                                      \
-      if (nullptr == andhead)                                        \
-         andhead = make_and_node(dict->Exp_pool, eee, unary);        \
-      else {                                                         \
-         eee->operand_next = andhead->operand_first;                 \
-         andhead->operand_first = eee;                               \
-      }                                                              \
-   } else                                                            \
-      unary = eee;
-
 Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -449,32 +432,49 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 			continue;
 
 		Exp* andhead = nullptr;
-		Exp* unary = nullptr;
+		Exp* andtail = nullptr;
 
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
-		// Loop twice, because the atomspace stores connectors
-		// in word-order, while LG stores them as distance-from
-		// given word.  So we have to reverse the order when
-		// building the disjunct.
+		// The atomspace stores connectors in word-order, while LG
+		// stores them as distance-from given word.  Thus, we have
+		// to reverse the order when building the expression.
 		const Handle& conseq = sect->getOutgoingAtom(1);
-		for (const Handle& ctcr : reverse(conseq->getOutgoingSet()))
-		{
-			// The direction is the second Atom in the connector
-			const Handle& dir = ctcr->getOutgoingAtom(1);
-			char cdir = dir->get_name().c_str()[0];
-			if ('-' == cdir) continue;
-			INNER_LOOP;
-		}
 		for (const Handle& ctcr : conseq->getOutgoingSet())
 		{
 			// The direction is the second Atom in the connector
 			const Handle& dir = ctcr->getOutgoingAtom(1);
 			char cdir = dir->get_name().c_str()[0];
-			if ('+' == cdir) continue;
-			INNER_LOOP;
+
+			/* Assign an upper-case name to the link. */
+			const std::string& slnk = get_linkname(local, germ, ctcr);
+
+			Exp* eee = make_connector_node(dict,
+				dict->Exp_pool, slnk.c_str(), cdir, false);
+
+			if (nullptr == andhead)
+			{
+				andhead = make_and_node(dict->Exp_pool, eee, NULL);
+				andtail = andhead;
+			}
+			else
+			if ('+' == cdir)
+			{
+				/* Link new connectors to the tail */
+				andtail->operand_next = eee;
+				andtail = eee;
+			}
+			else if ('-' == cdir)
+			{
+				/* Link new connectors to the head */
+				eee->operand_next = andhead->operand_first;
+				andhead->operand_first = eee;
+			}
 		}
-		if (nullptr == andhead) andhead = unary;
+
+		// This should never-ever happen!
+		if (nullptr == andhead)
+			continue;
 
 		andhead->cost = cost;
 
