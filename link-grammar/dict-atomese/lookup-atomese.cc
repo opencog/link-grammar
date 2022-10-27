@@ -429,24 +429,24 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
 	{
-// This is harsh. It must be less #define max-disjunct-cost
-// in the dict file (currently set to 10 in the demo dict)
-#define MISSING_MI -4.0   // This is harsh
-		double mi = MISSING_MI;
+		// Apprently, some sections are missing costs. This is
+		// most likey due to some data-processing bug, where the
+		// MI's were not recomputed. For nw, we will silently
+		// ignore this issue, and assign a default to them.
+		double cost = local->cost_default;
 
-		// If there's no MI on this section, just skip it.
-		// It's presumably not a valid part of the dataset (???)
 		const ValuePtr& mivp = sect->getValue(local->mikp);
-		// if (nullptr == mivp) continue;
-
-		// XXX FIXME ... why are the MI's sometimes missing?
-		// Did we forget to run a post-processing step?
 		if (mivp)
 		{
-			// MI is the second entry in the list.
+			// MI is the second entry in the vector.
 			const FloatValuePtr& fmivp = FloatValueCast(mivp);
-			mi = fmivp->value()[local->cost_index];
+			double mi = fmivp->value()[local->cost_index];
+			cost = (local->cost_scale * mi) + local->cost_offset;
 		}
+
+		// If the cost is too high, just skip this.
+		if (local->cost_cutoff <= cost)
+			continue;
 
 		Exp* andhead = nullptr;
 		Exp* unary = nullptr;
@@ -476,8 +476,7 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		}
 		if (nullptr == andhead) andhead = unary;
 
-		// Cost is minus the MI.
-		andhead->cost = -mi;
+		andhead->cost = cost;
 
 		// Save the exp-section pairing in the AtomSpace.
 		cache_disjunct_string(local, sect, andhead);
