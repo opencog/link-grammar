@@ -15,6 +15,7 @@
 #include <opencog/persist/rocks/RocksStorage.h>
 #include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
+
 #undef STRINGIFY
 
 extern "C" {
@@ -485,7 +486,11 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 
 		// This should never-ever happen!
 		if (nullptr == andhead)
+		{
+			prt_error("Warning: Empty connector sequence for %s\n",
+				sect->to_short_string().c_str());
 			continue;
+		}
 
 		andhead->cost = cost;
 
