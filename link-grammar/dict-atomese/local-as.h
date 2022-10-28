@@ -8,7 +8,6 @@
 
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/persist/api/StorageNode.h>
-#undef STRINGIFY
 
 using namespace opencog;
 

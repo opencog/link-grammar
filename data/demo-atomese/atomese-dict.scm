@@ -126,15 +126,15 @@
 ; The name comes from the following parse diagram:
 ;
 ;        +-------A-------+
-;        |     +----D----+----G---+
+;        |     +----D----+----I---+
 ;        |     | +---E---+---H--+ |
-;        |     | | +--F--+--I-+ | |
+;        |     | | +--F--+--G-+ | |
 ;        |     | | |     |    | | |
 ;    LEFT-WALL 1 2 3 fountain 4 5 6
 ;
 ; The expected disjunct on the word 'fountain' is
 ;
-;      F- & E- & D- & A- & I+ & H+ & G+
+;      F- & E- & D- & A- & G+ & H+ & I+
 ;
 
 (Section

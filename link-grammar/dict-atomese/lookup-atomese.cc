@@ -15,6 +15,7 @@
 #include <opencog/persist/rocks/RocksStorage.h>
 #include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
+
 #undef STRINGIFY
 
 extern "C" {
@@ -222,8 +223,10 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 		nclssects += count_sections(local, wcl);
 	}
 
-printf("duuude as_boolean_lookup for >>%s<< found class=%lu sects=%lu %lu\n",
-s, nclass, nwrdsects, nclssects);
+	lgdebug(+D_SPEC+5,
+		"as_boolean_lookup for >>%s<< found class=%lu nsects=%lu %lu\n",
+		s, nclass, nwrdsects, nclssects);
+
 	return 0 != (nwrdsects + nclssects);
 }
 
@@ -402,23 +405,6 @@ static void cache_disjunct_string(Local* local,
 
 // ===============================================================
 
-#define INNER_LOOP                                                   \
-   /* Assign an upper-case name to the link. */                      \
-   const std::string& slnk = get_linkname(local, germ, ctcr);        \
-                                                                     \
-   Exp* eee = make_connector_node(dict, dict->Exp_pool,              \
-                    slnk.c_str(), cdir, false);                      \
-   /* Link new connectors to the head */                             \
-   if (unary) {                                                      \
-      if (nullptr == andhead)                                        \
-         andhead = make_and_node(dict->Exp_pool, eee, unary);        \
-      else {                                                         \
-         eee->operand_next = andhead->operand_first;                 \
-         andhead->operand_first = eee;                               \
-      }                                                              \
-   } else                                                            \
-      unary = eee;
-
 Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -449,32 +435,72 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 			continue;
 
 		Exp* andhead = nullptr;
-		Exp* unary = nullptr;
+		Exp* andtail = nullptr;
 
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
-		// Loop twice, because the atomspace stores connectors
-		// in word-order, while LG stores them as distance-from
-		// given word.  So we have to reverse the order when
-		// building the disjunct.
+		// The atomspace stores connectors in word-order, while LG
+		// stores them as distance-from given word.  Thus, we have
+		// to reverse the order when building the expression.
 		const Handle& conseq = sect->getOutgoingAtom(1);
-		for (const Handle& ctcr : reverse(conseq->getOutgoingSet()))
-		{
-			// The direction is the second Atom in the connector
-			const Handle& dir = ctcr->getOutgoingAtom(1);
-			char cdir = dir->get_name().c_str()[0];
-			if ('-' == cdir) continue;
-			INNER_LOOP;
-		}
 		for (const Handle& ctcr : conseq->getOutgoingSet())
 		{
 			// The direction is the second Atom in the connector
 			const Handle& dir = ctcr->getOutgoingAtom(1);
 			char cdir = dir->get_name().c_str()[0];
-			if ('+' == cdir) continue;
-			INNER_LOOP;
+
+			/* Assign an upper-case name to the link. */
+			const std::string& slnk = get_linkname(local, germ, ctcr);
+
+			Exp* eee = make_connector_node(dict,
+				dict->Exp_pool, slnk.c_str(), cdir, false);
+
+			if (nullptr == andhead)
+				andhead = make_and_node(dict->Exp_pool, eee, NULL);
+			else
+			if ('+' == cdir)
+			{
+				/* Link new connectors to the tail */
+				if (nullptr == andtail)
+				{
+					andtail = andhead;
+					eee->operand_next = andhead->operand_first;
+					andhead->operand_first = eee;
+				}
+				else
+				{
+					andtail->operand_next = eee;
+					andtail = eee;
+				}
+			}
+			else if ('-' == cdir)
+			{
+				/* Link new connectors to the head */
+				eee->operand_next = andhead->operand_first;
+				andhead->operand_first = eee;
+
+				if (nullptr == andtail)
+					andtail = eee->operand_next;
+			}
 		}
-		if (nullptr == andhead) andhead = unary;
+
+		// This should never-ever happen!
+		if (nullptr == andhead)
+		{
+			prt_error("Warning: Empty connector sequence for %s\n",
+				sect->to_short_string().c_str());
+			continue;
+		}
+
+		// Optional: shorten the expression,
+		// if there's only one connector in it.
+		if (nullptr == andhead->operand_first->operand_next)
+		{
+			Exp *tmp = andhead->operand_first;
+			andhead->operand_first = NULL;
+			// pool_free(dict->Exp_pool, andhead); // not needed!?
+			andhead = tmp;
+		}
 
 		andhead->cost = cost;
 
@@ -531,8 +557,9 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		Exp* clexp = make_exprs(dict, wcl);
 		if (nullptr == clexp) continue;
 
-printf("duuude as_lookup_list class for >>%s<< had=%d\n", ssc,
-size_of_expression(clexp));
+		lgdebug(+D_SPEC+5, "as_lookup_list class for >>%s<< nexpr=%d\n",
+			ssc, size_of_expression(clexp));
+
 		if (nullptr == exp)
 			exp = clexp;
 		else
@@ -550,8 +577,9 @@ size_of_expression(clexp));
 	// Cache the result; avoid repeated lookups.
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
-printf("duuude as_lookup_list %d for >>%s<< had=%d\n",
-dict->num_entries, ssc, size_of_expression(exp));
+
+	lgdebug(+D_SPEC+5, "as_lookup_list %d for >>%s<< nexpr=%d\n",
+		dict->num_entries, ssc, size_of_expression(exp));
 
 	// Rebalance the tree every now and then.
 	if (0 == dict->num_entries% 30)

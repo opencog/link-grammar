@@ -51,7 +51,7 @@ static void print_Tconnector_list(Tconnector * e);
 static void print_clause_list(Clause * c);
 #endif
 
-#if BUILD_DISJUNCTS_FREE_INETERMEDIATE_MEMOEY /* Undefined - CPU overhead. */
+#if BUILD_DISJUNCTS_FREE_INETERMEDIATE_MEMORY /* Undefined - CPU overhead. */
 static void free_Tconnectors(Tconnector *e, Pool_desc *mp)
 {
 	Tconnector * n;

@@ -72,6 +72,7 @@ greater than 1 are not included in their output:
  103    Show unsubscripted dictionary words and subscripted ones which
         share the same base word
  104    Memory pool statistics
+ 105    AtomSpace I/O tracing
 
 [morphology]
 When False, whole words are displayed, without indicating any
