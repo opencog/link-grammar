@@ -301,7 +301,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			       (ndis->category[0].num < 64*1024)),
 			       "Insane category %u", ndis->category[0].num);
 			ndis->category[0].cost = cl->cost;
-			ndis->cost = cl->cost;
+			// ndis->cost = cl->cost; No! clobbers memory!
 		}
 
 		ndis->originating_gword = (gword_set*)gs; /* XXX remove constness */

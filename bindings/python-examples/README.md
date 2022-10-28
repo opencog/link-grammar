@@ -119,7 +119,7 @@ Set the `PYTHONPATH` environment variable to the location of the installed
 Python's **linkgrammar** module, e.g.:
 
 ```
-PYTHONPATH=/usr/local/lib/python3.7/site-packages
+PYTHONPATH=/usr/local/lib/python3.9/site-packages
 ```
 (Export it, or prepend it to the `python3` command.)
 
