@@ -47,6 +47,7 @@ typedef struct
 	unsigned int sentence_length;
 	unsigned int corpus_size; /* Limited to INT_MAX. */
 	bool display_disjuncts;
+	bool display_cost;
 	bool display_unused_disjuncts;
 	bool leave_subscripts;
 	bool unrepeatable_random;
@@ -80,6 +81,7 @@ static struct argp_option
 	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts."},
 	{"unused", 'u', 0, 0, "Display unused disjuncts."},
 	{"leave-subscripts", '.', 0, 0, "Don't remove word subscripts."},
+	{"show-cost", 'p', 0, 0, "Display linkage cost."},
 	{"random", 'r', 0, 0, "Use unrepeatable random numbers."},
 	{"no-walls", 'w'+128, 0, 0, "Don't use walls in wildcard words."},
 	{0, 0, 0, 0, "Library options:", 1},
@@ -416,6 +418,7 @@ static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
 			          break;
 			case 'x': gp->explode = true; break;
 			case 'd': gp->display_disjuncts = true; break;
+			case 'p': gp->display_cost = true; break;
 			case 'u': gp->display_unused_disjuncts = true; break;
 			case '.': gp->leave_subscripts = true; break;
 			case 'r': gp->unrepeatable_random = true; break;
@@ -634,6 +637,9 @@ int main (int argc, char* argv[])
 		if (verbosity_level >= 5) printf("%d: ", i);
 		num_printed += print_sentences(catlist, linkage, nwords, words,
 		                               parms.leave_subscripts, samples);
+
+		if (parms.display_cost)
+			printf("# linkage-cost=%f\n", linkage_disjunct_cost(linkage));
 
 		if (parms.display_disjuncts)
 		{
