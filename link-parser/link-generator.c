@@ -45,7 +45,8 @@ typedef struct
 {
 	const char* language;
 	unsigned int sentence_length;
-	unsigned int corpus_size; /* Limited to INT_MAX. */
+	unsigned int nsentences; /* Limited to INT_MAX. */
+	unsigned int nlinkages;  /* Limited to INT_MAX. */
 	bool display_disjuncts;
 	bool display_cost;
 	bool display_unused_disjuncts;
@@ -76,7 +77,8 @@ static struct argp_option
 {
 	{"language", 'l', "language", 0, "Directory containing language definition."},
 	{"length", 's', "length", 0, "Sentence length. If 0 - get sentence template from stdin."},
-	{"count", 'c', "count", 0, "Count of number of sentences to generate."},
+	{"count", 'c', "count", 0, "Number of linkages to generate."},
+	{"print", 'k', "count", 0, "Number of sentences to print."},
 	{"explode", 'x', 0, 0, "Generate all wording samples per linkage."},
 	{"disjuncts", 'd', 0, 0, "Display linkage disjuncts."},
 	{"unused", 'u', 0, 0, "Display unused disjuncts."},
@@ -413,7 +415,10 @@ static void getopt_parse(int ac, char *av[], struct argp_option *a_opt,
 			case 's': gp->sentence_length = (int)
 			             strtoi_errexit(av[optind-2], optarg, 0, MAX_SENTENCE-2);
 			          break;
-			case 'c': gp->corpus_size =
+			case 'c': gp->nlinkages =
+			             strtoi_errexit(av[optind-2], optarg, 1, INT_MAX);
+			          break;
+			case 'k': gp->nsentences =
 			             strtoi_errexit(av[optind-2], optarg, 1, INT_MAX);
 			          break;
 			case 'x': gp->explode = true; break;
@@ -492,7 +497,8 @@ int main (int argc, char* argv[])
 	gen_parameters parms;
 	parms.language = "lt";
 	parms.sentence_length = 6;
-	parms.corpus_size = 50;
+	parms.nlinkages = 500;
+	parms.nsentences = 20;
 	parms.explode = false;
 	parms.display_disjuncts = false;
 	parms.display_unused_disjuncts = false;
@@ -514,7 +520,8 @@ int main (int argc, char* argv[])
 	printf("#\n# Corpus for language: \"%s\"\n", parms.language);
 	if (parms.sentence_length != 0)
 		printf("# Sentence length: %u\n", parms.sentence_length);
-	printf("# Requested corpus size: %u\n", parms.corpus_size);
+	printf("# Requested number of linkages: %u\n", parms.nlinkages);
+	printf("# Requested number to print: %u\n", parms.nsentences);
 
 	// Force the system into generation mode by setting the "test"
 	// parse-option to "generate".
@@ -549,7 +556,7 @@ int main (int argc, char* argv[])
 		exit(0);
 	}
 
-	parse_options_set_linkage_limit(opts, parms.corpus_size);
+	parse_options_set_linkage_limit(opts, parms.nlinkages);
 
 	if (parms.sentence_length > 0)
 	{
@@ -622,7 +629,7 @@ int main (int argc, char* argv[])
 	// How many sentences to print per linkage.
 	// Print more than one only if explode flag set.
 	double samples = parms.explode ?
-		((double) parms.corpus_size) / ((double) num_linkages)
+		((double) parms.nsentences) / ((double) num_linkages)
 		: 1.0;
 
 	unsigned int num_printed = 0;
@@ -650,7 +657,7 @@ int main (int argc, char* argv[])
 
 		linkage_delete(linkage);
 
-		if (num_printed >= parms.corpus_size) break;
+		if (num_printed >= parms.nsentences) break;
 	}
 
 	free(unused_disjuncts);
