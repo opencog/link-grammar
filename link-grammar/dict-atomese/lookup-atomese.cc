@@ -222,8 +222,10 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 		nclssects += count_sections(local, wcl);
 	}
 
-printf("duuude as_boolean_lookup for >>%s<< found class=%lu sects=%lu %lu\n",
-s, nclass, nwrdsects, nclssects);
+	lgdebug(+D_SPEC+5,
+		"as_boolean_lookup for >>%s<< found class=%lu nsects=%lu %lu\n",
+		s, nclass, nwrdsects, nclssects);
+
 	return 0 != (nwrdsects + nclssects);
 }
 
@@ -540,8 +542,9 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		Exp* clexp = make_exprs(dict, wcl);
 		if (nullptr == clexp) continue;
 
-printf("duuude as_lookup_list class for >>%s<< had=%d\n", ssc,
-size_of_expression(clexp));
+		lgdebug(+D_SPEC+5, "as_lookup_list class for >>%s<< nexpr=%d\n",
+			ssc, size_of_expression(clexp));
+
 		if (nullptr == exp)
 			exp = clexp;
 		else
@@ -559,8 +562,9 @@ size_of_expression(clexp));
 	// Cache the result; avoid repeated lookups.
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
-printf("duuude as_lookup_list %d for >>%s<< had=%d\n",
-dict->num_entries, ssc, size_of_expression(exp));
+
+	lgdebug(+D_SPEC+5, "as_lookup_list %d for >>%s<< nexpr=%d\n",
+		dict->num_entries, ssc, size_of_expression(exp));
 
 	// Rebalance the tree every now and then.
 	if (0 == dict->num_entries% 30)
