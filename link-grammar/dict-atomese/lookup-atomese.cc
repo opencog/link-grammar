@@ -492,6 +492,16 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 			continue;
 		}
 
+		// Optional: shorten the expression,
+		// if there's only one connector in it.
+		if (nullptr == andhead->operand_first->operand_next)
+		{
+			Exp *tmp = andhead->operand_first;
+			andhead->operand_first = NULL;
+			// pool_free(dict->Exp_pool, andhead); // not needed!?
+			andhead = tmp;
+		}
+
 		andhead->cost = cost;
 
 		// Save the exp-section pairing in the AtomSpace.
