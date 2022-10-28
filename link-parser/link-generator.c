@@ -639,7 +639,7 @@ int main (int argc, char* argv[])
 		                               parms.leave_subscripts, samples);
 
 		if (parms.display_cost)
-			printf("# linkage-cost=%f\n", linkage_disjunct_cost(linkage));
+			printf("# linkage-cost= %.3f\n", linkage_disjunct_cost(linkage));
 
 		if (parms.display_disjuncts)
 		{
