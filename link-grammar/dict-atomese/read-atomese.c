@@ -114,8 +114,14 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	if (!afdict_init(dict)) goto failure;
 
 	/* Initialize word categories, for text generation. */
+	/* Since this causes the entire dict to load, close the
+	 * storage node after it is loaded. This avoids cogserver
+	 * stalls due to excess open sockets. */
 	if (dictionary_generation_request(dict))
+	{
 		as_add_categories(dict);
+		as_storage_close(dict);
+	}
 
 	return dict;
 

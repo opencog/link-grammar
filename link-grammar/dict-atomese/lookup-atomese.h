@@ -18,3 +18,4 @@ void as_free_llist(Dictionary dict, Dict_node *llist);
 void as_clear_cache(Dictionary dict);
 
 void as_add_categories(Dictionary dict);
+void as_storage_close(Dictionary dict);

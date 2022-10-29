@@ -76,7 +76,7 @@ bool as_open(Dictionary dict)
 	Local* local = new Local;
 	local->node_str = stns;
 
-	// If an external atompsace is specified, then use that.
+	// If an external atomspace is specified, then use that.
 	if (external_atomspace)
 	{
 		local->asp = external_atomspace;
@@ -160,12 +160,31 @@ bool as_open(Dictionary dict)
 	return true;
 }
 
-/// Close the connection to the cogserver.
+/// Close the connection to the StorageNode (e.g. cogserver.)
+/// To be used only if the everything has been fetched, and the
+/// dict is now in local RAM. The dict remains usable, after
+/// closing the connection. Only local StorageNodes are closed.
+/// External storage nodes will remain open, but will no longer
+/// be used.
+void as_storage_close(Dictionary dict)
+{
+	if (nullptr == dict->as_server) return;
+	Local* local = (Local*) (dict->as_server);
+
+	if (not local->using_external_as and local->stnp)
+		local->stnp->close();
+
+	local->stnp = nullptr;
+}
+
+/// Close the connection to the AtomSpace. This will also empty out
+/// the local dictionary, and so the dictionary will no longer be
+/// usable after a close.
 void as_close(Dictionary dict)
 {
 	if (nullptr == dict->as_server) return;
 	Local* local = (Local*) (dict->as_server);
-	if (not local->using_external_as)
+	if (not local->using_external_as and local->stnp)
 		local->stnp->close();
 
 	delete local;
