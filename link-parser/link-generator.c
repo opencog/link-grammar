@@ -500,6 +500,7 @@ int main (int argc, char* argv[])
 	parms.nlinkages = 500;
 	parms.nsentences = 20;
 	parms.explode = false;
+	parms.display_cost = false;
 	parms.display_disjuncts = false;
 	parms.display_unused_disjuncts = false;
 	parms.leave_subscripts = false;
