@@ -61,8 +61,9 @@ static float compute_disjunct_cost(Linkage lkg)
 	lcost =  0.0;
 	for (i = 0; i < lkg->num_words; i++)
 	{
-		if (lkg->chosen_disjuncts[i] != NULL)
-			lcost += lkg->chosen_disjuncts[i]->cost;
+		Disjunct * dj = lkg->chosen_disjuncts[i];
+		if (dj != NULL)
+			lcost += dj->is_category ? dj->category[0].cost : dj->cost;
 	}
 	return lcost;
 }

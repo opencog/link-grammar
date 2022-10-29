@@ -903,8 +903,13 @@ float linkage_get_disjunct_cost(const Linkage linkage, WordIdx w)
 	dj = linkage->chosen_disjuncts[w];
 
 	/* dj may be null, if the word didn't participate in the parse. */
-	if (dj) return dj->cost;
-	return 0.0;
+	if (NULL == dj)
+		return 0.0;
+
+	if (dj->is_category)
+		return dj->category[0].cost;
+
+	return dj->cost;
 }
 
 const char * linkage_get_word(const Linkage linkage, WordIdx w)
