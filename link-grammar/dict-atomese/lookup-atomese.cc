@@ -347,6 +347,8 @@ static std::string get_linkname(Local* local, const Handle& germ,
 	return cached_linkname(local, lnk);
 }
 
+#if 0
+// Unused. This can walk a HandleSeq backwards.
 // Cheap hack until c++20 ranges are generally available.
 template<typename T>
 class reverse {
@@ -357,6 +359,7 @@ public:
   auto begin() const { return std::rbegin(iterable_); }
   auto end() const { return std::rend(iterable_); }
 };
+#endif
 
 // Debugging utility
 void print_section(Dictionary dict, const Handle& sect)
