@@ -23,7 +23,7 @@ extern "C" {
 
 using namespace opencog;
 
-static size_t count_pairs(Local* local, const Handle& germ)
+static size_t fetch_pairs(Local* local, const Handle& germ)
 {
 	local->stnp->fetch_incoming_by_type(germ, LIST_LINK);
 	local->stnp->barrier();
@@ -44,6 +44,44 @@ static size_t count_pairs(Local* local, const Handle& germ)
 Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
+	const AtomSpacePtr& asp = local->asp;
+	Exp* orhead = nullptr;
+	Exp* ortail = nullptr;
+
+	fetch_pairs(local, germ);
+
+	Handle hany = asp->add_node(LG_LINK_NODE, "ANY");
+
+	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
+	for (const Handle& rawpr : rprs)
+	{
+		Handle evpr = asp->get_link(EVALUATION_LINK, hany, rawpr);
+		if (nullptr == evpr) continue;
+
+		// Get the cached link-name for this pair.
+		const std::string& slnk = cached_linkname(local, rawpr);
+
+		// Direction is easy to determine: its either left or right.
+		char cdir = '+';
+		if (rawpr->getOutgoingAtom(1) == germ) cdir  = '-';
+
+		// Create a connector, and make it optional.
+		Exp* eee = make_connector_node(dict,
+			dict->Exp_pool, slnk.c_str(), cdir, false);
+
+		Exp* optex = make_optional_node(dict->Exp_pool, eee);
+
+		// Use an OR-node to create a linked list of expressions.
+		if (ortail)
+		{
+			if (nullptr == orhead)
+				orhead = make_or_node(dict->Exp_pool, ortail, optex);
+			else
+				ortail->operand_next = optex;
+		}
+		ortail = optex;
+	}
+
 }
 
 #endif // HAVE_ATOMESE

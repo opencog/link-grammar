@@ -29,3 +29,4 @@ public:
 };
 
 Exp* make_exprs(Dictionary dict, const Handle& germ);
+std::string cached_linkname(Local*, const Handle& pair);

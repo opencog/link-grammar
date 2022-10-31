@@ -296,7 +296,13 @@ static Handle get_lg_conn(const Handle& wset, const Handle& key)
 /// Return a cached LG-compatible link string.
 /// Assigns a new name, if one does not exist.
 /// The Handle `lnk` is an ordered pair, left-right, two words/classes.
-static std::string cached_linkname(Local* local, const Handle& lnk)
+/// That is, `lnk` is `(List (Word ...) (Word ...))`
+/// The link name is stored in an LgLinkNode, having the format
+///
+///     (Evaluation (Predicate "*-LG connector string-*")
+///              (LgLinkNode "ASDF") (List (Word ...) (Word ...)))
+///
+std::string cached_linkname(Local* local, const Handle& lnk)
 {
 	// If we've already cached a connector string for this,
 	// just return it.  Else build and cache a string.
