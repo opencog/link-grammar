@@ -314,7 +314,11 @@ std::string cached_linkname(Local* local, const Handle& lnk)
 		return lgc->get_name();
 
 	static uint64_t lid = 0;
+
+	// idtostr(16562) is "ANY" and we want to reserve "ANY"
+	if (16562 == lid) lid++;
 	std::string slnk = idtostr(lid++);
+
 	lgc = createNode(LG_LINK_NODE, slnk);
 	local->asp->add_link(EVALUATION_LINK, local->linkp, lgc, lnk);
 	return slnk;
