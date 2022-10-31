@@ -406,24 +406,44 @@ static std::string prt_andex(Exp* e)
 {
 	std::string str;
 
+	Exp* esave = e;
+
+	// Validate that either it's a single connector or an AND-list.
+	if (AND_type != e->type and CONNECTOR_type != e->type)
+	{
+		prt_error("Error: Unexpected expression type %s\n",
+			lg_exp_stringify(e));
+		return "";
+	}
+
+	e = e->operand_first;
 	while (e)
 	{
-		// Last connector in the list.
+		// We expect a linked list of connectors to follow.
 		if (CONNECTOR_type == e->type)
 		{
 			str += e->condesc->string;
 			str += e->dir;
-			return str;
 		}
 
-		// Else AND_type == e->type and the connector is the "first"
-		// operand. Oddly, e->operand_next is null. So it goes.
-		Exp* con = e->operand_first;
-		str += con->condesc->string;
-		str += con->dir;
-		str += " & ";
+		else if (OR_type == e->type)
+		{
+			str += "{";
+			Exp* con = e->operand_first->operand_next;
+			str += con->condesc->string;
+			str += con->dir;
+			str += "}";
+		}
+		else if (AND_type == e->type)
+		{
+			prt_error("Error: Unexpected AND expression %s\n",
+				lg_exp_stringify(esave));
+			return "";
+		}
 
-		e = con->operand_next;
+		// Walk the linked list.
+		e = e->operand_next;
+		if (e) str += " & ";
 	}
 
 	return str;
@@ -471,6 +491,16 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 
 		Exp* andhead = nullptr;
 		Exp* andtail = nullptr;
+
+// #define OPTIONAL_ANY_LINK
+#ifdef OPTIONAL_ANY_LINK
+		Exp* an = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
+		Exp* on = make_optional_node(dict->Exp_pool, an);
+		Exp* ap = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
+		Exp* op = make_optional_node(dict->Exp_pool, ap);
+		andhead = make_and_node(dict->Exp_pool, on, op);
+		andtail = op;
+#endif // OPTIONAL_ANY_LINK
 
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
@@ -560,6 +590,7 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		ortail = andhead;
 	}
 	if (nullptr == orhead) return ortail;
+
 	return orhead;
 }
 
