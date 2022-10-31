@@ -95,8 +95,8 @@ bool as_open(Dictionary dict)
 	local->linkp = local->asp->add_node(PREDICATE_NODE,
 		"*-LG connector string-*");
 
-	local->djp = local->asp->add_node(PREDICATE_NODE,
-		"*-LG disjunct string-*");
+	// local->djp = local->asp->add_node(PREDICATE_NODE,
+	//	"*-LG disjunct string-*");
 
 	// Marks word-pairs.
 	local->lany = local->asp->add_node(LG_LINK_NODE, "ANY");
@@ -449,6 +449,8 @@ static std::string prt_andex(Exp* e)
 	return str;
 }
 
+#if 0
+// XXX Unused right now. What was the plan, here?
 static void cache_disjunct_string(Local* local,
                                   const Handle& sect, Exp* andex)
 {
@@ -457,6 +459,7 @@ static void cache_disjunct_string(Local* local,
 		createNode(ITEM_NODE, prt_andex(andex)),
 		sect);
 }
+#endif
 
 // ===============================================================
 
@@ -578,7 +581,9 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		andhead->cost = cost;
 
 		// Save the exp-section pairing in the AtomSpace.
-		cache_disjunct_string(local, sect, andhead);
+		// XXX Why did we think this was needed ??
+		// What were we going to do with it?
+		// cache_disjunct_string(local, sect, andhead);
 
 #if DEBUG
 		print_section(dict, sect);
