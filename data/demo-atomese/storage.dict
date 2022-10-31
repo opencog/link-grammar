@@ -23,7 +23,10 @@
 % The default port for CogServers is 17001
 % Here `localhost` is just 127.0.0.1
 % Replace `localhost` by `example.com` or a dotted IPv4 address.
-% #define storage-node "(CogStorageNode \"cog://localhost:17001\")";
+% The `r-thru` argument indicates that the read-thru proxy should be used:
+% the cogserver will pass read requests onwards to any storage nodes
+% that are open in the cogserver.
+% #define storage-node "(CogStorageNode \"cog://localhost:17001?r-thru\")";
 
 % -----------------------
 % RocksStorageNode
