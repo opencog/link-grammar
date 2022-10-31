@@ -466,6 +466,15 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	Exp* orhead = nullptr;
 	Exp* ortail = nullptr;
 
+#define OPTIONAL_ANY_LINK
+#ifdef OPTIONAL_ANY_LINK
+	Exp* an = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
+	Exp* on = make_optional_node(dict->Exp_pool, an);
+	Exp* ap = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
+	Exp* op = make_optional_node(dict->Exp_pool, ap);
+	ortail = make_and_node(dict->Exp_pool, on, op);
+#endif // OPTIONAL_ANY_LINK
+
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
@@ -492,7 +501,6 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		Exp* andhead = nullptr;
 		Exp* andtail = nullptr;
 
-// #define OPTIONAL_ANY_LINK
 #ifdef OPTIONAL_ANY_LINK
 		Exp* an = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
 		Exp* on = make_optional_node(dict->Exp_pool, an);
@@ -590,7 +598,6 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		ortail = andhead;
 	}
 	if (nullptr == orhead) return ortail;
-
 	return orhead;
 }
 
