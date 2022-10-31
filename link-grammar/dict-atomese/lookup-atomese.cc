@@ -399,6 +399,9 @@ void print_section(Dictionary dict, const Handle& sect)
 
 // ===============================================================
 
+#if 0
+// Unused just right now.
+
 // This is a minimalist version of `lg_exp_stringify()` because
 // we want the string, without the costs on it. We also know that
 // it's just a list of and's with connectors.
@@ -449,7 +452,6 @@ static std::string prt_andex(Exp* e)
 	return str;
 }
 
-#if 0
 // XXX Unused right now. What was the plan, here?
 static void cache_disjunct_string(Local* local,
                                   const Handle& sect, Exp* andex)
@@ -469,8 +471,12 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	Exp* orhead = nullptr;
 	Exp* ortail = nullptr;
 
-#define OPTIONAL_ANY_LINK
+// #define OPTIONAL_ANY_LINK
 #ifdef OPTIONAL_ANY_LINK
+	// Create a pair of optional ANY-links that can connect both left
+	// and right. This is a stop-gap measure the case where there are
+	// no suitable disjuncts on the word. Disabled for now, because this
+	// is too blunt a tool; using explicit word-pairs is a better deal.
 	Exp* an = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
 	Exp* on = make_optional_node(dict->Exp_pool, an);
 	Exp* ap = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
