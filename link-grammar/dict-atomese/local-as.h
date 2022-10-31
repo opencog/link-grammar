@@ -21,6 +21,7 @@ public:
 	Handle linkp;   // (Predicate "*-LG connector string-*")
 	Handle djp;     // (Predicate "*-LG disjunct string-*")
 	Handle mikp;    // (Predicate "*-Mutual Info Key cover-section")
+	Handle lany;    // (LgLinkNode "ANY")
 	int cost_index;   // Offset into the FloatValue
 	double cost_scale;
 	double cost_offset;

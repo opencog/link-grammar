@@ -98,6 +98,9 @@ bool as_open(Dictionary dict)
 	local->djp = local->asp->add_node(PREDICATE_NODE,
 		"*-LG disjunct string-*");
 
+	// Marks word-pairs.
+	local->lany = local->asp->add_node(LG_LINK_NODE, "ANY");
+
 	// Costs are assumed to be minus the MI located at some key.
 	const char* miks = get_dict_define(dict, COST_KEY_STRING);
 	Handle mikh = Sexpr::decode_atom(miks);

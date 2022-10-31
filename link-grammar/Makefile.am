@@ -107,6 +107,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-atomese/read-atomese.c      \
 	dict-atomese/lookup-atomese.cc   \
 	dict-atomese/fetch-cats.cc       \
+	dict-atomese/word-pairs.cc       \
 	disjunct-utils.c                 \
 	error.c                          \
 	linkage/analyze-linkage.c        \

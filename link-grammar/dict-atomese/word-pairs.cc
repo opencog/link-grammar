@@ -50,7 +50,7 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 
 	fetch_pairs(local, germ);
 
-	Handle hany = asp->add_node(LG_LINK_NODE, "ANY");
+	const Handle& hany = local->lany; // (LG_LINK_NODE, "ANY");
 
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
@@ -82,6 +82,7 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		ortail = optex;
 	}
 
+	return ortail;
 }
 
 #endif // HAVE_ATOMESE
