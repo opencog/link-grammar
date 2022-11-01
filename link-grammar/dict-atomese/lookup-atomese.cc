@@ -119,7 +119,9 @@ bool as_open(Dictionary dict)
 
 	const char * str;
 #define LDEF(NAME,FLT) \
-	str = linkgrammar_get_dict_define(dict, NAME) ?  str : FLT
+	str = linkgrammar_get_dict_define(dict, NAME) ?  str : \
+		({ prt_error( \
+			"Warning: missing parameter `%s` in config file\n", NAME); FLT; })
 
 	local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
 	local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.2"));
