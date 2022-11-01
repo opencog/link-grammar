@@ -484,6 +484,13 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	ortail = make_and_node(dict->Exp_pool, on, op);
 #endif // OPTIONAL_ANY_LINK
 
+// #define OPTIONAL_PAIRS
+#ifdef OPTIONAL_PAIRS
+	Exp* epr = make_pair_exprs(dict, germ);
+printf("duuuude got %d pair exprs for %s\n", size_of_expression(epr),
+germ->get_name().c_str());
+#endif // OPTIONAL_PAIRS
+
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
@@ -518,6 +525,14 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		andhead = make_and_node(dict->Exp_pool, on, op);
 		andtail = op;
 #endif // OPTIONAL_ANY_LINK
+
+#ifdef OPTIONAL_PAIRS
+		Exp* ecp = copy_Exp(epr, dict->Exp_pool, NULL);
+		Exp* ecc = copy_Exp(epr, dict->Exp_pool, NULL);
+		// andhead = make_and_node(dict->Exp_pool, ecp, NULL);
+		andhead = make_and_node(dict->Exp_pool, ecp, ecc);
+		andtail = ecc;
+#endif // OPTIONAL_PAIRS
 
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
@@ -608,6 +623,7 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		}
 		ortail = andhead;
 	}
+
 	if (nullptr == orhead) return ortail;
 	return orhead;
 }
