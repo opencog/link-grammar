@@ -237,6 +237,8 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	return make_sect_exprs(dict, germ);
 }
 
+/// Given a word, return the collection of Dict_nodes holding the
+/// expressions for that word.
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
 	// Do we already have this word cached? If so, pull from
