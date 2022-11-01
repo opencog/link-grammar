@@ -531,13 +531,13 @@ germ->get_name().c_str());
 		andtail = op;
 #endif // OPTIONAL_ANY_LINK
 
-#ifdef OPTIONAL_PAIRS
+#ifdef EXTRA_OPTIONAL_PAIRS
 		Exp* optex = make_optional_node(dict->Exp_pool, epr);
 		Exp* optey = make_optional_node(dict->Exp_pool, epr);
 		// andhead = make_and_node(dict->Exp_pool, optex, NULL);
 		andhead = make_and_node(dict->Exp_pool, optex, optey);
 		andtail = optey;
-#endif // OPTIONAL_PAIRS
+#endif // EXTRA_OPTIONAL_PAIRS
 
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
