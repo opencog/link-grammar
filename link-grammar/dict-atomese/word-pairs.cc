@@ -139,4 +139,37 @@ germ->get_name().c_str());
 	return andhead;
 }
 
+// ===============================================================
+
+Exp* make_any_exprs(Dictionary dict, int arity)
+{
+	// Create a pair of ANY-links that can connect both left or right.
+	Exp* aneg = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
+	Exp* apos = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
+
+	// XXX Configure
+	aneg->cost = 1.0;
+	apos->cost = 1.0;
+
+	Exp* any = make_or_node(dict->Exp_pool, aneg, apos);
+	Exp* optex = make_optional_node(dict->Exp_pool, any);
+
+	Exp* andhead = nullptr;
+	Exp* andtail = nullptr;
+
+	andhead = make_and_node(dict->Exp_pool, optex, NULL);
+	andtail = andhead->operand_first;
+
+	for (int i=1; i< arity; i++)
+	{
+		Exp* opt = make_optional_node(dict->Exp_pool, any);
+		andtail->operand_next = opt;
+		andtail = opt;
+	}
+
+printf("duuuude created ANY nodes %s\n", lg_exp_stringify(andhead));
+
+	return andhead;
+}
+
 #endif // HAVE_ATOMESE
