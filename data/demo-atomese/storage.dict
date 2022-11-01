@@ -80,6 +80,12 @@
 % `cost-max`.
 #define cost-default 2.0;
 
+% Same as above, but for word-pairs. Note the different key!
+#define pair-key "(Predicate \"*-Mutual Info Key-*\")";
+#define pair-index 1;
+#define pair-scale -0.5;
+#define pair-offset 0.0;
+
 % -----------------------
 % For this file to be read, at least one bogus entry is needed. It is
 % meaningless; we only need to trick the code into reading this file.

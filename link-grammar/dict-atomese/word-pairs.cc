@@ -60,6 +60,19 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		Handle evpr = asp->get_link(EVALUATION_LINK, hany, rawpr);
 		if (nullptr == evpr) continue;
 
+		// XX TODO
+		// double cost = local->pair_default;
+		double cost = 0.0;
+
+		const ValuePtr& mivp = evpr->getValue(local->mikp);
+		if (mivp)
+		{
+			// MI is the second entry in the vector.
+			const FloatValuePtr& fmivp = FloatValueCast(mivp);
+			double mi = fmivp->value()[local->pair_index];
+			cost = (local->pair_scale * mi) + local->pair_offset;
+		}
+
 		// Get the cached link-name for this pair.
 		const std::string& slnk = cached_linkname(local, rawpr);
 
@@ -70,6 +83,8 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		// Create the connector
 		Exp* eee = make_connector_node(dict,
 			dict->Exp_pool, slnk.c_str(), cdir, false);
+
+		eee->cost = cost;
 
 		// Use an OR-node to create a linked list of expressions.
 		if (ortail)

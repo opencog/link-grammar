@@ -40,6 +40,11 @@ using namespace opencog;
 #define COST_CUTOFF_STRING "cost-cutoff"
 #define COST_DEFAULT_STRING "cost-default"
 
+#define PAIR_KEY_STRING "pair-key"
+#define PAIR_INDEX_STRING "pair-index"
+#define PAIR_SCALE_STRING "pair-scale"
+#define PAIR_OFFSET_STRING "pair-offset"
+
 /// Shared global
 static AtomSpacePtr external_atomspace;
 static StorageNodePtr external_storage;
@@ -104,7 +109,11 @@ bool as_open(Dictionary dict)
 	// Costs are assumed to be minus the MI located at some key.
 	const char* miks = get_dict_define(dict, COST_KEY_STRING);
 	Handle mikh = Sexpr::decode_atom(miks);
-	local->mikp = local->asp->add_atom(mikh);
+	local->miks = local->asp->add_atom(mikh);
+
+	const char* mikp = get_dict_define(dict, PAIR_KEY_STRING);
+	Handle miki = Sexpr::decode_atom(mikp);
+	local->mikp = local->asp->add_atom(miki);
 
 #define LDEF(NAME) linkgrammar_get_dict_define(dict, NAME)
 
@@ -113,6 +122,10 @@ bool as_open(Dictionary dict)
 	local->cost_offset = atof(LDEF(COST_OFFSET_STRING));
 	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING));
 	local->cost_default = atof(LDEF(COST_DEFAULT_STRING));
+
+	local->pair_index = atoi(LDEF(PAIR_INDEX_STRING));
+	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING));
+	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING));
 
 	dict->as_server = (void*) local;
 
@@ -506,7 +519,7 @@ germ->get_name().c_str());
 		// ignore this issue, and assign a default to them.
 		double cost = local->cost_default;
 
-		const ValuePtr& mivp = sect->getValue(local->mikp);
+		const ValuePtr& mivp = sect->getValue(local->miks);
 		if (mivp)
 		{
 			// MI is the second entry in the vector.
