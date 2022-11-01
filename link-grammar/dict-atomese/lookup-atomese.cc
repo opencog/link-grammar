@@ -44,6 +44,8 @@ using namespace opencog;
 #define PAIR_INDEX_STRING "pair-index"
 #define PAIR_SCALE_STRING "pair-scale"
 #define PAIR_OFFSET_STRING "pair-offset"
+#define PAIR_CUTOFF_STRING "pair-cutoff"
+#define PAIR_DEFAULT_STRING "pair-default"
 
 /// Shared global
 static AtomSpacePtr external_atomspace;
@@ -126,6 +128,8 @@ bool as_open(Dictionary dict)
 	local->pair_index = atoi(LDEF(PAIR_INDEX_STRING));
 	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING));
 	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING));
+	local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING));
+	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING));
 
 	dict->as_server = (void*) local;
 

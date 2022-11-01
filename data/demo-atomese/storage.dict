@@ -85,6 +85,8 @@
 #define pair-index 1;
 #define pair-scale -0.5;
 #define pair-offset 0.0;
+#define pair-cutoff 8.0;
+#define pair-default 2.0;
 
 % -----------------------
 % For this file to be read, at least one bogus entry is needed. It is

@@ -60,10 +60,7 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		Handle evpr = asp->get_link(EVALUATION_LINK, hany, rawpr);
 		if (nullptr == evpr) continue;
 
-		// XX TODO
-		// double cost = local->pair_default;
-		double cost = 0.0;
-
+		double cost = local->pair_default;
 		const ValuePtr& mivp = evpr->getValue(local->mikp);
 		if (mivp)
 		{
@@ -72,6 +69,9 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 			double mi = fmivp->value()[local->pair_index];
 			cost = (local->pair_scale * mi) + local->pair_offset;
 		}
+		// If the cost is too high, just skip this.
+		if (local->pair_cutoff <= cost)
+			continue;
 
 		// Get the cached link-name for this pair.
 		const std::string& slnk = cached_linkname(local, rawpr);
