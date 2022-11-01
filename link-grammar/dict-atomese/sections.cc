@@ -233,14 +233,7 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 
 #define OPTIONAL_PAIRS
 #ifdef OPTIONAL_PAIRS
-	Exp* epr = make_pair_exprs(dict, germ);
-	Exp* optex = make_optional_node(dict->Exp_pool, epr);
-	Exp* optey = make_optional_node(dict->Exp_pool, epr);
-	Exp* optez = make_optional_node(dict->Exp_pool, epr);
-	ortail = make_and_node(dict->Exp_pool, optex, optey);
-	optey->operand_next = optez;
-printf("duuuude got %d pair exprs for %s\n", size_of_expression(epr),
-germ->get_name().c_str());
+	ortail = make_cart_pairs(dict, germ, 3);
 #endif // OPTIONAL_PAIRS
 
 	// Loop over all Sections on the word.

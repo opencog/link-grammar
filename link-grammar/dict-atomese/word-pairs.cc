@@ -15,10 +15,8 @@ extern "C" {
 #include "../dict-common/dict-common.h"  // for Dictionary_s
 #include "../dict-common/dict-utils.h"   // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
-#include "lookup-atomese.h"
 };
 
-#include "dict-atomese.h"
 #include "local-as.h"
 
 using namespace opencog;
@@ -98,6 +96,44 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 	}
 
 	return orhead;
+}
+
+// ===============================================================
+
+/// Create exprs that consist of a Cartesian product of pairs.
+/// Given a word, a lookup is made to find all word-pairs holding
+/// that word. This is done by `make_pair_exprs()`, above. Then
+/// this is ANDED against itself N times, and the result is returned.
+/// The N is the `arity` argument.
+///
+/// For example, if `make_pair_exprs()` returns `(A+ or B- or C+)`
+/// and arity is 3, then this will return `(A+ or B- or C+ or ())
+/// and (A+ or B- or C+ or ()) and (A+ or B- or C+ or ())`. When
+/// this is exploded into disjuncts, any combination is possible,
+/// from size zero to three. That's why its a Cartesian product.
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
+{
+	Exp* andhead = nullptr;
+	Exp* andtail = nullptr;
+
+	Exp* epr = make_pair_exprs(dict, germ);
+	Exp* optex = make_optional_node(dict->Exp_pool, epr);
+	andhead = make_and_node(dict->Exp_pool, optex, NULL);
+	andtail = andhead;
+
+	for (int i=1; i< arity; i++)
+	{
+		Exp* opt = make_optional_node(dict->Exp_pool, epr);
+		andtail->operand_next = opt;
+		andtail = opt;
+	}
+
+printf("duuuude got %d pair exprs (prod = %d) for %s\n",
+size_of_expression(epr),
+size_of_expression(andhead),
+germ->get_name().c_str());
+
+	return andhead;
 }
 
 #endif // HAVE_ATOMESE

@@ -44,4 +44,6 @@ bool section_boolean_lookup(Dictionary dict, const char *s);
 Exp* make_exprs(Dictionary dict, const Handle& germ);
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
 Exp* make_pair_exprs(Dictionary dict, const Handle& germ);
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity);
+
 std::string cached_linkname(Local*, const Handle& pair);
