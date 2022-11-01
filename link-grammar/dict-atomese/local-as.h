@@ -18,14 +18,33 @@ public:
 	const char* node_str; // (StorageNode \"foo://bar/baz\")
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;
-	Handle linkp;   // (Predicate "*-LG connector string-*")
-	Handle djp;     // (Predicate "*-LG disjunct string-*")
-	Handle mikp;    // (Predicate "*-Mutual Info Key cover-section")
+	Handle linkp;     // (Predicate "*-LG connector string-*")
+	// Handle djp;       // (Predicate "*-LG disjunct string-*")
+	Handle lany;      // (LgLinkNode "ANY")
+
+	// Sections
+	Handle miks;      // (Predicate "*-Mutual Info Key cover-section")
 	int cost_index;   // Offset into the FloatValue
 	double cost_scale;
 	double cost_offset;
 	double cost_cutoff;
 	double cost_default;
+
+	// Word-pairs
+	Handle mikp;      // (Predicate "*-Mutual Info Key-*")
+	int pair_index;   // Offset into the FloatValue
+	double pair_scale;
+	double pair_offset;
+	double pair_cutoff;
+	double pair_default;
 };
 
+bool section_boolean_lookup(Dictionary dict, const char *s);
+
 Exp* make_exprs(Dictionary dict, const Handle& germ);
+Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
+Exp* make_pair_exprs(Dictionary dict, const Handle& germ);
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity);
+Exp* make_any_exprs(Dictionary dict, int arity);
+
+std::string cached_linkname(Local*, const Handle& pair);
