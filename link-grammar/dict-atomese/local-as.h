@@ -40,5 +40,6 @@ public:
 };
 
 Exp* make_exprs(Dictionary dict, const Handle& germ);
+Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
 Exp* make_pair_exprs(Dictionary dict, const Handle& germ);
 std::string cached_linkname(Local*, const Handle& pair);
