@@ -41,6 +41,8 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 	return cnt;
 }
 
+/// Create a list of connectors, one for each available word pair
+/// containing the word in the germ. These are simply OR'ed together.
 Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -65,21 +67,19 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		char cdir = '+';
 		if (rawpr->getOutgoingAtom(1) == germ) cdir  = '-';
 
-		// Create a connector, and make it optional.
+		// Create the connector
 		Exp* eee = make_connector_node(dict,
 			dict->Exp_pool, slnk.c_str(), cdir, false);
-
-		Exp* optex = make_optional_node(dict->Exp_pool, eee);
 
 		// Use an OR-node to create a linked list of expressions.
 		if (ortail)
 		{
 			if (nullptr == orhead)
-				orhead = make_or_node(dict->Exp_pool, ortail, optex);
+				orhead = make_or_node(dict->Exp_pool, ortail, eee);
 			else
-				ortail->operand_next = optex;
+				ortail->operand_next = eee;
 		}
-		ortail = optex;
+		ortail = eee;
 	}
 
 	return orhead;

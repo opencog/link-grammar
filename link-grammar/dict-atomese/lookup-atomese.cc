@@ -527,11 +527,11 @@ germ->get_name().c_str());
 #endif // OPTIONAL_ANY_LINK
 
 #ifdef OPTIONAL_PAIRS
-		Exp* ecp = copy_Exp(epr, dict->Exp_pool, NULL);
-		Exp* ecc = copy_Exp(epr, dict->Exp_pool, NULL);
-		// andhead = make_and_node(dict->Exp_pool, ecp, NULL);
-		andhead = make_and_node(dict->Exp_pool, ecp, ecc);
-		andtail = ecc;
+		Exp* optex = make_optional_node(dict->Exp_pool, epr);
+		Exp* optey = make_optional_node(dict->Exp_pool, epr);
+		// andhead = make_and_node(dict->Exp_pool, optex, NULL);
+		andhead = make_and_node(dict->Exp_pool, optex, optey);
+		andtail = optey;
 #endif // OPTIONAL_PAIRS
 
 		// The connector sequence the second Atom.
