@@ -119,7 +119,7 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 	Exp* epr = make_pair_exprs(dict, germ);
 	Exp* optex = make_optional_node(dict->Exp_pool, epr);
 	andhead = make_and_node(dict->Exp_pool, optex, NULL);
-	andtail = andhead;
+	andtail = andhead->operand_first;
 
 	for (int i=1; i< arity; i++)
 	{
@@ -128,6 +128,9 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 		andtail = opt;
 	}
 
+	// Should multiply out
+	// lg_assert(arity * size_of_expression(epr) ==
+	//           size_of_expression(andhead));
 printf("duuuude got %d pair exprs (prod = %d) for %s\n",
 size_of_expression(epr),
 size_of_expression(andhead),
