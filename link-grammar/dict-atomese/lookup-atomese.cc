@@ -117,19 +117,21 @@ bool as_open(Dictionary dict)
 	Handle miki = Sexpr::decode_atom(mikp);
 	local->mikp = local->asp->add_atom(miki);
 
-#define LDEF(NAME) linkgrammar_get_dict_define(dict, NAME)
+	const char * str;
+#define LDEF(NAME,FLT) \
+	str = linkgrammar_get_dict_define(dict, NAME) ?  str : FLT
 
-	local->cost_index = atoi(LDEF(COST_INDEX_STRING));
-	local->cost_scale = atof(LDEF(COST_SCALE_STRING));
-	local->cost_offset = atof(LDEF(COST_OFFSET_STRING));
-	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING));
-	local->cost_default = atof(LDEF(COST_DEFAULT_STRING));
+	local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
+	local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.2"));
+	local->cost_offset = atof(LDEF(COST_OFFSET_STRING, "0"));
+	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "6"));
+	local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.0"));
 
-	local->pair_index = atoi(LDEF(PAIR_INDEX_STRING));
-	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING));
-	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING));
-	local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING));
-	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING));
+	local->pair_index = atoi(LDEF(PAIR_INDEX_STRING, "1"));
+	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.2"));
+	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "0"));
+	local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING, "6"));
+	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "1.0"));
 
 	dict->as_server = (void*) local;
 
