@@ -82,7 +82,7 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		ortail = optex;
 	}
 
-	return ortail;
+	return orhead;
 }
 
 #endif // HAVE_ATOMESE
