@@ -167,8 +167,6 @@ Exp* make_any_exprs(Dictionary dict, int arity)
 		andtail = opt;
 	}
 
-printf("duuuude created ANY nodes %s\n", lg_exp_stringify(andhead));
-
 	return andhead;
 }
 
