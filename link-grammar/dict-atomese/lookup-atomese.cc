@@ -217,19 +217,6 @@ void as_close(Dictionary dict)
 
 // ===============================================================
 
-static size_t count_sections(Local* local, const Handle& germ)
-{
-	// Are there any Sections in the local atomspace?
-	size_t nsects = germ->getIncomingSetSizeByType(SECTION);
-	if (0 < nsects or nullptr == local->stnp) return nsects;
-
-	local->stnp->fetch_incoming_by_type(germ, SECTION);
-	local->stnp->barrier();
-	nsects = germ->getIncomingSetSizeByType(SECTION);
-
-	return nsects;
-}
-
 /// Return true if the given word can be found in the dictionary,
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
@@ -240,33 +227,7 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
 
-	Local* local = (Local*) (dict->as_server);
-	Handle wrd = local->asp->add_node(WORD_NODE, s);
-
-	// Are there any Sections for this word in the local atomspace?
-	size_t nwrdsects = count_sections(local, wrd);
-
-	// Does this word belong to any classes?
-	size_t nclass = wrd->getIncomingSetSizeByType(MEMBER_LINK);
-	if (0 == nclass and local->stnp)
-	{
-		local->stnp->fetch_incoming_by_type(wrd, MEMBER_LINK);
-		local->stnp->barrier();
-	}
-
-	size_t nclssects = 0;
-	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
-	{
-		const Handle& wcl = memb->getOutgoingAtom(1);
-		if (WORD_CLASS_NODE != wcl->get_type()) continue;
-		nclssects += count_sections(local, wcl);
-	}
-
-	lgdebug(+D_SPEC+5,
-		"as_boolean_lookup for >>%s<< found class=%lu nsects=%lu %lu\n",
-		s, nclass, nwrdsects, nclssects);
-
-	return 0 != (nwrdsects + nclssects);
+	return section_boolean_lookup(dict, s);
 }
 
 // ===============================================================

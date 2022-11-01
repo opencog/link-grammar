@@ -39,6 +39,8 @@ public:
 	double pair_default;
 };
 
+bool section_boolean_lookup(Dictionary dict, const char *s);
+
 Exp* make_exprs(Dictionary dict, const Handle& germ);
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
 Exp* make_pair_exprs(Dictionary dict, const Handle& germ);

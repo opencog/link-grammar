@@ -33,7 +33,6 @@ using namespace opencog;
 
 // ===============================================================
 
-#if LATER
 static size_t count_sections(Local* local, const Handle& germ)
 {
 	// Are there any Sections in the local atomspace?
@@ -49,14 +48,8 @@ static size_t count_sections(Local* local, const Handle& germ)
 
 /// Return true if the given word can be found in the dictionary,
 /// else return false.
-bool as_boolean_lookup(Dictionary dict, const char *s)
+bool section_boolean_lookup(Dictionary dict, const char *s)
 {
-	bool found = dict_node_exists_lookup(dict, s);
-	if (found) return true;
-
-	if (0 == strcmp(s, LEFT_WALL_WORD))
-		s = "###LEFT-WALL###";
-
 	Local* local = (Local*) (dict->as_server);
 	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
@@ -80,12 +73,11 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	}
 
 	lgdebug(+D_SPEC+5,
-		"as_boolean_lookup for >>%s<< found class=%lu nsects=%lu %lu\n",
+		"section_boolean_lookup for >>%s<< found class=%lu nsects=%lu %lu\n",
 		s, nclass, nwrdsects, nclssects);
 
 	return 0 != (nwrdsects + nclssects);
 }
-#endif //LATER
 
 // ===============================================================
 /// Mapping LG connectors to AtomSpace connectors, and v.v.
