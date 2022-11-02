@@ -315,16 +315,10 @@ void and_enchain_right(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
 
 	/* Link new connectors to the tail */
 	if (nullptr == andtail)
-	{
-		andtail = andhead;
-		item->operand_next = andhead->operand_first;
-		andhead->operand_first = item;
-	}
-	else
-	{
-		andtail->operand_next = item;
-		andtail = item;
-	}
+		andtail = andhead->operand_first;
+
+	andtail->operand_next = item;
+	andtail = item;
 }
 
 Exp* make_exprs(Dictionary dict, const Handle& germ)
