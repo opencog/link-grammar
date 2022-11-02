@@ -256,7 +256,10 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 		Exp* andtail = nullptr;
 
 		if (inside_any)
-			andhead = make_and_node(dict->Exp_pool, inside_any, NULL);
+		{
+			Exp* optex = make_optional_node(dict->Exp_pool, inside_any);
+			andhead = make_and_node(dict->Exp_pool, optex, NULL);
+		}
 
 #ifdef EXTRA_OPTIONAL_PAIRS
 		Exp* optex = make_optional_node(dict->Exp_pool, epr);
