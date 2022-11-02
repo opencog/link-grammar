@@ -286,6 +286,46 @@ void or_enchain(Dictionary dict, Exp* &orhead, Exp* &ortail, Exp* item)
 	ortail = item;
 }
 
+void and_enchain_left(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
+{
+	if (nullptr == item) return; // no-op
+	if (nullptr == andhead)
+	{
+		andhead = make_and_node(dict->Exp_pool, item, NULL);
+		return;
+	}
+
+	/* Link new connectors to the head */
+	item->operand_next = andhead->operand_first;
+	andhead->operand_first = item;
+
+	if (nullptr == andtail)
+		andtail = item->operand_next;
+}
+
+void and_enchain_right(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
+{
+	if (nullptr == item) return; // no-op
+	if (nullptr == andhead)
+	{
+		andhead = make_and_node(dict->Exp_pool, item, NULL);
+		return;
+	}
+
+	/* Link new connectors to the tail */
+	if (nullptr == andtail)
+	{
+		andtail = andhead;
+		item->operand_next = andhead->operand_first;
+		andhead->operand_first = item;
+	}
+	else
+	{
+		andtail->operand_next = item;
+		andtail = item;
+	}
+}
+
 Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -310,6 +350,10 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		Exp* sects = make_sect_exprs(dict, germ);
 		or_enchain(dict, orhead, ortail, sects);
 	}
+
+	if (nullptr == ortail)
+		prt_error("Error: No expressions for the word `%s`\n",
+			germ->get_name().c_str());
 
 	if (nullptr == orhead) return ortail;
 	return orhead;

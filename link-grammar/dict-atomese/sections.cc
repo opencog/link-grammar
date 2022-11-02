@@ -218,6 +218,18 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 	Exp* orhead = nullptr;
 	Exp* ortail = nullptr;
 
+	// Create some optional links; these may be nullptr's.
+	Exp* left_inside_any = make_any_exprs(dict, local->left_inside_pairs);
+	Exp* right_inside_any = make_any_exprs(dict, local->right_inside_any);
+	Exp* left_outside_any = make_any_exprs(dict, local->left_outside_any);
+	Exp* right_outside_any = make_any_exprs(dict, local->right_outside_any);
+
+	Exp* inside_any = right_inside_any;
+	if (left_inside_any and right_inside_any)
+		inside_any = make_and_node(dict->Exp_pool, left_inside_any, right_inside_any);
+	else if (left_inside_any)
+		inside_any = left_inside_any;
+
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
@@ -244,14 +256,8 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 		Exp* andhead = nullptr;
 		Exp* andtail = nullptr;
 
-#ifdef OPTIONAL_ANY_LINK
-		Exp* an = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
-		Exp* on = make_optional_node(dict->Exp_pool, an);
-		Exp* ap = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
-		Exp* op = make_optional_node(dict->Exp_pool, ap);
-		andhead = make_and_node(dict->Exp_pool, on, op);
-		andtail = op;
-#endif // OPTIONAL_ANY_LINK
+		if (inside_any)
+			andhead = make_and_node(dict->Exp_pool, inside_any, NULL);
 
 #ifdef EXTRA_OPTIONAL_PAIRS
 		Exp* optex = make_optional_node(dict->Exp_pool, epr);
@@ -279,42 +285,24 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 			Exp* eee = make_connector_node(dict,
 				dict->Exp_pool, slnk.c_str(), cdir, false);
 
-			if (nullptr == andhead)
-				andhead = make_and_node(dict->Exp_pool, eee, NULL);
-			else
 			if ('+' == cdir)
-			{
-				/* Link new connectors to the tail */
-				if (nullptr == andtail)
-				{
-					andtail = andhead;
-					eee->operand_next = andhead->operand_first;
-					andhead->operand_first = eee;
-				}
-				else
-				{
-					andtail->operand_next = eee;
-					andtail = eee;
-				}
-			}
+				and_enchain_right(dict, andhead, andtail, eee);
 			else if ('-' == cdir)
-			{
-				/* Link new connectors to the head */
-				eee->operand_next = andhead->operand_first;
-				andhead->operand_first = eee;
-
-				if (nullptr == andtail)
-					andtail = eee->operand_next;
-			}
+				and_enchain_left(dict, andhead, andtail, eee);
 		}
 
-		// This should never-ever happen!
+		// Sanity-check the Section - this should never-ever happen!
 		if (nullptr == andhead)
 		{
 			prt_error("Warning: Empty connector sequence for %s\n",
 				sect->to_short_string().c_str());
 			continue;
 		}
+
+		Exp* optel = make_optional_node(dict->Exp_pool, left_outside_any);
+		and_enchain_left(dict, andhead, andtail, optel);
+		Exp* opter = make_optional_node(dict->Exp_pool, right_outside_any);
+		and_enchain_right(dict, andhead, andtail, opter);
 
 		// Optional: shorten the expression,
 		// if there's only one connector in it.

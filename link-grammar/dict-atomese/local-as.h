@@ -65,5 +65,7 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity);
 Exp* make_any_exprs(Dictionary dict, int arity);
 
 void or_enchain(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);
+void and_enchain_left(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);
+void and_enchain_right(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);
 
 std::string cached_linkname(Local*, const Handle& pair);

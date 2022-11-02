@@ -143,6 +143,8 @@ germ->get_name().c_str());
 
 Exp* make_any_exprs(Dictionary dict, int arity)
 {
+	if (arity <= 0) return nullptr;
+
 	// Create a pair of ANY-links that can connect both left or right.
 	Exp* aneg = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
 	Exp* apos = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
