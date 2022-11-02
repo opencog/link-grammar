@@ -219,7 +219,7 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 	Exp* ortail = nullptr;
 
 	// Create some optional links; these may be nullptr's.
-	Exp* left_inside_any = make_any_exprs(dict, local->left_inside_pairs);
+	Exp* left_inside_any = make_any_exprs(dict, local->left_inside_any);
 	Exp* right_inside_any = make_any_exprs(dict, local->right_inside_any);
 	Exp* left_outside_any = make_any_exprs(dict, local->left_outside_any);
 	Exp* right_outside_any = make_any_exprs(dict, local->right_outside_any);
