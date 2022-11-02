@@ -130,24 +130,25 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 		andtail = opt;
 	}
 
-	// Should multiply out
+	// Could verify that it all multiplies out as expected.
 	// lg_assert(arity * size_of_expression(epr) ==
 	//           size_of_expression(andhead));
-printf("duuuude got %d pair exprs (prod = %d) for %s\n",
-size_of_expression(epr),
-size_of_expression(andhead),
-germ->get_name().c_str());
 
 	return andhead;
 }
 
 // ===============================================================
 
+/// Create exprs that are cartesian products of ANY links. The
+/// corresponding disjuncts will have `arity` number of connectors.
+/// If these are used all by themselves, the resulting parses will
+/// be random planar graphs; i.e. will be equivalent to the `any`
+/// language parses.
 Exp* make_any_exprs(Dictionary dict, int arity)
 {
 	if (arity <= 0) return nullptr;
 
-	// Create a pair of ANY-links that can connect both left or right.
+	// Create a pair of ANY-links that can connect either left or right.
 	Exp* aneg = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
 	Exp* apos = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
 
