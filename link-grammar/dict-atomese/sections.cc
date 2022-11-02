@@ -339,16 +339,8 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 		printf("Word: '%s'  Exp: %s\n", wrd, lg_exp_stringify(andhead));
 #endif
 
-		// If there are two or more and-expressions,
-		// they get appended to a list hanging on a single OR-node.
-		if (ortail)
-		{
-			if (nullptr == orhead)
-				orhead = make_or_node(dict->Exp_pool, ortail, andhead);
-			else
-				ortail->operand_next = andhead;
-		}
-		ortail = andhead;
+		// Add it to the linked list.
+		or_enchain(dict, orhead, ortail, andhead);
 	}
 
 	if (nullptr == orhead) return ortail;

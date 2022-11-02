@@ -147,9 +147,9 @@ Exp* make_any_exprs(Dictionary dict, int arity)
 	Exp* aneg = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
 	Exp* apos = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
 
-	// XXX Configure
-	aneg->cost = 1.0;
-	apos->cost = 1.0;
+	Local* local = (Local*) (dict->as_server);
+	aneg->cost = local->any_default;
+	apos->cost = local->any_default;
 
 	Exp* any = make_or_node(dict->Exp_pool, aneg, apos);
 	Exp* optex = make_optional_node(dict->Exp_pool, any);
