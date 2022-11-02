@@ -299,10 +299,16 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 			continue;
 		}
 
-		Exp* optel = make_optional_node(dict->Exp_pool, left_outside_any);
-		and_enchain_left(dict, andhead, andtail, optel);
-		Exp* opter = make_optional_node(dict->Exp_pool, right_outside_any);
-		and_enchain_right(dict, andhead, andtail, opter);
+		if (left_outside_any)
+		{
+			Exp* optex = make_optional_node(dict->Exp_pool, left_outside_any);
+			and_enchain_left(dict, andhead, andtail, optex);
+		}
+		if (right_outside_any)
+		{
+			Exp* optex = make_optional_node(dict->Exp_pool, right_outside_any);
+			and_enchain_right(dict, andhead, andtail, optex);
+		}
 
 		// Optional: shorten the expression,
 		// if there's only one connector in it.
