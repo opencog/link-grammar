@@ -9,7 +9,7 @@
 ; It is intended that this file can be read in using the
 ; FileStorageNode provided by the AtomSpace.
 ;
-; CAUTION: IF YOU EDIT THIS FILE, BE SRE TO `MAKE INSTALL` AFTERWARDS.
+; CAUTION: IF YOU EDIT THIS FILE, BE SURE TO `MAKE INSTALL` AFTERWARDS.
 ; That is because the `storage.dict` is configured to get this file
 ; from the install location, and not the source tree!
 ;
@@ -171,4 +171,48 @@
 (Section (Word "6")
 	(ConnectorSeq (Connector (Word "fountain") (ConnectorDir "-"))))
 
+; ---------------------------------------------------------------------
+; Disjuncts can also be constructed from individual word-pairs. Using
+; these will results in a Maximum Spanning Tree (MST) or Maximum Planar
+; Graph (MPG) parse. Such disjuncts are not as "rigid" as those specified
+; by sections; instead they may have a variable number of connectors
+; in arbitrary order, preserving only the word order in the parsed
+; sentence.
+;
+; When used with existing disjuncts (controllable in the configuration
+; file), the use of word-pairs can supplement a poor selection of
+; disjuncts by adding additional (optional) links determined by the word
+; pairs.
+;
+; An example vocabulary is given below.  This allows sentences such as
+; "the fish jumped out of the water" to be parsed, as well as shorter
+; sentences made up of these same words, such as "the fish jumped" and
+; "jumped out", "out of water". There is no grammatical structure to what
+; can be parsed in this way, other than that there must be some word-pair
+; occurring in proper sentence order. Thus, for example "water jumped"
+; will NOT parse, because there is no word pair with "water" coming before
+; "jumped".
+;
+(Evaluation (LgLink "ANY") (List (Word "###LEFT_WALL###") (Word "jumped")))
+(Evaluation (LgLink "ANY") (List (Word "###LEFT_WALL###") (Word "fish")))
+(Evaluation (LgLink "ANY") (List (Word "the") (Word "fish")))
+(Evaluation (LgLink "ANY") (List (Word "fish") (Word "jumped")))
+(Evaluation (LgLink "ANY") (List (Word "jumped") (Word "out")))
+(Evaluation (LgLink "ANY") (List (Word "out") (Word "water")))
+(Evaluation (LgLink "ANY") (List (Word "of") (Word "water")))
+(Evaluation (LgLink "ANY") (List (Word "the") (Word "water")))
+(Evaluation (LgLink "ANY") (List (Word "out") (Word "of")))
+
+; Set costs on two of the pairs.
+(cog-set-value!
+	(Evaluation (LgLink "ANY") (List (Word "the") (Word "fish")))
+	(Predicate "*-Mutual Info Key-*")
+	(FloatValue 0 3.1))
+
+(cog-set-value!
+	(Evaluation (LgLink "ANY") (List (Word "jumped") (Word "out")))
+	(Predicate "*-Mutual Info Key-*")
+	(FloatValue 0 4.2))
+
+;
 ; ---------------------------------------------------------------------
