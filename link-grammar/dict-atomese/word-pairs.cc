@@ -117,6 +117,8 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 	Exp* andtail = nullptr;
 
 	Exp* epr = make_pair_exprs(dict, germ);
+	if (nullptr == epr) return nullptr;
+
 	Exp* optex = make_optional_node(dict->Exp_pool, epr);
 	andhead = make_and_node(dict->Exp_pool, optex, NULL);
 	andtail = andhead->operand_first;
