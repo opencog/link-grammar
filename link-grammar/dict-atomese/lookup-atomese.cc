@@ -272,18 +272,19 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 
 // ===============================================================
 
-void or_enchain(Dictionary dict, Exp* &orhead, Exp* &ortail, Exp* item)
+void or_enchain(Dictionary dict, Exp* &orhead, Exp* item)
 {
-	// If there are two or more and-expressions,
-	// they get appended to a list hanging on a single OR-node.
-	if (ortail)
+	if (nullptr == item) return; // no-op
+
+	if (nullptr == orhead)
 	{
-		if (nullptr == orhead)
-			orhead = make_or_node(dict->Exp_pool, ortail, item);
-		else
-			ortail->operand_next = item;
+		orhead = make_or_node(dict->Exp_pool, item, NULL);
+		return;
 	}
-	ortail = item;
+
+	/* Link new connectors to the head */
+	item->operand_next = orhead->operand_first;
+	orhead->operand_first = item;
 }
 
 void and_enchain_left(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
@@ -331,31 +332,25 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	Local* local = (Local*) (dict->as_server);
 
 	Exp* orhead = nullptr;
-	Exp* ortail = nullptr;
 
 	if (0 < local->any_disjuncts)
 	{
 		Exp* any = make_any_exprs(dict, local->any_disjuncts);
-		ortail = any;
+		or_enchain(dict, orhead, any);
 	}
 
 	if (0 < local->pair_disjuncts)
 	{
 		Exp* cpr = make_cart_pairs(dict, germ, 4);
-		or_enchain(dict, orhead, ortail, cpr);
+		or_enchain(dict, orhead, cpr);
 	}
 
 	if (local->enable_sections)
 	{
 		Exp* sects = make_sect_exprs(dict, germ);
-		or_enchain(dict, orhead, ortail, sects);
+		or_enchain(dict, orhead, sects);
 	}
 
-	if (nullptr == ortail)
-		prt_error("Error: No expressions for the word `%s`\n",
-			germ->get_name().c_str());
-
-	if (nullptr == orhead) return ortail;
 	return orhead;
 }
 

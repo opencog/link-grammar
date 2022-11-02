@@ -216,7 +216,6 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 	Exp* orhead = nullptr;
-	Exp* ortail = nullptr;
 
 	// Create some optional links; these may be nullptr's.
 	Exp* left_inside_any = make_any_exprs(dict, local->left_inside_any);
@@ -334,10 +333,9 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 #endif
 
 		// Add it to the linked list.
-		or_enchain(dict, orhead, ortail, andhead);
+		or_enchain(dict, orhead, andhead);
 	}
 
-	if (nullptr == orhead) return ortail;
 	return orhead;
 }
 
