@@ -47,6 +47,22 @@ using namespace opencog;
 #define PAIR_CUTOFF_STRING "pair-cutoff"
 #define PAIR_DEFAULT_STRING "pair-default"
 
+#define ANY_DEFAULT_STRING "any-default"
+#define ENABLE_SECTIONS_STRING "enable-sections"
+
+#define PAIR_DISJUNCTS_STRING "pair-disjuncts"
+#define LEFT_INSIDE_PAIRS_STRING "left-inside-pairs"
+#define RIGHT_INSIDE_PAIRS_STRING "right-inside-pairs"
+#define LEFT_OUTSIDE_PAIRS_STRING "left-outside-pairs"
+#define RIGHT_OUTSIDE_PAIRS_STRING "right-outside-pairs"
+
+#define ANY_DISJUNCTS_STRING "any-disjuncts"
+#define LEFT_INSIDE_ANY_STRING "left-inside-any"
+#define RIGHT_INSIDE_ANY_STRING "right-inside-any"
+#define LEFT_OUTSIDE_ANY_STRING "left-outside-any"
+#define RIGHT_OUTSIDE_ANY_STRING "right-outside-any"
+
+
 /// Shared global
 static AtomSpacePtr external_atomspace;
 static StorageNodePtr external_storage;
@@ -121,7 +137,8 @@ bool as_open(Dictionary dict)
 #define LDEF(NAME,FLT) \
 	str = linkgrammar_get_dict_define(dict, NAME) ?  str : \
 		({ prt_error( \
-			"Warning: missing parameter `%s` in config file\n", NAME); FLT; })
+			"Warning: missing parameter `%s` in config file; default to %s\n", \
+			 NAME, FLT); FLT; })
 
 	local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
 	local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.2"));
@@ -134,6 +151,21 @@ bool as_open(Dictionary dict)
 	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "0"));
 	local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING, "6"));
 	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "1.0"));
+
+	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "3.0"));
+	local->enable_sections = atoi(LDEF(ENABLE_SECTIONS_STRING, "1"));
+
+	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
+	local->left_inside_pairs = atoi(LDEF(LEFT_INSIDE_PAIRS_STRING, "1"));
+	local->right_inside_pairs = atoi(LDEF(RIGHT_INSIDE_PAIRS_STRING, "1"));
+	local->left_outside_pairs = atoi(LDEF(LEFT_OUTSIDE_PAIRS_STRING, "1"));
+	local->right_outside_pairs = atoi(LDEF(RIGHT_OUTSIDE_PAIRS_STRING, "1"));
+
+	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "4"));
+	local->left_inside_any = atoi(LDEF(LEFT_INSIDE_ANY_STRING, "2"));
+	local->right_inside_any = atoi(LDEF(RIGHT_INSIDE_ANY_STRING, "2"));
+	local->left_outside_any = atoi(LDEF(LEFT_OUTSIDE_ANY_STRING, "2"));
+	local->right_outside_any = atoi(LDEF(RIGHT_OUTSIDE_ANY_STRING, "2"));
 
 	dict->as_server = (void*) local;
 

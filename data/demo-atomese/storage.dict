@@ -88,6 +88,70 @@
 #define pair-cutoff 8.0;
 #define pair-default 2.0;
 
+% Default cost for `ANY` link types
+#define any-default 3.0;
+
+% -----------------------
+% Data structure configuration. By default, Link Grammar expressions and
+% disjuncts are created from Atomese Sections. But they can also be created
+% from word-pairs, thus offering a form of Maximum Spanning Tree (MST)
+% parsing, and Maximum Planar Graph (MPG) parsing. Also, existing sections
+% can be supplemented with word-pair links ("optional expressions", in LG).
+% Finally, if word pairs are not in the dictionary, but are needed to
+% obtain a full parse, the ANY link type can be used to provide the missing
+% link. Finally, if sections and word-pairs are disabled, but ANY is
+% enabled, then the parses will be random planar graphs, with a uniform
+% sampling (Just like the `any` language, each graph appears with equal
+% probability).  There are a dozen parameters that control the above.
+%
+% Obtain expressions from Atomese Sections. The default mode.
+% Set to 0 to disable.  Each section has a cost determined by the above
+% config paramters.
+#define enable-sections 1;
+
+% Create expressions that consist entirely of word-pair relationships.
+% The disjuncts will have up to the specified number of connectors; 4 is
+% the defualt. Setting this to zero disables the creation of such
+% disjuncts. If `enable-sections` above is turned off, the result will be
+% pure MPG parsing.
+%
+% Each connector has a cost is that is determined by the config parameters,
+% above.
+#define pair-disjuncts 4;
+
+% Supplement existing sections with optional links, determined from
+% word-pair relations. Inside pairs reach out from the middle of the
+% disjunt; outside pairs are at the edges.  For example, if an existing
+% disjunct `A- & B+` is supplemented with pairs, the new disjunct will be
+% `{LO-} & A- & {LI-} & {RI+} & B+ & {RO+}`, where `LI`, `LO`, `RI` and
+% `RO` are connectors that are obtained from word-pairs. The cost of these
+% connectors is determined by the pair-config, above.
+%
+% If set to zero, these supplementary links will not be generated. If set
+% to 2 or more, then that many extra optional connectors will be added.
+%
+% If sections are not enabled, then these parameters have no effect.
+#define left-inside-pairs 1;
+#define right-inside-pairs 1;
+#define left-outside-pairs 1;
+#define right-outside-pairs 1;
+
+% Same as above, but the supplementary connectors will all be of type `ANY`,
+% and thus can connect to anything. Since these can connect to anything,
+% they will not, in general, improve the parse. They are mostly useful for
+% dealing with new, unknown words, and generating quasi-random linkages to
+% those unknown words. The be effective, the cost should be set high enough
+% so that these are more costly than existing word-pairs.
+%
+% Setting to zero disables this.
+% If sections are disabled, the last four parameters have no effect.
+#define any-disjuncts 4;
+#define left-inside-any 2;
+#define right-inside-any 2;
+#define left-outside-any 2;
+#define right-outside-any 2;
+
+
 % -----------------------
 % For this file to be read, at least one bogus entry is needed. It is
 % meaningless; we only need to trick the code into reading this file.

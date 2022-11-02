@@ -37,6 +37,23 @@ public:
 	double pair_offset;
 	double pair_cutoff;
 	double pair_default;
+
+	// Any link type
+	double any_default;
+
+	// Supplements
+	bool enable_sections;
+	int pair_disjuncts;
+	int left_inside_pairs;
+	int right_inside_pairs;
+	int left_outside_pairs;
+	int right_outside_pairs;
+
+	int any_disjuncts;
+	int left_inside_any;
+	int right_inside_any;
+	int left_outside_any;
+	int right_outside_any;
 };
 
 bool section_boolean_lookup(Dictionary dict, const char *s);
