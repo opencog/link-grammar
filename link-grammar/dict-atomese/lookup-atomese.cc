@@ -332,18 +332,31 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 
 	Exp* orhead = nullptr;
 
+	// Create disjuncts consisting entirely of "ANY" links.
 	if (0 < local->any_disjuncts)
 	{
 		Exp* any = make_any_exprs(dict, local->any_disjuncts);
 		or_enchain(dict, orhead, any);
 	}
 
+	// Create disjuncts consisting entirely of word-pair links.
 	if (0 < local->pair_disjuncts)
 	{
-		Exp* cpr = make_cart_pairs(dict, germ, 4);
+		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts);
+
+		// Add "ANY" links, if requested.
+		if (0 < local->pair_with_any)
+		{
+			Exp* ap = make_any_exprs(dict, local->pair_with_any);
+			if (cpr)
+				cpr = make_and_node(dict->Exp_pool, cpr, ap);
+			else
+				cpr = ap;
+		}
 		or_enchain(dict, orhead, cpr);
 	}
 
+	// Create disjuncts from Sections
 	if (local->enable_sections)
 	{
 		Exp* sects = make_sect_exprs(dict, germ);

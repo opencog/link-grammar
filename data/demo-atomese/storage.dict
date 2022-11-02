@@ -152,7 +152,8 @@
 
 % Supplement the above with additional connectors of type "ANY". This is
 % useful for providing links between words that don't already exist as
-% pairs in the dataset.
+% pairs in the dataset. This has no effect, if `pair-disjuncts` (above)
+% is set to zero.
 #define pair-with-any 2;
 
 % Create expressions that consist entirely of "ANY" link-types.
