@@ -147,6 +147,8 @@ void free_Exp(Exp *e)
 /* Returns the number of connectors in the expression e */
 int size_of_expression(Exp * e)
 {
+	if (NULL == e) return 0;
+
 	int size = 0;
 
 	if (e->type == CONNECTOR_type) return 1;
