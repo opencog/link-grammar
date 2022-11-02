@@ -218,17 +218,6 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 	Exp* orhead = nullptr;
 	Exp* ortail = nullptr;
 
-// #define OPTIONAL_ANY_LINK
-#ifdef OPTIONAL_ANY_LINK
-	Exp* any = make_any_exprs(dict, 4);
-	ortail = any;
-#endif // OPTIONAL_ANY_LINK
-
-#define OPTIONAL_PAIRS
-#ifdef OPTIONAL_PAIRS
-	ortail = make_cart_pairs(dict, germ, 4);
-#endif // OPTIONAL_PAIRS
-
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)

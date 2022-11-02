@@ -137,7 +137,7 @@ bool as_open(Dictionary dict)
 #define LDEF(NAME,FLT) \
 	str = linkgrammar_get_dict_define(dict, NAME) ?  str : \
 		({ prt_error( \
-			"Warning: missing parameter `%s` in config file; default to %s\n", \
+			"Warning: missing `%s` in config; default to %s\n", \
 			 NAME, FLT); FLT; })
 
 	local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
@@ -268,9 +268,47 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 
 // ===============================================================
 
+void or_enchain(Dictionary dict, Exp* &orhead, Exp* &ortail, Exp* item)
+{
+	// If there are two or more and-expressions,
+	// they get appended to a list hanging on a single OR-node.
+	if (ortail)
+	{
+		if (nullptr == orhead)
+			orhead = make_or_node(dict->Exp_pool, ortail, item);
+		else
+			ortail->operand_next = item;
+	}
+	ortail = item;
+}
+
 Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
-	return make_sect_exprs(dict, germ);
+	Local* local = (Local*) (dict->as_server);
+
+	Exp* orhead = nullptr;
+	Exp* ortail = nullptr;
+
+	if (0 < local->any_disjuncts)
+	{
+		Exp* any = make_any_exprs(dict, local->any_disjuncts);
+		ortail = any;
+	}
+
+	if (0 < local->pair_disjuncts)
+	{
+		Exp* cpr = make_cart_pairs(dict, germ, 4);
+		or_enchain(dict, orhead, ortail, cpr);
+	}
+
+	if (local->enable_sections)
+	{
+		Exp* sects = make_sect_exprs(dict, germ);
+		or_enchain(dict, orhead, ortail, sects);
+	}
+
+	if (nullptr == orhead) return ortail;
+	return orhead;
 }
 
 /// Given a word, return the collection of Dict_nodes holding the
