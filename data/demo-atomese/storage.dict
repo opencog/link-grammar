@@ -109,16 +109,6 @@
 % config paramters.
 #define enable-sections 1;
 
-% Create expressions that consist entirely of word-pair relationships.
-% The disjuncts will have up to the specified number of connectors; 4 is
-% the defualt. Setting this to zero disables the creation of such
-% disjuncts. If `enable-sections` above is turned off, the result will be
-% pure MPG parsing.
-%
-% Each connector has a cost is that is determined by the config parameters,
-% above.
-#define pair-disjuncts 4;
-
 % Supplement existing sections with optional links, determined from
 % word-pair relations. Inside pairs reach out from the middle of the
 % disjunt; outside pairs are at the edges.  For example, if an existing
@@ -144,13 +134,36 @@
 % so that these are more costly than existing word-pairs.
 %
 % Setting to zero disables this.
-% If sections are disabled, the last four parameters have no effect.
-#define any-disjuncts 4;
+% If sections are disabled, the these parameters have no effect.
 #define left-inside-any 2;
 #define right-inside-any 2;
 #define left-outside-any 2;
 #define right-outside-any 2;
 
+% Create expressions that consist entirely of word-pair relationships.
+% The disjuncts will have up to the specified number of connectors; 4 is
+% the default. Setting this to zero disables the creation of such
+% disjuncts. If `enable-sections` above is turned off, the result will be
+% pure MPG parsing.
+%
+% Each connector has a cost is that is determined by the config parameters,
+% above.
+#define pair-disjuncts 4;
+
+% Supplement the above with additional connectors of type "ANY". This is
+% useful for providing links between words that don't already exist as
+% pairs in the dataset.
+#define pair-with-any 2;
+
+% Create expressions that consist entirely of "ANY" link-types.
+% The disjuncts will have up to the specified number of connectors; 4 is
+% the default. Setting this to zero disables the creation of such
+% disjuncts. If `enable-sections` and `pair-disjuncts` (above) are turned
+% off, the result will be pure random planar tree parsing.
+%
+% Each connector has a cost is that is determined by the config parameters,
+% above.
+#define any-disjuncts 4;
 
 % -----------------------
 % For this file to be read, at least one bogus entry is needed. It is

@@ -41,19 +41,24 @@ public:
 	// Any link type
 	double any_default;
 
-	// Supplements
+	// Basic Sections
 	bool enable_sections;
-	int pair_disjuncts;
+
+	// Supplements
 	int left_inside_pairs;
 	int right_inside_pairs;
 	int left_outside_pairs;
 	int right_outside_pairs;
 
-	int any_disjuncts;
 	int left_inside_any;
 	int right_inside_any;
 	int left_outside_any;
 	int right_outside_any;
+
+	// Disjuncts made from pairs
+	int pair_disjuncts;
+	int pair_with_any;
+	int any_disjuncts;
 };
 
 bool section_boolean_lookup(Dictionary dict, const char *s);

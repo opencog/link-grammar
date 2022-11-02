@@ -51,6 +51,8 @@ using namespace opencog;
 #define ENABLE_SECTIONS_STRING "enable-sections"
 
 #define PAIR_DISJUNCTS_STRING "pair-disjuncts"
+#define PAIR_WITH_ANY_STRING "pair-with-any"
+
 #define LEFT_INSIDE_PAIRS_STRING "left-inside-pairs"
 #define RIGHT_INSIDE_PAIRS_STRING "right-inside-pairs"
 #define LEFT_OUTSIDE_PAIRS_STRING "left-outside-pairs"
@@ -157,19 +159,22 @@ bool as_open(Dictionary dict)
 	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "1.0"));
 
 	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "3.0"));
+
 	local->enable_sections = atoi(LDEF(ENABLE_SECTIONS_STRING, "1"));
 
-	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
 	local->left_inside_pairs = atoi(LDEF(LEFT_INSIDE_PAIRS_STRING, "1"));
 	local->right_inside_pairs = atoi(LDEF(RIGHT_INSIDE_PAIRS_STRING, "1"));
 	local->left_outside_pairs = atoi(LDEF(LEFT_OUTSIDE_PAIRS_STRING, "1"));
 	local->right_outside_pairs = atoi(LDEF(RIGHT_OUTSIDE_PAIRS_STRING, "1"));
 
-	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "4"));
 	local->left_inside_any = atoi(LDEF(LEFT_INSIDE_ANY_STRING, "2"));
 	local->right_inside_any = atoi(LDEF(RIGHT_INSIDE_ANY_STRING, "2"));
 	local->left_outside_any = atoi(LDEF(LEFT_OUTSIDE_ANY_STRING, "2"));
 	local->right_outside_any = atoi(LDEF(RIGHT_OUTSIDE_ANY_STRING, "2"));
+
+	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
+	local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "2"));
+	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "4"));
 
 	dict->as_server = (void*) local;
 
