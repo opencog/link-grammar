@@ -89,6 +89,15 @@ static const char* get_dict_define(Dictionary dict, const char* namestr)
 	return string_set_add(unescaped, dict->string_set);
 }
 
+static const char* ldef(Dictionary dict, const char* name, const char* def)
+{
+	const char* str = linkgrammar_get_dict_define(dict, name);
+	if (str) return str;
+	prt_error("Warning: missing `%s` in config; default to %s\n",
+		 name, def);
+	return def;
+}
+
 /// Open a connection to a StorageNode.
 bool as_open(Dictionary dict)
 {
@@ -133,12 +142,7 @@ bool as_open(Dictionary dict)
 	Handle miki = Sexpr::decode_atom(mikp);
 	local->mikp = local->asp->add_atom(miki);
 
-	const char * str;
-#define LDEF(NAME,FLT) \
-	str = linkgrammar_get_dict_define(dict, NAME) ?  str : \
-		({ prt_error( \
-			"Warning: missing `%s` in config; default to %s\n", \
-			 NAME, FLT); FLT; })
+#define LDEF(NAME,DEF) ldef(dict, NAME, DEF)
 
 	local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
 	local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.2"));
