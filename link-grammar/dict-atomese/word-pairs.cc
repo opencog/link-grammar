@@ -98,7 +98,6 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 	Local* local = (Local*) (dict->as_server);
 	const AtomSpacePtr& asp = local->asp;
 	Exp* orhead = nullptr;
-	Exp* ortail = nullptr;
 
 	const Handle& hpr = local->prp; // (Predicate "pair")
 
@@ -134,15 +133,7 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 
 		eee->cost = cost;
 
-		// Use an OR-node to create a linked list of expressions.
-		if (ortail)
-		{
-			if (nullptr == orhead)
-				orhead = make_or_node(dict->Exp_pool, ortail, eee);
-			else
-				ortail->operand_next = eee;
-		}
-		ortail = eee;
+		or_enchain(dict, orhead, eee);
 	}
 
 	return orhead;
