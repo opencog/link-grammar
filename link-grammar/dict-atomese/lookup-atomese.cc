@@ -342,7 +342,8 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	}
 
 	// Create disjuncts consisting entirely of word-pair links.
-	if (0 < local->pair_disjuncts)
+	if (0 < local->pair_disjuncts or
+	    0 < local->left_pairs or 0 < local->right_pairs)
 	{
 		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts);
 
