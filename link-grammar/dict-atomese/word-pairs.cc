@@ -170,6 +170,18 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 /// and (A+ or B- or C+ or ()) and (A+ or B- or C+ or ())`. When
 /// this is exploded into disjuncts, any combination is possible,
 /// from size zero to three. That's why its a Cartesian product.
+///
+/// FYI, this is a work-around for the lack of a commmutative
+/// multi-product. What we really want to do here is to have the
+/// expression `(@A+ com @B- com @C+)` where `com` is a commutative
+/// product.  The `@` sign denotes a multi-connector, so that `@A+`
+/// is the same things as `(() or A+ or (A+ & A+) or ...)` and the
+/// commutative product allows any of these to commute, i.e. so that
+/// disjuncts such as `(A+ & C+ & A+ & C+)` are possible. But we do
+/// not have such a commutative multi-product, and so we fake it with
+/// a plain cartesian product. The only issue is that this eats up
+/// RAM. At least RAM use is linear: it goes as `O(arity)`.  More
+/// precisely, as `O(npairs x arity)`.
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 {
 	if (0 >= arity) return nullptr;
