@@ -134,8 +134,7 @@
 % to 2 or more, then that many extra optional connectors will be added.
 %
 % If sections are not enabled, then these parameters have no effect.
-#define left-pairs 1;
-#define right-pairs 1;
+#define extra-pairs 1;
 
 % Same as above, but the supplementary connectors will all be of type `ANY`,
 % and thus can connect to anything. Since these can connect to anything,
@@ -146,8 +145,7 @@
 %
 % Setting to zero disables this.
 % If sections are disabled, the these parameters have no effect.
-#define left-any 2;
-#define right-any 2;
+#define extra-any 2;
 
 % Create expressions that consist entirely of word-pair relationships.
 % The disjuncts will have up to the specified number of connectors; 4 is

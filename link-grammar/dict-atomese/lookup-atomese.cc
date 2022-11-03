@@ -50,17 +50,13 @@ using namespace opencog;
 
 #define ANY_DEFAULT_STRING "any-default"
 #define ENABLE_SECTIONS_STRING "enable-sections"
+#define EXTRA_PAIRS_STRING "extra-pairs"
+#define EXTRA_ANY_STRING "extra-any"
 
 #define PAIR_DISJUNCTS_STRING "pair-disjuncts"
 #define PAIR_WITH_ANY_STRING "pair-with-any"
 
-#define LEFT_PAIRS_STRING "left-pairs"
-#define RIGHT_PAIRS_STRING "right-pairs"
-
 #define ANY_DISJUNCTS_STRING "any-disjuncts"
-#define LEFT_ANY_STRING "left-any"
-#define RIGHT_ANY_STRING "right-any"
-
 
 /// Shared global
 static AtomSpacePtr external_atomspace;
@@ -162,12 +158,8 @@ bool as_open(Dictionary dict)
 	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "3.0"));
 
 	local->enable_sections = atoi(LDEF(ENABLE_SECTIONS_STRING, "1"));
-
-	local->left_pairs = atoi(LDEF(LEFT_PAIRS_STRING, "1"));
-	local->right_pairs = atoi(LDEF(RIGHT_PAIRS_STRING, "1"));
-
-	local->left_any = atoi(LDEF(LEFT_ANY_STRING, "2"));
-	local->right_any = atoi(LDEF(RIGHT_ANY_STRING, "2"));
+	local->extra_pairs = atoi(LDEF(EXTRA_PAIRS_STRING, "1"));
+	local->extra_any = atoi(LDEF(EXTRA_ANY_STRING, "2"));
 
 	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
 	local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "2"));
@@ -274,8 +266,7 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	if (local->enable_sections)
 		found = section_boolean_lookup(dict, s);
 
-	if (0 < local->pair_disjuncts or
-	    0 < local->left_pairs or 0 < local->right_pairs)
+	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	{
 		bool have_pairs = pair_boolean_lookup(dict, s);
 		found = found or have_pairs;
@@ -368,8 +359,7 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	}
 
 	// Create disjuncts consisting entirely of word-pair links.
-	if (0 < local->pair_disjuncts or
-	    0 < local->left_pairs or 0 < local->right_pairs)
+	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	{
 		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts);
 

@@ -44,13 +44,8 @@ public:
 
 	// Basic Sections
 	bool enable_sections;
-
-	// Supplements
-	int left_pairs;
-	int right_pairs;
-
-	int left_any;
-	int right_any;
+	int extra_pairs;
+	int extra_any;
 
 	// Disjuncts made from pairs
 	int pair_disjuncts;
