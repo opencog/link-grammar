@@ -279,13 +279,22 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 
 // ===============================================================
 
+/// Add `item` to the linked list `orhead`, using a OR operator.
 void or_enchain(Dictionary dict, Exp* &orhead, Exp* item)
 {
 	if (nullptr == item) return; // no-op
 
 	if (nullptr == orhead)
 	{
-		orhead = make_or_node(dict->Exp_pool, item, NULL);
+		orhead = item;
+		return;
+	}
+
+	// Unary OR-nodes are not allowed; they will cause assorted
+	// algos to croak. So the first OR node must have two.
+	if (OR_type != orhead->type)
+	{
+		orhead = make_or_node(dict->Exp_pool, item, orhead);
 		return;
 	}
 
@@ -294,6 +303,9 @@ void or_enchain(Dictionary dict, Exp* &orhead, Exp* item)
 	orhead->operand_first = item;
 }
 
+/// Add `item` to the left end of the linked list `andhead`, using
+/// an AND operator. The `andtail` is used to track the right side
+/// of the list.
 void and_enchain_left(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
 {
 	if (nullptr == item) return; // no-op
@@ -311,6 +323,9 @@ void and_enchain_left(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
 		andtail = item->operand_next;
 }
 
+/// Add `item` to the right end of the linked list `andhead`, using
+/// an AND operator. The `andtail` is used to track the right side
+/// of the list.
 void and_enchain_right(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
 {
 	if (nullptr == item) return; // no-op
@@ -328,6 +343,10 @@ void and_enchain_right(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
 	andtail = item;
 }
 
+/// Build expressions for the dictionary word held by `germ`.
+/// Exactly what is built is controlled by the configuration:
+/// it will be some mixture of sections, word-pairs, and ANY
+/// links.
 Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
