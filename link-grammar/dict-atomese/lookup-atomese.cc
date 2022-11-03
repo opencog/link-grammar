@@ -40,12 +40,27 @@ using namespace opencog;
 #define COST_CUTOFF_STRING "cost-cutoff"
 #define COST_DEFAULT_STRING "cost-default"
 
+#define PAIR_PREDICATE_STRING "pair-predicate"
 #define PAIR_KEY_STRING "pair-key"
 #define PAIR_INDEX_STRING "pair-index"
 #define PAIR_SCALE_STRING "pair-scale"
 #define PAIR_OFFSET_STRING "pair-offset"
 #define PAIR_CUTOFF_STRING "pair-cutoff"
 #define PAIR_DEFAULT_STRING "pair-default"
+
+#define ANY_DEFAULT_STRING "any-default"
+#define ENABLE_SECTIONS_STRING "enable-sections"
+
+#define PAIR_DISJUNCTS_STRING "pair-disjuncts"
+#define PAIR_WITH_ANY_STRING "pair-with-any"
+
+#define LEFT_PAIRS_STRING "left-pairs"
+#define RIGHT_PAIRS_STRING "right-pairs"
+
+#define ANY_DISJUNCTS_STRING "any-disjuncts"
+#define LEFT_ANY_STRING "left-any"
+#define RIGHT_ANY_STRING "right-any"
+
 
 /// Shared global
 static AtomSpacePtr external_atomspace;
@@ -71,6 +86,15 @@ static const char* get_dict_define(Dictionary dict, const char* namestr)
 	*q = 0x0;
 
 	return string_set_add(unescaped, dict->string_set);
+}
+
+static const char* ldef(Dictionary dict, const char* name, const char* def)
+{
+	const char* str = linkgrammar_get_dict_define(dict, name);
+	if (str) return str;
+	prt_error("Warning: missing `%s` in config; default to %s\n",
+		name, def);
+	return def;
 }
 
 /// Open a connection to a StorageNode.
@@ -105,8 +129,8 @@ bool as_open(Dictionary dict)
 	// local->djp = local->asp->add_node(PREDICATE_NODE,
 	//	"*-LG disjunct string-*");
 
-	// Marks word-pairs.
-	local->lany = local->asp->add_node(LG_LINK_NODE, "ANY");
+	// Internal-use only. Do we have this pair yet?
+	local->prk = local->asp->add_node(PREDICATE_NODE, "*-fetched-pair-*");
 
 	// Costs are assumed to be minus the MI located at some key.
 	const char* miks = get_dict_define(dict, COST_KEY_STRING);
@@ -117,11 +141,7 @@ bool as_open(Dictionary dict)
 	Handle miki = Sexpr::decode_atom(mikp);
 	local->mikp = local->asp->add_atom(miki);
 
-	const char * str;
-#define LDEF(NAME,FLT) \
-	str = linkgrammar_get_dict_define(dict, NAME) ?  str : \
-		({ prt_error( \
-			"Warning: missing parameter `%s` in config file\n", NAME); FLT; })
+#define LDEF(NAME,DEF) ldef(dict, NAME, DEF)
 
 	local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
 	local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.2"));
@@ -129,11 +149,29 @@ bool as_open(Dictionary dict)
 	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "6"));
 	local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.0"));
 
+	const char* prps = get_dict_define(dict, PAIR_PREDICATE_STRING);
+	Handle prph = Sexpr::decode_atom(prps);
+	local->prp = local->asp->add_atom(prph);
+
 	local->pair_index = atoi(LDEF(PAIR_INDEX_STRING, "1"));
 	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.2"));
 	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "0"));
 	local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING, "6"));
 	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "1.0"));
+
+	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "3.0"));
+
+	local->enable_sections = atoi(LDEF(ENABLE_SECTIONS_STRING, "1"));
+
+	local->left_pairs = atoi(LDEF(LEFT_PAIRS_STRING, "1"));
+	local->right_pairs = atoi(LDEF(RIGHT_PAIRS_STRING, "1"));
+
+	local->left_any = atoi(LDEF(LEFT_ANY_STRING, "2"));
+	local->right_any = atoi(LDEF(RIGHT_ANY_STRING, "2"));
+
+	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
+	local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "2"));
+	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "4"));
 
 	dict->as_server = (void*) local;
 
@@ -225,20 +263,134 @@ void as_close(Dictionary dict)
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
 {
+	Local* local = (Local*) (dict->as_server);
+
 	bool found = dict_node_exists_lookup(dict, s);
 	if (found) return true;
 
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
 
-	return section_boolean_lookup(dict, s);
+	if (local->enable_sections)
+		found = section_boolean_lookup(dict, s);
+
+	if (0 < local->pair_disjuncts or
+	    0 < local->left_pairs or 0 < local->right_pairs)
+	{
+		bool have_pairs = pair_boolean_lookup(dict, s);
+		found = found or have_pairs;
+	}
+
+	return found;
 }
 
 // ===============================================================
 
+/// Add `item` to the linked list `orhead`, using a OR operator.
+void or_enchain(Dictionary dict, Exp* &orhead, Exp* item)
+{
+	if (nullptr == item) return; // no-op
+
+	if (nullptr == orhead)
+	{
+		orhead = item;
+		return;
+	}
+
+	// Unary OR-nodes are not allowed; they will cause assorted
+	// algos to croak. So the first OR node must have two.
+	if (OR_type != orhead->type)
+	{
+		orhead = make_or_node(dict->Exp_pool, item, orhead);
+		return;
+	}
+
+	/* Link new connectors to the head */
+	item->operand_next = orhead->operand_first;
+	orhead->operand_first = item;
+}
+
+/// Add `item` to the left end of the linked list `andhead`, using
+/// an AND operator. The `andtail` is used to track the right side
+/// of the list.
+void and_enchain_left(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
+{
+	if (nullptr == item) return; // no-op
+	if (nullptr == andhead)
+	{
+		andhead = make_and_node(dict->Exp_pool, item, NULL);
+		return;
+	}
+
+	/* Link new connectors to the head */
+	item->operand_next = andhead->operand_first;
+	andhead->operand_first = item;
+
+	if (nullptr == andtail)
+		andtail = item->operand_next;
+}
+
+/// Add `item` to the right end of the linked list `andhead`, using
+/// an AND operator. The `andtail` is used to track the right side
+/// of the list.
+void and_enchain_right(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
+{
+	if (nullptr == item) return; // no-op
+	if (nullptr == andhead)
+	{
+		andhead = make_and_node(dict->Exp_pool, item, NULL);
+		return;
+	}
+
+	/* Link new connectors to the tail */
+	if (nullptr == andtail)
+		andtail = andhead->operand_first;
+
+	andtail->operand_next = item;
+	andtail = item;
+}
+
+/// Build expressions for the dictionary word held by `germ`.
+/// Exactly what is built is controlled by the configuration:
+/// it will be some mixture of sections, word-pairs, and ANY
+/// links.
 Exp* make_exprs(Dictionary dict, const Handle& germ)
 {
-	return make_sect_exprs(dict, germ);
+	Local* local = (Local*) (dict->as_server);
+
+	Exp* orhead = nullptr;
+
+	// Create disjuncts consisting entirely of "ANY" links.
+	if (0 < local->any_disjuncts)
+	{
+		Exp* any = make_any_exprs(dict, local->any_disjuncts);
+		or_enchain(dict, orhead, any);
+	}
+
+	// Create disjuncts consisting entirely of word-pair links.
+	if (0 < local->pair_disjuncts or
+	    0 < local->left_pairs or 0 < local->right_pairs)
+	{
+		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts);
+
+		// Add "ANY" links, if requested.
+		if (0 < local->pair_with_any)
+		{
+			Exp* ap = make_any_exprs(dict, local->pair_with_any);
+			Exp* dummy;
+			and_enchain_left(dict, cpr, dummy, ap);
+		}
+		or_enchain(dict, orhead, cpr);
+	}
+
+	// Create disjuncts from Sections
+	if (local->enable_sections)
+	{
+		Exp* sects = make_sect_exprs(dict, germ);
+		or_enchain(dict, orhead, sects);
+	}
+
+	return orhead;
 }
 
 /// Given a word, return the collection of Dict_nodes holding the

@@ -13,7 +13,6 @@
 #include <opencog/persist/cog-storage/CogStorage.h>
 #include <opencog/persist/file/FileStorage.h>
 #include <opencog/persist/rocks/RocksStorage.h>
-#include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
 
 #undef STRINGIFY
@@ -33,6 +32,8 @@ using namespace opencog;
 
 // ===============================================================
 
+/// Count the number of times that the `germ` appears in some
+/// Section.
 static size_t count_sections(Local* local, const Handle& germ)
 {
 	// Are there any Sections in the local atomspace?
@@ -46,8 +47,9 @@ static size_t count_sections(Local* local, const Handle& germ)
 	return nsects;
 }
 
-/// Return true if the given word can be found in the dictionary,
-/// else return false.
+/// Return true if the given word can be found as the germ of some
+/// Section, else return false. As a side-effect, Sections are loaded
+/// from storage.
 bool section_boolean_lookup(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -97,7 +99,8 @@ bool section_boolean_lookup(Dictionary dict, const char *s)
 /// As of just right now, the above is held only in the local AtomSpace;
 /// it is never written back to storage.
 
-/// int to base-26 capital letters.
+/// int to base-26 capital letters. Except it has gaps in that
+/// sequence, and the order is reversed. Whatever. Doesn't matter.
 static std::string idtostr(uint64_t aid)
 {
 	std::string s;
@@ -216,18 +219,14 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 	Exp* orhead = nullptr;
-	Exp* ortail = nullptr;
 
-// #define OPTIONAL_ANY_LINK
-#ifdef OPTIONAL_ANY_LINK
-	Exp* any = make_any_exprs(dict, 4);
-	ortail = any;
-#endif // OPTIONAL_ANY_LINK
+	// Create some optional word-pair links; these may be nullptr's.
+	Exp* left_pairs = make_cart_pairs(dict, germ, local->left_pairs);
+	Exp* right_pairs = make_cart_pairs(dict, germ, local->right_pairs);
 
-#define OPTIONAL_PAIRS
-#ifdef OPTIONAL_PAIRS
-	ortail = make_cart_pairs(dict, germ, 4);
-#endif // OPTIONAL_PAIRS
+	// Create some optional ANY-links; these may be nullptr's.
+	Exp* left_any = make_any_exprs(dict, local->left_any);
+	Exp* right_any = make_any_exprs(dict, local->right_any);
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
@@ -255,23 +254,6 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 		Exp* andhead = nullptr;
 		Exp* andtail = nullptr;
 
-#ifdef OPTIONAL_ANY_LINK
-		Exp* an = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
-		Exp* on = make_optional_node(dict->Exp_pool, an);
-		Exp* ap = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
-		Exp* op = make_optional_node(dict->Exp_pool, ap);
-		andhead = make_and_node(dict->Exp_pool, on, op);
-		andtail = op;
-#endif // OPTIONAL_ANY_LINK
-
-#ifdef EXTRA_OPTIONAL_PAIRS
-		Exp* optex = make_optional_node(dict->Exp_pool, epr);
-		Exp* optey = make_optional_node(dict->Exp_pool, epr);
-		// andhead = make_and_node(dict->Exp_pool, optex, NULL);
-		andhead = make_and_node(dict->Exp_pool, optex, optey);
-		andtail = optey;
-#endif // EXTRA_OPTIONAL_PAIRS
-
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
 		// The atomspace stores connectors in word-order, while LG
@@ -290,41 +272,42 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 			Exp* eee = make_connector_node(dict,
 				dict->Exp_pool, slnk.c_str(), cdir, false);
 
-			if (nullptr == andhead)
-				andhead = make_and_node(dict->Exp_pool, eee, NULL);
-			else
 			if ('+' == cdir)
-			{
-				/* Link new connectors to the tail */
-				if (nullptr == andtail)
-				{
-					andtail = andhead;
-					eee->operand_next = andhead->operand_first;
-					andhead->operand_first = eee;
-				}
-				else
-				{
-					andtail->operand_next = eee;
-					andtail = eee;
-				}
-			}
+				and_enchain_right(dict, andhead, andtail, eee);
 			else if ('-' == cdir)
-			{
-				/* Link new connectors to the head */
-				eee->operand_next = andhead->operand_first;
-				andhead->operand_first = eee;
-
-				if (nullptr == andtail)
-					andtail = eee->operand_next;
-			}
+				and_enchain_left(dict, andhead, andtail, eee);
 		}
 
-		// This should never-ever happen!
+		// Sanity-check the Section - this should never-ever happen!
 		if (nullptr == andhead)
 		{
 			prt_error("Warning: Empty connector sequence for %s\n",
 				sect->to_short_string().c_str());
 			continue;
+		}
+
+		// Tack on ANY connectors, as configured.
+		if (left_any)
+		{
+			Exp* optex = make_optional_node(dict->Exp_pool, left_any);
+			and_enchain_left(dict, andhead, andtail, optex);
+		}
+		if (right_any)
+		{
+			Exp* optex = make_optional_node(dict->Exp_pool, right_any);
+			and_enchain_right(dict, andhead, andtail, optex);
+		}
+
+		// Tack on word-pair connectors, as configured.
+		if (left_pairs)
+		{
+			Exp* optex = make_optional_node(dict->Exp_pool, left_pairs);
+			and_enchain_left(dict, andhead, andtail, optex);
+		}
+		if (right_pairs)
+		{
+			Exp* optex = make_optional_node(dict->Exp_pool, right_pairs);
+			and_enchain_right(dict, andhead, andtail, optex);
 		}
 
 		// Optional: shorten the expression,
@@ -350,19 +333,10 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 		printf("Word: '%s'  Exp: %s\n", wrd, lg_exp_stringify(andhead));
 #endif
 
-		// If there are two or more and-expressions,
-		// they get appended to a list hanging on a single OR-node.
-		if (ortail)
-		{
-			if (nullptr == orhead)
-				orhead = make_or_node(dict->Exp_pool, ortail, andhead);
-			else
-				ortail->operand_next = andhead;
-		}
-		ortail = andhead;
+		// Add it to the linked list.
+		or_enchain(dict, orhead, andhead);
 	}
 
-	if (nullptr == orhead) return ortail;
 	return orhead;
 }
 

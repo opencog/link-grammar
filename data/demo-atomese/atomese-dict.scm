@@ -9,13 +9,15 @@
 ; It is intended that this file can be read in using the
 ; FileStorageNode provided by the AtomSpace.
 ;
-; CAUTION: IF YOU EDIT THIS FILE, BE SRE TO `MAKE INSTALL` AFTERWARDS.
+; CAUTION: IF YOU EDIT THIS FILE, BE SURE TO `MAKE INSTALL` AFTERWARDS.
 ; That is because the `storage.dict` is configured to get this file
 ; from the install location, and not the source tree!
 ;
 ; ---------------------------------------------------------------------
 ; The four sections below allow one and only one phrase to be parsed:
-; "level playing field".
+; "level playing field". These sections are directly converted into
+; Link Grammar disjuncts having the same connectors, except that the
+; LG connectors are single links, that stand in for the connected words.
 
 (Section
 	(Word "###LEFT-WALL###")
@@ -171,4 +173,54 @@
 (Section (Word "6")
 	(ConnectorSeq (Connector (Word "fountain") (ConnectorDir "-"))))
 
+; ---------------------------------------------------------------------
+; Disjuncts can also be constructed from individual word-pairs. Using
+; these will results in a Maximum Spanning Tree (MST) or Maximum Planar
+; Graph (MPG) parse. Such disjuncts are not as "rigid" as those specified
+; by sections; instead they may have a variable number of connectors
+; in arbitrary order, preserving only the word order in the parsed
+; sentence.
+;
+; When used with existing disjuncts (controllable in the configuration
+; file), the use of word-pairs can supplement a poor selection of
+; disjuncts by adding additional (optional) links determined by the word
+; pairs.
+;
+; An example vocabulary is given below.  This allows sentences such as
+; "the fish jumped out of the water" to be parsed, as well as shorter
+; sentences made up of these same words, such as "the fish jumped" and
+; "jumped out", "out of water". There is no grammatical structure to what
+; can be parsed in this way, other than that there must be some word-pair
+; occurring in proper sentence order. Thus, for example "water jumped"
+; will NOT parse, because there is no word pair with "water" coming before
+; "jumped".
+;
+; The configuration file enables the automatic insertion of "ANY" links
+; into disjuncts. Thus, sentences like "Olga saw the fish" will also parse,
+; because "Olga" and "saw" are in the dictionary (above), and are decorated
+; with "ANY" connector types. These connect to "ANY" connectors that are
+; added to word-pair disjuncts.
+;
+(Evaluation (Predicate "wrdpr") (List (Word "###LEFT-WALL###") (Word "jumped")))
+(Evaluation (Predicate "wrdpr") (List (Word "###LEFT-WALL###") (Word "fish")))
+(Evaluation (Predicate "wrdpr") (List (Word "the") (Word "fish")))
+(Evaluation (Predicate "wrdpr") (List (Word "fish") (Word "jumped")))
+(Evaluation (Predicate "wrdpr") (List (Word "jumped") (Word "out")))
+(Evaluation (Predicate "wrdpr") (List (Word "out") (Word "water")))
+(Evaluation (Predicate "wrdpr") (List (Word "of") (Word "water")))
+(Evaluation (Predicate "wrdpr") (List (Word "the") (Word "water")))
+(Evaluation (Predicate "wrdpr") (List (Word "out") (Word "of")))
+
+; Set costs on two of the pairs.
+(cog-set-value!
+	(Evaluation (Predicate "wrdpr") (List (Word "the") (Word "fish")))
+	(Predicate "*-Mutual Info Key-*")
+	(FloatValue 0 3.1))
+
+(cog-set-value!
+	(Evaluation (Predicate "wrdpr") (List (Word "jumped") (Word "out")))
+	(Predicate "*-Mutual Info Key-*")
+	(FloatValue 0 4.2))
+
+;
 ; ---------------------------------------------------------------------
