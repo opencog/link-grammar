@@ -20,6 +20,7 @@ public:
 	StorageNodePtr stnp;
 	Handle linkp;     // (Predicate "*-LG connector string-*")
 	// Handle djp;       // (Predicate "*-LG disjunct string-*")
+	Handle prk;       // (Predicate "*-fetched-pair-*")
 
 	// Sections
 	Handle miks;      // (Predicate "*-Mutual Info Key cover-section")

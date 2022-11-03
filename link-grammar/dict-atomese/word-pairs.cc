@@ -8,6 +8,7 @@
 #ifdef HAVE_ATOMESE
 
 #include <opencog/atomspace/AtomSpace.h>
+#include <opencog/atoms/value/FloatValue.h>
 #include <opencog/nlp/types/atom_types.h>
 #undef STRINGIFY
 
@@ -22,6 +23,20 @@ extern "C" {
 
 using namespace opencog;
 
+/// Return true if word-pairs for `germ` need to be fetched.
+static bool need_pair_fetch(Local* local, const Handle& germ)
+{
+	const ValuePtr& fpv = germ->getValue(local->prk);
+	if (fpv) return false;
+
+	// Just tag it. We could tag it with a date. That way, we'd know
+	// how old it is, to re-fetch it !?
+	local->asp->set_value(germ, local->prk, createFloatValue(1.0));
+	return true;
+}
+
+/// Get the word-pairs for `germ` from storage.
+/// Return zero, if there are none; else return non-zero.
 static size_t fetch_pairs(Local* local, const Handle& germ)
 {
 	local->stnp->fetch_incoming_by_type(germ, LIST_LINK);
@@ -32,33 +47,36 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 	for (const Handle& rawpr : rprs)
 	{
 		local->stnp->fetch_incoming_by_type(rawpr, EVALUATION_LINK);
-
-		// XXX TODO validate that the EvaluationLink has
-		// (LgLinkNode "ANY") in the first location.
 		cnt++;
 	}
 	return cnt;
 }
 
+/// Return true if there are any word-pairs for `germ`.
+/// The will automatically fetch from storage, as needed.
 static bool have_pairs(Local* local, const Handle& germ)
 {
+	if (need_pair_fetch(local, germ))
+		fetch_pairs(local, germ);
+
 	const AtomSpacePtr& asp = local->asp;
 	const Handle& hpr = local->prp; // (Predicate "word-pair")
 
 	// Are there any pairs in the local AtomSpace?
-	// If ther's at least one, just return `true`.
+	// If there's at least one, just return `true`.
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
 	{
 		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
-		if (evpr) return true;
+		if (evpr)
+		{
+			// Verify that its an actual word-pair.
+			if (evpr->getOutgoingAtom(0) == local->prp)
+				return true;
+		}
 	}
 
-	// Else go and fetch them.
-	size_t cnt = fetch_pairs(local, germ);
-
-	// True, if there's at least one.
-	return (0 < cnt);
+	return false;
 }
 
 /// Return true if the given word occurs in some word-pair, else return

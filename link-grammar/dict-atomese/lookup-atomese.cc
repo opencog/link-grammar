@@ -129,6 +129,9 @@ bool as_open(Dictionary dict)
 	// local->djp = local->asp->add_node(PREDICATE_NODE,
 	//	"*-LG disjunct string-*");
 
+	// Internal-use only. Do we have this pair yet?
+	local->prk = local->asp->add_node(PREDICATE_NODE, "*-fetched-pair-*");
+
 	// Costs are assumed to be minus the MI located at some key.
 	const char* miks = get_dict_define(dict, COST_KEY_STRING);
 	Handle mikh = Sexpr::decode_atom(miks);
