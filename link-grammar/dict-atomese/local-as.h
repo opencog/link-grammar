@@ -45,15 +45,11 @@ public:
 	bool enable_sections;
 
 	// Supplements
-	int left_inside_pairs;
-	int right_inside_pairs;
-	int left_outside_pairs;
-	int right_outside_pairs;
+	int left_pairs;
+	int right_pairs;
 
-	int left_inside_any;
-	int right_inside_any;
-	int left_outside_any;
-	int right_outside_any;
+	int left_any;
+	int right_any;
 
 	// Disjuncts made from pairs
 	int pair_disjuncts;

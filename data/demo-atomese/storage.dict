@@ -119,22 +119,23 @@
 % config paramters.
 #define enable-sections 1;
 
-% Supplement existing sections with optional links, determined from
-% word-pair relations. Inside pairs reach out from the middle of the
-% disjunt; outside pairs are at the edges.  For example, if an existing
-% disjunct `A- & B+` is supplemented with pairs, the new disjunct will be
-% `{LO-} & A- & {LI-} & {RI+} & B+ & {RO+}`, where `LI`, `LO`, `RI` and
-% `RO` are connectors that are obtained from word-pairs. The cost of these
-% connectors is determined by the pair-config, above.
+% Supplement existing sections with optional links, obtained from word-
+% pair relations.  For example, if an existing disjunct `A- & B+` on word
+% "wrd" is supplemented with pairs, the new disjunct will be
+% `{J- or K+} & A- & B+ & {L- or M+}`, where `J-` and `L-` are obtained
+% from pairs of the form ("other", "wrd") and `K+` and `M+` are obtained
+% from pairs of the for ("wrd", "more"). That is, the links `J`, `K`, `L`
+% and `M` are formed only if the AtomSpace has the corresponding word-pairs
+% in it.
+%
+% The cost of these connectors is determined by the pair-config, above.
 %
 % If set to zero, these supplementary links will not be generated. If set
 % to 2 or more, then that many extra optional connectors will be added.
 %
 % If sections are not enabled, then these parameters have no effect.
-#define left-inside-pairs 1;
-#define right-inside-pairs 1;
-#define left-outside-pairs 1;
-#define right-outside-pairs 1;
+#define left-pairs 1;
+#define right-pairs 1;
 
 % Same as above, but the supplementary connectors will all be of type `ANY`,
 % and thus can connect to anything. Since these can connect to anything,
@@ -145,10 +146,8 @@
 %
 % Setting to zero disables this.
 % If sections are disabled, the these parameters have no effect.
-#define left-inside-any 2;
-#define right-inside-any 2;
-#define left-outside-any 2;
-#define right-outside-any 2;
+#define left-any 2;
+#define right-any 2;
 
 % Create expressions that consist entirely of word-pair relationships.
 % The disjuncts will have up to the specified number of connectors; 4 is

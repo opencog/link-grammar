@@ -220,16 +220,8 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 	Exp* orhead = nullptr;
 
 	// Create some optional links; these may be nullptr's.
-	Exp* left_inside_any = make_any_exprs(dict, local->left_inside_any);
-	Exp* right_inside_any = make_any_exprs(dict, local->right_inside_any);
-	Exp* left_outside_any = make_any_exprs(dict, local->left_outside_any);
-	Exp* right_outside_any = make_any_exprs(dict, local->right_outside_any);
-
-	Exp* inside_any = right_inside_any;
-	if (left_inside_any and right_inside_any)
-		inside_any = make_and_node(dict->Exp_pool, left_inside_any, right_inside_any);
-	else if (left_inside_any)
-		inside_any = left_inside_any;
+	Exp* left_any = make_any_exprs(dict, local->left_any);
+	Exp* right_any = make_any_exprs(dict, local->right_any);
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
@@ -256,12 +248,6 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 
 		Exp* andhead = nullptr;
 		Exp* andtail = nullptr;
-
-		if (inside_any)
-		{
-			Exp* optex = make_optional_node(dict->Exp_pool, inside_any);
-			andhead = make_and_node(dict->Exp_pool, optex, NULL);
-		}
 
 #ifdef EXTRA_OPTIONAL_PAIRS
 		Exp* optex = make_optional_node(dict->Exp_pool, epr);
@@ -303,14 +289,14 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 			continue;
 		}
 
-		if (left_outside_any)
+		if (left_any)
 		{
-			Exp* optex = make_optional_node(dict->Exp_pool, left_outside_any);
+			Exp* optex = make_optional_node(dict->Exp_pool, left_any);
 			and_enchain_left(dict, andhead, andtail, optex);
 		}
-		if (right_outside_any)
+		if (right_any)
 		{
-			Exp* optex = make_optional_node(dict->Exp_pool, right_outside_any);
+			Exp* optex = make_optional_node(dict->Exp_pool, right_any);
 			and_enchain_right(dict, andhead, andtail, optex);
 		}
 
