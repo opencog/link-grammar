@@ -83,7 +83,12 @@
 % Word-pairs are encoded in the dictionary as
 %    (Evaluation pair-predicate (List (Word "leftword") (Word "rightword")))
 % The pair-predicate is configureable, as below.
-#define pair-predicate "(Predicate \"*-word pair-*\")";
+#define pair-predicate "(Predicate \"wrdpr\")";
+
+% Due to historical design decisions, existing dictionaries use the
+% (LgLinkNode "ANY") to mark word pairs. We note this here, as a reminder.
+% Its commented out, because the demo does not use it.
+% #define pair-predicate "(LgLink \"ANY\")";
 
 % Same as above, but for word-pairs. Note the different key!
 #define pair-key "(Predicate \"*-Mutual Info Key-*\")";

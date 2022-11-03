@@ -201,24 +201,24 @@
 ; with "ANY" connector types. These connect to "ANY" connectors that are
 ; added to word-pair disjuncts.
 ;
-(Evaluation (Predicate "*-word pair-*") (List (Word "###LEFT-WALL###") (Word "jumped")))
-(Evaluation (Predicate "*-word pair-*") (List (Word "###LEFT-WALL###") (Word "fish")))
-(Evaluation (Predicate "*-word pair-*") (List (Word "the") (Word "fish")))
-(Evaluation (Predicate "*-word pair-*") (List (Word "fish") (Word "jumped")))
-(Evaluation (Predicate "*-word pair-*") (List (Word "jumped") (Word "out")))
-(Evaluation (Predicate "*-word pair-*") (List (Word "out") (Word "water")))
-(Evaluation (Predicate "*-word pair-*") (List (Word "of") (Word "water")))
-(Evaluation (Predicate "*-word pair-*") (List (Word "the") (Word "water")))
-(Evaluation (Predicate "*-word pair-*") (List (Word "out") (Word "of")))
+(Evaluation (Predicate "wrdpr") (List (Word "###LEFT-WALL###") (Word "jumped")))
+(Evaluation (Predicate "wrdpr") (List (Word "###LEFT-WALL###") (Word "fish")))
+(Evaluation (Predicate "wrdpr") (List (Word "the") (Word "fish")))
+(Evaluation (Predicate "wrdpr") (List (Word "fish") (Word "jumped")))
+(Evaluation (Predicate "wrdpr") (List (Word "jumped") (Word "out")))
+(Evaluation (Predicate "wrdpr") (List (Word "out") (Word "water")))
+(Evaluation (Predicate "wrdpr") (List (Word "of") (Word "water")))
+(Evaluation (Predicate "wrdpr") (List (Word "the") (Word "water")))
+(Evaluation (Predicate "wrdpr") (List (Word "out") (Word "of")))
 
 ; Set costs on two of the pairs.
 (cog-set-value!
-	(Evaluation (Predicate "*-word pair-*") (List (Word "the") (Word "fish")))
+	(Evaluation (Predicate "wrdpr") (List (Word "the") (Word "fish")))
 	(Predicate "*-Mutual Info Key-*")
 	(FloatValue 0 3.1))
 
 (cog-set-value!
-	(Evaluation (Predicate "*-word pair-*") (List (Word "jumped") (Word "out")))
+	(Evaluation (Predicate "wrdpr") (List (Word "jumped") (Word "out")))
 	(Predicate "*-Mutual Info Key-*")
 	(FloatValue 0 4.2))
 
