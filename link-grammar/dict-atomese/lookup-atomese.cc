@@ -159,11 +159,11 @@ bool as_open(Dictionary dict)
 
 	local->enable_sections = atoi(LDEF(ENABLE_SECTIONS_STRING, "1"));
 	local->extra_pairs = atoi(LDEF(EXTRA_PAIRS_STRING, "1"));
-	local->extra_any = atoi(LDEF(EXTRA_ANY_STRING, "2"));
+	local->extra_any = atoi(LDEF(EXTRA_ANY_STRING, "1"));
 
 	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
-	local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "2"));
-	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "4"));
+	local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "1"));
+	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "1"));
 
 	dict->as_server = (void*) local;
 
@@ -352,9 +352,9 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	Exp* orhead = nullptr;
 
 	// Create disjuncts consisting entirely of "ANY" links.
-	if (0 < local->any_disjuncts)
+	if (local->any_disjuncts)
 	{
-		Exp* any = make_any_exprs(dict, local->any_disjuncts);
+		Exp* any = make_any_exprs(dict);
 		or_enchain(dict, orhead, any);
 	}
 
@@ -364,9 +364,9 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts);
 
 		// Add "ANY" links, if requested.
-		if (0 < local->pair_with_any)
+		if (local->pair_with_any)
 		{
-			Exp* ap = make_any_exprs(dict, local->pair_with_any);
+			Exp* ap = make_any_exprs(dict);
 			Exp* dummy;
 			and_enchain_left(dict, cpr, dummy, ap);
 		}

@@ -229,9 +229,9 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 	}
 
 	// Create some optional ANY-links; these may be nullptr's.
-	if (0 < local->extra_any)
+	if (local->extra_any)
 	{
-		Exp* extra_any = make_any_exprs(dict, local->extra_any);
+		Exp* extra_any = make_any_exprs(dict);
 		or_enchain(dict, extras, extra_any);
 	}
 

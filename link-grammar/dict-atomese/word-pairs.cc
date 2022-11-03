@@ -203,35 +203,19 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 /// If these are used all by themselves, the resulting parses will
 /// be random planar graphs; i.e. will be equivalent to the `any`
 /// language parses.
-Exp* make_any_exprs(Dictionary dict, int arity)
+Exp* make_any_exprs(Dictionary dict)
 {
-	if (arity <= 0) return nullptr;
-
 	// Create a pair of ANY-links that can connect either left or right.
-	Exp* aneg = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
-	Exp* apos = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
+	Exp* aneg = make_connector_node(dict, dict->Exp_pool, "ANY", '-', true);
+	Exp* apos = make_connector_node(dict, dict->Exp_pool, "ANY", '+', true);
 
 	Local* local = (Local*) (dict->as_server);
 	aneg->cost = local->any_default;
 	apos->cost = local->any_default;
 
-	Exp* any = make_or_node(dict->Exp_pool, aneg, apos);
-	Exp* optex = make_optional_node(dict->Exp_pool, any);
+	Exp* any = make_and_node(dict->Exp_pool, aneg, apos);
 
-	Exp* andhead = nullptr;
-	Exp* andtail = nullptr;
-
-	andhead = make_and_node(dict->Exp_pool, optex, NULL);
-	andtail = andhead->operand_first;
-
-	for (int i=1; i< arity; i++)
-	{
-		Exp* opt = make_optional_node(dict->Exp_pool, any);
-		andtail->operand_next = opt;
-		andtail = opt;
-	}
-
-	return andhead;
+	return any;
 }
 
 #endif // HAVE_ATOMESE
