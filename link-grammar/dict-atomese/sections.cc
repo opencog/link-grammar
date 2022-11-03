@@ -99,7 +99,8 @@ bool section_boolean_lookup(Dictionary dict, const char *s)
 /// As of just right now, the above is held only in the local AtomSpace;
 /// it is never written back to storage.
 
-/// int to base-26 capital letters.
+/// int to base-26 capital letters. Except it has gaps in that
+/// sequence, and the order is reversed. Whatever. Doesn't matter.
 static std::string idtostr(uint64_t aid)
 {
 	std::string s;
