@@ -161,14 +161,12 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 	if (nullptr == epr) return nullptr;
 
 	Exp* optex = make_optional_node(dict->Exp_pool, epr);
-	andhead = make_and_node(dict->Exp_pool, optex, NULL);
-	andtail = andhead->operand_first;
+	and_enchain_right(dict, andhead, andtail, optex);
 
 	for (int i=1; i< arity; i++)
 	{
 		Exp* opt = make_optional_node(dict->Exp_pool, epr);
-		andtail->operand_next = opt;
-		andtail = opt;
+		and_enchain_right(dict, andhead, andtail, opt);
 	}
 
 	// Could verify that it all multiplies out as expected.
