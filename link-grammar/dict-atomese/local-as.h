@@ -20,7 +20,6 @@ public:
 	StorageNodePtr stnp;
 	Handle linkp;     // (Predicate "*-LG connector string-*")
 	// Handle djp;       // (Predicate "*-LG disjunct string-*")
-	Handle lany;      // (LgLinkNode "ANY")
 
 	// Sections
 	Handle miks;      // (Predicate "*-Mutual Info Key cover-section")
@@ -31,6 +30,7 @@ public:
 	double cost_default;
 
 	// Word-pairs
+	Handle prp;       // (Predicate "*-word pair-*")
 	Handle mikp;      // (Predicate "*-Mutual Info Key-*")
 	int pair_index;   // Offset into the FloatValue
 	double pair_scale;

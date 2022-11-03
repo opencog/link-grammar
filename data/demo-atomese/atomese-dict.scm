@@ -15,7 +15,9 @@
 ;
 ; ---------------------------------------------------------------------
 ; The four sections below allow one and only one phrase to be parsed:
-; "level playing field".
+; "level playing field". These sections are directly converted into
+; Link Grammar disjuncts having the same connectors, except that the
+; LG connectors are single links, that stand in for the connected words.
 
 (Section
 	(Word "###LEFT-WALL###")
@@ -193,24 +195,30 @@
 ; will NOT parse, because there is no word pair with "water" coming before
 ; "jumped".
 ;
-(Evaluation (LgLink "ANY") (List (Word "###LEFT-WALL###") (Word "jumped")))
-(Evaluation (LgLink "ANY") (List (Word "###LEFT-WALL###") (Word "fish")))
-(Evaluation (LgLink "ANY") (List (Word "the") (Word "fish")))
-(Evaluation (LgLink "ANY") (List (Word "fish") (Word "jumped")))
-(Evaluation (LgLink "ANY") (List (Word "jumped") (Word "out")))
-(Evaluation (LgLink "ANY") (List (Word "out") (Word "water")))
-(Evaluation (LgLink "ANY") (List (Word "of") (Word "water")))
-(Evaluation (LgLink "ANY") (List (Word "the") (Word "water")))
-(Evaluation (LgLink "ANY") (List (Word "out") (Word "of")))
+; The configuration file enables the automatic insertion of "ANY" links
+; into disjuncts. Thus, sentences like "Olga saw the fish" will also parse,
+; because "Olga" and "saw" are in the dictionary (above), and are decorated
+; with "ANY" connector types. These connect to "ANY" connectors that are
+; added to word-pair disjuncts.
+;
+(Evaluation (Predicate "*-word pair-*") (List (Word "###LEFT-WALL###") (Word "jumped")))
+(Evaluation (Predicate "*-word pair-*") (List (Word "###LEFT-WALL###") (Word "fish")))
+(Evaluation (Predicate "*-word pair-*") (List (Word "the") (Word "fish")))
+(Evaluation (Predicate "*-word pair-*") (List (Word "fish") (Word "jumped")))
+(Evaluation (Predicate "*-word pair-*") (List (Word "jumped") (Word "out")))
+(Evaluation (Predicate "*-word pair-*") (List (Word "out") (Word "water")))
+(Evaluation (Predicate "*-word pair-*") (List (Word "of") (Word "water")))
+(Evaluation (Predicate "*-word pair-*") (List (Word "the") (Word "water")))
+(Evaluation (Predicate "*-word pair-*") (List (Word "out") (Word "of")))
 
 ; Set costs on two of the pairs.
 (cog-set-value!
-	(Evaluation (LgLink "ANY") (List (Word "the") (Word "fish")))
+	(Evaluation (Predicate "*-word pair-*") (List (Word "the") (Word "fish")))
 	(Predicate "*-Mutual Info Key-*")
 	(FloatValue 0 3.1))
 
 (cog-set-value!
-	(Evaluation (LgLink "ANY") (List (Word "jumped") (Word "out")))
+	(Evaluation (Predicate "*-word pair-*") (List (Word "jumped") (Word "out")))
 	(Predicate "*-Mutual Info Key-*")
 	(FloatValue 0 4.2))
 

@@ -43,14 +43,14 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 static bool have_pairs(Local* local, const Handle& germ)
 {
 	const AtomSpacePtr& asp = local->asp;
-	const Handle& hany = local->lany; // (LG_LINK_NODE, "ANY");
+	const Handle& hpr = local->prp; // (Predicate "word-pair")
 
 	// Are there any pairs in the local AtomSpace?
 	// If ther's at least one, just return `true`.
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
 	{
-		Handle evpr = asp->get_link(EVALUATION_LINK, hany, rawpr);
+		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
 		if (evpr) return true;
 	}
 
@@ -100,12 +100,12 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 	Exp* orhead = nullptr;
 	Exp* ortail = nullptr;
 
-	const Handle& hany = local->lany; // (LG_LINK_NODE, "ANY");
+	const Handle& hpr = local->prp; // (Predicate "pair")
 
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
 	{
-		Handle evpr = asp->get_link(EVALUATION_LINK, hany, rawpr);
+		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
 		if (nullptr == evpr) continue;
 
 		double cost = local->pair_default;

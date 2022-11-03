@@ -80,6 +80,11 @@
 % `cost-max`.
 #define cost-default 2.0;
 
+% Word-pairs are encoded in the dictionary as
+%    (Evaluation pair-predicate (List (Word "leftword") (Word "rightword")))
+% The pair-predicate is configureable, as below.
+#define pair-predicate "(Predicate \"*-word pair-*\")";
+
 % Same as above, but for word-pairs. Note the different key!
 #define pair-key "(Predicate \"*-Mutual Info Key-*\")";
 #define pair-index 1;
@@ -89,7 +94,7 @@
 #define pair-default 2.0;
 
 % Default cost for `ANY` link types
-#define any-default 3.0;
+#define any-default 2.6;
 
 % -----------------------
 % Data structure configuration. By default, Link Grammar expressions and

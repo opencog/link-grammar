@@ -40,6 +40,7 @@ using namespace opencog;
 #define COST_CUTOFF_STRING "cost-cutoff"
 #define COST_DEFAULT_STRING "cost-default"
 
+#define PAIR_PREDICATE_STRING "pair-predicate"
 #define PAIR_KEY_STRING "pair-key"
 #define PAIR_INDEX_STRING "pair-index"
 #define PAIR_SCALE_STRING "pair-scale"
@@ -132,9 +133,6 @@ bool as_open(Dictionary dict)
 	// local->djp = local->asp->add_node(PREDICATE_NODE,
 	//	"*-LG disjunct string-*");
 
-	// Marks word-pairs.
-	local->lany = local->asp->add_node(LG_LINK_NODE, "ANY");
-
 	// Costs are assumed to be minus the MI located at some key.
 	const char* miks = get_dict_define(dict, COST_KEY_STRING);
 	Handle mikh = Sexpr::decode_atom(miks);
@@ -151,6 +149,10 @@ bool as_open(Dictionary dict)
 	local->cost_offset = atof(LDEF(COST_OFFSET_STRING, "0"));
 	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "6"));
 	local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.0"));
+
+	const char* prps = get_dict_define(dict, PAIR_PREDICATE_STRING);
+	Handle prph = Sexpr::decode_atom(prps);
+	local->prp = local->asp->add_atom(prph);
 
 	local->pair_index = atoi(LDEF(PAIR_INDEX_STRING, "1"));
 	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.2"));
