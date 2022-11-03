@@ -219,7 +219,11 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 	Local* local = (Local*) (dict->as_server);
 	Exp* orhead = nullptr;
 
-	// Create some optional links; these may be nullptr's.
+	// Create some optional word-pair links; these may be nullptr's.
+	Exp* left_pairs = make_cart_pairs(dict, germ, local->left_pairs);
+	Exp* right_pairs = make_cart_pairs(dict, germ, local->right_pairs);
+
+	// Create some optional ANY-links; these may be nullptr's.
 	Exp* left_any = make_any_exprs(dict, local->left_any);
 	Exp* right_any = make_any_exprs(dict, local->right_any);
 
@@ -248,14 +252,6 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 
 		Exp* andhead = nullptr;
 		Exp* andtail = nullptr;
-
-#ifdef EXTRA_OPTIONAL_PAIRS
-		Exp* optex = make_optional_node(dict->Exp_pool, epr);
-		Exp* optey = make_optional_node(dict->Exp_pool, epr);
-		// andhead = make_and_node(dict->Exp_pool, optex, NULL);
-		andhead = make_and_node(dict->Exp_pool, optex, optey);
-		andtail = optey;
-#endif // EXTRA_OPTIONAL_PAIRS
 
 		// The connector sequence the second Atom.
 		// Loop over the connectors in the connector sequence.
@@ -289,6 +285,7 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 			continue;
 		}
 
+		// Tack on ANY connectors, as configured.
 		if (left_any)
 		{
 			Exp* optex = make_optional_node(dict->Exp_pool, left_any);
@@ -297,6 +294,18 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 		if (right_any)
 		{
 			Exp* optex = make_optional_node(dict->Exp_pool, right_any);
+			and_enchain_right(dict, andhead, andtail, optex);
+		}
+
+		// Tack on word-pair connectors, as configured.
+		if (left_pairs)
+		{
+			Exp* optex = make_optional_node(dict->Exp_pool, left_pairs);
+			and_enchain_left(dict, andhead, andtail, optex);
+		}
+		if (right_pairs)
+		{
+			Exp* optex = make_optional_node(dict->Exp_pool, right_pairs);
 			and_enchain_right(dict, andhead, andtail, optex);
 		}
 
