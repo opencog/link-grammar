@@ -93,7 +93,7 @@ static const char* ldef(Dictionary dict, const char* name, const char* def)
 	const char* str = linkgrammar_get_dict_define(dict, name);
 	if (str) return str;
 	prt_error("Warning: missing `%s` in config; default to %s\n",
-		 name, def);
+		name, def);
 	return def;
 }
 
@@ -272,10 +272,14 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 		s = "###LEFT-WALL###";
 
 	if (local->enable_sections)
-		found = found or section_boolean_lookup(dict, s);
+		found = section_boolean_lookup(dict, s);
 
-	if (0 < local->pair_disjuncts)
-		found = found or pair_boolean_lookup(dict, s);
+	if (0 < local->pair_disjuncts or
+	    0 < local->left_pairs or 0 < local->right_pairs)
+	{
+		bool have_pairs = pair_boolean_lookup(dict, s);
+		found = found or have_pairs;
+	}
 
 	return found;
 }
@@ -373,10 +377,8 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 		if (0 < local->pair_with_any)
 		{
 			Exp* ap = make_any_exprs(dict, local->pair_with_any);
-			if (cpr)
-				cpr = make_and_node(dict->Exp_pool, cpr, ap);
-			else
-				cpr = ap;
+			Exp* dummy;
+			and_enchain_left(dict, cpr, dummy, ap);
 		}
 		or_enchain(dict, orhead, cpr);
 	}
