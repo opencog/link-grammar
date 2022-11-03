@@ -172,6 +172,8 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 /// from size zero to three. That's why its a Cartesian product.
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 {
+	if (0 >= arity) return nullptr;
+
 	Exp* andhead = nullptr;
 	Exp* andtail = nullptr;
 
