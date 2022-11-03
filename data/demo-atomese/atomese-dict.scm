@@ -193,8 +193,8 @@
 ; will NOT parse, because there is no word pair with "water" coming before
 ; "jumped".
 ;
-(Evaluation (LgLink "ANY") (List (Word "###LEFT_WALL###") (Word "jumped")))
-(Evaluation (LgLink "ANY") (List (Word "###LEFT_WALL###") (Word "fish")))
+(Evaluation (LgLink "ANY") (List (Word "###LEFT-WALL###") (Word "jumped")))
+(Evaluation (LgLink "ANY") (List (Word "###LEFT-WALL###") (Word "fish")))
 (Evaluation (LgLink "ANY") (List (Word "the") (Word "fish")))
 (Evaluation (LgLink "ANY") (List (Word "fish") (Word "jumped")))
 (Evaluation (LgLink "ANY") (List (Word "jumped") (Word "out")))
