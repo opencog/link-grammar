@@ -13,7 +13,6 @@
 #include <opencog/persist/cog-storage/CogStorage.h>
 #include <opencog/persist/file/FileStorage.h>
 #include <opencog/persist/rocks/RocksStorage.h>
-#include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
 
 #undef STRINGIFY
@@ -33,6 +32,8 @@ using namespace opencog;
 
 // ===============================================================
 
+/// Count the number of times that the `germ` appears in some
+/// Section.
 static size_t count_sections(Local* local, const Handle& germ)
 {
 	// Are there any Sections in the local atomspace?
@@ -46,8 +47,9 @@ static size_t count_sections(Local* local, const Handle& germ)
 	return nsects;
 }
 
-/// Return true if the given word can be found in the dictionary,
-/// else return false.
+/// Return true if the given word can be found as the germ of some
+/// Section, else return false. As a side-effect, Sections are loaded
+/// from storage.
 bool section_boolean_lookup(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);

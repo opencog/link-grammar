@@ -8,6 +8,7 @@
 #ifdef HAVE_ATOMESE
 
 #include <opencog/atomspace/AtomSpace.h>
+#include <opencog/nlp/types/atom_types.h>
 #undef STRINGIFY
 
 extern "C" {
@@ -39,6 +40,57 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 	return cnt;
 }
 
+static bool have_pairs(Local* local, const Handle& germ)
+{
+	const AtomSpacePtr& asp = local->asp;
+	const Handle& hany = local->lany; // (LG_LINK_NODE, "ANY");
+
+	// Are there any pairs in the local AtomSpace?
+	// If ther's at least one, just return `true`.
+	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
+	for (const Handle& rawpr : rprs)
+	{
+		Handle evpr = asp->get_link(EVALUATION_LINK, hany, rawpr);
+		if (evpr) return true;
+	}
+
+	// Else go and fetch them.
+	size_t cnt = fetch_pairs(local, germ);
+
+	// True, if there's at least one.
+	return (0 < cnt);
+}
+
+/// Return true if the given word occurs in some word-pair, else return
+/// false. As a side-effect, word-pairs are loaded from storage.
+bool pair_boolean_lookup(Dictionary dict, const char *s)
+{
+	Local* local = (Local*) (dict->as_server);
+	Handle wrd = local->asp->add_node(WORD_NODE, s);
+
+	// Are there any pairs that contain this word?
+	bool have_word = have_pairs(local, wrd);
+
+	// Does this word belong to any classes?
+	size_t nclass = wrd->getIncomingSetSizeByType(MEMBER_LINK);
+	if (0 == nclass and local->stnp)
+	{
+		local->stnp->fetch_incoming_by_type(wrd, MEMBER_LINK);
+		local->stnp->barrier();
+	}
+
+	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+	{
+		const Handle& wcl = memb->getOutgoingAtom(1);
+		if (WORD_CLASS_NODE != wcl->get_type()) continue;
+
+		// If there's at least one, return it.
+		if (have_pairs(local, wcl)) return true;
+	}
+
+	return have_word;
+}
+
 /// Create a list of connectors, one for each available word pair
 /// containing the word in the germ. These are simply OR'ed together.
 Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
@@ -47,8 +99,6 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 	const AtomSpacePtr& asp = local->asp;
 	Exp* orhead = nullptr;
 	Exp* ortail = nullptr;
-
-	fetch_pairs(local, germ);
 
 	const Handle& hany = local->lany; // (LG_LINK_NODE, "ANY");
 

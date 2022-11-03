@@ -266,13 +266,21 @@ void as_close(Dictionary dict)
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
 {
+	Local* local = (Local*) (dict->as_server);
+
 	bool found = dict_node_exists_lookup(dict, s);
 	if (found) return true;
 
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
 
-	return section_boolean_lookup(dict, s);
+	if (local->enable_sections)
+		found = found or section_boolean_lookup(dict, s);
+
+	if (0 < local->pair_disjuncts)
+		found = found or pair_boolean_lookup(dict, s);
+
+	return found;
 }
 
 // ===============================================================
