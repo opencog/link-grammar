@@ -59,7 +59,7 @@ bool pair_boolean_lookup(Dictionary dict, const char *s);
 Exp* make_exprs(Dictionary dict, const Handle& germ);
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
 Exp* make_pair_exprs(Dictionary dict, const Handle& germ);
-Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity);
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity, bool any);
 Exp* make_any_exprs(Dictionary dict);
 
 void or_enchain(Dictionary, Exp* &orhead, Exp*);

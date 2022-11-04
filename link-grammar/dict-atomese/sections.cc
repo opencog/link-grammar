@@ -223,17 +223,8 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 
 	// Create some optional word-pair links; these may be nullptr's.
 	if (0 < local->extra_pairs)
-	{
-		Exp* extra_pairs = make_cart_pairs(dict, germ, local->extra_pairs);
-		or_enchain(dict, extras, extra_pairs);
-	}
-
-	// Create some optional ANY-links; these may be nullptr's.
-	if (local->extra_any)
-	{
-		Exp* extra_any = make_any_exprs(dict);
-		or_enchain(dict, extras, extra_any);
-	}
+		extras = make_cart_pairs(dict, germ, local->extra_pairs,
+		                         local->extra_any);
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);

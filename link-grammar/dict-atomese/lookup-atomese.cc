@@ -361,15 +361,8 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	// Create disjuncts consisting entirely of word-pair links.
 	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	{
-		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts);
-
-		// Add "ANY" links, if requested.
-		if (local->pair_with_any)
-		{
-			Exp* ap = make_any_exprs(dict);
-			Exp* dummy;
-			and_enchain_left(dict, cpr, dummy, ap);
-		}
+		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts,
+		                           local->pair_with_any);
 		or_enchain(dict, orhead, cpr);
 	}
 

@@ -182,7 +182,8 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 /// a plain cartesian product. The only issue is that this eats up
 /// RAM. At least RAM use is linear: it goes as `O(arity)`.  More
 /// precisely, as `O(npairs x arity)`.
-Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
+                     int arity, bool with_any)
 {
 	if (0 >= arity) return nullptr;
 
@@ -192,7 +193,17 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 	Exp* epr = make_pair_exprs(dict, germ);
 	if (nullptr == epr) return nullptr;
 
+	// Tack on ANY connectors, if requested.
+	if (with_any)
+	{
+		Exp* ap = make_any_exprs(dict);
+		epr = make_or_node(dict->Exp_pool, epr, ap);
+	}
 	Exp* optex = make_optional_node(dict->Exp_pool, epr);
+
+	// If its 1-dimensional, we are done.
+	if (1 == arity) return optex;
+
 	and_enchain_right(dict, andhead, andtail, optex);
 
 	for (int i=1; i< arity; i++)
