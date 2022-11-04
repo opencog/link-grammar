@@ -294,11 +294,16 @@ LG disjuncts must be associated with Atomese disjuncts, so that when
 LG produces a parse, we can know which Atomese disjunct was used in
 that parse (and thus increment the use count on it).
 
-This is currently done in several steps. First, an `LgConnNode`
-is associated to a germ-connector pair, ass follows:
+This is accomplished by associating the LG Link type to the word or
+word-class pair from which it was made. For the case of plain words,
+this pairing can be directly reconstructed from the parse. For the
+case of WordClasses, it is impossible to guess, and so it is explicitly
+provided.
+
+The association is:
 ```
    (Evaluation
-      (Predicate "*-LG connector string-*")
+      (Predicate "*-LG link string-*")
       (LgLinkNode ...)   ; The name is the LG link type.
       (List
          (Word ...)      ; The left word (from germ or connector)
@@ -307,23 +312,6 @@ is associated to a germ-connector pair, ass follows:
 In the above, the two Words/WordClasses appear as germ-connector or
 connector-germ in the Atomese disjuncts.  See examples in `lg-atomese`
 that show how above can be accessed.
-
-The above is enough to recreate an association between LG disjuncts
-and Atomese Sections; however, computing this requires some painful
-code. Thus, it seems easiest to cache the disjunct string, and attach
-it to each Section.  It would appear thus:
-```
-   (Evaluation
-      (Predicate "*-LG disjunct string-*")
-      (ItemNode "A- & B- & C+")
-      (Section ...))
-```
-
-After an LG parse is performed, the resulting `LgDisjunct` can be
-easily converted to a string, that string can be used to search for
-the above `ItemNode` and thus find the `Section`. This seems to be
-the easiest thing to do, avoiding the need to create complicated
-code to convert from `LgDisjunct`s to `Section`s.
 
 * Side note: we need a `get-incoming-by-predicate` function!
 
@@ -338,7 +326,7 @@ It might be desirable to be able to have reproducible connector names,
 adds considerable new complexity. Is it worth doing?
 The following would be needed:
 
-* The `(Predicate "*-LG connector string-*")` described above need to be
+* The `(Predicate "*-LG link string-*")` described above need to be
   fetched. This can add significant network overhead.
 
 * The StorageNode needs to queried for a block of unused link names

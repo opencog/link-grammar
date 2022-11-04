@@ -18,8 +18,7 @@ public:
 	const char* node_str; // (StorageNode \"foo://bar/baz\")
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;
-	Handle linkp;     // (Predicate "*-LG connector string-*")
-	// Handle djp;       // (Predicate "*-LG disjunct string-*")
+	Handle linkp;     // (Predicate "*-LG link string-*")
 	Handle prk;       // (Predicate "*-fetched-pair-*")
 
 	// Sections
@@ -63,10 +62,11 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
 Exp* make_pair_exprs(Dictionary dict, const Handle& germ);
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity, bool any);
 Exp* make_any_exprs(Dictionary dict);
-Exp* make_cart_any(Dictionary dict, int arity);
 
 void or_enchain(Dictionary, Exp* &orhead, Exp*);
 void and_enchain_left(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);
 void and_enchain_right(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);
 
 std::string cached_linkname(Local*, const Handle& pair);
+
+//----

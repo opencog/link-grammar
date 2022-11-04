@@ -221,11 +221,17 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 
 // ===============================================================
 
-/// Create exprs that are cartesian products of ANY links. The
-/// corresponding disjuncts will have `arity` number of connectors.
-/// If these are used all by themselves, the resulting parses will
-/// be random planar graphs; i.e. will be equivalent to the `any`
-/// language parses.
+/// Create an expression having the form
+///    @ANY- or @ANY+ or (@ANY- & @ANY+)
+/// These are multi-connectors. The cost on each connector is the
+/// default any-cost from the configuration.  Note that the use of
+/// this expression will result in random planar parses between the
+/// words having this expression. i.e. it will be the same as using
+/// the `any` language to create random planar pares.
+///
+/// FYI, there is a minor issue for cost-accounting on multi-connectors;
+/// see https://github.com/opencog/link-grammar/issues/1351 for details.
+///
 Exp* make_any_exprs(Dictionary dict)
 {
 	// Create a pair of ANY-links that can connect either left or right.
@@ -238,39 +244,10 @@ Exp* make_any_exprs(Dictionary dict)
 
 	Exp* any = make_or_node(dict->Exp_pool, aneg, apos);
 
+	Exp* andy = make_and_node(dict->Exp_pool, aneg, apos);
+	or_enchain(dict, any, andy);
+
 	return any;
-}
-
-/// Much like make_part_pairs, except that this duplicates the
-/// ANY connector. It creates the expression
-/// {@ANY- or @ANY+} and {@ANY- or @ANY+} and ... and {@ANY- or @ANY+}
-/// This cartesian allows multiple connectors to participate in loops.
-/// However, the behavior is ... sruprising. See
-///    https://github.com/opencog/link-grammar/issues/1351
-/// for a discussion of what this is all about.
-Exp* make_cart_any(Dictionary dict, int arity)
-{
-	if (0 >= arity) return nullptr;
-
-	Exp* andhead = nullptr;
-	Exp* andtail = nullptr;
-
-	Exp* any = make_any_exprs(dict);
-
-	Exp* optex = make_optional_node(dict->Exp_pool, any);
-
-	// If its 1-dimensional, we are done.
-	if (1 == arity) return optex;
-
-	and_enchain_right(dict, andhead, andtail, optex);
-
-	for (int i=1; i< arity; i++)
-	{
-		Exp* opt = make_optional_node(dict->Exp_pool, any);
-		and_enchain_right(dict, andhead, andtail, opt);
-	}
-
-	return andhead;
 }
 
 // ===============================================================
