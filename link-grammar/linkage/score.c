@@ -87,6 +87,15 @@ static float compute_multi_cost(Linkage lkg)
 			// No-op if not a multi-connector.
 			if (false == rcon->multi) continue;
 
+			// If the multi-connector does not have a cost, then skip.
+// XXX at this time, there is no cncost in the condesc.
+			// if (0.0 == rcon->desc->cncost) continue;
+
+			// Initial offset; this will be immediately cancelled
+			// by the first use.
+			// mcost -= rcon->desc->cncost;
+mcost -= 1.0;
+
 			// Find the links using this connector.
 			for (size_t l = 0; l < lkg->num_links; l++)
 			{
@@ -98,12 +107,16 @@ static float compute_multi_cost(Linkage lkg)
 				{
 					// Skip if no match.
 					if (strcmp(rcon->desc->string, wrc->desc->string)) continue;
-	 mcost += 1.0;
+
+					// Increment for each use.
+					// mcost += rcon->desc->cncost;
+mcost += 1.0;
 				}
 			}
 		}
 		lword++; // increment only if disjunct is non-null.
 	}
+mcost *= -0.00001;
 	return mcost;
 }
 
@@ -115,7 +128,5 @@ void linkage_score(Linkage lkg, Parse_Options opts)
 	lkg->lifo.disjunct_cost = compute_disjunct_cost(lkg);
 	lkg->lifo.link_cost = compute_link_cost(lkg);
 
-float mcost = compute_multi_cost(lkg);
-// printf("duuude mcost=%f\n", mcost);
-lkg->lifo.disjunct_cost -= 0.00001 * mcost;
+	lkg->lifo.disjunct_cost += compute_multi_cost(lkg);
 }
