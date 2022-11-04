@@ -98,7 +98,6 @@ static float compute_multi_cost(Linkage lkg)
 				{
 					// Skip if no match.
 					if (strcmp(rcon->desc->string, wrc->desc->string)) continue;
-dj->cost += 0.0001;
 	 mcost += 1.0;
 				}
 			}
@@ -111,12 +110,12 @@ dj->cost += 0.0001;
 /** Assign parse score (cost) to linkage, used for parse ranking. */
 void linkage_score(Linkage lkg, Parse_Options opts)
 {
-float mcost = compute_multi_cost(lkg);
 
 	lkg->lifo.unused_word_cost = unused_word_cost(lkg);
 	lkg->lifo.disjunct_cost = compute_disjunct_cost(lkg);
 	lkg->lifo.link_cost = compute_link_cost(lkg);
 
+float mcost = compute_multi_cost(lkg);
 // printf("duuude mcost=%f\n", mcost);
-// lkg->lifo.disjunct_cost += 0.0001 * mcost;
+lkg->lifo.disjunct_cost -= 0.00001 * mcost;
 }
