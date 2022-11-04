@@ -260,6 +260,9 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	bool found = dict_node_exists_lookup(dict, s);
 	if (found) return true;
 
+	if (0 == strcmp(s, "<UNKNOWN-WORD>"))
+		return true;
+
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
 
@@ -376,18 +379,53 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	return orhead;
 }
 
+/// Given an expression, wrap  it with a Dict_node and insert it into
+/// the dictionary.
+static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
+{
+	Dict_node* dn = (Dict_node*) malloc(sizeof(Dict_node));
+	memset(dn, 0, sizeof(Dict_node));
+	dn->string = ssc;
+	dn->exp = exp;
+
+	// Cache the result; avoid repeated lookups.
+	dict->root = dict_node_insert(dict, dict->root, dn);
+	dict->num_entries++;
+
+	lgdebug(+D_SPEC+5, "as_lookup_list %d for >>%s<< nexpr=%d\n",
+		dict->num_entries, ssc, size_of_expression(exp));
+
+	// Rebalance the tree every now and then.
+	if (0 == dict->num_entries% 30)
+	{
+		dict->root = dsw_tree_to_vine(dict->root);
+		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
+	}
+
+	// Perform the lookup. We cannot return the dn above, as the
+	// as_free_llist() below will delete it, leading to mem corruption.
+	dn = dict_node_lookup(dict, ssc);
+	return dn;
+}
+
 /// Given a word, return the collection of Dict_nodes holding the
 /// expressions for that word.
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
 	// Do we already have this word cached? If so, pull from
 	// the cache.
-	Dict_node * dn = dict_node_lookup(dict, s);
+	Dict_node* dn = dict_node_lookup(dict, s);
 
 	if (dn) return dn;
 
 	const char* ssc = string_set_add(s, dict->string_set);
 	Local* local = (Local*) (dict->as_server);
+
+	if (0 == strcmp(s, "<UNKNOWN-WORD>"))
+	{
+		Exp* exp = make_any_exprs(dict);
+		return make_dn(dict, exp, ssc);
+	}
 
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
@@ -419,29 +457,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	if (nullptr == exp)
 		return nullptr;
 
-	dn = (Dict_node*) malloc(sizeof(Dict_node));
-	memset(dn, 0, sizeof(Dict_node));
-	dn->string = ssc;
-	dn->exp = exp;
-
-	// Cache the result; avoid repeated lookups.
-	dict->root = dict_node_insert(dict, dict->root, dn);
-	dict->num_entries++;
-
-	lgdebug(+D_SPEC+5, "as_lookup_list %d for >>%s<< nexpr=%d\n",
-		dict->num_entries, ssc, size_of_expression(exp));
-
-	// Rebalance the tree every now and then.
-	if (0 == dict->num_entries% 30)
-	{
-		dict->root = dsw_tree_to_vine(dict->root);
-		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
-	}
-
-	// Perform the lookup. We cannot return the dn above, as the
-	// as_free_llist() below will delete it, leading to mem corruption.
-	dn = dict_node_lookup(dict, ssc);
-	return dn;
+	return make_dn(dict, exp, ssc);
 }
 
 // This is supposed to provide a wild-card lookup.  However,
