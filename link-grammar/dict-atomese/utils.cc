@@ -42,7 +42,9 @@ public:
 // ===============================================================
 
 #if 0
-// Unused just right now.
+
+// Currently unused. Left over from an earlier attempt to label
+// disjuncts.
 
 // This is a minimalist version of `lg_exp_stringify()` because
 // we want the string, without the costs on it. We also know that
@@ -73,11 +75,11 @@ static std::string prt_andex(Exp* e)
 
 		else if (OR_type == e->type)
 		{
-			str += "{";
+			str += "(";
 			Exp* con = e->operand_first->operand_next;
 			str += con->condesc->string;
 			str += con->dir;
-			str += "}";
+			str += ")";
 		}
 		else if (AND_type == e->type)
 		{
@@ -94,15 +96,6 @@ static std::string prt_andex(Exp* e)
 	return str;
 }
 
-// XXX Unused right now. What was the plan, here?
-static void cache_disjunct_string(Local* local,
-                                  const Handle& sect, Exp* andex)
-{
-	local->asp->add_link(
-		EVALUATION_LINK, local->djp,
-		createNode(ITEM_NODE, prt_andex(andex)),
-		sect);
-}
 #endif
 
 #endif /* HAVE_ATOMESE */
