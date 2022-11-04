@@ -1,6 +1,6 @@
 
-(Experimental) AtomSpace Dictionary
-===================================
+AtomSpace Dictionary
+====================
 This directory provides code that can access dictionary data held in
 [AtomSpace](https://wiki.opencog.org/w/AtomSpace)
 [StorageNodes](https://wiki.opencog.org/w/StorageNode).
@@ -9,15 +9,14 @@ dictionaries maintained in the AtomSpace.  This provides several benefits:
 
  * Avoids the need for a batch dump of the AtomSpace data to a DB file.
  * Enables "lifelong learning": as new language uses are learned, the
-   AtomSpace contents are changed, and those changes become visible to
-   the parser.
+   AtomSpace contents are changed, and those changes become immediately
+   visible to the parser.
 
 This is meant to work with dictionaries created by the code located
 in the [OpenCog learn repo](https://github.com/opencog/learn).
 
-**Version 0.9.1** -- All basic features have been implemented.
+**Version 0.9.2** -- All basic features have been implemented.
 All known bugs have been fixed.
-A better demo dict needs to be prepared.
 
 Building
 --------
@@ -70,8 +69,13 @@ to get a taste of basic Atomese.  Then edit the
 and make sure that the URL points to the install location of
 `atomese-dict.scm`.
 
-Start link-parser as `link-parser demo-atomese`. There is one and only
-one sentence that will parse: "level playing field". That's it.
+Start link-parser as `link-parser demo-atomese`. There are multiple
+demo sentences possible. These are:
+
+* "level playing field" -- from the first part of `atomese-dict.scm`.
+* "Mary saw a bird" -- from the middle part of `atomese-dict.scm`.
+* "1 2 3 fountain 4 5 6" -- from the middle, a debugging pattern.
+* "fee fie fo fum" -- Using the `UNKNOWN-WORD` creates random parses.
 
 ### CogServer demo
 
@@ -264,7 +268,7 @@ TODO
 ====
 Remaining work items:
 
-* Provide a high-quality demo ditionary.
+* Provide a high-quality demo dictionary.
 
 * Close the loop w/ parsing, so that LG disjuncts arising from a given
   parse an be matched up with the Atomese disjuncts.  Increment/send
