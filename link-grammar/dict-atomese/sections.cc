@@ -219,14 +219,12 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 	Exp* orhead = nullptr;
+	Exp* extras = nullptr;
 
 	// Create some optional word-pair links; these may be nullptr's.
-	Exp* left_pairs = make_cart_pairs(dict, germ, local->left_pairs);
-	Exp* right_pairs = make_cart_pairs(dict, germ, local->right_pairs);
-
-	// Create some optional ANY-links; these may be nullptr's.
-	Exp* left_any = make_any_exprs(dict, local->left_any);
-	Exp* right_any = make_any_exprs(dict, local->right_any);
+	if (0 < local->extra_pairs)
+		extras = make_cart_pairs(dict, germ, local->extra_pairs,
+		                         local->extra_any);
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
@@ -286,27 +284,12 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 			continue;
 		}
 
-		// Tack on ANY connectors, as configured.
-		if (left_any)
+		// Tack on extra connectors, as configured.
+		if (extras)
 		{
-			Exp* optex = make_optional_node(dict->Exp_pool, left_any);
+			Exp* optex = make_optional_node(dict->Exp_pool, extras);
 			and_enchain_left(dict, andhead, andtail, optex);
-		}
-		if (right_any)
-		{
-			Exp* optex = make_optional_node(dict->Exp_pool, right_any);
-			and_enchain_right(dict, andhead, andtail, optex);
-		}
-
-		// Tack on word-pair connectors, as configured.
-		if (left_pairs)
-		{
-			Exp* optex = make_optional_node(dict->Exp_pool, left_pairs);
-			and_enchain_left(dict, andhead, andtail, optex);
-		}
-		if (right_pairs)
-		{
-			Exp* optex = make_optional_node(dict->Exp_pool, right_pairs);
+			optex = make_optional_node(dict->Exp_pool, extras);
 			and_enchain_right(dict, andhead, andtail, optex);
 		}
 

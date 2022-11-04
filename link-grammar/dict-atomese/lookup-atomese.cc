@@ -50,17 +50,15 @@ using namespace opencog;
 
 #define ANY_DEFAULT_STRING "any-default"
 #define ENABLE_SECTIONS_STRING "enable-sections"
+#define EXTRA_PAIRS_STRING "extra-pairs"
+#define EXTRA_ANY_STRING "extra-any"
 
 #define PAIR_DISJUNCTS_STRING "pair-disjuncts"
 #define PAIR_WITH_ANY_STRING "pair-with-any"
 
-#define LEFT_PAIRS_STRING "left-pairs"
-#define RIGHT_PAIRS_STRING "right-pairs"
-
 #define ANY_DISJUNCTS_STRING "any-disjuncts"
-#define LEFT_ANY_STRING "left-any"
-#define RIGHT_ANY_STRING "right-any"
 
+#define ENABLE_UNKNOWN_WORD_STRING "enable-unknown-word"
 
 /// Shared global
 static AtomSpacePtr external_atomspace;
@@ -162,16 +160,14 @@ bool as_open(Dictionary dict)
 	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "3.0"));
 
 	local->enable_sections = atoi(LDEF(ENABLE_SECTIONS_STRING, "1"));
-
-	local->left_pairs = atoi(LDEF(LEFT_PAIRS_STRING, "1"));
-	local->right_pairs = atoi(LDEF(RIGHT_PAIRS_STRING, "1"));
-
-	local->left_any = atoi(LDEF(LEFT_ANY_STRING, "2"));
-	local->right_any = atoi(LDEF(RIGHT_ANY_STRING, "2"));
+	local->extra_pairs = atoi(LDEF(EXTRA_PAIRS_STRING, "1"));
+	local->extra_any = atoi(LDEF(EXTRA_ANY_STRING, "1"));
 
 	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
-	local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "2"));
-	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "4"));
+	local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "1"));
+	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "0"));
+
+	local->enable_unknown_word = atoi(LDEF(ENABLE_UNKNOWN_WORD_STRING, "1"));
 
 	dict->as_server = (void*) local;
 
@@ -268,14 +264,16 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	bool found = dict_node_exists_lookup(dict, s);
 	if (found) return true;
 
+	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))
+		return true;
+
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
 
 	if (local->enable_sections)
 		found = section_boolean_lookup(dict, s);
 
-	if (0 < local->pair_disjuncts or
-	    0 < local->left_pairs or 0 < local->right_pairs)
+	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	{
 		bool have_pairs = pair_boolean_lookup(dict, s);
 		found = found or have_pairs;
@@ -361,25 +359,17 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	Exp* orhead = nullptr;
 
 	// Create disjuncts consisting entirely of "ANY" links.
-	if (0 < local->any_disjuncts)
+	if (local->any_disjuncts)
 	{
-		Exp* any = make_any_exprs(dict, local->any_disjuncts);
+		Exp* any = make_any_exprs(dict);
 		or_enchain(dict, orhead, any);
 	}
 
 	// Create disjuncts consisting entirely of word-pair links.
-	if (0 < local->pair_disjuncts or
-	    0 < local->left_pairs or 0 < local->right_pairs)
+	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	{
-		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts);
-
-		// Add "ANY" links, if requested.
-		if (0 < local->pair_with_any)
-		{
-			Exp* ap = make_any_exprs(dict, local->pair_with_any);
-			Exp* dummy;
-			and_enchain_left(dict, cpr, dummy, ap);
-		}
+		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts,
+		                           local->pair_with_any);
 		or_enchain(dict, orhead, cpr);
 	}
 
@@ -393,18 +383,56 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	return orhead;
 }
 
+/// Given an expression, wrap  it with a Dict_node and insert it into
+/// the dictionary.
+static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
+{
+	Dict_node* dn = (Dict_node*) malloc(sizeof(Dict_node));
+	memset(dn, 0, sizeof(Dict_node));
+	dn->string = ssc;
+	dn->exp = exp;
+
+	// Cache the result; avoid repeated lookups.
+	dict->root = dict_node_insert(dict, dict->root, dn);
+	dict->num_entries++;
+
+	lgdebug(+D_SPEC+5, "as_lookup_list %d for >>%s<< nexpr=%d\n",
+		dict->num_entries, ssc, size_of_expression(exp));
+
+	// Rebalance the tree every now and then.
+	if (0 == dict->num_entries% 30)
+	{
+		dict->root = dsw_tree_to_vine(dict->root);
+		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
+	}
+
+	// Perform the lookup. We cannot return the dn above, as the
+	// as_free_llist() below will delete it, leading to mem corruption.
+	dn = dict_node_lookup(dict, ssc);
+	return dn;
+}
+
 /// Given a word, return the collection of Dict_nodes holding the
 /// expressions for that word.
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
 	// Do we already have this word cached? If so, pull from
 	// the cache.
-	Dict_node * dn = dict_node_lookup(dict, s);
+	Dict_node* dn = dict_node_lookup(dict, s);
 
 	if (dn) return dn;
 
 	const char* ssc = string_set_add(s, dict->string_set);
 	Local* local = (Local*) (dict->as_server);
+
+	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))
+	{
+		// XXX Note the hard-coded 6. I do not understand why 2 is not
+		// enough. See issue #1351 for a discussion.
+		// https://github.com/opencog/link-grammar/issues/1351
+		Exp* exp = make_cart_any(dict, 6);
+		return make_dn(dict, exp, ssc);
+	}
 
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
@@ -436,29 +464,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	if (nullptr == exp)
 		return nullptr;
 
-	dn = (Dict_node*) malloc(sizeof(Dict_node));
-	memset(dn, 0, sizeof(Dict_node));
-	dn->string = ssc;
-	dn->exp = exp;
-
-	// Cache the result; avoid repeated lookups.
-	dict->root = dict_node_insert(dict, dict->root, dn);
-	dict->num_entries++;
-
-	lgdebug(+D_SPEC+5, "as_lookup_list %d for >>%s<< nexpr=%d\n",
-		dict->num_entries, ssc, size_of_expression(exp));
-
-	// Rebalance the tree every now and then.
-	if (0 == dict->num_entries% 30)
-	{
-		dict->root = dsw_tree_to_vine(dict->root);
-		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
-	}
-
-	// Perform the lookup. We cannot return the dn above, as the
-	// as_free_llist() below will delete it, leading to mem corruption.
-	dn = dict_node_lookup(dict, ssc);
-	return dn;
+	return make_dn(dict, exp, ssc);
 }
 
 // This is supposed to provide a wild-card lookup.  However,

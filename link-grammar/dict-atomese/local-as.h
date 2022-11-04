@@ -44,18 +44,15 @@ public:
 
 	// Basic Sections
 	bool enable_sections;
-
-	// Supplements
-	int left_pairs;
-	int right_pairs;
-
-	int left_any;
-	int right_any;
+	int extra_pairs;
+	bool extra_any;
 
 	// Disjuncts made from pairs
 	int pair_disjuncts;
-	int pair_with_any;
-	int any_disjuncts;
+	bool pair_with_any;
+	bool any_disjuncts;
+
+	bool enable_unknown_word;
 };
 
 bool section_boolean_lookup(Dictionary dict, const char *s);
@@ -64,8 +61,9 @@ bool pair_boolean_lookup(Dictionary dict, const char *s);
 Exp* make_exprs(Dictionary dict, const Handle& germ);
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
 Exp* make_pair_exprs(Dictionary dict, const Handle& germ);
-Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity);
-Exp* make_any_exprs(Dictionary dict, int arity);
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity, bool any);
+Exp* make_any_exprs(Dictionary dict);
+Exp* make_cart_any(Dictionary dict, int arity);
 
 void or_enchain(Dictionary, Exp* &orhead, Exp*);
 void and_enchain_left(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);

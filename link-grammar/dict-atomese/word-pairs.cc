@@ -170,7 +170,20 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 /// and (A+ or B- or C+ or ()) and (A+ or B- or C+ or ())`. When
 /// this is exploded into disjuncts, any combination is possible,
 /// from size zero to three. That's why its a Cartesian product.
-Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
+///
+/// FYI, this is a work-around for the lack of a commmutative
+/// multi-product. What we really want to do here is to have the
+/// expression `(@A+ com @B- com @C+)` where `com` is a commutative
+/// product.  The `@` sign denotes a multi-connector, so that `@A+`
+/// is the same things as `(() or A+ or (A+ & A+) or ...)` and the
+/// commutative product allows any of these to commute, i.e. so that
+/// disjuncts such as `(A+ & C+ & A+ & C+)` are possible. But we do
+/// not have such a commutative multi-product, and so we fake it with
+/// a plain cartesian product. The only issue is that this eats up
+/// RAM. At least RAM use is linear: it goes as `O(arity)`.  More
+/// precisely, as `O(npairs x arity)`.
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
+                     int arity, bool with_any)
 {
 	if (0 >= arity) return nullptr;
 
@@ -180,7 +193,17 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 	Exp* epr = make_pair_exprs(dict, germ);
 	if (nullptr == epr) return nullptr;
 
+	// Tack on ANY connectors, if requested.
+	if (with_any)
+	{
+		Exp* ap = make_any_exprs(dict);
+		epr = make_or_node(dict->Exp_pool, epr, ap);
+	}
 	Exp* optex = make_optional_node(dict->Exp_pool, epr);
+
+	// If its 1-dimensional, we are done.
+	if (1 == arity) return optex;
+
 	and_enchain_right(dict, andhead, andtail, optex);
 
 	for (int i=1; i< arity; i++)
@@ -203,35 +226,52 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity)
 /// If these are used all by themselves, the resulting parses will
 /// be random planar graphs; i.e. will be equivalent to the `any`
 /// language parses.
-Exp* make_any_exprs(Dictionary dict, int arity)
+Exp* make_any_exprs(Dictionary dict)
 {
-	if (arity <= 0) return nullptr;
-
 	// Create a pair of ANY-links that can connect either left or right.
-	Exp* aneg = make_connector_node(dict, dict->Exp_pool, "ANY", '-', false);
-	Exp* apos = make_connector_node(dict, dict->Exp_pool, "ANY", '+', false);
+	Exp* aneg = make_connector_node(dict, dict->Exp_pool, "ANY", '-', true);
+	Exp* apos = make_connector_node(dict, dict->Exp_pool, "ANY", '+', true);
 
 	Local* local = (Local*) (dict->as_server);
 	aneg->cost = local->any_default;
 	apos->cost = local->any_default;
 
 	Exp* any = make_or_node(dict->Exp_pool, aneg, apos);
-	Exp* optex = make_optional_node(dict->Exp_pool, any);
+
+	return any;
+}
+
+/// Much like make_part_pairs, except that this duplicates the
+/// ANY connector. It creates the expression
+/// {@ANY- or @ANY+} and {@ANY- or @ANY+} and ... and {@ANY- or @ANY+}
+/// This cartesian allows multiple connectors to participate in loops.
+/// However, the behavior is ... sruprising. See
+///    https://github.com/opencog/link-grammar/issues/1351
+/// for a discussion of what this is all about.
+Exp* make_cart_any(Dictionary dict, int arity)
+{
+	if (0 >= arity) return nullptr;
 
 	Exp* andhead = nullptr;
 	Exp* andtail = nullptr;
 
-	andhead = make_and_node(dict->Exp_pool, optex, NULL);
-	andtail = andhead->operand_first;
+	Exp* any = make_any_exprs(dict);
+
+	Exp* optex = make_optional_node(dict->Exp_pool, any);
+
+	// If its 1-dimensional, we are done.
+	if (1 == arity) return optex;
+
+	and_enchain_right(dict, andhead, andtail, optex);
 
 	for (int i=1; i< arity; i++)
 	{
 		Exp* opt = make_optional_node(dict->Exp_pool, any);
-		andtail->operand_next = opt;
-		andtail = opt;
+		and_enchain_right(dict, andhead, andtail, opt);
 	}
 
 	return andhead;
 }
 
+// ===============================================================
 #endif // HAVE_ATOMESE

@@ -68,6 +68,11 @@
 % obtained above can be rescaled linearly befor being used as a cost.
 % The rescaling is as usual: y=mx+b where m==`cost-scale` and
 % b==`cost-offset`.
+%
+% Keep in mind that the parser ranks parses from lowest to highest cost.
+% If word-pair links have a negative cost, the parser is incentivized to
+% add as many of these as possible, while still resulting in a planar
+% graph with many loops.
 #define cost-scale -0.5;
 #define cost-offset 0.0;
 
@@ -133,9 +138,8 @@
 % If set to zero, these supplementary links will not be generated. If set
 % to 2 or more, then that many extra optional connectors will be added.
 %
-% If sections are not enabled, then these parameters have no effect.
-#define left-pairs 1;
-#define right-pairs 1;
+% If sections are not enabled, then this parameter has no effect.
+#define extra-pairs 1;
 
 % Same as above, but the supplementary connectors will all be of type `ANY`,
 % and thus can connect to anything. Since these can connect to anything,
@@ -144,10 +148,9 @@
 % those unknown words. The be effective, the cost should be set high enough
 % so that these are more costly than existing word-pairs.
 %
-% Setting to zero disables this.
-% If sections are disabled, the these parameters have no effect.
-#define left-any 2;
-#define right-any 2;
+% This is a bool on/off flag. Setting to zero disables this.
+% If sections are disabled, the this parameter has no effect.
+#define extra-any 1;
 
 % Create expressions that consist entirely of word-pair relationships.
 % The disjuncts will have up to the specified number of connectors; 4 is
@@ -162,18 +165,23 @@
 % Supplement the above with additional connectors of type "ANY". This is
 % useful for providing links between words that don't already exist as
 % pairs in the dataset. This has no effect, if `pair-disjuncts` (above)
-% is set to zero.
-#define pair-with-any 2;
+% is set to zero.  This is a bool on/off value; setting to zero disables.
+#define pair-with-any 1;
 
 % Create expressions that consist entirely of "ANY" link-types.
-% The disjuncts will have up to the specified number of connectors; 4 is
-% the default. Setting this to zero disables the creation of such
-% disjuncts. If `enable-sections` and `pair-disjuncts` (above) are turned
-% off, the result will be pure random planar tree parsing.
+% This is a bool on/off parameter; setting this to zero disables the
+% creation of such disjuncts. If `enable-sections` and `pair-disjuncts`
+% (above) are turned off, the result will be pure random planar tree parsing.
 %
 % Each connector has a cost is that is determined by the config parameters,
 % above.
-#define any-disjuncts 4;
+#define any-disjuncts 0;
+
+% Enble the automatic generation of <UNKNOWN-WORD>. It will be
+% automatically added to the dictionary, with multi-ANY connectors on it.
+% The ANY connectors will be used, irresepctive of the other any setting
+% above.
+#define enable-unknown-word 1;
 
 % -----------------------
 % For this file to be read, at least one bogus entry is needed. It is
