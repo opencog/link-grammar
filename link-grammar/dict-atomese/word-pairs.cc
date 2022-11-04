@@ -236,7 +236,7 @@ Exp* make_any_exprs(Dictionary dict)
 	aneg->cost = local->any_default;
 	apos->cost = local->any_default;
 
-	Exp* any = make_and_node(dict->Exp_pool, aneg, apos);
+	Exp* any = make_or_node(dict->Exp_pool, aneg, apos);
 
 	return any;
 }
