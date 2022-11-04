@@ -427,7 +427,10 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 
 	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))
 	{
-		Exp* exp = make_any_exprs(dict);
+		// XXX Note the hard-coded 6. I do not understand why 2 is not
+		// enough. See issue #1351 for a discussion.
+		// https://github.com/opencog/link-grammar/issues/1351
+		Exp* exp = make_cart_any(dict, 6);
 		return make_dn(dict, exp, ssc);
 	}
 

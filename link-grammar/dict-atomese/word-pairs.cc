@@ -241,4 +241,37 @@ Exp* make_any_exprs(Dictionary dict)
 	return any;
 }
 
+/// Much like make_part_pairs, except that this duplicates the
+/// ANY connector. It creates the expression
+/// {@ANY- or @ANY+} and {@ANY- or @ANY+} and ... and {@ANY- or @ANY+}
+/// This cartesian allows multiple connectors to participate in loops.
+/// However, the behavior is ... sruprising. See
+///    https://github.com/opencog/link-grammar/issues/1351
+/// for a discussion of what this is all about.
+Exp* make_cart_any(Dictionary dict, int arity)
+{
+	if (0 >= arity) return nullptr;
+
+	Exp* andhead = nullptr;
+	Exp* andtail = nullptr;
+
+	Exp* any = make_any_exprs(dict);
+
+	Exp* optex = make_optional_node(dict->Exp_pool, any);
+
+	// If its 1-dimensional, we are done.
+	if (1 == arity) return optex;
+
+	and_enchain_right(dict, andhead, andtail, optex);
+
+	for (int i=1; i< arity; i++)
+	{
+		Exp* opt = make_optional_node(dict->Exp_pool, any);
+		and_enchain_right(dict, andhead, andtail, opt);
+	}
+
+	return andhead;
+}
+
+// ===============================================================
 #endif // HAVE_ATOMESE
