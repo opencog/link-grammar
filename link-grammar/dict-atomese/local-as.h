@@ -51,6 +51,8 @@ public:
 	int pair_disjuncts;
 	bool pair_with_any;
 	bool any_disjuncts;
+
+	bool enable_unknown_word;
 };
 
 bool section_boolean_lookup(Dictionary dict, const char *s);

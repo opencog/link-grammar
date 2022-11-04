@@ -68,6 +68,11 @@
 % obtained above can be rescaled linearly befor being used as a cost.
 % The rescaling is as usual: y=mx+b where m==`cost-scale` and
 % b==`cost-offset`.
+%
+% Keep in mind that the parser ranks parses from lowest to highest cost.
+% If word-pair links have a negative cost, the parser is incentivized to
+% add as many of these as possible, while still resulting in a planar
+% graph with many loops.
 #define cost-scale -0.5;
 #define cost-offset 0.0;
 
@@ -170,7 +175,13 @@
 %
 % Each connector has a cost is that is determined by the config parameters,
 % above.
-#define any-disjuncts 1;
+#define any-disjuncts 0;
+
+% Enble the automatic generation of <UNKNOWN-WORD>. It will be
+% automatically added to the dictionary, with multi-ANY connectors on it.
+% The ANY connectors will be used, irresepctive of the other any setting
+% above.
+#define enable-unknown-word 1;
 
 % -----------------------
 % For this file to be read, at least one bogus entry is needed. It is

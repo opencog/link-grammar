@@ -58,6 +58,8 @@ using namespace opencog;
 
 #define ANY_DISJUNCTS_STRING "any-disjuncts"
 
+#define ENABLE_UNKNOWN_WORD_STRING "enable-unknown-word"
+
 /// Shared global
 static AtomSpacePtr external_atomspace;
 static StorageNodePtr external_storage;
@@ -163,7 +165,9 @@ bool as_open(Dictionary dict)
 
 	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
 	local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "1"));
-	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "1"));
+	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "0"));
+
+	local->enable_unknown_word = atoi(LDEF(ENABLE_UNKNOWN_WORD_STRING, "1"));
 
 	dict->as_server = (void*) local;
 
@@ -260,7 +264,7 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	bool found = dict_node_exists_lookup(dict, s);
 	if (found) return true;
 
-	if (0 == strcmp(s, "<UNKNOWN-WORD>"))
+	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))
 		return true;
 
 	if (0 == strcmp(s, LEFT_WALL_WORD))
@@ -421,7 +425,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	const char* ssc = string_set_add(s, dict->string_set);
 	Local* local = (Local*) (dict->as_server);
 
-	if (0 == strcmp(s, "<UNKNOWN-WORD>"))
+	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))
 	{
 		Exp* exp = make_any_exprs(dict);
 		return make_dn(dict, exp, ssc);
