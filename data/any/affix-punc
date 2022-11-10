@@ -6,7 +6,7 @@
 % capture group 0). Disregarding the position in which they appear, they
 % are checked last - but in the same order. (Experimental.)
 
-"’’" ''.y ….y ....y ” ~ = "|" │  "/[[:punct:]]$/.\0": RPUNC+;
+"’’" ''.y ….y ....y ” ~ = "|" │ "/[[:punct:]]$/.\0": RPUNC+;
 
 `` ''.x ….x ....x †† … • ” “ » « · ~ = "|" │ "/^[[:punct:]]/.\0": LPUNC+;
 
