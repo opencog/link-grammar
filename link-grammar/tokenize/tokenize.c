@@ -157,20 +157,20 @@ static bool is_space(wchar_t wc, locale_t dict_locale)
 {
 	if (iswspace_l(wc, dict_locale)) return true;
 
-	/* 0xc2 0xa0 is U+00A0, c2 a0, NO-BREAK SPACE */
+	/* 0xc2 a0 is U+00A0  NO-BREAK SPACE */
 	/* For some reason, iswspace doesn't get this */
 	if (0xa0 == wc) return true;
 
 	/* iswspace seems to use somewhat different rules than what we want,
-	 * so over-ride special cases in the U+2000 to U+206F range.
-	 * Caution: this potentially screws with arabic, and right-to-left
-	 * languages.
-	 */
-/***  later, not now ..
-	if (0x2000 <= wc && wc <= 0x200f) return true;
-	if (0x2028 <= wc && wc <= 0x202f) return true;
-	if (0x205f <= wc && wc <= 0x206f) return true;
-***/
+	 * so over-ride special cases in the U+2000 to U+206F range.  */
+	if (0x2000 <= wc && wc <= 0x200d) return true; /* Assorted spaces */
+	if (0x2028 == wc) return true;  /* LINE SEPARATOR */
+	if (0x2029 == wc) return true;  /* PARAGRAPH SEPARATOR */
+
+	/* 0xe2 80 af is U+202F NARROW NO-BREAK SPACE */
+	if (0x202f == wc) return true;
+	if (0x205f == wc) return true; /* MEDIUM MATHEMATICAL SPACE */
+	if (0x2060 == wc) return true; /* WORD JOINER */
 
 	return false;
 }
