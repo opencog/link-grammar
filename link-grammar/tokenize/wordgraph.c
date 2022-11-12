@@ -28,6 +28,7 @@ Gword *gword_new(Sentence sent, const char *s)
 
 	memset(gword, 0, sizeof(*gword));
 	assert(NULL != s, "Null-string subword");
+	assert(0 != *s, "Empty-string subword");
 	gword->subword = string_set_add(s, sent->string_set);
 
 	if (NULL != sent->last_word) sent->last_word->chain_next = gword;
