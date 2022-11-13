@@ -206,6 +206,7 @@ static bool reg_comp(Regex_node *rn)
 	                            options, &rc, &erroffset, NULL);
 	if (re->re_code != NULL)
 	{
+		re->re_md_key = 0;
 		int trc = tss_create(&re->re_md_key, (tss_dtor_t) pcre2_match_data_free);
 		if (thrd_success != trc)
 		{
@@ -266,6 +267,7 @@ static void reg_span(Regex_node *rn)
 static void reg_free(Regex_node *rn)
 {
 	reg_info *re = rn->re;
+	tss_delete(re->re_md_key);
 	pcre2_code_free(re->re_code);
 	free(re);
 	rn->re = NULL;
