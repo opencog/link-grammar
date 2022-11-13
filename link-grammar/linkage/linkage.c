@@ -136,7 +136,7 @@ static Gword *wordgraph_link_placeholder(Sentence sent, Gword *w)
 {
 	Gword *new_word;
 
-	new_word = gword_new(sent, "");
+	new_word = gword_new(sent, "PLACE_HOLDER");
 	new_word->status |= WS_PL;
 	new_word->label = "PH";
 	new_word->start = w->start;
