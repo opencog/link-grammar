@@ -10,6 +10,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <threads.h> /* C11 Concurrency library */
+
 /**
  * Support for the regular-expression based token matching system
  * using standard POSIX regex, PCRE2 or C++.
@@ -55,7 +57,7 @@ LINK_END_DECLS
 #if HAVE_PCRE2_H
 typedef struct {
 	pcre2_code *re_code;
-	pcre2_match_data* re_md;
+	tss_t re_md_key;
 } reg_info;
 #endif
 
@@ -179,6 +181,18 @@ static void reg_free(Regex_node *rn)
 
 /* ========================================================================= */
 #if HAVE_PCRE2_H
+
+static pcre2_match_data* get_re_md(reg_info *rif)
+{
+	pcre2_match_data* md = (pcre2_match_data*) tss_get(rif->re_md_key);
+	if (md) return md;
+
+	md = pcre2_match_data_create_from_pattern(rif->re_code, NULL);
+	assert(md, "Unable to allocate pcre2 match data struct");
+	tss_set(rif->re_md_key, md);
+	return md;
+}
+
 static bool reg_comp(Regex_node *rn)
 {
 	reg_info *re = rn->re = malloc(sizeof(reg_info));
@@ -192,10 +206,11 @@ static bool reg_comp(Regex_node *rn)
 	                            options, &rc, &erroffset, NULL);
 	if (re->re_code != NULL)
 	{
-		re->re_md = pcre2_match_data_create_from_pattern(re->re_code, NULL);
-		if (re->re_md == NULL)
+		int trc = tss_create(&re->re_md_key, (tss_dtor_t) pcre2_match_data_free);
+		if (thrd_success != trc)
 		{
-			prt_error("Error: pcre2_match_data_create failed\n");
+			prt_error("Error: pcre2 thread key create failed\n");
+			pcre2_code_free(re->re_code);
 			free(re);
 			return false;
 		}
@@ -218,7 +233,7 @@ static int reg_match(const char *s, const Regex_node *rn)
 
 	int rc = pcre2_match(re->re_code, (PCRE2_SPTR)s,
 	                     PCRE2_ZERO_TERMINATED, /*startoffset*/0,
-	                     PCRE2_NO_UTF_CHECK, re->re_md, NULL);
+	                     PCRE2_NO_UTF_CHECK, get_re_md(re), NULL);
 	if (rc == PCRE2_ERROR_NOMATCH) return false;
 	if (rc >= 0) return true;
 
@@ -234,9 +249,10 @@ static void reg_span(Regex_node *rn)
 {
 	int cgn = rn->capture_group;
 	reg_info *re = rn->re;
-	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(re->re_md);
+	pcre2_match_data* re_md = get_re_md(re);
+	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(re_md);
 
-	if (unlikely(cgn >= (int)pcre2_get_ovector_count(re->re_md)))
+	if (unlikely(cgn >= (int)pcre2_get_ovector_count(re_md)))
 	{
 		rn->ovector[0] = rn->ovector[1] = -1;
 	}
@@ -250,8 +266,6 @@ static void reg_span(Regex_node *rn)
 static void reg_free(Regex_node *rn)
 {
 	reg_info *re = rn->re;
-
-	pcre2_match_data_free(re->re_md);
 	pcre2_code_free(re->re_code);
 	free(re);
 	rn->re = NULL;
