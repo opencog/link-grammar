@@ -128,7 +128,7 @@ struct count_context_s
 /* Each thread will get it's own version of the `kept_table`.
  * If the program creates zillions of threads, then there will
  * be a mem-leak if this table is not released when each thread
- * exists. This code arranges so that `free_tls_table` is called
+ * exits. This code arranges so that `free_tls_table` is called
  * when the thread exists.
  */
 static void free_tls_table(void* ptr_to_table)
