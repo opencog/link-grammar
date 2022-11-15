@@ -71,7 +71,6 @@ typedef struct {
 #if USE_CXXREGEX
 typedef struct {
 	std::regex *re_code;
-	std::cmatch re_md;
 } reg_info;
 #endif
 
@@ -280,6 +279,31 @@ static void reg_finish(void)
 
 /* ========================================================================= */
 #if USE_CXXREGEX
+
+static tss_t re_md_key;
+
+void md_free(void *cma)
+{
+	std::cmatch *md = (std::cmatch *) cma;
+	delete md;
+}
+
+static std::cmatch* get_re_md(void)
+{
+	if (0 == re_md_key)
+	{
+		int trc = tss_create(&re_md_key, md_free);
+		assert(thrd_success == trc, "Unable to create thread key");
+	}
+
+	std::cmatch *md = (std::cmatch *) tss_get(re_md_key);
+	if (md) return md;
+
+	md = new std::cmatch;
+	tss_set(re_md_key, md);
+	return md;
+}
+
 static bool reg_comp(Regex_node *rn)
 {
 	rn->re = new reg_info;
@@ -301,13 +325,13 @@ static bool reg_comp(Regex_node *rn)
 
 static bool reg_match(const char *s, const Regex_node *rn)
 {
-	/* "nosub" not used, as no time difference found w/o using re->re_md. */
-	bool match;
+	/* "nosub" not used, as no time difference found w/o using re_md. */
+	bool match = false;
 	reg_info *re = (reg_info *)rn->re;
 
 	try
 	{
-		match = std::regex_search(s, re->re_md, *re->re_code);
+		match = std::regex_search(s, *get_re_md(), *re->re_code);
 	}
 	catch (const std::regex_error& e)
 	{
@@ -322,16 +346,16 @@ static bool reg_match(const char *s, const Regex_node *rn)
 static void reg_span(Regex_node *rn, int *start, int *end)
 {
 	int cgn = rn->capture_group;
-	std::cmatch re_md = ((reg_info *)rn->re)->re_md;
+	std::cmatch *re_md = get_re_md();
 
-	if (unlikely(cgn >= (int)re_md.size()))
+	if (unlikely(cgn >= (int)re_md->size()))
 	{
 		*start = *end = -1;
 	}
 	else
 	{
-		*start = (int)re_md.position(cgn);
-		*end = *start + (int)re_md.length(cgn);
+		*start = (int)re_md->position(cgn);
+		*end = *start + (int)re_md->length(cgn);
 	}
 }
 
@@ -344,7 +368,11 @@ static void reg_free(Regex_node *rn)
 	rn->re = NULL;
 }
 
-static void reg_finish(void) {}
+static void reg_finish(void)
+{
+	tss_delete(re_md_key);
+	re_md_key = 0;
+}
 #endif // USE_CXXREGEX
 
 /**
