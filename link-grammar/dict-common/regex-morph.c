@@ -64,14 +64,12 @@ typedef struct {
 typedef struct {
 	regex_t re_code;
 	unsigned int Nre_md;
-	regmatch_t re_md[];
 } reg_info;
 #endif
 
 #if USE_CXXREGEX
 typedef struct {
 	std::regex *re_code;
-	std::cmatch re_md;
 } reg_info;
 #endif
 
@@ -85,6 +83,36 @@ typedef struct {
 /* ========================================================================= */
 
 #if HAVE_REGEX_H
+
+#ifndef __EMSCRIPTEN__
+static tss_t re_md_key;
+
+static regmatch_t* get_re_md(void)
+{
+	if (0 == re_md_key)
+	{
+		int trc = tss_create(&re_md_key, free);
+		assert(thrd_success == trc, "Unable to create thread key");
+	}
+
+	regmatch_t* md = (regmatch_t*) tss_get(re_md_key);
+	if (md) return md;
+
+	md = (regmatch_t*) malloc(sizeof(regmatch_t) * 2 * MAX_CAPTURE_GROUPS);
+	assert(md, "Unable to allocate pcre2 match data struct");
+
+	tss_set(re_md_key, md);
+	return md;
+}
+
+#else // __EMSCRIPTEN__ is defined; no threads available.
+static regmatch_t* get_re_md(void)
+{
+	static regmatch_t md[2 * MAX_CAPTURE_GROUPS];
+	return &md;
+}
+#endif // __EMSCRIPTEN__
+
 /**
  * Find an upper limit to the number of capture groups in the pattern.
  */
@@ -113,12 +141,13 @@ static bool reg_comp(Regex_node *rn)
 #endif
 
 	const bool nosub = (rn->capture_group < 0);
-	const unsigned int Novector = nosub ? 0 : (max_capture_groups(rn) + 1);
 	int options = REG_EXTENDED|REG_ENHANCED|REG_GNU|(nosub ? REG_NOSUB : 0);
 
-	reg_info *re = malloc(sizeof(reg_info) + sizeof(regmatch_t) * 2 * Novector);
-	memset(re, 0, sizeof(reg_info)); /* No need to initialize re_md. */
+	const unsigned int Novector = nosub ? 0 : (max_capture_groups(rn) + 1);
+	assert(Novector < MAX_CAPTURE_GROUPS, "Too many capture groups");
 
+	reg_info *re = malloc(sizeof(reg_info));
+	memset(re, 0, sizeof(reg_info));
 	re->Nre_md = Novector;
 
 	int rc = regcomp(&re->re_code, rn->pattern, options);
@@ -141,7 +170,7 @@ static bool reg_match(const char *s, const Regex_node *rn)
 {
 	reg_info *re = (reg_info *)rn->re;
 	size_t nmatch = (rn->capture_group < 0) ? 0 : re->Nre_md;
-	int rc = regexec(&re->re_code, s, nmatch, re->re_md, /*eflags*/0);
+	int rc = regexec(&re->re_code, s, nmatch, get_re_md(), /*eflags*/0);
 
 	if (rc == REG_NOMATCH) return false;
 	if (rc == 0) return true;
@@ -157,7 +186,6 @@ static bool reg_match(const char *s, const Regex_node *rn)
 static void reg_span(Regex_node *rn, int *start, int *end)
 {
 	int cgn = rn->capture_group;
-	reg_info *re = rn->re;
 
 	if (unlikely(cgn > rn->capture_group))
 	{
@@ -165,8 +193,9 @@ static void reg_span(Regex_node *rn, int *start, int *end)
 	}
 	else
 	{
-		*start = re->re_md[cgn].rm_so;
-		*end = re->re_md[cgn].rm_eo;
+		regmatch_t* re_md = get_re_md();
+		*start = re_md[cgn].rm_so;
+		*end = re_md[cgn].rm_eo;
 	}
 }
 
@@ -179,7 +208,13 @@ static void reg_free(Regex_node *rn)
 	rn->re = NULL;
 }
 
-static void reg_finish(void) {}
+static void reg_finish(void)
+{
+#ifndef __EMSCRIPTEN__
+	tss_delete(re_md_key);
+	re_md_key = 0;
+#endif
+}
 #endif // HAVE_REGEX_H
 
 /* ========================================================================= */
@@ -280,6 +315,31 @@ static void reg_finish(void)
 
 /* ========================================================================= */
 #if USE_CXXREGEX
+
+static tss_t re_md_key;
+
+void md_free(void *cma)
+{
+	std::cmatch *md = (std::cmatch *) cma;
+	delete md;
+}
+
+static std::cmatch* get_re_md(void)
+{
+	if (0 == re_md_key)
+	{
+		int trc = tss_create(&re_md_key, md_free);
+		assert(thrd_success == trc, "Unable to create thread key");
+	}
+
+	std::cmatch *md = (std::cmatch *) tss_get(re_md_key);
+	if (md) return md;
+
+	md = new std::cmatch;
+	tss_set(re_md_key, md);
+	return md;
+}
+
 static bool reg_comp(Regex_node *rn)
 {
 	rn->re = new reg_info;
@@ -301,13 +361,13 @@ static bool reg_comp(Regex_node *rn)
 
 static bool reg_match(const char *s, const Regex_node *rn)
 {
-	/* "nosub" not used, as no time difference found w/o using re->re_md. */
-	bool match;
+	/* "nosub" not used, as no time difference found w/o using re_md. */
+	bool match = false;
 	reg_info *re = (reg_info *)rn->re;
 
 	try
 	{
-		match = std::regex_search(s, re->re_md, *re->re_code);
+		match = std::regex_search(s, *get_re_md(), *re->re_code);
 	}
 	catch (const std::regex_error& e)
 	{
@@ -322,16 +382,16 @@ static bool reg_match(const char *s, const Regex_node *rn)
 static void reg_span(Regex_node *rn, int *start, int *end)
 {
 	int cgn = rn->capture_group;
-	std::cmatch re_md = ((reg_info *)rn->re)->re_md;
+	std::cmatch *re_md = get_re_md();
 
-	if (unlikely(cgn >= (int)re_md.size()))
+	if (unlikely(cgn >= (int)re_md->size()))
 	{
 		*start = *end = -1;
 	}
 	else
 	{
-		*start = (int)re_md.position(cgn);
-		*end = *start + (int)re_md.length(cgn);
+		*start = (int)re_md->position(cgn);
+		*end = *start + (int)re_md->length(cgn);
 	}
 }
 
@@ -344,7 +404,11 @@ static void reg_free(Regex_node *rn)
 	rn->re = NULL;
 }
 
-static void reg_finish(void) {}
+static void reg_finish(void)
+{
+	tss_delete(re_md_key);
+	re_md_key = 0;
+}
 #endif // USE_CXXREGEX
 
 /**
