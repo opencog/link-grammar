@@ -62,7 +62,6 @@ struct Regex_node_s
 	Regex_node *next;
 	bool neg;        /* Negate the match */
 	int capture_group;  /* Capture group number (-1 if none) for ovector */
-	int ovector[2];  /* 0: start offset; 1: end offset */
 };
 
 static inline Regex_node *regex_new(const char *name, const char *pattern)
