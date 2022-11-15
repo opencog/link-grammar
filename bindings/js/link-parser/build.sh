@@ -16,7 +16,6 @@ cp ../../../link-parser/.libs/link-parser link-parser.bc
 # is not available on Apple Mac's (I guess it's called .shlib ??)
 # So change to .a which should work for all OS'es.
 emcc -O3 link-parser.bc ../../../link-grammar/.libs/liblink-grammar.a \
-	libpthread.a \
 	--pre-js pre.js \
 	-s WASM=1 \
 	-s ALLOW_MEMORY_GROWTH=1 \

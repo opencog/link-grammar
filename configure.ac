@@ -122,6 +122,7 @@ AX_TLS(,:)
 test "$ac_cv_tls" != "none" && lg_tls=yes
 
 dnl Don't use thread functions with Emscripten.
+dnl Why? The regex code will not link without threads...
 if test "$EMSCRIPTEN" != ''; then
 	AC_CHECK_DEFINE(__EMSCRIPTEN__, [emscripten=yes],
 						 [AC_MSG_ERROR([EMSCRIPTION environment variable found, but emcc is not used])])

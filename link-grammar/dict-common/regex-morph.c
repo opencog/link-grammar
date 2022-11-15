@@ -84,6 +84,7 @@ typedef struct {
 
 #if HAVE_REGEX_H
 
+#ifndef __EMSCRIPTEN__
 static tss_t re_md_key;
 
 static regmatch_t* get_re_md(void)
@@ -103,6 +104,14 @@ static regmatch_t* get_re_md(void)
 	tss_set(re_md_key, md);
 	return md;
 }
+
+#else // __EMSCRIPTEN__ is defined; no threads available.
+static regmatch_t* get_re_md(void)
+{
+	static regmatch_t md[2 * MAX_CAPTURE_GROUPS];
+	return &md;
+}
+#endif // __EMSCRIPTEN__
 
 /**
  * Find an upper limit to the number of capture groups in the pattern.
@@ -201,8 +210,10 @@ static void reg_free(Regex_node *rn)
 
 static void reg_finish(void)
 {
+#ifndef __EMSCRIPTEN__
 	tss_delete(re_md_key);
 	re_md_key = 0;
+#endif
 }
 #endif // HAVE_REGEX_H
 
