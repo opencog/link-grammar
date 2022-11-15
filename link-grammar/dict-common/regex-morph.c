@@ -49,7 +49,7 @@ LINK_BEGIN_DECLS
 #include "dict-common/regex-morph.h"
 LINK_END_DECLS
 
-/* ovector     - returned start and end offsets.
+/*
  * re_code     - compiled regex.
  * re_md       - match data.
  */
@@ -154,19 +154,19 @@ static bool reg_match(const char *s, const Regex_node *rn)
 	return false;
 }
 
-static void reg_span(Regex_node *rn)
+static void reg_span(Regex_node *rn, int *start, int *end)
 {
 	int cgn = rn->capture_group;
 	reg_info *re = rn->re;
 
 	if (unlikely(cgn > rn->capture_group))
 	{
-		rn->ovector[0] = rn->ovector[1] = -1;
+		*start = *end = -1;
 	}
 	else
 	{
-		rn->ovector[0] = re->re_md[cgn].rm_so;
-		rn->ovector[1] = re->re_md[cgn].rm_eo;
+		*start = re->re_md[cgn].rm_so;
+		*end = re->re_md[cgn].rm_eo;
 	}
 }
 
@@ -246,20 +246,20 @@ static int reg_match(const char *s, const Regex_node *rn)
 	return false;
 }
 
-static void reg_span(Regex_node *rn)
+static void reg_span(Regex_node *rn, int *start, int *end)
 {
 	int cgn = rn->capture_group;
 	pcre2_match_data* re_md = get_re_md();
-	PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(re_md);
 
 	if (unlikely(cgn >= (int)pcre2_get_ovector_count(re_md)))
 	{
-		rn->ovector[0] = rn->ovector[1] = -1;
+		*start = *end = -1;
 	}
 	else
 	{
-		rn->ovector[0] = (int)ovector[2*cgn];
-		rn->ovector[1] = (int)ovector[2*cgn + 1];
+		PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(re_md);
+		*start = (int)ovector[2*cgn];
+		*end = (int)ovector[2*cgn + 1];
 	}
 }
 
@@ -319,19 +319,19 @@ static bool reg_match(const char *s, const Regex_node *rn)
 	return match;
 }
 
-static void reg_span(Regex_node *rn)
+static void reg_span(Regex_node *rn, int *start, int *end)
 {
 	int cgn = rn->capture_group;
 	std::cmatch re_md = ((reg_info *)rn->re)->re_md;
 
 	if (unlikely(cgn >= (int)re_md.size()))
 	{
-		rn->ovector[0] = rn->ovector[1] = -1;
+		*start = *end = -1;
 	}
 	else
 	{
-		rn->ovector[0] = (int)re_md.position(cgn);
-		rn->ovector[1] = rn->ovector[0] + (int)re_md.length(cgn);
+		*start = (int)re_md.position(cgn);
+		*end = *start + (int)re_md.length(cgn);
 	}
 }
 
@@ -462,10 +462,8 @@ const char *matchspan_regex(Regex_node *rn, const char *s,
 			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!rn->neg], rn->name, s);
 			if (!rn->neg)
 			{
-				reg_span(rn);
-				lgdebug(+D_MRE, " [%d, %d)\n", rn->ovector[0], rn->ovector[1]);
-				*start = rn->ovector[0];
-				*end = rn->ovector[1];
+				reg_span(rn, start, end);
+				lgdebug(+D_MRE, " [%d, %d)\n", *start, *end);
 
 				if (unlikely(*start == -1))
 				{
