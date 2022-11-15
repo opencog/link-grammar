@@ -84,6 +84,8 @@ typedef struct {
 
 #if HAVE_REGEX_H
 
+// We cannot use threads with emscripten, or even link to libpthread,
+// so just ifdef away the threaded code.
 #ifndef __EMSCRIPTEN__
 static tss_t re_md_key;
 
