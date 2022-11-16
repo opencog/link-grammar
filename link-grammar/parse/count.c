@@ -1255,7 +1255,7 @@ static Count_bin do_count(
 
 #ifdef VERIFY_MATCH_LIST
 		Disjunct *od = get_match_list_element(mchxt, mlb);
-		unsigned int id = od ? od->match_id : 0;
+		uint16_t id = od ? od->match_id : 0;
 #endif
 
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
