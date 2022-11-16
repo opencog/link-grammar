@@ -71,7 +71,7 @@ struct sortbin_s
 /**
  * Push a match-list element into the match-list array.
  */
-static void push_match_list_element(fast_matcher_t *ctxt, int id, Disjunct *d)
+static void push_match_list_element(fast_matcher_t *ctxt, uint16_t id, Disjunct *d)
 {
 	if (ctxt->match_list_end >= ctxt->match_list_size)
 	{
@@ -81,7 +81,7 @@ static void push_match_list_element(fast_matcher_t *ctxt, int id, Disjunct *d)
 	}
 
 #ifdef VERIFY_MATCH_LIST
-	if (id != 0) d->match_id = id;
+	if (d) d->match_id = id;
 #endif
 	ctxt->match_list[ctxt->match_list_end++] = d;
 }
@@ -410,7 +410,7 @@ static void match_stats(Connector *c1, Connector *c2)
  * clutters the source code very much, as it needs to be inserted in plenty
  * of places.)
  */
-static void print_match_list(fast_matcher_t *ctxt, int id, size_t mlb, int w,
+static void print_match_list(fast_matcher_t *ctxt, uint16_t id, size_t mlb, int w,
                              Connector *lc, int lw,
                              Connector *rc, int rw,
                              Disjunct ***mlcl, Disjunct ***mlcr)
@@ -532,7 +532,7 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
  * Optionally print it (for debug).
  * Return the match list start.
  */
-static size_t terminate_match_list(fast_matcher_t *ctxt, int id,
+static size_t terminate_match_list(fast_matcher_t *ctxt, uint16_t id,
                              size_t ml_start, int w,
                              Connector *lc, int lw,
                              Connector *rc, int rw,
@@ -608,10 +608,10 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 
 #ifdef VERIFY_MATCH_LIST
-	static int id = 0;
-	int lid = ++id; /* A local copy, for multi-threading support. */
+	static _Atomic(uint16_t) id = 0;
+	uint16_t lid = ++id; /* A local copy, for multi-threading support. */
 #else
-	const int lid = 0;
+	const uint16_t lid = 0;
 #endif
 
 	lgdebug(+D_FAST_MATCHER, "MATCH_LIST %c%c %5d mlb %zu\n",
