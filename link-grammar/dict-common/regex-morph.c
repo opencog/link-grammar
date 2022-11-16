@@ -87,15 +87,18 @@ typedef struct {
 // We cannot use threads with emscripten, or even link to libpthread,
 // so just ifdef away the threaded code.
 #ifndef __EMSCRIPTEN__
+static once_flag re_md_flag = ONCE_FLAG_INIT;
 static tss_t re_md_key;
+static void make_re_md_key(void)
+{
+	int trc = tss_create(&re_md_key, free);
+	assert(thrd_success == trc, "Unable to create thread key");
+}
+
 
 static regmatch_t* get_re_md(void)
 {
-	if (0 == re_md_key)
-	{
-		int trc = tss_create(&re_md_key, free);
-		assert(thrd_success == trc, "Unable to create thread key");
-	}
+	call_once(&re_md_flag, make_re_md_key);
 
 	regmatch_t* md = (regmatch_t*) tss_get(re_md_key);
 	if (md) return md;
@@ -215,6 +218,7 @@ static void reg_finish(void)
 #ifndef __EMSCRIPTEN__
 	tss_delete(re_md_key);
 	re_md_key = 0;
+	memset(&re_md_flag, 0, sizeof(re_md_flag));
 #endif
 }
 #endif // HAVE_REGEX_H
@@ -222,15 +226,17 @@ static void reg_finish(void)
 /* ========================================================================= */
 #if HAVE_PCRE2_H
 
+static once_flag re_md_flag = ONCE_FLAG_INIT;
 static tss_t re_md_key;
+static void make_re_md_key(void)
+{
+	int trc = tss_create(&re_md_key, (tss_dtor_t) pcre2_match_data_free);
+	assert(thrd_success == trc, "Unable to create thread key");
+}
 
 static pcre2_match_data* get_re_md(void)
 {
-	if (0 == re_md_key)
-	{
-		int trc = tss_create(&re_md_key, (tss_dtor_t) pcre2_match_data_free);
-		assert(thrd_success == trc, "Unable to create thread key");
-	}
+	call_once(&re_md_flag, make_re_md_key);
 
 	pcre2_match_data* md = (pcre2_match_data*) tss_get(re_md_key);
 	if (md) return md;
@@ -312,13 +318,12 @@ static void reg_finish(void)
 {
 	tss_delete(re_md_key);
 	re_md_key = 0;
+	memset(&re_md_flag, 0, sizeof(re_md_flag));
 }
 #endif // HAVE_PCRE2_H
 
 /* ========================================================================= */
 #if USE_CXXREGEX
-
-static tss_t re_md_key;
 
 void md_free(void *cma)
 {
@@ -326,13 +331,18 @@ void md_free(void *cma)
 	delete md;
 }
 
+static once_flag re_md_flag = ONCE_FLAG_INIT;
+static tss_t re_md_key;
+static void make_re_md_key(void)
+{
+	int trc = tss_create(&re_md_key, md_free);
+	assert(thrd_success == trc, "Unable to create thread key");
+}
+
+
 static std::cmatch* get_re_md(void)
 {
-	if (0 == re_md_key)
-	{
-		int trc = tss_create(&re_md_key, md_free);
-		assert(thrd_success == trc, "Unable to create thread key");
-	}
+	call_once(&re_md_flag, make_re_md_key);
 
 	std::cmatch *md = (std::cmatch *) tss_get(re_md_key);
 	if (md) return md;
@@ -410,6 +420,7 @@ static void reg_finish(void)
 {
 	tss_delete(re_md_key);
 	re_md_key = 0;
+	memset(&re_md_flag, 0, sizeof(re_md_flag));
 }
 #endif // USE_CXXREGEX
 
