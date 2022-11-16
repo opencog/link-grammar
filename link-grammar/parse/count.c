@@ -1254,8 +1254,8 @@ static Count_bin do_count(
 		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw, mlcl, mlcr);
 
 #ifdef VERIFY_MATCH_LIST
-		unsigned int id = get_match_list_element(mchxt, mlb) ?
-		                  get_match_list_element(mchxt, mlb)->match_id : 0;
+		Disjunct *od = get_match_list_element(mchxt, mlb);
+		unsigned int id = od ? od->match_id : 0;
 #endif
 
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
@@ -1263,6 +1263,9 @@ static Count_bin do_count(
 			COUNT_COST(ctxt->count_cost[1]++;)
 
 			Disjunct *d = get_match_list_element(mchxt, mle);
+#ifdef VERIFY_MATCH_LIST
+			assert(id == d->match_id, "Modified id (%u!=%u)", id, d->match_id);
+#endif
 			bool Lmatch = d->match_left;
 			bool Rmatch = d->match_right;
 			w_Count_bin leftcount = NO_COUNT;
@@ -1295,10 +1298,6 @@ static Count_bin do_count(
 					rightcount = r_cache[d->rcount_index];
 				}
 			}
-
-#ifdef VERIFY_MATCH_LIST
-			assert(id == d->match_id, "Modified id (%u!=%u)", id, d->match_id);
-#endif
 
 			for (unsigned int lnull_cnt = lnull_start; lnull_cnt <= lnull_end; lnull_cnt++)
 			{
