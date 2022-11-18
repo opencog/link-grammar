@@ -10,8 +10,6 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <threads.h> /* C11 Concurrency library */
-
 /**
  * Support for the regular-expression based token matching system
  * using standard POSIX regex, PCRE2 or C++.
@@ -63,7 +61,6 @@ typedef struct {
 #if HAVE_REGEX_H
 typedef struct {
 	regex_t re_code;
-	unsigned int Nre_md;
 } reg_info;
 #endif
 
@@ -84,50 +81,8 @@ typedef struct {
 
 #if HAVE_REGEX_H
 
-// We cannot use threads with emscripten, or even link to libpthread,
-// so just ifdef away the threaded code.
-#ifndef __EMSCRIPTEN__
-static tss_t re_md_key;
-
-static regmatch_t* get_re_md(void)
-{
-	if (0 == re_md_key)
-	{
-		int trc = tss_create(&re_md_key, free);
-		assert(thrd_success == trc, "Unable to create thread key");
-	}
-
-	regmatch_t* md = (regmatch_t*) tss_get(re_md_key);
-	if (md) return md;
-
-	md = (regmatch_t*) malloc(sizeof(regmatch_t) * 2 * MAX_CAPTURE_GROUPS);
-	assert(md, "Unable to allocate pcre2 match data struct");
-
-	tss_set(re_md_key, md);
-	return md;
-}
-
-#else // __EMSCRIPTEN__ is defined; no threads available.
-static regmatch_t* get_re_md(void)
-{
-	static regmatch_t md[2 * MAX_CAPTURE_GROUPS];
-	return &md;
-}
-#endif // __EMSCRIPTEN__
-
-/**
- * Find an upper limit to the number of capture groups in the pattern.
- */
-static unsigned int max_capture_groups(const Regex_node *rn)
-{
-	if (rn->capture_group < 0) return 0;
-
-	unsigned int Nov = 1;
-	for (const char *p = rn->pattern; *p != '\0'; p++)
-		if (*p == '(') Nov++;
-
-	return Nov;
-}
+#define ALLOCTE_MATCH_DATA(var) \
+	regmatch_t mem_##var[MAX_CAPTURE_GROUPS]; regmatch_t *var = mem_##var
 
 /**
  * Compile the given regex..
@@ -144,13 +99,8 @@ static bool reg_comp(Regex_node *rn)
 
 	const bool nosub = (rn->capture_group < 0);
 	int options = REG_EXTENDED|REG_ENHANCED|REG_GNU|(nosub ? REG_NOSUB : 0);
-
-	const unsigned int Novector = nosub ? 0 : (max_capture_groups(rn) + 1);
-	assert(Novector < MAX_CAPTURE_GROUPS, "Too many capture groups");
-
 	reg_info *re = malloc(sizeof(reg_info));
 	memset(re, 0, sizeof(reg_info));
-	re->Nre_md = Novector;
 
 	int rc = regcomp(&re->re_code, rn->pattern, options);
 
@@ -168,11 +118,10 @@ static bool reg_comp(Regex_node *rn)
 	return true;
 }
 
-static bool reg_match(const char *s, const Regex_node *rn)
+static bool reg_match(const char *s, const Regex_node *rn, regmatch_t *re_md)
 {
-	reg_info *re = (reg_info *)rn->re;
-	size_t nmatch = (rn->capture_group < 0) ? 0 : re->Nre_md;
-	int rc = regexec(&re->re_code, s, nmatch, get_re_md(), /*eflags*/0);
+	reg_info *re = rn->re;
+	int rc = regexec(&re->re_code, s, MAX_CAPTURE_GROUPS, re_md, /*eflags*/0);
 
 	if (rc == REG_NOMATCH) return false;
 	if (rc == 0) return true;
@@ -185,17 +134,16 @@ static bool reg_match(const char *s, const Regex_node *rn)
 	return false;
 }
 
-static void reg_span(Regex_node *rn, int *start, int *end)
+static void reg_span(Regex_node *rn, int *start, int *end, regmatch_t *re_md)
 {
 	int cgn = rn->capture_group;
 
-	if (unlikely(cgn > rn->capture_group))
+	if (unlikely(cgn > MAX_CAPTURE_GROUPS))
 	{
 		*start = *end = -1;
 	}
 	else
 	{
-		regmatch_t* re_md = get_re_md();
 		*start = re_md[cgn].rm_so;
 		*end = re_md[cgn].rm_eo;
 	}
@@ -209,37 +157,17 @@ static void reg_free(Regex_node *rn)
 	free(re);
 	rn->re = NULL;
 }
-
-static void reg_finish(void)
-{
-#ifndef __EMSCRIPTEN__
-	tss_delete(re_md_key);
-	re_md_key = 0;
-#endif
-}
 #endif // HAVE_REGEX_H
 
 /* ========================================================================= */
 #if HAVE_PCRE2_H
 
-static tss_t re_md_key;
+#define ALLOCTE_MATCH_DATA(var) \
+	pcre2_match_data *var = \
+	memcpy(alloca(re_md_template_size), re_md_template, re_md_template_size)
 
-static pcre2_match_data* get_re_md(void)
-{
-	if (0 == re_md_key)
-	{
-		int trc = tss_create(&re_md_key, (tss_dtor_t) pcre2_match_data_free);
-		assert(thrd_success == trc, "Unable to create thread key");
-	}
-
-	pcre2_match_data* md = (pcre2_match_data*) tss_get(re_md_key);
-	if (md) return md;
-
-	md = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
-	assert(md, "Unable to allocate pcre2 match data struct");
-	tss_set(re_md_key, md);
-	return md;
-}
+static TLS unsigned int re_md_template_size;
+static TLS pcre2_match_data* re_md_template;
 
 static bool reg_comp(Regex_node *rn)
 {
@@ -253,7 +181,20 @@ static bool reg_comp(Regex_node *rn)
 	re->re_code = pcre2_compile((PCRE2_SPTR)rn->pattern, PCRE2_ZERO_TERMINATED,
 	                            options, &rc, &erroffset, NULL);
 	if (re->re_code != NULL)
+	{
+		if (0 == re_md_template_size)
+		{
+			re_md_template = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
+			if (re_md_template == NULL)
+			{
+				prt_error("Error: pcre2_match_data_create() failed\n");
+				free(re);
+				return false;
+			}
+			re_md_template_size = pcre2_get_match_data_size(re_md_template);
+		}
 		return true;
+	}
 
 	/* We have an error. */
 	PCRE2_UCHAR errbuf[ERRBUFFLEN];
@@ -265,13 +206,13 @@ static bool reg_comp(Regex_node *rn)
 	return false;
 }
 
-static int reg_match(const char *s, const Regex_node *rn)
+static int reg_match(const char *s, const Regex_node *rn, pcre2_match_data *re_md)
 {
 	reg_info *re = rn->re;
 
 	int rc = pcre2_match(re->re_code, (PCRE2_SPTR)s,
 	                     PCRE2_ZERO_TERMINATED, /*startoffset*/0,
-	                     PCRE2_NO_UTF_CHECK, get_re_md(), NULL);
+	                     PCRE2_NO_UTF_CHECK, re_md, NULL);
 	if (rc == PCRE2_ERROR_NOMATCH) return false;
 	if (rc >= 0) return true;
 
@@ -283,12 +224,11 @@ static int reg_match(const char *s, const Regex_node *rn)
 	return false;
 }
 
-static void reg_span(Regex_node *rn, int *start, int *end)
+static void reg_span(Regex_node *rn, int *start, int *end, pcre2_match_data *re_md)
 {
 	int cgn = rn->capture_group;
-	pcre2_match_data* re_md = get_re_md();
 
-	if (unlikely(cgn >= (int)pcre2_get_ovector_count(re_md)))
+	if (unlikely(cgn >= MAX_CAPTURE_GROUPS))
 	{
 		*start = *end = -1;
 	}
@@ -307,40 +247,13 @@ static void reg_free(Regex_node *rn)
 	free(re);
 	rn->re = NULL;
 }
-
-static void reg_finish(void)
-{
-	tss_delete(re_md_key);
-	re_md_key = 0;
-}
 #endif // HAVE_PCRE2_H
 
 /* ========================================================================= */
 #if USE_CXXREGEX
 
-static tss_t re_md_key;
-
-void md_free(void *cma)
-{
-	std::cmatch *md = (std::cmatch *) cma;
-	delete md;
-}
-
-static std::cmatch* get_re_md(void)
-{
-	if (0 == re_md_key)
-	{
-		int trc = tss_create(&re_md_key, md_free);
-		assert(thrd_success == trc, "Unable to create thread key");
-	}
-
-	std::cmatch *md = (std::cmatch *) tss_get(re_md_key);
-	if (md) return md;
-
-	md = new std::cmatch;
-	tss_set(re_md_key, md);
-	return md;
-}
+#define ALLOCTE_MATCH_DATA(var) \
+	std::cmatch mem_##var; std::cmatch *var = &mem_##var
 
 static bool reg_comp(Regex_node *rn)
 {
@@ -361,7 +274,7 @@ static bool reg_comp(Regex_node *rn)
 	return true;
 }
 
-static bool reg_match(const char *s, const Regex_node *rn)
+static bool reg_match(const char *s, const Regex_node *rn, std::cmatch *re_md)
 {
 	/* "nosub" not used, as no time difference found w/o using re_md. */
 	bool match = false;
@@ -369,7 +282,7 @@ static bool reg_match(const char *s, const Regex_node *rn)
 
 	try
 	{
-		match = std::regex_search(s, *get_re_md(), *re->re_code);
+		match = std::regex_search(s, *re_md, *re->re_code);
 	}
 	catch (const std::regex_error& e)
 	{
@@ -381,10 +294,9 @@ static bool reg_match(const char *s, const Regex_node *rn)
 	return match;
 }
 
-static void reg_span(Regex_node *rn, int *start, int *end)
+static void reg_span(Regex_node *rn, int *start, int *end, std::cmatch *re_md)
 {
 	int cgn = rn->capture_group;
-	std::cmatch *re_md = get_re_md();
 
 	if (unlikely(cgn >= (int)re_md->size()))
 	{
@@ -404,12 +316,6 @@ static void reg_free(Regex_node *rn)
 	delete re->re_code;
 	delete re;
 	rn->re = NULL;
-}
-
-static void reg_finish(void)
-{
-	tss_delete(re_md_key);
-	re_md_key = 0;
 }
 #endif // USE_CXXREGEX
 
@@ -487,11 +393,13 @@ bool compile_regexs(Regex_node *rn, Dictionary dict)
 #define D_MRE 6
 const char *match_regex(const Regex_node *rn, const char *s)
 {
+	ALLOCTE_MATCH_DATA(re_md);
+
 	while (rn != NULL)
 	{
 		if (rn->re == NULL) continue; // Make sure the regex has been compiled.
 
-		if (reg_match(s, rn))
+		if (reg_match(s, rn, re_md))
 		{
 			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!rn->neg], rn->name, s);
 			if (!rn->neg)
@@ -518,17 +426,18 @@ const char *matchspan_regex(Regex_node *rn, const char *s,
                             int *start, int *end)
 {
 	assert(rn->capture_group >= 0, "No capture");
+	ALLOCTE_MATCH_DATA(re_md);
 
 	while (rn != NULL)
 	{
 		if (rn->re == NULL) continue; // Make sure the regex has been compiled.
 
-		if (reg_match(s, rn))
+		if (reg_match(s, rn, re_md))
 		{
 			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!rn->neg], rn->name, s);
 			if (!rn->neg)
 			{
-				reg_span(rn, start, end);
+				reg_span(rn, start, end, re_md);
 				lgdebug(+D_MRE, " [%d, %d)\n", *start, *end);
 
 				if (unlikely(*start == -1))
@@ -574,5 +483,4 @@ void free_regexs(Regex_node *rn)
 
 		rn = next;
 	}
-	reg_finish();
 }
