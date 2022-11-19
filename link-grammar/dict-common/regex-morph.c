@@ -10,6 +10,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#include <threads.h>
+
 /**
  * Support for the regular-expression based token matching system
  * using standard POSIX regex, PCRE2 or C++.
@@ -169,6 +171,15 @@ static void reg_free(Regex_node *rn)
 static unsigned int re_md_template_size;
 static pcre2_match_data* re_md_template;
 
+static once_flag call_once_flag = ONCE_FLAG_INIT;
+static void alloc_match_data(void)
+{
+	re_md_template = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
+	if (re_md_template == NULL)
+		return;
+	re_md_template_size = pcre2_get_match_data_size(re_md_template);
+}
+
 static bool reg_comp(Regex_node *rn)
 {
 	reg_info *re = rn->re = malloc(sizeof(reg_info));
@@ -182,16 +193,12 @@ static bool reg_comp(Regex_node *rn)
 	                            options, &rc, &erroffset, NULL);
 	if (re->re_code != NULL)
 	{
+		call_once(&call_once_flag, alloc_match_data);
 		if (0 == re_md_template_size)
 		{
-			re_md_template = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
-			if (re_md_template == NULL)
-			{
-				prt_error("Error: pcre2_match_data_create() failed\n");
-				free(re);
-				return false;
-			}
-			re_md_template_size = pcre2_get_match_data_size(re_md_template);
+			prt_error("Error: pcre2_match_data_create() failed\n");
+			free(re);
+			return false;
 		}
 		return true;
 	}
