@@ -171,7 +171,9 @@ static void reg_free(Regex_node *rn)
 static unsigned int re_md_template_size;
 static pcre2_match_data* re_md_template;
 
+#if HAVE_THREADS_H
 static once_flag call_once_flag = ONCE_FLAG_INIT;
+#endif // HAVE_THREADS_H
 static void alloc_match_data(void)
 {
 	re_md_template = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
@@ -193,7 +195,11 @@ static bool reg_comp(Regex_node *rn)
 	                            options, &rc, &erroffset, NULL);
 	if (re->re_code != NULL)
 	{
+#if HAVE_THREADS_H
 		call_once(&call_once_flag, alloc_match_data);
+#else
+		alloc_match_data();
+#endif
 		if (0 == re_md_template_size)
 		{
 			prt_error("Error: pcre2_match_data_create() failed\n");
