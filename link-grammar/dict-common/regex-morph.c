@@ -166,8 +166,8 @@ static void reg_free(Regex_node *rn)
 	pcre2_match_data *var = \
 	memcpy(alloca(re_md_template_size), re_md_template, re_md_template_size)
 
-static TLS unsigned int re_md_template_size;
-static TLS pcre2_match_data* re_md_template;
+static unsigned int re_md_template_size;
+static pcre2_match_data* re_md_template;
 
 static bool reg_comp(Regex_node *rn)
 {
