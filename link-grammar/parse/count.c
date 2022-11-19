@@ -369,10 +369,12 @@ static void table_stat(count_context_t *ctxt)
 			assert(t->hash != 0, "Invalid hash value: 0");
 			assert((hist_total(&t->count)>=0)&&(hist_total(&t->count) <= INT_MAX),
 			       "Invalid count %"COUNT_FMT, hist_total(&t->count));
-			assert(t->l_id < (int)ctxt->sent->length ||
+			assert((ctxt->table_lrcnt[0].sz == 0) ||
+			       t->l_id < (int)ctxt->sent->length ||
 			       ((t->l_id >= 255)&&(t->l_id < (int)ctxt->table_lrcnt[0].sz)),
 			       "invalid l_id %d", t->l_id);
-			assert(t->r_id <= (int)ctxt->sent->length ||
+			assert((ctxt->table_lrcnt[1].sz == 0) ||
+			       t->r_id <= (int)ctxt->sent->length ||
 			       ((t->r_id > 255)&&(t->r_id < (int)ctxt->table_lrcnt[1].sz)),
 			       "invalid r_id %d", t->r_id);
 		}
