@@ -200,8 +200,31 @@ esac
 AC_MSG_RESULT([$netbsd])
 AM_CONDITIONAL(OS_NETBSD, test "x$netbsd" = "xyes")
 
+AC_MSG_CHECKING([for FreeBSD])
+case "$host_os" in
+  *freebsd*)
+    freebsd=yes
+    ;;
+  *)
+    freebsd=no
+    ;;
+esac
+AC_MSG_RESULT([$freebsd])
+AM_CONDITIONAL(OS_FREEBSD, test "x$freebsd" = "xyes")
+
 HOST_OS="$host_os"
 AC_SUBST(HOST_OS)
+
+# ====================================================================
+# FreeBSD work-around. Apparently, the AX_PTHREAD autoconf macro
+# fails to include -lstdthreads in it's results. See bug report
+# https://github.com/opencog/link-grammar/issues/1355
+# So we hack, and explicitly set it here.
+
+if test -n "$ax_pthread_ok" -a "x$freebsd" = "xyes"; then
+	PTHREAD_LIBS="${PTHREAD_LIBS} -lstdthreads"
+fi
+
 # ====================================================================
 
 CXXFLAGS="${CXXFLAGS} -Wall"
