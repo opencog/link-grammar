@@ -7,7 +7,7 @@
 AC_INIT([link-grammar],[5.12.0],[https://github.com/opencog/link-grammar],[],
 		  [https://www.abisource.com/projects/link-grammar])
 
-dnl Check whether we want to set defaults for CFLAGS and CXXFLAGS
+# Check whether we want to set defaults for CFLAGS and CXXFLAGS
 AC_MSG_CHECKING([whether configure should try to set CFLAGS/CXXFLAGS])
 AS_IF([test "x${CFLAGS+set}" = "xset" || test "x${CXXFLAGS+set}" = "xset"], [
     enable_flags_setting=no
@@ -26,7 +26,7 @@ AC_SUBST(DISCUSSION_GROUP)
 OVERVIEW=https://en.wikipedia.org/wiki/Link_grammar
 AC_SUBST(OVERVIEW)
 
-dnl Set release number
+# Set release number
 dnl This is derived from "Versioning" chapter of info libtool documentation.
 PACKAGE=link-grammar
 dnl     4a) Increment when removing or changing interfaces.
@@ -110,19 +110,19 @@ AC_FUNC_ALLOCA
 AC_FUNC_FORK
 AC_CHECK_FUNCS(prctl)
 
-dnl CentOS-7 (at least) needs these to expose the C99 format and
-dnl limit macros in C++ source code.  They are needed for minisat.
+# CentOS-7 (at least) needs these to expose the C99 format and
+# limit macros in C++ source code.  They are needed for minisat.
 AC_DEFINE(__STDC_FORMAT_MACROS)
 AC_DEFINE(__STDC_LIMIT_MACROS)
 
-dnl Check for a keyword for Thread Local Storage declaration.
-dnl If found - define TLS to it.
+# Check for a keyword for Thread Local Storage declaration.
+# If found - define TLS to it.
 lg_tls=no
 AX_TLS(,:)
 test "$ac_cv_tls" != "none" && lg_tls=yes
 
-dnl Don't use thread functions with Emscripten.
-dnl Why? The regex code will not link without threads...
+# Don't use thread functions with Emscripten.
+# Why? Because the regex code will not link without threads...
 if test "$EMSCRIPTEN" != ''; then
 	AC_CHECK_DEFINE(__EMSCRIPTEN__, [emscripten=yes],
 						 [AC_MSG_ERROR([EMSCRIPTION environment variable found, but emcc is not used])])
@@ -131,7 +131,7 @@ if test "$emscripten" != yes; then
 	AX_PTHREAD
 	if test -n "$ax_pthread_ok"; then
 		CC="${PTHREAD_CC:-CC}"
-		#CCX="${PTHREAD_CC:-CCX}"
+		dnl #CCX="${PTHREAD_CC:-CCX}"
 
 		dnl Currently, libtool uses --nostdlib when linking shared libraries,
 		dnl which causes the -pthread flag to be ignored. Try to work around that
@@ -149,8 +149,8 @@ dnl If the visibility __attribute__  is supported, define HAVE_VISIBILITY
 dnl and a variable CFLAG_VISIBILITY, to be added to CFLAGS/CXXFLAGS.
 LG_C_ATTRIBUTE_VISIBILITY
 
-dnl Check for specific OSs
 # ====================================================================
+# Check for specific OSs
 
 AC_MSG_CHECKING([for native Win32])
 case "$host_os" in
@@ -288,8 +288,8 @@ AC_CHECK_HEADERS([xlocale.h])
 
 # ====================================================================
 
-dnl For stdatomic.h -- missing in gcc-4.8 (Ubuntu Trusty 14.04)
-dnl Its used in the Java bindings, to avoid an ugly server-init race.
+# For stdatomic.h -- missing in gcc-4.8 (Ubuntu Trusty 14.04)
+# Its used in the Java bindings, to avoid an ugly server-init race.
 AC_MSG_CHECKING(for stdatomic.h)
 AC_CHECK_HEADER([stdatomic.h],
 	[AC_DEFINE([HAVE_STDATOMIC_H], 1, [Define to 1 if stdatomic.h exists])],
@@ -474,8 +474,7 @@ fi
 
 AM_CONDITIONAL(WITH_ANYSPLIT, test x${enable_wordgraph_display} = xyes)
 
-dnl ====================================================================
-
+# ====================================================================
 # Couldn't use AX_LIB_SQLITE3 since it is currently (04/2021) buggy.
 
 AC_CHECK_HEADER([sqlite3.h], [SQLiteFound=yes], SQLiteFound=no)
@@ -485,7 +484,7 @@ if test "${SQLiteFound}" = yes; then
 							[SQLiteFound=nopc])
 fi
 
-dnl On macOS, the sqlite3 library exists but the .pc file may not exist.
+# On macOS, the sqlite3 library exists but the .pc file may not exist.
 if test "${SQLiteFound}" = nopc; then
 	AC_CHECK_LIB(sqlite3, sqlite3_open, [SQLITE3_LIBS=-lsqlite3])
 fi
@@ -740,8 +739,8 @@ AM_CONDITIONAL(WITH_CXXREGEX, test -n "$regexlib_cxx")
 if test -z "$REGEX_LIBS"; then
 	AC_MSG_NOTICE([Checking for REGEX implementation:])
 fi
-dnl Find the first regex library according to this order:
-dnl libpcre2-8, libtre, libregex, libc.
+# Find the first regex library according to this order:
+# libpcre2-8, libtre, libregex, libc.
 
 if test -n "$regexlib_cxx"; then
 	AC_MSG_RESULT([... using C++ regex])
@@ -1067,7 +1066,7 @@ LINK_CC_TRY_FLAG([-Wmaybe-uninitialized -Werror], [AC_DEFINE(HAVE_MAYBE_UNINITIA
 
 AC_FUNC_STRERROR_R
 
-dnl Save the compilation definitions for an extended version printout
+# Save the compilation definitions for an extended version printout
 AC_OUTPUT_MAKE_DEFS()
 LG_DEFS=`AS_ECHO(["$DEFS"]) | $SED 's/\\\\//g'`
 AC_SUBST(LG_DEFS)
