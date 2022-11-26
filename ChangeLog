@@ -8,6 +8,7 @@ Version 5.12.0 (26 Nov 2022)
  * Minor tweaks to `any` uniform random parse tree language.
  * Include U+202F NARROW NO-BREAK SPACE as a space character.
  * Fix the various regexes so that they're thread safe! #1354
+ * Maybe(?) fix FreeBSD missing -lstdthreads #1355
 
 Version 5.11.0 (27 Sept 2022)
  * Prototype support for dictionary in the AtomSpace.
