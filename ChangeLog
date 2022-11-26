@@ -1,4 +1,4 @@
-Version 5.12.0 (XXX 2022)
+Version 5.12.0 (26 Nov 2022)
  * Fix crash when using the Atomese dictionary backend.
  * Fix generation tokenization bug when dict has no unknown word token.
  * Major Atomese dictionary extensions, including generation support.
