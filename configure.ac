@@ -75,8 +75,11 @@ m4_pattern_forbid([^PKG_],
 # OS checks, including Win32
 AC_CANONICAL_HOST
 dnl Checks for programs.
-AS_ECHO_N(["Hello World! Where am I?"])
+# The following echoes locate the bug described in issue
+# https://github.com/opencog/link-grammar/issues/1361
+AS_ECHO_N(["Hello World! Where am I?\n"])
 AC_PROG_CC
+AS_ECHO_N(["Hah! I think I found where you are hiding!\n"])
 AC_PROG_CXX
 AX_COMPILER_VENDOR
 AC_PROG_CPP
