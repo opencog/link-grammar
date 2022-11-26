@@ -75,6 +75,7 @@ m4_pattern_forbid([^PKG_],
 # OS checks, including Win32
 AC_CANONICAL_HOST
 dnl Checks for programs.
+AS_ECHO_N(["Hello World! Where am I?"])
 AC_PROG_CC
 AC_PROG_CXX
 AX_COMPILER_VENDOR
@@ -121,10 +122,7 @@ if test "$EMSCRIPTEN" != ''; then
 	AC_CHECK_DEFINE(__EMSCRIPTEN__, [emscripten=yes],
 						 [AC_MSG_ERROR([EMSCRIPTEN environment variable found, but emcc is not used])])
 fi
-# The above doesn't trip on github. Don't know why.
-if test "$EMSDK" != ''; then
-	emscripten=yes
-fi
+
 if test "x$emscripten" != "xyes"; then
 
 	# Check for a keyword for Thread Local Storage declaration.
