@@ -115,19 +115,24 @@ AC_CHECK_FUNCS(prctl)
 AC_DEFINE(__STDC_FORMAT_MACROS)
 AC_DEFINE(__STDC_LIMIT_MACROS)
 
-# Check for a keyword for Thread Local Storage declaration.
-# If found - define TLS to it.
-lg_tls=no
-AX_TLS(,:)
-test "$ac_cv_tls" != "none" && lg_tls=yes
-
 # Don't use thread functions with Emscripten.
-# Why? Because the regex code will not link without threads...
+# Emscripten does not like threads.
 if test "$EMSCRIPTEN" != ''; then
 	AC_CHECK_DEFINE(__EMSCRIPTEN__, [emscripten=yes],
-						 [AC_MSG_ERROR([EMSCRIPTION environment variable found, but emcc is not used])])
+						 [AC_MSG_ERROR([EMSCRIPTEN environment variable found, but emcc is not used])])
 fi
-if test "$emscripten" != yes; then
+# The above doesn't trip on github. Don't know why.
+if test "$EMSDK" != ''; then
+	emscripten=yes
+fi
+if test "x$emscripten" != "xyes"; then
+
+	# Check for a keyword for Thread Local Storage declaration.
+	# If found - define TLS to it.
+	lg_tls=no
+	AX_TLS(,:)
+	test "$ac_cv_tls" != "none" && lg_tls=yes
+
 	AX_PTHREAD
 	if test -n "$ax_pthread_ok"; then
 		CC="${PTHREAD_CC:-CC}"
