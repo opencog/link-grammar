@@ -43,6 +43,7 @@ using namespace opencog;
 #define PAIR_PREDICATE_STRING "pair-predicate"
 #define PAIR_KEY_STRING "pair-key"
 #define PAIR_INDEX_STRING "pair-index"
+#define PAIR_FORMULA_STRING "pair-formula"
 #define PAIR_SCALE_STRING "pair-scale"
 #define PAIR_OFFSET_STRING "pair-offset"
 #define PAIR_CUTOFF_STRING "pair-cutoff"
@@ -131,9 +132,25 @@ bool as_open(Dictionary dict)
 	Handle mikh = Sexpr::decode_atom(miks);
 	local->miks = local->asp->add_atom(mikh);
 
+	// Costs might be static, precomputed, located at a given key.
+	// Or they may be dynamic, coming from a formula.
 	const char* mikp = get_dict_define(dict, PAIR_KEY_STRING);
-	Handle miki = Sexpr::decode_atom(mikp);
-	local->mikp = local->asp->add_atom(miki);
+	const char* mifm = get_dict_define(dict, PAIR_FORMULA_STRING);
+	if (mikp and mifm)
+		prt_error("Error: Only one of `pair-key` or `pair-formula` allowed!\n");
+	else if (nullptr == mikp and nullptr == mifm)
+		prt_error("Error: One of `pair-key` or `pair-formula` must be given!\n");
+
+	if (mikp)
+	{
+		Handle miki = Sexpr::decode_atom(mikp);
+		local->mikey = local->asp->add_atom(miki);
+	}
+	if (mifm)
+	{
+		Handle mifl = Sexpr::decode_atom(mifm);
+		local->miformula = local->asp->add_atom(mifl);
+	}
 
 #define LDEF(NAME,DEF) ldef(dict, NAME, DEF)
 
@@ -143,7 +160,7 @@ bool as_open(Dictionary dict)
 	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "6"));
 	local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.0"));
 
-	const char* prps = get_dict_define(dict, PAIR_PREDICATE_STRING);
+	const char* prps = LDEF(PAIR_PREDICATE_STRING, "(LgLink \"ANY\")");
 	Handle prph = Sexpr::decode_atom(prps);
 	local->prp = local->asp->add_atom(prph);
 

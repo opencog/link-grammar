@@ -126,7 +126,7 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		if (nullptr == evpr) continue;
 
 		double cost = local->pair_default;
-		const ValuePtr& mivp = evpr->getValue(local->mikp);
+		const ValuePtr& mivp = evpr->getValue(local->mikey);
 		if (mivp)
 		{
 			// MI is the second entry in the vector.
