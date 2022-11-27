@@ -8,6 +8,7 @@
 #ifdef HAVE_ATOMESE
 
 #include <opencog/atomspace/AtomSpace.h>
+#include <opencog/atoms/execution/ExecutionOutputLink.h>
 #include <opencog/atoms/value/FloatValue.h>
 #include <opencog/nlp/types/atom_types.h>
 #undef STRINGIFY
@@ -114,8 +115,6 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 /// formula at `miformula`.
 static double pair_cost(Local* local, const Handle& evpr)
 {
-	// const AtomSpacePtr& asp = local->asp;
-
 	double cost = local->pair_default;
 	if (local->mikey)
 	{
@@ -129,6 +128,23 @@ static double pair_cost(Local* local, const Handle& evpr)
 		}
 		return cost;
 	}
+
+	if (nullptr == local->miformula)
+		return cost;
+
+	// The formula expects a (ListLink left right) and that
+	// is exactly the second Atom in the outgoing set of evpr.
+	// TODO: perhaps in the future, the formula should take
+	// evpr directly, instead?
+	const AtomSpacePtr& asp = local->asp;
+	Handle exout(createExecutionOutputLink(
+		local->miformula, evpr->getOutgoingAtom(1)));
+	ValuePtr midy = exout->execute(asp.get());
+
+	// Same calculation as above.
+	const FloatValuePtr& fmivp = FloatValueCast(midy);
+	double mi = fmivp->value()[local->pair_index];
+	cost = (local->pair_scale * mi) + local->pair_offset;
 
 	return cost;
 }
