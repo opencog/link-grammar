@@ -332,9 +332,9 @@ static bool link_advance(Dictionary dict)
 		 * into the token. This includes embedded white-space.
 		 *
 		 * This is slightly awkward, and is NOT conventional
-		 * programming practice of quotes. It does allow quotes to be
+		 * programming practice for quotes. It does allow quotes to be
 		 * embedded into the middle of tokens. It misbehaves mildly
-		 * when a quotes string is used with a #define statement.
+		 * when a quoted string is used with a #define statement.
 		 */
 		if (quote_mode) {
 

@@ -129,7 +129,7 @@ bool as_open(Dictionary dict)
 
 	// Costs are assumed to be minus the MI located at some key.
 	const char* miks = ldef(dict, COST_KEY_STRING,
-		"(Predicate \"*-Mutual Info Key cover-section\")";
+		"(Predicate \"*-Mutual Info Key cover-section\")");
 	Handle mikh = Sexpr::decode_atom(miks);
 	local->miks = local->asp->add_atom(mikh);
 
