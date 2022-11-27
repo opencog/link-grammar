@@ -128,7 +128,8 @@ bool as_open(Dictionary dict)
 	local->prk = local->asp->add_node(PREDICATE_NODE, "*-fetched-pair-*");
 
 	// Costs are assumed to be minus the MI located at some key.
-	const char* miks = get_dict_define(dict, COST_KEY_STRING);
+	const char* miks = ldef(dict, COST_KEY_STRING,
+		"(Predicate \"*-Mutual Info Key cover-section\")";
 	Handle mikh = Sexpr::decode_atom(miks);
 	local->miks = local->asp->add_atom(mikh);
 
