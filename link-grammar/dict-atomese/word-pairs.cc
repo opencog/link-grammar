@@ -109,6 +109,30 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 	return have_word;
 }
 
+/// Get the word-pair cost. It's either a static cost, located at
+/// `mikey`, or it's a dynamically-computed cost, built from a
+/// formula at `miformula`.
+static double pair_cost(Local* local, const Handle& evpr)
+{
+	// const AtomSpacePtr& asp = local->asp;
+
+	double cost = local->pair_default;
+	if (local->mikey)
+	{
+		const ValuePtr& mivp = evpr->getValue(local->mikey);
+		if (mivp)
+		{
+			// MI is the second entry in the vector.
+			const FloatValuePtr& fmivp = FloatValueCast(mivp);
+			double mi = fmivp->value()[local->pair_index];
+			cost = (local->pair_scale * mi) + local->pair_offset;
+		}
+		return cost;
+	}
+
+	return cost;
+}
+
 /// Create a list of connectors, one for each available word pair
 /// containing the word in the germ. These are simply OR'ed together.
 Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
@@ -125,15 +149,8 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
 		if (nullptr == evpr) continue;
 
-		double cost = local->pair_default;
-		const ValuePtr& mivp = evpr->getValue(local->mikey);
-		if (mivp)
-		{
-			// MI is the second entry in the vector.
-			const FloatValuePtr& fmivp = FloatValueCast(mivp);
-			double mi = fmivp->value()[local->pair_index];
-			cost = (local->pair_scale * mi) + local->pair_offset;
-		}
+		double cost = pair_cost(local, evpr);
+
 		// If the cost is too high, just skip this.
 		if (local->pair_cutoff <= cost)
 			continue;
