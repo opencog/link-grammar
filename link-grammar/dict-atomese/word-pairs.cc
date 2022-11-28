@@ -8,7 +8,6 @@
 #ifdef HAVE_ATOMESE
 
 #include <opencog/atomspace/AtomSpace.h>
-#include <opencog/atoms/execution/ExecutionOutputLink.h>
 #include <opencog/atoms/value/FloatValue.h>
 #include <opencog/nlp/types/atom_types.h>
 #undef STRINGIFY
@@ -137,7 +136,7 @@ static double pair_cost(Local* local, const Handle& evpr)
 	// TODO: perhaps in the future, the formula should take
 	// evpr directly, instead?
 	const AtomSpacePtr& asp = local->asp;
-	Handle exout(createExecutionOutputLink(
+	Handle exout(asp->add_link(EXECUTION_OUTPUT_LINK,
 		local->miformula, evpr->getOutgoingAtom(1)));
 	ValuePtr midy = exout->execute(asp.get());
 
