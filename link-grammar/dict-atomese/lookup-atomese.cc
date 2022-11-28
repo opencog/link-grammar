@@ -229,6 +229,15 @@ bool as_open(Dictionary dict)
 	else
 		printf("Failed to connect to %s\n", stoname);
 
+	// If a formula is in use, then we need to fetch the
+	// formula defintion (the miformula is just it's name;
+	// its a DefinedProcedureNode)
+	if (local->miformula)
+	{
+		local->stnp->fetch_incoming_by_type(local->miformula, DEFINE_LINK);
+		local->stnp->barrier();
+	}
+
 	return true;
 }
 
