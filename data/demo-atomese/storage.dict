@@ -59,7 +59,7 @@
 % the floating point value located at the `cost-key` Value on the
 % Sections. It's assumed that this is a FloatValue, which is a vector;
 % the index specifies the location in this vector.
-#define cost-key "(Predicate \"*-Mutual Info Key cover-section\")";
+#define cost-key "(Predicate "*-Mutual Info Key cover-section")";
 #define cost-index 1;
 
 % In the demo dictionary, the costs are provided by the MI, which is
@@ -88,20 +88,30 @@
 % Word-pairs are encoded in the dictionary as
 %    (Evaluation pair-predicate (List (Word "leftword") (Word "rightword")))
 % The pair-predicate is configureable, as below.
-#define pair-predicate "(Predicate \"wrdpr\")";
+#define pair-predicate "(Predicate "wrdpr")";
 
 % Due to historical design decisions, existing dictionaries use the
 % (LgLinkNode "ANY") to mark word pairs. We note this here, as a reminder.
 % Its commented out, because the demo does not use it.
-% #define pair-predicate "(LgLink \"ANY\")";
+% #define pair-predicate "(LgLink "ANY")";
 
 % Same as above, but for word-pairs. Note the different key!
-#define pair-key "(Predicate \"*-Mutual Info Key-*\")";
+#define pair-key "(Predicate "*-Mutual Info Key-*")";
 #define pair-index 1;
 #define pair-scale -0.5;
 #define pair-offset 0.0;
 #define pair-cutoff 8.0;
 #define pair-default 2.0;
+
+% Dynamic formula for word-pairs. If this is set, then, instead of
+% using the static, pre-computed costs located at `pair-key`, a
+% defined formula will be used to calculate the costs on the fly.
+% This has the advantage that there is no need to precompute costs
+% for every possible word-pair; the costs are always up-to-date.
+% This has the disadvange of being much less efficient than working
+% with pre-computed costs, as each access forces re-computation.
+% Blanked out by default.
+% #define pair-formula "(DefinedProcedure "*-dynamic MI ANY")";
 
 % Default cost for `ANY` link types
 #define any-default 2.6;

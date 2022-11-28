@@ -31,7 +31,8 @@ public:
 
 	// Word-pairs
 	Handle prp;       // (Predicate "*-word pair-*")
-	Handle mikp;      // (Predicate "*-Mutual Info Key-*")
+	Handle mikey;     // (Predicate "*-Mutual Info Key-*")
+	Handle miformula; // (DefinedProcedure "*-dynamic MI ANY")
 	int pair_index;   // Offset into the FloatValue
 	double pair_scale;
 	double pair_offset;
