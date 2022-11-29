@@ -329,7 +329,7 @@ static const char *process_some_linkages(FILE *in, Sentence sent,
 				fprintf(stdout, "\tLinkage %d, ", num_displayed+1);
 			}
 
-			fprintf(stdout, "cost vector = (UNUSED=%d DIS=%5.2f LEN=%d)\n",
+			fprintf(stdout, "cost vector = (UNUSED=%d DIS=%5.5f LEN=%d)\n",
 			        linkage_unused_word_cost(linkage),
 			        linkage_disjunct_cost(linkage),
 			        linkage_link_cost(linkage));
