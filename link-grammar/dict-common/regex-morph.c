@@ -10,7 +10,9 @@
 /*                                                                       */
 /*************************************************************************/
 
+#if HAVE_THREADS_H
 #include <threads.h>
+#endif
 
 /**
  * Support for the regular-expression based token matching system
