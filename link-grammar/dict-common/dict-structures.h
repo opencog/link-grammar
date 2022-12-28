@@ -39,7 +39,7 @@ typedef enum
 
 #ifndef SWIG
 #define COST_MAX_DEC_PLACES 3 /* Max. decimal places when printing. */
-static const float cost_epsilon = 1E-5f;
+static const float cost_epsilon = 1E-7f;
 
 #define EXPTAG_SZ 100 /* Initial size for the Exptag array. */
 typedef enum { Exptag_none=0, Exptag_dialect, Exptag_macro } Exptag_type;

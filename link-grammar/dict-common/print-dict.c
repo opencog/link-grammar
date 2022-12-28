@@ -46,15 +46,16 @@ bool cost_eq(float cost1, float cost2)
  */
 const char *cost_stringify(float cost)
 {
-	static TLS char buf[16];
+	static TLS char buf[COST_MAX_DEC_PLACES+8];
+	static const float scale = EXP10F(1, COST_MAX_DEC_PLACES);
 
-	const int scale = (int)EXP10F(1, COST_MAX_DEC_PLACES);
-	const bool sign = signbit(cost);
-	const float roundinc = (1 / EXP10F(2, COST_MAX_DEC_PLACES));
-	int c = (int)((fabsf(cost) + roundinc) * scale);
+	bool sign = signbit(cost);
+	float ac = fabsf(cost);
+	int c = (int) floorf(ac);
+	unsigned long r = (unsigned long) roundf((ac-c)*scale);
 
-	int l = snprintf(buf, sizeof(buf), "%s%d.%0*d", sign ? "-" : "",
-	                 c / scale, COST_MAX_DEC_PLACES, c - c / scale * scale);
+	int l = snprintf(buf, sizeof(buf), "%s%d.%0*ld", sign ? "-" : "",
+	                 c, COST_MAX_DEC_PLACES, r);
 	if ((l < 0) || (l >= (int)sizeof(buf))) return "ERR_COST";
 
 	return buf;
