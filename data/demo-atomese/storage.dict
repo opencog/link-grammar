@@ -23,10 +23,7 @@
 % The default port for CogServers is 17001
 % Here `localhost` is just 127.0.0.1
 % Replace `localhost` by `example.com` or a dotted IPv4 address.
-% The `r-thru` argument indicates that the read-thru proxy should be used:
-% the cogserver will pass read requests onwards to any storage nodes
-% that are open in the cogserver.
-% #define storage-node "(CogStorageNode \"cog://localhost:17001?r-thru\")";
+% #define storage-node "(CogStorageNode "cog://localhost:17001")";
 
 % -----------------------
 % RocksStorageNode
@@ -37,7 +34,7 @@
 % The URL is just a path into the local filesystem.
 %
 % Uncomment this, and provide a correct file-path.
-% #define storage-node "(RocksStorageNode \"rocks:///home2/linas/x13-all-in-one.rdb\")";
+% #define storage-node "(RocksStorageNode "rocks:///home2/linas/x13-all-in-one.rdb")";
 
 % -----------------------
 % FileStorageNode
@@ -50,7 +47,7 @@
 % This is the one actually used in the demo. If you are getting errors,
 % then verify that the path below is correct.
 
-#define storage-node "(FileStorageNode \"file:///usr/local/share/link-grammar/demo-atomese/atomese-dict.scm\")";
+#define storage-node "(FileStorageNode "file:///usr/local/share/link-grammar/demo-atomese/atomese-dict.scm")";
 
 % -----------------------
 % Additional configuration parameters.
