@@ -12,7 +12,7 @@
 
 #define dictionary-lang           en;
 #define dictionary-locale         en_US.UTF-8;
-#define dictionary-version-number 5.12.0;
+#define dictionary-version-number 5.12.1;
 
 % -----------------------
 % CogStorageNode
@@ -52,24 +52,22 @@
 % -----------------------
 % Additional configuration parameters.
 
-% Location where costs are stored. The cost will be obtained from
-% the floating point value located at the `cost-key` Value on the
+% Location where disjunct costs are stored. The cost will be obtained
+% from the floating point value located at the `cost-key` Value on the
 % Sections. It's assumed that this is a FloatValue, which is a vector;
 % the index specifies the location in this vector.
 #define cost-key "(Predicate "*-Mutual Info Key cover-section")";
 #define cost-index 1;
 
+% The cost will be used is a linear rescaling of the raw data above.
+% The rescaling is y=mx+b where m==`cost-scale` and b==`cost-offset`
+% and x== the value fished out of the vector above.
+%
+% The scale factor is negative, so as to flip the sign on the costs.
 % In the demo dictionary, the costs are provided by the MI, which is
 % "better", the more positive it is.  The LG costs, however, are
-% "better" when they are smaller (more negative). Thus, the value
-% obtained above can be rescaled linearly befor being used as a cost.
-% The rescaling is as usual: y=mx+b where m==`cost-scale` and
-% b==`cost-offset`.
-%
-% Keep in mind that the parser ranks parses from lowest to highest cost.
-% If word-pair links have a negative cost, the parser is incentivized to
-% add as many of these as possible, while still resulting in a planar
-% graph with many loops.
+% "better" when they are smaller (less positive). Thus, a sign-flip
+% is called for.
 #define cost-scale -0.5;
 #define cost-offset 0.0;
 
@@ -82,9 +80,20 @@
 % `cost-max`.
 #define cost-default 2.0;
 
+% Disjuncts with a cost larger than this will not be used during
+% parsing. This can be over-ridden with the !cost-max parser option.
+% This applies both to the available disjuncts, and the ones created
+% dynamically, from pairs.
+% #define max-disjunct-cost 10;
+
+% -----------------------
+% If disjuncts are not directly available, they can be created on the
+% fly, from word-pairs. The settings below are analogous to those above,
+% but are for word-pairs.
+
 % Word-pairs are encoded in the dictionary as
 %    (Evaluation pair-predicate (List (Word "leftword") (Word "rightword")))
-% The pair-predicate is configureable, as below.
+% The pair-predicate is configurable, as below.
 #define pair-predicate "(Predicate "wrdpr")";
 
 % Due to historical design decisions, existing dictionaries use the
@@ -100,6 +109,13 @@
 #define pair-cutoff 8.0;
 #define pair-default 2.0;
 
+% Keep in mind that the parser ranks parses from lowest to highest cost.
+% If word-pair links have a negative cost, the parser is incentivized to
+% add as many of these as possible, while still resulting in a planar
+% graph with many loops. Viz, "Maximal Planar Graphs" (MPG). Conversely,
+% if word-pair links have a positive cost, Minimal Spanning Trees (MST)
+% will be created (minimizing the total cost.)
+
 % Dynamic formula for word-pairs. If this is set, then, instead of
 % using the static, pre-computed costs located at `pair-key`, a
 % defined formula will be used to calculate the costs on the fly.
@@ -110,7 +126,10 @@
 % Blanked out by default.
 % #define pair-formula "(DefinedProcedure "*-dynamic MI ANY")";
 
-% Default cost for `ANY` link types
+% Default cost for `ANY` link types. The `ANY` link type is meant to
+% provide a desperate, last-chance opportunity to link to a word that
+% does not appear in any disjuncts or word-pairs.  Thus, its given some
+% high cost, so that it is not used when other links are available.
 #define any-default 2.6;
 
 % -----------------------
@@ -127,8 +146,8 @@
 % probability).  There are a dozen parameters that control the above.
 %
 % Obtain expressions from Atomese Sections. The default mode.
-% Set to 0 to disable.  Each section has a cost determined by the above
-% config paramters.
+% Set to 0 to disable.  Each section has a cost determined by the previous
+% config parameters, above.
 #define enable-sections 1;
 
 % Supplement existing sections with optional links, obtained from word-
@@ -184,10 +203,10 @@
 % above.
 #define any-disjuncts 0;
 
-% Enble the automatic generation of <UNKNOWN-WORD>. It will be
-% automatically added to the dictionary, with multi-ANY connectors on it.
-% The ANY connectors will be used, irresepctive of the other any setting
-% above.
+% Enable the automatic generation of <UNKNOWN-WORD>. It will be
+% automatically added to the dictionary, with multi-ANY connectors
+% on it. The ANY connectors will be used, irresepctive of the other
+% `any` setting above.
 #define enable-unknown-word 1;
 
 % -----------------------

@@ -122,7 +122,7 @@
 
 ; ---------------------------------------------------------------------
 ;
-; Crazy data used for unit testing, to veryify connector order.
+; Crazy data used for unit testing, to verify connector order.
 ; This should allow the sentence "1 2 3 fountain 4 5 6" to parse,
 ; with a fountain from the center to each of the numbers.
 ; The name comes from the following parse diagram:

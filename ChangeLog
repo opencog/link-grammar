@@ -1,5 +1,6 @@
 Version 5.12.1 (XXX 2022)
  * Assorted enhancements and fixes for the AtomSpace dictionary. #1362
+ * Fix missing HAVE_THREADS_H, affects Apple Homebrew. #1363
 
 Version 5.12.0 (26 Nov 2022)
  * Fix crash when using the Atomese dictionary backend.
