@@ -768,7 +768,7 @@ void compute_generated_words(Sentence sent, Linkage linkage)
 		}
 		else
 		{
-			assert(cdj->num_categories > 0, "0 categories in disjunct");
+			assert(cdj->num_categories > 0, "zero categories in disjunct");
 			word = linkage_get_disjunct_str(linkage, i);
 			size_t len = strlen(word) + sizeof("<>");
 			char *disjunct_string = alloca(len);
@@ -881,9 +881,7 @@ const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 
 	if (NULL == linkage) return "";
 	if (NULL == linkage->disjunct_list_str)
-	{
 		lg_compute_disjunct_strings(linkage);
-	}
 
 	if (linkage->num_words <= w) return NULL; /* bounds-check */
 
