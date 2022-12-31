@@ -54,7 +54,7 @@ const char *cost_stringify(float cost)
 	int c = (int) floorf(ac);
 	unsigned long r = (unsigned long) roundf((ac-c)*scale);
 
-	int l = snprintf(buf, sizeof(buf), "%s%d.%0*ld", sign ? "-" : "",
+	int l = snprintf(buf, sizeof(buf), "%s%d.%0*lu", sign ? "-" : "",
 	                 c, COST_MAX_DEC_PLACES, r);
 	if ((l < 0) || (l >= (int)sizeof(buf))) return "ERR_COST";
 
