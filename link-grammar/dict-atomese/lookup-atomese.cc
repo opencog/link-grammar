@@ -111,6 +111,11 @@ bool as_open(Dictionary dict)
 		{
 			Handle hsn = local->asp->add_atom(external_storage);
 			local->stnp = StorageNodeCast(hsn);
+			if (nullptr == local->stnp)
+			{
+				prt_error("Error: Not a StorageNode! %s\n", hsn->to_string().c_str());
+				return false;
+			}
 		}
 	}
 	else
@@ -130,6 +135,11 @@ bool as_open(Dictionary dict)
 			Handle hsn = Sexpr::decode_atom(stns);
 			hsn = local->asp->add_atom(hsn);
 			local->stnp = StorageNodeCast(hsn);
+			if (nullptr == local->stnp)
+			{
+				prt_error("Error: Not a StorageNode! %s\n", stns);
+				return false;
+			}
 		}
 		else
 			prt_error("Warning: No StorageNode was specified! Are you sure?\n");
