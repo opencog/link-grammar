@@ -72,6 +72,9 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	dictionary_setup_locale(dict);
 	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
 
+	/* The string that the user provided to identify this dict */
+	dict->name = string_set_add(dictdir, dict->string_set);
+
 	dict->spell_checker = NULL;
 	dict->base_knowledge = NULL;
 	dict->hpsg_knowledge = NULL;

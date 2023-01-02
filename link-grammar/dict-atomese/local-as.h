@@ -15,9 +15,8 @@ class Local
 {
 public:
 	bool using_external_as;
-	const char* node_str; // (StorageNode \"foo://bar/baz\")
 	AtomSpacePtr asp;
-	StorageNodePtr stnp;
+	StorageNodePtr stnp; // Might be nullptr
 	Handle linkp;     // (Predicate "*-LG link string-*")
 	Handle prk;       // (Predicate "*-fetched-pair-*")
 
