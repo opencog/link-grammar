@@ -99,25 +99,32 @@ static const char* ldef(Dictionary dict, const char* name, const char* def)
 /// Open a connection to a StorageNode.
 bool as_open(Dictionary dict)
 {
-	const char * stns = get_dict_define(dict, STORAGE_NODE_STRING);
-	if (nullptr == stns) return false;
-	dict->name = stns;
-
 	Local* local = new Local;
-	local->node_str = stns;
+	local->stnp = nullptr;
 
 	// If an external atomspace is specified, then use that.
 	if (external_atomspace)
 	{
-		local->asp = external_atomspace;
-		Handle hsn = local->asp->add_atom(external_storage);
-		local->stnp = StorageNodeCast(hsn);
 		local->using_external_as = true;
+		local->asp = external_atomspace;
+		if (external_storage)
+		{
+			Handle hsn = local->asp->add_atom(external_storage);
+			local->stnp = StorageNodeCast(hsn);
+		}
 	}
 	else
 	{
-		local->asp = createAtomSpace();
 		local->using_external_as = false;
+		local->asp = createAtomSpace();
+
+		const char * stns = get_dict_define(dict, STORAGE_NODE_STRING);
+		if (stns)
+		{
+			Handle hsn = Sexpr::decode_atom(stns);
+			hsn = local->asp->add_atom(hsn);
+			local->stnp = StorageNodeCast(hsn);
+		}
 	}
 
 	// Create the connector predicate.
@@ -186,21 +193,12 @@ bool as_open(Dictionary dict)
 	dict->as_server = (void*) local;
 
 	if (local->using_external_as) return true;
+	if (NULL == local->stnp) return true;
 
 	// --------------------
-	// If we are here, then we manage our own private AtomSpace.
-
-	if (external_storage)
-	{
-		Handle hsn = local->asp->add_atom(external_storage);
-		local->stnp = StorageNodeCast(hsn);
-	}
-	else
-	{
-		Handle hsn = Sexpr::decode_atom(local->node_str);
-		hsn = local->asp->add_atom(hsn);
-		local->stnp = StorageNodeCast(hsn);
-	}
+	// If we are here, then we manage our own private connection
+	// to storage. We will be managing opening and closing of it,
+	// and the fetching of data from it.
 
 	std::string stone = local->stnp->to_short_string();
 	const char * stoname = stone.c_str();
@@ -223,11 +221,13 @@ bool as_open(Dictionary dict)
 
 	local->stnp->open();
 
-	// XXX FIXME -- if we cannot connect, then should hard-fail.
 	if (local->stnp->connected())
-		printf("Connected to %s\n", stoname);
+		prt_error("Info: Connected to %s\n", stoname);
 	else
-		printf("Failed to connect to %s\n", stoname);
+	{
+		prt_error("Error: Failed to connect to %s\n", stoname);
+		return false;
+	}
 
 	// If a formula is in use, then we need to fetch the
 	// formula defintion (the miformula is just it's name;
