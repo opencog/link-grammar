@@ -193,7 +193,7 @@ bool as_open(Dictionary dict)
 	dict->as_server = (void*) local;
 
 	if (local->using_external_as) return true;
-	if (NULL == local->stnp) return true;
+	if (nullptr == local->stnp) return true;
 
 	// --------------------
 	// If we are here, then we manage our own private connection

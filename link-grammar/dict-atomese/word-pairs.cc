@@ -26,6 +26,8 @@ using namespace opencog;
 /// Return true if word-pairs for `germ` need to be fetched.
 static bool need_pair_fetch(Local* local, const Handle& germ)
 {
+	if (nullptr == local->stnp) return false;
+
 	const ValuePtr& fpv = germ->getValue(local->prk);
 	if (fpv) return false;
 
