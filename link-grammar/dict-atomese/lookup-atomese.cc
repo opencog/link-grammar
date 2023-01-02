@@ -119,12 +119,20 @@ bool as_open(Dictionary dict)
 		local->asp = createAtomSpace();
 
 		const char * stns = get_dict_define(dict, STORAGE_NODE_STRING);
+
+		// A local AtomSpace means that there *must* be local storage,
+		// too, else there is no where to get dict data from. The grand
+		// exception would be "any" parsing, with random parse trees,
+		// which doesn't require a dictionary. So issue a strong warning,
+		// but not an error.
 		if (stns)
 		{
 			Handle hsn = Sexpr::decode_atom(stns);
 			hsn = local->asp->add_atom(hsn);
 			local->stnp = StorageNodeCast(hsn);
 		}
+		else
+			prt_error("Warning: No StorageNode was specified! Are you sure?\n");
 	}
 
 	// Create the connector predicate.
@@ -216,7 +224,10 @@ bool as_open(Dictionary dict)
 	else if (FILE_STORAGE_NODE == snt)
 		local->stnp = FileStorageNodeCast(local->stnp);
 	else
-		printf("Unknown storage %s\n", stoname);
+	{
+		prt_error("Error: Unknown storage %s\n", stoname);
+		return false;
+	}
 #endif
 
 	local->stnp->open();
