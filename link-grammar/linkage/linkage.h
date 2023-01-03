@@ -23,13 +23,13 @@
  */
 struct Linkage_info_struct
 {
+	const char *pp_violation_msg;
+
 	int index;            /* Index into the parse_set */
+	float disjunct_cost;
 	short N_violations;
 	short unused_word_cost;
 	short link_cost;
-
-	float disjunct_cost;
-	const char *pp_violation_msg;
 };
 
 /**
@@ -51,7 +51,6 @@ struct Linkage_info_struct
 struct Linkage_s
 {
 	WordIdx         num_words;    /* Number of (tokenized) words */
-	bool            is_sent_long; /* num_words >= twopass_length */
 	const char *  * word;         /* Array of word spellings */
 
 	size_t          num_links;    /* Number of links in array */
@@ -66,6 +65,8 @@ struct Linkage_s
 	Gword **wg_path_display;      /* Wordgraph path after morpheme combining */
 
 	Linkage_info    lifo;         /* Parse_set index and cost information */
+	bool            is_sent_long; /* num_words >= twopass_length */
+
 	PP_domains *    pp_domains;   /* PP domain info, one for each link */
 
 	Sentence        sent;         /* Used for common linkage data */
