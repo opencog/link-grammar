@@ -27,10 +27,12 @@
 #define LIMITED_CONNECTORS_WORD ("LENGTH-LIMIT-")
 #define IS_GENERATION(dict) (dict->category != NULL)
 
-/* If the maximum disjunct cost is yet uninitialized, the value defined in the
- * dictionary (or if not defined then DEFAULT_MAX_DISJUNCT_COST) is used. */
+/* If the maximum disjunct cost is not initialized, the value defined
+ * in the dictionary is used. If not defined, then DEFAULT_MAX_DISJUNCT_COST
+ * is used. */
 static const float UNINITIALIZED_MAX_DISJUNCT_COST = -10000.0f;
 static const float DEFAULT_MAX_DISJUNCT_COST = 2.7f;
+
 /* We need some of these as literal strings. */
 #define LG_DISJUNCT_COST                        "max-disjunct-cost"
 #define LG_DICTIONARY_VERSION_NUMBER            "dictionary-version-number"
