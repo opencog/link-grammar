@@ -36,6 +36,9 @@
 typedef uint8_t null_count_m;  /* Storage representation of null_count */
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
+/* Allow to disable the use of the various caches (for debug). */
+const bool ENABLE_WORD_SKIP_VECTOR = true;
+
 typedef struct Table_tracon_s Table_tracon;
 struct Table_tracon_s
 {
@@ -627,6 +630,8 @@ static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
                                       int start_word, int end_word,
                                       int lw, int rw)
 {
+	if (!ENABLE_WORD_SKIP_VECTOR) return;
+
 	if (le != NULL)
 	{
 		int check_word = start_word;
