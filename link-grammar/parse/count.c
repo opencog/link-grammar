@@ -39,6 +39,8 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 /* Allow to disable the use of the various caches (for debug). */
 const bool ENABLE_WORD_SKIP_VECTOR = true;
 const bool ENABLE_MATCH_LIST_CACHE = true;
+const bool ENABLE_TABLE_LRCNT = true;  // Also controls the above two caches.
+const bool USE_TABLE_TRACON = true;    // The table is always maintained.
 
 typedef struct Table_tracon_s Table_tracon;
 struct Table_tracon_s
@@ -1653,8 +1655,8 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	memset(ctxt, 0, sizeof(count_context_t));
 
 	ctxt->sent = sent;
-	ctxt->is_short =
-		(sent->length <= min_len_word_vector) && !IS_GENERATION(ctxt->sent->dict);
+	ctxt->is_short = !ENABLE_TABLE_LRCNT ||
+		((sent->length <= min_len_word_vector) && !IS_GENERATION(ctxt->sent->dict));
 
 	if (!ctxt->is_short)
 	{
