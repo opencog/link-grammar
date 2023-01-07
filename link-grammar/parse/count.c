@@ -38,6 +38,7 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
 /* Allow to disable the use of the various caches (for debug). */
 const bool ENABLE_WORD_SKIP_VECTOR = true;
+const bool ENABLE_MATCH_LIST_CACHE = true;
 
 typedef struct Table_tracon_s Table_tracon;
 struct Table_tracon_s
@@ -742,6 +743,8 @@ static void lrcnt_cache_match_list(wordvecp lrcnt_cache, count_context_t *ctxt,
 	size_t dcnt = 0;
 	size_t i  = 0;
 	fast_matcher_t *mchxt = ctxt->mchxt;
+
+	if (!ENABLE_MATCH_LIST_CACHE) return;
 
 	for (i = mlb; get_match_list_element(mchxt, i) != NULL; i++)
 	{
