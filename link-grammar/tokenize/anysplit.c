@@ -336,6 +336,7 @@ static bool gr_reg_comp(grapheme_regex *re)
 	                         PCRE2_UTF, &rc, &erroffset, NULL);
 	if (re->code != NULL)
 	{
+		pcre2_jit_compile(re->code, PCRE2_JIT_COMPLETE);
 		re->match_data = pcre2_match_data_create_from_pattern(re->code, NULL);
 		if (re->match_data == NULL)
 		{
