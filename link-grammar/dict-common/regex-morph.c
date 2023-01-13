@@ -167,6 +167,13 @@ static void reg_free(Regex_node *rn)
 /* ========================================================================= */
 #if HAVE_PCRE2_H
 
+// It might have been nice to perform this allocation once per
+// dictionary, but, alas, this won't work: pcre2 version 10.41 and
+// newer allocate internal memory for each call to pcre2_match(),
+// and this grows without bound, until pcre2_match_data_free() is
+// called. Apparently, the existing unit tests were able to clobber
+// 4GB of RAM, clobbering the OOM killer on small RAM machines.
+// See issue #1366 for details.
 #define ALLOCTE_MATCH_DATA(var) \
 	pcre2_match_data *var = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
 #define FRE_MATCH_DATA(var) pcre2_match_data_free(var);
