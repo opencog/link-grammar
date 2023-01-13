@@ -87,6 +87,7 @@ typedef struct {
 
 #define ALLOCTE_MATCH_DATA(var) \
 	regmatch_t mem_##var[MAX_CAPTURE_GROUPS]; regmatch_t *var = mem_##var
+#define FRE_MATCH_DATA(var)
 
 /**
  * Compile the given regex..
@@ -167,22 +168,8 @@ static void reg_free(Regex_node *rn)
 #if HAVE_PCRE2_H
 
 #define ALLOCTE_MATCH_DATA(var) \
-	pcre2_match_data *var = \
-	memcpy(alloca(re_md_template_size), re_md_template, re_md_template_size)
-
-static unsigned int re_md_template_size;
-static pcre2_match_data* re_md_template;
-
-#if HAVE_THREADS_H
-static once_flag call_once_flag = ONCE_FLAG_INIT;
-#endif // HAVE_THREADS_H
-static void alloc_match_data(void)
-{
-	re_md_template = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
-	if (re_md_template == NULL)
-		return;
-	re_md_template_size = pcre2_get_match_data_size(re_md_template);
-}
+	pcre2_match_data *var = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
+#define FRE_MATCH_DATA(var) pcre2_match_data_free(var);
 
 static bool reg_comp(Regex_node *rn)
 {
@@ -196,20 +183,7 @@ static bool reg_comp(Regex_node *rn)
 	re->re_code = pcre2_compile((PCRE2_SPTR)rn->pattern, PCRE2_ZERO_TERMINATED,
 	                            options, &rc, &erroffset, NULL);
 	if (re->re_code != NULL)
-	{
-#if HAVE_THREADS_H
-		call_once(&call_once_flag, alloc_match_data);
-#else
-		alloc_match_data();
-#endif
-		if (0 == re_md_template_size)
-		{
-			prt_error("Error: pcre2_match_data_create() failed\n");
-			free(re);
-			return false;
-		}
 		return true;
-	}
 
 	/* We have an error. */
 	PCRE2_UCHAR errbuf[ERRBUFFLEN];
@@ -269,6 +243,7 @@ static void reg_free(Regex_node *rn)
 
 #define ALLOCTE_MATCH_DATA(var) \
 	std::cmatch mem_##var; std::cmatch *var = &mem_##var
+#define FRE_MATCH_DATA(var)
 
 static bool reg_comp(Regex_node *rn)
 {
@@ -418,7 +393,10 @@ const char *match_regex(const Regex_node *rn, const char *s)
 		{
 			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!rn->neg], rn->name, s);
 			if (!rn->neg)
+			{
+				FRE_MATCH_DATA(re_md);
 				return rn->name; /* Match found - return--no multiple matches. */
+			}
 
 			/* Negative match - skip this regex name. */
 			for (const char *nre_name = rn->name; rn->next != NULL; rn = rn->next)
@@ -430,6 +408,7 @@ const char *match_regex(const Regex_node *rn, const char *s)
 		rn = rn->next;
 	}
 
+	FRE_MATCH_DATA(re_md);
 	return NULL; /* No matches. */
 }
 
@@ -460,8 +439,10 @@ const char *matchspan_regex(Regex_node *rn, const char *s,
 					lgdebug(+D_USER_INFO, "Regex \"%s\": "
 					        "Specified capture group %d didn't match \"%s\"\n",
 					        rn->name, rn->capture_group, s);
+					FRE_MATCH_DATA(re_md);
 					return NULL;
 				}
+				FRE_MATCH_DATA(re_md);
 				return rn->name; /* Match found - return--no multiple matches. */
 			}
 
@@ -475,6 +456,7 @@ const char *matchspan_regex(Regex_node *rn, const char *s,
 		rn = rn->next;
 	}
 
+	FRE_MATCH_DATA(re_md);
 	return NULL; /* No matches. */
 }
 #undef D_MRE
