@@ -390,12 +390,11 @@ bool compile_regexs(Regex_node *rn, Dictionary dict)
 #define D_MRE 6
 const char *match_regex(const Regex_node *rn, const char *s)
 {
-	ALLOCTE_MATCH_DATA(re_md);
-
 	while (rn != NULL)
 	{
 		if (rn->re == NULL) continue; // Make sure the regex has been compiled.
 
+		ALLOCTE_MATCH_DATA(re_md);
 		if (reg_match(s, rn, re_md))
 		{
 			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!rn->neg], rn->name, s);
@@ -412,10 +411,10 @@ const char *match_regex(const Regex_node *rn, const char *s)
 			}
 		}
 
+		FRE_MATCH_DATA(re_md);
 		rn = rn->next;
 	}
 
-	FRE_MATCH_DATA(re_md);
 	return NULL; /* No matches. */
 }
 
@@ -427,12 +426,11 @@ const char *matchspan_regex(Regex_node *rn, const char *s,
                             int *start, int *end)
 {
 	assert(rn->capture_group >= 0, "No capture");
-	ALLOCTE_MATCH_DATA(re_md);
-
 	while (rn != NULL)
 	{
 		if (rn->re == NULL) continue; // Make sure the regex has been compiled.
 
+		ALLOCTE_MATCH_DATA(re_md);
 		if (reg_match(s, rn, re_md))
 		{
 			lgdebug(+D_MRE, "%s%s %s\n", &"!"[!rn->neg], rn->name, s);
@@ -460,10 +458,10 @@ const char *matchspan_regex(Regex_node *rn, const char *s,
 			}
 		}
 
+		FRE_MATCH_DATA(re_md);
 		rn = rn->next;
 	}
 
-	FRE_MATCH_DATA(re_md);
 	return NULL; /* No matches. */
 }
 #undef D_MRE
