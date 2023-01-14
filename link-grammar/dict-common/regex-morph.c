@@ -166,23 +166,40 @@ static void reg_free(Regex_node *rn)
 /* ========================================================================= */
 #if HAVE_PCRE2_H
 
-#define ALLOCTE_MATCH_DATA(var) \
-	pcre2_match_data *var = \
-	memcpy(alloca(re_md_template_size), re_md_template, re_md_template_size)
-
-static unsigned int re_md_template_size;
-static pcre2_match_data* re_md_template;
-
-#if HAVE_THREADS_H
 static once_flag call_once_flag = ONCE_FLAG_INIT;
-#endif // HAVE_THREADS_H
-static void alloc_match_data(void)
+static tss_t re_md_key;
+static void alloc_key(void)
 {
-	re_md_template = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
-	if (re_md_template == NULL)
-		return;
-	re_md_template_size = pcre2_get_match_data_size(re_md_template);
+	int rc = tss_create(&re_md_key, (tss_dtor_t) pcre2_match_data_free);
+	if (thrd_success == rc) return;
+	prt_error("Error: pcre2 alloc per-thread key failed\n");
 }
+
+static pcre2_match_data* alloc_match_data(void)
+{
+#if HAVE_THREADS_H
+	call_once(&call_once_flag, alloc_key);
+
+	pcre2_match_data *pmd = (pcre2_match_data *) tss_get(re_md_key);
+	if (pmd) return pmd;
+
+	pmd = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
+	tss_set(re_md_key, pmd);
+	if (pmd) return pmd;
+#else
+
+	// No threads. Malloc once, forever, and we are done.
+	static pcre2_match_data *pmd = nullptr;
+	if (pmd) return pmd;
+	pmd = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
+	if (pmd) return pmd;
+
+#endif // HAVE_THREADS_H
+	prt_error("Error: pcre2_match_data_create() failed\n");
+	return NULL;
+}
+
+#define ALLOCTE_MATCH_DATA(var) pcre2_match_data *var = alloc_match_data();
 
 static bool reg_comp(Regex_node *rn)
 {
@@ -196,20 +213,7 @@ static bool reg_comp(Regex_node *rn)
 	re->re_code = pcre2_compile((PCRE2_SPTR)rn->pattern, PCRE2_ZERO_TERMINATED,
 	                            options, &rc, &erroffset, NULL);
 	if (re->re_code != NULL)
-	{
-#if HAVE_THREADS_H
-		call_once(&call_once_flag, alloc_match_data);
-#else
-		alloc_match_data();
-#endif
-		if (0 == re_md_template_size)
-		{
-			prt_error("Error: pcre2_match_data_create() failed\n");
-			free(re);
-			return false;
-		}
 		return true;
-	}
 
 	/* We have an error. */
 	PCRE2_UCHAR errbuf[ERRBUFFLEN];
