@@ -139,7 +139,7 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
 		if (free_final_path || (MT_INFRASTRUCTURE != twp->word->morpheme_type))
 			free(twp->path);
 	}
-	free(wp);
+	wordgraph_pathpos_free(wp);
 }
 
 #define NO_WORD (MAX_SENTENCE+1)
