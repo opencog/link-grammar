@@ -10,6 +10,7 @@
 void * my_realloc_hook(void *, size_t, const char *, int, const char *);
 void * my_malloc_hook(size_t, const char *, int, const char *);
 void my_free_hook(void *, const char *, int, const char *);
+
 #define malloc(X) my_malloc_hook(X, __FILE__, __LINE__, __FUNCTION__)
 #define realloc(X,N) my_realloc_hook(X, N, __FILE__, __LINE__, __FUNCTION__)
 #define free(X) my_free_hook(X, __FILE__, __LINE__, __FUNCTION__)
@@ -23,11 +24,16 @@ void my_free_hook(void *, const char *, int, const char *);
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <malloc.h>
 
+extern void * my_realloc_hook(void *, size_t, const char *, int, const char *);
+extern void * my_malloc_hook(size_t, const char *, int, const char *);
+extern void my_free_hook(void *, const char *, int, const char *);
+void my_init_hook(void);
 /* ======================================================== */
 
-#define NUSERS 4136
+#define NUSERS 436
 typedef struct {
 	const char * caller;
 	const char * file;
@@ -83,19 +89,34 @@ static int get_callerid(const char *file, int line, const char *caller)
 	return callerid;
 }
 
+#define RFREQ 21123123
+
+static int cmpu(const void * a, const void * b)
+{
+	user_t* ua = (user_t*) a;
+	user_t* ub = (user_t*) b;
+	return strcmp(ua->caller, ub->caller);
+}
+
 static void report(void)
 {
-	size_t totsz = 0;
+	user_t lusers[NUSERS];
+	for (int i=0; i<nusers; i++)
+		lusers[i] = users[i];
+
+	qsort(lusers, nusers, sizeof(user_t), cmpu);
+
+	int64_t totsz = 0;
 	fprintf(fh, "Performed to %lu mallos\n", mcnt);
 	for (int i=0; i<nusers; i++)
 	{
 		fprintf(fh, "%d caller=%s:%d %s sz=%ld nalloc=%d %d %d %d\n",
-			i, users[i].file, users[i].line, users[i].caller,
-			users[i].sz, users[i].nalloc,
-			users[i].nrealloc, users[i].nmove, users[i].nfree);
-		totsz += users[i].sz;
+			i, lusers[i].file, lusers[i].line, lusers[i].caller,
+			lusers[i].sz, lusers[i].nalloc,
+			lusers[i].nrealloc, lusers[i].nmove, lusers[i].nfree);
+		totsz += lusers[i].sz;
 	}
-	fprintf (fh, "Total Size=%zu\n", totsz);
+	fprintf (fh, "Total Size=%ld\n", totsz);
 }
 
 void * my_realloc_hook(void * mem, size_t n_bytes,
@@ -113,7 +134,7 @@ void * my_realloc_hook(void * mem, size_t n_bytes,
 		users[callerid].nmove ++;
 
 	mcnt++;
-	if (mcnt%1000000 == 0) report();
+	if (mcnt%RFREQ == 0) report();
 	allprt(fh, "realloc new alloc %d %p\n", i, nm);
 	return nm;
 }
@@ -131,7 +152,7 @@ void * my_malloc_hook(size_t n_bytes,
 	users[callerid].nalloc ++;
 
 	mcnt++;
-	if (mcnt%1000000 == 0) report();
+	if (mcnt%RFREQ == 0) report();
 
 	return mem;
 }
