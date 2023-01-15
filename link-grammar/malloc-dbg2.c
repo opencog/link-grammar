@@ -4,7 +4,16 @@
  * Debug memory allocation.  Hacky code, used only
  * for debugging. Tracks how much memory different malloc users ask for.
  *
- * To use: just compile and link into the executable.
+ * To use:
+ * Add following to a header file and recompile:
+
+void * my_realloc_hook(void *, size_t, const char *, int, const char *);
+void * my_malloc_hook(size_t, const char *, int, const char *);
+void my_free_hook(void *, const char *, int, const char *);
+#define malloc(X) my_malloc_hook(X, __FILE__, __LINE__, __FUNCTION__)
+#define realloc(X,N) my_realloc_hook(X, N, __FILE__, __LINE__, __FUNCTION__)
+#define free(X) my_free_hook(X, __FILE__, __LINE__, __FUNCTION__)
+
  *
  * Copyright (c) 2008, 2023 Linas Vepstas <linas@linas.org>
  */
@@ -17,18 +26,12 @@
 #include <malloc.h>
 
 /* ======================================================== */
-void report_mem_dbg(void);
-
-static void *(*old_malloc_hook)(size_t, const void *);
-static void (*old_free_hook)(void *, const void *);
-static void *(*old_realloc_hook)(void *, size_t, const void *);
-
-static void my_free_hook(void * mem, const void * caller);
-static void * my_malloc_hook(size_t n_bytes, const void * caller);
 
 #define NUSERS 4136
 typedef struct {
-	const void * caller;
+	const char * caller;
+	const char * file;
+	int line;
 	int64_t sz;
 	int nalloc;
 	int nrealloc;
@@ -51,7 +54,7 @@ static void init_io(void)
 // #define allprt(f, varargs...) fprintf(f, ##varargs)
 #define allprt(f, varargs...)
 
-static int get_callerid(const void *caller)
+static int get_callerid(const char *file, int line, const char *caller)
 {
 	for (int i=0; i<nusers; i++)
 	{
@@ -61,6 +64,8 @@ static int get_callerid(const void *caller)
 
 	int callerid = nusers;
 	nusers++;
+	users[callerid].file = file;
+	users[callerid].line = line;
 	users[callerid].caller = caller;
 	users[callerid].sz = 0;
 	users[callerid].nalloc = 0;
@@ -68,6 +73,7 @@ static int get_callerid(const void *caller)
 	users[callerid].nrealloc = 0;
 	users[callerid].nfree = 0;
 
+	users[callerid].caller = caller;
 	if (nusers == NUSERS)
 	{
 		printf("ran out of user slots\n");
@@ -77,30 +83,29 @@ static int get_callerid(const void *caller)
 	return callerid;
 }
 
-static void report()
+static void report(void)
 {
 	size_t totsz = 0;
 	fprintf(fh, "Performed to %lu mallos\n", mcnt);
 	for (int i=0; i<nusers; i++)
 	{
-		fprintf(fh, "%d caller=%p sz=%ld nalloc=%d %d %d %d\n",
-			i, users[i].caller, users[i].sz, users[i].nalloc,
+		fprintf(fh, "%d caller=%s:%d %s sz=%ld nalloc=%d %d %d %d\n",
+			i, users[i].file, users[i].line, users[i].caller,
+			users[i].sz, users[i].nalloc,
 			users[i].nrealloc, users[i].nmove, users[i].nfree);
 		totsz += users[i].sz;
 	}
 	fprintf (fh, "Total Size=%zu\n", totsz);
 }
 
-static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
+void * my_realloc_hook(void * mem, size_t n_bytes,
+                       const char *file, int line, const char *caller)
 {
-	int callerid = get_callerid(caller);
+	int callerid = get_callerid(file, line, caller);
 
-	__realloc_hook = old_realloc_hook;
 	size_t oldsz = malloc_usable_size(mem);
 	void * nm = realloc(mem, n_bytes);
 	size_t newsz = malloc_usable_size(nm);
-	old_realloc_hook = __realloc_hook;
-	__realloc_hook = my_realloc_hook;
 
 	users[callerid].sz += newsz - oldsz;
 	users[callerid].nrealloc ++;
@@ -113,48 +118,40 @@ static void * my_realloc_hook(void * mem, size_t n_bytes, const void *caller)
 	return nm;
 }
 
-static void * my_malloc_hook(size_t n_bytes, const void * caller)
+void * my_malloc_hook(size_t n_bytes,
+                      const char *file, int line, const char *caller)
 {
 	init_io();
 
-	__malloc_hook = old_malloc_hook;
-	__free_hook = old_free_hook;
 	void * mem = malloc(n_bytes);
 	size_t newsz = malloc_usable_size(mem);
-	old_malloc_hook = __malloc_hook;
-	old_free_hook = __free_hook;
 
-	int callerid = get_callerid(caller);
+	int callerid = get_callerid(file, line, caller);
 	users[callerid].sz += newsz;
 	users[callerid].nalloc ++;
 
 	mcnt++;
 	if (mcnt%1000000 == 0) report();
 
-	__malloc_hook = my_malloc_hook;
-	__free_hook = my_free_hook;
 	return mem;
 }
 
-static void my_free_hook(void * mem, const void * caller)
+void my_free_hook(void * mem,
+                  const char *file, int line, const char *caller)
 {
 	if (0x0 == mem) return;
-	__malloc_hook = old_malloc_hook;
-	__free_hook = old_free_hook;
 
 	size_t oldsz = malloc_usable_size(mem);
-	int callerid = get_callerid(caller);
+	int callerid = get_callerid(file, line, caller);
 	users[callerid].sz -= oldsz;
 	users[callerid].nfree ++;
 
-	__malloc_hook = my_malloc_hook;
-
 	free(mem);
-	old_free_hook = __free_hook;
-	__free_hook = my_free_hook;
 }
 
-void my_init_hook(void);
+// void my_init_hook(void);
+
+__attribute__((constructor))
 void my_init_hook(void)
 {
 	static bool is_init = false;
@@ -163,16 +160,6 @@ void my_init_hook(void)
 
 	printf("init malloc trace hook\n");
 	nusers = 0;
-
-	old_malloc_hook = __malloc_hook;
-	__malloc_hook = my_malloc_hook;
-
-	old_free_hook = __free_hook;
-	__free_hook = my_free_hook;
-
-	old_realloc_hook = __realloc_hook;
-	__realloc_hook = my_realloc_hook;
 }
 
-void (*__MALLOC_HOOK_VOLATILE __malloc_initialize_hook)(void) = my_init_hook;
 #endif /*_MSC_VER && __MINGW32__*/
