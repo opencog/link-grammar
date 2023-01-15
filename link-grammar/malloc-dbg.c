@@ -2,7 +2,9 @@
  * malloc-dbg.c
  *
  * Debug memory allocation.  Hacky code, used only
- * for debugging.
+ * for debugging. Tracks individual mallocs and frees.
+ *
+ * To use: just compile and link into the executable.
  *
  * Copyright (c) 2008 Linas Vepstas <linas@linas.org>
  */
