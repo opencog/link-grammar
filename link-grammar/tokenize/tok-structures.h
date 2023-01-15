@@ -48,6 +48,7 @@ struct gword_set
 	struct gword_set *chain_next;
 };
 
+gword_set *gword_set_union(gword_set *, gword_set *);
 
 typedef enum
 {
