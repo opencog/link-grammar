@@ -157,7 +157,7 @@ static void report(void)
 	getrusage(RUSAGE_SELF, &rus);
 
 	__int128_t avg = abssz;
-	avg /= mcnt;
+	if (0 < mcnt) avg /= mcnt;
 
 	totsz /= 1024;
 	abssz /= 1024*1024;
@@ -250,7 +250,10 @@ void my_reset_hook(void)
 {
 	mtx_lock(&mutx);
 	printf("reset malloc trace hook\n");
+	report();
 	nusers = 0;
+	mcnt = 0;
+	report();
 	mtx_unlock(&mutx);
 }
 
@@ -263,6 +266,7 @@ void my_init_hook(void)
 
 	printf("init malloc trace hook\n");
 	nusers = 0;
+	mcnt = 0;
 
 	mtx_init(&mutx, mtx_plain);
 }
