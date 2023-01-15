@@ -26,6 +26,7 @@ void my_free_hook(void *, const char *, int, const char *);
 #include <stdlib.h>
 #include <string.h>
 #include <malloc.h>
+#include <threads.h>
 
 extern void * my_realloc_hook(void *, size_t, const char *, int, const char *);
 extern void * my_malloc_hook(size_t, const char *, int, const char *);
@@ -47,6 +48,8 @@ typedef struct {
 static user_t users[NUSERS];
 int nusers = 0;
 static volatile size_t mcnt = 0;
+
+mtx_t mutx;
 
 static FILE *fh = NULL;
 
@@ -137,6 +140,7 @@ static void report(void)
 void * my_realloc_hook(void * mem, size_t n_bytes,
                        const char *file, int line, const char *caller)
 {
+	mtx_lock(&mutx);
 	int callerid = get_callerid(file, line, caller);
 
 	size_t oldsz = malloc_usable_size(mem);
@@ -151,6 +155,8 @@ void * my_realloc_hook(void * mem, size_t n_bytes,
 	mcnt++;
 	if (mcnt%RFREQ == 0) report();
 	allprt(fh, "realloc new alloc %d %p\n", i, nm);
+
+	mtx_unlock(&mutx);
 	return nm;
 }
 
@@ -159,6 +165,7 @@ void * my_malloc_hook(size_t n_bytes,
 {
 	init_io();
 
+	mtx_lock(&mutx);
 	void * mem = malloc(n_bytes);
 	size_t newsz = malloc_usable_size(mem);
 
@@ -169,6 +176,7 @@ void * my_malloc_hook(size_t n_bytes,
 	mcnt++;
 	if (mcnt%RFREQ == 0) report();
 
+	mtx_unlock(&mutx);
 	return mem;
 }
 
@@ -177,12 +185,14 @@ void my_free_hook(void * mem,
 {
 	if (0x0 == mem) return;
 
+	mtx_lock(&mutx);
 	size_t oldsz = malloc_usable_size(mem);
 	int callerid = get_callerid(file, line, caller);
 	users[callerid].sz -= oldsz;
 	users[callerid].nfree ++;
 
 	free(mem);
+	mtx_unlock(&mutx);
 }
 
 // void my_init_hook(void);
@@ -196,6 +206,8 @@ void my_init_hook(void)
 
 	printf("init malloc trace hook\n");
 	nusers = 0;
+
+	mtx_init(&mutx, mtx_plain);
 }
 
 #endif /*_MSC_VER && __MINGW32__*/
