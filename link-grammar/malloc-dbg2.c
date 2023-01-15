@@ -109,7 +109,9 @@ static void report(void)
 
 	qsort(lusers, nusers, sizeof(user_t), cmpu);
 
-	int64_t totsz = 0;
+	// int64_t totsz = 0;
+	__int128_t totsz = 0;
+	__int128_t abssz = 0;
 	int64_t subsz = 0;
 	char * prev = NULL;
 	fprintf(fh, "Performed %lu mallocs\n", mcnt);
@@ -121,7 +123,8 @@ static void report(void)
 		{
 			if (strcmp(prev, f))
 			{
-				printf("Summary %s %ld\n\n", prev, subsz);
+				printf("Summary %s use=%ld   runttot=%Ld abstot=%Ld\n\n", prev, subsz,
+					(long long int)totsz, (long long int)abssz);
 				subsz = 0;
 			}
 			free(prev);
@@ -133,8 +136,14 @@ static void report(void)
 			lusers[i].nrealloc, lusers[i].nmove, lusers[i].nfree);
 		totsz += lusers[i].sz;
 		subsz += lusers[i].sz;
+		if (0 < lusers[i].sz) abssz += lusers[i].sz;
 	}
-	fprintf (fh, "Total Size=%ld\n", totsz);
+
+	__int128_t avg = abssz;
+	avg /= mcnt;
+	fprintf (fh, "Total Size=%Ld abstot=%Ld out of %lu tot mallocs avg=%Ld\n",
+		(long long int)totsz, (long long int)abssz, mcnt,
+		(long long int)avg);
 }
 
 void * my_realloc_hook(void * mem, size_t n_bytes,
