@@ -76,7 +76,7 @@ static const char *join_null_word(Sentence sent, Gword **wgp, size_t count)
 		join_len += strlen(wgp[i]->subword);
 
 	join_buff = alloca(join_len+1);
-	memset(join_buff, '\0', join_len+1);
+	join_buff[0] = 0;
 
 	for (i = 0; i < count; i++)
 		add_morpheme_unmarked(sent, join_buff, wgp[i]->subword,
@@ -101,13 +101,13 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
 	size_t join_len = 0;
 
 	for (w = start; w <= end; w++) join_len += strlen((*w)->subword);
-	usubword = calloc(join_len+1, 1); /* zeroed out */
+	usubword = alloca(join_len+1);
+	usubword[0] = 0;
 
 	for (w = start; w <= end; w++)
 		add_morpheme_unmarked(sent, usubword, (*w)->subword, (*w)->morpheme_type);
 
 	new_word = gword_new(sent, usubword);
-	free(usubword);
 	new_word->status |= WS_PL;
 	new_word->label = "NJ";
 	new_word->null_subwords = NULL;
@@ -534,8 +534,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 						 * words with and without subscripts. */
 
 						const char subscript_sep_str[] = { SUBSCRIPT_SEP, '\0'};
-						char *join = calloc(join_len + 1, 1); /* zeroed out */
-
+						char *join = alloca(join_len + 1);
 						join[0] = '\0';
 
 						/* 1. Join base words. (Could just use the unsplit_word.) */
@@ -614,7 +613,6 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 
 						gwordlist_append(&n_lwg_path, w->unsplit_word);
 						t = string_set_add(join, sent->string_set);
-						free(join);
 
 						i += mcnt-1;
 					}
