@@ -190,6 +190,11 @@ bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
 	return true;
 }
 
+void wordgraph_pathpos_free(Wordgraph_pathpos *wp)
+{
+	free(wp);
+}
+
 /**
  *  Print linkage wordgraph path.
  */

@@ -39,6 +39,7 @@ Gword *find_real_unsplit_word(Gword *, bool);
 size_t wordgraph_pathpos_len(Wordgraph_pathpos *);
 Wordgraph_pathpos *wordgraph_pathpos_resize(Wordgraph_pathpos *, size_t);
 bool wordgraph_pathpos_add(Wordgraph_pathpos **, Gword *, bool, bool, bool);
+void wordgraph_pathpos_free(Wordgraph_pathpos *);
 
 const char *gword_status(Sentence, const Gword *);
 const char *gword_morpheme(Sentence sent, const Gword *w);

@@ -3645,7 +3645,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			}
 		}
 
-		free(wp_old);
+		wordgraph_pathpos_free(wp_old);
 		assert(wp_new != NULL, "No new wordgraph path");
 	} while ((NULL != wp_new[1].word) ||
 	         (wp_new[0].word->morpheme_type != MT_INFRASTRUCTURE));
