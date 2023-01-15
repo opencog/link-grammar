@@ -2,7 +2,7 @@
  * malloc-dbg2.c
  *
  * Debug memory allocation.  Hacky code, used only
- * for debugging. Tracks malloc users.
+ * for debugging. Tracks how much memory different malloc users ask for.
  *
  * To use: just compile and link into the executable.
  *
@@ -29,7 +29,7 @@ static void * my_malloc_hook(size_t n_bytes, const void * caller);
 #define NUSERS 4136
 typedef struct {
 	const void * caller;
-	size_t sz;
+	int64_t sz;
 	int nalloc;
 	int nrealloc;
 	int nmove;
@@ -70,7 +70,7 @@ static int get_callerid(const void *caller)
 
 	if (nusers == NUSERS)
 	{
-		printf("ran out of memory -reallo\n");
+		printf("ran out of user slots\n");
 		exit(1);
 	}
 
@@ -83,7 +83,7 @@ static void report()
 	fprintf(fh, "Performed to %lu mallos\n", mcnt);
 	for (int i=0; i<nusers; i++)
 	{
-		fprintf(fh, "%d caller=%p sz=%lu nalloc=%d %d %d %d\n",
+		fprintf(fh, "%d caller=%p sz=%ld nalloc=%d %d %d %d\n",
 			i, users[i].caller, users[i].sz, users[i].nalloc,
 			users[i].nrealloc, users[i].nmove, users[i].nfree);
 		totsz += users[i].sz;
