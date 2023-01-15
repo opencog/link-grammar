@@ -14,6 +14,7 @@
 #include "api-structures.h"
 #include "linkage.h"
 #include "post-process/post-process.h" // for linkage_free_pp_info
+#include "tokenize/wordgraph.h"        // for gwordlist_free
 #include "utilities.h"
 
 void free_linkage(Linkage linkage)
@@ -26,9 +27,8 @@ void free_linkage(Linkage linkage)
 
 	linkage_free_pp_domains(linkage);
 
-	/* XXX FIXME */
-	free(linkage->wg_path);
-	free(linkage->wg_path_display);
+	gwordlist_free(linkage->wg_path);
+	gwordlist_free(linkage->wg_path_display);
 }
 
 void free_linkages(Sentence sent)

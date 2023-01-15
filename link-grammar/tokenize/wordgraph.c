@@ -64,6 +64,16 @@ void gwordlist_append(Gword ***arrp, Gword *p)
 	(*arrp)[n] = p;
 }
 
+void gwordlist_free(Gword ** gw)
+{
+	free(gw);
+}
+
+void gwordlist_cfree(const Gword ** gw)
+{
+	free(gw);
+}
+
 #if 0
 /**
  * Append a Gword list to a given Gword list (w/o duplicates).

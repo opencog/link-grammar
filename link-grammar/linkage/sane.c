@@ -137,7 +137,7 @@ static void wordgraph_path_free(Wordgraph_pathpos *wp, bool free_final_path)
 	for (twp = wp; NULL != twp->word; twp++)
 	{
 		if (free_final_path || (MT_INFRASTRUCTURE != twp->word->morpheme_type))
-			free(twp->path);
+			gwordlist_cfree(twp->path);
 	}
 	wordgraph_pathpos_free(wp);
 }
