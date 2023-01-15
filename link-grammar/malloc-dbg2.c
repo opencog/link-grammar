@@ -10,10 +10,12 @@
 void * my_realloc_hook(void *, size_t, const char *, int, const char *);
 void * my_malloc_hook(size_t, const char *, int, const char *);
 void my_free_hook(void *, const char *, int, const char *);
+void my_strdup_hook(const char *, const char *, int, const char *);
 
 #define malloc(X) my_malloc_hook(X, __FILE__, __LINE__, __FUNCTION__)
 #define realloc(X,N) my_realloc_hook(X, N, __FILE__, __LINE__, __FUNCTION__)
 #define free(X) my_free_hook(X, __FILE__, __LINE__, __FUNCTION__)
+#define strdup(X) my_strdup_hook(X, __FILE__, __LINE__, __FUNCTION__)
 
  *
  * Copyright (c) 2008, 2023 Linas Vepstas <linas@linas.org>
@@ -44,6 +46,7 @@ typedef struct {
 	int nrealloc;
 	int nmove;
 	int nfree;
+	int ndup;
 } user_t;
 static user_t users[NUSERS];
 int nusers = 0;
@@ -81,6 +84,7 @@ static int get_callerid(const char *file, int line, const char *caller)
 	users[callerid].nmove = 0;
 	users[callerid].nrealloc = 0;
 	users[callerid].nfree = 0;
+	users[callerid].ndup = 0;
 
 	users[callerid].caller = caller;
 	if (nusers == NUSERS)
@@ -130,10 +134,10 @@ static void report(void)
 			free(prev);
 		}
 		prev = f;
-		fprintf(fh, "%d caller=%s:%d %s sz=%ld nalloc=%d %d %d %d\n",
+		fprintf(fh, "%d caller=%s:%d %s sz=%ld nalloc=%d %d %d %d %d\n",
 			i, lusers[i].file, lusers[i].line, lusers[i].caller,
-			lusers[i].sz, lusers[i].nalloc,
-			lusers[i].nrealloc, lusers[i].nmove, lusers[i].nfree);
+			lusers[i].sz, lusers[i].nalloc, lusers[i].nrealloc,
+			lusers[i].nmove, lusers[i].nfree, lusers[i].ndup);
 		totsz += lusers[i].sz;
 		subsz += lusers[i].sz;
 		if (0 < lusers[i].sz) abssz += lusers[i].sz;
@@ -187,6 +191,26 @@ void * my_malloc_hook(size_t n_bytes,
 
 	mtx_unlock(&mutx);
 	return mem;
+}
+
+char * my_strdup_hook(const char *s,
+                      const char *file, int line, const char *caller)
+{
+	init_io();
+
+	mtx_lock(&mutx);
+	char * news = strdup(s);
+	size_t newsz = malloc_usable_size(news);
+
+	int callerid = get_callerid(file, line, caller);
+	users[callerid].sz += newsz;
+	users[callerid].ndup ++;
+
+	// mcnt++;
+	// if (mcnt%RFREQ == 0) report();
+
+	mtx_unlock(&mutx);
+	return news;
 }
 
 void my_free_hook(void * mem,
