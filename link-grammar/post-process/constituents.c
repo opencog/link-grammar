@@ -1075,7 +1075,6 @@ exprint_constituent_structure(con_context_t *ctxt,
 static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 {
 	int numcon_total= 0, numcon_subl;
-	char * q;
 	Sentence sent = linkage->sent;
 
 	ctxt->phrase_ss = string_set_create();
@@ -1099,7 +1098,7 @@ static char * do_print_flat_constituents(con_context_t *ctxt, Linkage linkage)
 	assert (numcon_total < ctxt->conlen, "Too many constituents (e)");
 	numcon_total = last_minute_fixes(ctxt, linkage, numcon_total);
 	assert (numcon_total < ctxt->conlen, "Too many constituents (f)");
-	q = exprint_constituent_structure(ctxt, linkage, numcon_total);
+	char * q = exprint_constituent_structure(ctxt, linkage, numcon_total);
 	string_set_delete(ctxt->phrase_ss);
 	ctxt->phrase_ss = NULL;
 
@@ -1279,7 +1278,7 @@ static CNode * linkage_constituent_tree(Linkage linkage)
 	root = make_CNode(q+1);
 	root = parse_string(root, &saveptr);
 	assign_spans(root, 0);
-	free(p);
+	dyn_str_release(p);
 	return root;
 }
 
@@ -1337,5 +1336,5 @@ char * linkage_print_constituent_tree(Linkage linkage, ConstituentDisplayStyle m
 
 void linkage_free_constituent_tree_str(char * s)
 {
-	free(s);
+	dyn_str_release(s);
 }

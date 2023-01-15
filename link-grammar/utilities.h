@@ -492,6 +492,7 @@ typedef struct
 
 dyn_str* dyn_str_new(void);
 void dyn_str_delete(dyn_str*);
+static inline void dyn_str_release(char * mem) { free(mem); }
 void dyn_strcat(dyn_str*, const char*);
 void dyn_trimback(dyn_str*);
 char * dyn_str_take(dyn_str*);
