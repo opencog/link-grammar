@@ -36,6 +36,11 @@ static Linkage linkage_array_new(int num_to_alloc)
 	return lkgs;
 }
 
+void linkage_array_free(Linkage lkgs)
+{
+	free(lkgs);
+}
+
 static void find_unused_disjuncts(Sentence sent, extractor_t *pex)
 {
 	const size_t disjunct_used_sz =

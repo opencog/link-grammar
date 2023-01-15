@@ -85,6 +85,7 @@ void compute_generated_words(Sentence, Linkage);
 void partial_init_linkage(Sentence, Linkage, unsigned int N_words);
 void remove_empty_words(Linkage);
 void free_linkage(Linkage);
+void linkage_array_free(Linkage);
 void free_linkages(Sentence);
 
 #endif /* _LINKAGE_H */

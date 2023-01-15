@@ -43,7 +43,7 @@ void free_linkages(Sentence sent)
 		free_linkage(&lkgs[in]);
 	}
 
-	free(lkgs);
+	linkage_array_free(lkgs);
 	sent->num_linkages_alloced = 0;
 	sent->num_linkages_found = 0;
 	sent->num_linkages_post_processed = 0;
