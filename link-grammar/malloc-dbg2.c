@@ -95,7 +95,7 @@ static int cmpu(const void * a, const void * b)
 {
 	user_t* ua = (user_t*) a;
 	user_t* ub = (user_t*) b;
-	return strcmp(ua->caller, ub->caller);
+	return strcmp(ua->file, ub->file);
 }
 
 static void report(void)
@@ -107,14 +107,29 @@ static void report(void)
 	qsort(lusers, nusers, sizeof(user_t), cmpu);
 
 	int64_t totsz = 0;
-	fprintf(fh, "Performed to %lu mallos\n", mcnt);
+	int64_t subsz = 0;
+	char * prev = NULL;
+	fprintf(fh, "Performed %lu mallocs\n", mcnt);
 	for (int i=0; i<nusers; i++)
 	{
+		char* c = strchr(lusers[i].file, ':');
+		char* f = strndup(lusers[i].file, c-lusers[i].file);
+		if (prev)
+		{
+			if (strcmp(prev, f))
+			{
+				printf("Summary %s %ld\n\n", prev, subsz);
+				subsz = 0;
+			}
+			free(prev);
+		}
+		prev = f;
 		fprintf(fh, "%d caller=%s:%d %s sz=%ld nalloc=%d %d %d %d\n",
 			i, lusers[i].file, lusers[i].line, lusers[i].caller,
 			lusers[i].sz, lusers[i].nalloc,
 			lusers[i].nrealloc, lusers[i].nmove, lusers[i].nfree);
 		totsz += lusers[i].sz;
+		subsz += lusers[i].sz;
 	}
 	fprintf (fh, "Total Size=%ld\n", totsz);
 }
