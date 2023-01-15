@@ -1031,6 +1031,12 @@ void free_tracon_sharing(Tracon_sharing *ts)
 	free(ts);
 }
 
+void free_tracon_memblock(Tracon_sharing *ts)
+{
+	free(ts->memblock);
+	free_tracon_sharing(ts);
+}
+
 /**
  * Pack all disjunct and connectors into one big memory block, share
  * tracon memory and generate tracon IDs (for parsing) or tracon lists
@@ -1144,4 +1150,9 @@ void restore_disjuncts(Sentence sent, void *saved_memblock, Tracon_sharing *ts)
 		sent->word[w].d = ts->d[w];
 
 	memcpy(ts->memblock, saved_memblock, ts->memblock_sz);
+}
+
+void free_saved_memblock(void * blk)
+{
+	free(blk);
 }
