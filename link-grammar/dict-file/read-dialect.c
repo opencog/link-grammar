@@ -398,7 +398,7 @@ bool dialect_file_read(Dictionary dict, const char *fname)
 	{
 		prt_error("Warning: "
 		          "File '%s' found but no dialects in the dictionary.\n", fname);
-		free(input);
+		free_file_contents(input);
 		return true;
 	}
 

@@ -281,7 +281,7 @@ dictionary_six(const char * lang, const char * dict_name,
 	dict = dictionary_six_str(lang, input, dict_name, pp_name,
 	                          cons_name, affix_name, regex_name);
 
-	free(input);
+	free_file_contents(input);
 	return dict;
 }
 

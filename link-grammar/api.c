@@ -531,7 +531,7 @@ static void free_sentence_words(Sentence sent)
 {
 	for (WordIdx i = 0; i < sent->length; i++)
 	{
-		free(sent->word[i].alternatives);
+		altfree(sent->word[i].alternatives);
 	}
 	free_sentence_disjuncts(sent, /*categories_too*/true);
 	free((void *) sent->word);

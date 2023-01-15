@@ -445,11 +445,10 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			{
 				/* At this point no further pruning will be done. Free the
 				 * pruning tracon stuff here instead of at the end. */
-				free(ts_pruning->memblock);
-				free_tracon_sharing(ts_pruning);
+				free_tracon_memblock(ts_pruning);
 				ts_pruning = NULL;
 				if (NULL != saved_memblock)
-					free(saved_memblock);
+					free_saved_memblock(saved_memblock);
 			}
 
 			gword_record_in_connector(sent);
@@ -528,9 +527,8 @@ parse_end_cleanup:
 	if (NULL != ts_pruning)
 	{
 		free_categories(sent);
-		free(ts_pruning->memblock);
-		free_tracon_sharing(ts_pruning);
-		free(saved_memblock);
+		free_tracon_memblock(ts_pruning);
+		free_saved_memblock(saved_memblock);
 	}
 	free_tracon_sharing(ts_parsing);
 	free_count_context(ctxt, sent);

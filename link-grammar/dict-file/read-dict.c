@@ -1058,7 +1058,7 @@ static bool read_entry(Dictionary dict)
 			dict->already_got_it = save_already_got_it;
 			dict->line_number    = save_line_number;
 
-			free(instr);
+			free_file_contents(instr);
 			if (!rc) goto syntax_error;
 
 			/* when we return, point to the next entry */
