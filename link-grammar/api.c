@@ -25,7 +25,7 @@
 #include "post-process/post-process.h"  // post_process_new
 #include "prepare/exprune.h"
 #include "string-set.h"
-#include "tokenize//wordgraph.h"        // wordgraph_delete
+#include "tokenize/wordgraph.h"         // wordgraph_delete
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"
 #include "tokenize/tokenize.h"
@@ -527,22 +527,12 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	return 0;
 }
 
-static void free_sentence_words(Sentence sent)
-{
-	for (WordIdx i = 0; i < sent->length; i++)
-	{
-		altfree(sent->word[i].alternatives);
-	}
-	free_sentence_disjuncts(sent, /*categories_too*/true);
-	free((void *) sent->word);
-	sent->word = NULL;
-}
-
 void sentence_delete(Sentence sent)
 {
 	if (!sent) return;
 	sat_sentence_delete(sent);
-	free_sentence_words(sent);
+	free_sentence_disjuncts(sent, /*categories_too*/true);
+	free_words(sent);
 	wordgraph_delete(sent);
 	string_set_delete(sent->string_set);
 	free_linkages(sent);

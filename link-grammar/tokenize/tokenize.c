@@ -1057,7 +1057,7 @@ void altappend(Sentence sent, const char ***altp, const char *w)
 	(*altp)[n] = string_set_add(w, sent->string_set);
 }
 
-void altfree(const char **alts)
+static void altfree(const char **alts)
 {
 	free(alts);
 }
@@ -3163,6 +3163,14 @@ static Word *word_new(Sentence sent)
 		sent->length++;
 
 		return &sent->word[len];
+}
+
+void free_words(Sentence sent)
+{
+	for (WordIdx i = 0; i < sent->length; i++)
+		altfree(sent->word[i].alternatives);
+
+	free(sent->word);
 }
 
 /* Used only by display_word_split() for words that shouldn't get split. */
