@@ -555,4 +555,9 @@ char *get_file_contents(const char * dict_name)
 	return contents;
 }
 
+void free_file_contents(char * contents)
+{
+	free(contents);
+}
+
 /* ============================================================= */
