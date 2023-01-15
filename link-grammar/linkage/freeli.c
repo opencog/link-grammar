@@ -15,6 +15,7 @@
 #include "linkage.h"
 #include "post-process/post-process.h" // for linkage_free_pp_info
 #include "tokenize/wordgraph.h"        // for gwordlist_free
+#include "linkage/lisjuncts.h"         // for lg_free_disjunct_strings
 #include "utilities.h"
 
 void free_linkage(Linkage linkage)
@@ -23,7 +24,7 @@ void free_linkage(Linkage linkage)
 	exfree(linkage->chosen_disjuncts, linkage->num_words * sizeof(Disjunct *));
 	free(linkage->link_array);
 
-	free(linkage->disjunct_list_str);
+	lg_free_disjunct_strings(linkage);
 
 	linkage_free_pp_domains(linkage);
 

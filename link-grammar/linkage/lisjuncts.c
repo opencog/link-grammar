@@ -103,6 +103,11 @@ void lg_compute_disjunct_strings(Linkage lkg)
 	}
 }
 
+void lg_free_disjunct_strings(Linkage lkg)
+{
+	free(lkg->disjunct_list_str);
+}
+
 #ifdef DEBUG_lisjuncts
 /* Cannot be used when morphology is not suppressed and lexical links exist. */
 static void assert_same_disjunct(Linkage lkg, WordIdx w, const char *djstr)
