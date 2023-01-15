@@ -1057,6 +1057,11 @@ void altappend(Sentence sent, const char ***altp, const char *w)
 	(*altp)[n] = string_set_add(w, sent->string_set);
 }
 
+void altfree(const char **alts)
+{
+	free(alts);
+}
+
 /*
 	Here's a summary of how subscripts are handled:
 
