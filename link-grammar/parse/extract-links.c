@@ -692,16 +692,6 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 	return set_overflowed(pex);
 }
 
-// Cannot be static, also called by SAT-solver.
-void check_link_size(Linkage lkg)
-{
-	if (lkg->lasz <= lkg->num_links)
-	{
-		lkg->lasz = 2 * lkg->lasz + 10;
-		lkg->link_array = realloc(lkg->link_array, lkg->lasz * sizeof(Link));
-	}
-}
-
 /**
  * Assemble the link array and the chosen_disjuncts of a linkage.
  */
@@ -711,7 +701,7 @@ static void issue_link(Linkage lkg, bool lr, Disjunct *md, Link *link)
 
 	if (link->rc != NULL)
 	{
-		check_link_size(lkg);
+		assert(lkg->num_links < lkg->lasz, "Linkage array too small!");
 		lkg->link_array[lkg->num_links] = *link;
 		lkg->num_links++;
 	}

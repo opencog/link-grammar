@@ -55,6 +55,7 @@ void free_linkages(Sentence sent)
 void partial_init_linkage(Sentence sent, Linkage lkg, unsigned int N_words)
 {
 	lkg->num_links = 0;
+	// It is impossible for a planar graph to have more links than this.
 	lkg->lasz = 2 * N_words;
 	lkg->link_array = (Link *) malloc(lkg->lasz * sizeof(Link));
 	memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));

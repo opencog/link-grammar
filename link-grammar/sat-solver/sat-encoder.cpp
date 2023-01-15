@@ -1810,7 +1810,7 @@ bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
     if (_solver->model[_variables->linked(var->left_word, var->right_word)] != l_True)
       continue;
 
-    check_link_size(lkg);
+    assert(current_link < lkg->lasz, "Linkage array too small!");
     Link& clink = lkg->link_array[current_link];
     current_link++;
     clink.lw = var->left_word;

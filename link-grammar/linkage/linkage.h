@@ -83,7 +83,6 @@ struct Link_s
 
 void compute_generated_words(Sentence, Linkage);
 void partial_init_linkage(Sentence, Linkage, unsigned int N_words);
-void check_link_size(Linkage);
 void remove_empty_words(Linkage);
 void free_linkage(Linkage);
 void free_linkages(Sentence);
