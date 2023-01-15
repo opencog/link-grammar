@@ -100,18 +100,8 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 	}
 	(*nwp)[n].word = p;
 
-	if (NULL == path)
-	{
-			(*nwp)[n].path = NULL;
-	}
-	else
-	{
-		/* Duplicate the path from the current one. */
-		size_t path_arr_size = (gwordlist_len(path)+1)*sizeof(*path);
-
-		(*nwp)[n].path = malloc(path_arr_size);
-		memcpy((*nwp)[n].path, path, path_arr_size);
-	}
+	/* Duplicate the path from the current one. */
+	(*nwp)[n].path = gwordlist_copy(path);
 
 	if (NULL == current_word) return;
 

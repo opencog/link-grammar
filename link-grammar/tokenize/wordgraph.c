@@ -74,6 +74,18 @@ void gwordlist_cfree(const Gword ** gw)
 	free(gw);
 }
 
+const Gword ** gwordlist_copy(const Gword ** path)
+{
+	if (NULL == path) return NULL;
+
+	/* Duplicate the path from the current one. */
+	size_t path_arr_size = (gwordlist_len(path)+1)*sizeof(*path);
+
+	const Gword ** pcp = malloc(path_arr_size);
+	memcpy(pcp, path, path_arr_size);
+	return pcp;
+}
+
 #if 0
 /**
  * Append a Gword list to a given Gword list (w/o duplicates).
@@ -144,7 +156,7 @@ Wordgraph_pathpos *wordgraph_pathpos_resize(Wordgraph_pathpos *wp,
  *   diff_alternative: validate we don't queue words from the same alternative.
  */
 bool wordgraph_pathpos_add(Wordgraph_pathpos **wp, Gword *p, bool used,
-                              bool same_word, bool diff_alternative)
+                           bool same_word, bool diff_alternative)
 {
 	size_t n = wordgraph_pathpos_len(*wp);
 	Wordgraph_pathpos *wpt;
