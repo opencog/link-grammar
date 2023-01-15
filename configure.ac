@@ -706,14 +706,10 @@ case "$with_regexlib" in
 	'')
 		break
 		;;
-	  pcre2)
-	   AC_CHECK_HEADERS([pcre2.h], ,
-	                    [AS_BOX(m4_normalize($pcre2_message))]
-	                    [AC_MSG_ERROR([$lgregexlib: pcre2.h not found])],
-	                    [#define PCRE2_CODE_UNIT_WIDTH 8])
-	   PKG_CHECK_MODULES([PCRE2], [libpcre2-8], [],
-	                     [AS_BOX(m4_normalize($pcre2_message))]
-	                     [AC_MSG_ERROR([$lgregexlib: libpcre2-8 not found])])
+	pcre2)
+		PKG_CHECK_MODULES([PCRE2], [libpcre2-8], [],
+				[AS_BOX(m4_normalize($pcre2_message))]
+				[AC_MSG_ERROR([$lgregexlib: libpcre2-8 not found])])
 		;;
 	tre)
 		AC_CHECK_HEADERS([tre/regex.h], ,
@@ -752,12 +748,11 @@ if test -n "$regexlib_cxx"; then
 	AC_MSG_RESULT([... using C++ regex])
 else
 	if test -z "$REGEX_LIBS" -a -n "$check_pcre2"; then
-		AC_CHECK_HEADER([pcre2.h],
-			[PKG_CHECK_MODULES([REGEX], [libpcre2-8],
-									 [AC_DEFINE([HAVE_PCRE2_H], 1)],
-									 [AC_MSG_RESULT([... missing libpcre2-8, continuing])])]
-									 , , [#define PCRE2_CODE_UNIT_WIDTH 8])
-
+		PKG_CHECK_MODULES([PCRE2], [libpcre2-8], [
+							AC_DEFINE([HAVE_PCRE2_H], 1)
+							REGEX_LIBS=$PCRE2_LIBS
+							REGEX_CFLAGS=$PCRE2_CFLAGS
+						], [AC_MSG_RESULT([... missing libpcre2-8, continuing])])
 	fi
 	if test -z "$REGEX_LIBS"; then
 		AC_CHECK_HEADER([tre/regex.h],
