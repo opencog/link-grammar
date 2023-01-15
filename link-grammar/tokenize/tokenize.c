@@ -2242,12 +2242,12 @@ static bool strip_right(Sentence sent,
  * If wend is NULL, w is Null-terminated.
  */
 static void issue_r_stripped(Sentence sent,
-                               Gword *unsplit_word,
-                               const char *w,
-                               const char *wend,
-                               const stripped_t r_stripped[],
-                               size_t n_stripped,
-                               const char *label)
+                             Gword *unsplit_word,
+                             const char *w,
+                             const char *wend,
+                             const stripped_t r_stripped[],
+                             size_t n_stripped,
+                             const char *label)
 {
 	const size_t sz = (NULL==wend) ? strlen(w) : (size_t)(wend-w);
 	char *word;
@@ -2275,7 +2275,7 @@ static void issue_r_stripped(Sentence sent,
 		ntokens++;
 	}
 	rstrip_alt = issue_word_alternative(sent, unsplit_word, label,
-	                                    0,NULL, ntokens,rtokens, 0,NULL);
+	                                    0,NULL, ntokens, rtokens, 0,NULL);
 
 	for_word_alt(sent, rstrip_alt, set_word_status,
 	             (unsigned int []){WS_INDICT|WS_REGEX});
@@ -2320,7 +2320,7 @@ static void issue_r_stripped(Sentence sent,
 		}
 	}
 
-	free(rtokens);
+	altfree(rtokens);
 }
 
 static void issue_dictcap(Sentence sent, bool is_cap,
@@ -3659,7 +3659,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	         (wp_new[0].word->morpheme_type != MT_INFRASTRUCTURE));
 
 	wp_new[0].word->sent_wordidx = sent->length;
-	free(wp_new);
+	wordgraph_pathpos_free(wp_new);
 	lgdebug(+D_FW, "sent->length %zu\n", sent->length);
 	if (verbosity_level(D_SW))
 	{
