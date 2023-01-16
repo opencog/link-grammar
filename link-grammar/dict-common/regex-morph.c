@@ -213,7 +213,10 @@ static bool reg_comp(Regex_node *rn)
 	re->re_code = pcre2_compile((PCRE2_SPTR)rn->pattern, PCRE2_ZERO_TERMINATED,
 	                            options, &rc, &erroffset, NULL);
 	if (re->re_code != NULL)
+	{
+		pcre2_jit_compile(re->re_code, PCRE2_JIT_COMPLETE);
 		return true;
+	}
 
 	/* We have an error. */
 	PCRE2_UCHAR errbuf[ERRBUFFLEN];
