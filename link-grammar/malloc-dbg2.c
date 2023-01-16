@@ -27,6 +27,7 @@ void my_strdup_hook(const char *, const char *, int, const char *);
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <malloc.h>
 #include <threads.h>
 
@@ -38,6 +39,7 @@ extern void * my_malloc_hook(size_t, const char *, int, const char *);
 extern void my_free_hook(void *, const char *, int, const char *);
 extern char * my_strdup_hook(const char *, const char *, int, const char *);
 extern void my_reset_hook(void);
+extern void hist_dump(void);
 void my_init_hook(void);
 /* ======================================================== */
 
@@ -70,6 +72,100 @@ static void init_io(void)
 
 // #define allprt(f, varargs...) fprintf(f, ##varargs)
 #define allprt(f, varargs...)
+
+/* ======================================================== */
+
+#define HISTOGRAM 1
+#if HISTOGRAM
+
+#define HISTSZ 1000
+u_int64_t malask[HISTSZ];
+u_int64_t maluse[HISTSZ];
+u_int64_t relask[HISTSZ];
+u_int64_t reluse[HISTSZ];
+u_int64_t strask[HISTSZ];
+u_int64_t struse[HISTSZ];
+
+#if 0
+// ffs() is broken, returns pseudo-random garbage.
+// This is a work-around.
+static int my_ffs(size_t n)
+{
+	int bp = 0;
+	while (0 != n) { bp++; n >>= 1; }
+	return bp;
+}
+#endif
+
+#define BANKBITS 8
+static int get_bin(size_t sz)
+{
+	static int banksz = 1 << BANKBITS;
+	int isz = sz;
+
+	int delta = 1;
+	int off = 0;
+	while (1)
+	{
+		if (isz < delta*banksz)
+		{
+			int bin = off + isz / delta - 1;
+			if (HISTSZ <= bin) bin = HISTSZ-1;
+			return bin;
+		}
+		isz -= delta * banksz;
+		off += banksz;
+		delta <<= 1;
+	}
+}
+
+static int get_binsz(int bin)
+{
+	static int banksz = 1 << BANKBITS;
+
+	int binum = 0;
+	int delt = 1;
+	while(1)
+	{
+		if (bin < delt*banksz) return binum + bin;
+		bin -= delt*banksz;
+		binum += delt*banksz;
+		bin <<= 1;
+		delt <<= 1;
+	}
+}
+
+static void hist_init(void)
+{
+	for (int i=0; i< HISTSZ; i++)
+	{
+		malask[i] = 0;
+		maluse[i] = 0;
+		relask[i] = 0;
+		reluse[i] = 0;
+		strask[i] = 0;
+		struse[i] = 0;
+	}
+}
+
+void hist_dump(void)
+{
+	fprintf(fh, "#\n# row size-bin malloc-ask malloc-usable relloc-ask realloc-usable strdup-ask strdup-usable\n#\n");
+	for (int i=0; i< HISTSZ; i++)
+	{
+		fprintf(fh, "%d	%d	%lu	%lu	%lu	%lu	%lu	%lu\n",
+			i, get_binsz(i+1), malask[i], maluse[i],
+			relask[i], reluse[i], strask[i], struse[i]);
+	}
+}
+
+#else // HISTOGRAM
+static void hist_init(void) {}
+void hist_dump(void) {}
+
+#endif // HISTOGRAM
+
+/* ======================================================== */
 
 static int get_callerid(const char *file, int line, const char *caller)
 {
@@ -168,6 +264,8 @@ static void report(void)
 		(long long int)avg, rus.ru_maxrss);
 }
 
+/* ======================================================== */
+
 void * my_realloc_hook(void * mem, size_t n_bytes,
                        const char *file, int line, const char *caller)
 {
@@ -183,9 +281,13 @@ void * my_realloc_hook(void * mem, size_t n_bytes,
 	if (mem != nm)
 		users[callerid].nmove ++;
 
+#if HISTOGRAM
+	relask[get_bin(n_bytes)] ++;
+	reluse[get_bin(newsz)] ++;
+#endif
+
 	mcnt++;
 	if (mcnt%RFREQ == 0) report();
-	allprt(fh, "realloc new alloc %d %p\n", i, nm);
 
 	mtx_unlock(&mutx);
 	return nm;
@@ -203,6 +305,11 @@ void * my_malloc_hook(size_t n_bytes,
 	int callerid = get_callerid(file, line, caller);
 	users[callerid].sz += newsz;
 	users[callerid].nalloc ++;
+
+#if HISTOGRAM
+	malask[get_bin(n_bytes)] ++;
+	maluse[get_bin(newsz)] ++;
+#endif
 
 	mcnt++;
 	if (mcnt%RFREQ == 0) report();
@@ -224,8 +331,13 @@ char * my_strdup_hook(const char *s,
 	users[callerid].sz += newsz;
 	users[callerid].ndup ++;
 
-	// mcnt++;
-	// if (mcnt%RFREQ == 0) report();
+#if HISTOGRAM
+	strask[get_bin(strlen(s)+1)] ++;
+	struse[get_bin(newsz)] ++;
+#endif
+
+	mcnt++;
+	if (mcnt%RFREQ == 0) report();
 
 	mtx_unlock(&mutx);
 	return news;
@@ -253,6 +365,7 @@ void my_reset_hook(void)
 	report();
 	nusers = 0;
 	mcnt = 0;
+	hist_init();
 	report();
 	mtx_unlock(&mutx);
 }
@@ -267,6 +380,7 @@ void my_init_hook(void)
 	printf("init malloc trace hook\n");
 	nusers = 0;
 	mcnt = 0;
+	hist_init();
 
 	mtx_init(&mutx, mtx_plain);
 }
