@@ -86,6 +86,12 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 		"文在寅希望半島對話氛 圍在平昌冬奧會後能延續",
 		"土耳其出兵 搶先機 美土俄棋局怎麼走?",
 		"默克爾努力獲突破 德社民黨同意開展組閣談判"
+
+		// Thai test sentences from corpus.batch
+		"ตำรวจ กิน ข้าว",
+		"ตำรวจ นาย หนึ่ง ซื้อ เสื้อ ตัว หนึ่ง",
+		"ฉัน ไป ตลาด ซื้อ ข้าว มา",
+		"ฉัน เดิน ไป ตลาด ซื้อ ข้าว มา กิน"
 	};
 
 	int nsents = sizeof(sents) / sizeof(const char *);
@@ -133,6 +139,7 @@ int main(int argc, char* argv[])
 	dictionary_set_data_dir(DICTIONARY_DIR "/data");
 	Dictionary dicte = dictionary_create_lang("en");
 	Dictionary dictr = dictionary_create_lang("ru");
+	Dictionary dicth = dictionary_create_lang("th");
 	if (!dicte or !dictr) {
 		fprintf (stderr, "Fatal error: Unable to open the dictionary\n");
 		exit(1);
@@ -149,9 +156,15 @@ int main(int argc, char* argv[])
 	{
 		Dictionary dict = dicte;
 		opts[i] = parse_options_create();
-		if (0 == i%2)
+		if (1 == i%3)
 		{
-			dict = dictr;
+			dict = dictr; // Russian
+			parse_options_set_spell_guess(opts[i], 0);
+		}
+
+		if (2 == i%3)
+		{
+			dict = dicth;  // Thai
 			parse_options_set_spell_guess(opts[i], 0);
 		}
 
@@ -174,5 +187,6 @@ int main(int argc, char* argv[])
 
 	dictionary_delete(dicte);
 	dictionary_delete(dictr);
+	dictionary_delete(dicth);
 	return 0;
 }
