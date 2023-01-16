@@ -101,7 +101,7 @@ void * spellcheck_create(const char * lang)
 }
 
 /**
- * Free memory structures used wiith spell-checker 'chk'
+ * Free memory structures used with spell-checker 'chk'
  */
 void spellcheck_destroy(void * chk)
 {
@@ -125,7 +125,10 @@ bool spellcheck_test(void * chk, const char * word)
 	struct linkgrammar_aspell *aspell = (struct linkgrammar_aspell *)chk;
 	if (aspell && aspell->speller)
 	{
-		/* this can return -1 on failure */
+		/* This returns 1 if the word is in the aspell dict.
+		 * i.e. is spelled OK. It returns 0 if the word is not
+		 * in the aspell dict. It can also return -1 on failure.
+		 */
 		val = aspell_speller_check(aspell->speller, word, -1);
 	}
 	return (val == 1);

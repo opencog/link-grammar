@@ -1,3 +1,9 @@
+Version 5.12.0 - Aspell leaks memory
+====================================
+The `aspell` spell checker leaks 64 bytes per spelling suggestion. See
+the `aspell-memleak.c` file for a demo of the leak. Status is unresolved.
+(This is an aspell bug.)
+
 Version 5.5.0 - Official wordgraph display support
 ==================================================
 
