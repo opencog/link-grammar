@@ -54,3 +54,6 @@ data/th/old_words/**
 # Visual Studio keeps adding the directory ".vs". If it got added while
 # rebasing and it is not git-ignored, it somehow breaks the rebase.
 .vs
+# a.wasm is created by "emcc" (in "emconfigure ./configure").
+# For now just ignore it.
+a.wasm
