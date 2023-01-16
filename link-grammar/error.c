@@ -228,7 +228,7 @@ static void default_error_handler(lg_errinfo *lge, void *data)
 	fputs(msgtext, outfile);
 #endif
 
-	free(msgtext);
+	dyn_str_release(msgtext); // For malloc debug.
 
 	fflush(outfile); /* Also stderr, in case some OS does some strange thing */
 }
