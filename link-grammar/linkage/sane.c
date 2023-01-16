@@ -81,7 +81,7 @@ static void wordgraph_path_append(Wordgraph_pathpos **nwp, const Gword **path,
 				}
 				lgdebug(D_WPA, "Longer path is in the queue\n");
 				//print_lwg_path((Gword **)wpt->path, "Freeing");
-				free(wpt->path); /* To be replaced by a shorter path. */
+				gwordlist_cfree(wpt->path); /* To be replaced by a shorter path. */
 				break;
 			}
 		}
