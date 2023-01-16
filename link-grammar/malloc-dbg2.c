@@ -27,6 +27,7 @@ void my_strdup_hook(const char *, const char *, int, const char *);
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <strings.h>
 #include <malloc.h>
 #include <threads.h>
 
@@ -78,24 +79,44 @@ static void init_io(void)
 #if HISTOGRAM
 
 #define HISTSZ 1000
-uint64_t malask[HISTSZ];
-uint64_t maluse[HISTSZ];
-uint64_t relask[HISTSZ];
-uint64_t reluse[HISTSZ];
-uint64_t strask[HISTSZ];
-uint64_t struse[HISTSZ];
+u_int64_t malask[HISTSZ];
+u_int64_t maluse[HISTSZ];
+u_int64_t relask[HISTSZ];
+u_int64_t reluse[HISTSZ];
+u_int64_t strask[HISTSZ];
+u_int64_t struse[HISTSZ];
+
+#if 0
+// ffs() is broken, returns pseudo-random garbage.
+// This is a work-around.
+static int my_ffs(size_t n)
+{
+	int bp = 0;
+	while (0 != n) { bp++; n >>= 1; }
+	return bp;
+}
+#endif
 
 #define BANKBITS 8
 static int get_bin(size_t sz)
 {
 	static int banksz = 1 << BANKBITS;
+	int isz = sz;
 
-	int bitl = ffsl(sz);
-	bitl -= BANKBITS;
-	if (0 > bitl) bitl = 0;
-
-	int bin = bitl * banksz + (sz >> bitl);
-	return bin;
+	int delta = 1;
+	int off = 0;
+	while (1)
+	{
+		if (isz < delta*banksz)
+		{
+			int bin = off + isz / delta - 1;
+			if (HISTSZ <= bin) bin = HISTSZ-1;
+			return bin;
+		}
+		isz -= delta * banksz;
+		off += banksz;
+		delta <<= 1;
+	}
 }
 
 static int get_binsz(int bin)
@@ -103,11 +124,14 @@ static int get_binsz(int bin)
 	static int banksz = 1 << BANKBITS;
 
 	int binum = 0;
+	int delt = 1;
 	while(1)
 	{
-		if (bin < banksz) return binum + bin;
-		bin >>= 1;
-		binum += banksz;
+		if (bin < delt*banksz) return binum + bin;
+		bin -= delt*banksz;
+		binum += delt*banksz;
+		bin <<= 1;
+		delt <<= 1;
 	}
 }
 
@@ -130,7 +154,7 @@ void hist_dump(void)
 	for (int i=0; i< HISTSZ; i++)
 	{
 		fprintf(fh, "%d	%d	%lu	%lu	%lu	%lu	%lu	%lu\n",
-			i, get_binsz(i), malask[i], maluse[i],
+			i, get_binsz(i+1), malask[i], maluse[i],
 			relask[i], reluse[i], strask[i], struse[i]);
 	}
 }
