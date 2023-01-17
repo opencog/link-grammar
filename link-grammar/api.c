@@ -99,11 +99,10 @@ Parse_Options parse_options_create(void)
 	po->use_sat_solver = false;
 #endif
 	po->linkage_limit = 100;
-#if defined HAVE_HUNSPELL || defined HAVE_ASPELL
-	po->use_spell_guess = 7;
-#else
+
+	// Disable spell-guessing by default. Aspell 0.60.8 and possibly
+	// others leak memory.
 	po->use_spell_guess = 0;
-#endif /* defined HAVE_HUNSPELL || defined HAVE_ASPELL */
 
 	po->cost_model.compare_fn = &VDAL_compare_parse;
 	po->cost_model.type = VDAL;

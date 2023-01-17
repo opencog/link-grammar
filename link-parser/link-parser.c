@@ -610,6 +610,7 @@ int main(int argc, char * argv[])
 	parse_options_set_short_length(opts, 16);
 	parse_options_set_islands_ok(opts, false);
 	parse_options_set_display_morphology(opts, false);
+	parse_options_set_spell_guess(opts, 7);
 
 	/* Get the panic disjunct cost from the dictionary. */
 	const char *panic_max_cost_str =
