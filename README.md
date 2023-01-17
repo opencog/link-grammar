@@ -806,6 +806,10 @@ aspell is used, else hunspell is used.
 Spell guessing may be disabled at runtime, in the link-parser client
 with the `!spell=0` flag.  Enter `!help` for more details.
 
+Caution: aspell version 0.60.8 and possibly others have a memory leak.
+The use of spell-guessing in production servers is strongly discouraged.
+Keeping spell-guessing disabled (`=0`) in `Parse_Options` is safe.
+
 
 ### Multi-threading
 It is safe to use link-grammar for parsing in multiple threads.

@@ -1152,10 +1152,19 @@ $PACKAGE-$VERSION  build configuration settings
 	AtomSpace-backed dictionary:    ${HaveAtomese}
 	Definitions:                    ${LG_DEFS}
 	Libraries:                      ${lglibs}
-])"
+"])
 # Show LDFLAGS if set (usually by environment of argument).
 if test -n "$LDFLAGS"; then
 	AS_ECHO(["	Loader flags:                   $LDFLAGS"])
 else
 	AS_ECHO([])
+fi
+
+if test "x${ASpellFound}" == "xyes"; then
+	AS_ECHO_N(["
+   ----------
+   Caution: Aspell version 0.60.8 and possibly others leak memory!
+   Do not enable spell-guessing in production servers!
+   ----------
+"])
 fi
