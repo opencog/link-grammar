@@ -16,7 +16,7 @@ emmake make
 popd
 
 # Build link-grammar
-emcc -O3 link-grammar/.libs/liblink-grammar.so -o liblink-grammar.js
+emcc -O3 link-grammar/.libs/liblink-grammar.a -o liblink-grammar.js
 
 # Build link-parser
 ./link-parser/build.sh
