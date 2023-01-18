@@ -10,9 +10,9 @@
 /*                                                                       */
 /*************************************************************************/
 
-#if HAVE_THREADS_H
+#if HAVE_THREADS_H && !__EMSCRIPTEN__
 #include <threads.h>
-#endif
+#endif // HAVE_THREADS_H && !__EMSCRIPTEN__
 
 /**
  * Support for the regular-expression based token matching system
@@ -177,7 +177,7 @@ static void alloc_key(void)
 
 static pcre2_match_data* alloc_match_data(void)
 {
-#if HAVE_THREADS_H
+#if HAVE_THREADS_H && !__EMSCRIPTEN__
 	call_once(&call_once_flag, alloc_key);
 
 	pcre2_match_data *pmd = (pcre2_match_data *) tss_get(re_md_key);
@@ -194,7 +194,7 @@ static pcre2_match_data* alloc_match_data(void)
 	pmd = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
 	if (pmd) return pmd;
 
-#endif // HAVE_THREADS_H
+#endif // HAVE_THREADS_H && !__EMSCRIPTEN__
 	prt_error("Error: pcre2_match_data_create() failed\n");
 	return NULL;
 }

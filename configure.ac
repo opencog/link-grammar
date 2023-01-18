@@ -119,37 +119,27 @@ AC_CHECK_FUNCS(prctl)
 AC_DEFINE(__STDC_FORMAT_MACROS)
 AC_DEFINE(__STDC_LIMIT_MACROS)
 
-# Don't use thread functions with Emscripten.
-# Emscripten does not like threads.
-if test "$EMSCRIPTEN" != ''; then
-	AC_CHECK_DEFINE(__EMSCRIPTEN__, [emscripten=yes],
-						 [AC_MSG_ERROR([EMSCRIPTEN environment variable found, but emcc is not used])])
-fi
+# Check for a keyword for Thread Local Storage declaration.
+# If found - define TLS to it.
+lg_tls=no
+AX_TLS(,:)
+test "$ac_cv_tls" != "none" && lg_tls=yes
 
-if test "x$emscripten" != "xyes"; then
+AX_PTHREAD
+if test -n "$ax_pthread_ok"; then
+	CC="${PTHREAD_CC:-CC}"
+	dnl #CCX="${PTHREAD_CC:-CCX}"
 
-	# Check for a keyword for Thread Local Storage declaration.
-	# If found - define TLS to it.
-	lg_tls=no
-	AX_TLS(,:)
-	test "$ac_cv_tls" != "none" && lg_tls=yes
-
-	AX_PTHREAD
-	if test -n "$ax_pthread_ok"; then
-		CC="${PTHREAD_CC:-CC}"
-		dnl #CCX="${PTHREAD_CC:-CCX}"
-
-		dnl Currently, libtool uses --nostdlib when linking shared libraries,
-		dnl which causes the -pthread flag to be ignored. Try to work around that
-		dnl by explicitly specifying the pthread library unless it is already set.
-		if test -z "$PTHREAD_LIBS"; then
-			PTHREAD_LIBS=-lpthread
-		fi
+	dnl Currently, libtool uses --nostdlib when linking shared libraries,
+	dnl which causes the -pthread flag to be ignored. Try to work around that
+	dnl by explicitly specifying the pthread library unless it is already set.
+	if test -z "$PTHREAD_LIBS"; then
+		PTHREAD_LIBS=-lpthread
 	fi
-
-	dnl Check if we can use C11 threads functions
-	AC_CHECK_HEADERS_ONCE([threads.h])
 fi
+
+dnl Check if we can use C11 threads functions
+AC_CHECK_HEADERS_ONCE([threads.h])
 
 dnl If the visibility __attribute__  is supported, define HAVE_VISIBILITY
 dnl and a variable CFLAG_VISIBILITY, to be added to CFLAGS/CXXFLAGS.
