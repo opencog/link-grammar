@@ -11,7 +11,7 @@ rm -rf dist
 mkdir dist
 
 # Compile link-parser.js & link-parser.wasm
-cp ../../../link-parser/.libs/link-parser link-parser.bc
+cp ../../../link-parser/.libs/link-parser.wasm link-parser.bc
 # Originally, this had `emcc liblink-grammar.so` but the .so
 # is not available on Apple Mac's (I guess it's called .shlib ??)
 # So change to .a which should work for all OS'es.
