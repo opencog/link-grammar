@@ -94,11 +94,14 @@
 % Word-pairs are encoded in the dictionary as
 %    (Evaluation pair-predicate (List (Word "leftword") (Word "rightword")))
 % The pair-predicate is configurable, as below.
+
+% The demo dictionary uses a simple PredicateNode:
 #define pair-predicate "(Predicate "wrdpr")";
 
-% Due to historical design decisions, existing dictionaries use the
-% (LgLinkNode "ANY") to mark word pairs. We note this here, as a reminder.
-% Its commented out, because the demo does not use it.
+% Current AtomSpace configuartions use the BondNode
+% #define pair-predicate "(BondNode "ANY")";
+
+% Older dictionaries use the "(LgLinkNode "ANY")" to mark word pairs.
 % #define pair-predicate "(LgLink "ANY")";
 
 % Same as above, but for word-pairs. Note the different key!

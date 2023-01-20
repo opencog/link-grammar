@@ -186,7 +186,7 @@ bool as_open(Dictionary dict)
 	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "6"));
 	local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.0"));
 
-	const char* prps = LDEF(PAIR_PREDICATE_STRING, "(LgLink \"ANY\")");
+	const char* prps = LDEF(PAIR_PREDICATE_STRING, "(BondNode \"ANY\")");
 	Handle prph = Sexpr::decode_atom(prps);
 	local->prp = local->asp->add_atom(prph);
 
