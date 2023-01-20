@@ -520,7 +520,7 @@ HaveAtomese=no
 if test x"${AtomSpaceFound}" = xyes && test x"${NLPTypesFound}" = xyes; then
 	HaveAtomese=yes
 	AC_DEFINE(HAVE_ATOMESE, 1, [Define for compilation])
-	ATOMSPACE_LIBS="-latom_types -lnlp-types -lstorage-types -lsexpr -lpersist-flow -Wl,--no-as-needed -lpersist-rocks -lpersist-cog -lpersist-file -Wl,--as-needed -lpersist -latomspace -L/usr/local/lib/opencog/"
+	ATOMSPACE_LIBS="-latom_types -lnlp-types -lstorage-types -lsexpr -lpersist-flow -Wl,--no-as-needed -lpersist-rocks -lpersist-monospace -lpersist-cog -lpersist-cog-simple -lpersist-file -Wl,--as-needed -lpersist -latomspace -L/usr/local/lib/opencog/"
 fi
 AC_SUBST(ATOMSPACE_LIBS)
 

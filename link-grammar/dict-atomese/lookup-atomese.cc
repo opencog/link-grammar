@@ -10,8 +10,10 @@
 #include <cstdlib>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/persist/api/StorageNode.h>
+#include <opencog/persist/cog-simple/CogSimpleStorage.h>
 #include <opencog/persist/cog-storage/CogStorage.h>
 #include <opencog/persist/file/FileStorage.h>
+#include <opencog/persist/monospace/MonoStorage.h>
 #include <opencog/persist/rocks/RocksStorage.h>
 #include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
@@ -227,12 +229,16 @@ bool as_open(Dictionary dict)
 	/* That's needed to force the factory to get installed. */
 	/* We need a more elegant solution to this. */
 	Type snt = local->stnp->get_type();
-	if (COG_STORAGE_NODE == snt)
+	if (COG_SIMPLE_STORAGE_NODE == snt)
+		local->stnp = CogSimpleStorageNodeCast(local->stnp);
+	else if (COG_STORAGE_NODE == snt)
 		local->stnp = CogStorageNodeCast(local->stnp);
-	else if (ROCKS_STORAGE_NODE == snt)
-		local->stnp = RocksStorageNodeCast(local->stnp);
 	else if (FILE_STORAGE_NODE == snt)
 		local->stnp = FileStorageNodeCast(local->stnp);
+	else if (MONO_STORAGE_NODE == snt)
+		local->stnp = MonoStorageNodeCast(local->stnp);
+	else if (ROCKS_STORAGE_NODE == snt)
+		local->stnp = RocksStorageNodeCast(local->stnp);
 	else
 	{
 		prt_error("Error: Unknown storage %s\n", stoname);
