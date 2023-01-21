@@ -1,12 +1,12 @@
 Link Grammar Parser
 ===================
-***Version 5.12.0***
+***Version 5.12.1***
 
 ![Main](https://github.com/opencog/link-grammar/actions/workflows/main.yml/badge.svg)
 ![node.js](https://github.com/opencog/link-grammar/actions/workflows/bindings-js.yml/badge.svg)
 
 The Link Grammar Parser exhibits the linguistic (natural language)
-structure of English, Russian, Arabic, Persian and limited subsets
+structure of English, Thai, Russian, Arabic, Persian and limited subsets
 of a half-dozen other languages. This structure is a graph of typed
 links (edges) between the words in a sentence. One may obtain the
 more conventional HPSG (constituent) and dependency style parses
@@ -24,17 +24,25 @@ best introduction and overview; since then, there have been hundreds
 of publications further exploring, examining and extending the ideas.
 
 Although based on the
-[original Carnegie-Mellon code base](https://www.link.cs.cmu.edu/link/)
+[original Carnegie-Mellon code base](https://www.link.cs.cmu.edu/link/),
 the current Link Grammar package has dramatically evolved and is
 profoundly different from earlier versions.  There have been innumerable
-bug fixes; performance has improved by more than an order of magnitude.
+bug fixes; performance has improved by several orders of magnitude.
 The package is fully multi-threaded, fully UTF-8 enabled, and has been
 scrubbed for security, enabling cloud deployment.  Parse coverage of
 English has been dramatically improved; other languages have been added
-(most notably, Russian). There is a raft of new features, including support
-for morphology, log-likelihood semantic selection, and a sophisticated
-tokenizer that moves far beyond white-space-delimited sentence-splitting.
-Detailed lists can be found in the [ChangeLog](ChangeLog).
+(most notably, Thai and Russian). There is a raft of new features,
+including support for morphology, dialects, and a fine-grained weight
+(cost) system, allowing vector-embedding-like behaviour. There is a
+new, sophisticated tokenizer tailored for morphology: it can offer
+alternative splittings for morphologically ambiguous words.
+Dictionaries can be updated at run-time, enabling systems that perform
+continuous learning of grammar to also parse at the same time. That is,
+dictionary updates and parsing are mutually thread-safe. Classes of
+words can be recognized with regexes. Random planar graph parsing is
+fully supported; this allows uniform sampling of the space of planar
+graphs.  A detailed report of what has changed can be found in the
+[ChangeLog](ChangeLog).
 
 This code is released under the LGPL license, making it freely
 available for both private and commercial use, with few restrictions.
@@ -190,6 +198,29 @@ be [found here](data/th/TAGSETS.md). More information about LST20, e.g.
 annotation guideline and data statistics, can be
 [found here](https://arxiv.org/abs/2008.05055).
 
+The `any` language supports uniformly-sampled random planar graphs:
+```
+linkparser> asdf qwer tyuiop fghj bbb
+Found 1162 linkages (1162 had no P.P. violations)
+
+             +-------ANY------+-------ANY------+
+    +---ANY--+--ANY--+        +---ANY--+--ANY--+
+    |        |       |        |        |       |
+LEFT-WALL asdf[!] qwer[!] tyuiop[!] fghj[!] bbb[!]
+```
+The `ady` language does likewise, performing random morphological
+splittings:
+```
+linkparser> asdf qwerty fghjbbb
+Found 1512 linkages (1512 had no P.P. violations)
+
+                                  +------------------ANY-----------------+
+    +-----ANY----+-------ANY------+                  +---------LL--------+
+    |            |                |                  |                   |
+LEFT-WALL asdf[!ANY-WORD] qwerty[!ANY-WORD] fgh[!SIMPLE-STEM].= =jbbb[!SIMPLE-SUFF]
+```
+
+
 Theory and Documentation
 ------------------------
 An extended overview and summary can be found in the
@@ -286,7 +317,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.12.0.tar.gz.asc`
+`gpg --verify link-grammar-5.12.1.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
@@ -812,11 +843,10 @@ Keeping spell-guessing disabled (`=0`) in `Parse_Options` is safe.
 
 
 ### Multi-threading
-It is safe to use link-grammar for parsing in multiple threads.
-Different threads may use different dictionaries, or the same dictionary.
-Parse options can be set on a per-thread basis, with the exception of
-verbosity, which is a global, shared by all threads.  It is the only
-global.
+It is safe to use link-grammar in multiple threads. Threads may share
+the same dictionary.  Parse options can be set on a per-thread basis,
+with the exception of verbosity, which is a global, shared by all
+threads.  It is the only global.
 
 Linguistic Commentary
 =====================
