@@ -360,7 +360,7 @@ bool word_has_connector(Dict_node * dn, const char * cs, char direction)
  **/
 bool is_exp_like_empty_word(Dictionary dict, Exp *exp)
 {
-	const char *cs = string_set_lookup(EMPTY_CONNECTOR, dict->string_set);
+	const char *cs = string_set_lookup_concurrent(EMPTY_CONNECTOR, dict->string_set);
 	if (NULL == cs) return false;
 	return exp_has_connector(exp, 2, cs, '-', /*smart_match*/false);
 }

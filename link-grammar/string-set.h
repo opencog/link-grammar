@@ -16,6 +16,10 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+#if HAVE_THREADS_H
+#include <threads.h>
+#endif
+
 #include "api-types.h"
 #include "const-prime.h"
 #include "error.h"
@@ -42,6 +46,9 @@ struct String_set_s
 	ssize_t pool_free_count;    /* string pool free space */
 	char *alloc_next;           /* next string address */
 	str_mem_pool *string_pool;  /* string memory pool */
+#if HAVE_THREADS_H
+	mtx_t mutex;                /* Optional pool thread-safety lock */
+#endif
 };
 
 /* If the table gets too big, we grow it. Too big is defined as being
@@ -52,6 +59,30 @@ String_set * string_set_create(void);
 const char * string_set_add(const char * source_string, String_set * ss);
 const char * string_set_lookup(const char * source_string, String_set * ss);
 void         string_set_delete(String_set *ss);
+
+static inline const char * string_set_add_concurrent(const char * source, String_set * ss)
+{
+#if HAVE_THREADS_H
+	mtx_lock(&ss->mutex);
+	const char* rv = string_set_add(source, ss);
+	mtx_unlock(&ss->mutex);
+	return rv;
+#else
+	return string_set_add(source, ss);
+#endif
+}
+
+static inline const char * string_set_lookup_concurrent(const char * source, String_set * ss)
+{
+#if HAVE_THREADS_H
+	mtx_lock(&ss->mutex);
+	const char* rv = string_set_lookup(source, ss);
+	mtx_unlock(&ss->mutex);
+	return rv;
+#else
+	return string_set_lookup(source, ss);
+#endif
+}
 
 /**
  * Compare 2 strings, assuming they are in the same string-set.
