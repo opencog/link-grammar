@@ -74,8 +74,8 @@ struct Linkage_s
 
 struct Link_s
 {
-	size_t lw;              /* Offset into Linkage->word NOT Sentence->word */
-	size_t rw;              /* Offset into Linkage->word NOT Sentence->word */
+	uint16_t lw;            /* Offset into Linkage->word NOT Sentence->word */
+	uint16_t rw;            /* Offset into Linkage->word NOT Sentence->word */
 	Connector * lc;
 	Connector * rc;
 	const char * link_name; /* Spelling of full link name */

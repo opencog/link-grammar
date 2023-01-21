@@ -365,7 +365,7 @@ build_linkage_postscript_string(const Linkage linkage,
 		assert (ppla[link].lw != SIZE_MAX, "Missing word in link");
 		if ((j%7 == 0) && (j>0)) dyn_strcat(string,"\n");
 		j++;
-		append_string(string,"[%zu %zu %d",
+		append_string(string,"[%d %d %d",
 				ppla[link].lw - d, ppla[link].rw - d,
 				pctx->link_heights[link]);
 		append_string(string," (%s)]", ppla[link].link_name);
