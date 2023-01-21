@@ -365,13 +365,10 @@ void *aligned_alloc(size_t alignment, size_t size)
 #endif /* HAVE_POSIX_MEMALIGN */
 
 /* ============================================================= */
-/* Memory alloc routines below. These routines attempt to keep
- * track of how much space is getting used during a parse.
- *
- * This code is probably obsolescent, and should probably be dumped.
- * No one (that I know of) looks at the space usage; its one of the
- * few areas that needs pthreads -- it would be great to just get
- * rid of it (and thus get rid of pthreads).
+/* Memory alloc routines to keep track of how much space is getting
+ * used during a parse.  This code is obsolescent; it is useful once a
+ * decade when there is some scare about memory usage. Overall, RAM
+ * usage is excellent; everything is well-managed.
  */
 
 #ifdef TRACK_SPACE_USAGE
