@@ -786,7 +786,7 @@ static void list_random_links(Linkage lkg, unsigned int *rand_state,
 
 	if (set == NULL || set->first == NULL) return;
 
-	/* Most of the times there is only one list element. */
+	/* Most of the time, there is only one list element. */
 	if (set->first->next == NULL)
 	{
 		pc = set->first;

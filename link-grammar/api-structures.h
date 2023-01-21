@@ -162,6 +162,7 @@ struct Sentence_s
 	/* Parse results */
 	int    num_linkages_found;  /* Total number before postprocessing.  This
 	                               is returned by the do_count() function */
+	bool   overflowed;          /* True, if counting overflowed. */
 	size_t num_linkages_alloced;/* Total number of linkages allocated.
 	                               the number post-processed might be fewer
 	                               because some are non-canonical */
