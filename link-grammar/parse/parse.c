@@ -316,10 +316,10 @@ static void deduplicate_linkages(Sentence sent)
 		uint32_t li;
 		for (li=0; li<lpv->num_links; li++)
 		{
-			if (lpv->link_array[li].lw != lnx->link_array[li].lw) break;
-			if (lpv->link_array[li].rw != lnx->link_array[li].rw) break;
 			if (lpv->link_array[li].lc != lnx->link_array[li].lc) break;
 			if (lpv->link_array[li].rc != lnx->link_array[li].rc) break;
+			if (lpv->link_array[li].lw != lnx->link_array[li].lw) break;
+			if (lpv->link_array[li].rw != lnx->link_array[li].rw) break;
 		}
 		if (li != lpv->num_links) continue;
 
