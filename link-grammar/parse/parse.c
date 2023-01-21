@@ -329,7 +329,8 @@ static void deduplicate_linkages(Sentence sent)
 		nl--;
 		sent->num_linkages_alloced --;
 		sent->num_valid_linkages --;
-		i--; // Do not advance i.
+		sent->num_linkages_post_processed --;
+		i--; // Do not advance i; there may be more!
 	}
 }
 
