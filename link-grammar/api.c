@@ -88,9 +88,8 @@ Parse_Options parse_options_create(void)
 	debug = po->debug = (char *)"";
 	test = po->test = (char *)"";
 
-	/* A cost of 2.7 allows the usual cost-2 connectors, plus the
-	 * assorted fractional costs, without going to cost 3.0, which
-	 * is used only during panic-parsing. */
+	/* Set dijunct_cost to a bogus value of -10000. The dict-common
+	 * code will set this to a more reasonable default. */
 	po->disjunct_cost = UNINITIALIZED_MAX_DISJUNCT_COST;
 	po->min_null_count = 0;
 	po->max_null_count = 0;
