@@ -14,6 +14,10 @@
 
 #include <stddef.h>                     // max_align_t
 
+#if HAVE_THREADS_H
+#include <threads.h>                    // mtx_t
+#endif
+
 #include "link-includes.h"
 #include "error.h"
 #include "utilities.h"                  // GNUC_MALLOC (XXX separate include?)
@@ -94,6 +98,10 @@ struct  Pool_desc_s
 #ifdef POOL_EXACT
 	bool exact;                 // Abort if more than num_elements are needed.
 #endif /* POOL_EXACT */
+
+#if HAVE_THREADS_H
+	mtx_t mutex;                // Optional pool thread-safety lock.
+#endif
 };
 
 typedef struct
@@ -111,9 +119,23 @@ static inline size_t pool_num_elements_alloced(Pool_desc *mp)
 	return mp->curr_elements;
 }
 
+// Lock-free version, when every thread has it's own pool.
 static inline void *pool_alloc(Pool_desc *mp)
 {
 	return pool_alloc_vec(mp, 1);
+}
+
+// Locking version, when multiple threads share a single pool.
+static inline void *pool_alloc_concurrent(Pool_desc *mp)
+{
+#if HAVE_THREADS_H
+	mtx_lock(&mp->mutex);
+	void* rv = pool_alloc_vec(mp, 1);
+	mtx_unlock(&mp->mutex);
+	return rv;
+#else
+	return pool_alloc_vec(mp, 1);
+#endif
 }
 
 /**
