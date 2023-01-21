@@ -64,15 +64,15 @@ static void find_unused_disjuncts(Sentence sent, extractor_t *pex)
 	}
 }
 
-static bool setup_linkages(Sentence sent, extractor_t* pex,
+static void setup_linkages(Sentence sent, extractor_t* pex,
                           fast_matcher_t* mchxt,
                           count_context_t* ctxt,
                           Parse_Options opts)
 {
-	bool overflowed = build_parse_set(pex, sent, mchxt, ctxt, sent->null_count, opts);
+	sent->overflowed = build_parse_set(pex, sent, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
-	if (overflowed && (1 < opts->verbosity) && !IS_GENERATION(sent->dict))
+	if (sent->overflowed && (1 < opts->verbosity) && !IS_GENERATION(sent->dict))
 	{
 		err_ctxt ec = { sent };
 		err_msgc(&ec, lg_Warn, "Count overflow.\n"
@@ -86,7 +86,7 @@ static bool setup_linkages(Sentence sent, extractor_t* pex,
 		sent->num_linkages_post_processed = 0;
 		sent->num_valid_linkages = 0;
 		sent->lnkages = NULL;
-		return overflowed;
+		return;
 	}
 
 	sent->num_linkages_alloced =
@@ -98,8 +98,6 @@ static bool setup_linkages(Sentence sent, extractor_t* pex,
 	 * XXX free_linkages() zeros sent->num_linkages_found. */
 	if (sent->lnkages) free_linkages(sent);
 	sent->lnkages = linkage_array_new(sent->num_linkages_alloced);
-
-	return overflowed;
 }
 
 /**
@@ -166,13 +164,13 @@ static bool optional_word_exists(Sentence sent)
  * linkages.
  */
 static void process_linkages(Sentence sent, extractor_t* pex,
-                             bool overflowed, Parse_Options opts)
+                             Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
 	if (0 == sent->num_linkages_alloced) return; /* Avoid a later crash. */
 
 	/* Pick random linkages if we get more than what was asked for. */
-	bool pick_randomly = overflowed ||
+	bool pick_randomly = sent->overflowed ||
 	    (sent->num_linkages_found > (int) sent->num_linkages_alloced);
 
 	sent->num_valid_linkages = 0;
@@ -282,23 +280,25 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	}
 }
 
-/* Remove duplicate linkages in the link array. Duplicates can appear
- * if, for example, the dictionary contains entries such as
- *    foo: A- & {B+} & {B+};
- * Then there will be two distinct parses, one connecting to the first
- * optional `B+`, and another, connecting to the second `B+`. But both of
- * these are "the same linkage". We fish these out and remove them here.
- *
- * This is rather uncommon for the English & Russian dicts, but can
- * happen very frequently for learned dicts. The form `{B+} & {B+}` is
- * used instead of `@B+` in order to control the grand total number of
- * optional connectors.
+/**
+ * Remove duplicate linkages in the link array. Duplicates can appear
+ * if the number of parses overflowed, or if the number of parses is
+ * larger than the linkage array. In this case, random linkages will
+ * be selected, and, by random chance, duplicate linkages can be
+ * selected. When the alloc array is slightly less than the number of
+ * linkages found, then as many as half(!) of the linkages can be
+ * duplicates.
  *
  * This can be done in a single pass, after the linkages have been
  * sorted. We only need to check nearest neighbors.
  */
 static void deduplicate_linkages(Sentence sent)
 {
+	/* No need for deduplication, if random selection wasn't done. */
+	if (!sent->overflowed &&
+	    (sent->num_linkages_found <= (int) sent->num_linkages_alloced))
+		return;
+
 	uint32_t nl = sent->num_linkages_alloced;
 	if (2 > nl) return;
 
@@ -328,6 +328,7 @@ static void deduplicate_linkages(Sentence sent)
 		memmove(lpv, lnx, (nl-i)* sizeof(struct Linkage_s));
 		nl--;
 		sent->num_linkages_alloced --;
+		sent->num_valid_linkages --;
 		i--; // Do not advance i.
 	}
 }
@@ -453,6 +454,7 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		 * linkages had P.P. violations. Ensure that in case of a timeout we
 		 * will not end up with the previous num_linkages_found. */
 		sent->num_linkages_found = 0;
+		sent->overflowed = false;
 		sent->num_valid_linkages = 0;
 		sent->num_linkages_post_processed = 0;
 
@@ -541,8 +543,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		{
 			extractor_t * pex =
 				extractor_new(sent->length, sent->rand_state, IS_GENERATION(sent->dict));
-			bool ovfl = setup_linkages(sent, pex, mchxt, ctxt, opts);
-			process_linkages(sent, pex, ovfl, opts);
+			setup_linkages(sent, pex, mchxt, ctxt, opts);
+			process_linkages(sent, pex, opts);
 			if (IS_GENERATION(sent->dict))
 			    find_unused_disjuncts(sent, pex);
 			free_extractor(pex);
