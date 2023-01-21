@@ -190,7 +190,7 @@ The SAT solver speed can be significantly increased by these changes:
 - Improve and add hashing.
 - Improve the post-processing efficiency. For short sentences (also in
   the classic parser) this has a potential for maybe 10% speedup.
-  However, for getting several parsings for long sentences a huge speedup
+  However, when getting several parses of long sentences, a huge speedup
   is expected.
 
 The code can still be built by saying
