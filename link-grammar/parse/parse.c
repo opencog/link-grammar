@@ -280,6 +280,47 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	}
 }
 
+/* The scan appear more than one, if, for example, the dictionary
+ * contains entries such as
+ *    foo: A- & {B+} & {B+};
+ * Then there will be two distinct parses, one connecting to the first
+ * optional B+, and another, connecting to the second B+. But both of
+ * these are "the same linkage". We fish these out and remove them here.
+ *
+ * This is rather uncommon for the English & Russian dicts, but can
+ * happen very frequently for learned dicts. The form `{B+} & {B+}` is
+ * used instead of `@B+` in order to control the grand total number of
+ * optional connectors.
+ *
+ * This can be done in a single pass, after the linkages have been
+ * sorted. We only need to check nearest neighbors.
+ */
+static void deduplicate_linkages(Sentence sent)
+{
+	uint32_t nl = sent->num_linkages_alloced;
+	for (uint32_t i=1; i<nl; i++)
+	{
+		Linkage lpv = &sent->lnkages[i-1];
+		Linkage lnx = &sent->lnkages[i];
+
+		// Rule out obvious mismatches.
+		if (lpv->num_links != lnx->num_links) continue;
+		if (1.0e-4 < fabs(lpv->lifo.disjunct_cost - lnx->lifo.disjunct_cost)) continue;
+		if (lpv->num_words != lnx->num_words) continue;
+
+		// Compare links
+		uint32_t li;
+		for (li=0; li<lkg->num_links; li++)
+		{
+			if (lpv->link_array[li].lw != lnx->link_array[li].lw) break;
+			if (lpv->link_array[li].rw != lnx->link_array[li].rw) break;
+			if (lpv->link_array[li].lc != lnx->link_array[li].lc) break;
+			if (lpv->link_array[li].rc != lnx->link_array[li].rc) break;
+		}
+		if (li != lkg->num_links) continue;
+	}
+}
+
 static void sort_linkages(Sentence sent, Parse_Options opts)
 {
 	if (0 == sent->num_linkages_found) return;
@@ -291,6 +332,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
 
+	deduplicate_linkages(sent);
 	print_time(opts, "Sorted all linkages");
 }
 
