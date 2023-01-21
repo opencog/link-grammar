@@ -173,7 +173,7 @@ LEFT-WALL เมื่อวานนี้.n[!] มี.ve[!] คน.n[!] มา
 ```
 
 Full documentation for the Thai dictionary can be
-[found here](th/INPUT_FORMATS.md).
+[found here](data/th/INPUT_FORMATS.md).
 
 The Thai dictionary accepts LST20 tagsets for POS and named entities,
 to bridge the gap between fundamental NLP tools and the Link Parser.
