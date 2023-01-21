@@ -11,6 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 #include <limits.h>
+#include <math.h>
+
 #include "api-structures.h"
 #include "count.h"
 #include "dict-common/dict-common.h"   // For Dictionary_s
@@ -298,6 +300,8 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 static void deduplicate_linkages(Sentence sent)
 {
 	uint32_t nl = sent->num_linkages_alloced;
+	if (2 > nl) return;
+
 	for (uint32_t i=1; i<nl; i++)
 	{
 		Linkage lpv = &sent->lnkages[i-1];
@@ -310,14 +314,21 @@ static void deduplicate_linkages(Sentence sent)
 
 		// Compare links
 		uint32_t li;
-		for (li=0; li<lkg->num_links; li++)
+		for (li=0; li<lpv->num_links; li++)
 		{
 			if (lpv->link_array[li].lw != lnx->link_array[li].lw) break;
 			if (lpv->link_array[li].rw != lnx->link_array[li].rw) break;
 			if (lpv->link_array[li].lc != lnx->link_array[li].lc) break;
 			if (lpv->link_array[li].rc != lnx->link_array[li].rc) break;
 		}
-		if (li != lkg->num_links) continue;
+		if (li != lpv->num_links) continue;
+
+		// If we are here, then lpv and lnx are the same linkage.
+		// Shuffle down all linkages.
+		memmove(lpv, lnx, (nl-i)* sizeof(struct Linkage_s));
+		nl--;
+		sent->num_linkages_alloced --;
+		i--; // Do not advance i.
 	}
 }
 
