@@ -282,11 +282,11 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	}
 }
 
-/* The scan appear more than one, if, for example, the dictionary
- * contains entries such as
+/* Remove duplicate linkages in the link array. Duplicates can appear
+ * if, for example, the dictionary contains entries such as
  *    foo: A- & {B+} & {B+};
  * Then there will be two distinct parses, one connecting to the first
- * optional B+, and another, connecting to the second B+. But both of
+ * optional `B+`, and another, connecting to the second `B+`. But both of
  * these are "the same linkage". We fish these out and remove them here.
  *
  * This is rather uncommon for the English & Russian dicts, but can
