@@ -67,6 +67,10 @@ using namespace opencog;
 static AtomSpacePtr external_atomspace;
 static StorageNodePtr external_storage;
 
+/// Specify an AtomSpace, and optionally, a StorageNode that will be
+/// used to fetch dictionary contents. This should be done before
+/// opening the dictionary; the values passed here are grabbed by the
+/// dictionary when it is opened.
 void lg_config_atomspace(AtomSpacePtr asp, StorageNodePtr sto)
 {
 	external_atomspace = asp;
