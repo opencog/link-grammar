@@ -53,9 +53,9 @@ struct Linkage_s
 	WordIdx         num_words;    /* Number of (tokenized) words */
 	const char *  * word;         /* Array of word spellings */
 
-	size_t          num_links;    /* Number of links in array */
 	Link *          link_array;   /* Array of links */
-	size_t          lasz;         /* Alloc'ed length of link_array */
+	uint32_t        num_links;    /* Number of links in array */
+	uint32_t        lasz;         /* Alloc'ed length of link_array */
 
 	Disjunct **     chosen_disjuncts; /* Disjuncts used, one per word */
 	size_t          cdsz;         /* Alloc'ed length of chosen_disjuncts */
