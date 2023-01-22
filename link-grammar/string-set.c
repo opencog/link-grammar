@@ -125,14 +125,11 @@ String_set * string_set_create(void)
 	ss_pool_alloc(MEM_POOL_INIT, ss);
 	ss->available_count = MAX_STRING_SET_TABLE_SIZE(ss->size);
 
-#if HAVE_THREADS_H
-	mtx_init(&ss->mutex, mtx_plain);
-#endif
-
 	return ss;
 }
 
-static bool place_found(const char *str, const ss_slot *slot, unsigned int hash)
+static bool place_found(const char *str, const ss_slot *slot, unsigned int hash,
+                         String_set *ss)
 {
 	if (slot->str == NULL) return true;
 	if (hash != slot->hash) return false;
@@ -149,7 +146,7 @@ static unsigned int find_place(const char *str, unsigned int h, String_set *ss)
 	unsigned int key = ss->mod_func(h);
 
 	/* Quadratic probing. */
-	while (!place_found(str, &ss->table[key], h))
+	while (!place_found(str, &ss->table[key], h, ss))
 	{
 		key += 2 * ++coll_num - 1;
 		if (key >= ss->size) key = ss->mod_func(key);

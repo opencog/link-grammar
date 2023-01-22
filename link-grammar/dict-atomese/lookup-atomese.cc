@@ -90,7 +90,7 @@ static const char* get_dict_define(Dictionary dict, const char* namestr)
 	while (*p) { if ('\\' != *p) { *q = *p; q++; } p++; }
 	*q = 0x0;
 
-	return string_set_add_concurrent(unescaped, dict->string_set);
+	return string_set_add(unescaped, dict->string_set);
 }
 
 static const char* ldef(Dictionary dict, const char* name, const char* def)
@@ -476,7 +476,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 
 	if (dn) return dn;
 
-	const char* ssc = string_set_add_concurrent(s, dict->string_set);
+	const char* ssc = string_set_add(s, dict->string_set);
 	Local* local = (Local*) (dict->as_server);
 
 	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))

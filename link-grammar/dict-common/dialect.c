@@ -53,7 +53,7 @@ unsigned int exptag_dialect_add(Dictionary dict, const char *tag)
 
 	if (tag_index != SID_NOTFOUND) return tag_index;
 	tag_index = string_id_add(tag, dt->set);
-	tag = string_set_add_concurrent(tag, dict->string_set); /* FIXME: Refer to string-id */
+	tag = string_set_add(tag, dict->string_set); /* FIXME: Refer to string-id */
 
 	if (dt->num == dt->size)
 	{

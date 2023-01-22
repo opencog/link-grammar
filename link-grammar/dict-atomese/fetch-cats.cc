@@ -60,7 +60,7 @@ void as_add_categories(Dictionary dict)
 			continue;
 
 		dict->category[j].name =
-			string_set_add_concurrent(wcl->get_name().c_str(), dict->string_set);
+			string_set_add(wcl->get_name().c_str(), dict->string_set);
 
 		// Copy the words into the cateory.
 		dict->category[j].word = (const char**)
@@ -73,7 +73,7 @@ void as_add_categories(Dictionary dict)
 			if (WORD_NODE != wrd->get_type()) continue;
 
 			dict->category[j].word[nwo] =
-				string_set_add_concurrent(wrd->get_name().c_str(), dict->string_set);
+				string_set_add(wrd->get_name().c_str(), dict->string_set);
 			nwo++;
 		}
 		dict->category[j].num_words = nwo;
@@ -91,7 +91,7 @@ void as_add_categories(Dictionary dict)
 			continue;
 
 		dict->category[j].name =
-			string_set_add_concurrent(allwo[i]->get_name().c_str(), dict->string_set);
+			string_set_add(allwo[i]->get_name().c_str(), dict->string_set);
 
 		dict->category[j].num_words = 1;
 		dict->category[j].word =

@@ -83,7 +83,7 @@ static const char * build_idiom_word_name(Dictionary dict, const char * s)
 	buff[n + 2] = 'I';
 	buff[n + 3] = '\0';
 
-	return string_set_add_concurrent(buff, dict->string_set);
+	return string_set_add(buff, dict->string_set);
 }
 
 /**
@@ -112,7 +112,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 		Dict_node *dn_new = (Dict_node *) malloc(sizeof (Dict_node));
 		dn_new->right = dn;
 		dn = dn_new;
-		dn->string = string_set_add_concurrent(t, dict->string_set);
+		dn->string = string_set_add(t, dict->string_set);
 		dn->file = NULL;
 	}
 
@@ -156,7 +156,7 @@ static const char * generate_id_connector(Dictionary dict)
 		*t++ = dict->current_idiom[i];
 	}
 	*t++ = '\0';
-	return string_set_add_concurrent(buff, dict->string_set);
+	return string_set_add(buff, dict->string_set);
 }
 
 /**
