@@ -223,29 +223,42 @@ rdictionary_lookup(Dict_node * restrict llist,
                    bool boolean_lookup,
                    int (*dict_order)(const char *, const Dict_node *))
 {
-	int m;
-	Dict_node * dn_new;
 	if (dn == NULL) return llist;
 
-	m = dict_order(s, dn);
+	int m = dict_order(s, dn);
 
-	if (m >= 0)
+	// The tree is in alphabetical order. Move down either the
+	// left or right branch, until a string match is found.
+	while (m != 0)
 	{
-		llist = rdictionary_lookup(llist, dn->right, s, boolean_lookup, dict_order);
+		if (m > 0)
+			dn = dn->right;
+		else if (m < 0)
+			dn = dn->left;
+
+		if (dn == NULL) return llist;
+
+		m = dict_order(s, dn);
 	}
-	if ((m == 0) && (dict_order != dict_order_wild || subscr_match(s, dn)))
+
+	// There might be more than one perfect match. Recurse to get it.
+	if (dn->right)
+		llist = rdictionary_lookup(llist, dn->right, s, boolean_lookup, dict_order);
+
+	if (dict_order != dict_order_wild || subscr_match(s, dn))
 	{
 		if (boolean_lookup) return dn;
-		dn_new = dict_node_new();
+		Dict_node * dn_new = dict_node_new();
 		*dn_new = *dn;
 		dn_new->right = llist;
 		dn_new->left = dn; /* Currently only used for inserting idioms */
 		llist = dn_new;
 	}
-	if (m <= 0)
-	{
+
+	// There might be more than one perfect match. Recurse to get it.
+	if (dn->left)
 		llist = rdictionary_lookup(llist, dn->left, s, boolean_lookup, dict_order);
-	}
+
 	return llist;
 }
 
