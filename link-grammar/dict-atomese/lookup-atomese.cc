@@ -314,6 +314,7 @@ void as_close(Dictionary dict)
 bool as_boolean_lookup(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
 	bool found = dict_node_exists_lookup(dict, s);
 	if (found) return true;
@@ -470,6 +471,9 @@ static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
 /// expressions for that word.
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
+	Local* local = (Local*) (dict->as_server);
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
+
 	// Do we already have this word cached? If so, pull from
 	// the cache.
 	Dict_node* dn = dict_node_lookup(dict, s);
@@ -477,7 +481,6 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	if (dn) return dn;
 
 	const char* ssc = string_set_add_concurrent(s, dict->string_set);
-	Local* local = (Local*) (dict->as_server);
 
 	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))
 	{

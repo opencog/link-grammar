@@ -6,6 +6,7 @@
  * Copyright (c) 2022 Linas Vepstas <linasvepstas@gmail.com>
  */
 
+#include <mutex>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/persist/api/StorageNode.h>
 
@@ -14,6 +15,7 @@ using namespace opencog;
 class Local
 {
 public:
+	std::mutex dict_mutex; // Avoid corruption of Dictionary
 	bool using_external_as;
 	AtomSpacePtr asp;
 	StorageNodePtr stnp; // Might be nullptr
