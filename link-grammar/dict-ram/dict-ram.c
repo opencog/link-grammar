@@ -45,6 +45,29 @@ void dict_node_noop(Dictionary dict)
 }
 
 /* ======================================================================== */
+
+Dict_node * dict_node_new(void)
+{
+	return (Dict_node*) malloc(sizeof(Dict_node));
+}
+
+void dict_node_free_list(Dict_node *llist)
+{
+	Dict_node * n;
+	while (llist != NULL)
+	{
+		n = llist->right;
+		free(llist);
+		llist = n;
+	}
+}
+
+void dict_node_free_lookup(Dictionary dict, Dict_node *llist)
+{
+	dict_node_free_list(llist);
+}
+
+/* ======================================================================== */
 /**
  * Dictionary entry comparison and ordering functions.
  *
@@ -169,11 +192,6 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
 }
 #undef D_DOW
 
-Dict_node * dict_node_new(void)
-{
-	return (Dict_node*) malloc(sizeof(Dict_node));
-}
-
 /* ======================================================================== */
 #if 0
 /**
@@ -234,6 +252,7 @@ static Dict_node * prune_lookup_list(Dict_node * restrict llist, const char * re
 #endif
 
 /* ======================================================================== */
+
 static bool subscr_match(const char *s, const Dict_node * dn)
 {
 	const char * s_sub = get_word_subscript(s);
@@ -309,20 +328,22 @@ bool dict_node_exists_lookup(Dictionary dict, const char *s)
 	return !!rdictionary_lookup(NULL, dict->root, s, true, dict_order_bare);
 }
 
-void dict_node_free_list(Dict_node *llist)
+/**
+ * strict_lookup_list() - return exact match in the dictionary
+ *
+ * Returns a pointer to a lookup list of the words in the dictionary.
+ *
+ * This list is made up of Dict_nodes, linked by their right pointers.
+ * The node, file and string fields are copied from the dictionary.
+ *
+ * The list normally has 0 or 1 elements, unless the given word
+ * appears more than once in the dictionary.
+ *
+ * The returned list must be freed with dict_node_free_lookup().
+ */
+Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
 {
-	Dict_node * n;
-	while (llist != NULL)
-	{
-		n = llist->right;
-		free(llist);
-		llist = n;
-	}
-}
-
-void dict_node_free_lookup(Dictionary dict, Dict_node *llist)
-{
-	dict_node_free_list(llist);
+	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
 }
 
 /**
@@ -345,43 +366,6 @@ Dict_node * dict_node_wild_lookup(Dictionary dict, const char *s)
 
 	result = rdictionary_lookup(NULL, dict->root, stmp, false, dict_order_wild);
 	return result;
-}
-
-#if 0
-/**
- * abridged_lookup_list() - return lookup list of words in the dictionary
- *
- * Returns a pointer to a lookup list of the words in the dictionary.
- * Excludes any idioms that contain the word; use
- * dictionary_lookup_list() to obtain the complete list.
- *
- * This list is made up of Dict_nodes, linked by their right pointers.
- * The node, file and string fields are copied from the dictionary.
- *
- * The returned list must be freed with dict_node_free_lookup().
- */
-static Dict_node * abridged_lookup_list(const Dictionary dict, const char *s)
-{
-	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_bare);
-}
-#endif
-
-/**
- * strict_lookup_list() - return exact match in the dictionary
- *
- * Returns a pointer to a lookup list of the words in the dictionary.
- *
- * This list is made up of Dict_nodes, linked by their right pointers.
- * The node, file and string fields are copied from the dictionary.
- *
- * The list normally has 0 or 1 elements, unless the given word
- * appears more than once in the dictionary.
- *
- * The returned list must be freed with dict_node_free_lookup().
- */
-Dict_node * strict_lookup_list(const Dictionary dict, const char *s)
-{
-	return rdictionary_lookup(NULL, dict->root, s, false, dict_order_strict);
 }
 
 /* ======================================================================== */
