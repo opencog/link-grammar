@@ -1,8 +1,8 @@
 Version 5.12.1 (XXX 2023)
- * Assorted enhancements and fixes for the AtomSpace dictionary. #1362
+ * Assorted enhancements and fixes for the AtomSpace dictionary. #1362, #1379
  * Fix missing HAVE_THREADS_H, affects Apple Homebrew. #1363
  * Fix regex thread-safety issue. #1370
- * Disable aspell; it leaks memory. #1373
+ * Disable aspell; it leaks memory. Ouch! #1373
  * Deduplicate linkages when overflow forces random selection. #1378
 
 Version 5.12.0 (26 Nov 2022)

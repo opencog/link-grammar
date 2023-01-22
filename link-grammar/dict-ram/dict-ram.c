@@ -528,7 +528,7 @@ Exp * make_connector_node(Dictionary dict, Pool_desc *mp,
 	n->type = CONNECTOR_type;
 
 	n->condesc = condesc_add(&dict->contable,
-		string_set_add(linktype, dict->string_set));
+		string_set_add_concurrent(linktype, dict->string_set));
 	n->dir = dir;
 	n->multi = multi;
 
@@ -759,9 +759,9 @@ void add_define(Dictionary dict, const char *name, const char *value)
 			realloc(dict->dfine.name, dict->dfine.size * sizeof(char *));
 		assert(dict->dfine.size == (unsigned int)id,
 		       "\"dfine\" array size inconsistency");
-		dict->dfine.name[id - 1] = string_set_add(name, dict->string_set);
+		dict->dfine.name[id - 1] = string_set_add_concurrent(name, dict->string_set);
 	}
-	dict->dfine.value[id - 1] = string_set_add(value, dict->string_set);
+	dict->dfine.value[id - 1] = string_set_add_concurrent(value, dict->string_set);
 }
 
 static bool is_directive(const char *s)
@@ -821,7 +821,7 @@ void add_category(Dictionary dict, Exp *e, Dict_node *dn, int n)
 		char category_string[16]; /* For the tokenizer - not used here */
 		snprintf(category_string, sizeof(category_string), " %x",
 		         dict->num_categories);
-		string_set_add(category_string, dict->string_set);
+		string_set_add_concurrent(category_string, dict->string_set);
 		dict->category[dict->num_categories].exp = e;
 		dict->category[dict->num_categories].num_words = n;
 		dict->category[dict->num_categories].name = "";

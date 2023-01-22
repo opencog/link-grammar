@@ -3191,7 +3191,7 @@ static Dict_node *dictionary_all_categories(Dictionary dict)
 		char category_string[16];
 		snprintf(category_string, sizeof(category_string), " %x",
 		         (unsigned int)i + 1);
-		dn[i].string = string_set_add(category_string, dict->string_set);
+		dn[i].string = string_set_add_concurrent(category_string, dict->string_set);
 		dn[i].right = &dn[i + 1];
 	}
 	dn[dict->num_categories-1].right = NULL;
