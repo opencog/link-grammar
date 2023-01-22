@@ -578,14 +578,8 @@ void condesc_init(Dictionary dict, size_t num_con)
 
 void condesc_setup(Dictionary dict)
 {
-#if HAVE_THREADS_H
-	mtx_lock(&dict->contable.mutex);
-#endif
 	sort_condesc_by_uc_constring(dict);
 	set_all_condesc_length_limit(dict);
 	free(dict->contable.sdesc);
-#if HAVE_THREADS_H
-	mtx_unlock(&dict->contable.mutex);
-#endif
 }
 /* ========================= END OF FILE ============================== */
