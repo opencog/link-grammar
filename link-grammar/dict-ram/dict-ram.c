@@ -377,7 +377,7 @@ Dict_node * dict_node_wild_lookup(Dictionary dict, const char *s)
  */
 Exp *Exp_create(Pool_desc *mp)
 {
-	Exp *e = pool_alloc_concurrent(mp);
+	Exp *e = pool_alloc(mp);
 	e->tag_type = Exptag_none;
 	e->operand_next = NULL;
 	e->cost = 0.0;
@@ -391,7 +391,7 @@ Exp *Exp_create(Pool_desc *mp)
  */
 Exp *Exp_create_dup(Pool_desc *mp, Exp *old_e)
 {
-	Exp *new_e = pool_alloc_concurrent(mp);
+	Exp *new_e = pool_alloc(mp);
 
 	*new_e = *old_e;
 
