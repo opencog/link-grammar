@@ -19,10 +19,6 @@
 #include <stdbool.h>
 #include <stdint.h>  // for uint8_t
 
-#if HAVE_THREADS_H
-#include <threads.h> // for mtx_t
-#endif
-
 #include "api-types.h"
 #include "error.h"
 #include "memory-pool.h"
@@ -112,9 +108,6 @@ typedef struct hdesc
 
 typedef struct
 {
-#if HAVE_THREADS_H
-	mtx_t mutex;          /* Provide multi-thread safety */
-#endif
 	hdesc_t *hdesc;       /* Hashed connector descriptors table */
 	condesc_t **sdesc;    /* Alphabetically sorted descriptors */
 	size_t size;          /* Allocated size */
