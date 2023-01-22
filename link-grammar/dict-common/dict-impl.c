@@ -501,7 +501,7 @@ void affix_list_add(Dictionary afdict, Afdict_class * ac,
 		new_sz = ac->mem_elems * sizeof(const char *);
 		ac->string = realloc(ac->string, new_sz);
 	}
-	ac->string[ac->length] = string_set_add_concurrent(affix, afdict->string_set);
+	ac->string[ac->length] = string_set_add(affix, afdict->string_set);
 	ac->length++;
 }
 
@@ -585,7 +585,7 @@ static void concat_class(Dictionary afdict, int classno)
 	for (i = 0; i < ac->length; i++)
 		dyn_strcat(qs, ac->string[i]);
 
-	ac->string[0] = string_set_add_concurrent(qs->str, afdict->string_set);
+	ac->string[0] = string_set_add(qs->str, afdict->string_set);
 	dyn_str_delete(qs);
 }
 

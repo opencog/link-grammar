@@ -282,7 +282,7 @@ static int morph_cb(void *user_data, int argc, char **argv, char **colName)
 	/* Put each word into a Dict_node. */
 	Dict_node *dn = malloc(sizeof(Dict_node));
 	memset(dn, 0, sizeof(Dict_node));
-	dn->string = string_set_add_concurrent(scriword, bs->dict->string_set);
+	dn->string = string_set_add(scriword, bs->dict->string_set);
 	dn->right = bs->dn;
 	dn->exp = bs->exp;
 	bs->dn = dn;
@@ -405,13 +405,13 @@ static int classname_cb(void *user_data, int argc, char **argv, char **colName)
 	dict->category[dict->num_categories].word = NULL;
 	char* esc = escape_quotes(argv[0]);
 	dict->category[dict->num_categories].name =
-		string_set_add_concurrent(esc, dict->string_set);
+		string_set_add(esc, dict->string_set);
 	if (esc != argv[0]) free(esc);
 
 	char category_string[16];     /* For the tokenizer - not used here */
 	snprintf(category_string, sizeof(category_string), " %x",
 	         dict->num_categories); /* ' ': See comment in build_disjuncts() */
-	string_set_add_concurrent(category_string, dict->string_set);
+	string_set_add(category_string, dict->string_set);
 
 	return 0;
 }
@@ -427,7 +427,7 @@ static int classword_cb(void *user_data, int argc, char **argv, char **colName)
 
 	/* Add the word. */
 	dict->category[dict->num_categories].word[bs->count] =
-		string_set_add_concurrent(word, dict->string_set);
+		string_set_add(word, dict->string_set);
 	bs->count++;
 
 	return 0;
