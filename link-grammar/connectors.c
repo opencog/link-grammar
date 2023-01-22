@@ -406,7 +406,7 @@ static int condesc_by_uc_constring(const void * a, const void * b)
  * Enumerate the connectors by their UC parts - equal parts get the same number.
  * It can later serve as a table index, as if it was a perfect hash.
  */
-bool sort_condesc_by_uc_constring(Dictionary dict)
+static bool sort_condesc_by_uc_constring(Dictionary dict)
 {
 	if ((0 == dict->contable.num_con) && !IS_DYNAMIC_DICT(dict))
 	{
