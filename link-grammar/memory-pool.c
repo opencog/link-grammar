@@ -84,10 +84,6 @@ Pool_desc *pool_new(const char *func, const char *name,
 	mp->curr_elements = 0;
 	mp->num_elements = num_elements;
 
-#if HAVE_THREADS_H
-	mtx_init(&mp->mutex, mtx_plain);
-#endif
-
 	lgdebug(+D_MEMPOOL, "%sElement size %zu, alignment %zu (pool '%s' created in %s())\n",
 	        POOL_ALLOCATOR?"":"(Fake pool allocator) ",
 	        mp->element_size, mp->alignment, mp->name, mp->func);
