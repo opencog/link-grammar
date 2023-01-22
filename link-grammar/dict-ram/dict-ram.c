@@ -193,65 +193,6 @@ static inline int dict_order_wild(const char * s, const Dict_node * dn)
 #undef D_DOW
 
 /* ======================================================================== */
-#if 0
-/**
- * dict_match --  return true if strings match, else false.
- * A "bare" string (one without a subscript) will match any corresponding
- * string with a subscript; so, for example, "make" and "make.n" are
- * a match.  If both strings have subscripts, then the subscripts must match.
- *
- * A subscript is the part that follows the SUBSCRIPT_MARK.
- */
-static bool dict_match(const char * s, const char * t)
-{
-	while ((*s == *t) && (*s != '\0')) { s++; t++; }
-
-	if (*s == *t) return true; /* both are '\0' */
-	if ((*s == 0) && (*t == SUBSCRIPT_MARK)) return true;
-	if ((*s == SUBSCRIPT_MARK) && (*t == 0)) return true;
-
-	return false;
-}
-
-/**
- * prune_lookup_list -- discard all list entries that don't match string
- * Walk the lookup list (of right links), discarding all nodes that do
- * not match the dictionary string s. The matching is dictionary matching:
- * subscripted entries will match "bare" entries.
- */
-static Dict_node * prune_lookup_list(Dict_node * restrict llist, const char * restrict s)
-{
-	Dict_node *dn, *dnx, *list_new;
-
-	list_new = NULL;
-	for (dn = llist; dn != NULL; dn = dnx)
-	{
-		dnx = dn->right;
-		/* now put dn onto the answer list, or free it */
-		if (dict_match(dn->string, s))
-		{
-			dn->right = list_new;
-			list_new = dn;
-		}
-		else
-		{
-			free(dn);
-		}
-	}
-
-	/* now reverse the list back */
-	llist = NULL;
-	for (dn = list_new; dn != NULL; dn = dnx)
-	{
-		dnx = dn->right;
-		dn->right = llist;
-		llist = dn;
-	}
-	return llist;
-}
-#endif
-
-/* ======================================================================== */
 
 static bool subscr_match(const char *s, const Dict_node * dn)
 {
