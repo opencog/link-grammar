@@ -14,6 +14,7 @@
 #include <string.h>
 
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-internals.h"
 #include "dict-common/dict-utils.h"     // patch_subscript
 #include "dict-common/idiom.h"
 #include "dict-file/read-dict.h"        // dict_error2
@@ -38,28 +39,6 @@ void free_dictionary_root(Dictionary dict)
 	pool_delete(dict->Exp_pool);
 	dict->root = NULL;
 	dict->Exp_pool = NULL;
-}
-
-void dict_node_noop(Dictionary dict)
-{
-}
-
-/* ======================================================================== */
-
-Dict_node * dict_node_new(void)
-{
-	return (Dict_node*) malloc(sizeof(Dict_node));
-}
-
-void dict_node_free_list(Dict_node *llist)
-{
-	Dict_node * n;
-	while (llist != NULL)
-	{
-		n = llist->right;
-		free(llist);
-		llist = n;
-	}
 }
 
 /* ======================================================================== */

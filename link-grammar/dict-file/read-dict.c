@@ -17,6 +17,7 @@
 #include "dict-common/dialect.h"
 #include "dict-common/dict-affix.h"     // is_stem
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-internals.h"
 #include "dict-common/dict-utils.h"     // patch_subscript
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
@@ -519,7 +520,6 @@ static Exp * make_connector(Dictionary dict)
 		dn = strict_lookup_list(dict, dict->token);
 		if (dn == NULL)
 		{
-			dict_node_free_list(dn);
 			dict_error2(dict, "Perhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the subscript on a word.\n"
 			                 "Or perhaps the word is used before it is defined:",
