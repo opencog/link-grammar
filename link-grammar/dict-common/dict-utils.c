@@ -287,7 +287,8 @@ GNUC_UNUSED static void print_x_node(X_node *x)
 /* More connector utilities ... */
 
 /**
- * word_has_connector() -- return TRUE if dictionary expression has connector
+ * word_has_connector() -- Return true if the given expression has
+ *                         the given connector.
  * This function takes a dict_node (corresponding to an entry in a
  * given dictionary), a string (representing a connector), and a
  * direction (+ = right-pointing, '-' = left-pointing); it returns true
@@ -297,28 +298,6 @@ GNUC_UNUSED static void print_x_node(X_node *x)
  * if a word has a connector in a normal dictionary. The connector
  * check uses a "smart-match", the same kind used by the parser.
  */
-#if CRAZY_OBESE_CHECKING_AGLO
-bool word_has_connector(Dict_node * dn, const char * cs, char direction)
-{
-	Connector * c2 = NULL;
-	Disjunct *d, *d0;
-	if (dn == NULL) return false;
-	d0 = d = build_disjuncts_for_dict_node(dn);
-	if (d == NULL) return false;
-	for (; d != NULL; d = d->next) {
-		if (direction == '+') c2 = d->right;
-		if (direction == '-') c2 = d->left;
-		for (; c2 != NULL; c2 = c2->next) {
-			if (easy_match(c2->string, cs)) {
-				free_disjuncts(d0);
-				return true;
-			}
-		}
-	}
-	free_disjuncts(d0);
-	return false;
-}
-#else /* CRAZY_OBESE_CHECKING_AGLO */
 
 /**
  * Return true if the given expression has the given connector.
@@ -344,12 +323,6 @@ static bool exp_has_connector(const Exp * e, int depth, const char * cs,
 	}
 	return false;
 }
-
-bool word_has_connector(Dict_node * dn, const char * cs, char direction)
-{
-	return exp_has_connector(dn->exp, -1, cs, direction, /*smart_match*/true);
-}
-#endif /* CRAZY_OBESE_CHECKING_AGLO */
 
 /**
  * Find if an expression has a connector ZZZ- (that an empty-word has).

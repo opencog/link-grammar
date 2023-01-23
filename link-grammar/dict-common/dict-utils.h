@@ -39,7 +39,6 @@ void prt_exp_mem(Exp *);
 X_node *    catenate_X_nodes(X_node *, X_node *);
 
 /* Dictionary utilities ... */
-bool word_has_connector(Dict_node *, const char *, char);
 const char * word_only_connector(Dict_node *);
 bool word_contains(Dictionary dict, const char * word, const char * macro);
 
