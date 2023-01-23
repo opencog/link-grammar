@@ -16,9 +16,10 @@
 
 #include "api-structures.h"
 #include "connectors.h"
+#include "dict-common/dict-affix-impl.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-impl.h"
+#include "dict-common/dict-locale.h"
 #include "dict-common/dict-structures.h"
 #include "dict-common/dict-utils.h"      // patch_subscript()
 #include "dict-common/file-utils.h"

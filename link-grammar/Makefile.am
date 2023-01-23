@@ -90,8 +90,9 @@ liblink_grammar_la_SOURCES =        \
 	api.c                            \
 	connectors.c                     \
 	dict-common/dialect.c            \
+	dict-common/dict-affix-impl.c    \
 	dict-common/dict-common.c        \
-	dict-common/dict-impl.c          \
+	dict-common/dict-locale.c        \
 	dict-common/dict-utils.c         \
 	dict-common/file-utils.c         \
 	dict-common/idiom.c              \
@@ -154,10 +155,11 @@ liblink_grammar_la_SOURCES =        \
 	const-prime.h                    \
 	dict-common/dialect.h            \
 	dict-common/dict-affix.h         \
+	dict-common/dict-affix-impl.h    \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
 	dict-common/dict-defines.h       \
-	dict-common/dict-impl.h          \
+	dict-common/dict-locale.h        \
 	dict-common/dict-structures.h    \
 	dict-common/dict-utils.h         \
 	dict-common/file-utils.h         \

@@ -14,10 +14,11 @@
 #include "api-structures.h"
 #include "dict-common/dialect.h"      // dialect_alloc
 #include "dict-common/dict-affix.h"
+#include "dict-common/dict-affix-impl.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h"
-#include "dict-common/dict-impl.h"
+#include "dict-common/dict-locale.h"
 #include "dict-common/dict-utils.h"
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"

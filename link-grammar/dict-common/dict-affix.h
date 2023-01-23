@@ -10,7 +10,7 @@
 /*************************************************************************/
 
 #ifndef _LG_DICT_AFFIX_H_
-#define  _LG_DICT_AFFIX_H_
+#define _LG_DICT_AFFIX_H_
 
 #include "dict-common.h"
 
