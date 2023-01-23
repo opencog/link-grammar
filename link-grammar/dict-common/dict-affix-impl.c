@@ -12,18 +12,13 @@
 
 #include <string.h>
 
-#include "api-types.h"
-#include "connectors.h"
 #include "dict-affix.h"
 #include "dict-affix-impl.h"
 #include "dict-api.h"
-#include "dict-defines.h"
-#include "dict-structures.h"
+#include "dict-common.h"
 #include "print/print-util.h"           // patch_subscript_mark
 #include "regex-morph.h"
-#include "string-id.h"
 #include "string-set.h"
-#include "utilities.h"
 
 /* ======================================================================= */
 

@@ -12,16 +12,12 @@
 
 #include <string.h>
 
-#include "api-types.h"
-#include "connectors.h"
 #include "dict-api.h"
+#include "dict-common.h"
 #include "dict-defines.h"
 #include "dict-locale.h"
-#include "dict-structures.h"
-#include "regex-morph.h"
 #include "string-id.h"
 #include "string-set.h"
-#include "utilities.h"
 
 /* ======================================================================= */
 
