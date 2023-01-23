@@ -538,6 +538,15 @@ static void db_close(Dictionary dict)
 	dict->db_handle = NULL;
 }
 
+static void db_start_lookup(Dictionary dict, Sentence sent)
+{
+}
+
+static void db_end_lookup(Dictionary dict, Sentence sent)
+{
+	condesc_setup(dict);
+}
+
 Dictionary dictionary_create_from_db(const char *lang)
 {
 	char *dbname;
@@ -577,8 +586,8 @@ Dictionary dictionary_create_from_db(const char *lang)
 	dict->lookup_wild = db_lookup_wild;
 	dict->free_lookup = dict_node_free_lookup;
 	dict->exists_lookup = db_lookup;
-	dict->start_lookup = dict_lookup_noop;
-	dict->end_lookup = dict_lookup_noop;
+	dict->start_lookup = db_start_lookup;
+	dict->end_lookup = db_end_lookup;
 	dict->clear_cache = dict_node_noop;
 	dict->close = db_close;
 
