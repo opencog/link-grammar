@@ -86,7 +86,7 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 			free_insert_list(dn);
 			return NULL;
 		}
-		Dict_node * dn_new = malloc(sizeof(Dict_node));
+		Dict_node * dn_new = dict_node_new();
 		dn_new->left = dn;
 		dn = dn_new;
 		dn->string = s;
