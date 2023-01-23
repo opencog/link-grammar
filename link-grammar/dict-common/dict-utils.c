@@ -125,6 +125,7 @@ Exp *lg_exp_resolve(Dictionary dict, const Exp *e, Parse_Options opts)
 /* ======================================================== */
 
 #if 0
+/* Unused.... interesting. */
 void free_Exp(Exp *e)
 {
 	if (NULL == e) return; /* Exp might be null if the user has a bad dict. */

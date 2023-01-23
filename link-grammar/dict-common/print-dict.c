@@ -461,7 +461,7 @@ static bool is_ASAN_uninitialized(uintptr_t a)
 	return (a == asan_uninitialized);
 }
 
-void prt_exp_all(dyn_str *s, Exp *e, int i, Dictionary dict)
+static void prt_exp_all(dyn_str *s, Exp *e, int i, Dictionary dict)
 {
 	if (is_ASAN_uninitialized((uintptr_t)e))
 	{
