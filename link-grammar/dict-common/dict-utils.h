@@ -21,7 +21,6 @@
 
 #include "dict-common.h"
 #include "dict-structures.h"            // Exp
-#include "utilities.h"                  // dyn_str
 
 void patch_subscript(char *);
 
