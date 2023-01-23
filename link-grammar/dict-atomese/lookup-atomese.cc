@@ -316,6 +316,8 @@ void as_start_parse(Dictionary dict, Sentence sent)
 
 void as_end_parse(Dictionary dict, Sentence sent)
 {
+	// Deal with any new connector descriptors that have arrived.
+	condesc_setup(dict);
 }
 
 /// Return true if the given word can be found in the dictionary,

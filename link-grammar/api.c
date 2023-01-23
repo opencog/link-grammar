@@ -692,11 +692,6 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		return -2;
 	}
 
-	/* When a dynamic dictionary is used, expressions are read on demand,
-	 * so the connector descriptor table is not yet ready at this point. */
-	if (IS_DYNAMIC_DICT(dict))
-		condesc_setup(dict);
-
 	resources_reset(opts->resources);
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
