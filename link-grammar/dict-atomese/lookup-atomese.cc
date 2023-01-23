@@ -21,9 +21,10 @@
 #undef STRINGIFY
 
 extern "C" {
-#include "../link-includes.h"            // For Dictionary
-#include "../dict-common/dict-common.h"  // for Dictionary_s
-#include "../dict-common/dict-utils.h"   // for size_of_expression()
+#include "../link-includes.h"              // For Dictionary
+#include "../dict-common/dict-common.h"    // for Dictionary_s
+#include "../dict-common/dict-internals.h" // for dict_node_new()
+#include "../dict-common/dict-utils.h"     // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
 #include "lookup-atomese.h"
 };
@@ -442,8 +443,7 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 /// the dictionary.
 static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
 {
-	Dict_node* dn = (Dict_node*) malloc(sizeof(Dict_node));
-	memset(dn, 0, sizeof(Dict_node));
+	Dict_node* dn = dict_node_new();
 	dn->string = ssc;
 	dn->exp = exp;
 
@@ -462,7 +462,7 @@ static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
 	}
 
 	// Perform the lookup. We cannot return the dn above, as the
-	// as_free_llist() below will delete it, leading to mem corruption.
+	// dict_node_free_lookup() will delete it, leading to mem corruption.
 	dn = dict_node_lookup(dict, ssc);
 	return dn;
 }

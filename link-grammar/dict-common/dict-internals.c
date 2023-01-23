@@ -10,6 +10,7 @@
 /*************************************************************************/
 
 #include <stdlib.h>
+#include <string.h>
 
 #include "dict-internals.h"
 
@@ -23,7 +24,9 @@ void dict_parse_noop(Dictionary dict, Sentence sent)
 
 Dict_node * dict_node_new(void)
 {
-   return (Dict_node*) malloc(sizeof(Dict_node));
+   Dict_node* dn = (Dict_node*) malloc(sizeof(Dict_node));
+	memset(dn, 0, sizeof(Dict_node));
+   return dn;
 }
 
 void dict_node_free_list(Dict_node *llist)
