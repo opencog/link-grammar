@@ -92,6 +92,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-common/dialect.c            \
 	dict-common/dict-affix-impl.c    \
 	dict-common/dict-common.c        \
+	dict-common/dict-internals.c     \
 	dict-common/dict-locale.c        \
 	dict-common/dict-utils.c         \
 	dict-common/file-utils.c         \
@@ -159,6 +160,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-common/dict-api.h           \
 	dict-common/dict-common.h        \
 	dict-common/dict-defines.h       \
+	dict-common/dict-internals.h     \
 	dict-common/dict-locale.h        \
 	dict-common/dict-structures.h    \
 	dict-common/dict-utils.h         \

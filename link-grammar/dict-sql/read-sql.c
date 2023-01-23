@@ -26,6 +26,7 @@
 #include "dict-common/dict-affix-impl.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
+#include "dict-common/dict-internals.h"
 #include "dict-common/dict-locale.h"
 #include "dict-common/dict-structures.h"
 #include "dict-common/dict-utils.h"      // patch_subscript()
@@ -139,17 +140,6 @@ typedef struct
 	Exp* exp;
 	char* classname;
 } cbdata;
-
-static void db_free_llist(Dictionary dict, Dict_node *llist)
-{
-	Dict_node * dn;
-	while (llist != NULL)
-	{
-		dn = llist->right;
-		free(llist);
-		llist = dn;
-	}
-}
 
 /* callback -- set bs->exp to the expressions for a class in the dict */
 static int exp_cb(void *user_data, int argc, char **argv, char **colName)
@@ -586,7 +576,7 @@ Dictionary dictionary_create_from_db(const char *lang)
 
 	dict->lookup_list = db_lookup_list;
 	dict->lookup_wild = db_lookup_wild;
-	dict->free_lookup = db_free_llist;
+	dict->free_lookup = dict_node_free_lookup;
 	dict->exists_lookup = db_lookup;
 	dict->clear_cache = dict_node_noop;
 	dict->close = db_close;

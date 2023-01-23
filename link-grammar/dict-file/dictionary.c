@@ -18,6 +18,7 @@
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h"
+#include "dict-common/dict-internals.h"
 #include "dict-common/dict-locale.h"
 #include "dict-common/dict-utils.h"
 #include "dict-common/file-utils.h"
