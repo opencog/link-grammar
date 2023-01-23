@@ -17,6 +17,14 @@
 #include "api-types.h"
 
 typedef struct X_node_struct X_node;
+struct X_node_struct
+{
+	const char * string;       /* the word itself */
+	Exp * exp;
+	X_node *next;
+	const Gword *word;         /* originating Wordgraph word */
+};
+
 /**
  * Word, as represented shortly after tokenization, but before parsing.
  *

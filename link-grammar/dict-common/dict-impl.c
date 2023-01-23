@@ -27,6 +27,10 @@
 
 /* ======================================================================= */
 
+#ifdef __MINGW32__
+int callGetLocaleInfoEx(LPCWSTR, LCTYPE, LPWSTR, int);
+#endif /* __MINGW32__ */
+
 // WindowsXP workaround - missing GetLocaleInfoEx
 #if _WINVER == 0x501 // XP
 int callGetLocaleInfoEx(LPCWSTR lpLocaleName, LCTYPE LCType, LPWSTR lpLCData, int cchData)
