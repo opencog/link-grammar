@@ -12,8 +12,9 @@
 
 #include "error.h"
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-defines.h" // for MAX_WORD
-#include "dict-common/dict-utils.h" // for patch_subscript()
+#include "dict-common/dict-defines.h"   // for MAX_WORD
+#include "dict-common/dict-internals.h"
+#include "dict-common/dict-utils.h"     // for patch_subscript()
 #include "dict-common/file-utils.h"
 #include "string-set.h"
 #include "read-dict.h"
