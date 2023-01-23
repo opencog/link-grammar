@@ -42,15 +42,6 @@ static const float DEFAULT_MAX_DISJUNCT_COST = 2.7f;
 typedef struct Afdict_class_struct Afdict_class;
 typedef struct Regex_node_s Regex_node;
 
-typedef struct X_node_struct X_node;
-struct X_node_struct
-{
-	const char * string;       /* the word itself */
-	Exp * exp;
-	X_node *next;
-	const Gword *word;         /* originating Wordgraph word */
-};
-
 /* The regexes are stored as a linked list of the following nodes. */
 struct Regex_node_s
 {
