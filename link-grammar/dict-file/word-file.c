@@ -12,8 +12,9 @@
 
 #include "error.h"
 #include "dict-common/dict-common.h"
-#include "dict-common/dict-defines.h" // for MAX_WORD
-#include "dict-common/dict-utils.h" // for patch_subscript()
+#include "dict-common/dict-defines.h"   // for MAX_WORD
+#include "dict-common/dict-internals.h"
+#include "dict-common/dict-utils.h"     // for patch_subscript()
 #include "dict-common/file-utils.h"
 #include "string-set.h"
 #include "read-dict.h"
@@ -86,7 +87,7 @@ Dict_node * read_word_file(Dictionary dict, Dict_node * dn, char * filename)
 			free_insert_list(dn);
 			return NULL;
 		}
-		Dict_node * dn_new = malloc(sizeof(Dict_node));
+		Dict_node * dn_new = dict_node_new();
 		dn_new->left = dn;
 		dn = dn_new;
 		dn->string = s;

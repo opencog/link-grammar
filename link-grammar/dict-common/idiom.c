@@ -14,7 +14,7 @@
 #include "api-types.h"
 #include "dict-api.h"
 #include "dict-common.h"
-#include "dict-ram/dict-ram.h"
+#include "dict-internals.h"
 #include "error.h"
 #include "idiom.h"
 #include "string-set.h"
@@ -109,7 +109,7 @@ static Dict_node * make_idiom_Dict_nodes(Dictionary dict, const char * string)
 		s = strchr(s, '_');
 		if ((NULL != sm) && (s > sm)) s = NULL;
 		if (NULL != s) *s++ = '\0';
-		Dict_node *dn_new = (Dict_node *) malloc(sizeof (Dict_node));
+		Dict_node *dn_new = dict_node_new();
 		dn_new->right = dn;
 		dn = dn_new;
 		dn->string = string_set_add(t, dict->string_set);

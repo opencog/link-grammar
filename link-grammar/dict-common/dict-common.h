@@ -165,10 +165,14 @@ struct Dictionary_s
 #endif
 
 	void (*insert_entry)(Dictionary, Dict_node *, int);
+
+	void (*start_lookup)(Dictionary, Sentence);
+	void (*end_lookup)(Dictionary, Sentence);
 	Dict_node* (*lookup_list)(Dictionary, const char*);
 	Dict_node* (*lookup_wild)(Dictionary, const char*);
 	void (*free_lookup)(Dictionary, Dict_node*);
 	bool (*exists_lookup)(Dictionary, const char*);
+
 	void (*clear_cache)(Dictionary);
 	void (*close)(Dictionary);
 
