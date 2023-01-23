@@ -316,6 +316,9 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 
 void as_end_lookup(Dictionary dict, Sentence sent)
 {
+	Local* local = (Local*) (dict->as_server);
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
+
 	// Deal with any new connector descriptors that have arrived.
 	condesc_setup(dict);
 }
