@@ -17,6 +17,10 @@ void dict_node_noop(Dictionary dict)
 {
 }
 
+void dict_parse_noop(Dictionary dict, Sentence sent)
+{
+}
+
 Dict_node * dict_node_new(void)
 {
    return (Dict_node*) malloc(sizeof(Dict_node));
