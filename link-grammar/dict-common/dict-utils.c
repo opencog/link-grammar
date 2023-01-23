@@ -254,36 +254,6 @@ static int exp_contains(Exp * super, Exp * sub)
 }
 
 /* ======================================================== */
-/* X_node utilities ... */
-
-/**
- * Destructively catenates the two disjunct lists d1 followed by d2.
- * Doesn't change the contents of the disjuncts.
- * Traverses the first list, but not the second.
- */
-X_node * catenate_X_nodes(X_node *d1, X_node *d2)
-{
-	X_node * dis = d1;
-
-	if (d1 == NULL) return d2;
-	if (d2 == NULL) return d1;
-	while (dis->next != NULL) dis = dis->next;
-	dis->next = d2;
-	return d1;
-}
-
-#ifdef DEBUG
-GNUC_UNUSED static void print_x_node(X_node *x)
-{
-	if (x == NULL) printf("NULL X_node\n");
-	for (; x != NULL; x = x->next)
-	{
-		printf("%p: exp=%p next=%p\n", x, x->exp, x->next);
-	}
-}
-#endif
-
-/* ======================================================== */
 /* More connector utilities ... */
 
 /**
