@@ -62,11 +62,6 @@ void dict_node_free_list(Dict_node *llist)
 	}
 }
 
-void dict_node_free_lookup(Dictionary dict, Dict_node *llist)
-{
-	dict_node_free_list(llist);
-}
-
 /* ======================================================================== */
 /**
  * Dictionary entry comparison and ordering functions.

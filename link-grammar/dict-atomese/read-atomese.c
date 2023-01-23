@@ -100,7 +100,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	/* Install backend methods */
 	dict->lookup_list = as_lookup_list;
 	dict->lookup_wild = as_lookup_wild;
-	dict->free_lookup = dict_free_lookup;
+	dict->free_lookup = dict_node_free_lookup;
 	dict->exists_lookup = as_boolean_lookup;
 	dict->clear_cache = as_clear_cache;
 	dict->close = as_close;

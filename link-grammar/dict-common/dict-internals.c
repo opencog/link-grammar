@@ -13,7 +13,7 @@
 
 #include "dict-internals.h"
 
-void dict_free_lookup(Dictionary dict, Dict_node* llist)
+void dict_node_free_lookup(Dictionary dict, Dict_node* llist)
 {
 	Dict_node * dn;
 	while (llist != NULL)

@@ -12,4 +12,4 @@
 #include "dict-structures.h"
 #include "link-includes.h"
 
-void dict_free_lookup(Dictionary, Dict_node*);
+void dict_node_free_lookup(Dictionary, Dict_node*);

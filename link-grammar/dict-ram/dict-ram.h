@@ -19,7 +19,6 @@ Dict_node * dict_node_insert(Dictionary dict, Dict_node *n, Dict_node *newnode);
 Dict_node * dict_node_lookup(const Dictionary dict, const char *s);
 Dict_node * dict_node_wild_lookup(Dictionary dict, const char *s);
 bool dict_node_exists_lookup(Dictionary dict, const char *s);
-void dict_node_free_lookup(Dictionary dict, Dict_node *llist);
 void dict_node_free_list(Dict_node *llist);
 
 void free_dictionary_root(Dictionary dict);
