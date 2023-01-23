@@ -474,7 +474,7 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	return sent;
 }
 
-int sentence_split(Sentence sent, Parse_Options opts)
+static int do_sentence_split(Sentence sent, Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
 	bool fw_failed = false;
@@ -523,6 +523,15 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	if (verbosity >= D_USER_TIMES)
 		prt_error("#### Finished tokenizing (%zu tokens)\n", sent->length);
 	return 0;
+}
+
+int sentence_split(Sentence sent, Parse_Options opts)
+{
+	Dictionary dict = sent->dict;
+	dict->start_parse(dict, sent);
+	int rc = do_sentence_split(sent, opts);
+	dict->end_parse(dict, sent);
+	return rc;
 }
 
 void sentence_delete(Sentence sent)
@@ -635,9 +644,8 @@ int sentence_link_cost(Sentence sent, LinkageIdx i)
 
 int sentence_parse(Sentence sent, Parse_Options opts)
 {
-	int rc;
-
-	if (IS_GENERATION(sent->dict))
+	Dictionary dict = sent->dict;
+	if (IS_GENERATION(dict))
 	{
 #if USE_SAT_SOLVER
 		if (opts->use_sat_solver)
@@ -654,7 +662,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	}
 
 	if (opts->disjunct_cost == UNINITIALIZED_MAX_DISJUNCT_COST)
-		opts->disjunct_cost = sent->dict->default_max_disjunct_cost;
+		opts->disjunct_cost = dict->default_max_disjunct_cost;
 
 	sent->num_valid_linkages = 0;
 
@@ -664,7 +672,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	 */
 	if (0 == sent->length)
 	{
-		rc = sentence_split(sent, opts);
+		int rc = sentence_split(sent, opts);
 		if (rc) return -1;
 	}
 	else
@@ -684,13 +692,12 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 		return -2;
 	}
 
-	resources_reset(opts->resources);
-
 	/* When a dynamic dictionary is used, expressions are read on demand,
 	 * so the connector descriptor table is not yet ready at this point. */
-	if (IS_DYNAMIC_DICT(sent->dict))
-		condesc_setup(sent->dict);
+	if (IS_DYNAMIC_DICT(dict))
+		condesc_setup(dict);
 
+	resources_reset(opts->resources);
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
 		for (X_node *x = sent->word[w].x; x != NULL; x = x->next)
