@@ -333,18 +333,6 @@ bool is_exp_like_empty_word(Dictionary dict, Exp *exp)
 	return exp_has_connector(exp, 2, cs, '-');
 }
 
-/**
- * If word has a connector, return it.
- * If word has more than one connector, return NULL.
- */
-const char * word_only_connector(Dict_node * dn)
-{
-	Exp * e = dn->exp;
-	if (CONNECTOR_type == e->type)
-		return e->condesc->string;
-	return NULL;
-}
-
 /* ======================================================== */
 /* Dictionary utilities ... */
 

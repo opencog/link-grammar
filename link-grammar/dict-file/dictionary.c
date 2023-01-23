@@ -37,6 +37,18 @@
 *
 ****************************************************************/
 
+/**
+ * If word has a connector, return it.
+ * If word has more than one connector, return NULL.
+ */
+static const char * word_only_connector(Dict_node * dn)
+{
+	Exp * e = dn->exp;
+	if (CONNECTOR_type == e->type)
+		return e->condesc->string;
+	return NULL;
+}
+
 static void load_affix(Dictionary afdict, Dict_node *dn, int l)
 {
 	Dict_node * dnx = NULL;
