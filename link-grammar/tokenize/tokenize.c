@@ -3310,6 +3310,44 @@ GNUC_UNUSED static void print_x_node(X_node *x)
 }
 #endif
 
+/* ======================================================================== */
+/* Empty-word handling. */
+
+/** Insert ZZZ+ connectors.
+ *  This function was mainly used to support using empty-words, a concept
+ *  that has been eliminated. However, it is still used to support linking of
+ *  quotes that don't get the QUc/QUd links.
+ */
+static void add_empty_word(Sentence sent, X_node *x)
+{
+	Exp *zn, *an;
+	const char *ZZZ = string_set_lookup(EMPTY_CONNECTOR, sent->dict->string_set);
+	/* This function is called only if ZZZ is in the dictionary. */
+
+	/* The left-wall already has ZZZ-. The right-wall will not arrive here. */
+	if (MT_WALL == x->word->morpheme_type) return;
+
+	/* Replace plain-word-exp by {ZZZ+} & (plain-word-exp) in each X_node.  */
+	for(; NULL != x; x = x->next)
+	{
+		/* Ignore stems for now, decreases a little the overhead for
+		 * stem-suffix languages. */
+		if (is_stem(x->string)) continue; /* Avoid an unneeded overhead. */
+		//lgdebug(+0, "Processing '%s'\n", x->string);
+
+		/* zn points at {ZZZ+} */
+		zn = make_connector_node(sent->dict, sent->Exp_pool, ZZZ, '+', false);
+		zn = make_optional_node(sent->Exp_pool, zn);
+
+		/* an will be {ZZZ+} & (plain-word-exp) */
+		an = make_and_node(sent->Exp_pool, zn, x->exp);
+
+		x->exp = an;
+	}
+}
+
+/* ======================================================================== */
+
 /**
  * Build the expression lists for a given word at the current word-array word.
  *

@@ -218,7 +218,6 @@ bool dictionary_generation_request(const Dictionary);
  * and pretty much no one else. If you are not the tokenizer, you
  * probably don't need these. */
 bool dict_has_word(const Dictionary dict, const char *);
-void add_empty_word(Sentence, X_node *);
 
 static inline const char *subscript_mark_str(void)
 {
