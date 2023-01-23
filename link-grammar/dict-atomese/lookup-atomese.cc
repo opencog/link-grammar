@@ -310,6 +310,14 @@ void as_close(Dictionary dict)
 
 // ===============================================================
 
+void as_start_parse(Dictionary dict, Sentence sent)
+{
+}
+
+void as_end_parse(Dictionary dict, Sentence sent)
+{
+}
+
 /// Return true if the given word can be found in the dictionary,
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
