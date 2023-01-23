@@ -18,7 +18,7 @@ void dict_node_noop(Dictionary dict)
 {
 }
 
-void dict_parse_noop(Dictionary dict, Sentence sent)
+void dict_lookup_noop(Dictionary dict, Sentence sent)
 {
 }
 

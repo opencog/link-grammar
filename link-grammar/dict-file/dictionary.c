@@ -187,8 +187,8 @@ dictionary_six_str(const char * lang,
 		dict->free_lookup = dict_node_free_lookup;
 		dict->exists_lookup = dict_node_exists_lookup;
 		dict->clear_cache = dict_node_noop;
-		dict->start_parse = dict_parse_noop;
-		dict->end_parse = dict_parse_noop;
+		dict->start_lookup = dict_lookup_noop;
+		dict->end_lookup = dict_lookup_noop;
 
 		dict->dialect_tag.set = string_id_create();
 		condesc_init(dict, 1<<13);

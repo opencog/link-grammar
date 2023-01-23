@@ -528,9 +528,9 @@ static int do_sentence_split(Sentence sent, Parse_Options opts)
 int sentence_split(Sentence sent, Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
-	dict->start_parse(dict, sent);
+	dict->start_lookup(dict, sent);
 	int rc = do_sentence_split(sent, opts);
-	dict->end_parse(dict, sent);
+	dict->end_lookup(dict, sent);
 	return rc;
 }
 

@@ -15,8 +15,8 @@ bool as_boolean_lookup(Dictionary, const char *);
 Dict_node * as_lookup_list(Dictionary, const char *);
 Dict_node * as_lookup_wild(Dictionary, const char *);
 
-void as_start_parse(Dictionary, Sentence);
-void as_end_parse(Dictionary, Sentence);
+void as_start_lookup(Dictionary, Sentence);
+void as_end_lookup(Dictionary, Sentence);
 
 void as_clear_cache(Dictionary);
 
