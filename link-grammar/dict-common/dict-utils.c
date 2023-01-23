@@ -287,30 +287,24 @@ GNUC_UNUSED static void print_x_node(X_node *x)
 /* More connector utilities ... */
 
 /**
- * word_has_connector() -- Return true if the given expression has
- *                         the given connector.
- * This function takes a dict_node (corresponding to an entry in a
- * given dictionary), a string (representing a connector), and a
- * direction (+ = right-pointing, '-' = left-pointing); it returns true
+ * exp_has_connector() -- Return true if the given expression has
+ *                        the given connector.
+ * This function takes an expression, a string (representing a connector),
+ * and a direction (+ = right-pointing, '-' = left-pointing); it returns true
  * if the dictionary expression for the word includes the connector,
  * false otherwise.  This can be used to see if a word is in a certain
  * category (checking for a category connector in a table), or to see
- * if a word has a connector in a normal dictionary. The connector
- * check uses a "smart-match", the same kind used by the parser.
+ * if a word has a connector in a normal dictionary.
+ *
+ * The connector cs argument must be in the dictionary string set!
  */
-
-/**
- * Return true if the given expression has the given connector.
- * The connector cs argument must originally be in the dictionary string set.
- */
-static bool exp_has_connector(const Exp * e, int depth, const char * cs,
-                              char direction, bool smart_match)
+static bool exp_has_connector(const Exp * e, int depth,
+                              const char * cs, char direction)
 {
 	if (e->type == CONNECTOR_type)
 	{
 		if (direction != e->dir) return false;
-		return smart_match ? easy_match(e->condesc->string, cs)
-		                   : string_set_cmp(e->condesc->string, cs);
+		return string_set_cmp(e->condesc->string, cs);
 	}
 
 	if (depth == 0) return false;
@@ -318,7 +312,7 @@ static bool exp_has_connector(const Exp * e, int depth, const char * cs,
 
 	for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 	{
-		if (exp_has_connector(opd, depth, cs, direction, smart_match))
+		if (exp_has_connector(opd, depth, cs, direction))
 			return true;
 	}
 	return false;
@@ -336,7 +330,7 @@ bool is_exp_like_empty_word(Dictionary dict, Exp *exp)
 {
 	const char *cs = string_set_lookup(EMPTY_CONNECTOR, dict->string_set);
 	if (NULL == cs) return false;
-	return exp_has_connector(exp, 2, cs, '-', /*smart_match*/false);
+	return exp_has_connector(exp, 2, cs, '-');
 }
 
 /**
