@@ -343,7 +343,7 @@ static void deduplicate_linkages(Sentence sent)
 		Linkage lnx = &sent->lnkages[isrc];
 		if (lnx->dupe)
 		{
-			// Free stuff
+			free_linkage(lnx);
 			continue;
 		}
 		tgt++;
