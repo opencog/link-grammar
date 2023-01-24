@@ -337,6 +337,16 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 		uint32_t wi;
 		for (wi=0; wi<lpv->num_words; wi++)
 		{
+			// Parses with non-zero null count will have null words,
+			// i.e. word without chosen_disjuncts. Avoid a null-pointer
+			// deref in this case.
+			if (NULL == lpv->chosen_disjuncts[wi])
+			{
+				// If one is null, both should be null. (I think this
+				// will always be true, but I'm not sure.)
+				if (NULL == lnx->chosen_disjuncts[wi]) continue;
+				break;
+			}
 			if (lpv->chosen_disjuncts[wi]->word_string !=
 			    lnx->chosen_disjuncts[wi]->word_string) break;
 		}
