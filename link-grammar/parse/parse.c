@@ -304,13 +304,15 @@ static void deduplicate_linkages(Sentence sent)
 
 	// Phase one: Mark
 	uint32_t num_dupes = 0;
+	uint32_t tgt = 0;
 	for (uint32_t i=1; i<nl; i++)
 	{
-		Linkage lpv = &sent->lnkages[i-1];
+		Linkage lpv = &sent->lnkages[tgt];
 		Linkage lnx = &sent->lnkages[i];
 
 		// Mark
 		lnx->dupe = false;
+		tgt ++;
 
 		// Rule out obvious mismatches.
 		if (lpv->num_links != lnx->num_links) continue;
@@ -331,24 +333,23 @@ static void deduplicate_linkages(Sentence sent)
 		// If we are here, then lpv and lnx are the same linkage.
 		lnx->dupe = true;
 		num_dupes ++;
-
-		i--; // Do not advance i; there may be more!
+		tgt--;
 	}
 
 	// Phase two: Sweep
-	uint32_t off = 0;
-	for (uint32_t i=1; i<nl; i++)
+	tgt = 0;
+	for (uint32_t isrc=1; isrc<nl; isrc++)
 	{
-		Linkage lnx = &sent->lnkages[i];
+		Linkage lnx = &sent->lnkages[isrc];
 		if (lnx->dupe)
 		{
 			// Free stuff
 			continue;
 		}
-		off++;
-		if (off == i) continue; // Nothing to do, yet.
+		tgt++;
+		if (tgt == isrc) continue; // Nothing to do, yet.
 
-		Linkage lpv = &sent->lnkages[off];
+		Linkage lpv = &sent->lnkages[tgt];
 
 		// Move one linkage.
 		memmove(lpv, lnx, sizeof(struct Linkage_s));
