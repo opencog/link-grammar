@@ -294,9 +294,13 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 	for (uint32_t li=0; li<lpv->num_links; li++)
 	{
 		if (lpv->link_array[li].lc != lnx->link_array[li].lc)
-			return lpv->link_array[li].lc->tracon_id - lnx->link_array[li].lc->tracon_id;
+			return strcmp(
+				lpv->link_array[li].lc->desc->string,
+				lnx->link_array[li].lc->desc->string);
 		if (lpv->link_array[li].rc != lnx->link_array[li].rc)
-			return lpv->link_array[li].rc->tracon_id - lnx->link_array[li].rc->tracon_id;
+			return strcmp(
+				lpv->link_array[li].rc->desc->string,
+				lnx->link_array[li].rc->desc->string);
 		if (lpv->link_array[li].lw != lnx->link_array[li].lw)
 			return lpv->link_array[li].lw - lnx->link_array[li].lw;
 		if (lpv->link_array[li].rw != lnx->link_array[li].rw)
