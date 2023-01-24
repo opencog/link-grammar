@@ -281,6 +281,85 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 }
 
 /**
+ * Linkage-equivalent predicate. Return zero if they are equivalent,
+ * else return +1 or -1. This does provide a stable sort; inequivalent
+ * linkages are always sorted the same way.
+ *
+ * This assumes that the more basic inequivalence compares have already
+ * been done. This only disambiguates the final little bit of
+ * nearly-identical linkages.
+ */
+static int linkage_equiv_p(Linkage lpv, Linkage lnx)
+{
+	// Compare links
+	for (uint32_t li=0; li<lpv->num_links; li++)
+	{
+		if (lpv->link_array[li].lc != lnx->link_array[li].lc)
+			return lpv->link_array[li].lc->tracon_id - lnx->link_array[li].lc->tracon_id;
+		if (lpv->link_array[li].rc != lnx->link_array[li].rc)
+			return lpv->link_array[li].rc->tracon_id - lnx->link_array[li].rc->tracon_id;
+		if (lpv->link_array[li].lw != lnx->link_array[li].lw)
+			return lpv->link_array[li].lw - lnx->link_array[li].lw;
+		if (lpv->link_array[li].rw != lnx->link_array[li].rw)
+			return lpv->link_array[li].rw - lnx->link_array[li].rw;
+	}
+
+	// Compare words. The chosen_disjuncts->word_string is the
+	// dictionary word. It can happen that two different dictionary
+	// words can have the same disjunct, and thus result in the same
+	// linkage. For backwards compat, we will report these as being
+	// different, as printing will reveal the differences in words.
+	for (uint32_t wi=0; wi<lpv->num_words; wi++)
+	{
+		// Parses with non-zero null count will have null words,
+		// i.e. word without chosen_disjuncts. Avoid a null-pointer
+		// deref in this case.
+		if (NULL == lpv->chosen_disjuncts[wi])
+		{
+			// If one is null, both should be null. (I think this
+			// will always be true, but I'm not sure.)
+			if (NULL == lnx->chosen_disjuncts[wi]) continue;
+			return 1;
+		}
+		if (lpv->chosen_disjuncts[wi]->word_string !=
+		    lnx->chosen_disjuncts[wi]->word_string)
+			return strcmp(lpv->chosen_disjuncts[wi]->word_string,
+			              lnx->chosen_disjuncts[wi]->word_string);
+	}
+
+	return 0;
+}
+
+/**
+ * VDAL == Compare by Violations, Disjunct, Link length.
+ */
+int VDAL_compare_linkages(Linkage l1, Linkage l2)
+{
+	Linkage_info * p1 = &l1->lifo;
+	Linkage_info * p2 = &l2->lifo;
+
+	if (p1->N_violations != p2->N_violations)
+		return (p1->N_violations - p2->N_violations);
+
+	if (p1->unused_word_cost != p2->unused_word_cost)
+		return (p1->unused_word_cost - p2->unused_word_cost);
+
+	float diff = p1->disjunct_cost - p2->disjunct_cost;
+
+#define COST_EPSILON 1.0e-6
+	if (COST_EPSILON < diff) return 1;
+	if (diff < -COST_EPSILON) return -1;
+
+	if (p1->link_cost != p2->link_cost)
+		return (p1->link_cost - p2->link_cost);
+
+	if (l1->num_words != l2->num_words)
+		return l1->num_words != l2->num_words;
+
+	return linkage_equiv_p(l1, l2);
+}
+
+/**
  * Remove duplicate linkages in the link array. Duplicates can appear
  * if the number of parses overflowed, or if the number of parses is
  * larger than the linkage array. In this case, random linkages will
@@ -401,27 +480,6 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 	sent->num_linkages_alloced -= num_dupes;
 	sent->num_valid_linkages -= num_dupes;
 	sent->num_linkages_post_processed -= num_dupes;
-}
-
-/**
- * VDAL == Compare by Violations, Disjunct, Link length.
- */
-int VDAL_compare_parse(Linkage l1, Linkage l2)
-{
-	Linkage_info * p1 = &l1->lifo;
-	Linkage_info * p2 = &l2->lifo;
-
-	if (p1->N_violations != p2->N_violations) {
-		return (p1->N_violations - p2->N_violations);
-	}
-	else if (p1->unused_word_cost != p2->unused_word_cost) {
-		return (p1->unused_word_cost - p2->unused_word_cost);
-	}
-	else if (p1->disjunct_cost > p2->disjunct_cost) return 1;
-	else if (p1->disjunct_cost < p2->disjunct_cost) return -1;
-	else {
-		return (p1->link_cost - p2->link_cost);
-	}
 }
 
 static void sort_linkages(Sentence sent, Parse_Options opts)

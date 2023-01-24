@@ -81,7 +81,7 @@ Parse_Options parse_options_create(void)
 	// others leak memory.
 	po->use_spell_guess = 0;
 
-	po->cost_model.compare_fn = &VDAL_compare_parse;
+	po->cost_model.compare_fn = &VDAL_compare_linkages;
 	po->cost_model.type = VDAL;
 	po->short_length = 16;
 	po->all_short = false;
@@ -109,7 +109,7 @@ void parse_options_set_cost_model_type(Parse_Options opts, Cost_Model_type cm)
 	switch(cm) {
 	case VDAL:
 		opts->cost_model.type = VDAL;
-		opts->cost_model.compare_fn = &VDAL_compare_parse;
+		opts->cost_model.compare_fn = &VDAL_compare_linkages;
 		break;
 	default:
 		prt_error("Error: Illegal cost model: %d\n", (int)cm);
