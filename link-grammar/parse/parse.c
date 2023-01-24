@@ -329,6 +329,19 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 		}
 		if (li != lpv->num_links) continue;
 
+		// Compare words. The chosen_disjuncts->word_string is the
+		// dictionary word. It can happen that two different dictionary
+		// words can have the same disjunct, and thus result in the same
+		// linkage. For backwards compat, we will report these as being
+		// different, as printing will reveal the differences in words.
+		uint32_t wi;
+		for (wi=0; wi<lpv->num_words; wi++)
+		{
+			if (lpv->chosen_disjuncts[wi]->word_string !=
+			    lnx->chosen_disjuncts[wi]->word_string) break;
+		}
+		if (wi != lpv->num_words) continue;
+
 		// If we are here, then lpv and lnx are the same linkage.
 		lnx->dupe = true;
 		num_dupes ++;
