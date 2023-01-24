@@ -48,28 +48,6 @@ char * test = (char *)"";
 ****************************************************************/
 
 /**
- * For sorting the linkages in postprocessing
- */
-
-static int VDAL_compare_parse(Linkage l1, Linkage l2)
-{
-	Linkage_info * p1 = &l1->lifo;
-	Linkage_info * p2 = &l2->lifo;
-
-	if (p1->N_violations != p2->N_violations) {
-		return (p1->N_violations - p2->N_violations);
-	}
-	else if (p1->unused_word_cost != p2->unused_word_cost) {
-		return (p1->unused_word_cost - p2->unused_word_cost);
-	}
-	else if (p1->disjunct_cost > p2->disjunct_cost) return 1;
-	else if (p1->disjunct_cost < p2->disjunct_cost) return -1;
-	else {
-		return (p1->link_cost - p2->link_cost);
-	}
-}
-
-/**
  * Create and initialize a Parse_Options object
  */
 Parse_Options parse_options_create(void)
@@ -103,7 +81,7 @@ Parse_Options parse_options_create(void)
 	// others leak memory.
 	po->use_spell_guess = 0;
 
-	po->cost_model.compare_fn = &VDAL_compare_parse;
+	po->cost_model.compare_fn = &VDAL_compare_linkages;
 	po->cost_model.type = VDAL;
 	po->short_length = 16;
 	po->all_short = false;
@@ -131,7 +109,7 @@ void parse_options_set_cost_model_type(Parse_Options opts, Cost_Model_type cm)
 	switch(cm) {
 	case VDAL:
 		opts->cost_model.type = VDAL;
-		opts->cost_model.compare_fn = &VDAL_compare_parse;
+		opts->cost_model.compare_fn = &VDAL_compare_linkages;
 		break;
 	default:
 		prt_error("Error: Illegal cost model: %d\n", (int)cm);
