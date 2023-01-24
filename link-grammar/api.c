@@ -48,28 +48,6 @@ char * test = (char *)"";
 ****************************************************************/
 
 /**
- * For sorting the linkages in postprocessing
- */
-
-static int VDAL_compare_parse(Linkage l1, Linkage l2)
-{
-	Linkage_info * p1 = &l1->lifo;
-	Linkage_info * p2 = &l2->lifo;
-
-	if (p1->N_violations != p2->N_violations) {
-		return (p1->N_violations - p2->N_violations);
-	}
-	else if (p1->unused_word_cost != p2->unused_word_cost) {
-		return (p1->unused_word_cost - p2->unused_word_cost);
-	}
-	else if (p1->disjunct_cost > p2->disjunct_cost) return 1;
-	else if (p1->disjunct_cost < p2->disjunct_cost) return -1;
-	else {
-		return (p1->link_cost - p2->link_cost);
-	}
-}
-
-/**
  * Create and initialize a Parse_Options object
  */
 Parse_Options parse_options_create(void)
