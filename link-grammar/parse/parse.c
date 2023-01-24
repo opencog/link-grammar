@@ -348,23 +348,43 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 		tgt--;
 	}
 
+	// None found!
+	if (0 == num_dupes) return;
+
 	// Phase two: Sweep
 	tgt = 0;
-	for (uint32_t isrc=1; isrc<nl; isrc++)
+	uint32_t blkstart = 0;
+	uint32_t blklen = 1; // Initial block, already skipped
+	for (uint32_t i=1; i<nl; i++)
 	{
-		Linkage lnx = &sent->lnkages[isrc];
-		if (lnx->dupe)
+		Linkage lnx = &sent->lnkages[i];
+		if (false == lnx->dupe) { blklen++; continue; }
+		free_linkage(lnx);
+
+		// If there's a block of good linkages to copy, then copy.
+		if (0 < blklen)
 		{
-			free_linkage(lnx);
-			continue;
+			// Skip initial block; it is already in place.
+			if (0 < tgt)
+			{
+				Linkage ltgt = &sent->lnkages[tgt];
+				Linkage lsrc = &sent->lnkages[blkstart];
+				memmove(ltgt, lsrc, blklen * sizeof(struct Linkage_s));
+			}
+			tgt += blklen;
+			blklen = 0;
 		}
-		tgt++;
-		if (tgt == isrc) continue; // Nothing to do, yet.
 
-		Linkage lpv = &sent->lnkages[tgt];
+		// The next good linkage comes after this bad one.
+		blkstart = i+1;
+	}
 
-		// Move one linkage.
-		memmove(lpv, lnx, sizeof(struct Linkage_s));
+	// Copy the final block.
+	if (0 < blklen && 0 < tgt)
+	{
+		Linkage ltgt = &sent->lnkages[tgt];
+		Linkage lsrc = &sent->lnkages[blkstart];
+		memmove(ltgt, lsrc, blklen * sizeof(struct Linkage_s));
 	}
 
 	// Adjust the totals.
