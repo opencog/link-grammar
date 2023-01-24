@@ -358,6 +358,9 @@ int VDAL_compare_linkages(Linkage l1, Linkage l2)
 	if (l1->num_words != l2->num_words)
 		return l1->num_words - l2->num_words;
 
+	// Don't bother sorting bad linkages any further.
+	if (0 < p1->N_violations) return 0;
+
 	return linkage_equiv_p(l1, l2);
 }
 
@@ -379,7 +382,10 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 	if (!sent->overflowed && (sent->num_linkages_found <= linkage_limit))
 		return;
 
-	uint32_t nl = sent->num_linkages_alloced;
+	// Deduplicate the valid linkages only; its not worth wasting
+	// CPU time on the rest.  Sorting guarantees that the valid
+	// linkages come first.
+	uint32_t nl = sent->num_valid_linkages;
 	if (2 > nl) return;
 
 	// Sweep away duplicates
@@ -413,10 +419,11 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 	}
 
 	// Copy the final block.
-	if (0 < blklen && 0 < tgt)
+	if (0 < tgt)
 	{
 		Linkage ltgt = &sent->lnkages[tgt];
 		Linkage lsrc = &sent->lnkages[blkstart];
+		blklen += sent->num_linkages_alloced - sent->num_valid_linkages;
 		memmove(ltgt, lsrc, blklen * sizeof(struct Linkage_s));
 	}
 
