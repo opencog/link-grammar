@@ -632,7 +632,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 		{
 			(*cmx)->match_left = false;
 		}
-		mr_end = NULL; /* Prevent a gcc "mnay be uninitialkized" warning */
+		mr_end = NULL; /* Prevent a gcc "may be uninitialized" warning */
 	}
 
 	/* Construct the list of things that could match the left. */
