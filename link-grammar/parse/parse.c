@@ -11,7 +11,6 @@
 /*                                                                       */
 /*************************************************************************/
 #include <limits.h>
-#include <math.h>
 
 #include "api-structures.h"
 #include "count.h"
@@ -357,7 +356,7 @@ int VDAL_compare_linkages(Linkage l1, Linkage l2)
 		return (p1->link_cost - p2->link_cost);
 
 	if (l1->num_words != l2->num_words)
-		return l1->num_words != l2->num_words;
+		return l1->num_words - l2->num_words;
 
 	return linkage_equiv_p(l1, l2);
 }
@@ -435,7 +434,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	if (0 != sent->rand_state && sent->dict->shuffle_linkages) return;
 
 	/* Initialize all linkages as unique */
-	for (uint32_t i=0; i< sent->num_linkages_alloced; i++)
+	for (uint32_t i=0; i<sent->num_linkages_alloced; i++)
 		sent->lnkages[i].dupe = false;
 
 	qsort((void *)sent->lnkages, sent->num_linkages_alloced,
