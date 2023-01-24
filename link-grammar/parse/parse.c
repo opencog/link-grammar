@@ -171,7 +171,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 
 	/* Pick random linkages if we get more than what was asked for. */
 	bool pick_randomly = sent->overflowed ||
-	    (sent->num_linkages_found > (int) sent->num_linkages_alloced);
+	    (sent->num_linkages_found > (int) opts->linkage_limit);
 
 	sent->num_valid_linkages = 0;
 	size_t N_invalid_morphism = 0;
@@ -292,20 +292,26 @@ static void process_linkages(Sentence sent, extractor_t* pex,
  * This can be done in a single pass, after the linkages have been
  * sorted. We only need to check nearest neighbors.
  */
-static void deduplicate_linkages(Sentence sent)
+static void deduplicate_linkages(Sentence sent, int linkage_limit)
 {
 	/* No need for deduplication, if random selection wasn't done. */
-	if (!sent->overflowed &&
-	    (sent->num_linkages_found <= (int) sent->num_linkages_alloced))
+	if (!sent->overflowed && (sent->num_linkages_found <= linkage_limit))
 		return;
 
 	uint32_t nl = sent->num_linkages_alloced;
 	if (2 > nl) return;
 
+	// Phase one: Mark
+	uint32_t num_dupes = 0;
+	uint32_t tgt = 0;
 	for (uint32_t i=1; i<nl; i++)
 	{
-		Linkage lpv = &sent->lnkages[i-1];
+		Linkage lpv = &sent->lnkages[tgt];
 		Linkage lnx = &sent->lnkages[i];
+
+		// Mark
+		lnx->dupe = false;
+		tgt ++;
 
 		// Rule out obvious mismatches.
 		if (lpv->num_links != lnx->num_links) continue;
@@ -323,15 +329,78 @@ static void deduplicate_linkages(Sentence sent)
 		}
 		if (li != lpv->num_links) continue;
 
+		// Compare words. The chosen_disjuncts->word_string is the
+		// dictionary word. It can happen that two different dictionary
+		// words can have the same disjunct, and thus result in the same
+		// linkage. For backwards compat, we will report these as being
+		// different, as printing will reveal the differences in words.
+		uint32_t wi;
+		for (wi=0; wi<lpv->num_words; wi++)
+		{
+			// Parses with non-zero null count will have null words,
+			// i.e. word without chosen_disjuncts. Avoid a null-pointer
+			// deref in this case.
+			if (NULL == lpv->chosen_disjuncts[wi])
+			{
+				// If one is null, both should be null. (I think this
+				// will always be true, but I'm not sure.)
+				if (NULL == lnx->chosen_disjuncts[wi]) continue;
+				break;
+			}
+			if (lpv->chosen_disjuncts[wi]->word_string !=
+			    lnx->chosen_disjuncts[wi]->word_string) break;
+		}
+		if (wi != lpv->num_words) continue;
+
 		// If we are here, then lpv and lnx are the same linkage.
-		// Shuffle down all linkages.
-		memmove(lpv, lnx, (nl-i)* sizeof(struct Linkage_s));
-		nl--;
-		sent->num_linkages_alloced --;
-		sent->num_valid_linkages --;
-		sent->num_linkages_post_processed --;
-		i--; // Do not advance i; there may be more!
+		lnx->dupe = true;
+		num_dupes ++;
+		tgt--;
 	}
+
+	// None found!
+	if (0 == num_dupes) return;
+
+	// Phase two: Sweep
+	tgt = 0;
+	uint32_t blkstart = 0;
+	uint32_t blklen = 1; // Initial block, already skipped
+	for (uint32_t i=1; i<nl; i++)
+	{
+		Linkage lnx = &sent->lnkages[i];
+		if (false == lnx->dupe) { blklen++; continue; }
+		free_linkage(lnx);
+
+		// If there's a block of good linkages to copy, then copy.
+		if (0 < blklen)
+		{
+			// Skip initial block; it is already in place.
+			if (0 < tgt)
+			{
+				Linkage ltgt = &sent->lnkages[tgt];
+				Linkage lsrc = &sent->lnkages[blkstart];
+				memmove(ltgt, lsrc, blklen * sizeof(struct Linkage_s));
+			}
+			tgt += blklen;
+			blklen = 0;
+		}
+
+		// The next good linkage comes after this bad one.
+		blkstart = i+1;
+	}
+
+	// Copy the final block.
+	if (0 < blklen && 0 < tgt)
+	{
+		Linkage ltgt = &sent->lnkages[tgt];
+		Linkage lsrc = &sent->lnkages[blkstart];
+		memmove(ltgt, lsrc, blklen * sizeof(struct Linkage_s));
+	}
+
+	// Adjust the totals.
+	sent->num_linkages_alloced -= num_dupes;
+	sent->num_valid_linkages -= num_dupes;
+	sent->num_linkages_post_processed -= num_dupes;
 }
 
 static void sort_linkages(Sentence sent, Parse_Options opts)
@@ -345,7 +414,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
 
-	deduplicate_linkages(sent);
+	deduplicate_linkages(sent, opts->linkage_limit);
 	print_time(opts, "Sorted all linkages");
 }
 
