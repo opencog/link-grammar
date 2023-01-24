@@ -171,7 +171,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 
 	/* Pick random linkages if we get more than what was asked for. */
 	bool pick_randomly = sent->overflowed ||
-	    (sent->num_linkages_found > (int) sent->num_linkages_alloced);
+	    (sent->num_linkages_found > (int) opts->linkage_limit);
 
 	sent->num_valid_linkages = 0;
 	size_t N_invalid_morphism = 0;
@@ -292,11 +292,10 @@ static void process_linkages(Sentence sent, extractor_t* pex,
  * This can be done in a single pass, after the linkages have been
  * sorted. We only need to check nearest neighbors.
  */
-static void deduplicate_linkages(Sentence sent)
+static void deduplicate_linkages(Sentence sent, int linkage_limit)
 {
 	/* No need for deduplication, if random selection wasn't done. */
-	if (!sent->overflowed &&
-	    (sent->num_linkages_found <= (int) sent->num_linkages_alloced))
+	if (!sent->overflowed && (sent->num_linkages_found <= linkage_limit))
 		return;
 
 	uint32_t nl = sent->num_linkages_alloced;
@@ -372,7 +371,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
 
-	deduplicate_linkages(sent);
+	deduplicate_linkages(sent, opts->linkage_limit);
 	print_time(opts, "Sorted all linkages");
 }
 
