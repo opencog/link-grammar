@@ -67,6 +67,7 @@ struct Linkage_s
 	Linkage_info    lifo;         /* Parse_set index and cost information */
 	bool            is_sent_long; /* num_words >= twopass_length */
 
+	bool            dupe;         /* Duplicate marker */
 	PP_domains *    pp_domains;   /* PP domain info, one for each link */
 
 	Sentence        sent;         /* Used for common linkage data */

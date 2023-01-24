@@ -302,10 +302,15 @@ static void deduplicate_linkages(Sentence sent)
 	uint32_t nl = sent->num_linkages_alloced;
 	if (2 > nl) return;
 
+	// Phase one: Mark
+	uint32_t num_dupes = 0;
 	for (uint32_t i=1; i<nl; i++)
 	{
 		Linkage lpv = &sent->lnkages[i-1];
 		Linkage lnx = &sent->lnkages[i];
+
+		// Mark
+		lnx->dupe = false;
 
 		// Rule out obvious mismatches.
 		if (lpv->num_links != lnx->num_links) continue;
@@ -324,14 +329,35 @@ static void deduplicate_linkages(Sentence sent)
 		if (li != lpv->num_links) continue;
 
 		// If we are here, then lpv and lnx are the same linkage.
-		// Shuffle down all linkages.
-		memmove(lpv, lnx, (nl-i)* sizeof(struct Linkage_s));
-		nl--;
-		sent->num_linkages_alloced --;
-		sent->num_valid_linkages --;
-		sent->num_linkages_post_processed --;
+		lnx->dupe = true;
+		num_dupes ++;
+
 		i--; // Do not advance i; there may be more!
 	}
+
+	// Phase two: Sweep
+	uint32_t off = 0;
+	for (uint32_t i=1; i<nl; i++)
+	{
+		Linkage lnx = &sent->lnkages[i];
+		if (lnx->dupe)
+		{
+			// Free stuff
+			continue;
+		}
+		off++;
+		if (off == i) continue; // Nothing to do, yet.
+
+		Linkage lpv = &sent->lnkages[off];
+
+		// Move one linkage.
+		memmove(lpv, lnx, sizeof(struct Linkage_s));
+	}
+
+	// Adjust the totals.
+	sent->num_linkages_alloced -= num_dupes;
+	sent->num_valid_linkages -= num_dupes;
+	sent->num_linkages_post_processed -= num_dupes;
 }
 
 static void sort_linkages(Sentence sent, Parse_Options opts)
