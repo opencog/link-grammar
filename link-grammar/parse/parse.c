@@ -418,7 +418,9 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 		blkstart = i+1;
 	}
 
-	// Copy the final block.
+	// Copy the final block. This will copy the rest of the valid
+	// linkages, as well as the bad ones. (We need to copy the bad
+	// ones, because users can still examine them with the UI.)
 	if (0 < tgt)
 	{
 		Linkage ltgt = &sent->lnkages[tgt];
@@ -426,6 +428,8 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 		blklen += sent->num_linkages_alloced - sent->num_valid_linkages;
 		memmove(ltgt, lsrc, blklen * sizeof(struct Linkage_s));
 	}
+
+	assert(num_dupes < sent->num_valid_linkages, "Too many duplicates found!");
 
 	// Adjust the totals.
 	sent->num_linkages_alloced -= num_dupes;
