@@ -290,16 +290,32 @@ static void process_linkages(Sentence sent, extractor_t* pex,
  */
 static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 {
-	// Compare links
+	// Compare link endpoints
 	for (uint32_t li=0; li<lpv->num_links; li++)
 	{
+		Link * plk = &lpv->link_array[li];
+		Link * nlk = &lnx->link_array[li];
+
 		// Compare word-endpoints first. Most differences are likely
-		// to be noticeable here.
-		int lwd = lpv->link_array[li].lw - lnx->link_array[li].lw;
+		// to be noticeable here. This is an inexpensive check.
+		int lwd = plk->lw - nlk->lw;
 		if (lwd) return lwd;
 
-		int rwd = lpv->link_array[li].rw - lnx->link_array[li].rw;
+		int rwd = plk->rw - nlk->rw;
 		if (rwd) return rwd;
+	}
+
+	// Compare link names. This is slightly more expensive than the
+	// check above, so we defer this check.
+	for (uint32_t li=0; li<lpv->num_links; li++)
+	{
+		Link * plk = &lpv->link_array[li];
+		Link * nlk = &lnx->link_array[li];
+
+		// String set guarantees that if the pointer differs,
+		// then the string does too.
+		if (plk->link_name != nlk->link_name)
+			return strcmp(plk->link_name, nlk->link_name);
 	}
 
 	// Compare words. The chosen_disjuncts->word_string is the
@@ -327,8 +343,12 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 	}
 
 	// Compare connector types at the link endpoints. If we are here,
-	// then the link endpoints landed on the same words. It would be
-	// unusual if the link types differed, but we have to check.
+	// then the link endpoints landed on the same words, and the link
+	// names were the same. The connector types might still differ,
+	// due to intersection. The multi-connector flag might differ.
+	// However, neither of these are likely. It is plausible to skip
+	// this check entirely, its mostly a CPU-time-waster that will
+	// never find any differences for the almost any situation.
 	for (uint32_t li=0; li<lpv->num_links; li++)
 	{
 		Link * plk = &lpv->link_array[li];
