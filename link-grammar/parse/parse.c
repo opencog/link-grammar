@@ -293,18 +293,13 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 	// Compare links
 	for (uint32_t li=0; li<lpv->num_links; li++)
 	{
-		if (lpv->link_array[li].lc != lnx->link_array[li].lc)
-			return strcmp(
-				lpv->link_array[li].lc->desc->string,
-				lnx->link_array[li].lc->desc->string);
-		if (lpv->link_array[li].rc != lnx->link_array[li].rc)
-			return strcmp(
-				lpv->link_array[li].rc->desc->string,
-				lnx->link_array[li].rc->desc->string);
-		if (lpv->link_array[li].lw != lnx->link_array[li].lw)
-			return lpv->link_array[li].lw - lnx->link_array[li].lw;
-		if (lpv->link_array[li].rw != lnx->link_array[li].rw)
-			return lpv->link_array[li].rw - lnx->link_array[li].rw;
+		// Compare word-endpoints first. Most differences are likely
+		// to be noticeable here.
+		int lwd = lpv->link_array[li].lw - lnx->link_array[li].lw;
+		if (lwd) return lwd;
+
+		int rwd = lpv->link_array[li].rw - lnx->link_array[li].rw;
+		if (rwd) return rwd;
 	}
 
 	// Compare words. The chosen_disjuncts->word_string is the
@@ -328,6 +323,27 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 		    lnx->chosen_disjuncts[wi]->word_string)
 			return strcmp(lpv->chosen_disjuncts[wi]->word_string,
 			              lnx->chosen_disjuncts[wi]->word_string);
+	}
+
+	// Compare connector types at the link endpoints. If we are here,
+	// then the link endpoints landed on the same words. It would be
+	// unusual if the link types differed, but we have to check.
+	for (uint32_t li=0; li<lpv->num_links; li++)
+	{
+		if (lpv->link_array[li].lc != lnx->link_array[li].lc)
+		{
+			int diff = strcmp(
+				lpv->link_array[li].lc->desc->string,
+				lnx->link_array[li].lc->desc->string);
+			if (diff) return diff;
+		}
+		if (lpv->link_array[li].rc != lnx->link_array[li].rc)
+		{
+			int diff = strcmp(
+				lpv->link_array[li].rc->desc->string,
+				lnx->link_array[li].rc->desc->string);
+			if (diff) return diff;
+		}
 	}
 
 	// Since the above performed a stable compare, we can safely mark
