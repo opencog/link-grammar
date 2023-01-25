@@ -1002,6 +1002,7 @@ v/v vol/vol volume/volume w/v weight/vol weight/volume:
 % Nouns that can be used with that-clauses; most prominently, with
 % THb links: "The problem was that ...". Post-processing allows THb's
 % but blocks plain TH's.
+% These are singular; the plural ams mass-count are further below.
 % Vowel-only form of the below
 argument.n impression.n allegation.n announcement.n assertion.n
 accusation.n idea.n assumption.n implication.n
@@ -1022,7 +1023,7 @@ indication.n inkling.n amount.n answer.n:
 attestation.n:
   (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
-% consonant-only form of the above.
+% Consonant-only form of the above.
 /en/words/words.n.4-const:
   <noun-modifiers> & (
     AN+
