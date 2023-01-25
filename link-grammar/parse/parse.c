@@ -346,6 +346,22 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 		}
 	}
 
+#if LATER
+	// We also expect the chosen disjuncts to be identical.
+	// The only possible difference at this point would be that one
+	// disjunct has a multi-connector, and another does not, but are
+	// otherwise identical. Do we really need to detect this difference?
+	// Why would it matter, and who would care? Is this needed for dict
+	// debugging?
+	for (uint32_t wi=0; wi<lpv->num_words; wi++)
+	{
+		if (lpv->chosen_disjuncts[wi] != lnx->chosen_disjuncts[wi])
+			return strcmp(
+				linkage_get_disjunct_str(lpv, wi),
+				linkage_get_disjunct_str(lnx, wi));
+	}
+#endif
+
 	// Since the above performed a stable compare, we can safely mark
 	// the second linkage as a duplicate of the first.
 	lnx->dupe = true;
