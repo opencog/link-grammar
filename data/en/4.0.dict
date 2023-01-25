@@ -1033,7 +1033,7 @@ attestation.n:
       (Ss*t+ & <CLAUSE>) or
       SIs*t- or
       <rel-clause-s>))
-    or (<Dsc> & SIs-)
+    or (<Dsc> & SIs- & <noun-rel-s>)
     or ({<Dsc>} & <noun-and-s>)
     or (YS+ & <Dsc>)
     or ({NM+} & {Ss+} & Wd-)
