@@ -19,7 +19,7 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-#define dictionary-version-number 5.11.0;
+#define dictionary-version-number 5.12.1;
 #define dictionary-locale         en_US.UTF-8;
 
 % The default largest disjunct cost to consider during parsing.
@@ -1008,6 +1008,9 @@ v/v vol/vol volume/volume w/v weight/vol weight/volume:
 <Dsv>: Ds**v- or Ds**x-;
 <Dsc>: Ds**c- or Ds**x-;
 
+% Nouns that can be used with that-clauses; most prominently, with
+% THb links: "The problem was that ...". Post-processing allows THb's
+% but blocks plain TH's.
 % Vowel-only form of the below
 argument.n impression.n allegation.n announcement.n assertion.n
 accusation.n idea.n assumption.n implication.n
@@ -1036,7 +1039,7 @@ problem.n claim.n result.n statement.n hunch.n concept.n hypothesis.n
 message.n premonition.n prerequisite.n prereq.n pre-req.n pre-requisite.n
 corequisite.n co-requisite.n coreq.n co-req.n truism.n fallacy.n
 proposition.n prospect.n presupposition.n supposition.n finding.n
-crux.n shame.n thing.n bet.n guess.n:
+crux.n shame.n thing.n bet.n guess.n response.n presumption.n:
   <noun-modifiers> & (
     AN+
     or (<Dsc> & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
