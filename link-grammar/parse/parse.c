@@ -309,20 +309,21 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 	// different, as printing will reveal the differences in words.
 	for (uint32_t wi=0; wi<lpv->num_words; wi++)
 	{
+		Disjunct * pdj = lpv->chosen_disjuncts[wi];
+		Disjunct * ndj = lnx->chosen_disjuncts[wi];
+
 		// Parses with non-zero null count will have null words,
 		// i.e. word without chosen_disjuncts. Avoid a null-pointer
 		// deref in this case.
-		if (NULL == lpv->chosen_disjuncts[wi])
+		if (NULL == pdj)
 		{
 			// If one is null, both should be null. (I think this
 			// will always be true, but I'm not sure.)
-			if (NULL == lnx->chosen_disjuncts[wi]) continue;
+			if (NULL == ndj) continue;
 			return 1;
 		}
-		if (lpv->chosen_disjuncts[wi]->word_string !=
-		    lnx->chosen_disjuncts[wi]->word_string)
-			return strcmp(lpv->chosen_disjuncts[wi]->word_string,
-			              lnx->chosen_disjuncts[wi]->word_string);
+		if (pdj->word_string != ndj->word_string)
+			return strcmp(pdj->word_string, ndj->word_string);
 	}
 
 	// Compare connector types at the link endpoints. If we are here,
@@ -330,29 +331,28 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 	// unusual if the link types differed, but we have to check.
 	for (uint32_t li=0; li<lpv->num_links; li++)
 	{
-		if (lpv->link_array[li].lc != lnx->link_array[li].lc)
+		Link * plk = &lpv->link_array[li];
+		Link * nlk = &lnx->link_array[li];
+
+		if (plk->lc != nlk->lc)
 		{
-			int diff = strcmp(
-				lpv->link_array[li].lc->desc->string,
-				lnx->link_array[li].lc->desc->string);
+			int diff = strcmp(plk->lc->desc->string, nlk->lc->desc->string);
 			if (diff) return diff;
+			int md = plk->lc->multi - nlk->lc->multi;
+			if (md) return md;
 		}
-		if (lpv->link_array[li].rc != lnx->link_array[li].rc)
+		if (plk->rc != nlk->rc)
 		{
-			int diff = strcmp(
-				lpv->link_array[li].rc->desc->string,
-				lnx->link_array[li].rc->desc->string);
+			int diff = strcmp(plk->rc->desc->string, nlk->rc->desc->string);
 			if (diff) return diff;
+			int md = plk->rc->multi - nlk->rc->multi;
+			if (md) return md;
 		}
 	}
 
-#if LATER
-	// We also expect the chosen disjuncts to be identical.
-	// The only possible difference at this point would be that one
-	// disjunct has a multi-connector, and another does not, but are
-	// otherwise identical. Do we really need to detect this difference?
-	// Why would it matter, and who would care? Is this needed for dict
-	// debugging?
+#if DOUBLE_CHECK
+	// We also expect the chosen disjuncts to be identical. But after
+	// the above checks, it should be impossible that they differ.
 	for (uint32_t wi=0; wi<lpv->num_words; wi++)
 	{
 		if (lpv->chosen_disjuncts[wi] != lnx->chosen_disjuncts[wi])
