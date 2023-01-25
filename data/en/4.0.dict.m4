@@ -1032,14 +1032,7 @@ attestation.n:
   (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
 % consonant-only form of the above.
-/en/words/words.n.4-const
-report.n sign.n conclusion.n complaint.n position.n restriction.n
-notion.n remark.n proclamation.n reassurance.n saying.n possibility.n
-problem.n claim.n result.n statement.n hunch.n concept.n hypothesis.n
-message.n premonition.n prerequisite.n prereq.n pre-req.n pre-requisite.n
-corequisite.n co-requisite.n coreq.n co-req.n truism.n fallacy.n
-proposition.n prospect.n presupposition.n supposition.n finding.n
-crux.n shame.n thing.n bet.n guess.n response.n presumption.n:
+/en/words/words.n.4-const:
   <noun-modifiers> & (
     AN+
     or (<Dsc> & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
