@@ -44,7 +44,7 @@
  % make them adjective-like. Strictly speaking, these should probably
  % copied into words.adj.1 and treated like common adjectives, right?
  %
- % Many nouns in words.n.4 are treated as "mass or count". The side
+ % Many nouns in words.n.3 are treated as "mass or count". The side
  % effect is that mass nouns are inconsistently treated as sometimes
  % singular, sometimes plural. e.g. words.n.3 gets <noun-rel-s> &
  % <noun-main-m>. This is a kind-of ugly tangle, it should really
@@ -462,7 +462,7 @@ Hallowe'en:
     ({Dm-} & Wa-)
     or (Jd- & Dmu- & Wa- & {Mp+});
 
-% words.n.4: nouns that can be mass or countable
+% Nouns that can be mass or countable
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n
 % piano.n flute.n belong here, because of "He plays piano"
 %
@@ -482,7 +482,7 @@ Hallowe'en:
 
 <GREEK-LETTER-AND-NUMBER> pH.i x.n: <noun-mass-count>;
 
-% Same as pattern used in words.n.4 -- mass nouns or countable nouns
+% Same as above -- mass nouns or countable nouns
 <generic-singular-id>: <noun-mass-count>;
 
 % Pattern used for words.n.2.s
@@ -1024,6 +1024,7 @@ attestation.n:
   (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
 % Consonant-only form of the above.
+% SIs-: "How fast is the program"
 /en/words/words.n.4-const:
   <noun-modifiers> & (
     AN+
@@ -1032,6 +1033,7 @@ attestation.n:
       (Ss*t+ & <CLAUSE>) or
       SIs*t- or
       <rel-clause-s>))
+    or (<Dsc> & SIs-)
     or ({<Dsc>} & <noun-and-s>)
     or (YS+ & <Dsc>)
     or ({NM+} & {Ss+} & Wd-)
