@@ -1033,6 +1033,7 @@ attestation.n:
   (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
 % consonant-only form of the above.
+/en/words/words.n.4-const
 report.n sign.n conclusion.n complaint.n position.n restriction.n
 notion.n remark.n proclamation.n reassurance.n saying.n possibility.n
 problem.n claim.n result.n statement.n hunch.n concept.n hypothesis.n
@@ -1069,7 +1070,7 @@ awareness.n opinion.n explanation.n expectation.n insistence.n:
     or (GN+ & (DD- or [()]))))
   or AN+;
 
-% Consonant for of the above.
+% Consonant form of the above.
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n disclosure.n
 fear.n principle.n concern.n philosophy.n risk.n threat.n conviction.n
 theory.n speculation.n news.n belief.n contention.n thought.n myth.n
