@@ -8754,13 +8754,15 @@ makes.v:
   (<verb-and-sp-i-> & ([<vc-make>]0.2 or ())) or
   ((<vc-make>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>);
+
+% THb+: "An allegation was made that he did it."
 made.v-d:
   
   ((<verb-sp,pp> & (<vc-make>)) or
   (<verb-and-sp-i-> & ([<vc-make>]0.2 or ())) or
   ((<vc-make>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
-  or (<verb-s-pv-b> & ((<mv-coord> & Pa+) or ({O+ or K+} & <mv-coord>)))
+  or (<verb-s-pv-b> & (THb+ or (<mv-coord> & Pa+) or ({O+ or K+} & <mv-coord>)))
   or ({({@MV+} & Pa+) or K+} & <verb-phrase-opener>);
 
 built_of built_up_of composed_of constructed_of formed_of made_of

@@ -6614,9 +6614,11 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 
 make.v: VERB_PLI(<vc-make>);
 makes.v: VERB_S_T(<vc-make>);
+
+% THb+: "An allegation was made that he did it."
 made.v-d:
   VERB_SPPP_T(<vc-make>)
-  or (<verb-s-pv-b> & ((<mv-coord> & Pa+) or ({O+ or K+} & <mv-coord>)))
+  or (<verb-s-pv-b> & (THb+ or (<mv-coord> & Pa+) or ({O+ or K+} & <mv-coord>)))
   or ({({@MV+} & Pa+) or K+} & <verb-phrase-opener>);
 
 built_of built_up_of composed_of constructed_of formed_of made_of
