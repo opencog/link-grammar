@@ -41,6 +41,7 @@ WORDS= \
 	words.n.2.x	\
 	words.n.3-const	\
 	words.n.3-vowel	\
+	words.n.4-const	\
 	words.lang.3-const	\
 	words.lang.3-vowel	\
 	words.n.3.y	\

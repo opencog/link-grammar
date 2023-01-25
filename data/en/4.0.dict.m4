@@ -53,7 +53,7 @@ changecom(`%')
  % make them adjective-like. Strictly speaking, these should probably
  % copied into words.adj.1 and treated like common adjectives, right?
  %
- % Many nouns in words.n.4 are treated as "mass or count". The side
+ % Many nouns in words.n.3 are treated as "mass or count". The side
  % effect is that mass nouns are inconsistently treated as sometimes
  % singular, sometimes plural. e.g. words.n.3 gets <noun-rel-s> &
  % <noun-main-m>. This is a kind-of ugly tangle, it should really
@@ -471,7 +471,7 @@ Hallowe'en:
     ({Dm-} & Wa-)
     or (Jd- & Dmu- & Wa- & {Mp+});
 
-% words.n.4: nouns that can be mass or countable
+% Nouns that can be mass or countable
 % allocation.n allotment.n alloy.n allure.n alteration.n alternation.n
 % piano.n flute.n belong here, because of "He plays piano"
 %
@@ -491,7 +491,7 @@ Hallowe'en:
 
 <GREEK-LETTER-AND-NUMBER> pH.i x.n: <noun-mass-count>;
 
-% Same as pattern used in words.n.4 -- mass nouns or countable nouns
+% Same as above -- mass nouns or countable nouns
 <generic-singular-id>: <noun-mass-count>;
 
 % Pattern used for words.n.2.s
@@ -1011,6 +1011,7 @@ v/v vol/vol volume/volume w/v weight/vol weight/volume:
 % Nouns that can be used with that-clauses; most prominently, with
 % THb links: "The problem was that ...". Post-processing allows THb's
 % but blocks plain TH's.
+% These are singular; the plural ams mass-count are further below.
 % Vowel-only form of the below
 argument.n impression.n allegation.n announcement.n assertion.n
 accusation.n idea.n assumption.n implication.n
@@ -1023,7 +1024,6 @@ indication.n inkling.n amount.n answer.n:
       SIs*t- or
       <rel-clause-s>))
     or ({<Dsv>} & <noun-and-s>)
-    or dSJrs-
     or (YS+ & <Dsv>)
     or ({NM+} & {Ss+} & Wd-)
     or (GN+ & (DD- or [()]))
@@ -1032,14 +1032,9 @@ indication.n inkling.n amount.n answer.n:
 attestation.n:
   (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
-% consonant-only form of the above.
-report.n sign.n conclusion.n complaint.n position.n restriction.n
-notion.n remark.n proclamation.n reassurance.n saying.n possibility.n
-problem.n claim.n result.n statement.n hunch.n concept.n hypothesis.n
-message.n premonition.n prerequisite.n prereq.n pre-req.n pre-requisite.n
-corequisite.n co-requisite.n coreq.n co-req.n truism.n fallacy.n
-proposition.n prospect.n presupposition.n supposition.n finding.n
-crux.n shame.n thing.n bet.n guess.n response.n presumption.n:
+% Consonant-only form of the above.
+% SIs-: "How fast is the program"
+/en/words/words.n.4-const:
   <noun-modifiers> & (
     AN+
     or (<Dsc> & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
@@ -1047,8 +1042,8 @@ crux.n shame.n thing.n bet.n guess.n response.n presumption.n:
       (Ss*t+ & <CLAUSE>) or
       SIs*t- or
       <rel-clause-s>))
+    or (<Dsc> & SIs- & <noun-rel-s>)
     or ({<Dsc>} & <noun-and-s>)
-    or dSJrs-
     or (YS+ & <Dsc>)
     or ({NM+} & {Ss+} & Wd-)
     or (GN+ & (DD- or [()]))
@@ -1057,49 +1052,49 @@ crux.n shame.n thing.n bet.n guess.n response.n presumption.n:
 % Vowel form of the below
 acknowledgment.n acknowledgement.n understanding.n assurance.n
 awareness.n opinion.n explanation.n expectation.n insistence.n:
-  (<noun-modifiers> & (
-    ({(D*u*v- or D*u*x-)} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (
+  <noun-modifiers> & (
+    AN+
+    or ({(D*u*v- or D*u*x-)} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (
       <noun-main2-m>
       or (Ss*t+ & <CLAUSE>)
       or SIs*t-
       or <rel-clause-s>))
     or ({(D*u*v- or D*u*x-)} & <noun-and-u>)
-    or Us-
     or (YS+ & {D*u-})
-    or (GN+ & (DD- or [()]))))
-  or AN+;
+    or (GN+ & (DD- or [()]))
+    or Us-);
 
-% Consonant for of the above.
+% Consonant form of the above.
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n disclosure.n
 fear.n principle.n concern.n philosophy.n risk.n threat.n conviction.n
 theory.n speculation.n news.n belief.n contention.n thought.n myth.n
 discovery.n rumor.n probability.n fact.n feeling.n comment.n process.n
 perception.n sense.n realization.n view.n consensus.n notification.n
 rule.n danger.n warning.n suggestion.n:
-  (<noun-modifiers> & (
-    ({(D*u*c- or D*u*x-)} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (
+  <noun-modifiers> & (
+    AN+
+    or ({(D*u*c- or D*u*x-)} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (
       <noun-main2-m>
       or (Ss*t+ & <CLAUSE>)
       or SIs*t-
       or <rel-clause-s>))
     or ({(D*u*c- or D*u*x-)} & <noun-and-u>)
-    or Us-
     or (YS+ & {D*u-})
-    or (GN+ & (DD- or [()]))))
-  or AN+;
+    or (GN+ & (DD- or [()]))
+    or Us-);
 
 evidence.n reasoning.n likelihood:
-  (<noun-modifiers> &
-    (({Dmu-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+  <noun-modifiers> & (
+    AN+
+    or ({Dmu-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-m> or
       (Ss*t+ & <CLAUSE>) or
       SIs*t- or
-      <rel-clause-s>)) or
-    ({Dmu-} & <noun-and-u>) or
-    Up- or
-    (YS+ & {Dmu-}) or
-    (GN+ & (DD- or [()])))) or
-  AN+;
+      <rel-clause-s>))
+    or ({Dmu-} & <noun-and-u>)
+    or (YS+ & {Dmu-})
+    or (GN+ & (DD- or [()]))
+    or Up-);
 
 ideas.n opinions.n statements.n beliefs.n facts.n arguments.n
 principles.n theories.n philosophies.n signs.n impressions.n
@@ -6621,9 +6616,11 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 
 make.v: VERB_PLI(<vc-make>);
 makes.v: VERB_S_T(<vc-make>);
+
+% THb+: "An allegation was made that he did it."
 made.v-d:
   VERB_SPPP_T(<vc-make>)
-  or (<verb-s-pv-b> & ((<mv-coord> & Pa+) or ({O+ or K+} & <mv-coord>)))
+  or (<verb-s-pv-b> & (THb+ or (<mv-coord> & Pa+) or ({O+ or K+} & <mv-coord>)))
   or ({({@MV+} & Pa+) or K+} & <verb-phrase-opener>);
 
 built_of built_up_of composed_of constructed_of formed_of made_of
