@@ -50,7 +50,7 @@ static double current_usage_time(void)
 {
 #if !defined(_WIN32)
 	struct rusage u;
-	getrusage (RUSAGE_SELF, &u);
+	getrusage (RUSAGE_THREAD, &u);
 	return (u.ru_utime.tv_sec + ((double) u.ru_utime.tv_usec) / 1000000.0);
 #else
 	return ((double) clock())/CLOCKS_PER_SEC;

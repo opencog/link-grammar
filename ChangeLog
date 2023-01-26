@@ -6,7 +6,8 @@ Version 5.12.1 (XXX 2023)
  * Deduplicate linkages when overflow forces random selection. #1378 #1396
  * Fix direct dialect settings on connectors. #1382
  * Cleanup dictionary backends. #1391 thru #1395
- * English dict: paraphrasing fixes #1398
+ * English dict: paraphrasing fixes. #1398
+ * Report CPU time usage only for the current thread. #1399
 
 Version 5.12.0 (26 Nov 2022)
  * Fix crash when using the Atomese dictionary backend.
