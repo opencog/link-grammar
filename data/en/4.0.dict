@@ -1018,7 +1018,8 @@ indication.n inkling.n amount.n answer.n:
     or (YS+ & <Dsv>)
     or ({NM+} & {Ss+} & Wd-)
     or (GN+ & (DD- or [()]))
-    or Us-);
+    or Us-
+    or <noun-assert>);
 
 attestation.n:
   (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
@@ -1038,7 +1039,8 @@ attestation.n:
     or (YS+ & <Dsc>)
     or ({NM+} & {Ss+} & Wd-)
     or (GN+ & (DD- or [()]))
-    or Us-);
+    or Us-
+    or <noun-assert>);
 
 % Vowel form of the below
 acknowledgment.n acknowledgement.n understanding.n assurance.n
@@ -1053,7 +1055,8 @@ awareness.n opinion.n explanation.n expectation.n insistence.n:
     or ({(D*u*v- or D*u*x-)} & <noun-and-u>)
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
-    or Us-);
+    or Us-
+    or <noun-assert>);
 
 % Consonant form of the above.
 proof.n doubt.n suspicion.n hope.n knowledge.n relief.n disclosure.n
@@ -1072,7 +1075,8 @@ rule.n danger.n warning.n suggestion.n:
     or ({(D*u*c- or D*u*x-)} & <noun-and-u>)
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
-    or Us-);
+    or Us-
+    or <noun-assert>);
 
 evidence.n reasoning.n likelihood:
   <noun-modifiers> & (
@@ -1085,7 +1089,8 @@ evidence.n reasoning.n likelihood:
     or ({Dmu-} & <noun-and-u>)
     or (YS+ & {Dmu-})
     or (GN+ & (DD- or [()]))
-    or Up-);
+    or Up-
+    or <noun-assert>);
 
 ideas.n opinions.n statements.n beliefs.n facts.n arguments.n
 principles.n theories.n philosophies.n signs.n impressions.n
@@ -1105,61 +1110,65 @@ provisos.n truisms.n fallacies.n assurances.n speculations.n
 propositions.n prospects.n presuppositions.n inklings.n suppositions.n
 findings.n amounts.n rules.n dangers.n warnings.n indications.n
 answers.n suggestions.n:
-  (<noun-modifiers> &
-    (({{Jd-} & Dmc-} & {@M+} & {(TH+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
+  <noun-modifiers> & (
+    [[AN+]]
+    or ({{Jd-} & Dmc-} & {@M+} & {(TH+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main2-p> or
       (Sp*t+ & <CLAUSE>) or
       SIp*t- or
-      <rel-clause-p>)) or
-    ({Dmc-} & <noun-and-p>) or
-    Up- or
-    (YP+ & {Dmc-}) or
-    (GN+ & (DD- or [()])))) or
-  [[AN+]];
+      <rel-clause-p>))
+    or ({Dmc-} & <noun-and-p>)
+    or (YP+ & {Dmc-})
+    or (GN+ & (DD- or [()]))
+    or Up-
+    or <noun-assert>);
 
 request.n requirement.n condition.n recommendation.n provision.n stipulation.n:
-  (<noun-modifiers> &
-    (({D*u-} & {@M+} & {(TH+ or TS+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+  <noun-modifiers> & (
+    AN+
+    or ({D*u-} & {@M+} & {(TH+ or TS+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-m> or
       (Ss*t+ & <CLAUSE>) or
       SIs*t- or
-      <rel-clause-s>)) or
-    ({D*u-} & <noun-and-u>) or
-    Us- or
-    (YS+ & {D*u-}) or
-    (GN+ & (DD- or [()])))) or
-  AN+;
+      <rel-clause-s>))
+    or ({D*u-} & <noun-and-u>)
+    or (YS+ & {D*u-})
+    or (GN+ & (DD- or [()]))
+    or Us-
+    or <noun-assert>);
 
 % {Jd-} : "a number of conditions"
 requests.n requirements.n conditions.n recommendations.n provisions.n
 stipulations.n:
-  (<noun-modifiers> &
-    (({{Jd-} & Dmc-} & {@M+} & {(TH+ or TS+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
+  <noun-modifiers> & (
+    [[AN+]]
+    or ({{Jd-} & Dmc-} & {@M+} & {(TH+ or TS+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main2-p> or
       (Sp*t+ & <CLAUSE>) or
       SIp*t- or
-      <rel-clause-p>)) or
-    ({Dmc-} & <noun-and-p>) or
-    Up- or
-    (YP+ & {Dmc-}) or
-    (GN+ & (DD- or [()])))) or
-  [[AN+]];
+      <rel-clause-p>))
+    or ({Dmc-} & <noun-and-p>)
+    or Up-
+    or (YP+ & {Dmc-})
+    or (GN+ & (DD- or [()]))
+    or <noun-assert>);
 
 % (NM+ & Ss+ & Wd-): "Proposal 2: Hire a plumber"
 excuse.n decision.n proposal.n attempt.n plan.n plot.n pledge.n urge.n
 mission.n right.n desire.n mandate.n promise.n option.n campaign.n
 offer.n vow.n permit.n impetus.n proclivity.n propensity.n move.n
 vote.n bill.n:
-  (<noun-modifiers> &
-    ((Ds- & {@M+} & {(<ton-verb> or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
+  <noun-modifiers> & (
+    AN+
+    or (Ds- & {@M+} & {(<ton-verb> or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main-s> or
-      <rel-clause-s>)) or
-    ({Ds-} & <noun-and-s>) or
-    Us- or
-    (YS+ & Ds-) or
-    (GN+ & (DD- or [()])) or
-    ({NM+} & Ss+ & Wd-))) or
-  AN+;
+      <rel-clause-s>))
+    or ({Ds-} & <noun-and-s>)
+    or (YS+ & Ds-)
+    or (GN+ & (DD- or [()]))
+    or ({NM+} & Ss+ & Wd-)
+    or Us-
+    or <noun-assert>);
 
 propension.n:
   (<noun-modifiers> & ((Ds- & {@M+} & {(<ton-verb> or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
@@ -1178,8 +1187,7 @@ propension.n:
     or ({D*u-} & <noun-and-u>)
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
-    or Us-
-    );
+    or Us-);
 
 failure.n haste.n refusal.n reluctance.n pressure.n willingness.n
 responsibility.n intent.n temptation.n readiness.n effort.n
