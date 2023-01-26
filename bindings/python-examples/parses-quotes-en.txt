@@ -19,7 +19,7 @@ Ihe said `this is a backtick test`
 O
 O                 +------------------QUc-----------------+
 O                 +------>WV----->+--------Osm-------+   |
-O    +---->WV---->+--->Wd---+     |  +-----Ds**x-----+   |
+O    +---->WV---->+--->Wd---+     |  +-----Ds**c-----+   |
 O    +->Wd--+--Ss-+-QUd+    +-Ss*b+  |      +---AN---+   |
 O    |      |     |    |    |     |  |      |        |   |
 OLEFT-WALL he said.q-d ` this.p is.v a backtick.n test.n `

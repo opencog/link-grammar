@@ -1028,7 +1028,7 @@ class XLookupListTestCase(unittest.TestCase):
         for i in range(len(dictnode)):
             self.assertIn("(", str(dictnode[i].exp), "Missing expression")
             if dictnode[i].string == sm('test.n'):
-                self.assertEqual(dictnode[i].file, 'en/words/words.n.1-const')
+                self.assertEqual(dictnode[i].file, 'en/words/words.n.4-const')
             elif dictnode[i].string == sm('test.v'):
                 self.assertIsNone(dictnode[i].file)
 
@@ -1093,7 +1093,7 @@ class XExp_resolving_test(unittest.TestCase):
         Test expression resolving using the default headline:4 setting from
         data/en/4.0.dialect.
         """
-        dictnode = clg.dictionary_lookup_list(self.d._obj, sm('test.n'))
+        dictnode = clg.dictionary_lookup_list(self.d._obj, sm('book.n'))
         exp_old = dictnode[0].exp
         exp_new = clg.lg_exp_resolve(self.d._obj, exp_old, ParseOptions()._obj)  # headline:4
 
@@ -1340,7 +1340,7 @@ class ZZdict_display_word_expr(unittest.TestCase):
        self.assertTrue(len(list(out.splitlines())) > 1800)
 
     def test_macros(self):
-       out = clg.dict_display_word_expr(self.d._obj, 'test/m', self.po._obj)
+       out = clg.dict_display_word_expr(self.d._obj, 'book/m', self.po._obj)
        self.assertIn('<common-const-noun>:', out)
        self.assertIn('<verb-pl,i>', out)
 
