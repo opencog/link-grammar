@@ -475,6 +475,13 @@ static void report_dict_usage(Dictionary dict)
 	logger().info("LG Dict: %lu entries; most-used: %lu %s least-used: %lu %s",
 		dict->num_entries, most_cnt, most_used->string,
 		least_cnt, least_used->string);
+
+	// Also report RAM usage.
+	size_t psz = pool_size(dict->Exp_pool);
+	size_t apparent = (psz * dict->Exp_pool->element_size) / (1024 * 1024);
+	size_t actual = pool_bytes(dict->Exp_pool) / (1024 * 1024);
+	logger().info("LG Dict: %lu of %lu pool elts in use. %lu/%lu MiBytes apparent/actual",
+		pool_num_elements_issued(dict->Exp_pool), psz, apparent, actual);
 }
 
 /// Given an expression, wrap  it with a Dict_node and insert it into
