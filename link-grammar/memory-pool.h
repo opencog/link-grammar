@@ -176,6 +176,12 @@ static inline size_t pool_size(Pool_desc *mp)
 	return mp->alloced_elements;
 }
 
+/// Total alloced bytes
+static inline size_t pool_bytes(Pool_desc *mp)
+{
+	return (mp->alloced_elements * mp->block_size) / mp->num_elements;
+}
+
 // Macros for our memory-pool usage debugging.
 // https://github.com/google/sanitizers/wiki/AddressSanitizerManualPoisoning
 #if !defined(__has_feature)

@@ -130,9 +130,10 @@ link_experimental_api(Exp *)
 struct Dict_node_struct
 {
 	const char * string;  /* The word itself */
-	const char * file;    /* The file the word came from (NULL if dict file) */
 	Exp       * exp;
 	Dict_node *left, *right;
+	const char * file;    /* The file the word came from (NULL if dict file) */
+	unsigned long use_count;
 };
 
 #ifndef SWIG
