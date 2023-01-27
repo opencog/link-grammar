@@ -82,6 +82,7 @@ Pool_desc *pool_new(const char *func, const char *name,
 	mp->free_list = NULL;
 #endif // POOL_FREE
 	mp->issued_elements = 0;
+	mp->alloced_elements = 0;
 	mp->num_elements = num_elements;
 
 	lgdebug(+D_MEMPOOL, "%sElement size %zu, alignment %zu (pool '%s' created in %s())\n",
@@ -179,6 +180,11 @@ void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 			/* Allocate a new block and chain it. */
 			mp->ring = aligned_alloc(mp->alignment, mp->block_size);
 
+			/* Count number of elements actually alloced.
+			 * The requested size may be smaller.
+			 */
+			mp->alloced_elements += mp->num_elements;
+
 			/* aligned_alloc() has strict requirements. */
 			assert(NULL != mp->ring, "Aligned_alloc(%zu, %zu): %s",
 			       mp->block_size, mp->element_size, syserror_msg(errno));
@@ -253,6 +259,7 @@ void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 	dassert(vecsize < mp->num_elements, "Pool block is too small %zu > %zu)",
 	        vecsize, mp->num_elements);
 	mp->issued_elements += vecsize;
+	mp->alloced_elements += vecsize;
 	size_t alloc_size = mp->element_size * vecsize;
 
 #ifdef POOL_EXACT

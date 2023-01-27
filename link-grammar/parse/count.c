@@ -272,7 +272,7 @@ static void free_table_lrcnt(count_context_t *ctxt)
 		}
 
 		const unsigned int num_values =
-			pool_num_elements_alloced(ctxt->sent->wordvec_pool);
+			pool_num_elements_issued(ctxt->sent->wordvec_pool);
 		lgdebug(+0, "Values %u (usage = non_max_null %u + other %u, "
 		        "other = any_null_zero %u + zero %u + nonzero %u); "
 		        "%u disjuncts in %u cache entries\n",
