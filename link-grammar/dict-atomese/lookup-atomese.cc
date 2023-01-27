@@ -17,6 +17,7 @@
 #include <opencog/persist/rocks/RocksStorage.h>
 #include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
+#include <opencog/util/Logger.h>
 
 #undef STRINGIFY
 
@@ -452,6 +453,30 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	return orhead;
 }
 
+static void report_dict_usage(Dictionary dict)
+{
+	Dict_node* most_used = nullptr;
+	Dict_node* least_used = nullptr;
+	unsigned long most_cnt = 0;
+	unsigned long least_cnt = 4000123123;
+	for (Dict_node* dn = dict->root; dn; dn = dn->right)
+	{
+		if (dn->use_count > most_cnt)
+		{
+			most_cnt = dn->use_count;
+			most_used = dn;
+		}
+		if (dn->use_count < least_cnt)
+		{
+			least_cnt = dn->use_count;
+			least_used = dn;
+		}
+	}
+	logger().info("LG Dict: %lu entries; most-used: %lu %s least-used: %lu %s",
+		dict->num_entries, most_cnt, most_used->string,
+		least_cnt, least_used->string);
+}
+
 /// Given an expression, wrap  it with a Dict_node and insert it into
 /// the dictionary.
 static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
@@ -468,9 +493,10 @@ static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
 		dict->num_entries, ssc, size_of_expression(exp));
 
 	// Rebalance the tree every now and then.
-	if (0 == dict->num_entries% 30)
+	if (0 == dict->num_entries%30)
 	{
 		dict->root = dsw_tree_to_vine(dict->root);
+		report_dict_usage(dict);
 		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
 	}
 

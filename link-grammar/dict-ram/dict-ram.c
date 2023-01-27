@@ -221,6 +221,7 @@ rdictionary_lookup(Dict_node * restrict llist,
 
 	if (dict_order != dict_order_wild || subscr_match(s, dn))
 	{
+		dn->use_count++;
 		if (boolean_lookup) return dn;
 		Dict_node * dn_new = dict_node_new();
 		*dn_new = *dn;
