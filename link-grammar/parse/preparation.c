@@ -107,7 +107,7 @@ static void build_sentence_disjuncts(Sentence sent, float cost_cutoff,
 	                   /*zero_out*/true, /*align*/false, /*exact*/false);
 
 #ifdef DEBUG
-	size_t num_con_alloced = pool_num_elements_alloced(sent->Connector_pool);
+	size_t num_con_alloced = pool_num_elements_issued(sent->Connector_pool);
 #endif
 
 	for (w = 0; w < sent->length; w++)
@@ -127,7 +127,7 @@ static void build_sentence_disjuncts(Sentence sent, float cost_cutoff,
 	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
 	lgdebug(+D_PREP, "%u disjucts, %u connectors (%zu allocated)\n",
 	        dcnt, ccnt,
-	        pool_num_elements_alloced(sent->Connector_pool) - num_con_alloced);
+	        pool_num_elements_issued(sent->Connector_pool) - num_con_alloced);
 #endif
 
 	/* Delete the memory pools created in build_disjuncts_for_exp(). */

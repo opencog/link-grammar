@@ -87,7 +87,8 @@ struct  Pool_desc_s
 	/* num_elements is also used by the fake allocator if the POOL_EXACT
 	 * feature is used (it is not used for now). */
 
-	size_t curr_elements;       // Originally for debug. Now used by pool_next().
+	size_t issued_elements;     // Number of elements issued to users.
+	size_t alloced_elements;    // Issued plus free (unissued) elements.
 
 	/* Flags that are used by pool_alloc(). */
 	bool zero_out;              // Zero out allocated elements.
@@ -104,11 +105,11 @@ typedef struct
 } Pool_location;
 
 /**
- * Return the number of allocated elements in the given pool.
+ * Return the number of elements issued to users.
  */
-static inline size_t pool_num_elements_alloced(Pool_desc *mp)
+static inline size_t pool_num_elements_issued(Pool_desc *mp)
 {
-	return mp->curr_elements;
+	return mp->issued_elements;
 }
 
 static inline void *pool_alloc(Pool_desc *mp)
@@ -135,7 +136,7 @@ static inline void *pool_next(Pool_desc *mp, Pool_location *l)
 	assert(mp->free_list == NULL, "Cannot be called after pool_free()");
 #endif
 
-	if (l->element_number == mp->curr_elements) return NULL;
+	if (l->element_number == mp->issued_elements) return NULL;
 
 	if (l->element_number == 0)
 	{
@@ -169,12 +170,11 @@ static inline void *pool_next(Pool_desc *mp, Pool_location *l)
 	return l->current_element;
 }
 
-#if 0 /* For planned memory management. */
-static size_t pool_size(Pool_desc *mp)
+/// Total number of elements in pool, both issued and currently free.
+static inline size_t pool_size(Pool_desc *mp)
 {
-	return mp->current_elements;
+	return mp->alloced_elements;
 }
-#endif
 
 // Macros for our memory-pool usage debugging.
 // https://github.com/google/sanitizers/wiki/AddressSanitizerManualPoisoning
