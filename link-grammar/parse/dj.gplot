@@ -1,0 +1,53 @@
+
+set key left top
+set term png
+
+# -----------
+set out 'dj-ctr.png'
+set title "Parse time vs Num connectors"
+set ylabel "Total Parse Time"
+set logscale y
+set xlabel "Num Connectors"
+plot "dj.dat" using 4:12 with points title ""
+
+# -----------
+set out 'dj-dj-ctr.png'
+set title "Num disjuncts vs Num connectors"
+set ylabel "Num Connectors"
+unset logscale y
+set xlabel "Num Disjuncts"
+plot "dj.dat" using 2:4 with points title ""
+
+# -----------
+set out 'dj-dj-cho.png'
+set title "Choices RAM Num disjuncts"
+set ylabel "Choice Bytes"
+set logscale x
+set logscale y
+set xlabel "Num Disjuncts"
+plot "dj.dat" using 2:8 with points title "",\
+     "dj.dat" using 2:((0.16 * $2)**2) with points title "square of #dj"
+
+# -----------
+set out 'dj-dj.png'
+set title "Parse time vs Disjuncts"
+set ylabel "Total Parse Time"
+set logscale x
+set logscale y
+set xlabel "Num Disjuncts"
+plot "dj.dat" using 2:12 with points title "", \
+     "dj.dat" using 2:((1.5e-4 *$2)**2) with points title "square of #dj"
+
+#     "dj.dat" using 2:(exp(1.0e-4 *$2)) with points title "crv"
+
+# -----------
+set out 'dj-dj-cho.png'
+set title "Choices RAM vs parse time"
+set xlabel "Parse time"
+set ylabel "Choice Bytes"
+set logscale x
+set logscale y
+set xlabel "Parse Time"
+plot "dj.dat" using 12:8 with points title "", \
+     "dj.dat" using 12:(1.1e6*$12) with points title "linear"
+
