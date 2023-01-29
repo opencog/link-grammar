@@ -509,6 +509,7 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	dict->start_lookup(dict, sent);
 	int rc = do_sentence_split(sent, opts);
 	dict->end_lookup(dict, sent);
+	print_time(opts, "Split sentence");
 	return rc;
 }
 
