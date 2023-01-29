@@ -716,6 +716,11 @@ for (size_t i=0; i<sent->length; i++)
 		free_count_context(ctxt, sent);
 		ctxt = alloc_count_context(sent, ts_parsing);
 
+if (30123 < totdj)
+{
+sent->num_linkages_found = 0;
+goto parse_end_cleanup;
+}
 double preparse = current_usage_time();
 
 		sent->num_linkages_found = do_parse(sent, mchxt, ctxt, opts);
