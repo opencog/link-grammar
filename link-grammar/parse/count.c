@@ -1597,12 +1597,15 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	 * one null link. */
 	/* ctxt->null_block = 1; */
 
+#if 0
 	if (NULL != sent->Table_connector_pool)
 	{
 		pool_reuse(sent->Table_connector_pool);
 	}
 	else
+#endif
 	{
+		pool_delete(sent->Table_connector_pool);
 		sent->Table_connector_pool =
 			pool_new(__func__, "Table_connector",
 			         /*num_elements*/16384, sizeof(Table_connector),
@@ -1612,6 +1615,10 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	init_table(ctxt);
 	return ctxt;
 }
+
+size_t tcpsize(Sentence);
+size_t tcpsize(Sentence sent) {
+return pool_size(sent->Table_connector_pool); }
 
 void free_count_context(count_context_t *ctxt, Sentence sent)
 {

@@ -554,6 +554,7 @@ static void notify_no_complete_linkages(unsigned int null_count,
  */
 size_t bucksz(extractor_t* pex);
 size_t chosz(extractor_t* pex);
+size_t tcpsize(Sentence);
 double current_usage_time(void);
 
 int np=0;
@@ -740,9 +741,9 @@ double postparse = current_usage_time();
 double postex = current_usage_time();
 
 np++;
-prt_error("%d d= %d c= %d b= %lu ch= %lu tc= %5.2f tb= %5.2f\n",
+prt_error("%d d= %d c= %d p= %lu b= %lu ch= %lu tc= %5.2f tb= %5.2f\n",
 np, totdj, rcnt+lcnt,
-bucksz(pex), chosz(pex),
+tcpsize(sent), bucksz(pex), chosz(pex),
 postparse-preparse, postex-postparse);
 			if (IS_GENERATION(sent->dict))
 			    find_unused_disjuncts(sent, pex);
