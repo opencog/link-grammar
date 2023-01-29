@@ -556,6 +556,8 @@ size_t bucksz(extractor_t* pex);
 size_t chosz(extractor_t* pex);
 double current_usage_time(void);
 
+int np=0;
+
 void classic_parse(Sentence sent, Parse_Options opts)
 {
 	fast_matcher_t * mchxt = NULL;
@@ -729,8 +731,9 @@ double postparse = current_usage_time();
 			process_linkages(sent, pex, opts);
 double postex = current_usage_time();
 
-prt_error("dj= %d ctr= %d prs= %d buck= %lu cho= %lu cnt= %5.2f bld= %5.2f\n",
-totdj, rcnt+lcnt, sent->num_linkages_found,
+np++;
+prt_error("%d d= %d c= %d b= %lu ch= %lu tc= %5.2f tb= %5.2f\n",
+np, totdj, rcnt+lcnt,
 bucksz(pex), chosz(pex),
 postparse-preparse, postex-preparse);
 			if (IS_GENERATION(sent->dict))
