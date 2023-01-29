@@ -735,7 +735,7 @@ np++;
 prt_error("%d d= %d c= %d b= %lu ch= %lu tc= %5.2f tb= %5.2f\n",
 np, totdj, rcnt+lcnt,
 bucksz(pex), chosz(pex),
-postparse-preparse, postex-preparse);
+postparse-preparse, postex-postparse);
 			if (IS_GENERATION(sent->dict))
 			    find_unused_disjuncts(sent, pex);
 			free_extractor(pex);
