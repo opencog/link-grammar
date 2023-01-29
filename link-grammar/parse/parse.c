@@ -157,6 +157,8 @@ static bool optional_word_exists(Sentence sent)
 	return false;
 }
 
+TLS size_t N_invalid_morphism = 0;
+
 #define D_PL 7
 /**
  * This fills the linkage array with morphologically-acceptable
@@ -173,7 +175,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	    (sent->num_linkages_found > (int) opts->linkage_limit);
 
 	sent->num_valid_linkages = 0;
-	size_t N_invalid_morphism = 0;
+	N_invalid_morphism = 0;
 
 	int itry = 0;
 	size_t in = 0;
@@ -741,10 +743,12 @@ double postparse = current_usage_time();
 double postex = current_usage_time();
 
 np++;
-prt_error("%d d= %d c= %d p= %lu b= %lu ch= %lu tc= %5.2f tb= %5.2f\n",
+prt_error("%d d= %d c= %d p= %lu b= %lu ch= %lu tc= %5.2f tb= %5.2f s= %lu / %lu\n",
 np, totdj, rcnt+lcnt,
 tcpsize(sent), bucksz(pex), chosz(pex),
-postparse-preparse, postex-postparse);
+postparse-preparse, postex-postparse,
+N_invalid_morphism, opts->linkage_limit
+);
 			if (IS_GENERATION(sent->dict))
 			    find_unused_disjuncts(sent, pex);
 			free_extractor(pex);
