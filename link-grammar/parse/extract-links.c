@@ -208,6 +208,7 @@ extractor_t * extractor_new(int nwords, unsigned int ranstat, bool generation)
 		         /*num_elements*/1024, sizeof(Parse_choice),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
 
+printf("duuude parse choice bytes=%lu\n", sizeof(Parse_choice));
 	return pex;
 }
 

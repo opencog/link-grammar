@@ -20,8 +20,8 @@ plot "dj.dat" using 2:4 with points title ""
 
 # -----------
 set out 'dj-dj-cho.png'
-set title "Choices RAM Num disjuncts"
-set ylabel "Choice Bytes"
+set title "Num Choices vs Num disjuncts"
+set ylabel "Num Choice"
 set logscale x
 set logscale y
 set xlabel "Num Disjuncts"
@@ -42,9 +42,9 @@ plot "dj.dat" using 2:12 with points title "", \
 
 # -----------
 set out 'dj-dj-cho.png'
-set title "Choices RAM vs parse time"
+set title "Num Choices vs parse time"
 set xlabel "Parse time"
-set ylabel "Choice Bytes"
+set ylabel "Num Choice"
 set logscale x
 set logscale y
 set xlabel "Parse Time"
