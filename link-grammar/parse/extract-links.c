@@ -89,6 +89,14 @@ struct extractor_s
 	unsigned int rand_state;
 };
 
+size_t bucksz(extractor_t* pex);
+size_t bucksz(extractor_t* pex) {
+return pool_size(pex->Pset_bucket_pool); }
+
+size_t chosz(extractor_t* pex);
+size_t chosz(extractor_t* pex) {
+return pool_size(pex->Parse_choice_pool); }
+
 /**
  * The first thing we do is we build a data structure to represent the
  * result of the entire parse search.  There will be a set of nodes

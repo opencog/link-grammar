@@ -46,7 +46,8 @@ int getrusage(int who, struct rusage *rusage);
 #define MAX_MEMORY_UNLIMITED ((size_t) -1)
 
 /** returns the current usage time clock in seconds */
-static double current_usage_time(void)
+double current_usage_time(void);
+double current_usage_time(void)
 {
 #if !defined(_WIN32)
 	struct rusage u;

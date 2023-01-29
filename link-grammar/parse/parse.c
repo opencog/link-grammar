@@ -552,6 +552,10 @@ static void notify_no_complete_linkages(unsigned int null_count,
  * a greater null_count. To solve that, we need to restore the original
  * disjuncts of the sentence and call pp_and_power_prune() once again.
  */
+size_t bucksz(extractor_t* pex);
+size_t chosz(extractor_t* pex);
+double current_usage_time(void);
+
 void classic_parse(Sentence sent, Parse_Options opts)
 {
 	fast_matcher_t * mchxt = NULL;
@@ -684,13 +688,25 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			print_time(opts, "Initialized fast matcher");
 			if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 		}
+int totdj = 0;
+int lcnt = 0, rcnt = 0;
+for (size_t i=0; i<sent->length; i++)
+{
+   Disjunct *d = sent->word[i].d;
+   totdj += count_disjuncts(d);
+   rcnt += right_connector_count(d);
+   lcnt += left_connector_count(d);
+}
 
 		free_linkages(sent);
 
 		free_count_context(ctxt, sent);
 		ctxt = alloc_count_context(sent, ts_parsing);
 
+double preparse = current_usage_time();
+
 		sent->num_linkages_found = do_parse(sent, mchxt, ctxt, opts);
+double postparse = current_usage_time();
 
 		print_time(opts, "Counted parses (%d w/%u null%s)",
 		           sent->num_linkages_found, sent->null_count,
@@ -711,10 +727,15 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				extractor_new(sent->length, sent->rand_state, IS_GENERATION(sent->dict));
 			setup_linkages(sent, pex, mchxt, ctxt, opts);
 			process_linkages(sent, pex, opts);
+double postex = current_usage_time();
+
+prt_error("dj= %d ctr= %d prs= %d buck= %lu cho= %lu cnt= %5.2f bld= %5.2f\n",
+totdj, rcnt+lcnt, sent->num_linkages_found,
+bucksz(pex), chosz(pex),
+postparse-preparse, postex-preparse);
 			if (IS_GENERATION(sent->dict))
 			    find_unused_disjuncts(sent, pex);
 			free_extractor(pex);
-
 			post_process_lkgs(sent, opts);
 			if (resources_exhausted(opts->resources))
 			{
