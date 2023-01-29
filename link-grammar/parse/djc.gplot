@@ -1,0 +1,33 @@
+
+set key left top
+set term png
+
+# -----------
+set out 'djc-dj-cnt.png'
+set title "Alloced Table connectors vs Num disjuncts"
+set ylabel "Number of Table connector"
+set logscale x
+set logscale y
+set xlabel "Number of Disjuncts (#dj)"
+plot "djc.dat" using 3:5 with points title "third dataset",\
+     (4 * x) with lines title "4 * #dj"
+
+# -----------
+set out 'djc-dj-buck.png'
+set title "Alloced Buckets vs Num disjuncts"
+set ylabel "Number of Buckets alloced"
+set logscale x
+set logscale y
+set xlabel "Number of Disjuncts (#dj)"
+plot "djc.dat" using 3:9 with points title "third dataset",\
+     (3e-2 * x**1.5) with lines title "#dj^{1.5}"
+
+# -----------
+set out 'djc-cnt-buck.png'
+set title "Alloced Buckets vs Table connectors"
+set ylabel "Number of Buckets alloced"
+set logscale x
+set logscale y
+set xlabel "Number of Table connectors"
+plot "djc.dat" using 5:9 with points title "third dataset"
+
