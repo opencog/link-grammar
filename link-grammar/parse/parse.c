@@ -690,12 +690,20 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			print_time(opts, "Initialized fast matcher");
 			if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 		}
+double pred = current_usage_time();
 int totdj = 0;
-int lcnt = 0, rcnt = 0;
 for (size_t i=0; i<sent->length; i++)
 {
    Disjunct *d = sent->word[i].d;
    totdj += count_disjuncts(d);
+}
+double postd = current_usage_time();
+prt_error("++++ time to count djs= %f secs\n", postd-pred);
+
+int lcnt = 0, rcnt = 0;
+for (size_t i=0; i<sent->length; i++)
+{
+   Disjunct *d = sent->word[i].d;
    rcnt += right_connector_count(d);
    lcnt += left_connector_count(d);
 }
