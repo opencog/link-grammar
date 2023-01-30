@@ -556,7 +556,8 @@ static void notify_no_complete_linkages(unsigned int null_count,
  */
 size_t bucksz(extractor_t* pex);
 size_t chosz(extractor_t* pex);
-size_t tcpsize(Sentence);
+size_t get_mlc(count_context_t *ctxt);
+size_t get_mld(count_context_t *ctxt);
 double current_usage_time(void);
 
 int np=0;
@@ -740,7 +741,7 @@ double postparse = current_usage_time();
 double postex = current_usage_time();
 
 np++;
-prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f s= %lu / %lu\n",
+prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f dp= %lu cp= %lu mlc= %lu mld= %lu s= %lu / %lu\n",
 np,
 sent->length,
 sent->num_disjuncts,
@@ -749,6 +750,12 @@ sent->num_linkages_found,
 pool_size(sent->Table_tracon_pool),
 bucksz(pex), chosz(pex),
 postparse-preparse, postex-postparse,
+
+pool_size(sent->Disjunct_pool),
+pool_size(sent->Connector_pool),
+get_mlc(ctxt),
+get_mld(ctxt),
+
 N_invalid_morphism, opts->linkage_limit
 );
 			if (IS_GENERATION(sent->dict))

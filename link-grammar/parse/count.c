@@ -1650,6 +1650,14 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	return ctxt;
 }
 
+size_t get_mlc(count_context_t *ctxt);
+size_t get_mlc(count_context_t *ctxt) {
+return pool_size(ctxt->mchxt->mlc_pool); }
+
+size_t get_mld(count_context_t *ctxt);
+size_t get_mld(count_context_t *ctxt) {
+return pool_size(ctxt->mchxt->mld_pool); }
+
 void free_count_context(count_context_t *ctxt, Sentence sent)
 {
 	if (NULL == ctxt) return;
