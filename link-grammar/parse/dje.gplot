@@ -27,6 +27,20 @@ plot "pandp.dat" using 3:9 with points title "Pride & Prej",\
 unset yrange
 
 # -----------
+set out 'dje-dj-time.png'
+set title "Parse time vs Disjuncts"
+set ylabel "Total Parse Time (seconds)"
+set logscale x
+set logscale y
+set xlabel "Number of Disjuncts"
+set xrange [70:30000]
+set yrange [0.008:1]
+plot "pandp.dat" using 5:($17+$19) with points title "Pride & Prej", \
+     ((1.5e-5 * x)**1.17) with lines lw 2 title "#dj^{1.17}"
+unset xrange
+unset yrange
+
+# -----------
 set out 'dje-dj-cnt.png'
 set title "English - Alloced Table connectors vs Num disjuncts"
 set ylabel "Number of Table connector"
