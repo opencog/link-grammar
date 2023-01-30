@@ -12,7 +12,8 @@ set xrange [1000:]
 set yrange [10000:3e5]
 set xlabel "Number of Disjuncts (#dj)"
 plot "djc.dat" using 3:7 with points title "third dataset",\
-     (0.1 * (x**1.4)) with lines lw 2 title "0.1 * #dj^{1.4}"
+     (0.1 * (x**1.4)) with lines lw 2 title "0.1 * #dj^{1.4}" ,\
+     (0.7 * (x**1.2)) with lines lw 2 title "0.7 * #dj^{1.2}"
 
 unset xrange
 unset yrange
