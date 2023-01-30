@@ -19,6 +19,28 @@ unset xrange
 unset yrange
 
 # -----------
+set out 'djc-dj-cnt-scaled.png'
+set title "Alloced Table connectors vs (Disjuncts x log(words))"
+set ylabel "Number of Table connector"
+set logscale x
+set logscale y
+set xrange [1000:]
+set yrange [10000:2e6]
+set xlabel "Disjuncts x log(words)"
+f(x)=1.0/x
+f(x)=sqrt(x)
+f(x)=log(x)
+#f(x)=1.0
+plot "djc.dat" using (f(9) * $3):7 with points title "third MST dataset",\
+     "dj-1500.dat" using (f(9) * $3):7 with points title "lim=1500 MST dataset",\
+     "pandp.dat" using (f($3) * $5):11 with points title "Pride Prejudice",\
+     (0.3 * (x**1.2)) with lines lw 2 title "0.3 * x^{1.2}", \
+     (0.015 * x**1.5) with lines lw 2 title "0.015 x^{1.5}"
+
+unset xrange
+unset yrange
+
+# -----------
 set out 'djc-dj-buck.png'
 set title "Alloced Buckets vs Num disjuncts"
 set ylabel "Number of Buckets alloced"
