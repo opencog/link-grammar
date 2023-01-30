@@ -27,29 +27,11 @@ set yrange [200:]
 set xlabel "Number of Disjuncts (#dj)"
 plot "djl.dat" using 3:9 with points title "second dataset",\
      "dj.dat" using 2:8 with points title "first dataset",\
-     "dj-1500.dat" using 3:9 with points title "linkage-lim=1500 dataset",\
+     "dj-1500.dat" using 3:11 with points title "linkage-lim=1500 dataset",\
+     "dj-150.dat" using 5:15 with points title "linkage-lim=150 dataset",\
      "pandp.dat" using 5:15 with points title "Pride & Prej", \
      ((0.16 * x)**2) with lines lw 2 title "(0.16 * #dj)^2", \
      ((0.1 * x)**1.5) with lines lw 2 title "(0.1 * #dj)^{1.5}"
-
-unset xrange
-unset yrange
-
-# -----------
-set out 'djl-dj-cho-scaled.png'
-set title "Alloced Choices vs (Disjuncts x Linkage-Limit)"
-set ylabel "Number of Parse choice alloced"
-set logscale x
-set logscale y
-set xrange [2e5:]
-set yrange [500:1e9]
-set xlabel "(Num Disjuncts) x (Linkage Limit)"
-plot "djl.dat" using (15000 * $3):9 with points title "second MST dataset",\
-     "dj.dat" using (15000 * $2):8 with points title "first MST dataset",\
-     "dj-1500.dat" using (1500 * $3):9 with points title "linkage-lim=1500 MST dataset",\
-     "pandp.dat" using (1000 * $5):15 with points title "Pride Prejude; linkage-lim=1K", \
-     ((0.000016 * x)**2) with lines lw 2 title "(0.00016 * #dj)^2", \
-     ((0.0001 * x)**1.5) with lines lw 2 title "(0.0001 * #dj)^{1.5}"
 
 unset xrange
 unset yrange
@@ -77,7 +59,8 @@ set xlabel "Num Disjuncts per word"
 f(x) = 1.0/x
 plot "djl.dat" using (f(9) * $3):7 with points title "second MST dataset",\
      "dj.dat" using (f(9) * $2):6 with points title "first MST dataset",\
-     "dj-1500.dat" using (f(9) * $3):7 with points title "linkage-lim=1500 MST dataset",\
+     "dj-1500.dat" using (f(9) * $3):9 with points title "linkage-lim=1500 MST dataset",\
+     "dj-150.dat" using (f($3) * $5):13 with points title "linkage-lim=150 MST dataset",\
      "pandp.dat" using (f($3) * $5):13 with points title "Pride Prejude; linkage-lim=1K", \
      (1 * x**1.5) with lines lw 2 title "1.0 #dj^{1.5}"
 
