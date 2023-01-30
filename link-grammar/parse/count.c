@@ -33,18 +33,18 @@
 
 #define D_COUNT 5 /* General debug level for this file. */
 
+typedef uint8_t null_count_m;  /* Storage representation of null_count */
+typedef uint8_t WordIdx_m;     /* Storage representation of word index */
+
 typedef struct Table_tracon_s Table_tracon;
 struct Table_tracon_s
 {
 	Table_tracon     *next;
 	int              l_id, r_id;
-	Count_bin        count;
-	unsigned int     null_count;
-	size_t           hash;
+	Count_bin        count;      // normally int_32_t
+	uint32_t         hash;
+	null_count_m     null_count;
 };
-
-typedef uint8_t null_count_m;  /* Storage representation of null_count */
-typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
 /* Most of the time, do_count() yields a zero leftcount/rightcount when it
  * parses a word range in which one end is a certain tracon and the other
