@@ -173,13 +173,15 @@ static inline void *pool_next(Pool_desc *mp, Pool_location *l)
 /// Total number of elements in pool, both issued and currently free.
 static inline size_t pool_size(Pool_desc *mp)
 {
-	return mp->alloced_elements;
+	if (mp) return mp->alloced_elements;
+	return 0;
 }
 
 /// Total alloced bytes
 static inline size_t pool_bytes(Pool_desc *mp)
 {
-	return (mp->alloced_elements * mp->block_size) / mp->num_elements;
+	if (mp) return (mp->alloced_elements * mp->block_size) / mp->num_elements;
+	return 0;
 }
 
 // Macros for our memory-pool usage debugging.
