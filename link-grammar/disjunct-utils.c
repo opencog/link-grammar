@@ -554,7 +554,7 @@ void count_disjuncts_and_connectors(Sentence sent, unsigned int *dca,
  * linkages per a given connector-pair using connector addresses. Since
  * an exhaustive search is done, such an approach has two main problems
  * for long sentences:
- * 1. A very big count hash table (Table_connector in count.c) is used
+ * 1. A very big count hash table (Table_tracon in count.c) is used
  * due to the huge number of connectors (100Ks) in long sentences, a
  * thing that causes a severe CPU cache trash (to the degree that
  * absolutely most of the memory accesses are L3 misses).
