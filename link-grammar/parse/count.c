@@ -36,7 +36,7 @@
 typedef struct Table_tracon_s Table_tracon;
 struct Table_tracon_s
 {
-	Table_tracon  *next;
+	Table_tracon     *next;
 	int              l_id, r_id;
 	Count_bin        count;
 	unsigned int     null_count;
@@ -120,7 +120,36 @@ struct count_context_s
 	Resources current_resources;
 	COUNT_COST(uint64_t count_cost[3];)
 };
-#define TABLE_LOAD_FACTOR(s) (s / 10) /* Low load factor, for speed */
+
+/* Wikipedia claims that load factors of 0.6 to 0.75 are OK, and that
+ * a load factor of less than 0.25 is pointless. We set it to 0.333.
+ */
+#define INV_LOAD_FACTOR 3 /* 1.0 / load factor. */
+
+/**
+ * Provide an estimate for the number of Table_tracon entries that will
+ * be needed.
+ *
+ * The number of entries actually used was measured in discussion
+ *     https://github.com/opencog/link-grammar/discussions/1402
+ * Based on this, an upper bound on the entries needed is
+ *    3 * num_disjuncts * log_2(num_words)
+ * i.e. more than this is almost never needed. A lower bound is
+ *    0.5 * num_disjuncts * log_2(num_words)
+ * i.e. more than this is *always* needed.
+ *
+ * In both conventional and MST dictionaries, more than 500K entries is
+ * almost never needed. In a handful of extreme cases, 2M was observed.
+ */
+static unsigned int estimate_tracon_entries(Sentence sent)
+{
+	unsigned int nwords = sent->length;
+	unsigned int log2_nwords = 0;
+	while (nwords) { log2_nwords++; nwords >>= 1; }
+
+	unsigned int tblsize = 3 * log2_nwords * sent->num_disjuncts;
+	return tblsize;
+}
 
 #if HAVE_THREADS_H && !__EMSCRIPTEN__
 /* Each thread will get it's own version of the `kept_table`.
@@ -148,9 +177,10 @@ static void make_key(void)
 #endif /* HAVE_THREADS_H && !__EMSCRIPTEN__ */
 
 /**
- * Allocate memory for the connector-pair table and initialize table-size
- * related fields (table_size and table_available_count). Reuse the
- * previous table memory if the request is for a table that fits.
+ * Allocate memory for the connector-pair hash table and initialize
+ * table-size related fields (table_size and table_available_count).
+ * Reuse the previous hash table memory if the request is for a table
+ * that fits.
  *
  * @ctxt[in, out] Table info.
  * @param logsz Log2 requested table size, or \c 0 if the table needs
@@ -201,33 +231,26 @@ static void table_alloc(count_context_t *ctxt, unsigned int logsz)
 	ctxt->table_mask = ctxt->table_size - 1;
 	ctxt->table = kept_table;
 
-	ctxt->table_available_count = TABLE_LOAD_FACTOR(ctxt->table_size);
+	// This assures that the table load will stay under the load factor.
+	ctxt->table_available_count = ctxt->table_size / INV_TABLE_LOAD_FACTOR;
 }
 
 /**
- * Allocate the table with a sentence-dependent table size.
+ * Allocate the tracon hash table with a sentence-dependent table size.
  * This saves on dynamic table growth, which is costly.
  *
- * The number of table entries actually used was measured in discussion
- *     https://github.com/opencog/link-grammar/discussions/1402
- * Based on this, an upper bound on the table entries needed is
- *    3 * num_disjuncts * log_2(num_words)
- * i.e. more than this is almost never needed. A lower bound is
- *    0.5 * num_disjuncts * log_2(num_words)
- * i.e. more than this is *always* needed.
- *
- * In both conventional and MST dictionaries, more than 500K entries is
- * almost never needed. In a handful of extreme cases, 2M was observed.
+ * We estimate the number of required hash table slots by estimating
+ * the number of entries that will be required, and then multiplying by
+ * four (actually, by 2**LOG2_TABLE_LOAD_FACTOR) so that the hash table
+ * usage remains sparse.
  */
 static void init_table(count_context_t *ctxt)
 {
-	Sentence sent = ctxt->sent;
+	// Number of tracon entries we expect to store.
+	unsigned int tblsize = estimate_tracon_entries(ctxt->sent);
 
-	unsigned int nwords = sent->length;
-	unsigned int log2_nwords = 0;
-	while (nwords) { log2_nwords++; nwords >>= 1; }
-
-	unsigned int tblsize = 3 * log2_nwords * sent->num_disjuncts;
+	// Adjust by the table load factor.
+	tblsz *= INV_TABLE_LOAD_FACTOR;
 
 	unsigned int logsz = 0;
 	while (tblsz) { logsz++; tblsz >>= 1; }
