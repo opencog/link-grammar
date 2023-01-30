@@ -111,7 +111,6 @@ struct count_context_s
 	bool    exhausted;
 	uint8_t num_growth;       /* Number of table growths, for debug */
 	bool    is_short;
-	uint8_t log2_table_size;
 	uint32_t checktimer;  /* Avoid excess system calls */
 	size_t table_size;
 	size_t table_mask;
@@ -121,8 +120,7 @@ struct count_context_s
 	Resources current_resources;
 	COUNT_COST(uint64_t count_cost[3];)
 };
-#define MAX_TABLE_SIZE(s) (s / 10) /* Low load factor, for speed */
-#define MAX_LOG2_TABLE_SIZE ((sizeof(size_t)==4) ? 25 : 34)
+#define TABLE_LOAD_FACTOR(s) (s / 10) /* Low load factor, for speed */
 
 #if HAVE_THREADS_H && !__EMSCRIPTEN__
 /* Each thread will get it's own version of the `kept_table`.
@@ -152,17 +150,20 @@ static void make_key(void)
 /**
  * Allocate memory for the connector-pair table and initialize table-size
  * related fields (table_size and table_available_count). Reuse the
- * previous table memory if the request is for a table that fits. If this
- * is not a call to grow the table, free it if not reused.
+ * previous table memory if the request is for a table that fits.
  *
  * @ctxt[in, out] Table info.
- * @param shift log2 table size, or \c 0 for table growth. On table growth,
- * increase the new table size by 2.
+ * @param logsz Log2 requested table size, or \c 0 if the table needs
+ *              to be expanded. Tables are expanded by a factor of 2.
  */
-static void table_alloc(count_context_t *ctxt, unsigned int shift)
+static void table_alloc(count_context_t *ctxt, unsigned int logsz)
 {
+	unsigned int reqsz = 1ULL << logsz;
+	if (0 < logsz && reqsz <= ctxt->table_size) return; // It's big enough, already.
+
 	static TLS Table_tracon **kept_table = NULL;
-	static TLS unsigned int log2_kept_table_size = 0;
+	static TLS unsigned int kept_table_size = 0;
+	lgdebug(+D_COUNT, "Connector table size %u\n", reqsz);
 
 #if HAVE_THREADS_H && !__EMSCRIPTEN__
 	// Install a thread-exit handler, to free kept_table on thread-exit.
@@ -173,19 +174,23 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 		tss_set(key, &kept_table);
 #endif /* HAVE_THREADS_H && !__EMSCRIPTEN__ */
 
-	if (shift == 0)
-		shift = ctxt->log2_table_size + 1; /* Double the table size */
-	lgdebug(+D_COUNT, "Connector table log2 size %u\n", shift);
+	if (logsz == 0)
+		ctxt->table_size *= 2; /* Double the table size */
+	else
+		ctxt->table_size = reqsz;
 
 	/* Keep the table indefinitely (until thread-exit), so that it can
 	 * be reused. This avoids a large overhead in malloc/free when
-	 * large memory blocks are allocated. Large block in Linux trigger
+	 * large memory blocks are allocated. Large blocks in Linux trigger
 	 * system calls to mmap/munmap that eat up a lot of time.
-	 * (Up to 20%, depending on the sentence and CPU.) */
-	ctxt->table_size = (1ULL << shift);
-	if ((shift > log2_kept_table_size) || (kept_table == NULL))
+	 * (Up to 20%, depending on the sentence and CPU.)
+	 *
+	 * FYI: the new tracon tables are (much?) smaller than the older
+	 * connector tables, so maybe this reuse is no longer needed?
+	 */
+	if ((logsz == 0) || (kept_table == NULL))
 	{
-		log2_kept_table_size = shift;
+		kept_table_size = ctxt->table_size;
 
 		if (kept_table) free(kept_table);
 		kept_table = malloc(sizeof(Table_tracon *) * ctxt->table_size);
@@ -193,47 +198,41 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 
 	memset(kept_table, 0, sizeof(Table_tracon *) * ctxt->table_size);
 
-	/* This is here and not in init_table() because it must be set
-	 * also when the table growths. */
-	ctxt->log2_table_size = shift;
 	ctxt->table_mask = ctxt->table_size - 1;
 	ctxt->table = kept_table;
 
-	if (shift >= MAX_LOG2_TABLE_SIZE)
-		ctxt->table_available_count = UINT_MAX; /* Prevent growth */
-	else
-		ctxt->table_available_count = MAX_TABLE_SIZE(ctxt->table_size);
+	ctxt->table_available_count = TABLE_LOAD_FACTOR(ctxt->table_size);
 }
 
 /**
- * Allocate the table with a sentence-dependent table size.  Use
- * sent->length as a hint for the initial table size. Usually, this
- * saves on dynamic table growth, which is costly.
- * */
+ * Allocate the table with a sentence-dependent table size.
+ * This saves on dynamic table growth, which is costly.
+ *
+ * The number of table entries actually used was measured in discussion
+ *     https://github.com/opencog/link-grammar/discussions/1402
+ * Based on this, an upper bound on the table entries needed is
+ *    3 * num_disjuncts * log_2(num_words)
+ * i.e. more than this is almost never needed. A lower bound is
+ *    0.5 * num_disjuncts * log_2(num_words)
+ * i.e. more than this is *always* needed.
+ *
+ * In both conventional and MST dictionaries, more than 500K entries is
+ * almost never needed. In a handful of extreme cases, 2M was observed.
+ */
 static void init_table(count_context_t *ctxt)
 {
 	Sentence sent = ctxt->sent;
 
-	/* A piecewise exponential function determines the size of the
-	 * hash table. Probably should make use of the actual number of
-	 * disjuncts, rather than just the number of words.
-	 */
-	unsigned int shift;
-	if (sent->length >= 16)
-	{
-		shift = 14 + sent->length / 16;
-	}
-	else
-	{
-		shift = 14;
-	}
-#if 0 /* Not yet */
-	shift += (unsigned int)sent->num_disjuncts / (sent->length * 200);
-#endif
+	unsigned int nwords = sent->length;
+	unsigned int log2_nwords = 0;
+	while (nwords) { log2_nwords++; nwords >>= 1; }
 
-	if (MAX_LOG2_TABLE_SIZE < shift) shift = MAX_LOG2_TABLE_SIZE;
+	unsigned int tblsize = 3 * log2_nwords * sent->num_disjuncts;
 
-	table_alloc(ctxt, shift);
+	unsigned int logsz = 0;
+	while (tblsz) { logsz++; tblsz >>= 1; }
+
+	table_alloc(ctxt, tblsize);
 }
 
 static void free_table_lrcnt(count_context_t *ctxt)
@@ -1603,6 +1602,7 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	}
 	else
 	{
+xxxxxxxxxx
 		sent->Table_tracon_pool =
 			pool_new(__func__, "Table_tracon",
 			         /*num_elements*/16384, sizeof(Table_tracon),
