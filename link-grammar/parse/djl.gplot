@@ -37,7 +37,7 @@ unset yrange
 
 # -----------
 set out 'djl-dj-cho-scaled.png'
-set title "Alloced Choices vs (Disjuncts x Linakges)"
+set title "Alloced Choices vs (Disjuncts x Linkage-Limit)"
 set ylabel "Number of Parse choice alloced"
 set logscale x
 set logscale y
@@ -61,9 +61,36 @@ set ylabel "Number of Buckets alloced"
 set logscale x
 set logscale y
 set xlabel "Number of Disjuncts (#dj)"
-plot "djl.dat" using 3:7 with points title "second dataset",\
-     "dj.dat" using 2:6 with points title "first dataset",\
-     (3e-2 * x**1.5) with lines title "#dj^{1.5}"
+plot "djl.dat" using 3:7 with points title "second MST dataset",\
+     "dj.dat" using 2:6 with points title "first MST dataset",\
+     (3e-2 * x**1.5) with lines title "0.03 #dj^{1.5}"
+
+# -----------
+set out 'djl-dj-buck-scaled.png'
+set title "Alloced Buckets vs (Disjuncts x log(Linkage-Limit))"
+set ylabel "Number of Buckets alloced"
+set logscale x
+set logscale y
+set xrange [2e3:]
+set yrange [500:1e7]
+set xlabel "(Num Disjuncts) x log(Linkage Limit)"
+f(x)=log(x)
+plot "djl.dat" using (f(15000) * $3):7 with points title "second MST dataset",\
+     "dj.dat" using (f(15000) * $2):6 with points title "first MST dataset",\
+     "dj-1500.dat" using (f(1500) * $3):7 with points title "linkage-lim=1500 MST dataset",\
+     "pandp.dat" using (f(1000) * $5):13 with points title "Pride Prejude; linkage-lim=1K", \
+     (1e-3 * x**1.5) with lines lw 2 title "0.001 #dj^{1.5}"
+
+#p=0.5
+#plot "djl.dat" using ((15000)**p * $3):7 with points title "second MST dataset",\
+#     "dj.dat" using ((15000)**p * $2):6 with points title "first MST dataset",\
+#     "dj-1500.dat" using ((1500)**p * $3):7 with points title "linkage-lim=1500 MST dataset",\
+#     "pandp.dat" using ((1000)**p * $5):13 with points title "Pride Prejude; linkage-lim=1K", \
+#     (1e-3 * x**1.5) with lines lw 2 title "#dj^{1.5}"
+
+
+unset xrange
+unset yrange
 
 
 # -----------
