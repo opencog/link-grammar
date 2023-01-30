@@ -22,10 +22,18 @@ set title "Alloced Choices vs Num disjuncts"
 set ylabel "Number of Parse choice alloced"
 set logscale x
 set logscale y
+set xrange [100:]
+set yrange [200:]
 set xlabel "Number of Disjuncts (#dj)"
 plot "djl.dat" using 3:9 with points title "second dataset",\
      "dj.dat" using 2:8 with points title "first dataset",\
-     ((0.16 * x)**2) with lines title "square of #dj"
+     "dj-1500.dat" using 3:9 with points title "linkage-lim=1500 dataset",\
+     "pandp.dat" using 5:15 with points title "Pride & Prej", \
+     ((0.16 * x)**2) with lines lw 2 title "(0.16 * #dj)^2", \
+     ((0.1 * x)**1.5) with lines lw 2 title "(0.1 * #dj)^{1.5}"
+
+unset xrange
+unset yrange
 
 # -----------
 set out 'djl-dj-buck.png'
