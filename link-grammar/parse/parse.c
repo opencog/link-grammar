@@ -748,8 +748,11 @@ double postparse = current_usage_time();
 double postex = current_usage_time();
 
 np++;
-prt_error("%d d= %d c= %d p= %lu b= %lu ch= %lu tc= %5.2f tb= %5.2f s= %lu / %lu\n",
-np, totdj, rcnt+lcnt,
+prt_error("%d w= %lu d= %d c= %d l= %d p= %lu b= %lu ch= %lu tc= %5.2f tb= %5.2f s= %lu / %lu\n",
+np,
+sent->length,
+totdj, rcnt+lcnt,
+sent->num_linkages_found,
 tcpsize(sent), bucksz(pex), chosz(pex),
 postparse-preparse, postex-postparse,
 N_invalid_morphism, opts->linkage_limit
