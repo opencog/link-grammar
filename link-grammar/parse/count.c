@@ -219,21 +219,21 @@ static void table_alloc(count_context_t *ctxt, unsigned int logsz)
 	 * FYI: the new tracon tables are (much?) smaller than the older
 	 * connector tables, so maybe this reuse is no longer needed?
 	 */
-	if ((logsz == 0) || (kept_table == NULL))
+	if (kept_table_size < ctxt->table_size)
 	{
 		kept_table_size = ctxt->table_size;
 
 		if (kept_table) free(kept_table);
 		kept_table = malloc(sizeof(Table_tracon *) * ctxt->table_size);
 	}
-
-	memset(kept_table, 0, sizeof(Table_tracon *) * ctxt->table_size);
-
-	ctxt->table_mask = ctxt->table_size - 1;
 	ctxt->table = kept_table;
 
+	memset(ctxt->table, 0, sizeof(Table_tracon *) * ctxt->table_size);
+
+	ctxt->table_mask = ctxt->table_size - 1;
+
 	// This assures that the table load will stay under the load factor.
-	ctxt->table_available_count = ctxt->table_size / INV_TABLE_LOAD_FACTOR;
+	ctxt->table_available_count = ctxt->table_size / INV_LOAD_FACTOR;
 }
 
 /**
@@ -242,21 +242,20 @@ static void table_alloc(count_context_t *ctxt, unsigned int logsz)
  *
  * We estimate the number of required hash table slots by estimating
  * the number of entries that will be required, and then multiplying by
- * four (actually, by 2**LOG2_TABLE_LOAD_FACTOR) so that the hash table
- * usage remains sparse.
+ * INV_LOAD_FACTOR so that the hash table usage remains sparse.
  */
 static void init_table(count_context_t *ctxt)
 {
 	// Number of tracon entries we expect to store.
-	unsigned int tblsize = estimate_tracon_entries(ctxt->sent);
+	unsigned int tblsz = estimate_tracon_entries(ctxt->sent);
 
 	// Adjust by the table load factor.
-	tblsz *= INV_TABLE_LOAD_FACTOR;
+	tblsz *= INV_LOAD_FACTOR;
 
 	unsigned int logsz = 0;
 	while (tblsz) { logsz++; tblsz >>= 1; }
 
-	table_alloc(ctxt, tblsize);
+	table_alloc(ctxt, tblsz);
 }
 
 static void free_table_lrcnt(count_context_t *ctxt)
