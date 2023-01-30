@@ -5,9 +5,9 @@ set term png
 unset yrange
 
 # -----------
-set out 'dj-both-dj-cnt.png'
-set title "Alloced Table connectors vs Num disjuncts"
-set ylabel "Number of Table connector"
+set out 'dj-both-dj-ctr.png'
+set title "Num connectors vs Num disjuncts"
+set ylabel "Number of Connectors"
 set logscale x
 set logscale y
 set xlabel "Number of Disjuncts (#dj)"
@@ -15,6 +15,24 @@ plot "pandp.dat" using 5:7 with points title "Pride & Prej", \
      (1 * (x)**1.17) with lines lw 2 title "#dj^{1.17}", \
      "djc.dat" using 3:5 with points title "third dataset", \
      (4 * x) with lines lw 2 title "4 * #dj"
+
+# -----------
+set out 'dj-both-dj-cnt.png'
+set title "Alloced Table connectors vs Num disjuncts"
+set ylabel "Number of Table connector"
+set logscale x
+set logscale y
+set xrange [1000:]
+set yrange [10000:2e6]
+
+set xlabel "Number of Disjuncts (#dj)"
+plot "pandp.dat" using 5:11 with points title "Pride & Prej", \
+     (0.1 * (x)**1.5) with lines lw 2 title "0.1 #dj^{1.5}", \
+     "djc.dat" using 3:7 with points title "third dataset", \
+     (0.7 * (x**1.2)) with lines lw 2 title "0.7 * #dj^{1.2}"
+
+unset xrange
+unset yrange
 
 # -----------
 set out 'dj-both-dj-buck.png'
