@@ -748,7 +748,7 @@ double postparse = current_usage_time();
 double postex = current_usage_time();
 
 np++;
-prt_error("%d w= %lu d= %d c= %d l= %d p= %lu b= %lu ch= %lu tc= %5.2f tb= %5.2f s= %lu / %lu\n",
+prt_error("%d w= %lu d= %d c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f s= %lu / %lu\n",
 np,
 sent->length,
 totdj, rcnt+lcnt,
