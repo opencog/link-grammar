@@ -3,6 +3,30 @@ set key left top
 set term png
 
 # -----------
+set out 'dje-wrd-dj.png'
+set title "English - Num disjuncts vs. Num words"
+set ylabel "Number of Disjuncts"
+set logscale x
+set logscale y
+set xlabel "Number of words"
+plot "pandp.dat" using 3:5 with points title "Pride & Prej",\
+     (4e-2 * (x)**3) with lines title "0.04 #w^{3}"
+
+# -----------
+set out 'dje-wrd-lkg.png'
+set title "English - Num Linkages vs. Num words"
+set ylabel "Number of Linkages"
+set logscale x
+set logscale y
+set yrange [1:1e10]
+set xlabel "Number of words"
+plot "pandp.dat" using 3:9 with points title "Pride & Prej",\
+     (1 * (x)**(0.10*x)) with lines lw 3 title "#w^{(0.1 #w)}", \
+     ( (0.1*x)**11) with lines lw 3 title "(0.1 #w)^{11}"
+
+unset yrange
+
+# -----------
 set out 'dje-dj-cnt.png'
 set title "English - Alloced Table connectors vs Num disjuncts"
 set ylabel "Number of Table connector"
@@ -19,7 +43,8 @@ set ylabel "Number of Buckets alloced"
 set logscale x
 set logscale y
 set xlabel "Number of Disjuncts (#dj)"
+set yrange [1000:]
 plot "pandp.dat" using 5:13 with points title "Pride & Prej",\
-     (3e-2 * x**1.5) with lines title "#dj^{1.5}"
+     (0.1 * x**1.17) with lines title "0.1 #dj^{1.17}"
 
 # -----------
