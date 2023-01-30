@@ -33,10 +33,10 @@
 
 #define D_COUNT 5 /* General debug level for this file. */
 
-typedef struct Table_connector_s Table_connector;
-struct Table_connector_s
+typedef struct Table_tracon_s Table_tracon;
+struct Table_tracon_s
 {
-	Table_connector  *next;
+	Table_tracon  *next;
 	int              l_id, r_id;
 	Count_bin        count;
 	unsigned int     null_count;
@@ -76,7 +76,7 @@ typedef struct
 	count_t *count_nc0;      /* The counts for that linkage */
 
 	null_count_m null_count; /* status==0 valid up to this null count */
-	int8_t status;         /* -1: Needs update; 0: No count; 1: Count possible */
+	int8_t status;           /* -1: Needs update; 0: No count; 1: Count possible */
 	WordIdx_m check_next;    /* Next word to check */
 } count_expectation;
 
@@ -116,7 +116,7 @@ struct count_context_s
 	size_t table_size;
 	size_t table_mask;
 	size_t table_available_count;
-	Table_connector ** table;
+	Table_tracon ** table;
 	Table_lrcnt table_lrcnt[2];  /* Left/right wordvec */
 	Resources current_resources;
 	COUNT_COST(uint64_t count_cost[3];)
@@ -135,11 +135,11 @@ static void free_tls_table(void* ptr_to_table)
 {
 	if (NULL == ptr_to_table) return;
 
-	Table_connector** kept_table = *((Table_connector***)ptr_to_table);
+	Table_tracon** kept_table = *((Table_tracon***)ptr_to_table);
 	if (NULL == kept_table) return;
 
 	free(kept_table);
-	*((Table_connector***) ptr_to_table) = NULL;
+	*((Table_tracon***) ptr_to_table) = NULL;
 }
 
 static tss_t key;
@@ -161,7 +161,7 @@ static void make_key(void)
  */
 static void table_alloc(count_context_t *ctxt, unsigned int shift)
 {
-	static TLS Table_connector **kept_table = NULL;
+	static TLS Table_tracon **kept_table = NULL;
 	static TLS unsigned int log2_kept_table_size = 0;
 
 #if HAVE_THREADS_H && !__EMSCRIPTEN__
@@ -188,10 +188,10 @@ static void table_alloc(count_context_t *ctxt, unsigned int shift)
 		log2_kept_table_size = shift;
 
 		if (kept_table) free(kept_table);
-		kept_table = malloc(sizeof(Table_connector *) * ctxt->table_size);
+		kept_table = malloc(sizeof(Table_tracon *) * ctxt->table_size);
 	}
 
-	memset(kept_table, 0, sizeof(Table_connector *) * ctxt->table_size);
+	memset(kept_table, 0, sizeof(Table_tracon *) * ctxt->table_size);
 
 	/* This is here and not in init_table() because it must be set
 	 * also when the table growths. */
@@ -358,7 +358,7 @@ static void table_stat(count_context_t *ctxt)
 
 	for (size_t i = 0; i < ctxt->table_size; i++)
 	{
-		Table_connector *t = ctxt->table[i];
+		Table_tracon *t = ctxt->table[i];
 
 		c = 0;
 		if (t == NULL)
@@ -430,7 +430,7 @@ static void table_stat(count_context_t *ctxt)
 			printf("Null count %u:\n", nc);
 			for (size_t i = 0; i < ctxt->table_size; i++)
 			{
-				for (Table_connector *t = ctxt->table[i]; t != NULL; t = t->next)
+				for (Table_tracon *t = ctxt->table[i]; t != NULL; t = t->next)
 				{
 					if (t->null_count != nc) continue;
 
@@ -450,9 +450,9 @@ static void table_grow(count_context_t *ctxt)
 	table_alloc(ctxt, 0);
 
 	/* Rehash. */
-	Table_connector *oe;
+	Table_tracon *oe;
 	Pool_location loc = { 0 };
-	while ((oe = pool_next(ctxt->sent->Table_connector_pool, &loc)) != NULL)
+	while ((oe = pool_next(ctxt->sent->Table_tracon_pool, &loc)) != NULL)
 	{
 		size_t ni = oe->hash & ctxt->table_mask;
 
@@ -478,7 +478,7 @@ static Count_bin table_store(count_context_t *ctxt,
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
 	size_t i = hash & ctxt->table_mask;
-	Table_connector *n = pool_alloc(ctxt->sent->Table_connector_pool);
+	Table_tracon *n = pool_alloc(ctxt->sent->Table_tracon_pool);
 
 	if (ctxt->table[i] == NULL)
 		ctxt->table_available_count--;
@@ -510,7 +510,7 @@ table_lookup(count_context_t *ctxt, int lw, int rw,
 	int r_id = (NULL != re) ? re->tracon_id : rw;
 
 	size_t h = pair_hash(lw, rw, l_id, r_id, null_count);
-	Table_connector *t = ctxt->table[h & ctxt->table_mask];
+	Table_tracon *t = ctxt->table[h & ctxt->table_mask];
 
 	for (; t != NULL; t = t->next)
 	{
@@ -997,7 +997,7 @@ static Count_bin do_count(
 	int start_word, end_word, w;
 
 	/* This check is not necessary for correctness. It typically saves
-	 * significant CPU and Table_connector memory because in many cases a
+	 * significant CPU and Table_tracon memory because in many cases a
 	 * linkage is not possible due to nearest_word restrictions. */
 	if (!valid_nearest_words(le, re, lw, rw)) return hist_zero();
 
@@ -1171,8 +1171,8 @@ static Count_bin do_count(
 		 * extremely effective for long sentences, but doesn't speed up
 		 * short ones.
 		 *
-		 * FIXME: l/rcnt_optimize==false doubles the Table_connector cache!
-		 * Try to fix it by not caching zero counts in Table_connector when
+		 * FIXME: l/rcnt_optimize==false doubles the Table_tracon cache!
+		 * Try to fix it by not caching zero counts in Table_tracon when
 		 * l/rcnt_optimize==false. If this can be fixed, a significant
 		 * speedup is expected. */
 
@@ -1597,15 +1597,15 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	 * one null link. */
 	/* ctxt->null_block = 1; */
 
-	if (NULL != sent->Table_connector_pool)
+	if (NULL != sent->Table_tracon_pool)
 	{
-		pool_reuse(sent->Table_connector_pool);
+		pool_reuse(sent->Table_tracon_pool);
 	}
 	else
 	{
-		sent->Table_connector_pool =
-			pool_new(__func__, "Table_connector",
-			         /*num_elements*/16384, sizeof(Table_connector),
+		sent->Table_tracon_pool =
+			pool_new(__func__, "Table_tracon",
+			         /*num_elements*/16384, sizeof(Table_tracon),
 			         /*zero_out*/false, /*align*/false, /*exact*/false);
 	}
 

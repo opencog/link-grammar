@@ -529,7 +529,7 @@ void sentence_delete(Sentence sent)
 
 	global_rand_state = sent->rand_state;
 	pool_delete(sent->Match_node_pool);
-	pool_delete(sent->Table_connector_pool);
+	pool_delete(sent->Table_tracon_pool);
 	pool_delete(sent->wordvec_pool);
 	pool_delete(sent->Exp_pool);
 	pool_delete(sent->X_node_pool);
