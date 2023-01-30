@@ -43,8 +43,8 @@ unset yrange
 
 # -----------
 set out 'djc-dj-cnt-bound.png'
-set title "Alloced Table connectors vs (Disjuncts x ceil(log_2(words)))"
-set ylabel "Number of Table connector"
+set title "Alloced Table tracon vs (Disjuncts x ceil(log_2(words)))"
+set ylabel "Number of Table tracon"
 set logscale x
 set logscale y
 set xrange [1000:]
@@ -55,8 +55,8 @@ plot "djc.dat" using (f(9) * $3):7 with points title "third MST dataset",\
      "dj-1500.dat" using (f(9) * $3):7 with points title "lim=1500 MST dataset",\
      "dj-150.dat" using (f($3) * $5):11 with points title "lim=150 MST dataset",\
      "pandp.dat" using (f($3) * $5):11 with points title "Pride Prejudice",\
-     (2**f(3*x)) with lines lw 2 lc "blue" title "3 x",\
-     (2**f(0.5*x)) with lines lw 2 lc "green" title "0.5 x"
+     (3*x) with lines lw 2 lc "blue" title "3 ndj ceil(log_2(words))",\
+     (0.5*x) with lines lw 2 lc "green" title "0.5 ndj ceil(log_2(words))"
 
 unset xrange
 unset yrange
