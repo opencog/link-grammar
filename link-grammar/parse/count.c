@@ -1638,7 +1638,7 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	else
 #endif
 	{
-		pool_delete(sent->Table_connector_pool);
+		pool_delete(sent->Table_tracon_pool);
 		unsigned int num_elts = estimate_tracon_entries(sent);
 		sent->Table_tracon_pool =
 			pool_new(__func__, "Table_tracon",
@@ -1649,10 +1649,6 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	init_table(ctxt);
 	return ctxt;
 }
-
-size_t tcpsize(Sentence);
-size_t tcpsize(Sentence sent) {
-return pool_size(sent->Table_connector_pool); }
 
 void free_count_context(count_context_t *ctxt, Sentence sent)
 {

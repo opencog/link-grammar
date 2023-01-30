@@ -694,6 +694,15 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 		}
 
+int conn_cnt = 0;
+for (size_t i=0; i<sent->length; i++)
+{
+   Disjunct *d = sent->word[i].d;
+   conn_cnt += right_connector_count(d);
+   conn_cnt += left_connector_count(d);
+}
+
+
 		free_linkages(sent);
 
 		free_count_context(ctxt, sent);
@@ -731,13 +740,14 @@ double postparse = current_usage_time();
 double postex = current_usage_time();
 
 np++;
-prt_error("%d w= %lu d= %d c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f s= %lu / %lu\n",
+prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f s= %lu / %lu\n",
 np,
 sent->length,
 sent->num_disjuncts,
-sent->num_connectors,
+conn_cnt,
 sent->num_linkages_found,
-tcpsize(sent), bucksz(pex), chosz(pex),
+pool_size(sent->Table_tracon_pool),
+bucksz(pex), chosz(pex),
 postparse-preparse, postex-postparse,
 N_invalid_morphism, opts->linkage_limit
 );
