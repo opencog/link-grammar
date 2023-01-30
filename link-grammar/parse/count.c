@@ -148,6 +148,7 @@ static unsigned int estimate_tracon_entries(Sentence sent)
 	while (nwords) { log2_nwords++; nwords >>= 1; }
 
 	unsigned int tblsize = 3 * log2_nwords * sent->num_disjuncts;
+	if (tblsize < 512) tblsize = 512; // Can't ever happen, but whatever.
 	return tblsize;
 }
 
@@ -1625,10 +1626,10 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	}
 	else
 	{
-xxxxxxxxxx
+		unsigned int num_elts = estimate_tracon_entries(sent);
 		sent->Table_tracon_pool =
 			pool_new(__func__, "Table_tracon",
-			         /*num_elements*/16384, sizeof(Table_tracon),
+			         num_elts, sizeof(Table_tracon),
 			         /*zero_out*/false, /*align*/false, /*exact*/false);
 	}
 
