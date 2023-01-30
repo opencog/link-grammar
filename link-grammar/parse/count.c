@@ -112,7 +112,7 @@ struct count_context_s
 	uint8_t num_growth;       /* Number of table growths, for debug */
 	bool    is_short;
 	uint32_t checktimer;  /* Avoid excess system calls */
-	size_t table_size;
+	uint32_t table_size;
 	size_t table_mask;
 	size_t table_available_count;
 	Table_tracon ** table;
@@ -148,7 +148,7 @@ static unsigned int estimate_tracon_entries(Sentence sent)
 	while (nwords) { log2_nwords++; nwords >>= 1; }
 
 	unsigned int tblsize = 3 * log2_nwords * sent->num_disjuncts;
-	if (tblsize < 512) tblsize = 512; // Can't ever happen, but whatever.
+	if (tblsize < 512) tblsize = 512; // Happens rarely on short sentences.
 	return tblsize;
 }
 
@@ -189,11 +189,12 @@ static void make_key(void)
  */
 static void table_alloc(count_context_t *ctxt, unsigned int logsz)
 {
+	static TLS Table_tracon **kept_table = NULL;
+	static TLS unsigned int kept_table_size = 0;
+
 	unsigned int reqsz = 1ULL << logsz;
 	if (0 < logsz && reqsz <= ctxt->table_size) return; // It's big enough, already.
 
-	static TLS Table_tracon **kept_table = NULL;
-	static TLS unsigned int kept_table_size = 0;
 	lgdebug(+D_COUNT, "Connector table size %u\n", reqsz);
 
 #if HAVE_THREADS_H && !__EMSCRIPTEN__
@@ -209,6 +210,16 @@ static void table_alloc(count_context_t *ctxt, unsigned int logsz)
 		ctxt->table_size *= 2; /* Double the table size */
 	else
 		ctxt->table_size = reqsz;
+
+	// This can never happen, but ... we will check anyway, to avoid
+	// mem corruption or other craziness.
+#define MAXSZ 20*1024*1024
+	if (MAXSZ < ctxt->table_size)
+	{
+		prt_error("Warning: insanely large tracon hash table size: %u\n",
+			ctxt->table_size);
+		ctxt->table_size = MAXSZ;
+	}
 
 	/* Keep the table indefinitely (until thread-exit), so that it can
 	 * be reused. This avoids a large overhead in malloc/free when
@@ -255,7 +266,7 @@ static void init_table(count_context_t *ctxt)
 	unsigned int logsz = 0;
 	while (tblsz) { logsz++; tblsz >>= 1; }
 
-	table_alloc(ctxt, tblsz);
+	table_alloc(ctxt, logsz);
 }
 
 static void free_table_lrcnt(count_context_t *ctxt)
