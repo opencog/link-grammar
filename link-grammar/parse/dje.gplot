@@ -57,8 +57,25 @@ set ylabel "Number of Buckets alloced"
 set logscale x
 set logscale y
 set xlabel "Number of Disjuncts (#dj)"
-set yrange [1000:]
+set xrange [1000:]
+set yrange [1000:3e4]
 plot "pandp.dat" using 5:13 with points title "Pride & Prej",\
-     (0.1 * x**1.17) with lines title "0.1 #dj^{1.17}"
+     (0.1 * x**1.17) with lines lw 2 title "0.1 #dj^{1.17}"
+
+unset xrange
+unset yrange
+
+# -----------
+
+set out 'dje-dj-cho.png'
+set title "English: Alloced Parse choices vs Num disjuncts"
+set ylabel "Number of Parse choice alloced"
+set logscale x
+set logscale y
+set xrange [400:]
+set yrange [1e3:2e5]
+set xlabel "Number of Disjuncts (#dj)"
+plot "pandp.dat" using 5:15 with points title "Pride & Prej", \
+     (0.01 * x**1.5) with lines lw 2 title "0.01 #dj^{1.5}"
 
 # -----------
