@@ -693,30 +693,13 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			print_time(opts, "Initialized fast matcher");
 			if (resources_exhausted(opts->resources)) goto parse_end_cleanup;
 		}
-double pred = current_usage_time();
-int totdj = 0;
-for (size_t i=0; i<sent->length; i++)
-{
-   Disjunct *d = sent->word[i].d;
-   totdj += count_disjuncts(d);
-}
-double postd = current_usage_time();
-prt_error("++++ time to count djs= %f secs\n", postd-pred);
-
-int lcnt = 0, rcnt = 0;
-for (size_t i=0; i<sent->length; i++)
-{
-   Disjunct *d = sent->word[i].d;
-   rcnt += right_connector_count(d);
-   lcnt += left_connector_count(d);
-}
 
 		free_linkages(sent);
 
 		free_count_context(ctxt, sent);
 		ctxt = alloc_count_context(sent, ts_parsing);
 
-if (30123 < totdj)
+if (30123 < sent->num_disjuncts)
 {
 sent->num_linkages_found = 0;
 goto parse_end_cleanup;
@@ -751,7 +734,8 @@ np++;
 prt_error("%d w= %lu d= %d c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f s= %lu / %lu\n",
 np,
 sent->length,
-totdj, rcnt+lcnt,
+sent->num_disjuncts,
+sent->num_connectors,
 sent->num_linkages_found,
 tcpsize(sent), bucksz(pex), chosz(pex),
 postparse-preparse, postex-postparse,
