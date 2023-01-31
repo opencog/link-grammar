@@ -1,0 +1,16 @@
+
+set key left top
+set term png
+
+# -----------
+set out 'djm-dj-mnp.png'
+set title "Match Node Pool size vs Num Disjuncts"
+set xlabel "Num Disjuncts"
+set ylabel "Match Node Pool size"
+set logscale x
+set logscale y
+set yrange [1000:]
+plot "pandp-more.dat" using 5:29 with points title "Pride Prejudice", \
+     (2*x) with lines lw 2 title "2x"
+
+unset yrange
