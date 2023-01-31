@@ -741,7 +741,7 @@ double postparse = current_usage_time();
 double postex = current_usage_time();
 
 np++;
-prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f dp= %lu cp= %lu mlc= %lu mld= %lu s= %lu / %lu\n",
+prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f dp= %lu cp= %lu mlc= %lu mld= %lu mn= %lu ex= %lu xn= %lu s= %lu / %lu\n",
 np,
 sent->length,
 sent->num_disjuncts,
@@ -751,10 +751,13 @@ pool_size(sent->Table_tracon_pool),
 bucksz(pex), chosz(pex),
 postparse-preparse, postex-postparse,
 
-pool_size(sent->Disjunct_pool),
+pool_size(sent->Disjunct_pool), // dp
 pool_size(sent->Connector_pool),
 get_mlc(ctxt),
 get_mld(ctxt),
+pool_size(sent->Match_node_pool), // mn
+pool_size(sent->Exp_pool),
+pool_size(sent->X_node_pool),
 
 N_invalid_morphism, opts->linkage_limit
 );
