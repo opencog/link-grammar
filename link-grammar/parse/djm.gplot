@@ -28,8 +28,9 @@ set logscale x
 set logscale y
 set yrange [1000:]
 plot "pandp-more.dat" using 5:31 with points title "Pride Prejudice", \
-     (4*x) with lines lw 2 title "4x", \
-     (5e3*(x**0.333) ) with lines lw 2 title "5000 x^{1/3}"
+     "mst-more.dat" using 5:31 with points title "MST lim=150", \
+     (4*x) with lines lw 2 title "4 ndj", \
+     (5e3*(x**0.333) ) with lines lw 2 title "5000 (ndj)^{1/3}"
 
 unset xrange
 unset yrange
