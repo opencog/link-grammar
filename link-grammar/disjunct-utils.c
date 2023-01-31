@@ -173,6 +173,7 @@ void free_sentence_disjuncts(Sentence sent, bool category_too)
 		pool_delete(sent->Disjunct_pool);
 		pool_delete(sent->Connector_pool);
 		sent->Disjunct_pool = NULL;
+		sent->Connector_pool = NULL;
 	}
 }
 
