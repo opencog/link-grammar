@@ -31,3 +31,18 @@ plot "pandp-more.dat" using 5:31 with points title "Pride Prejudice", \
 
 unset xrange
 unset yrange
+
+# -----------
+set out 'djm-dj-wordvec.png'
+set title "Wordvec Pool size vs Num Disjuncts"
+set xlabel "Num Disjuncts"
+set ylabel "Wordvec Pool size"
+set logscale x
+set logscale y
+set yrange [1000:]
+plot "pandp-more.dat" using 5:35 with points title "Pride Prejudice", \
+     (50*x**0.75) with lines lw 2 title "50x^{3/4}", \
+     (1e3*(x**0.5) ) with lines lw 2 title "1000 x^{1/2}"
+
+unset xrange
+unset yrange
