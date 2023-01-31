@@ -111,10 +111,10 @@ struct count_context_s
 	bool    exhausted;
 	uint8_t num_growth;       /* Number of table growths, for debug */
 	bool    is_short;
-	uint32_t checktimer;  /* Avoid excess system calls */
-	uint32_t table_size;
-	size_t table_mask;
-	size_t table_available_count;
+	uint32_t checktimer;      /* Avoid excess system calls */
+	size_t table_size;        /* Can exceed 2**32 during generation. */
+	size_t table_mask;        /* 2**table_size -1 */
+	size_t table_available_count; /* derated table_size by hash load factor */
 	Table_tracon ** table;
 	Table_lrcnt table_lrcnt[2];  /* Left/right wordvec */
 	Resources current_resources;
@@ -141,13 +141,13 @@ struct count_context_s
  * In both conventional and MST dictionaries, more than 500K entries is
  * almost never needed. In a handful of extreme cases, 2M was observed.
  */
-static unsigned int estimate_tracon_entries(Sentence sent)
+static size_t estimate_tracon_entries(Sentence sent)
 {
 	unsigned int nwords = sent->length;
 	unsigned int log2_nwords = 0;
 	while (nwords) { log2_nwords++; nwords >>= 1; }
 
-	unsigned int tblsize = 3 * log2_nwords * sent->num_disjuncts;
+	size_t tblsize = 3 * log2_nwords * sent->num_disjuncts;
 	if (tblsize < 512) tblsize = 512; // Happens rarely on short sentences.
 	return tblsize;
 }
@@ -190,12 +190,12 @@ static void make_key(void)
 static void table_alloc(count_context_t *ctxt, unsigned int logsz)
 {
 	static TLS Table_tracon **kept_table = NULL;
-	static TLS unsigned int kept_table_size = 0;
+	static TLS size_t kept_table_size = 0;
 
-	unsigned int reqsz = 1ULL << logsz;
+	size_t reqsz = 1ULL << logsz;
 	if (0 < logsz && reqsz <= ctxt->table_size) return; // It's big enough, already.
 
-	lgdebug(+D_COUNT, "Connector table size %u\n", reqsz);
+	lgdebug(+D_COUNT, "Connector table size %lu\n", reqsz);
 
 #if HAVE_THREADS_H && !__EMSCRIPTEN__
 	// Install a thread-exit handler, to free kept_table on thread-exit.
@@ -210,16 +210,6 @@ static void table_alloc(count_context_t *ctxt, unsigned int logsz)
 		ctxt->table_size *= 2; /* Double the table size */
 	else
 		ctxt->table_size = reqsz;
-
-	// This can never happen, but ... we will check anyway, to avoid
-	// mem corruption or other craziness.
-#define MAXSZ 20*1024*1024
-	if (MAXSZ < ctxt->table_size)
-	{
-		prt_error("Warning: insanely large tracon hash table size: %u\n",
-			ctxt->table_size);
-		ctxt->table_size = MAXSZ;
-	}
 
 	/* Keep the table indefinitely (until thread-exit), so that it can
 	 * be reused. This avoids a large overhead in malloc/free when
@@ -258,7 +248,7 @@ static void table_alloc(count_context_t *ctxt, unsigned int logsz)
 static void init_table(count_context_t *ctxt)
 {
 	// Number of tracon entries we expect to store.
-	unsigned int tblsz = estimate_tracon_entries(ctxt->sent);
+	size_t tblsz = estimate_tracon_entries(ctxt->sent);
 
 	// Adjust by the table load factor.
 	tblsz *= INV_LOAD_FACTOR;
