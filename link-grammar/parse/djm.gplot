@@ -49,3 +49,18 @@ plot "pandp-more.dat" using 5:35 with points title "Pride Prejudice", \
 
 unset xrange
 unset yrange
+
+# -----------
+set out 'djm-dj-xnode.png'
+set title "mlc Pool size vs Num Disjuncts"
+set xlabel "Num Disjuncts"
+set ylabel "MLC Pool size"
+set logscale x
+set logscale y
+set xrange [1000:]
+set yrange [5e5:2e7]
+plot "pandp-more.dat" using 5:25 with points title "Pride Prejudice", \
+     "mst-more.dat" using 5:25 with points title "MST lim=150"
+
+unset xrange
+unset yrange
