@@ -51,7 +51,7 @@ unset xrange
 unset yrange
 
 # -----------
-set out 'djm-dj-xnode.png'
+set out 'djm-dj-mlc.png'
 set title "mlc Pool size vs Num Disjuncts"
 set xlabel "Num Disjuncts"
 set ylabel "MLC Pool size"
