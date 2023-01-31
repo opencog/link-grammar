@@ -62,7 +62,9 @@ plot "djl.dat" using (f(9) * $3):7 with points title "second MST dataset",\
      "dj-1500.dat" using (f(9) * $3):9 with points title "linkage-lim=1500 MST dataset",\
      "dj-150.dat" using (f($3) * $5):13 with points title "linkage-lim=150 MST dataset",\
      "pandp.dat" using (f($3) * $5):13 with points title "Pride Prejude; linkage-lim=1K", \
-     (1 * x**1.5) with lines lw 2 title "1.0 #dj^{1.5}"
+     (1 * x**1.5) with lines lw 2 title "1.0 #dj^{1.5}", \
+     (80 * x) with lines lw 2 title "80 #dj", \
+     (20 * x) with lines lw 2 title "20 #dj"
 
 # set title "Alloced Buckets vs (Disjuncts x log(Linkage-Limit))"
 # set xlabel "(Num Disjuncts) x log(Linkage Limit)"
