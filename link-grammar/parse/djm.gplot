@@ -9,8 +9,25 @@ set xlabel "Num Disjuncts"
 set ylabel "Match Node Pool size"
 set logscale x
 set logscale y
+set xrange [100:]
 set yrange [1000:]
 plot "pandp-more.dat" using 5:29 with points title "Pride Prejudice", \
      (2*x) with lines lw 2 title "2x"
 
+unset xrange
+unset yrange
+
+# -----------
+set out 'djm-dj-exp.png'
+set title "Exp Pool size vs Num Disjuncts"
+set xlabel "Num Disjuncts"
+set ylabel "Exp Pool size"
+set logscale x
+set logscale y
+set yrange [1000:]
+plot "pandp-more.dat" using 5:31 with points title "Pride Prejudice", \
+     (4*x) with lines lw 2 title "4x", \
+     (5e3*(x**0.333) ) with lines lw 2 title "5000 x^{1/3}"
+
+unset xrange
 unset yrange
