@@ -1626,7 +1626,18 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	}
 	else
 	{
-		unsigned int num_elts = estimate_tracon_entries(sent);
+		/* The estimate_tracon_entries() provides an upper limit to
+		 * how many might get allocated in a "typical" sentence. The
+		 * lower bound is 12 times smaller. So, start with that. If
+		 * this isn't enough, each new alloc will grab another chunk
+		 * of this size. Thus, a typical sentence will expand the
+		 * tracon pool six times. (... Assuming we're not reusing
+		 * them. Otherwise, the delta becomes whatever size the first
+		 * sentence came up with. Hmmmm ... Maybe this size should be
+		 * hard-coded? Maybe 16K is an OK starter size?)
+		 */
+		size_t num_elts = estimate_tracon_entries(sent);
+		num_elts /= 12;
 		sent->Table_tracon_pool =
 			pool_new(__func__, "Table_tracon",
 			         num_elts, sizeof(Table_tracon),
