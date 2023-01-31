@@ -605,8 +605,9 @@ int main (int argc, char* argv[])
 
 	Disjunct **unused_disjuncts = sentence_unused_disjuncts(sent);
 	unsigned int num_unused = 0;
-	for (Disjunct** d = unused_disjuncts; *d != NULL; d++)
-		num_unused++;
+	if (unused_disjuncts)
+		for (Disjunct** d = unused_disjuncts; *d != NULL; d++)
+			num_unused++;
 	printf("# Number of unused disjuncts: %u\n", num_unused);
 	printf("#\n");
 
