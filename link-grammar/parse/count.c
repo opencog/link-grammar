@@ -124,7 +124,7 @@ struct count_context_s
 /* Wikipedia claims that load factors of 0.6 to 0.75 are OK, and that
  * a load factor of less than 0.25 is pointless. We set it to 0.333.
  */
-#define INV_LOAD_FACTOR 3 /* 1.0 / load factor. */
+#define INV_LOAD_FACTOR 3 /* One divided by load factor. */
 
 /* Avoid pathological cases leading to failure */
 #define MAX_LOG2_TABLE_SIZE ((sizeof(size_t)==4) ? 25 : 34)
