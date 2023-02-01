@@ -126,6 +126,9 @@ struct count_context_s
  */
 #define INV_LOAD_FACTOR 3 /* 1.0 / load factor. */
 
+/* Avoid pathological cases leading to failure */
+#define MAX_LOG2_TABLE_SIZE ((sizeof(size_t)==4) ? 25 : 34)
+
 /**
  * Provide an estimate for the number of Table_tracon entries that will
  * be needed.
@@ -195,8 +198,6 @@ static void table_alloc(count_context_t *ctxt, unsigned int logsz)
 	size_t reqsz = 1ULL << logsz;
 	if (0 < logsz && reqsz <= ctxt->table_size) return; // It's big enough, already.
 
-	lgdebug(+D_COUNT, "Connector table size %lu\n", reqsz);
-
 #if HAVE_THREADS_H && !__EMSCRIPTEN__
 	// Install a thread-exit handler, to free kept_table on thread-exit.
 	static once_flag flag = ONCE_FLAG_INIT;
@@ -210,6 +211,11 @@ static void table_alloc(count_context_t *ctxt, unsigned int logsz)
 		ctxt->table_size *= 2; /* Double the table size */
 	else
 		ctxt->table_size = reqsz;
+
+	if ((1ULL << MAX_LOG2_TABLE_SIZE) <= ctxt->table_size)
+		ctxt->table_size  = (1ULL << MAX_LOG2_TABLE_SIZE);
+
+	lgdebug(+D_COUNT, "Tracon table size %lu\n", ctxt->table_size);
 
 	/* Keep the table indefinitely (until thread-exit), so that it can
 	 * be reused. This avoids a large overhead in malloc/free when
@@ -470,6 +476,14 @@ static void table_stat(count_context_t *ctxt)
 
 static void table_grow(count_context_t *ctxt)
 {
+	// If we somehow hit the max size, disallow further growth.
+	// Reset the `table_available_count` so we don't come here again.
+	if ((1ULL << MAX_LOG2_TABLE_SIZE) <= ctxt->table_size)
+	{
+		ctxt->table_available_count = UINT_MAX;
+		return;
+	}
+
 	table_alloc(ctxt, 0);
 
 	/* Rehash. */
@@ -1631,16 +1645,16 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 		 * lower bound is 12 times smaller. So, start with that. If
 		 * this isn't enough, each new alloc will grab another chunk
 		 * of this size. Thus, a typical sentence will expand the
-		 * tracon pool six times. (... Assuming we're not reusing
-		 * them. Otherwise, the delta becomes whatever size the first
-		 * sentence came up with. Hmmmm ... Maybe this size should be
-		 * hard-coded? Maybe 16K is an OK starter size?)
+		 * tracon pool six times. But this logic holds only if a new
+		 * pool is allocated each time. When re-using, with sentences
+		 * of highly variable sizes, if seems best to fix this value.
+		 *
+		 * size_t num_elts = estimate_tracon_entries(sent);
+		 * num_elts /= 12;
 		 */
-		size_t num_elts = estimate_tracon_entries(sent);
-		num_elts /= 12;
 		sent->Table_tracon_pool =
 			pool_new(__func__, "Table_tracon",
-			         num_elts, sizeof(Table_tracon),
+			         16384 /*num_elts */, sizeof(Table_tracon),
 			         /*zero_out*/false, /*align*/false, /*exact*/false);
 	}
 
