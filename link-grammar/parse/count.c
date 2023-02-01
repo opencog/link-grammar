@@ -1654,7 +1654,7 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 		 */
 		sent->Table_tracon_pool =
 			pool_new(__func__, "Table_tracon",
-			         16384 /*num_elts */, sizeof(Table_tracon),
+			         16382 /* num_elts */, sizeof(Table_tracon),
 			         /*zero_out*/false, /*align*/false, /*exact*/false);
 	}
 
