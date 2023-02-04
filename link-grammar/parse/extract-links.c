@@ -403,25 +403,25 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 				if (dis->left == NULL)
 				{
 					pset = mk_parse_set(mchxt, ctxt,
-											  w, rw, dis->right, NULL,
-											  null_count-1, pex);
+					                    w, rw, dis->right, NULL,
+					                    null_count-1, pex);
 					if (pset == NULL) continue;
 					dummy = dummy_set(lw, w, null_count-1, pex);
 					record_choice(dummy, NULL,
-									  pset, dis->right,
-									  dis, &xt->set, pex);
+					              pset, dis->right,
+					              dis, &xt->set, pex);
 					RECOUNT({xt->set.recount += pset->recount;})
 				}
 			}
 			pset = mk_parse_set(mchxt, ctxt,
-									  w, rw, NULL, NULL,
-									  null_count-1, pex);
+			                    w, rw, NULL, NULL,
+			                    null_count-1, pex);
 			if (pset != NULL)
 			{
 				dummy = dummy_set(lw, w, null_count-1, pex);
 				record_choice(dummy, NULL,
-								  pset,  NULL,
-								  NULL, &xt->set, pex);
+				              pset,  NULL,
+				              NULL, &xt->set, pex);
 				RECOUNT({xt->set.recount += pset->recount;})
 			}
 		}
