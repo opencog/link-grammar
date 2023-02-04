@@ -84,6 +84,7 @@ Pool_desc *pool_new(const char *func, const char *name,
 	mp->issued_elements = 0;
 	mp->alloced_elements = 0;
 	mp->num_elements = num_elements;
+	mp->alloced_bytes = 0;
 
 	lgdebug(+D_MEMPOOL, "%sElement size %zu, alignment %zu (pool '%s' created in %s())\n",
 	        POOL_ALLOCATOR?"":"(Fake pool allocator) ",
@@ -184,6 +185,7 @@ void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 			 * The requested size may be smaller.
 			 */
 			mp->alloced_elements += mp->num_elements;
+			mp->alloced_bytes += mp->block_size;
 
 			/* aligned_alloc() has strict requirements. */
 			assert(NULL != mp->ring, "Aligned_alloc(%zu, %zu): %s",
@@ -271,7 +273,9 @@ void *pool_alloc_vec(Pool_desc *mp, size_t vecsize)
 	/* Allocate a new element and chain it. */
 	char *next = mp->chain;
 
-	mp->chain = malloc(sizeof(alloc_attr) + alloc_size);
+	size_t totsz = sizeof(alloc_attr) + alloc_size;
+	mp->chain = malloc(totsz);
+	mp->alloced_bytes += totsz;
 
 	alloc_attr *at = (alloc_attr *)mp->chain;
 	at->next = next;
