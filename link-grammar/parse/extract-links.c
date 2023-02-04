@@ -686,25 +686,6 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 	return set_overflowed(pex);
 }
 
-#if 0
-/**
- * Assemble the link array and the chosen_disjuncts of a linkage.
- */
-static void issue_link(Linkage lkg, bool lr, Disjunct *md, Link *link)
-{
-	if (link[0].lc == NULL) return; /* no link to generate */
-
-	if (link->rc != NULL)
-	{
-		assert(lkg->num_links < lkg->lasz, "Linkage array too small!");
-		lkg->link_array[lkg->num_links] = *link;
-		lkg->num_links++;
-	}
-
-	lkg->chosen_disjuncts[lr ? link->lw : link->rw] = md;
-}
-#endif
-
 /**
  * Assemble the link array and the chosen_disjuncts of a linkage.
  */
@@ -712,7 +693,7 @@ static void issue_link(Linkage lkg, int lr, Parse_choice *pc,
                        const Parse_set *set)
 {
 	Connector *lc = lr ? pc->rc : set->le;
-	if (lc == NULL) return;
+	if (lc == NULL) return; /* no link to generate */
 
 	Connector *rc = lr ? set->re : pc->lc;
 	if (rc != NULL)
