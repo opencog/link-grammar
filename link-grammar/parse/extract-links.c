@@ -693,20 +693,20 @@ static void issue_link(Linkage lkg, int lr, Parse_choice *pc,
                        const Parse_set *set)
 {
 	Connector *lc = lr ? pc->rc : set->le;
-	if (lc == NULL) return; /* no link to generate */
+	if (lc == NULL) return; /* No choice to record. */
+
+	lkg->chosen_disjuncts[lr ? pc->set[1]->lw : pc->set[0]->rw] = pc->md;
 
 	Connector *rc = lr ? set->re : pc->lc;
-	if (rc != NULL)
-	{
-		assert(lkg->num_links < lkg->lasz, "Linkage array too small!");
-		Link *link = &lkg->link_array[lkg->num_links];
-		link->lw = pc->set[lr]->lw;
-		link->rw = pc->set[lr]->rw;
-		link->lc = lc;
-		link->rc = rc;
-		lkg->num_links++;
-	}
-	lkg->chosen_disjuncts[lr ? pc->set[1]->lw : pc->set[0]->rw] = pc->md;
+	if (rc == NULL) return; /* No link to generate. */
+
+	assert(lkg->num_links < lkg->lasz, "Linkage array too small!");
+	Link *link = &lkg->link_array[lkg->num_links];
+	link->lw = pc->set[lr]->lw;
+	link->rw = pc->set[lr]->rw;
+	link->lc = lc;
+	link->rc = rc;
+	lkg->num_links++;
 }
 
 static void issue_links_for_choice(Linkage lkg, Parse_choice *pc,
