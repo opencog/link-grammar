@@ -138,7 +138,7 @@ static void record_choice(
  * larger than what is needed. Thus, hash table load factor will be
  * small, usually around 0.25 or even less.
  */
-int estimate_log2_table_size(Sentence sent)
+static int estimate_log2_table_size(Sentence sent)
 {
 	/* Size estimate based on measurements (see #1402) */
 	double lscale = log2(sent->num_disjuncts) - 0.5 * log2(sent->length);
@@ -165,7 +165,7 @@ int estimate_log2_table_size(Sentence sent)
 /// get above 100M entries, and thus is clamped to a more reasonable
 /// size. This is the block size; if more is needed, more blocks will
 /// be allocated.
-size_t estimate_parse_choice_allocations(Sentence sent)
+static size_t estimate_parse_choice_allocations(Sentence sent)
 {
 	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
 	size_t pcsze = (expsz * expsz) / 100000;
