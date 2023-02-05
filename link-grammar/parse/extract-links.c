@@ -48,10 +48,11 @@ struct Parse_choice_struct
  * tracons l_id and r_id on words lw and rw, correspondingly. */
 struct Parse_set_struct
 {
+	Parse_choice   *first;
+	Connector      *le, *re;
 	uint8_t        lw, rw;     /* left and right word index */
 	uint8_t        null_count; /* number of island words */
 	int32_t        l_id, r_id; /* tracons on words lw, rw */
-	Connector      *le, *re;
 
 	count_t count;             /* The number of ways to parse. */
 #ifdef RECOUNT
@@ -63,8 +64,6 @@ struct Parse_set_struct
 #else
 #define RECOUNT(X)  /* Make it disappear... */
 #endif
-	Parse_choice * first;
-	Parse_choice * tail;
 };
 
 typedef struct Pset_bucket_struct Pset_bucket;
@@ -116,32 +115,16 @@ make_choice(Parse_set *lset, Connector * lrc,
 	return pc;
 }
 
-/**
- * Put this parse_choice into a given set.  The tail pointer is always
- * left pointing to the end of the list.
- */
-static void put_choice_in_set(Parse_set *s, Parse_choice *pc)
-{
-	if (s->first == NULL)
-	{
-		s->first = pc;
-	}
-	else
-	{
-		s->tail->next = pc;
-	}
-	s->tail = pc;
-	pc->next = NULL;
-}
-
 static void record_choice(
     Parse_set *lset, Connector * lrc,
     Parse_set *rset, Connector * rlc,
     Disjunct *md, Parse_set *s, extractor_t* pex)
 {
-	put_choice_in_set(s, make_choice(lset, lrc,
-	                                 rset, rlc,
-	                                 md, pex));
+	Parse_choice *pc = make_choice(lset, lrc, rset, rlc, md, pex);
+
+	// Chain it into the parse set.
+	pc->next = s->first;
+	s->first = pc;
 }
 
 /**
@@ -278,7 +261,6 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.re = re;
 	n->set.count = 0;
 	n->set.first = NULL;
-	n->set.tail = NULL;
 
 	h = pair_hash(lw, rw, n->set.l_id, n->set.r_id, null_count);
 	t = &pex->x_table[h & (pex->x_table_size -1)];
