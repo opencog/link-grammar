@@ -110,6 +110,34 @@ unset yrange
 
 
 # -----------
+set out 'djl-dj-buck-sqrt-act.png'
+set title "Alloced Buckets vs (Disjuncts per sqrt(num words))"
+set ylabel "Number of Buckets alloced"
+set logscale x
+set logscale y
+set xrange [1:]
+set yrange [1:]
+set xlabel "Num Disjuncts per sqrt(num words)"
+f(x) = 1.0/sqrt(x)
+# f(x) = 0.69/log(x)
+g(x) = 2**floor (1.5 * log(x) / 0.6931)
+max(x1,x2) = (x1>x2)? x1 : x2
+h(x) = 2**floor (max ((1.5 * log(x) / 0.6931), (1 + log(8*x) / 0.6931)))
+plot "djl.dat" using (f(9) * $3):7 with points title "second MST dataset",\
+     "dj.dat" using (f(9) * $2):6 with points title "first MST dataset",\
+     "dj-1500.dat" using (f(9) * $3):9 with points title "linkage-lim=1500 MST dataset",\
+     "dj-150.dat" using (f($3) * $5):13 with points title "linkage-lim=150 MST dataset",\
+     "pandp-more.dat" using (f($3) * $5):37 with points title "Pride Prejude buckets used",\
+     (0.2 * x**1.5) with lines lw 2 title "0.2 x^{1.5}", \
+     (0.5 * x**1.5) with lines lw 2 title "0.5 x^{1.5}", \
+     h(x) with lines lw 2 title "x-table-size", \
+     8*x with lines lw 2 title "8 x"
+
+unset xrange
+unset yrange
+
+
+# -----------
 set out 'djl-dj.png'
 set title "Parse time vs Disjuncts"
 set ylabel "Total Parse Time (seconds)"
