@@ -12,6 +12,8 @@
 /*                                                                        */
 /**************************************************************************/
 
+#include <math.h>                       // sqrt()
+
 #include "api-structures.h"             // Sentence_s
 #include "connectors.h"
 #include "disjunct-utils.h"
@@ -230,6 +232,21 @@ static void sort_by_nearest_word(Match_node *m, sortbin *sbin, int nearest_word)
 #endif
 }
 
+/// Estimate the proper size of the match pool based on experimental
+/// data. The appropriate blocksize seems to be 1e-4 *numexp**1.5
+/// based on the graph in
+/// https://github.com/opencog/link-grammar/discussions/1402#discussioncomment-4826342
+static size_t match_list_pool_size_estimate(Sentence sent)
+{
+	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
+	double scaling = expsz * sqrt((double) expsz);
+	scaling *= 1.0e-4;
+
+	size_t mlpse = scaling;
+	if (mlpse < 1020) mlpse = 1020;
+	return mlpse;
+}
+
 fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 {
 	assert(sent->length > 0, "Sentence length is 0");
@@ -259,7 +276,9 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			         /*num_elements*/2048, sizeof(Match_node),
 			         /*zero_out*/false, /*align*/true, /*exact*/false);
 	}
-	const size_t match_list_pool_size = 512*1024; /* Currently a hard limit. */
+
+	const size_t match_list_pool_size = match_list_pool_size_estimate(sent);
+
 	/* FIXME: Modify pool_alloc_vec() to use dynamic block sizes. */
 	ctxt->mld_pool =
 		pool_new(__func__, "Match list cache",
