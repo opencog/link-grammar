@@ -129,10 +129,8 @@ static void record_choice(
 }
 
 /**
- * Allocate the parse info struct
- *
- * An estimate of the hash table size, based on actual measurements,
- * is presented at
+ * Return an estimate of the required hash table size. The estimate is
+ * based on actual measurements, presented at
  * https://github.com/opencog/link-grammar/discussions/1402#discussioncomment-4872249
  * That estimate is 0.5 * (num dj / sqrt(num words))**1.5
  * I have no intuition as to why it would be that. It's just what the
@@ -140,13 +138,8 @@ static void record_choice(
  * larger than what is needed. Thus, hash table load factor will be
  * small, usually around 0.25 or even less.
  */
-extractor_t * extractor_new(Sentence sent)
+static int estimate_log2_table_size(Sentence sent)
 {
-	extractor_t * pex = (extractor_t *) xalloc(sizeof(extractor_t));
-	memset(pex, 0, sizeof(extractor_t));
-	pex->rand_state = sent->rand_state;
-
-	/* Alloc the x_table */
 	/* Size estimate based on measurements (see #1402) */
 	double lscale = log2(sent->num_disjuncts) - 0.5 * log2(sent->length);
 	double lo_est = lscale + 4.0;
@@ -162,6 +155,46 @@ extractor_t * extractor_new(Sentence sent)
 		log2_table_size = 28;
 #endif
 
+	return log2_table_size;
+}
+
+/// Provide an upper-bound estimate for the number of Parse_choice
+/// elements that will be allocated. This bound is reasonable for
+/// the English-language dictionary, almost never exceeding 100K
+/// on normal text. However, for MST dictionaries, it can easily
+/// get above 100M entries, and thus is clamped to a more reasonable
+/// size. This is the block size; if more is needed, more blocks will
+/// be allocated.
+static size_t estimate_parse_choice_allocations(Sentence sent)
+{
+	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
+	size_t pcsze = (expsz * expsz) / 100000;
+	if (pcsze < 1020) pcsze = 1020;
+
+	// At this time, sizeof(Parse_choice) is 48 bytes.
+	// Putting an upper limit of 16*1024*1024 elements corresponds to
+	// a limit of 800 MBytes RAM. No conventional hand-built dict ever
+	// comes close to this limit, but sizes well above this are seen
+	// with MST dictionaries. Presumably, this is an "MST thing", and
+	// goes away with more sophisticated dicts.
+#define MAX_PC_ELTS (16*1024*1024 - 10)
+
+	if (MAX_PC_ELTS < pcsze) pcsze = MAX_PC_ELTS;
+
+	return pcsze;
+}
+
+/**
+ * Allocate the parse info struct
+ */
+extractor_t * extractor_new(Sentence sent)
+{
+	extractor_t * pex = (extractor_t *) xalloc(sizeof(extractor_t));
+	memset(pex, 0, sizeof(extractor_t));
+	pex->rand_state = sent->rand_state;
+
+	/* Alloc the x_table */
+	int log2_table_size = estimate_log2_table_size(sent);
 	pex->log2_x_table_size = log2_table_size;
 	pex->x_table_size = (1 << log2_table_size);
 
@@ -173,13 +206,20 @@ extractor_t * extractor_new(Sentence sent)
 	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
 	memset(pex->x_table, 0, pex->x_table_size * sizeof(Pset_bucket*));
 
+	// What's good for the goose is good for the gander.
+	// The pex->x_table_size is a good upper-bound estimate for how
+	// many buckets we will be allocating. Divide by two, based on
+	// the observed fill ratio.
+	size_t pbsze = pex->x_table_size / 2;
 	pex->Pset_bucket_pool =
 		pool_new(__func__, "Pset_bucket",
-		         /*num_elements*/1024, sizeof(Pset_bucket),
+		         /*num_elements*/pbsze, sizeof(Pset_bucket),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
+
+	size_t pcsze = estimate_parse_choice_allocations(sent);
 	pex->Parse_choice_pool =
 		pool_new(__func__, "Parse_choice",
-		         /*num_elements*/1024, sizeof(Parse_choice),
+		         /*num_elements*/pcsze, sizeof(Parse_choice),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
 
 	return pex;
