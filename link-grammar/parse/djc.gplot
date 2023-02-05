@@ -62,6 +62,26 @@ unset xrange
 unset yrange
 
 # -----------
+set out 'djc-dj-cnt-bound-act.png'
+set title "Used Table tracon vs (Disjuncts x ceil(log_2(words)))"
+set ylabel "Number of Table tracon"
+set logscale x
+set logscale y
+set xrange [10:3e5]
+set yrange [5:2e6]
+set xlabel "Disjuncts x ceil(log_2(words))"
+f(x)=floor(log(x)/0.693147)+1
+plot "djc.dat" using (f(9) * $3):7 with points title "third MST dataset",\
+     "dj-1500.dat" using (f(9) * $3):7 with points title "lim=1500 MST dataset",\
+     "dj-150.dat" using (f($3) * $5):11 with points title "lim=150 MST dataset",\
+     "pandp-more.dat" using (f($3) * $5):41 with points title "Pride Prejudice",\
+     (3*x) with lines lw 2 lc "blue" title "3 ndj ceil(log_2(words))",\
+     (0.5*x) with lines lw 2 lc "green" title "0.5 ndj ceil(log_2(words))"
+
+unset xrange
+unset yrange
+
+# -----------
 set out 'djc-dj-buck.png'
 set title "Alloced Buckets vs Num disjuncts"
 set ylabel "Number of Buckets alloced"
