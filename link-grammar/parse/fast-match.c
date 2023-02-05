@@ -12,8 +12,6 @@
 /*                                                                        */
 /**************************************************************************/
 
-#include <math.h>                       // sqrt()
-
 #include "api-structures.h"             // Sentence_s
 #include "connectors.h"
 #include "disjunct-utils.h"
@@ -233,18 +231,19 @@ static void sort_by_nearest_word(Match_node *m, sortbin *sbin, int nearest_word)
 }
 
 /// Estimate the proper size of the match pool based on experimental
-/// data. The appropriate blocksize seems to be 1e-4 *numexp**1.5
-/// based on the graph in
+/// data. An upper bound of twice the number of expressions seems to
+/// handle almost all cases. This is based on the graph in
 /// https://github.com/opencog/link-grammar/discussions/1402#discussioncomment-4826342
 /// The estimate is meant to be an *upper bound* for how many will be
-/// needed; reallocation to get more is expensive, and is to be avoided.
+/// needed; the goal is to avoid allocation to get more, because it is
+/// expensive.
+///
+/// FYI, Expression pool sizes in excess of 10M entries have been observed.
 static size_t match_list_pool_size_estimate(Sentence sent)
 {
 	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
-	double scaling = expsz * sqrt((double) expsz);
-	scaling /= 100.0;
 
-	size_t mlpse = scaling;
+	size_t mlpse = 2 * expsz;
 	if (mlpse < 4090) mlpse = 4090;
 
 	return mlpse;
