@@ -88,3 +88,40 @@ plot "pandp.dat" using 5:15 with points title "Pride & Prej", \
      ((0.16 * x)**2) with lines lw 2 title "(0.16 #dj)^2"
 
 # -----------
+
+set out 'dj-both-dj-cho-act.png'
+set title "Used Parse choices vs Number of disjuncts"
+set ylabel "Number of Parse choice used"
+set logscale x
+set logscale y
+set xrange [2:]
+set yrange [2:]
+set xlabel "Number of Disjuncts"
+plot "pandp-more.dat" using 5:39 with points title "Pride Prejudice", \
+     "djl.dat" using 3:9 with points title "second MST dataset",\
+     "dj-1500.dat" using 3:11 with points title "MST link-lim=1500 dataset",\
+     "dj-150.dat" using 5:15 with points title "MST link-lim=150 dataset",\
+     (16 * x) with lines lw 2 title "16 #dj"
+
+# -----------
+
+set out 'dj-both-dj-cho-scaled-act.png'
+set title "Used Parse choices vs (Num dj / num words squared)"
+set ylabel "Number of Parse choice used"
+set logscale x
+set logscale y
+set xrange [0.1:]
+set yrange [1:]
+set xlabel "Number of Disjuncts / num words **2"
+#f(x) = 1
+#f(x) = 1/x
+#f(x) = 1/(x*log(x))
+#f(x) = 1/(x*sqrt(x))
+f(x) = 1/(x*x)
+plot "pandp-more.dat" using (f($3) * $5):39 with points title "Pride Prejudice", \
+     "djl.dat" using (f(10.0) * $3):9 with points title "second MST dataset",\
+     "dj-1500.dat" using (f(10.0) * $3):11 with points title "MST link-lim=1500 dataset",\
+     "dj-150.dat" using (f($3) * $5):15 with points title "MST link-lim=150 dataset",\
+     ((16 * x)**2) with lines lw 2 title "(16 #dj)^2"
+
+# -----------
