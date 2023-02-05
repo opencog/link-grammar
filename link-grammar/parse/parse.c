@@ -438,6 +438,8 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 	if (!sent->overflowed && (sent->num_linkages_found <= linkage_limit))
 		return;
 
+	if (test_enabled("no-linkage-dedup") != NULL) return;
+
 	// Deduplicate the valid linkages only; its not worth wasting
 	// CPU time on the rest.  Sorting guarantees that the valid
 	// linkages come first.
