@@ -30,7 +30,7 @@ def kwargs_only(init):
 class ParseOptions(object):
     @kwargs_only
     def __init__(self, verbosity=0,
-                 linkage_limit=100,
+                 linkage_limit=1000,
                  min_null_count=0,
                  max_null_count=0,
                  islands_ok=False,
