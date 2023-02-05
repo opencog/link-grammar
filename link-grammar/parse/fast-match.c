@@ -242,10 +242,11 @@ static size_t match_list_pool_size_estimate(Sentence sent)
 {
 	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
 	double scaling = expsz * sqrt((double) expsz);
-	scaling *= 3.0e-3;
+	scaling /= 100.0;
 
 	size_t mlpse = scaling;
-	if (mlpse < 2040) mlpse = 2040;
+	if (mlpse < 4090) mlpse = 4090;
+
 	return mlpse;
 }
 
