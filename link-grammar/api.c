@@ -683,6 +683,7 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	 */
 	expression_prune(sent, opts);
 	print_time(opts, "Finished expression pruning");
+
 #if USE_SAT_SOLVER
 	if (opts->use_sat_solver)
 	{

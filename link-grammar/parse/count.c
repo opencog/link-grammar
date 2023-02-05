@@ -272,7 +272,7 @@ static void free_table_lrcnt(count_context_t *ctxt)
 	if (verbosity_level(D_COUNT))
 	{
 		unsigned int nonzero = 0, any_null = 0, zero = 0, non_max_null = 0;
-		unsigned int cml = 0, cml_disjunct = 0; /* Cashed match lists */
+		unsigned int cml = 0, cml_disjunct = 0; /* Cached match lists */
 		Pool_location loc = { 0 };
 		wordvecp t;
 

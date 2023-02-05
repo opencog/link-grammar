@@ -95,10 +95,6 @@ void gword_record_in_connector(Sentence sent)
 static void build_sentence_disjuncts(Sentence sent, float cost_cutoff,
                                      Parse_Options opts)
 {
-	Disjunct * d;
-	X_node * x;
-	size_t w;
-
 	sent->Disjunct_pool = pool_new(__func__, "Disjunct",
 	                   /*num_elements*/2048, sizeof(Disjunct),
 	                   /*zero_out*/false, /*align*/false, /*exact*/false);
@@ -110,10 +106,10 @@ static void build_sentence_disjuncts(Sentence sent, float cost_cutoff,
 	size_t num_con_alloced = pool_num_elements_issued(sent->Connector_pool);
 #endif
 
-	for (w = 0; w < sent->length; w++)
+	for (size_t w = 0; w < sent->length; w++)
 	{
-		d = NULL;
-		for (x = sent->word[w].x; x != NULL; x = x->next)
+		Disjunct * d = NULL;
+		for (X_node * x = sent->word[w].x; x != NULL; x = x->next)
 		{
 			Disjunct *dx = build_disjuncts_for_exp(sent, x->exp, x->string,
 				&x->word->gword_set_head, cost_cutoff, opts);
@@ -134,6 +130,7 @@ static void build_sentence_disjuncts(Sentence sent, float cost_cutoff,
 	pool_delete(sent->Clause_pool);
 	pool_delete(sent->Tconnector_pool);
 	sent->Clause_pool = NULL;
+	sent->Tconnector_pool = NULL;
 }
 
 

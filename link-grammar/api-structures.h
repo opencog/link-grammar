@@ -110,9 +110,9 @@ struct Parse_Options_s
 	/* Options governing post-processing */
 	bool perform_pp_prune; /* Perform post-processing-based pruning TRUE */
 	size_t twopass_length; /* Min sent length for two-pass post processing */
-	Cost_Model cost_model; /* For sorting linkages after parsing. */
 
 	/* Options governing the generation of linkages. */
+	Cost_Model cost_model; /* For sorting linkages after parsing. */
 	size_t linkage_limit;  /* The maximum number of linkages processed 100 */
 	bool display_morphology;/* If true, print morpho analysis of words TRUE */
 
