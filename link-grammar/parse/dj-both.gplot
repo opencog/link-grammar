@@ -125,3 +125,16 @@ plot "pandp-more.dat" using (f($3) * $5):39 with points title "Pride Prejudice",
      ((16 * x)**2) with lines lw 2 title "(16 #dj)^2"
 
 # -----------
+
+set out 'exp-both-dj-cho-act.png'
+set title "Used Parse choices vs Number of expressions"
+set ylabel "Number of Parse choice used"
+set logscale x
+set logscale y
+set xrange [300:]
+set yrange [2:]
+set xlabel "Number of Expressions"
+plot "pandp-full.dat" using 31:39 with points title "Pride Prejudice", \
+     1e-5 * x**2  with lines lw 2 title "x"
+
+# -----------
