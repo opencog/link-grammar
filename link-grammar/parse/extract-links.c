@@ -12,6 +12,7 @@
 /*************************************************************************/
 
 #include <limits.h>                     // INT_MAX
+#include <math.h>                       // log2
 
 #include "connectors.h"
 #include "count.h"
@@ -130,32 +131,37 @@ static void record_choice(
 /**
  * Allocate the parse info struct
  *
- * A piecewise exponential function determines the size of the hash
- * table.  Probably should make use of the actual number of disjuncts,
- * rather than just the number of words.
+ * An estimate of the hash table size, based on actual measurements,
+ * is presented at
+ * https://github.com/opencog/link-grammar/discussions/1402#discussioncomment-4872249
+ * That estimate is 0.5 * (num dj / sqrt(num words))**1.5
+ * I have no intuition as to why it would be that. It's just what the
+ * data shows. Note, BTW, this is an upper bound, two or three times
+ * larger than what is needed. Thus, hash table load factor will be
+ * small, usually around 0.25 or even less.
  */
-extractor_t * extractor_new(int nwords, unsigned int ranstat, bool generation)
+extractor_t * extractor_new(Sentence sent)
 {
-	int log2_table_size;
-	extractor_t * pex;
-
-	pex = (extractor_t *) xalloc(sizeof(extractor_t));
+	extractor_t * pex = (extractor_t *) xalloc(sizeof(extractor_t));
 	memset(pex, 0, sizeof(extractor_t));
-	pex->rand_state = ranstat;
+	pex->rand_state = sent->rand_state;
 
 	/* Alloc the x_table */
-	if (generation) {
+	/* Size estimate based on measurements (see #1402) */
+	double lscale = log2(sent->num_disjuncts) - 0.5 * log2(sent->length);
+	double lo_est = lscale + 4.0;
+	double hi_est = 1.5 * lscale;
+	int log2_table_size = floor(fmax(lo_est, hi_est));
+
+	if (24 < log2_table_size) log2_table_size = 24;
+
+#if LATER
+	// TODO: Maybe the above size estimate is OK, for generation?
+	// perhaps it should not be clamped at 24 ??
+	if (IS_GENERATION(sent->dict))
 		log2_table_size = 28;
-	} else if (nwords >= 72) {
-		log2_table_size = 15 + nwords / 36;
-	} else if (nwords >= 10) {
-		log2_table_size = 14 + nwords / 24;
-	} else if (nwords >= 4) {
-		log2_table_size = 1 + nwords + nwords / 2;
-	} else {
-		log2_table_size = 5;
-	}
-	/* At nwords>=252, log2_table_size is 15+7=22. */
+#endif
+
 	pex->log2_x_table_size = log2_table_size;
 	pex->x_table_size = (1 << log2_table_size);
 
