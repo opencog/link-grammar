@@ -189,12 +189,15 @@ extractor_t * extractor_new(Sentence sent)
 	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
 	memset(pex->x_table, 0, pex->x_table_size * sizeof(Pset_bucket*));
 
+	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
+	// size_t pbsze = expsz / 5;
+	size_t pbsze = pex->x_table_size;
+
 	pex->Pset_bucket_pool =
 		pool_new(__func__, "Pset_bucket",
-		         /*num_elements*/1024, sizeof(Pset_bucket),
+		         /*num_elements*/pbsze, sizeof(Pset_bucket),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
 
-	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
 	size_t pcsze = expsz * expsz / 100000;
 	if (pcsze < 1020) pcsze = 1020;
 	if (1024*1024 < pcsze) pcsze = 1024*1024 - 10;

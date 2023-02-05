@@ -73,6 +73,31 @@ unset xrange
 unset yrange
 
 # -----------
+set out 'dj-both-buck-act.png'
+set title "Used Pset Buckets vs Num disjuncts"
+set ylabel "Number of Pset Buckets used"
+set logscale x
+set logscale y
+set xlabel "Number of Dissjuncts"
+set xrange [3: ]
+set yrange [10:]
+# expressions are column 31
+# words are column 3
+# disjuncts are column 5
+f(x) = 1.0/sqrt(x)
+g(x) = 2**floor (1.5 * log(x) / 0.6931)
+max(x1,x2) = (x1>x2)? x1 : x2
+h(x) = 2**floor (max ((1.5 * log(x) / 0.6931), (1 + log(8*x) / 0.6931)))
+plot "pandp-full.dat" using (f($3) * $5):37 with points title "Pride Prejudice", \
+     "dj-150-full.dat" using (f($3) * $5):37 with points title "dj-150 MST", \
+     h(x) with lines lw 2 title "x-table-size"
+
+###     "pandp-full.dat" using (f($3) * $5):(0.2*$31) with points title "Pride Prejudice", \
+###     "dj-150-full.dat" using (f($3) * $5):(0.2*$31) with points title "dj-150 MST", \
+unset xrange
+unset yrange
+
+# -----------
 
 set out 'dj-both-dj-cho.png'
 set title "Alloced Parse choices vs Num disjuncts"
@@ -176,7 +201,7 @@ set yrange [2:]
 plot "pandp-full.dat" using 31:37 with points title "Pride Prejudice", \
      "dj-150-full.dat" using 31:37 with points title "dj-150 MST", \
      1e-5 * x**1.5  with lines lw 2 title "1e-5 (num exp)^{3/2}", \
-      0.1*x  with lines lw 2 title "0.1 x"
+      0.2*x  with lines lw 2 title "0.2 x"
 
 unset xrange
 unset yrange
