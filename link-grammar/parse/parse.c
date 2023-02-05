@@ -434,8 +434,21 @@ int VDAL_compare_linkages(Linkage l1, Linkage l2)
  */
 static void deduplicate_linkages(Sentence sent, int linkage_limit)
 {
+	int linkage_dedup = -1;
+	const char *test_linkage_dedup = test_enabled("linkage-dedup");
+	/* Never dedup: linkage-dedup:0; Always dedup: linkage-dedup:1 . */
+
+	if (test_linkage_dedup != NULL)
+	{
+		if ((test_linkage_dedup[0] != ':') || (test_linkage_dedup[1] == '\0'))
+			linkage_dedup = 1; /* just linkage-dedup w/o value defaults to 1 */
+		else
+			linkage_dedup = atoi(test_linkage_dedup + 1);
+	}
+
 	/* No need for deduplication, if random selection wasn't done. */
-	if (!sent->overflowed && (sent->num_linkages_found <= linkage_limit))
+	if ((linkage_dedup == 0) || ((linkage_dedup < 0) &&
+	    !sent->overflowed && (sent->num_linkages_found <= linkage_limit)))
 		return;
 
 	// Deduplicate the valid linkages only; its not worth wasting
