@@ -82,7 +82,8 @@ set xrange [1e3:]
 set yrange [10:2e7]
 plot "pandp-full.dat" using 31:25 with points title "Pride Prejudice", \
      "mst-more.dat" using 31:25 with points title "MST lim=150", \
-     (3e-4 * x**1.5) with lines lw 2 title "0.0003 (num exp)^{3/2}"
+     (3e-4 * x**1.5) with lines lw 2 title "0.0003 (num exp)^{3/2}", \
+     (5e-3 * x**1.5) with lines lw 2 title "0.01 (num exp)^{3/2}"
 
 unset xrange
 unset yrange
