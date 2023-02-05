@@ -38,14 +38,14 @@ unset yrange
 
 # -----------
 set out 'djm-dj-wordvec.png'
-set title "Wordvec Pool size vs Num Disjuncts"
+set title "Wordvec Pool vs Num Disjuncts"
 set xlabel "Num Disjuncts"
-set ylabel "Wordvec Pool size"
+set ylabel "Wordvec Pool"
 set logscale x
 set logscale y
 set xrange [10:]
 set yrange [10:]
-plot "pandp-more.dat" using 5:35 with points title "Pride Prejudice pool_size", \
+plot "pandp-more.dat" using 5:35 with points title "Pride Prejudice poolsize", \
      "pandp-full.dat" using 5:35 with points title "Pride Prejudice issued", \
      "mst-more.dat" using 5:35 with points title "MST lim=150", \
      (50*x**0.75) with lines lw 2 title "50x^{3/4}", \

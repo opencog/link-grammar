@@ -742,7 +742,7 @@ double postparse = current_usage_time();
 double postex = current_usage_time();
 
 np++;
-prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f dp= %lu cp= %lu mlc= %lu mld= %lu mn= %lu ex= %lu xn= %lu wv= %lu bu= %lu cu= %lu pu= %lu s= %lu / %lu\n",
+prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f dp= %lu cp= %lu mlc= %lu mld= %lu mn= %lu ex= %lu xn= %lu wv= %lu bu= %lu cu= %lu pu= %lu vs= %lu s= %lu / %lu\n",
 np,
 sent->length,
 sent->num_disjuncts,
@@ -765,10 +765,12 @@ get_mld(ctxt),
 pool_num_elements_issued(sent->Match_node_pool), // mn
 pool_num_elements_issued(sent->Exp_pool),
 pool_num_elements_issued(sent->X_node_pool),
-pool_num_elements_issued(sent->wordvec_pool),
+pool_num_elements_issued(sent->wordvec_pool),  // wv= col 35
 
 bucku(pex), chosu(pex),  // bu= is column 37
 pool_num_elements_issued(sent->Table_tracon_pool), // pu= is column 41
+
+pool_size(sent->wordvec_pool), // vs= col 43
 
 N_invalid_morphism, opts->linkage_limit
 );
