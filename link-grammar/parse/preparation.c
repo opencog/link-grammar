@@ -195,12 +195,32 @@ error:
  */
 void prepare_to_parse(Sentence sent, Parse_Options opts)
 {
-	size_t i;
-
 	if (IS_GENERATION(sent->dict))
 		create_wildcard_word_disjunct_list(sent, opts);
 
 	build_sentence_disjuncts(sent, opts->disjunct_cost, opts);
+
+
+#ifdef NEED_THESE_FOR_NULL_AND_PANIC_PARSING
+	// If we somehow knew that we will not be called a second
+	// time, then we could safely delete the Exp_pool and the
+	// X_node_pool, because these are no longer needed to finish
+	// the parse. However, if we are called a second or third time,
+	// during panic parsing, or with non-zero null_count, the
+	// disjuncts will get rebuilt, again, and the expressions are
+	// needed for that. So we cannot actually free this memory.
+	if (0 == opts->max_null_count)
+	{
+		for (WordIdx w = 0; w < sent->length; w++)
+			sent->word[w].x = NULL;
+
+		pool_delete(sent->Exp_pool);
+		sent->Exp_pool = NULL;
+		pool_delete(sent->X_node_pool);
+		sent->X_node_pool = NULL;
+	}
+#endif
+
 	if (verbosity_level(D_PREP))
 	{
 		prt_error("Debug: After expanding expressions into disjuncts:\n\\");
@@ -208,7 +228,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Built disjuncts");
 
-	for (i=0; i<sent->length; i++)
+	for (WordIdx i=0; i<sent->length; i++)
 	{
 		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, false);
 		if (IS_GENERATION(sent->dict))
