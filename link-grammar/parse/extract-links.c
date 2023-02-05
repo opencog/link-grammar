@@ -158,6 +158,32 @@ int estimate_log2_table_size(Sentence sent)
 	return log2_table_size;
 }
 
+/// Provide an upper-bound estimate for the number of Parse_choice
+/// elements that will be allocated. This bound is reasonable for
+/// the English-language dictionary, almost never exceeding 100K
+/// on normal text. However, for MST dictionaries, it can easily
+/// get above 100M entries, and thus is clamped to a more reasonable
+/// size. This is the block size; if more is needed, more blocks will
+/// be allocated.
+size_t estimate_parse_choice_allocations(Sentence sent)
+{
+	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
+	size_t pcsze = (expsz * expsz) / 100000;
+	if (pcsze < 1020) pcsze = 1020;
+
+	// At this time, sizeof(Parse_choice) is 48 bytes.
+	// Putting an upper limit of 16*1024*1024 elements corresponds to
+	// a limit of 800 MBytes RAM. No conventional hand-built dict ever
+	// comes close to this limit, but sizes well above this are seen
+	// with MST dictionaries. Presumably, this is an "MST thing", and
+	// goes away with more sophisticated dicts.
+#define MAX_PC_ELTS (16*1024*1024 - 10)
+
+	if (MAX_PC_ELTS < pcsze) pcsze = MAX_PC_ELTS;
+
+	return pcsze;
+}
+
 /**
  * Allocate the parse info struct
  */
@@ -189,9 +215,11 @@ extractor_t * extractor_new(Sentence sent)
 		pool_new(__func__, "Pset_bucket",
 		         /*num_elements*/pbsze, sizeof(Pset_bucket),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
+
+	size_t pcsze = estimate_parse_choice_allocations(sent);
 	pex->Parse_choice_pool =
 		pool_new(__func__, "Parse_choice",
-		         /*num_elements*/1024, sizeof(Parse_choice),
+		         /*num_elements*/pcsze, sizeof(Parse_choice),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
 
 	return pex;
