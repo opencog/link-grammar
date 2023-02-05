@@ -11,7 +11,7 @@ set logscale x
 set logscale y
 set xrange [100:]
 set yrange [1000:]
-plot "pandp-more.dat" using 5:29 with points title "Pride Prejudice", \
+plot "pandp-full.dat" using 5:29 with points title "Pride Prejudice", \
      "mst-more.dat" using 5:29 with points title "MST lim=150", \
      (2*x) with lines lw 2 title "2 num dj", \
      (1.5*x) with lines lw 2 title "1.5 num dj"
@@ -21,15 +21,16 @@ unset yrange
 
 # -----------
 set out 'djm-dj-exp.png'
-set title "Exp Pool size vs Num Disjuncts"
+set title "Exp Pool elts vs Num Disjuncts"
 set xlabel "Num Disjuncts"
-set ylabel "Exp Pool size"
+set ylabel "Num Exp Pool elts issued"
 set logscale x
 set logscale y
-set yrange [1000:]
-plot "pandp-more.dat" using 5:31 with points title "Pride Prejudice", \
+set xrange [3:5e4]
+set yrange [100:]
+plot "pandp-full.dat" using 5:31 with points title "Pride Prejudice", \
      "mst-more.dat" using 5:31 with points title "MST lim=150", \
-     (4*x) with lines lw 2 title "4 ndj", \
+     (200 * x**0.5) with lines lw 2 title "200 (ndj)^{1/2}", \
      (5e3*(x**0.333) ) with lines lw 2 title "5000 (ndj)^{1/3}"
 
 unset xrange
@@ -43,7 +44,7 @@ set ylabel "Wordvec Pool size"
 set logscale x
 set logscale y
 set yrange [1000:]
-plot "pandp-more.dat" using 5:35 with points title "Pride Prejudice", \
+(plot "pandp-full.dat" using 5:35 with points title "Pride Prejudice", \
      "mst-more.dat" using 5:35 with points title "MST lim=150", \
      (50*x**0.75) with lines lw 2 title "50x^{3/4}", \
      (1e3*(x**0.5) ) with lines lw 2 title "1000 x^{1/2}"
@@ -60,7 +61,7 @@ set logscale x
 set logscale y
 set xrange [1000:]
 set yrange [5e5:2e7]
-plot "pandp-more.dat" using 5:25 with points title "Pride Prejudice", \
+plot "pandp-full.dat" using 5:25 with points title "Pride Prejudice", \
      "mst-more.dat" using 5:25 with points title "MST lim=150"
 
 unset xrange
