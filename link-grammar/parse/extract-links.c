@@ -193,9 +193,15 @@ extractor_t * extractor_new(Sentence sent)
 		pool_new(__func__, "Pset_bucket",
 		         /*num_elements*/1024, sizeof(Pset_bucket),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
+
+	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
+	size_t pcsze = expsz * expsz / 100000;
+	if (pcsze < 1020) pcsze = 1020;
+	if (1024*1024 < pcsze) pcsze = 1024*1024 - 10;
+
 	pex->Parse_choice_pool =
 		pool_new(__func__, "Parse_choice",
-		         /*num_elements*/1024, sizeof(Parse_choice),
+		         /*num_elements*/pcsze, sizeof(Parse_choice),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
 
 // printf("duuude parse choice bytes=%lu\n", sizeof(Parse_choice));

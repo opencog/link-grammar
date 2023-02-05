@@ -135,6 +135,6 @@ set xrange [300:]
 set yrange [2:]
 set xlabel "Number of Expressions"
 plot "pandp-full.dat" using 31:39 with points title "Pride Prejudice", \
-     1e-5 * x**2  with lines lw 2 title "x"
+     1e-5 * x**2  with lines lw 2 title "1e-5 (num exp)^2"
 
 # -----------
