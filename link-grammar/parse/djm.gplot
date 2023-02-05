@@ -43,11 +43,11 @@ set xlabel "Num Disjuncts"
 set ylabel "Wordvec Pool"
 set logscale x
 set logscale y
-set xrange [10:]
+set xrange [10:5e4]
 set yrange [10:]
 plot "pandp-full.dat" using 5:43 with points title "Pride Prejudice poolsize", \
      "pandp-full.dat" using 5:35 with points title "Pride Prejudice issued", \
-     "mst-more.dat" using 5:35 with points title "MST lim=150", \
+     "mst-more.dat" using 5:35 with points title "MST lim=150 poolsize", \
      (50*x**0.75) with lines lw 2 title "50x^{3/4}", \
      (1e3*(x**0.5) ) with lines lw 2 title "1000 x^{1/2}", \
      (0.5* x**1.2 ) with lines lw 2 title "0.5 x^{6/5}"
