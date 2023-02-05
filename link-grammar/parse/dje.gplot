@@ -108,4 +108,23 @@ set xlabel "Number of Disjuncts (#dj)"
 plot "pandp.dat" using 5:15 with points title "Pride & Prej", \
      (0.01 * x**1.5) with lines lw 2 title "0.01 #dj^{1.5}"
 
+unset xrange
+unset yrange
+
+# -----------
+
+set out 'dje-dj-cho-act.png'
+set title "English: Used Parse choices vs Num disjuncts"
+set ylabel "Number of Parse choice used"
+set logscale x
+set logscale y
+set xrange [2:50000]
+set yrange [1:1e6]
+set xlabel "Number of Disjuncts (#dj)"
+plot "pandp-more.dat" using 5:39 with points title "Pride & Prej", \
+     (2* x) with lines lw 2 title "2 #dj"
+
+unset xrange
+unset yrange
+
 # -----------
