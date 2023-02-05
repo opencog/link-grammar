@@ -79,7 +79,7 @@ set ylabel "Number of Pset Buckets used"
 set logscale x
 set logscale y
 set xlabel "Number of Dissjuncts"
-set xrange [3: ]
+set xrange [3:2e4]
 set yrange [10:]
 # expressions are column 31
 # words are column 3
