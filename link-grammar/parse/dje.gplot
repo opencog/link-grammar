@@ -96,6 +96,21 @@ unset xrange
 unset yrange
 
 # -----------
+set out 'dje-dj-buck-act.png'
+set title "English: Used Buckets vs Num disjuncts"
+set ylabel "Number of Buckets used"
+set logscale x
+set logscale y
+set xlabel "Number of Disjuncts (#dj)"
+set xrange [1:5e4]
+set yrange [5:5e4]
+plot "pandp-more.dat" using 5:37 with points title "Pride & Prej",\
+     ( x) with lines lw 2 title "#dj"
+
+unset xrange
+unset yrange
+
+# -----------
 
 set out 'dje-dj-cho.png'
 set title "English: Alloced Parse choices vs Num disjuncts"
