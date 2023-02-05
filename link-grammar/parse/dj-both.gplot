@@ -131,7 +131,7 @@ set title "Used Parse choices vs Number of expressions"
 set ylabel "Number of Parse choice used"
 set logscale x
 set logscale y
-set xrange [300:]
+set xrange [300: 5e6]
 set yrange [2:]
 set xlabel "Number of Expressions"
 plot "pandp-full.dat" using 31:39 with points title "Pride Prejudice", \
@@ -148,7 +148,7 @@ set ylabel "Number of Pset Buckets used"
 set logscale x
 set logscale y
 set xlabel "Number of Expressions"
-set xrange [300:]
+set xrange [300: 5e6]
 set yrange [2:]
 # expressions are column 31
 # words are column 3
