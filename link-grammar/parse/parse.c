@@ -756,12 +756,19 @@ pool_size(sent->Disjunct_pool), // dp
 pool_size(sent->Connector_pool),
 get_mlc(ctxt),
 get_mld(ctxt),
-pool_size(sent->Match_node_pool), // mn
-pool_size(sent->Exp_pool),
-pool_size(sent->X_node_pool),
-pool_size(sent->wordvec_pool),
-bucku(pex), chosu(pex),
-pool_num_elements_issued(sent->Table_tracon_pool),
+
+// pool_size(sent->Match_node_pool), // mn
+// pool_size(sent->Exp_pool),
+// pool_size(sent->X_node_pool),
+// pool_size(sent->wordvec_pool),
+
+pool_num_elements_issued(sent->Match_node_pool), // mn
+pool_num_elements_issued(sent->Exp_pool),
+pool_num_elements_issued(sent->X_node_pool),
+pool_num_elements_issued(sent->wordvec_pool),
+
+bucku(pex), chosu(pex),  // bu= is column 37
+pool_num_elements_issued(sent->Table_tracon_pool), // pu= is column 41
 
 N_invalid_morphism, opts->linkage_limit
 );
