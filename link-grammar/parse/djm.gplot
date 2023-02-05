@@ -43,8 +43,10 @@ set xlabel "Num Disjuncts"
 set ylabel "Wordvec Pool size"
 set logscale x
 set logscale y
-set yrange [1000:]
-plot "pandp-full.dat" using 5:35 with points title "Pride Prejudice", \
+set xrange [10:]
+set yrange [10:]
+plot "pandp-more.dat" using 5:35 with points title "Pride Prejudice pool_size", \
+     "pandp-full.dat" using 5:35 with points title "Pride Prejudice issued", \
      "mst-more.dat" using 5:35 with points title "MST lim=150", \
      (50*x**0.75) with lines lw 2 title "50x^{3/4}", \
      (1e3*(x**0.5) ) with lines lw 2 title "1000 x^{1/2}"
@@ -79,6 +81,22 @@ set xrange [1e3:]
 set yrange [10:2e7]
 plot "pandp-full.dat" using 31:25 with points title "Pride Prejudice", \
      "mst-more.dat" using 31:25 with points title "MST lim=150", \
+     (3e-4 * x**1.5) with lines lw 2 title "0.0003 (num exp)^{3/2}"
+
+unset xrange
+unset yrange
+
+# -----------
+set out 'djm-exp-mld.png'
+set title "Num mld Pool elts vs Num Exp"
+set xlabel "Num Expressions"
+set ylabel "MLD Pool elts issued"
+set logscale x
+set logscale y
+set xrange [1e3:]
+set yrange [10:2e7]
+plot "pandp-full.dat" using 31:27 with points title "Pride Prejudice", \
+     "mst-more.dat" using 31:27 with points title "MST lim=150", \
      (3e-4 * x**1.5) with lines lw 2 title "0.0003 (num exp)^{3/2}"
 
 unset xrange
