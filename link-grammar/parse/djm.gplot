@@ -4,13 +4,13 @@ set term png
 
 # -----------
 set out 'djm-dj-mnp.png'
-set title "Match Node Pool size vs Num Disjuncts"
+set title "Num Match Node Pool elts vs Num Disjuncts"
 set xlabel "Num Disjuncts"
-set ylabel "Match Node Pool size"
+set ylabel "Num Match Node Pool elts"
 set logscale x
 set logscale y
-set xrange [100:]
-set yrange [1000:]
+set xrange [4:]
+set yrange [4:]
 plot "pandp-full.dat" using 5:29 with points title "Pride Prejudice", \
      "mst-more.dat" using 5:29 with points title "MST lim=150", \
      (2*x) with lines lw 2 title "2 num dj", \
@@ -44,7 +44,7 @@ set ylabel "Wordvec Pool size"
 set logscale x
 set logscale y
 set yrange [1000:]
-(plot "pandp-full.dat" using 5:35 with points title "Pride Prejudice", \
+plot "pandp-full.dat" using 5:35 with points title "Pride Prejudice", \
      "mst-more.dat" using 5:35 with points title "MST lim=150", \
      (50*x**0.75) with lines lw 2 title "50x^{3/4}", \
      (1e3*(x**0.5) ) with lines lw 2 title "1000 x^{1/2}"
@@ -54,15 +54,32 @@ unset yrange
 
 # -----------
 set out 'djm-dj-mlc.png'
-set title "mlc Pool size vs Num Disjuncts"
+set title "Num mlc Pool elts vs Num Disjuncts"
 set xlabel "Num Disjuncts"
-set ylabel "MLC Pool size"
+set ylabel "MLC Pool elts issued"
 set logscale x
 set logscale y
-set xrange [1000:]
-set yrange [5e5:2e7]
+set xrange [10:5e4]
+set yrange [10:2e7]
 plot "pandp-full.dat" using 5:25 with points title "Pride Prejudice", \
-     "mst-more.dat" using 5:25 with points title "MST lim=150"
+     "mst-more.dat" using 5:25 with points title "MST lim=150", \
+     (x) with lines lw 2 title "num dj"
+
+unset xrange
+unset yrange
+
+# -----------
+set out 'djm-exp-mlc.png'
+set title "Num mlc Pool elts vs Num Exp"
+set xlabel "Num Expressions"
+set ylabel "MLC Pool elts issued"
+set logscale x
+set logscale y
+set xrange [1e3:]
+set yrange [10:2e7]
+plot "pandp-full.dat" using 31:25 with points title "Pride Prejudice", \
+     "mst-more.dat" using 31:25 with points title "MST lim=150", \
+     (3e-4 * x**1.5) with lines lw 2 title "0.0003 (num exp)^{3/2}"
 
 unset xrange
 unset yrange
