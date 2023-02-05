@@ -166,7 +166,7 @@ static inline void *pool_next(Pool_desc *mp, Pool_location *l)
 /// Return the number of elements issued to users.
 static inline size_t pool_num_elements_issued(Pool_desc *mp)
 {
-	if (mp) mp->issued_elements;
+	if (mp) return mp->issued_elements;
 	return 0;
 }
 
