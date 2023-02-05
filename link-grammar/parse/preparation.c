@@ -130,6 +130,7 @@ static void build_sentence_disjuncts(Sentence sent, float cost_cutoff,
 	pool_delete(sent->Clause_pool);
 	pool_delete(sent->Tconnector_pool);
 	sent->Clause_pool = NULL;
+	sent->Tconnector_pool = NULL;
 }
 
 
