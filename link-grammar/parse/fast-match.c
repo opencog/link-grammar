@@ -230,6 +230,25 @@ static void sort_by_nearest_word(Match_node *m, sortbin *sbin, int nearest_word)
 #endif
 }
 
+/// Estimate the proper size of the match pool based on experimental
+/// data. An upper bound of twice the number of expressions seems to
+/// handle almost all cases. This is based on the graph in
+/// https://github.com/opencog/link-grammar/discussions/1402#discussioncomment-4826342
+/// The estimate is meant to be an *upper bound* for how many will be
+/// needed; the goal is to avoid allocation to get more, because it is
+/// expensive.
+///
+/// FYI, Expression pool sizes in excess of 10M entries have been observed.
+static size_t match_list_pool_size_estimate(Sentence sent)
+{
+	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
+
+	size_t mlpse = 2 * expsz;
+	if (mlpse < 4090) mlpse = 4090;
+
+	return mlpse;
+}
+
 fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 {
 	assert(sent->length > 0, "Sentence length is 0");
@@ -259,7 +278,9 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			         /*num_elements*/2048, sizeof(Match_node),
 			         /*zero_out*/false, /*align*/true, /*exact*/false);
 	}
-	const size_t match_list_pool_size = 512*1024; /* Currently a hard limit. */
+
+	const size_t match_list_pool_size = match_list_pool_size_estimate(sent);
+
 	/* FIXME: Modify pool_alloc_vec() to use dynamic block sizes. */
 	ctxt->mld_pool =
 		pool_new(__func__, "Match list cache",
