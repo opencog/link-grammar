@@ -32,7 +32,7 @@ typedef struct Parse_choice_struct Parse_choice;
  * set[1]->rw, when the middle disjunct md is of word set[0]->rw
  * (which is always equal to set[1]->lw).
  * See make_choice() below.
- * The number of linkages in this parse is the multiplication of the
+ * The number of linkages in this parse is the product of the
  * counts of the two Parse_set elements. */
 typedef struct Parse_set_struct Parse_set;
 struct Parse_choice_struct
