@@ -90,7 +90,7 @@ max(x1,x2) = (x1>x2)? x1 : x2
 h(x) = 2**floor (max ((1.5 * log(x) / 0.6931), (1 + log(8*x) / 0.6931)))
 plot "pandp-full.dat" using (f($3) * $5):37 with points title "Pride Prejudice", \
      "dj-150-full.dat" using (f($3) * $5):37 with points title "dj-150 MST", \
-     h(x) with lines lw 2 title "x-table-size"
+     0.5*h(x) with lines lw 2 title "0.5 x-table-size"
 
 ###     "pandp-full.dat" using (f($3) * $5):(0.2*$31) with points title "Pride Prejudice", \
 ###     "dj-150-full.dat" using (f($3) * $5):(0.2*$31) with points title "dj-150 MST", \
