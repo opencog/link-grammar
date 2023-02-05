@@ -742,7 +742,7 @@ double postparse = current_usage_time();
 double postex = current_usage_time();
 
 np++;
-prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f dp= %lu cp= %lu mlc= %lu mld= %lu mn= %lu ex= %lu xn= %lu wv= %lu bu= %lu cu= %lu s= %lu / %lu\n",
+prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f dp= %lu cp= %lu mlc= %lu mld= %lu mn= %lu ex= %lu xn= %lu wv= %lu bu= %lu cu= %lu pu= %lu s= %lu / %lu\n",
 np,
 sent->length,
 sent->num_disjuncts,
@@ -761,6 +761,7 @@ pool_size(sent->Exp_pool),
 pool_size(sent->X_node_pool),
 pool_size(sent->wordvec_pool),
 bucku(pex), chosu(pex),
+pool_num_elements_issued(sent->Table_tracon_pool),
 
 N_invalid_morphism, opts->linkage_limit
 );

@@ -66,6 +66,21 @@ unset xrange
 unset yrange
 
 # -----------
+set out 'dje-dj-cnt-act.png'
+set title "English - Used Table connectors vs Num disjuncts"
+set ylabel "Number of Table connectors"
+set logscale x
+set logscale y
+set xrange [3:40000]
+set yrange [3:1e6]
+set xlabel "Number of Disjuncts (#dj)"
+plot "pandp-more.dat" using 5:41 with points title "Pride & Prej",\
+     (0.1 * (x)**1.5) with lines lw 2 title "0.1 #dj^{1.5}"
+
+unset xrange
+unset yrange
+
+# -----------
 set out 'dje-dj-buck.png'
 set title "English: Alloced Buckets vs Num disjuncts"
 set ylabel "Number of Buckets alloced"
