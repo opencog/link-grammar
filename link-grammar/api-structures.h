@@ -51,8 +51,11 @@
 
 /* Performance tuning.
  * For short sentences, encoding takes more resources than it saves. If
- * this overhead is improved, this limit can be set lower. */
-#define SENTENCE_MIN_LENGTH_TRAILING_HASH 6
+ * this overhead is improved, this limit can be set lower.
+ * Update: For a consistent linkage deduplication, encoding (which
+ * included tracon sharing) should always be done. And now the overhead
+ * is negligible. */
+#define SENTENCE_MIN_LENGTH_TRAILING_HASH 0
 
 /* Pruning per null-count is costly for sentences whose parsing time
  * is relatively small. If a better pruning per null-count is implemented,
