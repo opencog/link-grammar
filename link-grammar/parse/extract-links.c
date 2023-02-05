@@ -149,7 +149,7 @@ extractor_t * extractor_new(Sentence sent)
 	/* Alloc the x_table */
 	/* Size estimate based on measurements (see #1402) */
 	double lscale = log2(sent->num_disjuncts) - 0.5 * log2(sent->length);
-	duuble lo_est = lscale + 4.0;
+	double lo_est = lscale + 4.0;
 	double hi_est = 1.5 * lscale;
 	int log2_table_size = floor(fmax(lo_est, hi_est));
 
