@@ -556,6 +556,8 @@ static void notify_no_complete_linkages(unsigned int null_count,
  */
 size_t bucksz(extractor_t* pex);
 size_t chosz(extractor_t* pex);
+size_t bucku(extractor_t* pex);
+size_t chosu(extractor_t* pex);
 size_t get_mlc(count_context_t *ctxt);
 size_t get_mld(count_context_t *ctxt);
 double current_usage_time(void);
@@ -740,7 +742,7 @@ double postparse = current_usage_time();
 double postex = current_usage_time();
 
 np++;
-prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f dp= %lu cp= %lu mlc= %lu mld= %lu mn= %lu ex= %lu xn= %lu wv= %lu s= %lu / %lu\n",
+prt_error("%d w= %lu d= %u c= %d l= %d p= %lu b= %lu ch= %lu tc= %7.4f tb= %7.4f dp= %lu cp= %lu mlc= %lu mld= %lu mn= %lu ex= %lu xn= %lu wv= %lu bu= %lu cu= %lu s= %lu / %lu\n",
 np,
 sent->length,
 sent->num_disjuncts,
@@ -758,6 +760,7 @@ pool_size(sent->Match_node_pool), // mn
 pool_size(sent->Exp_pool),
 pool_size(sent->X_node_pool),
 pool_size(sent->wordvec_pool),
+bucku(pex), chosu(pex),
 
 N_invalid_morphism, opts->linkage_limit
 );

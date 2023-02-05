@@ -94,9 +94,17 @@ size_t bucksz(extractor_t* pex);
 size_t bucksz(extractor_t* pex) {
 return pool_size(pex->Pset_bucket_pool); }
 
+size_t bucku(extractor_t* pex);
+size_t bucku(extractor_t* pex) {
+return pool_num_elements_issued(pex->Pset_bucket_pool); }
+
 size_t chosz(extractor_t* pex);
 size_t chosz(extractor_t* pex) {
 return pool_size(pex->Parse_choice_pool); }
+
+size_t chosu(extractor_t* pex);
+size_t chosu(extractor_t* pex) {
+return pool_num_elements_issued(pex->Parse_choice_pool); }
 
 /**
  * The first thing we do is we build a data structure to represent the
