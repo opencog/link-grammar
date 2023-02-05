@@ -264,7 +264,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			if (is_tracon[idir]) continue; /* this direction is complete */
 			if (NULL != t->tracon)
 			{
-				/* Use the cashed tracon and mark this direction as complete. */
+				/* Use the cached tracon and mark this direction as complete. */
 				*(jet[idir]) = t->tracon;
 				is_tracon[idir] = true;
 				continue;
