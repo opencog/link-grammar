@@ -105,14 +105,6 @@ typedef struct
 	size_t element_number;
 } Pool_location;
 
-/**
- * Return the number of elements issued to users.
- */
-static inline size_t pool_num_elements_issued(Pool_desc *mp)
-{
-	return mp->issued_elements;
-}
-
 static inline void *pool_alloc(Pool_desc *mp)
 {
 	return pool_alloc_vec(mp, 1);
@@ -169,6 +161,13 @@ static inline void *pool_next(Pool_desc *mp, Pool_location *l)
 
 	l->element_number++;
 	return l->current_element;
+}
+
+/// Return the number of elements issued to users.
+static inline size_t pool_num_elements_issued(Pool_desc *mp)
+{
+	if (mp) mp->issued_elements;
+	return 0;
 }
 
 /// Total number of elements in pool, both issued and currently free.
