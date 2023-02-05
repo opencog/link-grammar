@@ -236,14 +236,16 @@ static void sort_by_nearest_word(Match_node *m, sortbin *sbin, int nearest_word)
 /// data. The appropriate blocksize seems to be 1e-4 *numexp**1.5
 /// based on the graph in
 /// https://github.com/opencog/link-grammar/discussions/1402#discussioncomment-4826342
+/// The estimate is meant to be an *upper bound* for how many will be
+/// needed; reallocation to get more is expensive, and is to be avoided.
 static size_t match_list_pool_size_estimate(Sentence sent)
 {
 	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
 	double scaling = expsz * sqrt((double) expsz);
-	scaling *= 1.0e-4;
+	scaling *= 3.0e-3;
 
 	size_t mlpse = scaling;
-	if (mlpse < 1020) mlpse = 1020;
+	if (mlpse < 2040) mlpse = 2040;
 	return mlpse;
 }
 
