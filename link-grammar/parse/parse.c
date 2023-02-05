@@ -711,7 +711,8 @@ for (size_t i=0; i<sent->length; i++)
 		free_count_context(ctxt, sent);
 		ctxt = alloc_count_context(sent, ts_parsing);
 
-if (30123 < sent->num_disjuncts)
+#define CUTOFF 60123
+if (CUTOFF < sent->num_disjuncts)
 {
 sent->num_linkages_found = 0;
 goto parse_end_cleanup;
