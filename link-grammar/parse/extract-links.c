@@ -30,7 +30,7 @@ typedef struct Parse_choice_struct Parse_choice;
 
 /* Parse_choice records a parse of the word range set[0]->lw to
  * set[1]->rw, when the middle disjunct md is of word set[0]->rw
- * (which is always equal to set[1]->lw, link[0]->rw, and link[1]->lw).
+ * (which is always equal to set[1]->lw).
  * See make_choice() below.
  * The number of linkages in this parse is the multiplication of the
  * counts of the two Parse_set elements. */
@@ -39,8 +39,8 @@ struct Parse_choice_struct
 {
 	Parse_choice * next;
 	Parse_set * set[2];
-	Link        link[2]; /* the lc fields of these is NULL if there is no link used */
-	Disjunct    *md;     /* the chosen disjunct for the middle word */
+	Disjunct    *md;           /* the chosen disjunct for the middle word */
+	Connector   *lc, *rc;      /* the connectors on the middle word */
 };
 
 /* Parse_set serves as a header of Parse_choice chained elements, that
@@ -48,10 +48,11 @@ struct Parse_choice_struct
  * tracons l_id and r_id on words lw and rw, correspondingly. */
 struct Parse_set_struct
 {
-	Parse_choice * first;
-	short          lw, rw;     /* left and right word index */
-	unsigned int   null_count; /* number of island words */
-	int            l_id, r_id; /* tracons on words lw, rw */
+	Parse_choice   *first;
+	Connector      *le, *re;
+	uint8_t        lw, rw;     /* left and right word index */
+	uint8_t        null_count; /* number of island words */
+	int32_t        l_id, r_id; /* tracons on words lw, rw */
 
 	count_t count;             /* The number of ways to parse. */
 #ifdef RECOUNT
@@ -99,37 +100,27 @@ struct extractor_s
  */
 
 static Parse_choice *
-make_choice(Parse_set *lset, Connector * llc, Connector * lrc,
-            Parse_set *rset, Connector * rlc, Connector * rrc,
+make_choice(Parse_set *lset, Connector * lrc,
+            Parse_set *rset, Connector * rlc,
             Disjunct *md, extractor_t* pex)
 {
 	Parse_choice *pc;
 	pc = pool_alloc(pex->Parse_choice_pool);
 	pc->next = NULL;
 	pc->set[0] = lset;
-	pc->link[0].link_name = NULL;
-	pc->link[0].lw = lset->lw;
-	pc->link[0].rw = lset->rw;
-	pc->link[0].lc = llc;
-	pc->link[0].rc = lrc;
 	pc->set[1] = rset;
-	pc->link[1].link_name = NULL;
-	pc->link[1].lw = rset->lw;
-	pc->link[1].rw = rset->rw;
-	pc->link[1].lc = rlc;
-	pc->link[1].rc = rrc;
+	pc->lc = lrc;
+	pc->rc = rlc;
 	pc->md = md;
 	return pc;
 }
 
 static void record_choice(
-    Parse_set *lset, Connector * llc, Connector * lrc,
-    Parse_set *rset, Connector * rlc, Connector * rrc,
+    Parse_set *lset, Connector * lrc,
+    Parse_set *rset, Connector * rlc,
     Disjunct *md, Parse_set *s, extractor_t* pex)
 {
-	Parse_choice *pc = make_choice(lset, llc, lrc,
-	                               rset, rlc, rrc,
-	                               md, pex);
+	Parse_choice *pc = make_choice(lset, lrc, rset, rlc, md, pex);
 
 	// Chain it into the parse set.
 	pc->next = s->first;
@@ -266,6 +257,8 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.null_count = null_count;
 	n->set.l_id = (NULL != le) ? le->tracon_id : lw;
 	n->set.r_id = (NULL != re) ? re->tracon_id : rw;
+	n->set.le = le;
+	n->set.re = re;
 	n->set.count = 0;
 	n->set.first = NULL;
 
@@ -392,25 +385,25 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 				if (dis->left == NULL)
 				{
 					pset = mk_parse_set(mchxt, ctxt,
-											  w, rw, dis->right, NULL,
-											  null_count-1, pex);
+					                    w, rw, dis->right, NULL,
+					                    null_count-1, pex);
 					if (pset == NULL) continue;
 					dummy = dummy_set(lw, w, null_count-1, pex);
-					record_choice(dummy, NULL, NULL,
-									  pset, dis->right, NULL,
-									  dis, &xt->set, pex);
+					record_choice(dummy, NULL,
+					              pset, dis->right,
+					              dis, &xt->set, pex);
 					RECOUNT({xt->set.recount += pset->recount;})
 				}
 			}
 			pset = mk_parse_set(mchxt, ctxt,
-									  w, rw, NULL, NULL,
-									  null_count-1, pex);
+			                    w, rw, NULL, NULL,
+			                    null_count-1, pex);
 			if (pset != NULL)
 			{
 				dummy = dummy_set(lw, w, null_count-1, pex);
-				record_choice(dummy, NULL, NULL,
-								  pset,  NULL, NULL,
-								  NULL, &xt->set, pex);
+				record_choice(dummy, NULL,
+				              pset,  NULL,
+				              NULL, &xt->set, pex);
 				RECOUNT({xt->set.recount += pset->recount;})
 			}
 		}
@@ -531,9 +524,8 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 								if (ls[i] == NULL) continue;
 								/* this ordering is probably not consistent with
 								 * that needed to use list_links */
-								record_choice(ls[i], le, d->left,
+								record_choice(ls[i], d->left,
 								              rset,  NULL /* d->right */,
-								              re,  /* the NULL indicates no link*/
 								              d, &xt->set, pex);
 								RECOUNT({xt->set.recount += (w_count_t)ls[i]->recount * rset->recount;})
 							}
@@ -578,9 +570,9 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 									if (rs[j] == NULL) continue;
 									/* this ordering is probably not consistent with
 									 * that needed to use list_links */
-									record_choice(lset, NULL /* le */,
+									record_choice(lset,
 									              d->left,  /* NULL indicates no link */
-									              rs[j], d->right, re,
+									              rs[j], d->right,
 									              d, &xt->set, pex);
 									RECOUNT({xt->set.recount += lset->recount * rs[j]->recount;})
 								}
@@ -596,8 +588,8 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 								for (j=0; j<4; j++)
 								{
 									if (rs[j] == NULL) continue;
-									record_choice(ls[i], le, d->left,
-									              rs[j], d->right, re,
+									record_choice(ls[i], d->left,
+									              rs[j], d->right,
 									              d, &xt->set, pex);
 									RECOUNT({xt->set.recount += ls[i]->recount * rs[j]->recount;})
 								}
@@ -679,24 +671,31 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 /**
  * Assemble the link array and the chosen_disjuncts of a linkage.
  */
-static void issue_link(Linkage lkg, bool lr, Disjunct *md, Link *link)
+static void issue_link(Linkage lkg, int lr, Parse_choice *pc,
+                       const Parse_set *set)
 {
-	if (link[0].lc == NULL) return; /* no link to generate */
+	Connector *lc = lr ? pc->rc : set->le;
+	if (lc == NULL) return; /* No choice to record. */
 
-	if (link->rc != NULL)
-	{
-		assert(lkg->num_links < lkg->lasz, "Linkage array too small!");
-		lkg->link_array[lkg->num_links] = *link;
-		lkg->num_links++;
-	}
+	lkg->chosen_disjuncts[lr ? pc->set[1]->lw : pc->set[0]->rw] = pc->md;
 
-	lkg->chosen_disjuncts[lr ? link->lw : link->rw] = md;
+	Connector *rc = lr ? set->re : pc->lc;
+	if (rc == NULL) return; /* No link to generate. */
+
+	assert(lkg->num_links < lkg->lasz, "Linkage array too small!");
+	Link *link = &lkg->link_array[lkg->num_links];
+	link->lw = pc->set[lr]->lw;
+	link->rw = pc->set[lr]->rw;
+	link->lc = lc;
+	link->rc = rc;
+	lkg->num_links++;
 }
 
-static void issue_links_for_choice(Linkage lkg, Parse_choice *pc)
+static void issue_links_for_choice(Linkage lkg, Parse_choice *pc,
+                                   const Parse_set *set)
 {
-	issue_link(lkg, /*lr*/false, pc->md, &pc->link[0]);
-	issue_link(lkg, /*lr*/true, pc->md, &pc->link[1]);
+	issue_link(lkg, /*lr*/0, pc, set);
+	issue_link(lkg, /*lr*/1, pc, set);
 }
 
 /**
@@ -757,7 +756,7 @@ static void list_links(Linkage lkg, const Parse_set * set, int index)
 		index -= n;
 	}
 	assert(pc != NULL, "walked off the end in list_links");
-	issue_links_for_choice(lkg, pc);
+	issue_links_for_choice(lkg, pc, set);
 	list_links(lkg, pc->set[0], index % pc->set[0]->count);
 	list_links(lkg, pc->set[1], index / pc->set[0]->count);
 }
@@ -790,7 +789,7 @@ static void list_random_links(Linkage lkg, unsigned int *rand_state,
 		}
 	}
 
-	issue_links_for_choice(lkg, pc);
+	issue_links_for_choice(lkg, pc, set);
 	list_random_links(lkg, rand_state, pc->set[0]);
 	list_random_links(lkg, rand_state, pc->set[1]);
 }

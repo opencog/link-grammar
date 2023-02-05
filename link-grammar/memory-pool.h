@@ -89,6 +89,7 @@ struct  Pool_desc_s
 
 	size_t issued_elements;     // Number of elements issued to users.
 	size_t alloced_elements;    // Issued plus free (unissued) elements.
+	size_t alloced_bytes;       // Total bytes, including padding, etc.
 
 	/* Flags that are used by pool_alloc(). */
 	bool zero_out;              // Zero out allocated elements.
@@ -180,7 +181,7 @@ static inline size_t pool_size(Pool_desc *mp)
 /// Total alloced bytes
 static inline size_t pool_bytes(Pool_desc *mp)
 {
-	if (mp) return (mp->alloced_elements * mp->block_size) / mp->num_elements;
+	if (mp) return mp->alloced_bytes;
 	return 0;
 }
 
