@@ -109,6 +109,7 @@ struct Parse_Options_s
 	                          no longer than this.  Default = 16 */
 	bool all_short;        /* If true, there can be no connectors that are exempt */
 	bool repeatable_rand;  /* Reset rand number gen after every parse. */
+	int  disjunct_limit;   /* Don't attempt parsing when too many disjuncts */
 
 	/* Options governing post-processing */
 	bool perform_pp_prune; /* Perform post-processing-based pruning TRUE */
