@@ -225,6 +225,7 @@ plot "pandp-full.dat" using 39:19 with points title "Pride Prejudice", \
      "dj-1500-full.dat" using 39:19 with points title "MST link-lim=1500", \
 		1e-6 * x with lines lw 2 title "1e-6 x"
 
+#     "dj-15000-full.dat" using 39:19 with points title "MST link-lim=15000", \
 unset xrange
 unset yrange
 # -----------
