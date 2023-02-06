@@ -169,7 +169,7 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		double cost = pair_cost(local, evpr);
 
 		// If the cost is too high, just skip this.
-		if (local->pair_cutoff <= cost)
+		if (local->pair_cutoff < cost)
 			continue;
 
 		// Get the cached link-name for this pair.

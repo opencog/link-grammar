@@ -230,9 +230,9 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
 	{
-		// Apprently, some sections are missing costs. This is
+		// Apparently, some sections are missing costs. This is
 		// most likey due to some data-processing bug, where the
-		// MI's were not recomputed. For nw, we will silently
+		// MI's were not recomputed. For now, we will silently
 		// ignore this issue, and assign a default to them.
 		double cost = local->cost_default;
 
@@ -246,7 +246,7 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 		}
 
 		// If the cost is too high, just skip this.
-		if (local->cost_cutoff <= cost)
+		if (local->cost_cutoff < cost)
 			continue;
 
 		Exp* andhead = nullptr;

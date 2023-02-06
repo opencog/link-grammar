@@ -186,25 +186,40 @@ bool as_open(Dictionary dict)
 		local->miformula = local->asp->add_atom(mifl);
 	}
 
+	// Rationale for these default values:
+	//
+	// Word-pair MI's only "make sense" when they are 4.0 or greater.
+	// The highest-possible MI depends on the dataset, but is roughly
+	// equal to log_2 of the number of word-pairs in the dataset. The
+	// MI for most "good" word-pairs will be in the 4 to 20 range.
+	//
+	// Multiplying by -0.25 gives them a cost of -1.0 or more negative.
+	// Setting the offset to 3.0 gives them a cost of 2.0 or less.
+	// This maps the MI interval [4,12] to [2,0] with MI's larger than
+	// 12 being mapped to negative costs (thus encouraging cycles).
+	//
+	// Setting the cutoff to 2.0 causes MI of less than 4 to be dropped.
+	// Setting the default assigns a default cost to pairs without MI.
+
 #define LDEF(NAME,DEF) ldef(dict, NAME, DEF)
 
 	local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
-	local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.2"));
-	local->cost_offset = atof(LDEF(COST_OFFSET_STRING, "0"));
-	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "6"));
-	local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.0"));
+	local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.25"));
+	local->cost_offset = atof(LDEF(COST_OFFSET_STRING, "3.0"));
+	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "2.0"));
+	local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.99"));
 
 	const char* prps = LDEF(PAIR_PREDICATE_STRING, "(BondNode \"ANY\")");
 	Handle prph = Sexpr::decode_atom(prps);
 	local->prp = local->asp->add_atom(prph);
 
 	local->pair_index = atoi(LDEF(PAIR_INDEX_STRING, "1"));
-	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.2"));
-	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "0"));
-	local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING, "6"));
-	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "1.0"));
+	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.25"));
+	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "3.0"));
+	local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING, "2.0"));
+	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "1.99"));
 
-	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "3.0"));
+	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
 
 	local->enable_sections = atoi(LDEF(ENABLE_SECTIONS_STRING, "1"));
 	local->extra_pairs = atoi(LDEF(EXTRA_PAIRS_STRING, "1"));
@@ -263,7 +278,7 @@ bool as_open(Dictionary dict)
 	}
 
 	// If a formula is in use, then we need to fetch the
-	// formula defintion (the miformula is just it's name;
+	// formula definition (the miformula is just it's name;
 	// its a DefinedProcedureNode)
 	if (local->miformula)
 	{

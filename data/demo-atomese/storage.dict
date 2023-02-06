@@ -68,23 +68,23 @@
 % "better", the more positive it is.  The LG costs, however, are
 % "better" when they are smaller (less positive). Thus, a sign-flip
 % is called for.
-#define cost-scale -0.5;
-#define cost-offset 0.0;
+#define cost-scale -0.25;
+#define cost-offset 3.0;
 
 % Sections whose computed cost is greater than this will not be added
 % to the local dictionary.
-#define cost-cutoff 8.0;
+#define cost-cutoff 2.0;
 
 % Sections with a missing cost will be assigned this default. To ignore
 % sections with a missing cost, set it to some value greater than
-% `cost-max`.
-#define cost-default 2.0;
+% `cost-cutoff`.
+#define cost-default 1.99;
 
 % Disjuncts with a cost larger than this will not be used during
 % parsing. This can be over-ridden with the !cost-max parser option.
 % This applies both to the available disjuncts, and the ones created
 % dynamically, from pairs.
-% #define max-disjunct-cost 10;
+% #define max-disjunct-cost 3;
 
 % -----------------------
 % If disjuncts are not directly available, they can be created on the
@@ -107,10 +107,24 @@
 % Same as above, but for word-pairs. Note the different key!
 #define pair-key "(Predicate "*-Mutual Info Key-*")";
 #define pair-index 1;
-#define pair-scale -0.5;
-#define pair-offset 0.0;
-#define pair-cutoff 8.0;
-#define pair-default 2.0;
+
+% Word-pair MI's only "make sense" when they are 4.0 or greater.
+% The highest-possible MI depends on the dataset, but is roughly
+% equal to log_2 of the number of word-pairs in the dataset. The
+% MI for most "good" word-pairs will be in the 4 to 20 range.
+% Use this to provide a default mapping.
+%
+% Multiplying by -0.25 gives them a cost of -1.0 or more negative.
+% Setting the offset to 3.0 gives them a cost of 2.0 or less.
+% This maps the MI interval [4,12] to [2,0] with MI's larger than
+% 12 being mapped to negative costs (thus encouraging cycles).
+%
+% Setting the cutoff to 2.0 causes MI of less than 4 to be dropped.
+% Setting the default assigns a default cost to pairs without MI.
+#define pair-scale -0.25;
+#define pair-offset 3.0;
+#define pair-cutoff 2.0;
+#define pair-default 1.99;
 
 % Keep in mind that the parser ranks parses from lowest to highest cost.
 % If word-pair links have a negative cost, the parser is incentivized to
