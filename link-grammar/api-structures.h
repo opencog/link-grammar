@@ -52,9 +52,16 @@
 /* Performance tuning.
  * For short sentences, encoding takes more resources than it saves. If
  * this overhead is improved, this limit can be set lower.
+ *
  * Update: For a consistent linkage deduplication, encoding (which
  * included tracon sharing) should always be done. And now the overhead
- * is negligible. */
+ * is negligible.
+ *
+ * Note: setting this to non-zero values disables some of the more
+ * subtle tracon encoding code, and thus can be used to create a
+ * baseline parse, skipping that code. This can be setin with the
+ * test_enabled("min-len-encoding") flag (see api.c)
+ */
 #define SENTENCE_MIN_LENGTH_TRAILING_HASH 0
 
 /* Pruning per null-count is costly for sentences whose parsing time
