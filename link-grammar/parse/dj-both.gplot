@@ -165,6 +165,8 @@ plot "pandp-full.dat" using 5:17 with points title "Pride Prejudice parse", \
      "pandp-full.dat" using 5:19 with points title "Pride Prejudice extract", \
      "dj-150-full.dat" using 5:17 with points title "MST link-lim=150 parse",\
      "dj-150-full.dat" using 5:19 with points title "MST link-lim=150 extract",\
+     "dj-1500-full.dat" using 5:17 with points title "MST link-lim=1500 parse",\
+     "dj-1500-full.dat" using 5:19 with points title "MST link-lim=1500 extract",\
      (1e-6 * x**1.5) with lines lw 2 title "1e-6 (#dj)^{3/2}"
 
 unset xrange
