@@ -173,6 +173,22 @@ unset xrange
 unset yrange
 # -----------
 
+set out 'dj-both-ratio.png'
+set title "Parse Time Ratio vs Num Disjuncts"
+set ylabel "Parse Time Ratio"
+set logscale x
+set logscale y
+set xrange [100:]
+set yrange [0.2:10]
+set xlabel "Number of Disjuncts"
+plot "pandp-full.dat" using 5:($19 / $17) with points title "Pride Prejudice", \
+     "dj-150-full.dat" using 5:($19 / $17) with points title "MST link-lim=150",\
+     "dj-1500-full.dat" using 5:($19 / $17) with points title "MST link-lim=1500"
+
+unset xrange
+unset yrange
+# -----------
+
 set out 'exp-both-cho-act.png'
 set title "Used Parse choices vs Number of expressions"
 set ylabel "Number of Parse choice used"
