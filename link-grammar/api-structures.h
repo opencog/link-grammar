@@ -51,8 +51,18 @@
 
 /* Performance tuning.
  * For short sentences, encoding takes more resources than it saves. If
- * this overhead is improved, this limit can be set lower. */
-#define SENTENCE_MIN_LENGTH_TRAILING_HASH 6
+ * this overhead is improved, this limit can be set lower.
+ *
+ * Update: For a consistent linkage deduplication, encoding (which
+ * included tracon sharing) should always be done. And now the overhead
+ * is negligible.
+ *
+ * Note: setting this to non-zero values disables some of the more
+ * subtle tracon encoding code, and thus can be used to create a
+ * baseline parse, skipping that code. This can be setin with the
+ * test_enabled("min-len-encoding") flag (see api.c)
+ */
+#define SENTENCE_MIN_LENGTH_TRAILING_HASH 0
 
 /* Pruning per null-count is costly for sentences whose parsing time
  * is relatively small. If a better pruning per null-count is implemented,
@@ -106,6 +116,7 @@ struct Parse_Options_s
 	                          no longer than this.  Default = 16 */
 	bool all_short;        /* If true, there can be no connectors that are exempt */
 	bool repeatable_rand;  /* Reset rand number gen after every parse. */
+	int  disjunct_limit;   /* Don't attempt parsing when too many disjuncts */
 
 	/* Options governing post-processing */
 	bool perform_pp_prune; /* Perform post-processing-based pruning TRUE */
