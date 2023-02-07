@@ -39,19 +39,19 @@ using namespace opencog;
 #define STORAGE_NODE_STRING "storage-node"
 #define COST_KEY_STRING "cost-key"
 #define COST_INDEX_STRING "cost-index"
-#define COST_SCALE_STRING "cost-scale"
-#define COST_OFFSET_STRING "cost-offset"
 #define COST_CUTOFF_STRING "cost-cutoff"
 #define COST_DEFAULT_STRING "cost-default"
+#define COST_SCALE_STRING "cost-scale"
+#define COST_OFFSET_STRING "cost-offset"
 
 #define PAIR_PREDICATE_STRING "pair-predicate"
 #define PAIR_KEY_STRING "pair-key"
 #define PAIR_INDEX_STRING "pair-index"
 #define PAIR_FORMULA_STRING "pair-formula"
-#define PAIR_SCALE_STRING "pair-scale"
-#define PAIR_OFFSET_STRING "pair-offset"
 #define PAIR_CUTOFF_STRING "pair-cutoff"
 #define PAIR_DEFAULT_STRING "pair-default"
+#define PAIR_SCALE_STRING "pair-scale"
+#define PAIR_OFFSET_STRING "pair-offset"
 
 #define ANY_DEFAULT_STRING "any-default"
 #define ENABLE_SECTIONS_STRING "enable-sections"
@@ -187,10 +187,10 @@ bool as_open(Dictionary dict)
 		local->miks = local->asp->add_atom(mikh);
 
 		local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
+		local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "4.0"));
+		local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "4.01"));
 		local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.25"));
 		local->cost_offset = atof(LDEF(COST_OFFSET_STRING, "3.0"));
-		local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "2.0"));
-		local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.99"));
 		local->extra_pairs = atoi(LDEF(EXTRA_PAIRS_STRING, "1"));
 		local->extra_any = atoi(LDEF(EXTRA_ANY_STRING, "1"));
 	}
@@ -223,10 +223,15 @@ bool as_open(Dictionary dict)
 	local->prp = local->asp->add_atom(prph);
 
 	local->pair_index = atoi(LDEF(PAIR_INDEX_STRING, "1"));
+	local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING, "4.0"));
+	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "4.01"));
 	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.25"));
 	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "3.0"));
-	local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING, "2.0"));
-	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "1.99"));
+
+	// The pair code applies the cutoff after scaling, not before.
+	// So we rejigger it here, so that works.
+	local->pair_cutoff =
+		local->pair_scale * local->pair_cutoff + local->pair_offset;
 
 	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
 

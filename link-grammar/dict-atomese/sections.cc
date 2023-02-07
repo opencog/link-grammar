@@ -230,23 +230,22 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
 	for (const Handle& sect: sects)
 	{
-		// Apparently, some sections are missing costs. This is
+		// Apparently, some sections are missing MI's. This is
 		// most likey due to some data-processing bug, where the
 		// MI's were not recomputed. For now, we will silently
 		// ignore this issue, and assign a default to them.
-		double cost = local->cost_default;
+		double mi = local->cost_default;
 
 		const ValuePtr& mivp = sect->getValue(local->miks);
 		if (mivp)
 		{
 			// MI is the second entry in the vector.
 			const FloatValuePtr& fmivp = FloatValueCast(mivp);
-			double mi = fmivp->value()[local->cost_index];
-			cost = (local->cost_scale * mi) + local->cost_offset;
+			mi = fmivp->value()[local->cost_index];
 		}
 
-		// If the cost is too high, just skip this.
-		if (local->cost_cutoff < cost)
+		// If the MI is too low, just skip this.
+		if (mi < local->cost_cutoff)
 			continue;
 
 		Exp* andhead = nullptr;
@@ -303,6 +302,7 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 			andhead = tmp;
 		}
 
+		double cost = (local->cost_scale * mi) + local->cost_offset;
 		andhead->cost = cost;
 
 		// Save the exp-section pairing in the AtomSpace.
