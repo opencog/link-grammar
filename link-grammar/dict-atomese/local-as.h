@@ -18,26 +18,26 @@ public:
 	std::mutex dict_mutex; // Avoid corruption of Dictionary
 	bool using_external_as;
 	AtomSpacePtr asp;
-	StorageNodePtr stnp; // Might be nullptr
-	Handle linkp;     // (Predicate "*-LG link string-*")
-	Handle prk;       // (Predicate "*-fetched-pair-*")
+	StorageNodePtr stnp;   // Might be nullptr
+	Handle linkp;          // (Predicate "*-LG link string-*")
+	Handle prk;            // (Predicate "*-fetched-pair-*")
 
 	// Sections
-	Handle miks;      // (Predicate "*-Mutual Info Key cover-section")
-	int cost_index;   // Offset into the FloatValue
+	Handle miks;           // (Predicate "*-Mutual Info Key cover-section")
+	int cost_index;        // Offset into the FloatValue
+	double cost_cutoff;    // MI below this is rejected
 	double cost_scale;
 	double cost_offset;
-	double cost_cutoff;
 	double cost_default;
 
 	// Word-pairs
-	Handle prp;       // (Predicate "*-word pair-*")
-	Handle mikey;     // (Predicate "*-Mutual Info Key-*")
-	Handle miformula; // (DefinedProcedure "*-dynamic MI ANY")
-	int pair_index;   // Offset into the FloatValue
+	Handle prp;            // (Predicate "*-word pair-*")
+	Handle mikey;          // (Predicate "*-Mutual Info Key-*")
+	Handle miformula;      // (DefinedProcedure "*-dynamic MI ANY")
+	int pair_index;        // Offset into the FloatValue
+	double pair_cutoff;    // MI below this is rejected
 	double pair_scale;
 	double pair_offset;
-	double pair_cutoff;
 	double pair_default;
 
 	// Any link type

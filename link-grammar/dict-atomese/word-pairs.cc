@@ -115,9 +115,9 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 /// Get the word-pair cost. It's either a static cost, located at
 /// `mikey`, or it's a dynamically-computed cost, built from a
 /// formula at `miformula`.
-static double pair_cost(Local* local, const Handle& evpr)
+static double pair_mi(Local* local, const Handle& evpr)
 {
-	double cost = local->pair_default;
+	double mi = local->pair_default;
 	if (local->mikey)
 	{
 		const ValuePtr& mivp = evpr->getValue(local->mikey);
@@ -125,14 +125,13 @@ static double pair_cost(Local* local, const Handle& evpr)
 		{
 			// MI is the second entry in the vector.
 			const FloatValuePtr& fmivp = FloatValueCast(mivp);
-			double mi = fmivp->value()[local->pair_index];
-			cost = (local->pair_scale * mi) + local->pair_offset;
+			mi = fmivp->value()[local->pair_index];
 		}
-		return cost;
+		return mi;
 	}
 
 	if (nullptr == local->miformula)
-		return cost;
+		return mi;
 
 	// The formula expects a (ListLink left right) and that
 	// is exactly the second Atom in the outgoing set of evpr.
@@ -145,10 +144,9 @@ static double pair_cost(Local* local, const Handle& evpr)
 
 	// Same calculation as above.
 	const FloatValuePtr& fmivp = FloatValueCast(midy);
-	double mi = fmivp->value()[local->pair_index];
-	cost = (local->pair_scale * mi) + local->pair_offset;
+	mi = fmivp->value()[local->pair_index];
 
-	return cost;
+	return mi;
 }
 
 /// Create a list of connectors, one for each available word pair
@@ -167,10 +165,10 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
 		if (nullptr == evpr) continue;
 
-		double cost = pair_cost(local, evpr);
+		double mi = pair_mi(local, evpr);
 
-		// If the cost is too high, just skip this.
-		if (local->pair_cutoff < cost)
+		// If the MI is too low, just skip this.
+		if (mi < local->pair_cutoff)
 			continue;
 
 		// Get the cached link-name for this pair.
@@ -184,6 +182,7 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		Exp* eee = make_connector_node(dict,
 			dict->Exp_pool, slnk.c_str(), cdir, false);
 
+		double cost = (local->pair_scale * mi) + local->pair_offset;
 		eee->cost = cost;
 
 		or_enchain(dict, orhead, eee);
