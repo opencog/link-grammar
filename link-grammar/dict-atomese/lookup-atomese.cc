@@ -228,11 +228,6 @@ bool as_open(Dictionary dict)
 	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.25"));
 	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "3.0"));
 
-	// The pair code applies the cutoff after scaling, not before.
-	// So we rejigger it here, so that works.
-	local->pair_cutoff =
-		local->pair_scale * local->pair_cutoff + local->pair_offset;
-
 	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
 
 	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
