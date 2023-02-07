@@ -203,11 +203,17 @@ bool as_open(Dictionary dict)
 
 #define LDEF(NAME,DEF) ldef(dict, NAME, DEF)
 
-	local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
-	local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.25"));
-	local->cost_offset = atof(LDEF(COST_OFFSET_STRING, "3.0"));
-	local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "2.0"));
-	local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.99"));
+	local->enable_sections = atoi(LDEF(ENABLE_SECTIONS_STRING, "1"));
+	if (local->enable_sections)
+	{
+		local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
+		local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.25"));
+		local->cost_offset = atof(LDEF(COST_OFFSET_STRING, "3.0"));
+		local->cost_cutoff = atof(LDEF(COST_CUTOFF_STRING, "2.0"));
+		local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.99"));
+		local->extra_pairs = atoi(LDEF(EXTRA_PAIRS_STRING, "1"));
+		local->extra_any = atoi(LDEF(EXTRA_ANY_STRING, "1"));
+	}
 
 	const char* prps = LDEF(PAIR_PREDICATE_STRING, "(BondNode \"ANY\")");
 	Handle prph = Sexpr::decode_atom(prps);
@@ -220,10 +226,6 @@ bool as_open(Dictionary dict)
 	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "1.99"));
 
 	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
-
-	local->enable_sections = atoi(LDEF(ENABLE_SECTIONS_STRING, "1"));
-	local->extra_pairs = atoi(LDEF(EXTRA_PAIRS_STRING, "1"));
-	local->extra_any = atoi(LDEF(EXTRA_ANY_STRING, "1"));
 
 	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
 	local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "1"));
