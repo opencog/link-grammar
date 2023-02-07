@@ -70,12 +70,13 @@ static bool have_pairs(Local* local, const Handle& germ)
 	for (const Handle& rawpr : rprs)
 	{
 		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
-		if (evpr)
-		{
-			// Verify that its an actual word-pair.
-			if (evpr->getOutgoingAtom(0) == local->prp)
-				return true;
-		}
+		if (nullptr == evpr) continue;
+
+		// The lookup will discard pairs with too high a cost.
+		double cost = pair_cost(local, evpr);
+		if (local->pair_cutoff < cost) continue;
+
+		return true;
 	}
 
 	return false;
