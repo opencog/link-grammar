@@ -875,17 +875,15 @@ const char ** linkage_get_words(const Linkage linkage)
 
 const char * linkage_get_disjunct_str(const Linkage linkage, WordIdx w)
 {
-	Disjunct *dj;
-
 	if (NULL == linkage) return "";
-	if (NULL == linkage->disjunct_list_str)
-		lg_compute_disjunct_strings(linkage);
-
 	if (linkage->num_words <= w) return NULL; /* bounds-check */
 
 	/* dj will be null if the word wasn't used in the parse. */
-	dj = linkage->chosen_disjuncts[w];
+	Disjunct *dj = linkage->chosen_disjuncts[w];
 	if (NULL == dj) return "";
+
+	if (NULL == linkage->disjunct_list_str)
+		lg_compute_disjunct_strings(linkage);
 
 	return linkage->disjunct_list_str[w];
 }
