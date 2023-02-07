@@ -354,14 +354,14 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 		Link * plk = &lpv->link_array[li];
 		Link * nlk = &lnx->link_array[li];
 
-		if (plk->lc != nlk->lc)
+		if (plk->lc != nlk->lc && plk->lc->desc != nlk->lc->desc)
 		{
 			int diff = strcmp(plk->lc->desc->string, nlk->lc->desc->string);
 			if (diff) return diff;
 			int md = plk->lc->multi - nlk->lc->multi;
 			if (md) return md;
 		}
-		if (plk->rc != nlk->rc)
+		if (plk->rc != nlk->rc && plk->rc->desc != nlk->rc->desc)
 		{
 			int diff = strcmp(plk->rc->desc->string, nlk->rc->desc->string);
 			if (diff) return diff;
