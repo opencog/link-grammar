@@ -477,12 +477,15 @@ void count_disjuncts_and_connectors(Sentence sent, unsigned int *dca,
 
 	for (WordIdx w = 0; w < sent->length; w++)
 	{
+		unsigned int ndw = 0;
 		for (Disjunct *d = sent->word[w].d; d != NULL; d = d->next)
 		{
-			dcnt++;
+			ndw++;
 			for (Connector *c = d->left; c != NULL; c = c->next) ccnt++;
 			for (Connector *c = d->right; c !=NULL; c = c->next) ccnt++;
 		}
+		sent->word[w].num_disjuncts = ndw;
+		dcnt += ndw;
 	}
 
 	*cca = ccnt;

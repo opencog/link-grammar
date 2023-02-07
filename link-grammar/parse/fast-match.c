@@ -246,6 +246,21 @@ static size_t match_list_pool_size_estimate(Sentence sent)
 	size_t mlpse = 2 * expsz;
 	if (mlpse < 4090) mlpse = 4090;
 
+	// Code below does a pool_alloc_vec(match_list_size) and we want to
+	// ensure that this estimate is greater than the match list size.
+	// The match list size can never be larger than the number of
+	// disjuncts, so the pool_alloc_vec() will never fail if we do this:
+	size_t maxndj = 0;
+	for (WordIdx w = 0; w < sent->length; w++)
+		if (maxndj < sent->word[w].num_disjuncts)
+			maxndj = sent->word[w].num_disjuncts;
+
+	// Generation can have millions of disjuncts on the wild-cards.
+	// But the match list will never get that big.
+	if (512*1024 < maxndj) maxndj = 512*1024;
+
+	if (mlpse < maxndj) mlpse = maxndj;
+
 	return mlpse;
 }
 
