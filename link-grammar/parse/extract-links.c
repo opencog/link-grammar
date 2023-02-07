@@ -141,11 +141,13 @@ static void record_choice(
 static int estimate_log2_table_size(Sentence sent)
 {
 	/* Size estimate based on measurements (see #1402) */
-	double lscale = log2(sent->num_disjuncts) - 0.5 * log2(sent->length);
+	double lscale = log2(sent->num_disjuncts + 1.0) - 0.5 * log2(sent->length);
 	double lo_est = lscale + 4.0;
 	double hi_est = 1.5 * lscale;
 	int log2_table_size = floor(fmax(lo_est, hi_est));
 
+	// Enforce min and max sizes.
+	if (log2_table_size < 4) log2_table_size = 4;
 	if (24 < log2_table_size) log2_table_size = 24;
 
 #if LATER
