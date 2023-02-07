@@ -160,33 +160,8 @@ bool as_open(Dictionary dict)
 	// Internal-use only. Do we have this pair yet?
 	local->prk = local->asp->add_node(PREDICATE_NODE, "*-fetched-pair-*");
 
-	// Costs are assumed to be minus the MI located at some key.
-	const char* miks = ldef(dict, COST_KEY_STRING,
-		"(Predicate \"*-Mutual Info Key cover-section\")");
-	Handle mikh = Sexpr::decode_atom(miks);
-	local->miks = local->asp->add_atom(mikh);
-
-	// Costs might be static, precomputed, located at a given key.
-	// Or they may be dynamic, coming from a formula.
-	const char* mikp = get_dict_define(dict, PAIR_KEY_STRING);
-	const char* mifm = get_dict_define(dict, PAIR_FORMULA_STRING);
-	if (mikp and mifm)
-		prt_error("Error: Only one of `pair-key` or `pair-formula` allowed!\n");
-	else if (nullptr == mikp and nullptr == mifm)
-		prt_error("Error: One of `pair-key` or `pair-formula` must be given!\n");
-
-	if (mikp)
-	{
-		Handle miki = Sexpr::decode_atom(mikp);
-		local->mikey = local->asp->add_atom(miki);
-	}
-	if (mifm)
-	{
-		Handle mifl = Sexpr::decode_atom(mifm);
-		local->miformula = local->asp->add_atom(mifl);
-	}
-
-	// Rationale for these default values:
+	// -----------------------------------------------------
+	// Rationale for default values for costs:
 	//
 	// Word-pair MI's only "make sense" when they are 4.0 or greater.
 	// The highest-possible MI depends on the dataset, but is roughly
@@ -206,6 +181,11 @@ bool as_open(Dictionary dict)
 	local->enable_sections = atoi(LDEF(ENABLE_SECTIONS_STRING, "1"));
 	if (local->enable_sections)
 	{
+		const char* miks = ldef(dict, COST_KEY_STRING,
+			"(Predicate \"*-Mutual Info Key cover-section\")");
+		Handle mikh = Sexpr::decode_atom(miks);
+		local->miks = local->asp->add_atom(mikh);
+
 		local->cost_index = atoi(LDEF(COST_INDEX_STRING, "1"));
 		local->cost_scale = atof(LDEF(COST_SCALE_STRING, "-0.25"));
 		local->cost_offset = atof(LDEF(COST_OFFSET_STRING, "3.0"));
@@ -213,6 +193,29 @@ bool as_open(Dictionary dict)
 		local->cost_default = atof(LDEF(COST_DEFAULT_STRING, "1.99"));
 		local->extra_pairs = atoi(LDEF(EXTRA_PAIRS_STRING, "1"));
 		local->extra_any = atoi(LDEF(EXTRA_ANY_STRING, "1"));
+	}
+
+	// -----------------------------------------------------
+	// Pair stuff.
+
+	// Costs might be static, precomputed, located at a given key.
+	// Or they may be dynamic, coming from a formula.
+	const char* mikp = get_dict_define(dict, PAIR_KEY_STRING);
+	const char* mifm = get_dict_define(dict, PAIR_FORMULA_STRING);
+	if (mikp and mifm)
+		prt_error("Error: Only one of `pair-key` or `pair-formula` allowed!\n");
+	else if (nullptr == mikp and nullptr == mifm)
+		prt_error("Error: One of `pair-key` or `pair-formula` must be given!\n");
+
+	if (mikp)
+	{
+		Handle miki = Sexpr::decode_atom(mikp);
+		local->mikey = local->asp->add_atom(miki);
+	}
+	if (mifm)
+	{
+		Handle mifl = Sexpr::decode_atom(mifm);
+		local->miformula = local->asp->add_atom(mifl);
 	}
 
 	const char* prps = LDEF(PAIR_PREDICATE_STRING, "(BondNode \"ANY\")");
