@@ -41,9 +41,11 @@ struct Word_struct
 {
 	const char *unsplit_word;
 
-	X_node * x;          /* Sentence starts out with these, */
-	Disjunct * d;        /* eventually these get generated. */
-	bool optional;       /* Linkage is optional. */
+	X_node * x;             /* Sentence starts out with these, */
+	Disjunct * d;           /* eventually these get generated. */
+	uint32_t num_disjuncts; /* Length of above */
+
+	bool optional;          /* Linkage is optional. */
 
 	const char **alternatives;
 };
