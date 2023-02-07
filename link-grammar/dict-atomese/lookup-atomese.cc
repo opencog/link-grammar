@@ -194,44 +194,53 @@ bool as_open(Dictionary dict)
 		local->extra_pairs = atoi(LDEF(EXTRA_PAIRS_STRING, "1"));
 		local->extra_any = atoi(LDEF(EXTRA_ANY_STRING, "1"));
 	}
+	else
+	{
+		local->extra_pairs = 0;
+	}
 
 	// -----------------------------------------------------
 	// Pair stuff.
 
-	// Costs might be static, precomputed, located at a given key.
-	// Or they may be dynamic, coming from a formula.
-	const char* mikp = get_dict_define(dict, PAIR_KEY_STRING);
-	const char* mifm = get_dict_define(dict, PAIR_FORMULA_STRING);
-	if (mikp and mifm)
-		prt_error("Error: Only one of `pair-key` or `pair-formula` allowed!\n");
-	else if (nullptr == mikp and nullptr == mifm)
-		prt_error("Error: One of `pair-key` or `pair-formula` must be given!\n");
-
-	if (mikp)
-	{
-		Handle miki = Sexpr::decode_atom(mikp);
-		local->mikey = local->asp->add_atom(miki);
-	}
-	if (mifm)
-	{
-		Handle mifl = Sexpr::decode_atom(mifm);
-		local->miformula = local->asp->add_atom(mifl);
-	}
-
-	const char* prps = LDEF(PAIR_PREDICATE_STRING, "(BondNode \"ANY\")");
-	Handle prph = Sexpr::decode_atom(prps);
-	local->prp = local->asp->add_atom(prph);
-
-	local->pair_index = atoi(LDEF(PAIR_INDEX_STRING, "1"));
-	local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING, "4.0"));
-	local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "4.01"));
-	local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.25"));
-	local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "3.0"));
-
-	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
-
 	local->pair_disjuncts = atoi(LDEF(PAIR_DISJUNCTS_STRING, "4"));
-	local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "1"));
+
+	// Setting pair-disjuncts to zero disables pair prococessing
+	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
+	{
+		// Costs might be static, precomputed, located at a given key.
+		// Or they may be dynamic, coming from a formula.
+		const char* mikp = get_dict_define(dict, PAIR_KEY_STRING);
+		const char* mifm = get_dict_define(dict, PAIR_FORMULA_STRING);
+		if (mikp and mifm)
+			prt_error("Error: Only one of `pair-key` or `pair-formula` allowed!\n");
+		else if (nullptr == mikp and nullptr == mifm)
+			prt_error("Error: One of `pair-key` or `pair-formula` must be given!\n");
+
+		if (mikp)
+		{
+			Handle miki = Sexpr::decode_atom(mikp);
+			local->mikey = local->asp->add_atom(miki);
+		}
+		if (mifm)
+		{
+			Handle mifl = Sexpr::decode_atom(mifm);
+			local->miformula = local->asp->add_atom(mifl);
+		}
+
+		const char* prps = LDEF(PAIR_PREDICATE_STRING, "(BondNode \"ANY\")");
+		Handle prph = Sexpr::decode_atom(prps);
+		local->prp = local->asp->add_atom(prph);
+
+		local->pair_index = atoi(LDEF(PAIR_INDEX_STRING, "1"));
+		local->pair_cutoff = atof(LDEF(PAIR_CUTOFF_STRING, "4.0"));
+		local->pair_default = atof(LDEF(PAIR_DEFAULT_STRING, "4.01"));
+		local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.25"));
+		local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "3.0"));
+
+		local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
+		local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "1"));
+	}
+
 	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "0"));
 
 	local->enable_unknown_word = atoi(LDEF(ENABLE_UNKNOWN_WORD_STRING, "1"));
