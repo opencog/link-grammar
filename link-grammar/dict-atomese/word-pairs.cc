@@ -54,64 +54,6 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 	return cnt;
 }
 
-/// Return true if there are any word-pairs for `germ`.
-/// The will automatically fetch from storage, as needed.
-static bool have_pairs(Local* local, const Handle& germ)
-{
-	if (need_pair_fetch(local, germ))
-		fetch_pairs(local, germ);
-
-	const AtomSpacePtr& asp = local->asp;
-	const Handle& hpr = local->prp; // (Predicate "word-pair")
-
-	// Are there any pairs in the local AtomSpace?
-	// If there's at least one, just return `true`.
-	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
-	for (const Handle& rawpr : rprs)
-	{
-		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
-		if (nullptr == evpr) continue;
-
-		// The lookup will discard pairs with too high a cost.
-		double cost = pair_cost(local, evpr);
-		if (local->pair_cutoff < cost) continue;
-
-		return true;
-	}
-
-	return false;
-}
-
-/// Return true if the given word occurs in some word-pair, else return
-/// false. As a side-effect, word-pairs are loaded from storage.
-bool pair_boolean_lookup(Dictionary dict, const char *s)
-{
-	Local* local = (Local*) (dict->as_server);
-	Handle wrd = local->asp->add_node(WORD_NODE, s);
-
-	// Are there any pairs that contain this word?
-	bool have_word = have_pairs(local, wrd);
-
-	// Does this word belong to any classes?
-	size_t nclass = wrd->getIncomingSetSizeByType(MEMBER_LINK);
-	if (0 == nclass and local->stnp)
-	{
-		local->stnp->fetch_incoming_by_type(wrd, MEMBER_LINK);
-		local->stnp->barrier();
-	}
-
-	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
-	{
-		const Handle& wcl = memb->getOutgoingAtom(1);
-		if (WORD_CLASS_NODE != wcl->get_type()) continue;
-
-		// If there's at least one, return it.
-		if (have_pairs(local, wcl)) return true;
-	}
-
-	return have_word;
-}
-
 /// Get the word-pair cost. It's either a static cost, located at
 /// `mikey`, or it's a dynamically-computed cost, built from a
 /// formula at `miformula`.
@@ -147,6 +89,64 @@ static double pair_mi(Local* local, const Handle& evpr)
 	mi = fmivp->value()[local->pair_index];
 
 	return mi;
+}
+
+/// Return true if there are any word-pairs for `germ`.
+/// The will automatically fetch from storage, as needed.
+static bool have_pairs(Local* local, const Handle& germ)
+{
+	if (need_pair_fetch(local, germ))
+		fetch_pairs(local, germ);
+
+	const AtomSpacePtr& asp = local->asp;
+	const Handle& hpr = local->prp; // (Predicate "word-pair")
+
+	// Are there any pairs in the local AtomSpace?
+	// If there's at least one, just return `true`.
+	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
+	for (const Handle& rawpr : rprs)
+	{
+		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
+		if (nullptr == evpr) continue;
+
+		// The lookup will discard pairs with too low an MI.
+		double mi = pair_mi(local, evpr);
+		if (mi < local->pair_cutoff) continue;
+
+		return true;
+	}
+
+	return false;
+}
+
+/// Return true if the given word occurs in some word-pair, else return
+/// false. As a side-effect, word-pairs are loaded from storage.
+bool pair_boolean_lookup(Dictionary dict, const char *s)
+{
+	Local* local = (Local*) (dict->as_server);
+	Handle wrd = local->asp->add_node(WORD_NODE, s);
+
+	// Are there any pairs that contain this word?
+	bool have_word = have_pairs(local, wrd);
+
+	// Does this word belong to any classes?
+	size_t nclass = wrd->getIncomingSetSizeByType(MEMBER_LINK);
+	if (0 == nclass and local->stnp)
+	{
+		local->stnp->fetch_incoming_by_type(wrd, MEMBER_LINK);
+		local->stnp->barrier();
+	}
+
+	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+	{
+		const Handle& wcl = memb->getOutgoingAtom(1);
+		if (WORD_CLASS_NODE != wcl->get_type()) continue;
+
+		// If there's at least one, return it.
+		if (have_pairs(local, wcl)) return true;
+	}
+
+	return have_word;
 }
 
 /// Create a list of connectors, one for each available word pair
