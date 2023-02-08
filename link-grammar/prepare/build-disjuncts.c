@@ -315,11 +315,9 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
                                   const gword_set *gs, float cost_cutoff,
                                   Parse_Options opts)
 {
-	Clause *c;
-	Disjunct * dis;
 	clause_context ct = { 0 };
-
 	ct.cost_cutoff = cost_cutoff;
+
 	if (unlikely(sent->Clause_pool == NULL))
 	{
 		ct.Clause_pool = pool_new(__func__, "Clause",
@@ -339,9 +337,9 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	}
 
 	// printf("%s\n", lg_exp_stringify(exp));
-	c = build_clause(exp, &ct, NULL);
+	Clause *c = build_clause(exp, &ct, NULL);
 	// print_clause_list(c);
-	dis = build_disjunct(sent, c, word, gs, cost_cutoff, opts);
+	Disjunct *dis = build_disjunct(sent, c, word, gs, cost_cutoff, opts);
 	// print_disjunct_list(dis);
 	pool_reuse(ct.Clause_pool);
 	pool_reuse(ct.Tconnector_pool);
