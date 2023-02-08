@@ -23,6 +23,7 @@
 
 extern "C" {
 #include "../link-includes.h"              // For Dictionary
+#include "../api-structures.h"             // For Sentence_s
 #include "../dict-common/dict-common.h"    // for Dictionary_s
 #include "../dict-common/dict-internals.h" // for dict_node_new()
 #include "../dict-common/dict-utils.h"     // for size_of_expression()
@@ -342,6 +343,8 @@ void as_close(Dictionary dict)
 
 void as_start_lookup(Dictionary dict, Sentence sent)
 {
+	lgdebug(D_USER_INFO, "Atomese: Start dictionary lookup for >>%s<<\n",
+		sent->orig_sentence);
 }
 
 void as_end_lookup(Dictionary dict, Sentence sent)
@@ -351,6 +354,9 @@ void as_end_lookup(Dictionary dict, Sentence sent)
 
 	// Deal with any new connector descriptors that have arrived.
 	condesc_setup(dict);
+
+	lgdebug(D_USER_INFO, "Atomese: Finish dictionary lookup for >>%s<<\n",
+		sent->orig_sentence);
 }
 
 /// Return true if the given word can be found in the dictionary,
@@ -360,8 +366,11 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	Local* local = (Local*) (dict->as_server);
 	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
-	bool found = dict_node_exists_lookup(dict, s);
-	if (found) return true;
+	if (dict_node_exists_lookup(dict, s))
+	{
+		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
+		return true;
+	}
 
 	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))
 		return true;
@@ -369,16 +378,20 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
 
-	if (local->enable_sections)
-		found = section_boolean_lookup(dict, s);
-
-	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
+	if (local->enable_sections and section_boolean_lookup(dict, s))
 	{
-		bool have_pairs = pair_boolean_lookup(dict, s);
-		found = found or have_pairs;
+		lgdebug(D_USER_INFO, "Atomese: Found in section: >>%s<<\n", s);
+		return true;
 	}
 
-	return found;
+	if ((0 < local->pair_disjuncts or 0 < local->extra_pairs) and
+	    pair_boolean_lookup(dict, s))
+	{
+		lgdebug(D_USER_INFO, "Atomese: Found in pairs: >>%s<<\n", s);
+		return true;
+	}
+
+	return false;
 }
 
 // ===============================================================
@@ -553,7 +566,11 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	// the cache.
 	Dict_node* dn = dict_node_lookup(dict, s);
 
-	if (dn) return dn;
+	if (dn)
+	{
+		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
+		return dn;
+	}
 
 	const char* ssc = string_set_add(s, dict->string_set);
 
@@ -593,6 +610,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	if (nullptr == exp)
 		return nullptr;
 
+	lgdebug(D_USER_INFO, "Atomese: Created expressions for >>%s<<\n", s);
 	return make_dn(dict, exp, ssc);
 }
 

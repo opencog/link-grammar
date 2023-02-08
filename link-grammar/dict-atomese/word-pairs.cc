@@ -51,6 +51,8 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 		local->stnp->fetch_incoming_by_type(rawpr, EVALUATION_LINK);
 		cnt++;
 	}
+	lgdebug(D_USER_INFO, "Atomese: Fetched %lu word-pairs for >>%s<<\n",
+		cnt, germ->get_name().c_str());
 	return cnt;
 }
 
@@ -127,7 +129,7 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
 	// Are there any pairs that contain this word?
-	bool have_word = have_pairs(local, wrd);
+	if (have_pairs(local, wrd)) return true;
 
 	// Does this word belong to any classes?
 	size_t nclass = wrd->getIncomingSetSizeByType(MEMBER_LINK);
@@ -146,7 +148,7 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 		if (have_pairs(local, wcl)) return true;
 	}
 
-	return have_word;
+	return false;
 }
 
 /// Create a list of connectors, one for each available word pair
@@ -159,6 +161,7 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 
 	const Handle& hpr = local->prp; // (Predicate "pair")
 
+	size_t cnt = 0;
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
 	{
@@ -186,7 +189,12 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		eee->cost = cost;
 
 		or_enchain(dict, orhead, eee);
+		cnt ++;
 	}
+
+	lgdebug(D_USER_INFO, "Atomese: Created %lu of %lu pair exprs for >>%s<<\n",
+		cnt, germ->getIncomingSetSizeByType(LIST_LINK),
+		germ->get_name().c_str());
 
 	return orhead;
 }
