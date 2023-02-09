@@ -16,42 +16,45 @@ class Local
 {
 public:
 	std::mutex dict_mutex; // Avoid corruption of Dictionary
+
+	// General housekeeping
 	bool using_external_as;
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;   // Might be nullptr
 	Handle linkp;          // (Predicate "*-LG link string-*")
 	Handle prk;            // (Predicate "*-fetched-pair-*")
 
+	// Section config
+	bool enable_sections;  // Enable use of sections
+	int extra_pairs;       // Supplement sections with pairs
+	bool extra_any;        // Supplement sections with ANY
+
 	// Sections
 	Handle miks;           // (Predicate "*-Mutual Info Key cover-section")
 	int cost_index;        // Offset into the FloatValue
-	double cost_cutoff;    // MI below this is rejected
+	double cost_cutoff;    // MI below this is rejected.
+	double cost_default;   // This MI is used if key is missing.
 	double cost_scale;
 	double cost_offset;
-	double cost_default;
+
+	// Word-pair config -- Disjuncts made from pairs
+	int pair_disjuncts;    // Max number of pair connectors in a disjunct.
+	bool pair_with_any;    // Add ANY pairs to pair disjuncts.
 
 	// Word-pairs
+	Dictionary pairs;      // Cache of pre-computed word-pair exprs.
 	Handle prp;            // (Predicate "*-word pair-*")
 	Handle mikey;          // (Predicate "*-Mutual Info Key-*")
 	Handle miformula;      // (DefinedProcedure "*-dynamic MI ANY")
 	int pair_index;        // Offset into the FloatValue
-	double pair_cutoff;    // MI below this is rejected
+	double pair_cutoff;    // MI below this is rejected.
+	double pair_default;   // This MI is used if key is missing.
 	double pair_scale;
 	double pair_offset;
-	double pair_default;
 
 	// Any link type
-	double any_default;
-
-	// Basic Sections
-	bool enable_sections;
-	int extra_pairs;
-	bool extra_any;
-
-	// Disjuncts made from pairs
-	int pair_disjuncts;
-	bool pair_with_any;
-	bool any_disjuncts;
+	bool any_disjuncts;   // Create disjuncts created entirely from ANY
+	double any_default;   // Default cost (post-scaling)
 
 	bool enable_unknown_word;
 };
