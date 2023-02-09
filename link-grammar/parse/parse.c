@@ -356,15 +356,17 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 
 		if (plk->lc != nlk->lc)
 		{
-			int diff = strcmp(plk->lc->desc->string, nlk->lc->desc->string);
-			if (diff) return diff;
+			if (plk->lc->desc != nlk->lc->desc)
+				return strcmp(plk->lc->desc->string, nlk->lc->desc->string);
+
 			int md = plk->lc->multi - nlk->lc->multi;
 			if (md) return md;
 		}
 		if (plk->rc != nlk->rc)
 		{
-			int diff = strcmp(plk->rc->desc->string, nlk->rc->desc->string);
-			if (diff) return diff;
+			if (plk->rc->desc != nlk->rc->desc)
+				return strcmp(plk->rc->desc->string, nlk->rc->desc->string);
+
 			int md = plk->rc->multi - nlk->rc->multi;
 			if (md) return md;
 		}
