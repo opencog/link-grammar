@@ -20,6 +20,7 @@ Dict_node * dict_node_wild_lookup(Dictionary dict, const char *s);
 bool dict_node_exists_lookup(Dictionary dict, const char *s);
 
 void free_dictionary_root(Dictionary dict);
+void free_dict_node_recursive(Dict_node*);
 
 Exp * Exp_create(Pool_desc *);
 Exp * Exp_create_dup(Pool_desc *, Exp *);
