@@ -567,10 +567,17 @@ void condesc_init(Dictionary dict, size_t num_con)
 {
 	ConTable *ct = &dict->contable;
 
-	condesc_table_alloc(ct, num_con);
 	ct->mempool = pool_new(__func__, "ConTable",
-								  /*num_elements*/1024, sizeof(condesc_t),
+								  /*num_elements*/num_con, sizeof(condesc_t),
 								  /*zero_out*/true, /*align*/true, /*exact*/false);
+
+	// Connector hash table must be an exact power of two.
+	int nbits = 0;
+	while (num_con) { nbits++; num_con >>= 1; }
+
+	// 4 times larger, to provide a reasonable hash table load factor.
+	nbits += 2;
+	condesc_table_alloc(ct, 1<<nbits);
 
 	ct->length_limit_def = NULL;
 	ct->length_limit_def_next = &ct->length_limit_def;
