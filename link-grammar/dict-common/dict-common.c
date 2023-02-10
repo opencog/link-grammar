@@ -372,7 +372,7 @@ void dictionary_delete(Dictionary dict)
 
 /**
  * Initialize generation mode, if requested.
- * Since the dictionary_create*() functions don't support Parse_Options as
+ * Since the dictionary_create_*() functions don't support Parse_Options as
  * an argument, use the "test" parse-option, which is in a global variable:
  * If it contains "generate", enable generation mode.
  * If an argument "walls" is also supplied ("generate:walls"), then
