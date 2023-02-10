@@ -200,7 +200,7 @@ dictionary_six_str(const char * lang,
 		// The pool sizes are slightly under a power of two,
 		// so that malloc doesn't round up to next power of two.
 		condesc_init(dict, 3060);
-		Exp_pool_size = 8188;
+		Exp_pool_size = 16380;
 
 		if (!test_enabled("no-macro-tag"))
 		{
