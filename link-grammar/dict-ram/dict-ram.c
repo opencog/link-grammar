@@ -25,12 +25,16 @@
 
 /* ======================================================================== */
 
-static void free_dict_node_recursive(Dict_node * dn)
+void free_dict_node_recursive(Dict_node * dn)
 {
-	if (dn == NULL) return;
-	free_dict_node_recursive(dn->left);
-	free_dict_node_recursive(dn->right);
-	free(dn);
+	while (dn != NULL)
+	{
+		free_dict_node_recursive(dn->left);
+
+		Dict_node * rn = dn->right;
+		free(dn);
+		dn = rn;
+	}
 }
 
 void free_dictionary_root(Dictionary dict)
