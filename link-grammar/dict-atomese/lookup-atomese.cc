@@ -533,7 +533,7 @@ static void report_dict_usage(Dictionary dict)
 
 /// Given an expression, wrap  it with a Dict_node and insert it into
 /// the dictionary.
-static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
+Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
 {
 	Dict_node* dn = dict_node_new();
 	dn->string = ssc;

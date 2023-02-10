@@ -42,7 +42,7 @@ public:
 	bool pair_with_any;    // Add ANY pairs to pair disjuncts.
 
 	// Word-pairs
-	Dictionary pairs;      // Cache of pre-computed word-pair exprs.
+	Dictionary pair_dict;  // Cache of pre-computed word-pair exprs.
 	Handle prp;            // (Predicate "*-word pair-*")
 	Handle mikey;          // (Predicate "*-Mutual Info Key-*")
 	Handle miformula;      // (DefinedProcedure "*-dynamic MI ANY")
@@ -69,6 +69,8 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
 Exp* get_pair_exprs(Dictionary dict, const Handle& germ);
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity, bool any);
 Exp* make_any_exprs(Dictionary dict);
+
+Dict_node * make_dn(Dictionary, Exp*, const char*);
 
 void or_enchain(Dictionary, Exp* &orhead, Exp*);
 void and_enchain_left(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);

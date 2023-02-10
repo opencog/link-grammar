@@ -13,9 +13,10 @@
 #undef STRINGIFY
 
 extern "C" {
-#include "../link-includes.h"            // For Dictionary
-#include "../dict-common/dict-common.h"  // for Dictionary_s
-#include "../dict-common/dict-utils.h"   // for size_of_expression()
+#include "../link-includes.h"              // For Dictionary
+#include "../dict-common/dict-common.h"    // for Dictionary_s
+#include "../dict-common/dict-internals.h" // for dict_node_free_lookup()
+#include "../dict-common/dict-utils.h"     // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
 };
 
@@ -231,16 +232,16 @@ Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
    {
       lgdebug(D_USER_INFO, "Atomese: Found pairs in cache: >>%s<<\n", wrd);
 		Exp* exp = dn->exp;
-		dict_node_free_lookup(dn);
+		dict_node_free_lookup(prdct, dn);
       return exp;
    }
 
 	Exp* exp = make_pair_exprs(dict, germ);
 	const char* ssc = string_set_add(wrd, dict->string_set);
-	Dict_node* dn = make_dn(prdct, exp, ssc);
+	dn = make_dn(prdct, exp, ssc);
 
 	// The make_dn made a copy, but we don't want it.
-	dict_node_free_lookup(dn);
+	dict_node_free_lookup(prdct, dn);
 	return exp;
 }
 
