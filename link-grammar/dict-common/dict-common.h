@@ -190,8 +190,10 @@ struct Dictionary_s
 	Category * category;      /* Word lists - indexed by category number */
 	bool generate_walls;      /* Generate walls too for wildcard words */
 
-	/* Private data elements that come in play only while the
-	 * dictionary is being read, and are not otherwise used.
+	/* Private data elements that come in play only while file-backed
+	 * dictionaries are being read, and are not otherwise used.
+	 * TODO: These should be moved to a private structure, accessible
+	 * only to the file backend.
 	 */
 	const char    * input;
 	const char    * pin;
