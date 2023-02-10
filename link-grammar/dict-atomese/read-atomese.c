@@ -94,7 +94,14 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	}
 	free(affix_name);
 
-	/* Set up the server connection */
+	dict->dynamic_lookup = true;
+	condesc_init(dict, 1<<8);
+
+	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/16380,
+	                          sizeof(Exp), /*zero_out*/false,
+	                          /*align*/false, /*exact*/false);
+
+	/* Set up the server connection. */
 	if (!as_open(dict)) goto failure;
 
 	/* Install backend methods */
@@ -106,13 +113,6 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	dict->end_lookup = as_end_lookup;
 	dict->clear_cache = as_clear_cache;
 	dict->close = as_close;
-
-	dict->dynamic_lookup = true;
-	condesc_init(dict, 1<<8);
-
-	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
-	                          sizeof(Exp), /*zero_out*/false,
-	                          /*align*/false, /*exact*/false);
 
 	if (!dictionary_setup_defines(dict))
 		goto failure;

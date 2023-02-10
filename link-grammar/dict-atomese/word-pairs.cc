@@ -23,6 +23,22 @@ extern "C" {
 
 using namespace opencog;
 
+// Create a mini-dict, used only for caching word-pair dict-nodes.
+Dictionary create_pair_cache_dict(Dictionary dict)
+{
+	Dictionary prca = (Dictionary) malloc(sizeof(struct Dictionary_s));
+	memset(prca, 0, sizeof(struct Dictionary_s));
+
+	/* Shared string-set */
+	prca->string_set = dict->string_set;
+	prca->name = string_set_add("word-pair cache", dict->string_set);
+
+	/* Shared Exp_pool, too */
+	prca->Exp_pool = dict->Exp_pool;
+
+	return prca;
+}
+
 /// Return true if word-pairs for `germ` need to be fetched.
 static bool need_pair_fetch(Local* local, const Handle& germ)
 {
@@ -153,7 +169,7 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 
 /// Create a list of connectors, one for each available word pair
 /// containing the word in the germ. These are simply OR'ed together.
-Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
+static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 	const AtomSpacePtr& asp = local->asp;
@@ -197,6 +213,35 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		germ->get_name().c_str());
 
 	return orhead;
+}
+
+/// Get a list of connectors, one for each available word pair
+/// containing the word in the germ. These are simply OR'ed together.
+/// Get them from the local dictionary cache, if they're already
+/// there; create them from scratch, polling the AtomSpace.
+Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
+{
+	Local* local = (Local*) (dict->as_server);
+
+	const char* wrd = germ->get_name().c_str();
+	Dictionary prdct = local->pair_dict;
+   Dict_node* dn = dict_node_lookup(prdct, wrd);
+
+   if (dn)
+   {
+      lgdebug(D_USER_INFO, "Atomese: Found pairs in cache: >>%s<<\n", wrd);
+		Exp* exp = dn->exp;
+		dict_node_free_lookup(dn);
+      return exp;
+   }
+
+	Exp* exp = make_pair_exprs(dict, germ);
+	const char* ssc = string_set_add(wrd, dict->string_set);
+	Dict_node* dn = make_dn(prdct, exp, ssc);
+
+	// The make_dn made a copy, but we don't want it.
+	dict_node_free_lookup(dn);
+	return exp;
 }
 
 // ===============================================================

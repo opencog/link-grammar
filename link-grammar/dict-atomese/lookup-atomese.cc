@@ -240,6 +240,8 @@ bool as_open(Dictionary dict)
 
 		local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
 		local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "1"));
+
+		local->pair_dict = create_pair_cache_dict(dict);
 	}
 
 	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "0"));
@@ -319,6 +321,9 @@ void as_storage_close(Dictionary dict)
 		local->stnp->close();
 
 	local->stnp = nullptr;
+
+	if (local->pair_dict)
+		free(local->pair_dict);
 }
 
 /// Close the connection to the AtomSpace. This will also empty out
@@ -538,11 +543,11 @@ static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
 
-	lgdebug(+D_SPEC+5, "as_lookup_list %d for >>%s<< nexpr=%d\n",
+	lgdebug(D_USER_INFO, "make_dn %d for >>%s<< nexpr=%d\n",
 		dict->num_entries, ssc, size_of_expression(exp));
 
 	// Rebalance the tree every now and then.
-	if (0 == dict->num_entries%30)
+	if (0 == dict->num_entries%60)
 	{
 		dict->root = dsw_tree_to_vine(dict->root);
 		report_dict_usage(dict);

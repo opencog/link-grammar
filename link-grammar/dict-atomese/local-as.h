@@ -59,12 +59,14 @@ public:
 	bool enable_unknown_word;
 };
 
+Dictionary create_pair_cache_dict(Dictionary);
+
 bool section_boolean_lookup(Dictionary dict, const char *s);
 bool pair_boolean_lookup(Dictionary dict, const char *s);
 
 Exp* make_exprs(Dictionary dict, const Handle& germ);
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
-Exp* make_pair_exprs(Dictionary dict, const Handle& germ);
+Exp* get_pair_exprs(Dictionary dict, const Handle& germ);
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity, bool any);
 Exp* make_any_exprs(Dictionary dict);
 
