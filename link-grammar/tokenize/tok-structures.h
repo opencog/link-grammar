@@ -171,17 +171,12 @@ struct Gword_struct
 	Gword **null_subwords;       /* Null subwords represented by this word */
 };
 
-/* Wordgraph path word-positions,
- * used in wordgraph_flatten() and sane_linkage_morphism().
- * FIXME Separate to two different structures. */
+/* Wordgraph path word-positions */
 struct Wordgraph_pathpos_s
 {
 	Gword *word;      /* Position in the Wordgraph */
-	/* Only for wordgraph_flatten(). */
 	bool same_word;   /* Still the same word - mark it as "optional" */
 	bool next_ok;     /* OK to proceed to the next Wordgraph word */
 	bool used;        /* Debug - the word has been issued */
-	/* Only for sane_morphism(). */
-	const Gword **path; /* Linkage candidate wordgraph path */
 };
 #endif
