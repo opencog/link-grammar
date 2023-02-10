@@ -647,14 +647,15 @@ void as_clear_cache(Dictionary dict)
 	printf("Prior to clear, dict has %d entries, Atomspace has %lu Atoms\n",
 		dict->num_entries, local->asp->get_size());
 
-	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
-	                             sizeof(Exp), /*zero_out*/false,
-	                             /*align*/false, /*exact*/false);
+	// Free the dict nodes. Free the pair-cache, too.
+	// Reuse the existing Exp pool.
+	free_dict_node_recursive(dict->root);
+	free_dict_node_recursive(local->pair_dict->root);
+	pool_reuse(dict->Exp_pool);
 
 	// Clear the local AtomSpace too.
 	// Easiest way to do this is to just close and reopen
 	// the connection.
-
 	AtomSpacePtr savea = external_atomspace;
 	StorageNodePtr saves = external_storage;
 	if (local->using_external_as)
