@@ -1062,17 +1062,6 @@ static void altfree(const char **alts)
 	free(alts);
 }
 
-static void gwappend(Word * w, Gword * gw)
-{
-	int len = 0;
-	if (w->gwords)
-		while (w->gwords[len] != NULL) len++;
-
-	w->gwords = realloc(w->gwords, (len+2) * sizeof(Gword *));
-	w->gwords[len] = gw;
-	w->gwords[len+1] = NULL;
-}
-
 /*
 	Here's a summary of how subscripts are handled:
 
@@ -3582,7 +3571,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				assert(!right_wall_encountered, "Extra word");
 
 				wg_word->sent_wordidx = curr_widx;
-				gwappend(wa_word, wg_word);
+				gwordlist_append(&wa_word->gwords, wg_word);
 
 				if ((MT_WALL == wg_word->morpheme_type) &&
 				    (0 == strcmp(wg_word->subword, RIGHT_WALL_WORD)))
