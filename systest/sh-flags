@@ -1,0 +1,71 @@
+#!/usr/bin/env perl
+# Written by <amirpli@gmail.com>
+#%DESC Show shell/Perl script flags
+#
+# Note the ":" for an option that is not to be documented.
+#For example:
+# In Bash scripts:
+#
+#   --help)
+#           exec sh-flags $0
+#           ;;
+#   -n) # Only configure - no compilation
+#           no_compilation=1
+#           shift
+#           ;;
+#   -q) # show configuration parameters
+#           qflag=1
+#           shift
+#           ;;
+#   -old) : # Unused, for backward compatibility
+#           shift
+#           ;;
+#
+#
+# In Perl scripts:
+#
+#while (defined $ARGV[0] && $ARGV[0] =~ /^-(.*)/) {
+#       my $argv = shift;
+#       my $flag = $1;
+
+#       $flag eq '-help' and do {
+#               exec('sh-flags', $0)
+#       };
+#       $flag eq 'l' and do { #- -l Use LEN in cost comparisons
+#               $lflag = $argv;
+#               next;
+#       };
+#       (($flag eq 'md5') || ($flag eq 'md5u')) and do { #- -md5 Emit md5
+#                                                        #- -md5u Same but discard dups
+#               $md5flag = $argv;
+#               next;
+#       };
+#}
+
+use strict;
+use warnings;
+
+(my $prog = $0) =~ s/.*\///;
+die "$prog: Missing argument\n" unless defined $ARGV[0];
+my $printflags;
+my $infile = $ARGV[0];
+open(F, $infile) or die "$prog: Cannot open '$infile': $!\n";
+
+while (<F>) {
+	if (/^#%DESC|^#%?Usage/i)
+	{
+		print;
+		next;
+	}
+	# Skip all lines unless case label with a comment, or #-
+	# But ignore ## comments.
+	if (/^\s*([^(]+)\)\s+#[^#](.*)/ || / #-\s+(\S+)\s+(\S+.*)$/)
+	{
+		unless ($printflags)
+		{
+			print "Flags:\n";
+			$printflags = 1;
+		}
+		print "$1: $2\n";
+	}
+}
