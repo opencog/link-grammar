@@ -3485,7 +3485,7 @@ static void print_wordgraph_pathpos(const Wordgraph_pathpos *wp)
  * Return false if an error was encountered.
  */
 #define D_FW 8
-bool flatten_wordgraph(Sentence sent, Parse_Options opts)
+void flatten_wordgraph(Sentence sent, Parse_Options opts)
 {
 	Wordgraph_pathpos *wp_new = NULL;
 	Wordgraph_pathpos *wp_old = NULL;
@@ -3704,11 +3704,20 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 	wp_new[0].word->sent_wordidx = sent->length;
 	wordgraph_pathpos_free(wp_new);
+}
 
-	/* That's it; we're done flattening the word-graph.
-	 * Now, look up the word-expressions. */
+/**
+ * Loop over all words in the sentence, and all of the split
+ * alternatives, and look up the expressions for those words
+ * in the dictionary.
+ */
+bool build_sentence_expressions(Sentence sent, Parse_Options opts)
+{
+	Dictionary dict = sent->dict;
 	bool error_encountered = false;
 	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
+
+	dict->start_lookup(dict, sent);
 	for (size_t i=0; i<sent->length; i++)
 	{
 		Gword *gw = sent->word[i].gwords[0];
@@ -3721,6 +3730,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			gw = sent->word[i].gwords[igw];
 		}
 	}
+	dict->end_lookup(dict, sent);
 
 	lgdebug(+D_FW, "sent->length %zu\n", sent->length);
 	if (verbosity_level(D_SW))

@@ -18,7 +18,8 @@
 
 bool separate_sentence(Sentence, Parse_Options);
 bool sentence_in_dictionary(Sentence);
-bool flatten_wordgraph(Sentence, Parse_Options);
+void flatten_wordgraph(Sentence, Parse_Options);
+bool build_sentence_expressions(Sentence, Parse_Options);
 void tokenization_done(Sentence, Gword *);
 void free_words(Sentence);
 

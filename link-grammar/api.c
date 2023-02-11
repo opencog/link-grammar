@@ -462,11 +462,8 @@ Sentence sentence_create(const char *input_string, Dictionary dict)
 	return sent;
 }
 
-static int do_sentence_split(Sentence sent, Parse_Options opts)
+int sentence_split(Sentence sent, Parse_Options opts)
 {
-	Dictionary dict = sent->dict;
-	bool fw_failed = false;
-
 	/* 0 == global_rand_state denotes "repeatable rand".
 	 * If non-zero, set it here so that anysplit can use it.
 	 */
@@ -482,25 +479,17 @@ static int do_sentence_split(Sentence sent, Parse_Options opts)
 		return -1;
 	}
 
+	Dictionary dict = sent->dict;
 	if (!setup_dialect(dict, opts))
 		return -4;
 
-	/* Flatten the word graph created by separate_sentence() to a 2D-word-array
-	 * which is compatible to the current parsers.
-	 * This may fail if UNKNOWN_WORD is needed but
-	 * is not defined in the dictionary, or an internal error happens. */
-	fw_failed = !flatten_wordgraph(sent, opts);
+	/* Flatten the word graph created by separate_sentence() to a
+	 * 2D-word-array which is compatible to the current parsers. */
+	flatten_wordgraph(sent, opts);
 
-	/* If unknown_word is not defined, then no special processing
-	 * will be done for e.g. capitalized words. */
-	if (!(dict->unknown_word_defined && dict->use_unknown_word))
-	{
-		if (!sentence_in_dictionary(sent)) {
-			return -2;
-		}
-	}
-
-	if (fw_failed)
+	/* This may fail if UNKNOWN_WORD is needed,
+	 * but is not defined in the dictionary. */
+	if (!build_sentence_expressions(sent, opts))
 	{
 		/* Make sure an error message is always printed.
 		 * So it may be redundant. */
@@ -508,19 +497,17 @@ static int do_sentence_split(Sentence sent, Parse_Options opts)
 		return -3;
 	}
 
+	/* If unknown_word is not defined, then no special processing
+	 * will be done for e.g. capitalized words. */
+	if (!(dict->unknown_word_defined && dict->use_unknown_word) &&
+	    !sentence_in_dictionary(sent))
+	{
+		return -2;
+	}
+
 	if (verbosity >= D_USER_TIMES)
 		prt_error("#### Finished tokenizing (%zu tokens)\n", sent->length);
 	return 0;
-}
-
-int sentence_split(Sentence sent, Parse_Options opts)
-{
-	Dictionary dict = sent->dict;
-	dict->start_lookup(dict, sent);
-	int rc = do_sentence_split(sent, opts);
-	dict->end_lookup(dict, sent);
-	print_time(opts, "Split sentence");
-	return rc;
 }
 
 void sentence_delete(Sentence sent)
