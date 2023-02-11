@@ -1,0 +1,95 @@
+#!/usr/bin/perl
+# Written by <amirpli@gmail.com>.
+#%DESC link-grammar: List all the sentences that have an error in one batch out file but not the other
+#
+# How to use:
+# lg.old > /tmp/b-old.out
+# lg.new > /tmp/b-new.out
+# lgerror /tmp/b-old.out /tmp/b-new.out
+#
+use warnings;
+use strict;
+
+(my $prog = $0) =~ s/.*\///;
+my $W = 250;
+my $zflag;
+
+while (defined $ARGV[0] && $ARGV[0] =~ /^-(.*)/) {
+	my $argv = shift;
+	my $flag = $1;
+
+	$flag eq 'help' and do {
+		exec('sh-flags', $0)
+	};
+	$flag eq 'z' and do { #- -0 Be silent on 0 errors
+		$zflag = $argv;
+		next;
+	};
+}
+
+
+my $f1 = shift or die "$prog: Missing file argument\n";
+my $f2 = shift or die "$prog: Missing file argument\n";
+
+my $max_width = `cat $f1 $f2 | wc -L` * 2;
+$W = $max_width > $W ? $max_width :$W;
+
+my $cmd = "diff -W $W -y '$f1' '$f2'";
+open (DIFF, "$cmd|") or die "Cannot open pipe from diff: $!";
+
+my $sentence;
+my $prev_sentence = '';
+my $errdiffcnt = 0;
+my $last_bar;
+my %errsentence;
+
+#I hope that he comes to the party tomorrow	I hope that ...
+#Found 8 linkages (4 had no P.P. violations)	Found 8 linkages ...
+#*I hope him to come to the party tomorrow	*I hope him to ...
+#
+#                                 +----------MVpn----------+
+#    +-----WV-----+---MVi---+     |     +----Js---+        |
+#    +--Wd--+-Sp*i+-Ox-+    +--I--+-MVp-+   +--Ds-+        |
+#    |      |     |    |    |     |     |   |     |        |
+#LEFT-WALL I.p hope.v him to.r come.v to.r the party.n tomorrow ...
+#
+#(S (NP I.p)
+#   (VP hope.v
+#       (NP him)
+#       (S (VP to.r
+#              (VP come.v
+#                  (PP to.r
+#                      (NP the party.n))
+#                  (NP tomorrow))))))
+#
+#+++++ error 5					+++++ error 6
+
+while (<DIFF>) {
+	next if /^%|\s+[<>|]\s%/;
+	#print "INPUT->$_";
+	($sentence) = /^([^\t]+)/ unless /^(Found \d|\s|\(|\+|LEFT|$)|[<>|]|\+{5} error/ || $last_bar;
+	#print "SENTENCE->$_";
+	if (/\+{5} error/ && !/^\+{5} error \d+[\s|]+\+{5} error/) {
+		if ($sentence eq $prev_sentence) {
+			delete $errsentence{$sentence};
+			$prev_sentence = $sentence;
+			next;
+		}
+		$errsentence{$sentence} = /^\+/ != ($sentence =~ /^\*/) ? '<' : '>';
+		$prev_sentence = $sentence;
+	}
+	$last_bar = /\|/ && !/\+{5} error/;
+}
+
+if (close(DIFF) && $! != 0)
+{
+	die "Error closing pipe to diff: $!";
+}
+
+foreach (sort keys %errsentence) {
+	$errdiffcnt++;
+	print "$errsentence{$_}  $_\n";
+}
+#print "\n" if $errdiffcnt;
+exit if ($errdiffcnt == 0) && $zflag;
+print "$f1 $f2: Total error differences: $errdiffcnt\n";
