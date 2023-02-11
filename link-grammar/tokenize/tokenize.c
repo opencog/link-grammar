@@ -3180,7 +3180,10 @@ static Word *word_new(Sentence sent)
 void free_words(Sentence sent)
 {
 	for (WordIdx i = 0; i < sent->length; i++)
+	{
 		altfree(sent->word[i].alternatives);
+		free(sent->word[i].gwords);
+	}
 
 	free(sent->word);
 }
