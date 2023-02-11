@@ -245,7 +245,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	else if (dict->unknown_word_defined && dict->use_unknown_word)
 	{
 		we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
-		assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
+		assert(we, UNKNOWN_WORD " must be defined in the dictionary!");
 		w->status |= WS_UNKNOWN;
 	}
 	else
@@ -294,13 +294,15 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 /**
  * Loop over all words in the sentence, and all of the split
  * alternatives, and look up the expressions for those words
- * in the dictionary.
+ * in the dictionary. Return `true` on success; return `false`
+ * if there are unknown words, and the dict does not define
+ * UNKNOWN_WORD.
  */
 #define D_BSE 8
 bool build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
-	bool error_encountered = false;
+	bool have_unknown_words = false;
 	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
 
 	dict->start_lookup(dict, sent);
@@ -310,7 +312,7 @@ bool build_sentence_expressions(Sentence sent, Parse_Options opts)
 		int igw = 0;
 		while (gw)
 		{
-			error_encountered |=
+			have_unknown_words |=
 				!determine_word_expressions(sent, gw, &ZZZ_added, opts);
 			igw ++;
 			gw = sent->word[i].gwords[igw];
@@ -328,51 +330,8 @@ bool build_sentence_expressions(Sentence sent, Parse_Options opts)
 		free(out);
 	}
 
-	return !error_encountered;
+	return !have_unknown_words;
 }
 #undef D_BSE
 
-/**
- * This just looks up all the words in the sentence, and builds
- * up an appropriate error message in case some are not there.
- * It has no side effect on the sentence.  Returns true if all
- * went well.
- *
- * This code is called only if the 'unknown-words' flag is set.
- */
-bool sentence_in_dictionary(Sentence sent)
-{
-	bool ok_so_far;
-	size_t w;
-	const char * s;
-	Dictionary dict = sent->dict;
-	char temp[1024];
-
-	ok_so_far = true;
-	for (w=0; w<sent->length; w++)
-	{
-		size_t ialt;
-		for (ialt=0; NULL != sent->word[w].alternatives[ialt]; ialt++)
-		{
-			s = sent->word[w].alternatives[ialt];
-			if (!dictionary_word_is_known(dict, s) &&
-			    !(IS_GENERATION(dict) && (NULL != strstr(s, WILDCARD_WORD))))
-			{
-				if (ok_so_far)
-				{
-					lg_strlcpy(temp, "The following words are not in the dictionary:", sizeof(temp));
-					ok_so_far = false;
-				}
-				safe_strcat(temp, " \"", sizeof(temp));
-				safe_strcat(temp, s, sizeof(temp));
-				safe_strcat(temp, "\"", sizeof(temp));
-			}
-		}
-	}
-	if (!ok_so_far)
-	{
-		err_ctxt ec = { sent };
-		err_msgc(&ec, lg_Error, "Sentence not in dictionary\n%s\n", temp);
-	}
-	return ok_so_far;
-}
+/* ================== END OF FILE =============== */

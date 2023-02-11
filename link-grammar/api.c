@@ -488,21 +488,15 @@ int sentence_split(Sentence sent, Parse_Options opts)
 	 * 2D-word-array which is compatible to the current parsers. */
 	flatten_wordgraph(sent, opts);
 
-	/* This may fail if UNKNOWN_WORD is needed,
-	 * but is not defined in the dictionary. */
+	/* This may fail if UNKNOWN_WORD is needed, but is not defined in
+	 * the dictionary. In that case, warnings for the unknown word were
+	 * already printed. */
 	if (!build_sentence_expressions(sent, opts))
 	{
-		/* Make sure an error message is always printed.
-		 * So it may be redundant. */
-		prt_error("Error: sentence_split(): Internal error detected\n");
-		return -3;
-	}
+		err_ctxt ec = { sent };
+		err_msgc(&ec, lg_Error,
+			"Cannot parse sentence with unknown words!\n");
 
-	/* If unknown_word is not defined, then no special processing
-	 * will be done for e.g. capitalized words. */
-	if (!(dict->unknown_word_defined && dict->use_unknown_word) &&
-	    !sentence_in_dictionary(sent))
-	{
 		return -2;
 	}
 

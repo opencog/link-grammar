@@ -16,7 +16,6 @@
 #include "api-types.h"
 #include "link-includes.h"
 
-bool sentence_in_dictionary(Sentence);
 bool build_sentence_expressions(Sentence, Parse_Options);
 
 #endif /* _LOOKUP_EXPRS_H */
