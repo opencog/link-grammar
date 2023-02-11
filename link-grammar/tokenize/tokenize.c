@@ -1064,7 +1064,7 @@ static void altfree(const char **alts)
 
 static void gwappend(Word * w, Gword * gw)
 {
-	size_t len = 0;
+	int len = 0;
 	if (w->gwords)
 		while (w->gwords[len] != NULL) len++;
 
@@ -3717,6 +3717,22 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 	wp_new[0].word->sent_wordidx = sent->length;
 	wordgraph_pathpos_free(wp_new);
+
+	bool error_encountered = false;
+	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
+	for (size_t i=0; i<sent->length; i++)
+	{
+		Gword *gw = sent->word[i].gwords[0];
+		int igw = 0;
+		while (gw)
+		{
+			error_encountered |=
+				!determine_word_expressions(sent, gw, &ZZZ_added, opts);
+			igw ++;
+			gw = sent->word[i].gwords[igw];
+		}
+	}
+
 	lgdebug(+D_FW, "sent->length %zu\n", sent->length);
 	if (verbosity_level(D_SW))
 	{
@@ -3727,18 +3743,6 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		free(out);
 	}
 
-	bool error_encountered = false;
-	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
-	for (size_t i=0; i<sent->length; i++)
-	{
-		Gword *gw = sent->word[i].gwords[0];
-		while (gw)
-		{
-			error_encountered |=
-				!determine_word_expressions(sent, gw, &ZZZ_added, opts);
-			gw ++;
-		}
-	}
 	return !error_encountered;
 }
 #undef D_FW

@@ -24,9 +24,9 @@
 
 Gword *gword_new(Sentence sent, const char *s)
 {
-	Gword *gword = malloc(sizeof(*gword));
+	Gword *gword = malloc(sizeof(Gword));
 
-	memset(gword, 0, sizeof(*gword));
+	memset(gword, 0, sizeof(Gword));
 	assert(NULL != s, "Null-string subword");
 	assert(0 != *s, "Empty-string subword");
 	gword->subword = string_set_add(s, sent->string_set);
