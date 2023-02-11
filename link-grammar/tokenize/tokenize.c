@@ -1062,6 +1062,17 @@ static void altfree(const char **alts)
 	free(alts);
 }
 
+static void gwappend(Word * w, Gword * gw)
+{
+	size_t len = 0;
+	if (w->gwords)
+		while (w->gwords[len] != NULL) len++;
+
+	w->gwords = realloc(w->gwords, (len+2) * sizeof(Gword *));
+	w->gwords[len] = gw;
+	w->gwords[len+1] = NULL;
+}
+
 /*
 	Here's a summary of how subscripts are handled:
 
@@ -3155,10 +3166,11 @@ static Word *word_new(Sentence sent)
 		const size_t len = sent->length;
 
 		sent->word = realloc(sent->word, (len+1)*sizeof(*sent->word));
-		sent->word[len].d= NULL;
-		sent->word[len].x= NULL;
+		sent->word[len].d = NULL;
+		sent->word[len].x = NULL;
 		sent->word[len].unsplit_word = NULL;
 		sent->word[len].alternatives = NULL;
+		sent->word[len].gwords = NULL;
 		sent->word[len].optional = false;
 		sent->length++;
 
@@ -3366,16 +3378,17 @@ static void add_empty_word(Sentence sent, X_node *x)
  */
 #define D_X_NODE 9
 #define D_DWE 8
-static bool determine_word_expressions(Sentence sent, Gword *w,
+static bool determine_word_expressions(Sentence sent,
+                                       Gword *w,
                                        unsigned int *ZZZ_added,
                                        Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
-	const size_t wordpos = sent->length - 1;
 
 	const char *s = w->subword;
 	X_node * we = NULL;
 
+	const size_t wordpos = w->sent_wordidx;
 	lgdebug(+D_DWE, "Word %zu subword %zu:'%s' status %s",
 	        wordpos, w->node_num, s, gword_status(sent, w));
 	if (NULL != sent->word[wordpos].unsplit_word)
@@ -3383,7 +3396,6 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 
 	/* Generate an "alternatives" component. */
 	altappend(sent, &sent->word[wordpos].alternatives, s);
-	w->sent_wordidx = wordpos;
 
 	if (w->status & WS_INDICT)
 	{
@@ -3491,9 +3503,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	Gword **next;                 /* The next words */
 	const Gword *last_unsplit_word = NULL;
 	size_t max_words = 0;
-	bool error_encountered = false;
 	bool right_wall_encountered = false;
-	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
 
 	assert(0 == sent->length, "Word array already exists.");
 
@@ -3567,11 +3577,12 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				assert(!wpp_old->used, "Word %zu:%s has been used",
 				       wg_word->node_num, wpp_old->word->subword);
 
-				/* This is a new wordgraph word.
-				 */
+				/* This is a new wordgraph word.  */
 				assert(!right_wall_encountered, "Extra word");
-				if (!determine_word_expressions(sent, wg_word, &ZZZ_added, opts))
-					error_encountered = true;
+
+				wg_word->sent_wordidx = sent->length - 1;
+				gwappend(wa_word, wg_word);
+
 				if ((MT_WALL == wg_word->morpheme_type) &&
 				    (0 == strcmp(wg_word->subword, RIGHT_WALL_WORD)))
 					right_wall_encountered = true;
@@ -3713,6 +3724,18 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		free(out);
 	}
 
+	bool error_encountered = false;
+	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
+	for (size_t i=0; i<sent->length; i++)
+	{
+		Gword *gw = sent->word[i].gwords[0];
+		while (gw)
+		{
+			error_encountered |=
+				!determine_word_expressions(sent, gw, &ZZZ_added, opts);
+			gw ++;
+		}
+	}
 	return !error_encountered;
 }
 #undef D_FW
