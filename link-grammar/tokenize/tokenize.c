@@ -3155,10 +3155,11 @@ static Word *word_new(Sentence sent)
 		const size_t len = sent->length;
 
 		sent->word = realloc(sent->word, (len+1)*sizeof(*sent->word));
-		sent->word[len].d= NULL;
-		sent->word[len].x= NULL;
+		sent->word[len].d = NULL;
+		sent->word[len].x = NULL;
 		sent->word[len].unsplit_word = NULL;
 		sent->word[len].alternatives = NULL;
+		sent->word[len].gwords = NULL;
 		sent->word[len].optional = false;
 		sent->length++;
 
@@ -3168,7 +3169,10 @@ static Word *word_new(Sentence sent)
 void free_words(Sentence sent)
 {
 	for (WordIdx i = 0; i < sent->length; i++)
+	{
 		altfree(sent->word[i].alternatives);
+		free(sent->word[i].gwords);
+	}
 
 	free(sent->word);
 }
@@ -3371,7 +3375,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
                                        Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
-	const size_t wordpos = sent->length - 1;
+	const size_t wordpos = w->sent_wordidx;
 
 	const char *s = w->subword;
 	X_node * we = NULL;
@@ -3383,7 +3387,6 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 
 	/* Generate an "alternatives" component. */
 	altappend(sent, &sent->word[wordpos].alternatives, s);
-	w->sent_wordidx = wordpos;
 
 	if (w->status & WS_INDICT)
 	{
@@ -3491,9 +3494,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	Gword **next;                 /* The next words */
 	const Gword *last_unsplit_word = NULL;
 	size_t max_words = 0;
-	bool error_encountered = false;
 	bool right_wall_encountered = false;
-	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
 
 	assert(0 == sent->length, "Word array already exists.");
 
@@ -3518,9 +3519,6 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	/* Scan the wordgraph and flatten it. */
 	do
 	{
-		Word *wa_word; /* A word-array word (for the parsing stage) */
-		const Gword *unsplit_word;
-
 		assert(NULL != wp_new, "pathpos word queue is empty");
 		wp_old = wp_new;
 		wp_new = NULL;
@@ -3529,10 +3527,13 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		/* Add a new word to the sentence word array. */
 		assert(0 < max_words, "Too many words (it may be an infinite loop)");
 		max_words--; /* For the assert() above */
-		wa_word = word_new(sent);
+
+		/* A word-array word (for the parsing stage) */
+		Word *wa_word = word_new(sent);
+		size_t curr_widx = sent->length - 1;
 
 		/* Find the sentence word. */
-		unsplit_word  = wp_old->word;
+		const Gword *unsplit_word  = wp_old->word;
 		if (MT_INFRASTRUCTURE != unsplit_word->morpheme_type)
 		{
 			unsplit_word = wg_get_sentence_word(sent, (Gword *)unsplit_word);
@@ -3544,7 +3545,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 			}
 		}
 
-		/* Generate the X-nodes. */
+		/* Record the Gword alternative. */
 		for (wpp_old = wp_old; NULL != wpp_old->word; wpp_old++)
 		{
 			wg_word = wpp_old->word;
@@ -3553,13 +3554,12 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 			if (wpp_old->same_word)
 			{
-				/* We haven't advanced to the next wordgraph word, so its X-node
-				 * has already been generated in a previous word of the word
-				 * array.  This means we are in a longer alternative which has
+				/* We haven't advanced to the next wordgraph word.
+				 * This means we are in a longer alternative which has
 				 * "extra" words that may not have links, and this is one of
-				 * them.  Mark it as "optional", so we consider that while
+				 * them.  Mark it as "optional", so we consider this while
 				 * parsing, and then remove it in case it doesn't have links. */
-				sent->word[sent->length - 1].optional = true;
+				wa_word->optional = true;
 			}
 			else
 			{
@@ -3567,11 +3567,12 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				assert(!wpp_old->used, "Word %zu:%s has been used",
 				       wg_word->node_num, wpp_old->word->subword);
 
-				/* This is a new wordgraph word.
-				 */
+				/* This is a new wordgraph word. */
 				assert(!right_wall_encountered, "Extra word");
-				if (!determine_word_expressions(sent, wg_word, &ZZZ_added, opts))
-					error_encountered = true;
+
+				wg_word->sent_wordidx = curr_widx;
+				gwordlist_append(&wa_word->gwords, wg_word);
+
 				if ((MT_WALL == wg_word->morpheme_type) &&
 				    (0 == strcmp(wg_word->subword, RIGHT_WALL_WORD)))
 					right_wall_encountered = true;
@@ -3703,6 +3704,24 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 
 	wp_new[0].word->sent_wordidx = sent->length;
 	wordgraph_pathpos_free(wp_new);
+
+	/* That's it; we're done flattening the word-graph.
+	 * Now, look up the word-expressions. */
+	bool error_encountered = false;
+	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
+	for (size_t i=0; i<sent->length; i++)
+	{
+		Gword *gw = sent->word[i].gwords[0];
+		int igw = 0;
+		while (gw)
+		{
+			error_encountered |=
+				!determine_word_expressions(sent, gw, &ZZZ_added, opts);
+			igw ++;
+			gw = sent->word[i].gwords[igw];
+		}
+	}
+
 	lgdebug(+D_FW, "sent->length %zu\n", sent->length);
 	if (verbosity_level(D_SW))
 	{

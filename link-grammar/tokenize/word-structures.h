@@ -48,6 +48,7 @@ struct Word_struct
 	bool optional;          /* Linkage is optional. */
 
 	const char **alternatives;
+	Gword **gwords;         /* gword alternatives. */
 };
 
 #endif
