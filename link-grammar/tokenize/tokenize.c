@@ -3530,9 +3530,6 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 	/* Scan the wordgraph and flatten it. */
 	do
 	{
-		Word *wa_word; /* A word-array word (for the parsing stage) */
-		const Gword *unsplit_word;
-
 		assert(NULL != wp_new, "pathpos word queue is empty");
 		wp_old = wp_new;
 		wp_new = NULL;
@@ -3541,10 +3538,13 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 		/* Add a new word to the sentence word array. */
 		assert(0 < max_words, "Too many words (it may be an infinite loop)");
 		max_words--; /* For the assert() above */
-		wa_word = word_new(sent);
+
+		/* A word-array word (for the parsing stage) */
+		Word *wa_word = word_new(sent);
+		size_t curr_widx = sent->length - 1;
 
 		/* Find the sentence word. */
-		unsplit_word  = wp_old->word;
+		const Gword *unsplit_word  = wp_old->word;
 		if (MT_INFRASTRUCTURE != unsplit_word->morpheme_type)
 		{
 			unsplit_word = wg_get_sentence_word(sent, (Gword *)unsplit_word);
@@ -3570,7 +3570,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				 * "extra" words that may not have links, and this is one of
 				 * them.  Mark it as "optional", so we consider this while
 				 * parsing, and then remove it in case it doesn't have links. */
-				sent->word[sent->length - 1].optional = true;
+				wa_word->optional = true;
 			}
 			else
 			{
@@ -3581,7 +3581,7 @@ bool flatten_wordgraph(Sentence sent, Parse_Options opts)
 				/* This is a new wordgraph word. */
 				assert(!right_wall_encountered, "Extra word");
 
-				wg_word->sent_wordidx = sent->length - 1;
+				wg_word->sent_wordidx = curr_widx;
 				gwappend(wa_word, wg_word);
 
 				if ((MT_WALL == wg_word->morpheme_type) &&
