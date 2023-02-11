@@ -41,7 +41,7 @@ struct Parse_choice_struct
 	Parse_choice * next;
 	Parse_set * set[2];
 	Disjunct    *md;           /* the chosen disjunct for the middle word */
-	Connector   *lc, *rc;      /* the connectors on the middle word */
+	int32_t     l_id, r_id;    /* the tracon IDs used in this disjunct */
 };
 
 /* Parse_set serves as a header of Parse_choice chained elements, that
@@ -53,7 +53,6 @@ struct Parse_set_struct
 	Connector      *le, *re;
 	uint8_t        lw, rw;     /* left and right word index */
 	uint8_t        null_count; /* number of island words */
-	int32_t        l_id, r_id; /* tracons on words lw, rw */
 
 	count_t count;             /* The number of ways to parse. */
 #ifdef RECOUNT
@@ -105,13 +104,12 @@ make_choice(Parse_set *lset, Connector * lrc,
             Parse_set *rset, Connector * rlc,
             Disjunct *md, extractor_t* pex)
 {
-	Parse_choice *pc;
-	pc = pool_alloc(pex->Parse_choice_pool);
+	Parse_choice *pc = pool_alloc(pex->Parse_choice_pool);
 	pc->next = NULL;
 	pc->set[0] = lset;
 	pc->set[1] = rset;
-	pc->lc = lrc;
-	pc->rc = rlc;
+	pc->l_id = (lrc == NULL) ? -1 : lrc->tracon_id;
+	pc->r_id = (rlc == NULL) ? -1 : rlc->tracon_id;
 	pc->md = md;
 	return pc;
 }
@@ -268,22 +266,39 @@ void free_extractor(extractor_t * pex)
 }
 
 /**
+ * Return a dummy connector that represents a null tracon for word \p w.
+ * Its purpose is to greatly simplify the condition in x_table_pointer().
+ * \p w may be in the range [-1,sentence length].
+ * We assume here is that an integer check and assignment is thread-safe.
+ */
+static Connector *dummy_null_tracon(int w)
+{
+	/* +1 for w+1 (see below).
+	 * +1 for invocations with w equal to MAX_SENTENCE. */
+	static Connector dnt[MAX_SENTENCE+1+1];
+
+	/* w+1 supports invocations with w==-1. */
+	if (dnt[w+1].tracon_id != w) dnt[w+1].tracon_id = w;
+	return &dnt[w+1];
+}
+
+/**
  * Returns the pointer to this info, NULL if not there.
  * Note that there is no need to use (lw, rw) as keys because tracon_id
  * values are not shared between words.
  */
-static Pset_bucket * x_table_pointer(int lw, int rw,
-                              Connector *le, Connector *re,
-                              unsigned int null_count, extractor_t * pex)
+static Pset_bucket *x_table_pointer(int lw, int rw,
+                                    Connector *le, Connector *re,
+                                    unsigned int null_count, extractor_t * pex)
 {
-	Pset_bucket *t;
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
 	unsigned int hash = pair_hash(lw, rw, l_id, r_id, null_count);
-	t = pex->x_table[hash & (pex->x_table_size-1)];
+	Pset_bucket *t = pex->x_table[hash & (pex->x_table_size-1)];
 
-	for (; t != NULL; t = t->next) {
-		if ((t->set.l_id == l_id) && (t->set.r_id == r_id) &&
+	for (; t != NULL; t = t->next)
+	{
+		if ((t->set.le->tracon_id == l_id) && (t->set.re->tracon_id == r_id) &&
 		    (t->set.null_count == null_count)) return t;
 	}
 	return NULL;
@@ -296,22 +311,20 @@ static Pset_bucket * x_table_store(int lw, int rw,
                                   Connector *le, Connector *re,
                                   unsigned int null_count, extractor_t * pex)
 {
-	Pset_bucket **t, *n;
-	unsigned int h;
+	int32_t l_id = (NULL != le) ? le->tracon_id : lw;
+	int32_t r_id = (NULL != re) ? re->tracon_id : rw;
+	unsigned int h = pair_hash(lw, rw, l_id, r_id, null_count);
+	Pset_bucket **t = &pex->x_table[h & (pex->x_table_size -1)];
+	Pset_bucket *n = pool_alloc(pex->Pset_bucket_pool);
 
-	n = pool_alloc(pex->Pset_bucket_pool);
 	n->set.lw = lw;
 	n->set.rw = rw;
 	n->set.null_count = null_count;
-	n->set.l_id = (NULL != le) ? le->tracon_id : lw;
-	n->set.r_id = (NULL != re) ? re->tracon_id : rw;
-	n->set.le = le;
-	n->set.re = re;
+	n->set.le = (NULL != le) ? le : dummy_null_tracon(lw);
+	n->set.re = (NULL != re) ? re : dummy_null_tracon(rw);
 	n->set.count = 0;
 	n->set.first = NULL;
 
-	h = pair_hash(lw, rw, n->set.l_id, n->set.r_id, null_count);
-	t = &pex->x_table[h & (pex->x_table_size -1)];
 	n->next = *t;
 	*t = n;
 	return n;
@@ -716,19 +729,35 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 	return set_overflowed(pex);
 }
 
+static Connector *get_tracon_by_id(const Disjunct *d, int32_t tracon_id,
+                                   int dir)
+{
+	if (tracon_id < 0) return NULL; /* See make_choice() */
+	for (Connector *c = dir ? d->right : d->left; c != NULL; c = c->next)
+		if (tracon_id == c->tracon_id) return c;
+
+	assert(0, "tracon_id %d not found on disjunct %p in direction %d\n",
+	       tracon_id, d, dir);
+}
+
+static bool is_zero_tracon(Connector *c)
+{
+	return (c == NULL) || (c->tracon_id < NULL_TRACON_BLOCK);
+}
+
 /**
  * Assemble the link array and the chosen_disjuncts of a linkage.
  */
 static void issue_link(Linkage lkg, int lr, Parse_choice *pc,
                        const Parse_set *set)
 {
-	Connector *lc = lr ? pc->rc : set->le;
-	if (lc == NULL) return; /* No choice to record. */
+	Connector *lc = lr ? get_tracon_by_id(pc->md, pc->r_id, 1) : set->le;
+	if (is_zero_tracon(lc)) return; /* No choice to record. */
 
 	lkg->chosen_disjuncts[lr ? pc->set[1]->lw : pc->set[0]->rw] = pc->md;
 
-	Connector *rc = lr ? set->re : pc->lc;
-	if (rc == NULL) return; /* No link to generate. */
+	Connector *rc = lr ? set->re : get_tracon_by_id(pc->md, pc->l_id, 0);
+	if (is_zero_tracon(rc)) return; /* No choice to record. */
 
 	assert(lkg->num_links < lkg->lasz, "Linkage array too small!");
 	Link *link = &lkg->link_array[lkg->num_links];
