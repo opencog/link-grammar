@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 # Written by <amirpli@gmail.com>.
-#%DESC link-grammar: List all the sentences that have an error in one batch out file but not the other
+#%DESC List all the sentences that have an error in one batch out file but not the other
 #
 # How to use:
 # lg.old > /tmp/b-old.out
@@ -11,6 +11,8 @@ use warnings;
 use strict;
 
 (my $prog = $0) =~ s/.*\///;
+(my $progdir = $0) =~ s,/[^/]+$,,;
+
 my $W = 250;
 my $zflag;
 
@@ -18,8 +20,9 @@ while (defined $ARGV[0] && $ARGV[0] =~ /^-(.*)/) {
 	my $argv = shift;
 	my $flag = $1;
 
-	$flag eq 'help' and do {
-		exec('sh-flags', $0)
+	$flag eq '-help' and do {
+		system("$progdir/sh-flags", $0);
+		usage();
 	};
 	$flag eq 'z' and do { #- -0 Be silent on 0 errors
 		$zflag = $argv;
@@ -27,9 +30,13 @@ while (defined $ARGV[0] && $ARGV[0] =~ /^-(.*)/) {
 	};
 }
 
+sub usage
+{
+	die "$prog: Missing file argument.\nUsage: $prog batch-result-old batch-result-new\n";
+}
 
-my $f1 = shift or die "$prog: Missing file argument\n";
-my $f2 = shift or die "$prog: Missing file argument\n";
+my $f1 = shift or usage();
+my $f2 = shift or usage();
 
 my $max_width = `cat $f1 $f2 | wc -L` * 2;
 $W = $max_width > $W ? $max_width :$W;
