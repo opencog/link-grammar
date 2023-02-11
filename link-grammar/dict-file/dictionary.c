@@ -191,8 +191,16 @@ dictionary_six_str(const char * lang,
 		dict->end_lookup = dict_lookup_noop;
 
 		dict->dialect_tag.set = string_id_create();
-		condesc_init(dict, 1<<13);
-		Exp_pool_size = 1<<13;
+
+		// Actual usage:
+		// Lang  Exp   Condesc
+		//  en   47K    2.3K
+		//  ru  300K    5.5K
+		//  th    8K    2.0K
+		// The pool sizes are slightly under a power of two,
+		// so that malloc doesn't round up to next power of two.
+		condesc_init(dict, 3060);
+		Exp_pool_size = 16380;
 
 		if (!test_enabled("no-macro-tag"))
 		{
@@ -202,14 +210,15 @@ dictionary_six_str(const char * lang,
 	}
 	else
 	{
-		/*
-		 * Affix dictionary.
-		 */
+		/* Affix dictionary. */
 		afclass_init(dict);
 		dict->insert_entry = load_affix;
 		dict->exists_lookup = return_true;
-		condesc_init(dict, 1<<9);
-		Exp_pool_size = 1<<5;
+
+		// English dict is the largest of all;
+		// it has 16 exprs and 8 connectors in the affix table.
+		condesc_init(dict, 16);
+		Exp_pool_size = 30;
 	}
 
 	dict->dfine.set = string_id_create();

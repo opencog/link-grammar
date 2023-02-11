@@ -426,11 +426,14 @@ static void table_stat(count_context_t *ctxt)
 	}
 
 	size_t used_slots = ctxt->table_size-N;
+	unsigned int logsz = 0;
+	size_t tblsz = ctxt->table_size;
+	while (tblsz) { logsz++; tblsz >>= 1; }
 	/* The used= value is TotalValues/TableSize (not UsedSlots/TableSize). */
 	printf("Connector table: num_growth=%u msb=%u slots=%6zu/%6zu (%5.2f%%) "
 	       "avg-chain=%4.2f values=%6zu (z=%5zu nz=%5zu N=%5zu) used=%5.2f%% "
 	       "acc=%"PRIu64" (hit=%"PRIu64" miss=%"PRIu64") (sent_len=%zu dis=%u)\n",
-	       ctxt->num_growth, ctxt->log2_table_size, used_slots, ctxt->table_size,
+	       ctxt->num_growth, logsz, used_slots, ctxt->table_size,
 			 100.0f*used_slots/ctxt->table_size, 1.0f*total_c/used_slots,
 	       z+nz, z, nz, N, 100.0f*(z+nz)/ctxt->table_size,
 	       hit+miss, hit, miss, ctxt->sent->length, ctxt->sent->num_disjuncts);
