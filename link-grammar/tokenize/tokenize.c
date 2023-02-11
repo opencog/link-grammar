@@ -3213,10 +3213,9 @@ static Dict_node *dictionary_all_categories(Dictionary dict)
 static X_node * build_word_expressions(Sentence sent, const Gword *w,
                                        const char *s, Parse_Options opts)
 {
-	Dict_node * dn, *dn_head;
-	X_node * x, * y;
 	const Dictionary dict = sent->dict;
 
+	Dict_node * dn_head = NULL;
 	if (IS_GENERATION(dict) && (NULL != strstr(w->subword, WILDCARD_WORD)))
 	{
 		if (0 == strcmp(w->subword, WILDCARD_WORD))
@@ -3238,11 +3237,11 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		dn_head = dictionary_lookup_list(dict, NULL == s ? w->subword : s);
 	}
 
-	x = NULL;
-	dn = dn_head;
+	X_node * x = NULL;
+	Dict_node * dn = dn_head;
 	while (dn != NULL)
 	{
-		y = (X_node *) pool_alloc(sent->X_node_pool);
+		X_node * y = (X_node *) pool_alloc(sent->X_node_pool);
 		y->next = x;
 		x = y;
 		x->exp = copy_Exp(dn->exp, sent->Exp_pool, opts);
@@ -3275,11 +3274,12 @@ static X_node * build_word_expressions(Sentence sent, const Gword *w,
 		 * result is valid (in case of "\*" it means an empty dict or a dict
 		 * only with walls that are not used).  Use a null-expression
 		 * instead, to prevent an error at the caller. */
-		y = pool_alloc(sent->X_node_pool);
+		X_node * y = pool_alloc(sent->X_node_pool);
 		y->next = NULL;
 		y->exp = make_zeroary_node(sent->Exp_pool);
 	}
 
+	assert(NULL != x, "Word '%s': NULL X-node", w->subword);
 	return x;
 }
 
@@ -3393,45 +3393,23 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	{
 		we = build_word_expressions(sent, w, w->regex_name, opts);
 	}
+	else if (IS_GENERATION(dict) && (NULL != strstr(s, WILDCARD_WORD)))
+	{
+		lgdebug(+D_DWE, "Wildcard word %s\n", s);
+		we = build_word_expressions(sent, w, NULL, opts);
+		w->status = WS_INDICT; /* Prevent marking as "unknown word". */
+	}
+	else if (dict->unknown_word_defined && dict->use_unknown_word)
+	{
+		we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
+		assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
+		w->status |= WS_UNKNOWN;
+	}
 	else
 	{
-#ifdef DEBUG
-		if (dict_has_word(dict, w->subword))
-		{
-			prt_error("Error: Word '%s': Internal error: Known word is unknown\n",
-			          w->subword);
-		}
-#endif /* DEBUG */
-
-		if (IS_GENERATION(dict) && (NULL != strstr(s, WILDCARD_WORD)))
-		{
-			lgdebug(+D_DWE, "Wildcard word %s\n", s);
-			we = build_word_expressions(sent, w, NULL, opts);
-			w->status = WS_INDICT; /* Prevent marking as "unknown word". */
-		}
-		else if (dict->unknown_word_defined && dict->use_unknown_word)
-		{
-			we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
-			assert(we, UNKNOWN_WORD " supposed to be defined in the dictionary!");
-			w->status |= WS_UNKNOWN;
-		}
-		else
-		{
-			prt_error("Error: Word '%s': word is unknown\n", w->subword);
-			return false;
-		}
-	}
-
-#ifdef DEBUG
-	assert(NULL != we, "Word '%s': NULL X-node", w->subword);
-#else
-	if (NULL == we)
-	{
-		/* FIXME Change it to assert() when the Wordgraph version is mature. */
-		prt_error("Error: Word %zu '%s': Internal error: NULL X_node\n", wordpos, w->subword);
+		prt_error("Error: Word '%s': word is unknown\n", w->subword);
 		return false;
 	}
-#endif
 
 	/* If the current word is an empty-word (or like it), add a
 	 * connector for an empty-word (EMPTY_CONNECTOR - ZZZ+) to the
