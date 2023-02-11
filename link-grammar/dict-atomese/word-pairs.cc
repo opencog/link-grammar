@@ -226,15 +226,15 @@ Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 
 	const char* wrd = germ->get_name().c_str();
 	Dictionary prdct = local->pair_dict;
-   Dict_node* dn = dict_node_lookup(prdct, wrd);
+	Dict_node* dn = dict_node_lookup(prdct, wrd);
 
-   if (dn)
-   {
-      lgdebug(D_USER_INFO, "Atomese: Found pairs in cache: >>%s<<\n", wrd);
+	if (dn)
+	{
+		lgdebug(D_USER_INFO, "Atomese: Found pairs in cache: >>%s<<\n", wrd);
 		Exp* exp = dn->exp;
 		dict_node_free_lookup(prdct, dn);
-      return exp;
-   }
+		return exp;
+	}
 
 	Exp* exp = make_pair_exprs(dict, germ);
 	const char* ssc = string_set_add(wrd, dict->string_set);
