@@ -31,6 +31,14 @@
  */
 #define MAX_SENTENCE 254        /* Maximum number of words in a sentence */
 
+/* Since tracon IDs are unique per sentence, for convenience NULL
+ * connectors (zero-length tracons) have tracon IDs equal to the word
+ * number on which their disjunct resides. To that end an initial block
+ * of IDs is reserved. It is the maximum number of words in a sentence
+ * rounded up to a power of 2.
+ */
+#define NULL_TRACON_BLOCK 256
+
 /* For faster comparisons, the connector lc part is encoded into a number
  * and a mask. Each letter is encoded using LC_BITS bits. With 7 bits, it
  * is possible to encode up to 9 letters in an uint64_t. */
