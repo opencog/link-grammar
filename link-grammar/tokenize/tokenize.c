@@ -26,8 +26,6 @@
 #include "dict-common/dict-utils.h"
 #include "dict-common/regex-morph.h"
 #include "error.h"
-#include "externs.h"
-#include "print/print.h"
 #include "print/print-util.h"
 #include "spellcheck.h"
 #include "string-set.h"

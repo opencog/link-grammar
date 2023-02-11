@@ -12,28 +12,16 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifndef _WIN32
-#include <langinfo.h>
-#endif
-#include <limits.h>
-
-#include "anysplit.h"
 #include "api-structures.h"
-#include "dict-common/dict-affix.h"
 #include "dict-common/dict-api.h"
 #include "dict-common/dict-common.h"
 #include "dict-common/dict-defines.h" // for RIGHT_WALL_WORD
 #include "dict-common/dict-utils.h"
-#include "dict-common/regex-morph.h"
 #include "error.h"
-#include "externs.h"
+#include "lookup-exprs.h"
 #include "print/print.h"
-#include "print/print-util.h"
-#include "spellcheck.h"
-#include "string-set.h"
 #include "tokenize.h"
 #include "tok-structures.h"
-#include "utilities.h"
 #include "wordgraph.h"
 #include "word-structures.h"
 

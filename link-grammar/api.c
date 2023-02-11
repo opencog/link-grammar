@@ -28,6 +28,7 @@
 #include "tokenize/wordgraph.h"         // wordgraph_delete
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"
+#include "tokenize/lookup-exprs.h"
 #include "tokenize/tokenize.h"
 #include "tokenize/word-structures.h"   // Word_struct
 #include "utilities.h"
