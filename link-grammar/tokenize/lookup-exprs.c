@@ -303,11 +303,11 @@ bool build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
 	bool have_unknown_words = false;
-	unsigned int ZZZ_added = 0;   /* ZZZ+ has been added to previous word */
 
 	dict->start_lookup(dict, sent);
 	for (size_t i=0; i<sent->length; i++)
 	{
+		unsigned int ZZZ_added = 0; /* ZZZ+ has been added to previous word */
 		Gword *gw = sent->word[i].gwords[0];
 		int igw = 0;
 		while (gw)
