@@ -239,13 +239,18 @@ bool as_open(Dictionary dict)
 		local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.25"));
 		local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "3.0"));
 
-		local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
 		local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "1"));
 
 		local->pair_dict = create_pair_cache_dict(dict);
 	}
 
 	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "0"));
+
+	// The any_default is used to set the costs on UNKNOWN-WORD
+	// XXX FIXME, maybe there should be a different parameter for this?
+	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
+
+	dict->as_server = (void*) local;
 
 	local->enable_unknown_word = atoi(LDEF(ENABLE_UNKNOWN_WORD_STRING, "1"));
 	if (local->enable_unknown_word)
@@ -254,8 +259,6 @@ bool as_open(Dictionary dict)
 		Exp* exp = make_any_exprs(dict);
 		make_dn(dict, exp, ukw);
 	}
-
-	dict->as_server = (void*) local;
 
 	if (local->using_external_as) return true;
 	if (nullptr == local->stnp) return true;
