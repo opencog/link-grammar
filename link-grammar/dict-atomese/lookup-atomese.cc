@@ -485,13 +485,6 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 
 	Exp* orhead = nullptr;
 
-	// Create disjuncts consisting entirely of "ANY" links.
-	if (local->any_disjuncts)
-	{
-		Exp* any = make_any_exprs(dict);
-		or_enchain(dict, orhead, any);
-	}
-
 	// Create disjuncts consisting entirely of word-pair links.
 	if (0 < local->pair_disjuncts)
 	{
@@ -565,6 +558,12 @@ void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 	}
 }
 
+#define ENCHAIN(ORHEAD,EXP) \
+	if (nullptr == ORHEAD)   \
+		ORHEAD = (EXP);       \
+	else                     \
+		ORHEAD = make_or_node(dict->Exp_pool, ORHEAD, (EXP));
+
 /// Given a word, return the collection of Dict_nodes holding the
 /// expressions for that word.
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
@@ -575,23 +574,39 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	// Do we already have this word cached? If so, pull from
 	// the cache.
 	Dict_node* dn = dict_node_lookup(dict, s);
-
 	if (dn)
 	{
 		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
+
+		// The dict cache contains only full sections. We never store
+		// cartesian pairs, as this has an explosively large number of
+		// disjuncts. So, if the user wants these, we have to generate
+		// them on the fly.
+		if (0 < local->pair_disjuncts)
+		{
+assert(0, "Sorry! Not implemented yet!");
+		}
 		return dn;
 	}
 
+	if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
+
 	const char* ssc = string_set_add(s, dict->string_set);
 
-	if (0 == strcmp(s, LEFT_WALL_WORD))
-		s = "###LEFT-WALL###";
-
-	Handle wrd = local->asp->get_node(WORD_NODE, s);
+	Handle wrd = local->asp->get_node(WORD_NODE, ssc);
 	if (nullptr == wrd) return nullptr;
 
+	Exp* exp = nullptr;
+
+	// Create disjuncts consisting entirely of "ANY" links.
+	if (local->any_disjuncts)
+	{
+		Exp* any = make_any_exprs(dict);
+		or_enchain(dict, exp, any);
+	}
+
 	// Get expressions, where the word itself is the germ.
-	Exp* exp = make_exprs(dict, wrd);
+	ENCHAIN(exp, make_exprs(dict, wrd));
 
 	// Get expressions, where the word is in some class.
 	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
@@ -605,16 +620,13 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		lgdebug(+D_SPEC+5, "as_lookup_list class for >>%s<< nexpr=%d\n",
 			ssc, size_of_expression(clexp));
 
-		if (nullptr == exp)
-			exp = clexp;
-		else
-			exp = make_or_node(dict->Exp_pool, exp, clexp);
+		ENCHAIN(exp, clexp);
 	}
 
 	if (nullptr == exp)
 		return nullptr;
 
-	lgdebug(D_USER_INFO, "Atomese: Created expressions for >>%s<<\n", s);
+	lgdebug(D_USER_INFO, "Atomese: Created expressions for >>%s<<\n", ssc);
 	make_dn(dict, exp, ssc);
 	return dict_node_lookup(dict, ssc);
 }
