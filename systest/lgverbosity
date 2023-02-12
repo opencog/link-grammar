@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Written by <amirpli@gmail.com>
+#%DESC List function and file verbosity levels
+
+cd ${0%/*}/..
+
+shopt -s globstar
+perl -ne \
+ 'BEGIN { $func_fieldwidth = 30; }
+  $filedebug = "";
+  if (/(?:verbosity_level|lgdebug)\(\+?(D_SPEC\+\d+)/)
+  {
+    $line = $.;
+    $verbosity = $1;
+    while (<>)
+    {
+      next if /{/;
+      $more_info = $_;
+      last;
+    }
+    $more_info =~ s/^\s+//;
+    chomp($more_info);
+    $out = sprintf "%-10s %-15s %s", $verbosity, "", $more_info;
+  }
+  elsif (/^#define\s+(D_[A-Z]+)\s+(\S+)\s*(.*)$/)
+  {
+    $line = $.;
+    $out = sprintf "%-10s %-15s %s", $1, $2, $3;
+    $filedebug = /for this file/;
+  }
+  $func = "";
+  $func = $1 if /([\w:]+)\(.*[\),]\s*$/;
+  if ($. > $line && $out)
+  {
+    ($file) = $ARGV =~ m|link-grammar/(.*)|;
+    if ($func)
+    {
+      $func = $func ."()";
+      $func = "...".substr($func, -($func_fieldwidth-3))
+        if $func =~ /::/ && length($func) > $func_fieldwidth;
+    }
+    $func = "Whole file" if $filedebug;
+    printf "%-30s %${func_fieldwidth}s %s\n", $file.":", $func, $out;
+    $out = "";
+  }
+ ' \
+**/*.[ch]* | sort -n -k 4

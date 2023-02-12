@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Written by <amirpli@gmail.com>
+#%DESC List test_enabled("teststring") tests
+
+cd ${0%/*}/..
+
+shopt -s globstar
+exec perl -ne \
+  'printf "%-30s %s:%d\n", $1, $ARGV, $. if /\btest_enabled\([^,]*(?:,\s)?"([^"]+)"/; eof and close ARGV' **/*.[ch]* |\
+  sort

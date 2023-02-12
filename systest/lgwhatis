@@ -1,0 +1,24 @@
+#!/usr/bin/env perl
+# Written by <amirpli@gmail.com>
+#%DESC Show description of script's directory programs according to embedded #%DESC
+
+use strict;
+use warnings;
+
+(my $progdir = $0) =~ s,/[^/]+$,,;
+
+opendir(PROGDIR, $progdir) || die "$0: Cannor opendir '$progdir': $!";
+(my @files = readdir(PROGDIR)) || die "$0: Cannor readdir '$progdir': $!";
+chdir $progdir;
+
+FILE: foreach my $f (@files) {
+	next if $f =~ /^\./ || -d $f;
+	open(PROGF, $f) || die "$0: Cannor open '$f': $!";
+	foreach (<PROGF>) {
+		if (s/^#%DESC\s+//) {
+			printf "%-20s %s", $f, $_;
+			next FILE;
+		}
+	}
+	printf "%-20s *** No description ***\n", $f;
+}
