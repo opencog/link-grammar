@@ -238,10 +238,7 @@ Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 
 	Exp* exp = make_pair_exprs(dict, germ);
 	const char* ssc = string_set_add(wrd, dict->string_set);
-	dn = make_dn(prdct, exp, ssc);
-
-	// The make_dn made a copy, but we don't want it.
-	dict_node_free_lookup(prdct, dn);
+	make_dn(prdct, exp, ssc);
 	return exp;
 }
 

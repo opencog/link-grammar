@@ -252,10 +252,7 @@ bool as_open(Dictionary dict)
 	{
 		const char* ukw = string_set_add("<UNKNOWN-WORD>", dict->string_set);
 		Exp* exp = make_any_exprs(dict);
-		Dict_node * dn = make_dn(dict, exp, ukw);
-		// make_dn() puts in the dict, but also creates a fresh copy.
-		// Free the copy, we don't want it.
-		dict_node_free_lookup(dict, dn);
+		make_dn(dict, exp, ukw);
 	}
 
 	dict->as_server = (void*) local;
@@ -543,7 +540,7 @@ static void report_dict_usage(Dictionary dict)
 
 /// Given an expression, wrap  it with a Dict_node and insert it into
 /// the dictionary.
-Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
+void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 {
 	Dict_node* dn = dict_node_new();
 	dn->string = ssc;
@@ -563,11 +560,6 @@ Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
 		report_dict_usage(dict);
 		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
 	}
-
-	// Perform the lookup. We cannot return the dn above, as the
-	// dict_node_free_lookup() will delete it, leading to mem corruption.
-	dn = dict_node_lookup(dict, ssc);
-	return dn;
 }
 
 /// Given a word, return the collection of Dict_nodes holding the
@@ -620,7 +612,8 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		return nullptr;
 
 	lgdebug(D_USER_INFO, "Atomese: Created expressions for >>%s<<\n", s);
-	return make_dn(dict, exp, ssc);
+	make_dn(dict, exp, ssc);
+	return dict_node_lookup(dict, ssc);
 }
 
 // This is supposed to provide a wild-card lookup.  However,
