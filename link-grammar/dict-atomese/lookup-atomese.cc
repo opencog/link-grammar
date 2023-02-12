@@ -475,34 +475,6 @@ void and_enchain_right(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
 	andtail = item;
 }
 
-/// Build expressions for the dictionary word held by `germ`.
-/// Exactly what is built is controlled by the configuration:
-/// it will be some mixture of sections, word-pairs, and ANY
-/// links.
-Exp* make_exprs(Dictionary dict, const Handle& germ)
-{
-	Local* local = (Local*) (dict->as_server);
-
-	Exp* orhead = nullptr;
-
-	// Create disjuncts consisting entirely of word-pair links.
-	if (0 < local->pair_disjuncts)
-	{
-		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts,
-		                           local->pair_with_any);
-		or_enchain(dict, orhead, cpr);
-	}
-
-	// Create disjuncts from Sections
-	if (local->enable_sections)
-	{
-		Exp* sects = make_sect_exprs(dict, germ);
-		or_enchain(dict, orhead, sects);
-	}
-
-	return orhead;
-}
-
 static void report_dict_usage(Dictionary dict)
 {
 	Dict_node* most_used = nullptr;
@@ -605,22 +577,34 @@ assert(0, "Sorry! Not implemented yet!");
 		or_enchain(dict, exp, any);
 	}
 
-	// Get expressions, where the word itself is the germ.
-	ENCHAIN(exp, make_exprs(dict, wrd));
-
-	// Get expressions, where the word is in some class.
-	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+	// Create disjuncts consisting entirely of word-pair links.
+	if (0 < local->pair_disjuncts)
 	{
-		const Handle& wcl = memb->getOutgoingAtom(1);
-		if (WORD_CLASS_NODE != wcl->get_type()) continue;
+		Exp* cpr = make_cart_pairs(dict, wrd, local->pair_disjuncts,
+		                           local->pair_with_any);
+		ENCHAIN(exp, cpr);
+	}
 
-		Exp* clexp = make_exprs(dict, wcl);
-		if (nullptr == clexp) continue;
+	// Create expressions from Sections
+	if (local->enable_sections)
+	{
+		Exp* sects = make_sect_exprs(dict, wrd);
+		ENCHAIN(exp, sects);
 
-		lgdebug(+D_SPEC+5, "as_lookup_list class for >>%s<< nexpr=%d\n",
-			ssc, size_of_expression(clexp));
+		// Get expressions, where the word is in some class.
+		for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+		{
+			const Handle& wcl = memb->getOutgoingAtom(1);
+			if (WORD_CLASS_NODE != wcl->get_type()) continue;
 
-		ENCHAIN(exp, clexp);
+			Exp* clexp = make_sect_exprs(dict, wcl);
+			if (nullptr == clexp) continue;
+
+			lgdebug(+D_SPEC+5, "as_lookup_list class for >>%s<< nexpr=%d\n",
+				ssc, size_of_expression(clexp));
+
+			ENCHAIN(exp, clexp);
+		}
 	}
 
 	if (nullptr == exp)
