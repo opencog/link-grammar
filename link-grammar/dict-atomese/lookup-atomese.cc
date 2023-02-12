@@ -28,6 +28,7 @@ extern "C" {
 #include "../dict-common/dict-internals.h" // for dict_node_new()
 #include "../dict-common/dict-utils.h"     // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
+#include "../tokenize/word-structures.h"   // for Word_struct
 #include "lookup-atomese.h"
 };
 
@@ -247,6 +248,15 @@ bool as_open(Dictionary dict)
 	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "0"));
 
 	local->enable_unknown_word = atoi(LDEF(ENABLE_UNKNOWN_WORD_STRING, "1"));
+	if (local->enable_unknown_word)
+	{
+		const char* ukw = string_set_add("<UNKNOWN-WORD>", dict->string_set);
+		Exp* exp = make_any_exprs(dict);
+		Dict_node * dn = make_dn(dict, exp, ukw);
+		// make_dn() puts in the dict, but also creates a fresh copy.
+		// Free the copy, we don't want it.
+		dict_node_free_lookup(dict, dn);
+	}
 
 	dict->as_server = (void*) local;
 
@@ -483,7 +493,7 @@ Exp* make_exprs(Dictionary dict, const Handle& germ)
 	}
 
 	// Create disjuncts consisting entirely of word-pair links.
-	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
+	if (0 < local->pair_disjuncts)
 	{
 		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts,
 		                           local->pair_with_any);
@@ -578,12 +588,6 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	}
 
 	const char* ssc = string_set_add(s, dict->string_set);
-
-	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))
-	{
-		Exp* exp = make_any_exprs(dict);
-		return make_dn(dict, exp, ssc);
-	}
 
 	if (0 == strcmp(s, LEFT_WALL_WORD))
 		s = "###LEFT-WALL###";
