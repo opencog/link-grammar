@@ -279,9 +279,9 @@ assert(0, "Not supported yet!");
 				dict->Exp_pool, slnk.c_str(), cdir, false);
 
 			if ('+' == cdir)
-				and_enchain_right(dict, andhead, andtail, eee);
+				and_enchain_right(dict->Exp_pool, andhead, andtail, eee);
 			else if ('-' == cdir)
-				and_enchain_left(dict, andhead, andtail, eee);
+				and_enchain_left(dict->Exp_pool, andhead, andtail, eee);
 		}
 
 		// Sanity-check the Section - this should never-ever happen!
@@ -296,9 +296,9 @@ assert(0, "Not supported yet!");
 		if (extras)
 		{
 			Exp* optex = make_optional_node(dict->Exp_pool, extras);
-			and_enchain_left(dict, andhead, andtail, optex);
+			and_enchain_left(dict->Exp_pool, andhead, andtail, optex);
 			optex = make_optional_node(dict->Exp_pool, extras);
-			and_enchain_right(dict, andhead, andtail, optex);
+			and_enchain_right(dict->Exp_pool, andhead, andtail, optex);
 		}
 
 		// Optional: shorten the expression,
@@ -326,7 +326,7 @@ assert(0, "Not supported yet!");
 #endif
 
 		// Add it to the linked list.
-		or_enchain(dict, orhead, andhead);
+		or_enchain(dict->Exp_pool, orhead, andhead);
 	}
 
 	return orhead;

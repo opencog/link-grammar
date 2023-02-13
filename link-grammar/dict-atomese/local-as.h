@@ -65,15 +65,16 @@ bool section_boolean_lookup(Dictionary dict, const char *s);
 bool pair_boolean_lookup(Dictionary dict, const char *s);
 
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
-Exp* make_cart_pairs(Dictionary dict, const Handle& germ, Sentence,
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ, Pool_desc*,
                      const HandleSeq&, int arity, bool any);
-Exp* make_any_exprs(Dictionary dict);
+Exp* make_any_exprs(Pool_desc*);
 
 void make_dn(Dictionary, Exp*, const char*);
 
-void or_enchain(Dictionary, Exp* &orhead, Exp*);
-void and_enchain_left(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);
-void and_enchain_right(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);
+// These work with both Dictionary and Sentence Exp_pools.
+void or_enchain(Pool_desc*, Exp* &orhead, Exp*);
+void and_enchain_left(Pool_desc*, Exp* &orhead, Exp* &ortail, Exp*);
+void and_enchain_right(Pool_desc*, Exp* &orhead, Exp* &ortail, Exp*);
 
 std::string cached_linkname(Local*, const Handle& pair);
 

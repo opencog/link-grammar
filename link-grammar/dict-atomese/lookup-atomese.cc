@@ -455,7 +455,7 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 // ===============================================================
 
 /// Add `item` to the linked list `orhead`, using a OR operator.
-void or_enchain(Dictionary dict, Exp* &orhead, Exp* item)
+void or_enchain(Pool_desc* pool, Exp* &orhead, Exp* item)
 {
 	if (nullptr == item) return; // no-op
 
@@ -469,7 +469,7 @@ void or_enchain(Dictionary dict, Exp* &orhead, Exp* item)
 	// algos to croak. So the first OR node must have two.
 	if (OR_type != orhead->type)
 	{
-		orhead = make_or_node(dict->Exp_pool, item, orhead);
+		orhead = make_or_node(pool, item, orhead);
 		return;
 	}
 
@@ -481,12 +481,12 @@ void or_enchain(Dictionary dict, Exp* &orhead, Exp* item)
 /// Add `item` to the left end of the linked list `andhead`, using
 /// an AND operator. The `andtail` is used to track the right side
 /// of the list.
-void and_enchain_left(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
+void and_enchain_left(Pool_desc* pool, Exp* &andhead, Exp* &andtail, Exp* item)
 {
 	if (nullptr == item) return; // no-op
 	if (nullptr == andhead)
 	{
-		andhead = make_and_node(dict->Exp_pool, item, NULL);
+		andhead = make_and_node(pool, item, NULL);
 		return;
 	}
 
@@ -501,12 +501,12 @@ void and_enchain_left(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
 /// Add `item` to the right end of the linked list `andhead`, using
 /// an AND operator. The `andtail` is used to track the right side
 /// of the list.
-void and_enchain_right(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
+void and_enchain_right(Pool_desc* pool, Exp* &andhead, Exp* &andtail, Exp* item)
 {
 	if (nullptr == item) return; // no-op
 	if (nullptr == andhead)
 	{
-		andhead = make_and_node(dict->Exp_pool, item, NULL);
+		andhead = make_and_node(pool, item, NULL);
 		return;
 	}
 
@@ -617,16 +617,19 @@ assert(0, "Sorry! Not implemented yet!");
 	if (local->any_disjuncts)
 	{
 		Exp* any = make_any_exprs(dict);
-		or_enchain(dict, exp, any);
+		or_enchain(dict->Exp_pool, exp, any);
 	}
 
-	// Create disjuncts consisting entirely of word-pair links.
+	// Create expressions consisting entirely of word-pair links.
+	// These are "temporary", and always go into the sentence
+	// Exp_pool.
 	if (0 < local->pair_disjuncts)
 	{
-		Exp* cpr = make_cart_pairs(dict, wrd, sentlo, sent_words,
+		Exp* cpr = make_cart_pairs(dict, wrd, sentlo->Exp_pool, sent_words,
 		                           local->pair_disjuncts,
 		                           local->pair_with_any);
 		ENCHAIN(exp, cpr);
+xxxxxxxx
 	}
 
 	// Create expressions from Sections

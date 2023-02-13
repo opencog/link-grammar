@@ -206,7 +206,7 @@ static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		double cost = (local->pair_scale * mi) + local->pair_offset;
 		eee->cost = cost;
 
-		or_enchain(dict, orhead, eee);
+		or_enchain(dict->Exp_pool, orhead, eee);
 		cnt ++;
 	}
 
@@ -250,7 +250,7 @@ static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 /// "pre-prunes" the set of all word-pairs to only those in this
 /// sentence.
 static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
-                                Sentence sent,
+                                Pool_desc* pool,
                                 const HandleSeq& sent_words)
 {
 	Exp* allexp = get_pair_exprs(dict, germ);
@@ -293,7 +293,7 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 
 		if (links.end() != links.find(orch->condesc->string))
 		{
-			Exp* cpe = (Exp*) pool_alloc(sent->Exp_pool);
+			Exp* cpe = (Exp*) pool_alloc(pool);
 			*cpe = *orch;
 			cpe->operand_next = sentex;
 			sentex = cpe;
@@ -302,13 +302,16 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 		orch = orch->operand_next;
 	}
 
+	lgdebug(D_USER_INFO, "Atomese: Pruned %d sentence pairs for >>%s<<\n",
+		nfound, wrd);
+
 	// Unary OR exps not allowed.
 	if (2 > nfound)
 		return sentex;
 
 	// sentex is a linked list or length 2 or more, of connectors to
 	// be or'ed together. Wrap them in an OR exp.
-	Exp* orhead = Exp_create(sent->Exp_pool);
+	Exp* orhead = Exp_create(pool);
 	orhead->type = OR_type;
 	orhead->operand_first = sentex;
 	return orhead;
@@ -351,7 +354,7 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 /// words passed in through `sent_words`. This is the local context.
 /// If it is empty, then no pre-pruning is done.
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
-                     Sentence sent,
+                     Pool_desc* pool,
                      const HandleSeq& sent_words,
                      int arity, bool with_any)
 {
@@ -360,26 +363,26 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 	Exp* andhead = nullptr;
 	Exp* andtail = nullptr;
 
-	Exp* epr = get_sent_pair_exprs(dict, germ, sent, sent_words);
+	Exp* epr = get_sent_pair_exprs(dict, germ, pool, sent_words);
 	if (nullptr == epr) return nullptr;
 
 	// Tack on ANY connectors, if requested.
 	if (with_any)
 	{
-		Exp* ap = make_any_exprs(dict);
-		epr = make_or_node(dict->Exp_pool, epr, ap);
+		Exp* ap = make_any_exprs(pool);
+		epr = make_or_node(pool, epr, ap);
 	}
-	Exp* optex = make_optional_node(dict->Exp_pool, epr);
+	Exp* optex = make_optional_node(pool, epr);
 
 	// If its 1-dimensional, we are done.
 	if (1 == arity) return optex;
 
-	and_enchain_right(dict, andhead, andtail, optex);
+	and_enchain_right(pool, andhead, andtail, optex);
 
 	for (int i=1; i< arity; i++)
 	{
-		Exp* opt = make_optional_node(dict->Exp_pool, epr);
-		and_enchain_right(dict, andhead, andtail, opt);
+		Exp* opt = make_optional_node(pool, epr);
+		and_enchain_right(pool, andhead, andtail, opt);
 	}
 
 	// Could verify that it all multiplies out as expected.
@@ -402,20 +405,20 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 /// FYI, there is a minor issue for cost-accounting on multi-connectors;
 /// see https://github.com/opencog/link-grammar/issues/1351 for details.
 ///
-Exp* make_any_exprs(Dictionary dict)
+Exp* make_any_exprs(Pool_desc* pool)
 {
 	// Create a pair of ANY-links that can connect either left or right.
-	Exp* aneg = make_connector_node(dict, dict->Exp_pool, "ANY", '-', true);
-	Exp* apos = make_connector_node(dict, dict->Exp_pool, "ANY", '+', true);
+	Exp* aneg = make_connector_node(dict, pool, "ANY", '-', true);
+	Exp* apos = make_connector_node(dict, pool, "ANY", '+', true);
 
 	Local* local = (Local*) (dict->as_server);
 	aneg->cost = local->any_default;
 	apos->cost = local->any_default;
 
-	Exp* any = make_or_node(dict->Exp_pool, aneg, apos);
+	Exp* any = make_or_node(pool, aneg, apos);
 
-	Exp* andy = make_and_node(dict->Exp_pool, aneg, apos);
-	or_enchain(dict, any, andy);
+	Exp* andy = make_and_node(pool, aneg, apos);
+	or_enchain(pool, any, andy);
 
 	return any;
 }
