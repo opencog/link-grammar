@@ -250,6 +250,7 @@ static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 /// "pre-prunes" the set of all word-pairs to only those in this
 /// sentence.
 static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
+                                Sentence sent,
                                 const HandleSeq& sent_words)
 {
 	Exp* allexp = get_pair_exprs(dict, germ);
@@ -292,7 +293,7 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 
 		if (links.end() != links.find(orch->condesc->string))
 		{
-			Exp *cpe = pool_alloc(sent->Exp_pool);
+			Exp* cpe = (Exp*) pool_alloc(sent->Exp_pool);
 			*cpe = *orch;
 			cpe->operand_next = sentex;
 			sentex = cpe;
@@ -308,7 +309,6 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 	// sentex is a linked list or length 2 or more, of connectors to
 	// be or'ed together. Wrap them in an OR exp.
 	Exp* orhead = Exp_create(sent->Exp_pool);
-xxxx
 	orhead->type = OR_type;
 	orhead->operand_first = sentex;
 	return orhead;
@@ -351,6 +351,7 @@ xxxx
 /// words passed in through `sent_words`. This is the local context.
 /// If it is empty, then no pre-pruning is done.
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
+                     Sentence sent,
                      const HandleSeq& sent_words,
                      int arity, bool with_any)
 {
@@ -359,7 +360,7 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 	Exp* andhead = nullptr;
 	Exp* andtail = nullptr;
 
-	Exp* epr = get_sent_pair_exprs(dict, germ, sent_words);
+	Exp* epr = get_sent_pair_exprs(dict, germ, sent, sent_words);
 	if (nullptr == epr) return nullptr;
 
 	// Tack on ANY connectors, if requested.

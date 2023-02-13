@@ -65,7 +65,7 @@ bool section_boolean_lookup(Dictionary dict, const char *s);
 bool pair_boolean_lookup(Dictionary dict, const char *s);
 
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
-Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ, Sentence,
                      const HandleSeq&, int arity, bool any);
 Exp* make_any_exprs(Dictionary dict);
 

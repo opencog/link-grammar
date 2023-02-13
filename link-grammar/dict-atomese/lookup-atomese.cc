@@ -356,6 +356,9 @@ void as_close(Dictionary dict)
 
 // ===============================================================
 
+// The sentence that this thread is working with. Assume one thread
+// per Sentence, which should be a perfectly valid assumption.
+thread_local Sentence sentlo = nullptr;
 thread_local HandleSeq sent_words;
 
 void as_start_lookup(Dictionary dict, Sentence sent)
@@ -371,6 +374,7 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 	// if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	if (0 < local->pair_disjuncts)
 	{
+		sentlo = sent;
 		for(size_t i=0; i<sent->length; i++)
 		{
 			const char* wstr = sent->word[i].unsplit_word;
@@ -399,7 +403,10 @@ void as_end_lookup(Dictionary dict, Sentence sent)
 	Local* local = (Local*) (dict->as_server);
 
 	if (0 < local->pair_disjuncts)
+	{
+		sentlo = nullptr;
 		sent_words.clear();
+	}
 
 	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
@@ -616,7 +623,7 @@ assert(0, "Sorry! Not implemented yet!");
 	// Create disjuncts consisting entirely of word-pair links.
 	if (0 < local->pair_disjuncts)
 	{
-		Exp* cpr = make_cart_pairs(dict, wrd, sent_words,
+		Exp* cpr = make_cart_pairs(dict, wrd, sentlo, sent_words,
 		                           local->pair_disjuncts,
 		                           local->pair_with_any);
 		ENCHAIN(exp, cpr);

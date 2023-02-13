@@ -230,7 +230,7 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 // now. Maybe later, after we get the basics down.
 HandleSeq sent_words;
 assert(0, "Not supported yet!");
-		extras = make_cart_pairs(dict, germ, sent_words,
+		extras = make_cart_pairs(dict, germ, nullptr, sent_words,
 		                         local->extra_pairs,
 		                         local->extra_any);
 	}
