@@ -356,7 +356,7 @@ void as_close(Dictionary dict)
 
 // ===============================================================
 
-thread_local std::vector<std::string> sent_words;
+thread_local HandleSeq sent_words;
 
 void as_start_lookup(Dictionary dict, Sentence sent)
 {
@@ -373,13 +373,22 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 	{
 		for(size_t i=0; i<sent->length; i++)
 		{
-			if (sent->word[i].unsplit_word)
-				sent_words.push_back(sent->word[i].unsplit_word);
-			int j = 0;
-			while (sent->word[i].alternatives[j])
+			const char* wstr = sent->word[i].unsplit_word;
+			if (wstr)
 			{
-				sent_words.push_back(sent->word[i].alternatives[j]);
+				Handle wrd = local->asp->get_node(WORD_NODE, wstr);
+				if (wrd)
+					sent_words.push_back(wrd);
+			}
+			int j = 0;
+			const char* astr = sent->word[i].alternatives[j];
+			while (astr)
+			{
+				Handle wrd = local->asp->get_node(WORD_NODE, astr);
+				if (wrd)
+					sent_words.push_back(wrd);
 				j++;
+				astr = sent->word[i].alternatives[j];
 			}
 		}
 	}

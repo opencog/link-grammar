@@ -228,7 +228,7 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 // and then also to not cahce the resultiong exprs, because they
 // will be sentence-specific. This is doable, but just ... not right
 // now. Maybe later, after we get the basics down.
-std::vector<std::string> sent_words;
+HandleSeq sent_words;
 assert(0, "Not supported yet!");
 		extras = make_cart_pairs(dict, germ, sent_words,
 		                         local->extra_pairs,

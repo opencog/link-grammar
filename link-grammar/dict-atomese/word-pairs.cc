@@ -249,25 +249,27 @@ static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 /// "pre-prunes" the set of all word-pairs to only those in this
 /// sentence.
 static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
-                                const std::vector<std::string>& sent_words)
+                                const HandleSeq& sent_words)
 {
 	Exp* allexp = get_pair_exprs(dict, germ);
 	if (0 == sent_words.size())
 		return allexp;
-
-	const char* wrd = germ->get_name().c_str();
-	lgdebug(D_USER_INFO, "Atomese: pre-prune pairs for: >>%s<<\n", wrd);
 
 	// Unary nodes are possible, in which case, it is just a connector.
 	// Don't bother pruning.
 	if (OR_type != allexp->type)
 		return allexp;
 
+	const char* wrd = germ->get_name().c_str();
+	lgdebug(D_USER_INFO, "Atomese: pre-prune pairs for: >>%s<<\n", wrd);
+
+	// Find all word-pairs.
+
 	Exp* orch = allexp->operand_first;
 	while (orch)
 	{
 		assert(CONNECTOR_type == orch->type, "unexpected expression!");
-printf("duuude its %d %s\n", orch->type, orch->condesc->string);
+// printf("duuude its %d %s\n", orch->type, orch->condesc->string);
 		orch = orch->operand_next;
 	}
 
@@ -313,7 +315,7 @@ exit(0);
 /// words passed in through `sent_words`. This is the local context.
 /// If it is empty, then no pre-pruning is done.
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
-                     const std::vector<std::string>& sent_words,
+                     const HandleSeq& sent_words,
                      int arity, bool with_any)
 {
 	if (0 >= arity) return nullptr;
