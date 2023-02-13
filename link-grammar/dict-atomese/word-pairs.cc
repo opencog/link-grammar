@@ -240,7 +240,6 @@ static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 	Exp* exp = make_pair_exprs(dict, germ);
 	const char* ssc = string_set_add(wrd, dict->string_set);
 	make_dn(prdct, exp, ssc);
-	lgdebug(D_USER_INFO, "Atomese: Fetched pairs for >>%s<<\n", wrd);
 	return exp;
 }
 
@@ -261,9 +260,6 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 	// Don't bother pruning.
 	if (OR_type != allexp->type)
 		return allexp;
-
-	const char* wrd = germ->get_name().c_str();
-	lgdebug(D_USER_INFO, "Atomese: pre-prune pairs for: >>%s<<\n", wrd);
 
 	// Find all word-pairs involving the germ, and words in the
 	// sentence. Then, look up the LG link name for these pairs.
@@ -302,8 +298,9 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 		orch = orch->operand_next;
 	}
 
+	const char* wrd = germ->get_name().c_str();
 	lgdebug(D_USER_INFO,
-		"Atomese: After pre-pruing, found %d sentence pairs for >>%s<<\n",
+		"Atomese: After pre-pruning, found %d sentence pairs for >>%s<<\n",
 		nfound, wrd);
 
 	// Unary OR exps not allowed.
