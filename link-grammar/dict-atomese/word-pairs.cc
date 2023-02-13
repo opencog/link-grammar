@@ -14,6 +14,7 @@
 
 extern "C" {
 #include "../link-includes.h"              // For Dictionary
+#include "../api-structures.h"             // For Sentence_s
 #include "../dict-common/dict-common.h"    // for Dictionary_s
 #include "../dict-common/dict-internals.h" // for dict_node_free_lookup()
 #include "../dict-common/dict-utils.h"     // for size_of_expression()
@@ -279,25 +280,38 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 			links.insert(cached_linkname(local, rpr));
 	}
 
-int i=0;
+	Exp* sentex = nullptr;
+	int nfound = 0;
+
 	// The allexp is an OR_type expression. A linked list of connectors
 	// follow, chained along `operand_next`.
 	Exp* orch = allexp->operand_first;
 	while (orch)
 	{
-i++;
 		assert(CONNECTOR_type == orch->type, "unexpected expression!");
 
 		if (links.end() != links.find(orch->condesc->string))
 		{
-printf("duuude got one %d %s\n", i, orch->condesc->string);
+			Exp *cpe = pool_alloc(sent->Exp_pool);
+			*cpe = *orch;
+			cpe->operand_next = sentex;
+			sentex = cpe;
+			nfound ++;
 		}
 		orch = orch->operand_next;
 	}
 
-exit(0);
-	Exp* exp = allexp;
-	return exp;
+	// Unary OR exps not allowed.
+	if (2 > nfound)
+		return sentex;
+
+	// sentex is a linked list or length 2 or more, of connectors to
+	// be or'ed together. Wrap them in an OR exp.
+	Exp* orhead = Exp_create(sent->Exp_pool);
+xxxx
+	orhead->type = OR_type;
+	orhead->operand_first = sentex;
+	return orhead;
 }
 
 // ===============================================================
