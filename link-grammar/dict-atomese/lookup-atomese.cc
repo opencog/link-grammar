@@ -256,7 +256,7 @@ bool as_open(Dictionary dict)
 	if (local->enable_unknown_word)
 	{
 		const char* ukw = string_set_add("<UNKNOWN-WORD>", dict->string_set);
-		Exp* exp = make_any_exprs(dict);
+		Exp* exp = make_any_exprs(dict, dict->Exp_pool);
 		make_dn(dict, exp, ukw);
 	}
 
@@ -611,25 +611,31 @@ assert(0, "Sorry! Not implemented yet!");
 	Handle wrd = local->asp->get_node(WORD_NODE, ssc);
 	if (nullptr == wrd) return nullptr;
 
-	Exp* exp = nullptr;
-
-	// Create disjuncts consisting entirely of "ANY" links.
-	if (local->any_disjuncts)
-	{
-		Exp* any = make_any_exprs(dict);
-		or_enchain(dict->Exp_pool, exp, any);
-	}
-
 	// Create expressions consisting entirely of word-pair links.
-	// These are "temporary", and always go into the sentence
-	// Exp_pool.
+	// These are "temporary", and always go into Sentence::Exp_pool.
+	// XXX FIXME, because thesee live in a different pool, they cannot
+	// be mixed with dictionary expressions. *However* we can mix the
+	// Dict_nodes, and so mashups of pairs and sections need to be done
+	// at the Dict_node level.
 	if (0 < local->pair_disjuncts)
 	{
 		Exp* cpr = make_cart_pairs(dict, wrd, sentlo->Exp_pool, sent_words,
 		                           local->pair_disjuncts,
 		                           local->pair_with_any);
-		ENCHAIN(exp, cpr);
-xxxxxxxx
+
+		Dict_node * dn = dict_node_new();
+		dn->string = ssc;
+		dn->exp = cpr;
+		return dn;
+	}
+
+	Exp* exp = nullptr;
+
+	// Create disjuncts consisting entirely of "ANY" links.
+	if (local->any_disjuncts)
+	{
+		Exp* any = make_any_exprs(dict, dict->Exp_pool);
+		or_enchain(dict->Exp_pool, exp, any);
 	}
 
 	// Create expressions from Sections

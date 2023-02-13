@@ -302,7 +302,8 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 		orch = orch->operand_next;
 	}
 
-	lgdebug(D_USER_INFO, "Atomese: Pruned %d sentence pairs for >>%s<<\n",
+	lgdebug(D_USER_INFO,
+		"Atomese: After pre-pruing, found %d sentence pairs for >>%s<<\n",
 		nfound, wrd);
 
 	// Unary OR exps not allowed.
@@ -353,6 +354,10 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 /// work *only* with the words in the current sentence.  These are the
 /// words passed in through `sent_words`. This is the local context.
 /// If it is empty, then no pre-pruning is done.
+///
+/// The expressions will be created in the given Exp_pool, which should
+/// be the Sentence::Exp_pool when pre-pruning (as those expressions are
+/// necessarily Sentence-specific).
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
                      Pool_desc* pool,
                      const HandleSeq& sent_words,
@@ -369,7 +374,7 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 	// Tack on ANY connectors, if requested.
 	if (with_any)
 	{
-		Exp* ap = make_any_exprs(pool);
+		Exp* ap = make_any_exprs(dict, pool);
 		epr = make_or_node(pool, epr, ap);
 	}
 	Exp* optex = make_optional_node(pool, epr);
@@ -405,7 +410,7 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 /// FYI, there is a minor issue for cost-accounting on multi-connectors;
 /// see https://github.com/opencog/link-grammar/issues/1351 for details.
 ///
-Exp* make_any_exprs(Pool_desc* pool)
+Exp* make_any_exprs(Dictionary dict, Pool_desc* pool)
 {
 	// Create a pair of ANY-links that can connect either left or right.
 	Exp* aneg = make_connector_node(dict, pool, "ANY", '-', true);
