@@ -263,13 +263,35 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 	const char* wrd = germ->get_name().c_str();
 	lgdebug(D_USER_INFO, "Atomese: pre-prune pairs for: >>%s<<\n", wrd);
 
-	// Find all word-pairs.
+	// Find all word-pairs involving the germ, and words in the
+	// sentence. Then, look up the LG link name for these pairs.
+	// Stick them into a hash table.
+	Local* local = (Local*) (dict->as_server);
+	std::unordered_set<std::string> links;
+	for (const Handle& sentw : sent_words)
+	{
+		const Handle& lpr = local->asp->get_link(LIST_LINK, sentw, germ);
+		if (lpr)
+			links.insert(cached_linkname(local, lpr));
 
+		const Handle& rpr = local->asp->get_link(LIST_LINK, germ, sentw);
+		if (rpr)
+			links.insert(cached_linkname(local, rpr));
+	}
+
+int i=0;
+	// The allexp is an OR_type expression. A linked list of connectors
+	// follow, chained along `operand_next`.
 	Exp* orch = allexp->operand_first;
 	while (orch)
 	{
+i++;
 		assert(CONNECTOR_type == orch->type, "unexpected expression!");
-// printf("duuude its %d %s\n", orch->type, orch->condesc->string);
+
+		if (links.end() != links.find(orch->condesc->string))
+		{
+printf("duuude got one %d %s\n", i, orch->condesc->string);
+		}
 		orch = orch->operand_next;
 	}
 
