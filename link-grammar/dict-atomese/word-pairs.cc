@@ -242,6 +242,22 @@ static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 	return exp;
 }
 
+/// Return word-pair expressions connecting the `germ` with any word
+/// listed in `sent_words`.  If `sent_words` is empty, then return
+/// all expressions for all word-pairs with `germ` in it. This
+/// "pre-prunes" the set of all word-pairs to only those in this
+/// sentence.
+static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
+                                const std::vector<std::string>& sent_words)
+{
+	Exp* allexp = get_pair_exprs(dict, germ);
+	if (0 == sent_words.size())
+		return allexp;
+
+	Exp* exp = allexp;
+	return exp;
+}
+
 // ===============================================================
 
 /// Create exprs that consist of a Cartesian product of pairs.
@@ -267,6 +283,17 @@ static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 /// a plain cartesian product. The only issue is that this eats up
 /// RAM. At least RAM use is linear: it goes as `O(arity)`.  More
 /// precisely, as `O(npairs x arity)`.
+///
+/// There's a problem, here. If the germ is a common word, e.g. 'the'
+/// or perhaps punctuation, participating in 10K pairs, or more, then
+/// the number of disjuncts created from the cartesian product becomes
+/// npairs raised to power of arity, so, trillions or more. This won't
+/// work, so we need to apply expression-pruning, first. The current
+/// generic expression pruning is not powerful enough to cut this down
+/// to size. So, instead, we pre-prune, in get_sent_pair_exprs(), and
+/// work *only* with the words in the current sentence.  These are the
+/// words passed in through `sent_words`. This is the local context.
+/// If it is empty, then no pre-pruning is done.
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
                      const std::vector<std::string>& sent_words,
                      int arity, bool with_any)
@@ -276,7 +303,7 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 	Exp* andhead = nullptr;
 	Exp* andtail = nullptr;
 
-	Exp* epr = make_pair_exprs(dict, germ);
+	Exp* epr = get_sent_pair_exprs(dict, germ, sent_words);
 	if (nullptr == epr) return nullptr;
 
 	// Tack on ANY connectors, if requested.
