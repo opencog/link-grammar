@@ -239,6 +239,7 @@ static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 	Exp* exp = make_pair_exprs(dict, germ);
 	const char* ssc = string_set_add(wrd, dict->string_set);
 	make_dn(prdct, exp, ssc);
+	lgdebug(D_USER_INFO, "Atomese: Fetched pairs for >>%s<<\n", wrd);
 	return exp;
 }
 
@@ -254,6 +255,23 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 	if (0 == sent_words.size())
 		return allexp;
 
+	const char* wrd = germ->get_name().c_str();
+	lgdebug(D_USER_INFO, "Atomese: pre-prune pairs for: >>%s<<\n", wrd);
+
+	// Unary nodes are possible, in which case, it is just a connector.
+	// Don't bother pruning.
+	if (OR_type != allexp->type)
+		return allexp;
+
+	Exp* orch = allexp->operand_first;
+	while (orch)
+	{
+		assert(CONNECTOR_type == orch->type, "unexpected expression!");
+printf("duuude its %d %s\n", orch->type, orch->condesc->string);
+		orch = orch->operand_next;
+	}
+
+exit(0);
 	Exp* exp = allexp;
 	return exp;
 }

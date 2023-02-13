@@ -373,7 +373,8 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 	{
 		for(size_t i=0; i<sent->length; i++)
 		{
-			sent_words.push_back(sent->word[i].unsplit_word);
+			if (sent->word[i].unsplit_word)
+				sent_words.push_back(sent->word[i].unsplit_word);
 			int j = 0;
 			while (sent->word[i].alternatives[j])
 			{
