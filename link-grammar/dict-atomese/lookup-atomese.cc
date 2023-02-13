@@ -356,15 +356,39 @@ void as_close(Dictionary dict)
 
 // ===============================================================
 
+thread_local std::vector<std::string> sent_words;
+
 void as_start_lookup(Dictionary dict, Sentence sent)
 {
 	lgdebug(D_USER_INFO, "Atomese: Start dictionary lookup for >>%s<<\n",
 		sent->orig_sentence);
+
+	// Make a note of all of the words in the sentence. We need this,
+	// to pre-prune MST word-pairs. But only if we are doing MST-style
+	// parsing. Maybe if extra_pairs, too, someday?
+	// if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
+	if (0 < local->pair_disjuncts)
+	{
+		for(size_t i=0; i<sent->length; i++)
+		{
+			sent_words.push_back(sent->word[i].unsplit_word);
+			int j = 0;
+			while (sent->word[i].alternatives[j])
+			{
+				sent_words.push_back(sent->word[i].alternatives[j]);
+				j++;
+			}
+		}
+	}
 }
 
 void as_end_lookup(Dictionary dict, Sentence sent)
 {
 	Local* local = (Local*) (dict->as_server);
+
+	if (0 < local->pair_disjuncts)
+		sent_words.clear();
+
 	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
 	// Deal with any new connector descriptors that have arrived.
