@@ -223,8 +223,17 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 
 	// Create some optional word-pair links; these may be nullptr's.
 	if (0 < local->extra_pairs)
-		extras = make_cart_pairs(dict, germ, local->extra_pairs,
+	{
+// We need to restructure the code to pass in the sentence-words,
+// and then also to not cahce the resultiong exprs, because they
+// will be sentence-specific. This is doable, but just ... not right
+// now. Maybe later, after we get the basics down.
+std::vector<std::string> sent_words;
+assert(0, "Not supported yet!");
+		extras = make_cart_pairs(dict, germ, sent_words,
+		                         local->extra_pairs,
 		                         local->extra_any);
+	}
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);

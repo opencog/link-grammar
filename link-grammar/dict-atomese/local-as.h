@@ -65,8 +65,9 @@ bool section_boolean_lookup(Dictionary dict, const char *s);
 bool pair_boolean_lookup(Dictionary dict, const char *s);
 
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
-Exp* get_pair_exprs(Dictionary dict, const Handle& germ);
-Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity, bool any);
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
+                     const std::vector<std::string>&,
+                     int arity, bool any);
 Exp* make_any_exprs(Dictionary dict);
 
 void make_dn(Dictionary, Exp*, const char*);

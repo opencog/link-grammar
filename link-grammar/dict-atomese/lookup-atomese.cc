@@ -360,6 +360,8 @@ thread_local std::vector<std::string> sent_words;
 
 void as_start_lookup(Dictionary dict, Sentence sent)
 {
+	Local* local = (Local*) (dict->as_server);
+
 	lgdebug(D_USER_INFO, "Atomese: Start dictionary lookup for >>%s<<\n",
 		sent->orig_sentence);
 
@@ -578,7 +580,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		// cartesian pairs, as this has an explosively large number of
 		// disjuncts. So, if the user wants these, we have to generate
 		// them on the fly.
-		if (0 < local->pair_disjuncts)
+		if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 		{
 assert(0, "Sorry! Not implemented yet!");
 		}
@@ -604,7 +606,8 @@ assert(0, "Sorry! Not implemented yet!");
 	// Create disjuncts consisting entirely of word-pair links.
 	if (0 < local->pair_disjuncts)
 	{
-		Exp* cpr = make_cart_pairs(dict, wrd, local->pair_disjuncts,
+		Exp* cpr = make_cart_pairs(dict, wrd, sent_words,
+		                           local->pair_disjuncts,
 		                           local->pair_with_any);
 		ENCHAIN(exp, cpr);
 	}

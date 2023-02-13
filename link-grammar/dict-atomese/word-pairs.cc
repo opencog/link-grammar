@@ -220,7 +220,7 @@ static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 /// containing the word in the germ. These are simply OR'ed together.
 /// Get them from the local dictionary cache, if they're already
 /// there; create them from scratch, polling the AtomSpace.
-Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
+static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 
@@ -268,6 +268,7 @@ Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 /// RAM. At least RAM use is linear: it goes as `O(arity)`.  More
 /// precisely, as `O(npairs x arity)`.
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
+                     const std::vector<std::string>& sent_words,
                      int arity, bool with_any)
 {
 	if (0 >= arity) return nullptr;
