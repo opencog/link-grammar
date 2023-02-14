@@ -214,7 +214,8 @@ static bool reg_comp(Regex_node *rn)
 	                            options, &rc, &erroffset, NULL);
 	if (re->re_code != NULL)
 	{
-		pcre2_jit_compile(re->re_code, PCRE2_JIT_COMPLETE);
+		// JIT is not used due to a significant slowdown. (Strings too short?)
+		//pcre2_jit_compile(re->re_code, PCRE2_JIT_COMPLETE);
 		return true;
 	}
 
