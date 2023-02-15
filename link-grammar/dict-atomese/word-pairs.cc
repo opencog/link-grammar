@@ -323,6 +323,22 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 }
 
 // ===============================================================
+//
+// Return the single expression (ANY+ or ANY-)
+static Exp* make_any_conns(Dictionary dict, Pool_desc* pool)
+{
+	// Create a pair of ANY-links that can connect either left or right.
+	Exp* aneg = make_connector_node(dict, pool, "ANY", '-', false);
+	Exp* apos = make_connector_node(dict, pool, "ANY", '+', false);
+
+	Local* local = (Local*) (dict->as_server);
+	aneg->cost = local->any_default;
+	apos->cost = local->any_default;
+
+	return make_or_node(pool, aneg, apos);
+}
+
+// ===============================================================
 
 /// Create exprs that consist of a Cartesian product of pairs.
 /// Given a word, a lookup is made to find all word-pairs holding
@@ -369,23 +385,22 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 {
 	if (0 >= arity) return nullptr;
 
-	Exp* andhead = nullptr;
-	Exp* andtail = nullptr;
-
 	Exp* epr = get_sent_pair_exprs(dict, germ, pool, sent_words);
 	if (nullptr == epr) return nullptr;
 
 	// Tack on ANY connectors, if requested.
 	if (with_any)
 	{
-		Exp* ap = make_any_exprs(dict, pool);
-		epr = make_or_node(pool, epr, ap);
+		Exp* ap = make_any_conns(dict, pool);
+		or_enchain(pool, epr, ap);
 	}
 	Exp* optex = make_optional_node(pool, epr);
 
 	// If its 1-dimensional, we are done.
 	if (1 == arity) return optex;
 
+	Exp* andhead = nullptr;
+	Exp* andtail = nullptr;
 	and_enchain_right(pool, andhead, andtail, optex);
 
 	for (int i=1; i< arity; i++)
@@ -403,65 +418,49 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 
 // ===============================================================
 
-/// Create an expression having the form
-///    @ANY- or @ANY+ or (@ANY- & @ANY+)
-/// These are multi-connectors. The cost on each connector is the
-/// default any-cost from the configuration.  Note that the use of
-/// this expression will result in random planar parses between the
-/// words having this expression. i.e. it will be the same as using
-/// the `any` language to create random planar pares.
+/// Create an expression having from one to four copies of
+///    (ANY- or ANY+) & ... & (ANY- or ANY+)
 ///
-/// FYI, there is a minor issue for cost-accounting on multi-connectors;
-/// see https://github.com/opencog/link-grammar/issues/1351 for details.
+/// The cost on each connector is the default any-cost from the
+/// configuration.
+///
+/// Multi-connectors are NOT used, due to an issue with cost accounting
+/// for multi-connectors. Basically, each additional use does not
+/// increase that cost. Yet we do want cost-per-use. See
+/// https://github.com/opencog/link-grammar/issues/1351 for details.
+///
+/// Using this expression is similar to the `any` language, in that it
+/// will results in random planar parses. However, since this maxes out
+/// at four connectors per word, this is .. different.
 ///
 Exp* make_any_exprs(Dictionary dict, Pool_desc* pool)
 {
-	// Create a pair of ANY-links that can connect either left or right.
-	Exp* aneg = make_connector_node(dict, pool, "ANY", '-', false);
-	Exp* apos = make_connector_node(dict, pool, "ANY", '+', false);
-
-	Local* local = (Local*) (dict->as_server);
-	aneg->cost = local->any_default;
-	apos->cost = local->any_default;
-
-	// any is (ANY+ or ANY-)
-	Exp* any = make_or_node(pool, aneg, apos);
-
 	// (ANY+ or ANY-) or
 	Exp* orhead = nullptr;
-	or_enchain(pool, orhead, any);
+	or_enchain(pool, orhead, make_any_conns(dict, pool));
 
 	// ((ANY+ or ANY-) & (ANY+ or ANY-)) or
 	Exp* andhead = nullptr;
 	Exp* andtail = nullptr;
-	any = make_or_node(pool, aneg, apos);
-	and_enchain_left(pool, andhead, andtail, any);
-	any = make_or_node(pool, aneg, apos);
-	and_enchain_left(pool, andhead, andtail, any);
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
 	or_enchain(pool, orhead, andhead);
 
 	// three-fold .. ((ANY+ or ANY-) & ...) or
 	andhead = nullptr;
 	andtail = nullptr;
-	any = make_or_node(pool, aneg, apos);
-	and_enchain_left(pool, andhead, andtail, any);
-	any = make_or_node(pool, aneg, apos);
-	and_enchain_left(pool, andhead, andtail, any);
-	any = make_or_node(pool, aneg, apos);
-	and_enchain_left(pool, andhead, andtail, any);
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
 	or_enchain(pool, orhead, andhead);
 
 	// four-fold .. ((ANY+ or ANY-) & ...) or
 	andhead = nullptr;
 	andtail = nullptr;
-	any = make_or_node(pool, aneg, apos);
-	and_enchain_left(pool, andhead, andtail, any);
-	any = make_or_node(pool, aneg, apos);
-	and_enchain_left(pool, andhead, andtail, any);
-	any = make_or_node(pool, aneg, apos);
-	and_enchain_left(pool, andhead, andtail, any);
-	any = make_or_node(pool, aneg, apos);
-	and_enchain_left(pool, andhead, andtail, any);
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
 	or_enchain(pool, orhead, andhead);
 
 	// Grand total of one to four connectors:
