@@ -270,11 +270,18 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 	{
 		const Handle& lpr = local->asp->get_link(LIST_LINK, sentw, germ);
 		if (lpr)
-			links.insert(cached_linkname(local, lpr));
-
+		{
+			Handle lgc = get_lg_conn(local, lpr);
+			if (lgc)
+				links.insert(lgc->get_name());
+		}
 		const Handle& rpr = local->asp->get_link(LIST_LINK, germ, sentw);
 		if (rpr)
-			links.insert(cached_linkname(local, rpr));
+		{
+			Handle rgc = get_lg_conn(local, rpr);
+			if (rgc)
+				links.insert(rgc->get_name().c_str());
+		}
 	}
 
 	Exp* sentex = nullptr;
