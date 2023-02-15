@@ -76,6 +76,7 @@ void or_enchain(Pool_desc*, Exp* &orhead, Exp*);
 void and_enchain_left(Pool_desc*, Exp* &orhead, Exp* &ortail, Exp*);
 void and_enchain_right(Pool_desc*, Exp* &orhead, Exp* &ortail, Exp*);
 
+Handle get_lg_conn(Local*, const Handle& pair);
 std::string cached_linkname(Local*, const Handle& pair);
 
 //----

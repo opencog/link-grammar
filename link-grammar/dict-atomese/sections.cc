@@ -115,13 +115,15 @@ static std::string idtostr(uint64_t aid)
 }
 
 /// Given a `(List (Word ...) (Word ...))` denoting a link, find the
-/// corresponding LgConnNode, if it exists.
-static Handle get_lg_conn(const Handle& wset, const Handle& key)
+/// corresponding LgConnNode, if it exists. The string name of that
+/// LgConnNode is the name of the LG link for that word-pair.
+Handle get_lg_conn(Local* local, const Handle& wpair)
 {
-	for (const Handle& ev : wset->getIncomingSetByType(EVALUATION_LINK))
+	const Handle& key = local->linkp;
+	for (const Handle& edge : wpair->getIncomingSetByType(EDGE_LINK))
 	{
-		if (ev->getOutgoingAtom(0) == key)
-			return ev->getOutgoingAtom(1);
+		if (edge->getOutgoingAtom(0) == key)
+			return edge->getOutgoingAtom(1);
 	}
 	return Handle::UNDEFINED;
 }
@@ -132,14 +134,14 @@ static Handle get_lg_conn(const Handle& wset, const Handle& key)
 /// That is, `lnk` is `(List (Word ...) (Word ...))`
 /// The link name is stored in an LgLinkNode, having the format
 ///
-///     (Evaluation (Predicate "*-LG connector string-*")
+///     (Edge (Predicate "*-LG connector string-*")
 ///              (LgLinkNode "ASDF") (List (Word ...) (Word ...)))
 ///
 std::string cached_linkname(Local* local, const Handle& lnk)
 {
 	// If we've already cached a connector string for this,
 	// just return it.  Else build and cache a string.
-	Handle lgc = get_lg_conn(lnk, local->linkp);
+	Handle lgc = get_lg_conn(local, lnk);
 	if (lgc)
 		return lgc->get_name();
 
@@ -150,7 +152,7 @@ std::string cached_linkname(Local* local, const Handle& lnk)
 	std::string slnk = idtostr(lid++);
 
 	lgc = createNode(LG_LINK_NODE, slnk);
-	local->asp->add_link(EVALUATION_LINK, local->linkp, lgc, lnk);
+	local->asp->add_link(EDGE_LINK, local->linkp, lgc, lnk);
 	return slnk;
 }
 
