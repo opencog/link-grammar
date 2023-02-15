@@ -3,9 +3,12 @@
  *
  * Create disjuncts consisting of optionals, from word-pairs.
  *
- * Copyright (c) 2022 Linas Vepstas <linasvepstas@gmail.com>
+ * Copyright (c) 2022, 2023 Linas Vepstas <linasvepstas@gmail.com>
  */
 #ifdef HAVE_ATOMESE
+
+#include <sys/time.h>
+#include <sys/resource.h>
 
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/atoms/value/FloatValue.h>
@@ -19,11 +22,24 @@ extern "C" {
 #include "../dict-common/dict-internals.h" // for dict_node_free_lookup()
 #include "../dict-common/dict-utils.h"     // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
+#include "../externs.h"                    // For verbosity
 };
 
 #include "local-as.h"
 
 using namespace opencog;
+
+/** returns the current usage time clock in seconds */
+static double current_usage_time(void)
+{
+#if !defined(_WIN32)
+	struct rusage u;
+	getrusage (RUSAGE_THREAD, &u);
+	return (u.ru_utime.tv_sec + ((double) u.ru_utime.tv_usec) / 1000000.0);
+#else
+	return ((double) clock())/CLOCKS_PER_SEC;
+#endif
+}
 
 // Create a mini-dict, used only for caching word-pair dict-nodes.
 Dictionary create_pair_cache_dict(Dictionary dict)
@@ -59,6 +75,9 @@ static bool need_pair_fetch(Local* local, const Handle& germ)
 /// Return zero, if there are none; else return non-zero.
 static size_t fetch_pairs(Local* local, const Handle& germ)
 {
+	double start = 0.0;
+	if (D_USER_BASIC <= verbosity) start = current_usage_time();
+
 	local->stnp->fetch_incoming_by_type(germ, LIST_LINK);
 	local->stnp->barrier();
 
@@ -69,8 +88,18 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 		local->stnp->fetch_incoming_by_type(rawpr, EVALUATION_LINK);
 		cnt++;
 	}
-	lgdebug(D_USER_INFO, "Atomese: Fetched %lu word-pairs for >>%s<<\n",
-		cnt, germ->get_name().c_str());
+
+#define RES_COL_WIDTH 37
+	if (D_USER_BASIC <= verbosity)
+	{
+		double now = current_usage_time();
+		char s[128] = "";
+		snprintf(s, sizeof(s), "Fetched %lu pairs: >>%s<<",
+			cnt, germ->get_name().c_str());
+		prt_error("Atomese: %-*s %6.2f seconds\n",
+			RES_COL_WIDTH, s, now - start);
+	}
+
 	return cnt;
 }
 
