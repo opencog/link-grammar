@@ -362,7 +362,7 @@ char *lg_exp_stringify(const Exp *n)
  * cumbersome. Care should be taken due to the static memory of the result. */
 const char *exp_stringify(const Exp *n)
 {
-	static TLS char *s;
+	static TLS char *s = NULL;
 
 	free(s);
 	s = NULL;
