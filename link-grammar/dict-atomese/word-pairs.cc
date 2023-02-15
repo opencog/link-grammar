@@ -420,18 +420,46 @@ Exp* make_any_exprs(Dictionary dict, Pool_desc* pool)
 	// any is (ANY+ or ANY-)
 	Exp* any = make_or_node(pool, aneg, apos);
 
+	// (ANY+ or ANY-) or
+	Exp* orhead = nullptr;
+	or_enchain(pool, orhead, any);
+
+	// ((ANY+ or ANY-) & (ANY+ or ANY-)) or
 	Exp* andhead = nullptr;
 	Exp* andtail = nullptr;
+	any = make_or_node(pool, aneg, apos);
+	and_enchain_left(pool, andhead, andtail, any);
+	any = make_or_node(pool, aneg, apos);
+	and_enchain_left(pool, andhead, andtail, any);
+	or_enchain(pool, orhead, andhead);
+
+	// three-fold .. ((ANY+ or ANY-) & ...) or
+	andhead = nullptr;
+	andtail = nullptr;
+	any = make_or_node(pool, aneg, apos);
+	and_enchain_left(pool, andhead, andtail, any);
+	any = make_or_node(pool, aneg, apos);
+	and_enchain_left(pool, andhead, andtail, any);
+	any = make_or_node(pool, aneg, apos);
+	and_enchain_left(pool, andhead, andtail, any);
+	or_enchain(pool, orhead, andhead);
+
+	// four-fold .. ((ANY+ or ANY-) & ...) or
+	andhead = nullptr;
+	andtail = nullptr;
+	any = make_or_node(pool, aneg, apos);
+	and_enchain_left(pool, andhead, andtail, any);
+	any = make_or_node(pool, aneg, apos);
+	and_enchain_left(pool, andhead, andtail, any);
+	any = make_or_node(pool, aneg, apos);
+	and_enchain_left(pool, andhead, andtail, any);
+	any = make_or_node(pool, aneg, apos);
+	and_enchain_left(pool, andhead, andtail, any);
+	or_enchain(pool, orhead, andhead);
 
 	// Grand total of one to four connectors:
-	// {ANY+ or ANY-} & {ANY+ or ANY-} & {ANY+ or ANY-} & (ANY+ or ANY-)
 	// The total cost should be N times single-connector cost.
-	and_enchain_left(pool, andhead, andtail, any);
-	and_enchain_left(pool, andhead, andtail, make_optional_node(pool, any));
-	and_enchain_left(pool, andhead, andtail, make_optional_node(pool, any));
-	and_enchain_left(pool, andhead, andtail, make_optional_node(pool, any));
-
-	return andhead;
+	return orhead;
 }
 
 // ===============================================================

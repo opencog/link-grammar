@@ -586,11 +586,13 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	Local* local = (Local*) (dict->as_server);
 	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
+printf("duuuude enter as lookup for %s\n", s);
 	// Do we already have this word cached? If so, pull from
 	// the cache.
 	Dict_node* dn = dict_node_lookup(dict, s);
 	if (dn)
 	{
+printf("duuuude unexpectedly found dn for %s\n", s);
 		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
 
 		// The dict cache contains only full sections. We never store
@@ -623,6 +625,8 @@ assert(0, "Sorry! Not implemented yet!");
 		                           local->pair_disjuncts,
 		                           local->pair_with_any);
 
+ 
+printf("duude ret from cart pairs size=%d\n", size_of_expression(cpr));
 		Dict_node * dn = dict_node_new();
 		dn->string = ssc;
 		dn->exp = cpr;
