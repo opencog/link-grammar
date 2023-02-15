@@ -29,16 +29,15 @@ extern "C" {
 
 using namespace opencog;
 
-/** returns the current usage time clock in seconds */
-static double current_usage_time(void)
+/**
+ * Returns the CPU usage time, summed over all threads, in seconds.
+ * Most of the time lost in Atomese is going to be in some other thread.
+ */
+static double total_usage_time(void)
 {
-#if !defined(_WIN32)
 	struct rusage u;
-	getrusage (RUSAGE_THREAD, &u);
+	getrusage (RUSAGE_SELF, &u);
 	return (u.ru_utime.tv_sec + ((double) u.ru_utime.tv_usec) / 1000000.0);
-#else
-	return ((double) clock())/CLOCKS_PER_SEC;
-#endif
 }
 
 // Create a mini-dict, used only for caching word-pair dict-nodes.
@@ -76,7 +75,7 @@ static bool need_pair_fetch(Local* local, const Handle& germ)
 static size_t fetch_pairs(Local* local, const Handle& germ)
 {
 	double start = 0.0;
-	if (D_USER_BASIC <= verbosity) start = current_usage_time();
+	if (D_USER_BASIC <= verbosity) start = total_usage_time();
 
 	local->stnp->fetch_incoming_by_type(germ, LIST_LINK);
 	local->stnp->barrier();
@@ -88,11 +87,12 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 		local->stnp->fetch_incoming_by_type(rawpr, EVALUATION_LINK);
 		cnt++;
 	}
+	local->stnp->barrier();
 
 #define RES_COL_WIDTH 37
 	if (D_USER_BASIC <= verbosity)
 	{
-		double now = current_usage_time();
+		double now = total_usage_time();
 		char s[128] = "";
 		snprintf(s, sizeof(s), "Fetched %lu pairs: >>%s<<",
 			cnt, germ->get_name().c_str());
@@ -202,6 +202,9 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 /// containing the word in the germ. These are simply OR'ed together.
 static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 {
+	double start = 0.0;
+	if (D_USER_BASIC <= verbosity) start = total_usage_time();
+
 	Local* local = (Local*) (dict->as_server);
 	const AtomSpacePtr& asp = local->asp;
 	Exp* orhead = nullptr;
@@ -243,6 +246,15 @@ static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		cnt, germ->getIncomingSetSizeByType(LIST_LINK),
 		germ->get_name().c_str());
 
+	if (D_USER_BASIC <= verbosity)
+	{
+		double now = total_usage_time();
+		char s[128] = "";
+		snprintf(s, sizeof(s), "Created %lu pairs: >>%s<<",
+			cnt, germ->get_name().c_str());
+		prt_error("Atomese: %-*s %6.2f seconds\n",
+			RES_COL_WIDTH, s, now - start);
+	}
 	return orhead;
 }
 
