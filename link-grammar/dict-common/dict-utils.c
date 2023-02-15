@@ -149,10 +149,9 @@ void free_Exp(Exp *e)
 int size_of_expression(Exp * e)
 {
 	if (NULL == e) return 0;
+	if (e->type == CONNECTOR_type) return 1;
 
 	int size = 0;
-
-	if (e->type == CONNECTOR_type) return 1;
 	for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 		size += size_of_expression(opd);
 

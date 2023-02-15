@@ -420,10 +420,6 @@ Exp* make_any_exprs(Dictionary dict, Pool_desc* pool)
 	// any is (ANY+ or ANY-)
 	Exp* any = make_or_node(pool, aneg, apos);
 
-	// optany is (ANY+ or ANY- or ())
-	Exp* optany = make_or_node(pool, aneg, apos);
-	or_enchain(pool, optany, make_zeroary_node(pool));
-
 	Exp* andhead = nullptr;
 	Exp* andtail = nullptr;
 
@@ -431,9 +427,9 @@ Exp* make_any_exprs(Dictionary dict, Pool_desc* pool)
 	// {ANY+ or ANY-} & {ANY+ or ANY-} & {ANY+ or ANY-} & (ANY+ or ANY-)
 	// The total cost should be N times single-connector cost.
 	and_enchain_left(pool, andhead, andtail, any);
-	and_enchain_left(pool, andhead, andtail, optany);
-	and_enchain_left(pool, andhead, andtail, optany);
-	and_enchain_left(pool, andhead, andtail, optany);
+	and_enchain_left(pool, andhead, andtail, make_optional_node(pool, any));
+	and_enchain_left(pool, andhead, andtail, make_optional_node(pool, any));
+	and_enchain_left(pool, andhead, andtail, make_optional_node(pool, any));
 
 	return andhead;
 }
