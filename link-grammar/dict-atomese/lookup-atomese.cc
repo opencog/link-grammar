@@ -361,6 +361,13 @@ void as_close(Dictionary dict)
 thread_local Sentence sentlo = nullptr;
 thread_local HandleSeq sent_words;
 
+/// Make a note of all of the words in the sentence. We need this,
+/// to pre-prune MST word-pairs.
+///
+/// XXX FIXME: At this time, pre-pruning ise done only when MST
+/// parsing. It could be extended to also pre-prune extra pairs
+/// added to disjuncts. Or even to the connectors on the disjuncts
+/// themselves.
 void as_start_lookup(Dictionary dict, Sentence sent)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -368,9 +375,7 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 	lgdebug(D_USER_INFO, "Atomese: Start dictionary lookup for >>%s<<\n",
 		sent->orig_sentence);
 
-	// Make a note of all of the words in the sentence. We need this,
-	// to pre-prune MST word-pairs. But only if we are doing MST-style
-	// parsing. Maybe if extra_pairs, too, someday?
+	// XXX FIXME Someday handle extra_pairs, too.
 	// if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	if (0 < local->pair_disjuncts)
 	{
@@ -380,7 +385,7 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 			const char* wstr = sent->word[i].unsplit_word;
 			if (wstr)
 			{
-				if (0 == strcmp(wstr, LEFT_WALL_WORD))
+				if (0 == i && 0 == strcmp(wstr, LEFT_WALL_WORD))
 					wstr = "###LEFT-WALL###";
 
 				Handle wrd = local->asp->get_node(WORD_NODE, wstr);
@@ -589,13 +594,11 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	Local* local = (Local*) (dict->as_server);
 	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
-printf("duuuude enter as lookup for %s\n", s);
 	// Do we already have this word cached? If so, pull from
 	// the cache.
 	Dict_node* dn = dict_node_lookup(dict, s);
 	if (dn)
 	{
-printf("duuuude unexpectedly found dn for %s\n", s);
 		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
 
 		// The dict cache contains only full sections. We never store
@@ -627,9 +630,6 @@ assert(0, "Sorry! Not implemented yet!");
 		Exp* cpr = make_cart_pairs(dict, wrd, sentlo->Exp_pool, sent_words,
 		                           local->pair_disjuncts,
 		                           local->pair_with_any);
-
- 
-printf("duude ret from cart pairs size=%d\n", size_of_expression(cpr));
 		Dict_node * dn = dict_node_new();
 		dn->string = ssc;
 		dn->exp = cpr;
