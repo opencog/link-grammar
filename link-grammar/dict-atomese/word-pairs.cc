@@ -410,19 +410,32 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 Exp* make_any_exprs(Dictionary dict, Pool_desc* pool)
 {
 	// Create a pair of ANY-links that can connect either left or right.
-	Exp* aneg = make_connector_node(dict, pool, "ANY", '-', true);
-	Exp* apos = make_connector_node(dict, pool, "ANY", '+', true);
+	Exp* aneg = make_connector_node(dict, pool, "ANY", '-', false);
+	Exp* apos = make_connector_node(dict, pool, "ANY", '+', false);
 
 	Local* local = (Local*) (dict->as_server);
 	aneg->cost = local->any_default;
 	apos->cost = local->any_default;
 
+	// any is (ANY+ or ANY-)
 	Exp* any = make_or_node(pool, aneg, apos);
 
-	Exp* andy = make_and_node(pool, aneg, apos);
-	or_enchain(pool, any, andy);
+	// optany is (ANY+ or ANY- or ())
+	Exp* optany = make_or_node(pool, aneg, apos);
+	or_enchain(pool, optany, make_zeroary_node(pool));
 
-	return any;
+	Exp* andhead = nullptr;
+	Exp* andtail = nullptr;
+
+	// Grand total of one to four connectors:
+	// {ANY+ or ANY-} & {ANY+ or ANY-} & {ANY+ or ANY-} & (ANY+ or ANY-)
+	// The total cost should be N times single-connector cost.
+	and_enchain_left(pool, andhead, andtail, any);
+	and_enchain_left(pool, andhead, andtail, optany);
+	and_enchain_left(pool, andhead, andtail, optany);
+	and_enchain_left(pool, andhead, andtail, optany);
+
+	return andhead;
 }
 
 // ===============================================================
