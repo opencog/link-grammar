@@ -380,6 +380,9 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 			const char* wstr = sent->word[i].unsplit_word;
 			if (wstr)
 			{
+				if (0 == strcmp(wstr, LEFT_WALL_WORD))
+					wstr = "###LEFT-WALL###";
+
 				Handle wrd = local->asp->get_node(WORD_NODE, wstr);
 				if (wrd)
 					sent_words.push_back(wrd);
