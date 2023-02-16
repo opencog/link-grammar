@@ -605,9 +605,10 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		// cartesian pairs, as this has an explosively large number of
 		// disjuncts. So, if the user wants these, we have to generate
 		// them on the fly.
-		if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
+		if (local->enable_sections and
+		    (0 < local->pair_disjuncts or 0 < local->extra_pairs))
 		{
-assert(0, "Sorry! Not implemented yet!");
+throw FatalErrorException(TRACE_INFO, "Sorry! Not implemented yet! (word=%s)", s);
 		}
 		return dn;
 	}
@@ -621,7 +622,7 @@ assert(0, "Sorry! Not implemented yet!");
 
 	// Create expressions consisting entirely of word-pair links.
 	// These are "temporary", and always go into Sentence::Exp_pool.
-	// XXX FIXME, because thesee live in a different pool, they cannot
+	// XXX FIXME, because these live in a different pool, they cannot
 	// be mixed with dictionary expressions. *However* we can mix the
 	// Dict_nodes, and so mashups of pairs and sections need to be done
 	// at the Dict_node level.

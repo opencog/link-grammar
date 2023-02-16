@@ -170,7 +170,10 @@ the dictionary entry is cached, and subsequent parsing is much faster.
 External Mode
 -------------
 The **external mode** is available when using the Link Grammar shared
-library.  In this case, a librar call can be made
+library. In this case, a call to the `lg_config_atomspace()` function
+must be made
+
+ In this case, a librar call can be made
 In external mode, the system uses a pre-existing AtomSpace.
 
 `lg_config_atomspace`
