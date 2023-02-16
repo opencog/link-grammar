@@ -15,8 +15,10 @@ dictionaries maintained in the AtomSpace.  This provides several benefits:
 This is meant to work with dictionaries created by the code located
 in the [OpenCog learn repo](https://github.com/opencog/learn).
 
-**Version 0.9.2** -- All basic features have been implemented.
-All known bugs have been fixed.
+**Version 0.9.3** -- All basic features have been implemented.
+All known bugs have been fixed. Some more complex modes have not
+yet been implemented. The code base is not stable, and is subject
+to change, including possibly large revisions.
 
 Building
 --------
@@ -140,6 +142,42 @@ $ guile
 See the
 [LgParse examples](https://github.com/opencog/lg-atomese/tree/master/examples)
 for more info.
+
+Using
+=====
+There are two basic modes of operation: **private AtomSpace mode** and
+** external (shared) AtomSpace mode**.
+
+Private Mode
+------------
+In **private mode**, the system creates and maintains it's own private
+AtomSpace, and relies on being able to access a `StorageNode` from
+which appropriate language data can be fetched. This `StorageNode`
+must be configured in the `storage.dict` file. This `StorageNode` can
+be a local database, a network connection, or a `ProxyNode` of any
+kind.
+
+Private mode is the only mode available the `link-parser` command-line
+executable. The typical use-case is to run the `link-parser` tool for
+spot-checking some large dictionary, exposed through the network.
+
+Although the parser fetches individual word data on-demand, as needed to
+parse some given sentence, network operation can still be slow, when
+the dictionaries are large. Depending on the dictionary, it can take
+seconds to copy a single dictionary word over the network. Once copied,
+the dictionary entry is cached, and subsequent parsing is much faster.
+
+External Mode
+-------------
+The **external mode** is available when using the Link Grammar shared
+library.  In this case, a librar call can be made
+In external mode, the system uses a pre-existing AtomSpace.
+
+`lg_config_atomspace`
+
+a There are
+two submodes: either
+
 
 Design
 ======

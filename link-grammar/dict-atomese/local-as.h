@@ -18,7 +18,7 @@ public:
 	std::mutex dict_mutex; // Avoid corruption of Dictionary
 
 	// General housekeeping
-	bool using_external_as;
+	bool using_external_as; // If false, then `asp` below is private.
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;   // Might be nullptr
 	Handle linkp;          // (Predicate "*-LG link string-*")
