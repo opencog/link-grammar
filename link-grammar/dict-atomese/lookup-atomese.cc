@@ -115,7 +115,7 @@ bool as_open(Dictionary dict)
 	// If an external atomspace is specified, then use that.
 	if (external_atomspace)
 	{
-		lgdebug(D_USER_BASIC, "Atomese: Attach external Atomspace: `%s`\n",
+		lgdebug(D_USER_BASIC, "Atomese: Attach external AtomSpace: `%s`\n",
 			external_atomspace->get_name().c_str());
 		local->using_external_as = true;
 		local->asp = external_atomspace;
@@ -131,6 +131,8 @@ bool as_open(Dictionary dict)
 			lgdebug(D_USER_BASIC, "Atomese: Using storage %s\n",
 				hsn->to_short_string().c_str());
 		}
+		else
+			lgdebug(D_USER_BASIC, "Atomese: No external storage specified.\n");
 	}
 	else
 	{
