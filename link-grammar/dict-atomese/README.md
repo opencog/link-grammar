@@ -370,7 +370,7 @@ provided.
 
 The association is:
 ```
-   (Evaluation
+   (EdgeLink
       (Predicate "*-LG link string-*")
       (LgLinkNode ...)   ; The name is the LG link type.
       (List
@@ -391,17 +391,19 @@ in a row.
 
 It might be desirable to be able to have reproducible connector names,
 *i.e.* to get the same names after a restart of LG. Implementing this
-adds considerable new complexity. Is it worth doing?
-The following would be needed:
+adds new complexity. Is it worth doing?  The following would be needed:
 
-* The `(Predicate "*-LG link string-*")` described above need to be
-  fetched. This can add significant network overhead.
+* The `LgLinkNode` and/or the word-pairs can be fetched on-demand;
+  so no particular problem there.
 
-* The StorageNode needs to queried for a block of unused link names
-  that can be assigned. Need to get a block, as otherwise multiple
-  parsers could be assigning the same names and trampling on one-another.
-  This could be done with an atomic increment of a Value: incrementing
-  by 100 lets the next 100 ints to be safely used.
+* To issue addtional link-names, an atomic increment of a link-counter
+  is needed. This would allow multiple parsers to (mostly) not step on
+  one-another in issuing new link names. To avoid the race window of
+  two parsers both issuing different link-names for the same word-pair,
+  the UniqueLink can be used. It's atomic, and can be used as a
+  semaphore.
+
+
 
 TODO
 ====
@@ -420,8 +422,7 @@ Remaining work items:
   below.
 
 * Expire local cache entries (given by `dict_node_lookup`) after some
-  time frame, forcing a fresh lookup from the server. (Only for
-  CogStorage!) (Maybe this should involve some proxy agent? Maybe a
-  `ProxyStorageNode`?)
+  time frame, forcing a fresh lookup from the server. (Some kind of
+  expiring ProxyNode ...)
 
 ----------
