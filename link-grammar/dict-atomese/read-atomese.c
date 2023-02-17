@@ -72,7 +72,7 @@ Dictionary dictionary_create_from_atomese(const char *dictdir)
 	const char* lang = linkgrammar_get_dict_define(dict, "dictionary-lang");
 	dict->lang = string_set_add(lang, dict->string_set);
 	dictionary_setup_locale(dict);
-	lgdebug(D_USER_FILES, "Debug: Language: %s\n", dict->lang);
+	lgdebug(D_USER_BASIC, "Atomese: Create dict: %s\n", dict->lang);
 
 	/* The string that the user provided to identify this dict */
 	dict->name = string_set_add(dictdir, dict->string_set);

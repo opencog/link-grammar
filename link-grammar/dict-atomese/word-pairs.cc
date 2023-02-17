@@ -75,7 +75,7 @@ static bool need_pair_fetch(Local* local, const Handle& germ)
 static size_t fetch_pairs(Local* local, const Handle& germ)
 {
 	double start = 0.0;
-	if (D_USER_BASIC <= verbosity) start = total_usage_time();
+	if (D_USER_TIMES <= verbosity) start = total_usage_time();
 
 	local->stnp->fetch_incoming_by_type(germ, LIST_LINK);
 	local->stnp->barrier();
@@ -90,7 +90,7 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 	local->stnp->barrier();
 
 #define RES_COL_WIDTH 37
-	if (D_USER_BASIC <= verbosity)
+	if (D_USER_TIMES <= verbosity)
 	{
 		double now = total_usage_time();
 		char s[128] = "";
@@ -203,7 +203,7 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 {
 	double start = 0.0;
-	if (D_USER_BASIC <= verbosity) start = total_usage_time();
+	if (D_USER_TIMES <= verbosity) start = total_usage_time();
 
 	Local* local = (Local*) (dict->as_server);
 	const AtomSpacePtr& asp = local->asp;
@@ -246,7 +246,7 @@ static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		cnt, germ->getIncomingSetSizeByType(LIST_LINK),
 		germ->get_name().c_str());
 
-	if (D_USER_BASIC <= verbosity)
+	if (D_USER_TIMES <= verbosity)
 	{
 		double now = total_usage_time();
 		char s[128] = "";

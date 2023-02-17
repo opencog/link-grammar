@@ -115,6 +115,8 @@ bool as_open(Dictionary dict)
 	// If an external atomspace is specified, then use that.
 	if (external_atomspace)
 	{
+		lgdebug(D_USER_BASIC, "Atomese: Attach external Atomspace: `%s`\n",
+			external_atomspace->get_name().c_str());
 		local->using_external_as = true;
 		local->asp = external_atomspace;
 		if (external_storage)
@@ -126,10 +128,14 @@ bool as_open(Dictionary dict)
 				prt_error("Error: Not a StorageNode! %s\n", hsn->to_string().c_str());
 				return false;
 			}
+			lgdebug(D_USER_BASIC, "Atomese: Using storage %s\n",
+				hsn->to_short_string().c_str());
 		}
 	}
 	else
 	{
+		lgdebug(D_USER_BASIC, "Atomese: Using private Atomspace\n");
+
 		local->using_external_as = false;
 		local->asp = createAtomSpace();
 
@@ -152,7 +158,11 @@ bool as_open(Dictionary dict)
 			}
 		}
 		else
-			prt_error("Warning: No StorageNode was specified! Are you sure?\n");
+			prt_error(
+				"Warning: Using a private AtomSpace with no StorageNode!\n"
+				"Are you sure?\n"
+				"All parses will be random planar parses using the ANY link.\n"
+				"This is probably not what you wanted!\n");
 	}
 
 	// Create the connector predicate.
@@ -364,7 +374,7 @@ thread_local HandleSeq sent_words;
 /// Make a note of all of the words in the sentence. We need this,
 /// to pre-prune MST word-pairs.
 ///
-/// XXX FIXME: At this time, pre-pruning ise done only when MST
+/// XXX FIXME: At this time, pre-pruning is done only when MST
 /// parsing. It could be extended to also pre-prune extra pairs
 /// added to disjuncts. Or even to the connectors on the disjuncts
 /// themselves.
