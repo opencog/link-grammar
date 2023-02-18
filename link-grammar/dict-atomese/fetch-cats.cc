@@ -18,6 +18,7 @@ extern "C" {
 
 using namespace opencog;
 
+// This works only with sections; it won't handle pairs or MST things.
 void as_add_categories(Dictionary dict)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -50,7 +51,7 @@ void as_add_categories(Dictionary dict)
 		const Handle& wcl = allcl[i];
 
 		// Some word-classes might not be in any sections.
-		dict->category[j].exp = make_exprs(dict, wcl);
+		dict->category[j].exp = make_sect_exprs(dict, wcl);
 		if (nullptr == dict->category[j].exp)
 			continue;
 
@@ -86,7 +87,7 @@ void as_add_categories(Dictionary dict)
 
 	for (size_t i=0; i<allwo.size(); i++)
 	{
-		dict->category[j].exp = make_exprs(dict, allwo[i]);
+		dict->category[j].exp = make_sect_exprs(dict, allwo[i]);
 		if (nullptr == dict->category[j].exp)
 			continue;
 

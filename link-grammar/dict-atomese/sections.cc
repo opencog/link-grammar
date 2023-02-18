@@ -115,13 +115,15 @@ static std::string idtostr(uint64_t aid)
 }
 
 /// Given a `(List (Word ...) (Word ...))` denoting a link, find the
-/// corresponding LgConnNode, if it exists.
-static Handle get_lg_conn(const Handle& wset, const Handle& key)
+/// corresponding LgConnNode, if it exists. The string name of that
+/// LgConnNode is the name of the LG link for that word-pair.
+Handle get_lg_conn(Local* local, const Handle& wpair)
 {
-	for (const Handle& ev : wset->getIncomingSetByType(EVALUATION_LINK))
+	const Handle& key = local->linkp;
+	for (const Handle& edge : wpair->getIncomingSetByType(EDGE_LINK))
 	{
-		if (ev->getOutgoingAtom(0) == key)
-			return ev->getOutgoingAtom(1);
+		if (edge->getOutgoingAtom(0) == key)
+			return edge->getOutgoingAtom(1);
 	}
 	return Handle::UNDEFINED;
 }
@@ -132,14 +134,14 @@ static Handle get_lg_conn(const Handle& wset, const Handle& key)
 /// That is, `lnk` is `(List (Word ...) (Word ...))`
 /// The link name is stored in an LgLinkNode, having the format
 ///
-///     (Evaluation (Predicate "*-LG connector string-*")
+///     (Edge (Predicate "*-LG connector string-*")
 ///              (LgLinkNode "ASDF") (List (Word ...) (Word ...)))
 ///
 std::string cached_linkname(Local* local, const Handle& lnk)
 {
 	// If we've already cached a connector string for this,
 	// just return it.  Else build and cache a string.
-	Handle lgc = get_lg_conn(lnk, local->linkp);
+	Handle lgc = get_lg_conn(local, lnk);
 	if (lgc)
 		return lgc->get_name();
 
@@ -150,7 +152,7 @@ std::string cached_linkname(Local* local, const Handle& lnk)
 	std::string slnk = idtostr(lid++);
 
 	lgc = createNode(LG_LINK_NODE, slnk);
-	local->asp->add_link(EVALUATION_LINK, local->linkp, lgc, lnk);
+	local->asp->add_link(EDGE_LINK, local->linkp, lgc, lnk);
 	return slnk;
 }
 
@@ -223,8 +225,17 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 
 	// Create some optional word-pair links; these may be nullptr's.
 	if (0 < local->extra_pairs)
-		extras = make_cart_pairs(dict, germ, local->extra_pairs,
+	{
+// We need to restructure the code to pass in the sentence-words,
+// and then also to not cahce the resultiong exprs, because they
+// will be sentence-specific. This is doable, but just ... not right
+// now. Maybe later, after we get the basics down.
+HandleSeq sent_words;
+assert(0, "Not supported yet!");
+		extras = make_cart_pairs(dict, germ, nullptr, sent_words,
+		                         local->extra_pairs,
 		                         local->extra_any);
+	}
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
@@ -270,9 +281,9 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 				dict->Exp_pool, slnk.c_str(), cdir, false);
 
 			if ('+' == cdir)
-				and_enchain_right(dict, andhead, andtail, eee);
+				and_enchain_right(dict->Exp_pool, andhead, andtail, eee);
 			else if ('-' == cdir)
-				and_enchain_left(dict, andhead, andtail, eee);
+				and_enchain_left(dict->Exp_pool, andhead, andtail, eee);
 		}
 
 		// Sanity-check the Section - this should never-ever happen!
@@ -287,9 +298,9 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 		if (extras)
 		{
 			Exp* optex = make_optional_node(dict->Exp_pool, extras);
-			and_enchain_left(dict, andhead, andtail, optex);
+			and_enchain_left(dict->Exp_pool, andhead, andtail, optex);
 			optex = make_optional_node(dict->Exp_pool, extras);
-			and_enchain_right(dict, andhead, andtail, optex);
+			and_enchain_right(dict->Exp_pool, andhead, andtail, optex);
 		}
 
 		// Optional: shorten the expression,
@@ -317,7 +328,7 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 #endif
 
 		// Add it to the linked list.
-		or_enchain(dict, orhead, andhead);
+		or_enchain(dict->Exp_pool, orhead, andhead);
 	}
 
 	return orhead;

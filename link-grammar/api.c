@@ -36,7 +36,7 @@
 /* Its OK if this is racey across threads.  Any mild shuffling is enough. */
 static unsigned int global_rand_state = 0;
 
-int verbosity;
+int verbosity = D_USER_BASIC;
 /* debug and test should not be NULL since they can be used before they
  * are assigned a value by parse_options_get_...() */
 char * debug = (char *)"";
@@ -60,10 +60,10 @@ Parse_Options parse_options_create(void)
 
 	/* Here's where the values are initialized */
 
-	/* The parse_options_set_(verbosity|debug|test) functions set also the
-	 * corresponding global variables. So these globals are initialized
-	 * here too. */
-	verbosity = po->verbosity = 1;
+	/* The parse_options_set_(verbosity|debug|test) functions also
+	 * set the corresponding global variables. Set them here, also.
+	 * Note that this is usally called *after* dictionary creation! */
+	verbosity = po->verbosity = D_USER_BASIC;
 	debug = po->debug = (char *)"";
 	test = po->test = (char *)"";
 

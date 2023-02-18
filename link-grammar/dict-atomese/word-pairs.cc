@@ -3,9 +3,12 @@
  *
  * Create disjuncts consisting of optionals, from word-pairs.
  *
- * Copyright (c) 2022 Linas Vepstas <linasvepstas@gmail.com>
+ * Copyright (c) 2022, 2023 Linas Vepstas <linasvepstas@gmail.com>
  */
 #ifdef HAVE_ATOMESE
+
+#include <sys/time.h>
+#include <sys/resource.h>
 
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/atoms/value/FloatValue.h>
@@ -13,15 +16,45 @@
 #undef STRINGIFY
 
 extern "C" {
-#include "../link-includes.h"            // For Dictionary
-#include "../dict-common/dict-common.h"  // for Dictionary_s
-#include "../dict-common/dict-utils.h"   // for size_of_expression()
+#include "../link-includes.h"              // For Dictionary
+#include "../api-structures.h"             // For Sentence_s
+#include "../dict-common/dict-common.h"    // for Dictionary_s
+#include "../dict-common/dict-internals.h" // for dict_node_free_lookup()
+#include "../dict-common/dict-utils.h"     // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
+#include "../externs.h"                    // For verbosity
 };
 
 #include "local-as.h"
 
 using namespace opencog;
+
+/**
+ * Returns the CPU usage time, summed over all threads, in seconds.
+ * Most of the time lost in Atomese is going to be in some other thread.
+ */
+static double total_usage_time(void)
+{
+	struct rusage u;
+	getrusage (RUSAGE_SELF, &u);
+	return (u.ru_utime.tv_sec + ((double) u.ru_utime.tv_usec) / 1000000.0);
+}
+
+// Create a mini-dict, used only for caching word-pair dict-nodes.
+Dictionary create_pair_cache_dict(Dictionary dict)
+{
+	Dictionary prca = (Dictionary) malloc(sizeof(struct Dictionary_s));
+	memset(prca, 0, sizeof(struct Dictionary_s));
+
+	/* Shared string-set */
+	prca->string_set = dict->string_set;
+	prca->name = string_set_add("word-pair cache", dict->string_set);
+
+	/* Shared Exp_pool, too */
+	prca->Exp_pool = dict->Exp_pool;
+
+	return prca;
+}
 
 /// Return true if word-pairs for `germ` need to be fetched.
 static bool need_pair_fetch(Local* local, const Handle& germ)
@@ -41,6 +74,9 @@ static bool need_pair_fetch(Local* local, const Handle& germ)
 /// Return zero, if there are none; else return non-zero.
 static size_t fetch_pairs(Local* local, const Handle& germ)
 {
+	double start = 0.0;
+	if (D_USER_TIMES <= verbosity) start = total_usage_time();
+
 	local->stnp->fetch_incoming_by_type(germ, LIST_LINK);
 	local->stnp->barrier();
 
@@ -51,8 +87,19 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 		local->stnp->fetch_incoming_by_type(rawpr, EVALUATION_LINK);
 		cnt++;
 	}
-	lgdebug(D_USER_INFO, "Atomese: Fetched %lu word-pairs for >>%s<<\n",
-		cnt, germ->get_name().c_str());
+	local->stnp->barrier();
+
+#define RES_COL_WIDTH 37
+	if (D_USER_TIMES <= verbosity)
+	{
+		double now = total_usage_time();
+		char s[128] = "";
+		snprintf(s, sizeof(s), "Fetched %lu pairs: >>%s<<",
+			cnt, germ->get_name().c_str());
+		prt_error("Atomese: %-*s %6.2f seconds\n",
+			RES_COL_WIDTH, s, now - start);
+	}
+
 	return cnt;
 }
 
@@ -153,8 +200,11 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 
 /// Create a list of connectors, one for each available word pair
 /// containing the word in the germ. These are simply OR'ed together.
-Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
+static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 {
+	double start = 0.0;
+	if (D_USER_TIMES <= verbosity) start = total_usage_time();
+
 	Local* local = (Local*) (dict->as_server);
 	const AtomSpacePtr& asp = local->asp;
 	Exp* orhead = nullptr;
@@ -188,7 +238,7 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		double cost = (local->pair_scale * mi) + local->pair_offset;
 		eee->cost = cost;
 
-		or_enchain(dict, orhead, eee);
+		or_enchain(dict->Exp_pool, orhead, eee);
 		cnt ++;
 	}
 
@@ -196,7 +246,137 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		cnt, germ->getIncomingSetSizeByType(LIST_LINK),
 		germ->get_name().c_str());
 
+	if (D_USER_TIMES <= verbosity)
+	{
+		double now = total_usage_time();
+		char s[128] = "";
+		snprintf(s, sizeof(s), "Created %lu pairs: >>%s<<",
+			cnt, germ->get_name().c_str());
+		prt_error("Atomese: %-*s %6.2f seconds\n",
+			RES_COL_WIDTH, s, now - start);
+	}
 	return orhead;
+}
+
+/// Get a list of connectors, one for each available word pair
+/// containing the word in the germ. These are simply OR'ed together.
+/// Get them from the local dictionary cache, if they're already
+/// there; create them from scratch, polling the AtomSpace.
+static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
+{
+	Local* local = (Local*) (dict->as_server);
+
+	const char* wrd = germ->get_name().c_str();
+	Dictionary prdct = local->pair_dict;
+	Dict_node* dn = dict_node_lookup(prdct, wrd);
+
+	if (dn)
+	{
+		lgdebug(D_USER_INFO, "Atomese: Found pairs in cache: >>%s<<\n", wrd);
+		Exp* exp = dn->exp;
+		dict_node_free_lookup(prdct, dn);
+		return exp;
+	}
+
+	Exp* exp = make_pair_exprs(dict, germ);
+	const char* ssc = string_set_add(wrd, dict->string_set);
+	make_dn(prdct, exp, ssc);
+	return exp;
+}
+
+/// Return word-pair expressions connecting the `germ` with any word
+/// listed in `sent_words`.  If `sent_words` is empty, then return
+/// all expressions for all word-pairs with `germ` in it. This
+/// "pre-prunes" the set of all word-pairs to only those in this
+/// sentence.
+static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
+                                Pool_desc* pool,
+                                const HandleSeq& sent_words)
+{
+	Exp* allexp = get_pair_exprs(dict, germ);
+	if (0 == sent_words.size())
+		return allexp;
+
+	// Unary nodes are possible, in which case, it is just a connector.
+	// Don't bother pruning.
+	if (OR_type != allexp->type)
+		return allexp;
+
+	// Find all word-pairs involving the germ, and words in the
+	// sentence. Then, look up the LG link name for these pairs.
+	// Stick them into a hash table.
+	Local* local = (Local*) (dict->as_server);
+	std::unordered_set<std::string> links;
+	for (const Handle& sentw : sent_words)
+	{
+		const Handle& lpr = local->asp->get_link(LIST_LINK, sentw, germ);
+		if (lpr)
+		{
+			Handle lgc = get_lg_conn(local, lpr);
+			if (lgc)
+				links.insert(lgc->get_name());
+		}
+		const Handle& rpr = local->asp->get_link(LIST_LINK, germ, sentw);
+		if (rpr)
+		{
+			Handle rgc = get_lg_conn(local, rpr);
+			if (rgc)
+				links.insert(rgc->get_name().c_str());
+		}
+	}
+
+	Exp* sentex = nullptr;
+	int nfound = 0;
+
+	// The allexp is an OR_type expression. A linked list of connectors
+	// follow, chained along `operand_next`.
+	Exp* orch = allexp->operand_first;
+	while (orch)
+	{
+		assert(CONNECTOR_type == orch->type, "unexpected expression!");
+
+		if (links.end() != links.find(orch->condesc->string))
+		{
+			Exp* cpe = (Exp*) pool_alloc(pool);
+			*cpe = *orch;
+			cpe->operand_next = sentex;
+			sentex = cpe;
+			nfound ++;
+		}
+		orch = orch->operand_next;
+	}
+
+	const char* wrd = germ->get_name().c_str();
+	lgdebug(D_USER_INFO,
+		"Atomese: After pre-pruning, found %d sentence pairs for >>%s<<\n",
+		nfound, wrd);
+
+	// Unary OR exps not allowed.
+	if (2 > nfound)
+		return sentex;
+
+	// sentex is a linked list or length 2 or more, of connectors to
+	// be or'ed together. Wrap them in an OR exp.
+	Exp* orhead = Exp_create(pool);
+	orhead->type = OR_type;
+	orhead->operand_first = sentex;
+	return orhead;
+}
+
+// ===============================================================
+//
+// Return the single expression (ANY+ or ANY-)
+static Exp* make_any_conns(Dictionary dict, Pool_desc* pool)
+{
+	// Create a pair of ANY-links that can connect either left or right.
+	Exp* aneg = make_connector_node(dict, pool, "ANY", '-', false);
+	Exp* apos = make_connector_node(dict, pool, "ANY", '+', false);
+
+	Local* local = (Local*) (dict->as_server);
+	aneg->cost = local->any_default;
+	apos->cost = local->any_default;
+
+	return make_or_node(pool, aneg, apos);
 }
 
 // ===============================================================
@@ -224,34 +404,50 @@ Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 /// a plain cartesian product. The only issue is that this eats up
 /// RAM. At least RAM use is linear: it goes as `O(arity)`.  More
 /// precisely, as `O(npairs x arity)`.
+///
+/// There's a problem, here. If the germ is a common word, e.g. 'the'
+/// or perhaps punctuation, participating in 10K pairs, or more, then
+/// the number of disjuncts created from the cartesian product becomes
+/// npairs raised to power of arity, so, trillions or more. This won't
+/// work, so we need to apply expression-pruning, first. The current
+/// generic expression pruning is not powerful enough to cut this down
+/// to size. So, instead, we pre-prune, in get_sent_pair_exprs(), and
+/// work *only* with the words in the current sentence.  These are the
+/// words passed in through `sent_words`. This is the local context.
+/// If it is empty, then no pre-pruning is done.
+///
+/// The expressions will be created in the given Exp_pool, which should
+/// be the Sentence::Exp_pool when pre-pruning (as those expressions are
+/// necessarily Sentence-specific).
 Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
+                     Pool_desc* pool,
+                     const HandleSeq& sent_words,
                      int arity, bool with_any)
 {
 	if (0 >= arity) return nullptr;
 
-	Exp* andhead = nullptr;
-	Exp* andtail = nullptr;
-
-	Exp* epr = make_pair_exprs(dict, germ);
+	Exp* epr = get_sent_pair_exprs(dict, germ, pool, sent_words);
 	if (nullptr == epr) return nullptr;
 
 	// Tack on ANY connectors, if requested.
 	if (with_any)
 	{
-		Exp* ap = make_any_exprs(dict);
-		epr = make_or_node(dict->Exp_pool, epr, ap);
+		Exp* ap = make_any_conns(dict, pool);
+		or_enchain(pool, epr, ap);
 	}
-	Exp* optex = make_optional_node(dict->Exp_pool, epr);
+	Exp* optex = make_optional_node(pool, epr);
 
 	// If its 1-dimensional, we are done.
 	if (1 == arity) return optex;
 
-	and_enchain_right(dict, andhead, andtail, optex);
+	Exp* andhead = nullptr;
+	Exp* andtail = nullptr;
+	and_enchain_right(pool, andhead, andtail, optex);
 
 	for (int i=1; i< arity; i++)
 	{
-		Exp* opt = make_optional_node(dict->Exp_pool, epr);
-		and_enchain_right(dict, andhead, andtail, opt);
+		Exp* opt = make_optional_node(pool, epr);
+		and_enchain_right(pool, andhead, andtail, opt);
 	}
 
 	// Could verify that it all multiplies out as expected.
@@ -263,33 +459,54 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 
 // ===============================================================
 
-/// Create an expression having the form
-///    @ANY- or @ANY+ or (@ANY- & @ANY+)
-/// These are multi-connectors. The cost on each connector is the
-/// default any-cost from the configuration.  Note that the use of
-/// this expression will result in random planar parses between the
-/// words having this expression. i.e. it will be the same as using
-/// the `any` language to create random planar pares.
+/// Create an expression having from one to four copies of
+///    (ANY- or ANY+) & ... & (ANY- or ANY+)
 ///
-/// FYI, there is a minor issue for cost-accounting on multi-connectors;
-/// see https://github.com/opencog/link-grammar/issues/1351 for details.
+/// The cost on each connector is the default any-cost from the
+/// configuration.
 ///
-Exp* make_any_exprs(Dictionary dict)
+/// Multi-connectors are NOT used, due to an issue with cost accounting
+/// for multi-connectors. Basically, each additional use does not
+/// increase that cost. Yet we do want cost-per-use. See
+/// https://github.com/opencog/link-grammar/issues/1351 for details.
+///
+/// Using this expression is similar to the `any` language, in that it
+/// will results in random planar parses. However, since this maxes out
+/// at four connectors per word, this is .. different.
+///
+Exp* make_any_exprs(Dictionary dict, Pool_desc* pool)
 {
-	// Create a pair of ANY-links that can connect either left or right.
-	Exp* aneg = make_connector_node(dict, dict->Exp_pool, "ANY", '-', true);
-	Exp* apos = make_connector_node(dict, dict->Exp_pool, "ANY", '+', true);
+	// (ANY+ or ANY-) or
+	Exp* orhead = nullptr;
+	or_enchain(pool, orhead, make_any_conns(dict, pool));
 
-	Local* local = (Local*) (dict->as_server);
-	aneg->cost = local->any_default;
-	apos->cost = local->any_default;
+	// ((ANY+ or ANY-) & (ANY+ or ANY-)) or
+	Exp* andhead = nullptr;
+	Exp* andtail = nullptr;
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	or_enchain(pool, orhead, andhead);
 
-	Exp* any = make_or_node(dict->Exp_pool, aneg, apos);
+	// three-fold .. ((ANY+ or ANY-) & ...) or
+	andhead = nullptr;
+	andtail = nullptr;
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	or_enchain(pool, orhead, andhead);
 
-	Exp* andy = make_and_node(dict->Exp_pool, aneg, apos);
-	or_enchain(dict, any, andy);
+	// four-fold .. ((ANY+ or ANY-) & ...) or
+	andhead = nullptr;
+	andtail = nullptr;
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	and_enchain_left(pool, andhead, andtail, make_any_conns(dict, pool));
+	or_enchain(pool, orhead, andhead);
 
-	return any;
+	// Grand total of one to four connectors:
+	// The total cost should be N times single-connector cost.
+	return orhead;
 }
 
 // ===============================================================

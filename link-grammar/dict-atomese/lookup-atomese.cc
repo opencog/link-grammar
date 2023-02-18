@@ -28,6 +28,7 @@ extern "C" {
 #include "../dict-common/dict-internals.h" // for dict_node_new()
 #include "../dict-common/dict-utils.h"     // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
+#include "../tokenize/word-structures.h"   // for Word_struct
 #include "lookup-atomese.h"
 };
 
@@ -114,6 +115,8 @@ bool as_open(Dictionary dict)
 	// If an external atomspace is specified, then use that.
 	if (external_atomspace)
 	{
+		lgdebug(D_USER_BASIC, "Atomese: Attach external AtomSpace: `%s`\n",
+			external_atomspace->get_name().c_str());
 		local->using_external_as = true;
 		local->asp = external_atomspace;
 		if (external_storage)
@@ -125,10 +128,16 @@ bool as_open(Dictionary dict)
 				prt_error("Error: Not a StorageNode! %s\n", hsn->to_string().c_str());
 				return false;
 			}
+			lgdebug(D_USER_BASIC, "Atomese: Using storage %s\n",
+				hsn->to_short_string().c_str());
 		}
+		else
+			lgdebug(D_USER_BASIC, "Atomese: No external storage specified.\n");
 	}
 	else
 	{
+		lgdebug(D_USER_BASIC, "Atomese: Using private Atomspace\n");
+
 		local->using_external_as = false;
 		local->asp = createAtomSpace();
 
@@ -151,7 +160,11 @@ bool as_open(Dictionary dict)
 			}
 		}
 		else
-			prt_error("Warning: No StorageNode was specified! Are you sure?\n");
+			prt_error(
+				"Warning: Using a private AtomSpace with no StorageNode!\n"
+				"Are you sure?\n"
+				"All parses will be random planar parses using the ANY link.\n"
+				"This is probably not what you wanted!\n");
 	}
 
 	// Create the connector predicate.
@@ -238,15 +251,26 @@ bool as_open(Dictionary dict)
 		local->pair_scale = atof(LDEF(PAIR_SCALE_STRING, "-0.25"));
 		local->pair_offset = atof(LDEF(PAIR_OFFSET_STRING, "3.0"));
 
-		local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
 		local->pair_with_any = atoi(LDEF(PAIR_WITH_ANY_STRING, "1"));
+
+		local->pair_dict = create_pair_cache_dict(dict);
 	}
 
 	local->any_disjuncts = atoi(LDEF(ANY_DISJUNCTS_STRING, "0"));
 
-	local->enable_unknown_word = atoi(LDEF(ENABLE_UNKNOWN_WORD_STRING, "1"));
+	// The any_default is used to set the costs on UNKNOWN-WORD
+	// XXX FIXME, maybe there should be a different parameter for this?
+	local->any_default = atof(LDEF(ANY_DEFAULT_STRING, "2.6"));
 
 	dict->as_server = (void*) local;
+
+	local->enable_unknown_word = atoi(LDEF(ENABLE_UNKNOWN_WORD_STRING, "1"));
+	if (local->enable_unknown_word)
+	{
+		const char* ukw = string_set_add("<UNKNOWN-WORD>", dict->string_set);
+		Exp* exp = make_any_exprs(dict, dict->Exp_pool);
+		make_dn(dict, exp, ukw);
+	}
 
 	if (local->using_external_as) return true;
 	if (nullptr == local->stnp) return true;
@@ -319,6 +343,9 @@ void as_storage_close(Dictionary dict)
 		local->stnp->close();
 
 	local->stnp = nullptr;
+
+	if (local->pair_dict)
+		free(local->pair_dict);
 }
 
 /// Close the connection to the AtomSpace. This will also empty out
@@ -341,15 +368,66 @@ void as_close(Dictionary dict)
 
 // ===============================================================
 
+// The sentence that this thread is working with. Assume one thread
+// per Sentence, which should be a perfectly valid assumption.
+thread_local Sentence sentlo = nullptr;
+thread_local HandleSeq sent_words;
+
+/// Make a note of all of the words in the sentence. We need this,
+/// to pre-prune MST word-pairs.
+///
+/// XXX FIXME: At this time, pre-pruning is done only when MST
+/// parsing. It could be extended to also pre-prune extra pairs
+/// added to disjuncts. Or even to the connectors on the disjuncts
+/// themselves.
 void as_start_lookup(Dictionary dict, Sentence sent)
 {
+	Local* local = (Local*) (dict->as_server);
+
 	lgdebug(D_USER_INFO, "Atomese: Start dictionary lookup for >>%s<<\n",
 		sent->orig_sentence);
+
+	// XXX FIXME Someday handle extra_pairs, too.
+	// if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
+	if (0 < local->pair_disjuncts)
+	{
+		sentlo = sent;
+		for(size_t i=0; i<sent->length; i++)
+		{
+			const char* wstr = sent->word[i].unsplit_word;
+			if (wstr)
+			{
+				if (0 == i && 0 == strcmp(wstr, LEFT_WALL_WORD))
+					wstr = "###LEFT-WALL###";
+
+				Handle wrd = local->asp->get_node(WORD_NODE, wstr);
+				if (wrd)
+					sent_words.push_back(wrd);
+			}
+			int j = 0;
+			const char* astr = sent->word[i].alternatives[j];
+			while (astr)
+			{
+				Handle wrd = local->asp->get_node(WORD_NODE, astr);
+				if (wrd)
+					sent_words.push_back(wrd);
+				j++;
+				astr = sent->word[i].alternatives[j];
+			}
+		}
+	}
 }
 
 void as_end_lookup(Dictionary dict, Sentence sent)
 {
 	Local* local = (Local*) (dict->as_server);
+
+	if (0 < local->pair_disjuncts)
+	{
+		sentlo = nullptr;
+		sent_words.clear();
+	}
+
 	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
 	// Deal with any new connector descriptors that have arrived.
@@ -397,7 +475,7 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 // ===============================================================
 
 /// Add `item` to the linked list `orhead`, using a OR operator.
-void or_enchain(Dictionary dict, Exp* &orhead, Exp* item)
+void or_enchain(Pool_desc* pool, Exp* &orhead, Exp* item)
 {
 	if (nullptr == item) return; // no-op
 
@@ -411,7 +489,7 @@ void or_enchain(Dictionary dict, Exp* &orhead, Exp* item)
 	// algos to croak. So the first OR node must have two.
 	if (OR_type != orhead->type)
 	{
-		orhead = make_or_node(dict->Exp_pool, item, orhead);
+		orhead = make_or_node(pool, item, orhead);
 		return;
 	}
 
@@ -423,12 +501,12 @@ void or_enchain(Dictionary dict, Exp* &orhead, Exp* item)
 /// Add `item` to the left end of the linked list `andhead`, using
 /// an AND operator. The `andtail` is used to track the right side
 /// of the list.
-void and_enchain_left(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
+void and_enchain_left(Pool_desc* pool, Exp* &andhead, Exp* &andtail, Exp* item)
 {
 	if (nullptr == item) return; // no-op
 	if (nullptr == andhead)
 	{
-		andhead = make_and_node(dict->Exp_pool, item, NULL);
+		andhead = make_and_node(pool, item, NULL);
 		return;
 	}
 
@@ -443,12 +521,12 @@ void and_enchain_left(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
 /// Add `item` to the right end of the linked list `andhead`, using
 /// an AND operator. The `andtail` is used to track the right side
 /// of the list.
-void and_enchain_right(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
+void and_enchain_right(Pool_desc* pool, Exp* &andhead, Exp* &andtail, Exp* item)
 {
 	if (nullptr == item) return; // no-op
 	if (nullptr == andhead)
 	{
-		andhead = make_and_node(dict->Exp_pool, item, NULL);
+		andhead = make_and_node(pool, item, NULL);
 		return;
 	}
 
@@ -458,41 +536,6 @@ void and_enchain_right(Dictionary dict, Exp* &andhead, Exp* &andtail, Exp* item)
 
 	andtail->operand_next = item;
 	andtail = item;
-}
-
-/// Build expressions for the dictionary word held by `germ`.
-/// Exactly what is built is controlled by the configuration:
-/// it will be some mixture of sections, word-pairs, and ANY
-/// links.
-Exp* make_exprs(Dictionary dict, const Handle& germ)
-{
-	Local* local = (Local*) (dict->as_server);
-
-	Exp* orhead = nullptr;
-
-	// Create disjuncts consisting entirely of "ANY" links.
-	if (local->any_disjuncts)
-	{
-		Exp* any = make_any_exprs(dict);
-		or_enchain(dict, orhead, any);
-	}
-
-	// Create disjuncts consisting entirely of word-pair links.
-	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
-	{
-		Exp* cpr = make_cart_pairs(dict, germ, local->pair_disjuncts,
-		                           local->pair_with_any);
-		or_enchain(dict, orhead, cpr);
-	}
-
-	// Create disjuncts from Sections
-	if (local->enable_sections)
-	{
-		Exp* sects = make_sect_exprs(dict, germ);
-		or_enchain(dict, orhead, sects);
-	}
-
-	return orhead;
 }
 
 static void report_dict_usage(Dictionary dict)
@@ -528,7 +571,7 @@ static void report_dict_usage(Dictionary dict)
 
 /// Given an expression, wrap  it with a Dict_node and insert it into
 /// the dictionary.
-static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
+void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 {
 	Dict_node* dn = dict_node_new();
 	dn->string = ssc;
@@ -538,22 +581,23 @@ static Dict_node * make_dn(Dictionary dict, Exp* exp, const char* ssc)
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
 
-	lgdebug(+D_SPEC+5, "as_lookup_list %d for >>%s<< nexpr=%d\n",
+	lgdebug(D_USER_INFO, "make_dn %d for >>%s<< nexpr=%d\n",
 		dict->num_entries, ssc, size_of_expression(exp));
 
 	// Rebalance the tree every now and then.
-	if (0 == dict->num_entries%30)
+	if (0 == dict->num_entries%60)
 	{
 		dict->root = dsw_tree_to_vine(dict->root);
 		report_dict_usage(dict);
 		dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
 	}
-
-	// Perform the lookup. We cannot return the dn above, as the
-	// dict_node_free_lookup() will delete it, leading to mem corruption.
-	dn = dict_node_lookup(dict, ssc);
-	return dn;
 }
+
+#define ENCHAIN(ORHEAD,EXP) \
+	if (nullptr == ORHEAD)   \
+		ORHEAD = (EXP);       \
+	else                     \
+		ORHEAD = make_or_node(dict->Exp_pool, ORHEAD, (EXP));
 
 /// Given a word, return the collection of Dict_nodes holding the
 /// expressions for that word.
@@ -565,53 +609,83 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	// Do we already have this word cached? If so, pull from
 	// the cache.
 	Dict_node* dn = dict_node_lookup(dict, s);
-
 	if (dn)
 	{
 		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
+
+		// The dict cache contains only full sections. We never store
+		// cartesian pairs, as this has an explosively large number of
+		// disjuncts. So, if the user wants these, we have to generate
+		// them on the fly.
+		if (local->enable_sections and
+		    (0 < local->pair_disjuncts or 0 < local->extra_pairs))
+		{
+throw FatalErrorException(TRACE_INFO, "Sorry! Not implemented yet! (word=%s)", s);
+		}
 		return dn;
 	}
 
+	if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
+
 	const char* ssc = string_set_add(s, dict->string_set);
 
-	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))
-	{
-		Exp* exp = make_any_exprs(dict);
-		return make_dn(dict, exp, ssc);
-	}
-
-	if (0 == strcmp(s, LEFT_WALL_WORD))
-		s = "###LEFT-WALL###";
-
-	Handle wrd = local->asp->get_node(WORD_NODE, s);
+	Handle wrd = local->asp->get_node(WORD_NODE, ssc);
 	if (nullptr == wrd) return nullptr;
 
-	// Get expressions, where the word itself is the germ.
-	Exp* exp = make_exprs(dict, wrd);
-
-	// Get expressions, where the word is in some class.
-	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+	// Create expressions consisting entirely of word-pair links.
+	// These are "temporary", and always go into Sentence::Exp_pool.
+	// XXX FIXME, because these live in a different pool, they cannot
+	// be mixed with dictionary expressions. *However* we can mix the
+	// Dict_nodes, and so mashups of pairs and sections need to be done
+	// at the Dict_node level.
+	if (0 < local->pair_disjuncts)
 	{
-		const Handle& wcl = memb->getOutgoingAtom(1);
-		if (WORD_CLASS_NODE != wcl->get_type()) continue;
+		Exp* cpr = make_cart_pairs(dict, wrd, sentlo->Exp_pool, sent_words,
+		                           local->pair_disjuncts,
+		                           local->pair_with_any);
+		Dict_node * dn = dict_node_new();
+		dn->string = ssc;
+		dn->exp = cpr;
+		return dn;
+	}
 
-		Exp* clexp = make_exprs(dict, wcl);
-		if (nullptr == clexp) continue;
+	Exp* exp = nullptr;
 
-		lgdebug(+D_SPEC+5, "as_lookup_list class for >>%s<< nexpr=%d\n",
-			ssc, size_of_expression(clexp));
+	// Create disjuncts consisting entirely of "ANY" links.
+	if (local->any_disjuncts)
+	{
+		Exp* any = make_any_exprs(dict, dict->Exp_pool);
+		or_enchain(dict->Exp_pool, exp, any);
+	}
 
-		if (nullptr == exp)
-			exp = clexp;
-		else
-			exp = make_or_node(dict->Exp_pool, exp, clexp);
+	// Create expressions from Sections
+	if (local->enable_sections)
+	{
+		Exp* sects = make_sect_exprs(dict, wrd);
+		ENCHAIN(exp, sects);
+
+		// Get expressions, where the word is in some class.
+		for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+		{
+			const Handle& wcl = memb->getOutgoingAtom(1);
+			if (WORD_CLASS_NODE != wcl->get_type()) continue;
+
+			Exp* clexp = make_sect_exprs(dict, wcl);
+			if (nullptr == clexp) continue;
+
+			lgdebug(+D_SPEC+5, "as_lookup_list class for >>%s<< nexpr=%d\n",
+				ssc, size_of_expression(clexp));
+
+			ENCHAIN(exp, clexp);
+		}
 	}
 
 	if (nullptr == exp)
 		return nullptr;
 
-	lgdebug(D_USER_INFO, "Atomese: Created expressions for >>%s<<\n", s);
-	return make_dn(dict, exp, ssc);
+	lgdebug(D_USER_INFO, "Atomese: Created expressions for >>%s<<\n", ssc);
+	make_dn(dict, exp, ssc);
+	return dict_node_lookup(dict, ssc);
 }
 
 // This is supposed to provide a wild-card lookup.  However,
@@ -642,14 +716,15 @@ void as_clear_cache(Dictionary dict)
 	printf("Prior to clear, dict has %d entries, Atomspace has %lu Atoms\n",
 		dict->num_entries, local->asp->get_size());
 
-	dict->Exp_pool = pool_new(__func__, "Exp", /*num_elements*/4096,
-	                             sizeof(Exp), /*zero_out*/false,
-	                             /*align*/false, /*exact*/false);
+	// Free the dict nodes. Free the pair-cache, too.
+	// Reuse the existing Exp pool.
+	free_dict_node_recursive(dict->root);
+	free_dict_node_recursive(local->pair_dict->root);
+	pool_reuse(dict->Exp_pool);
 
 	// Clear the local AtomSpace too.
 	// Easiest way to do this is to just close and reopen
 	// the connection.
-
 	AtomSpacePtr savea = external_atomspace;
 	StorageNodePtr saves = external_storage;
 	if (local->using_external_as)

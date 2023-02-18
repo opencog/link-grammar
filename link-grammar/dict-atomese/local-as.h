@@ -16,59 +16,67 @@ class Local
 {
 public:
 	std::mutex dict_mutex; // Avoid corruption of Dictionary
-	bool using_external_as;
+
+	// General housekeeping
+	bool using_external_as; // If false, then `asp` below is private.
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;   // Might be nullptr
 	Handle linkp;          // (Predicate "*-LG link string-*")
 	Handle prk;            // (Predicate "*-fetched-pair-*")
 
+	// Section config
+	bool enable_sections;  // Enable use of sections
+	int extra_pairs;       // Supplement sections with pairs
+	bool extra_any;        // Supplement sections with ANY
+
 	// Sections
 	Handle miks;           // (Predicate "*-Mutual Info Key cover-section")
 	int cost_index;        // Offset into the FloatValue
-	double cost_cutoff;    // MI below this is rejected
+	double cost_cutoff;    // MI below this is rejected.
+	double cost_default;   // This MI is used if key is missing.
 	double cost_scale;
 	double cost_offset;
-	double cost_default;
+
+	// Word-pair config -- Disjuncts made from pairs
+	int pair_disjuncts;    // Max number of pair connectors in a disjunct.
+	bool pair_with_any;    // Add ANY pairs to pair disjuncts.
 
 	// Word-pairs
+	Dictionary pair_dict;  // Cache of pre-computed word-pair exprs.
 	Handle prp;            // (Predicate "*-word pair-*")
 	Handle mikey;          // (Predicate "*-Mutual Info Key-*")
 	Handle miformula;      // (DefinedProcedure "*-dynamic MI ANY")
 	int pair_index;        // Offset into the FloatValue
-	double pair_cutoff;    // MI below this is rejected
+	double pair_cutoff;    // MI below this is rejected.
+	double pair_default;   // This MI is used if key is missing.
 	double pair_scale;
 	double pair_offset;
-	double pair_default;
 
 	// Any link type
-	double any_default;
-
-	// Basic Sections
-	bool enable_sections;
-	int extra_pairs;
-	bool extra_any;
-
-	// Disjuncts made from pairs
-	int pair_disjuncts;
-	bool pair_with_any;
-	bool any_disjuncts;
+	bool any_disjuncts;   // Create disjuncts created entirely from ANY
+	double any_default;   // Default cost (post-scaling)
 
 	bool enable_unknown_word;
 };
 
+Dictionary create_pair_cache_dict(Dictionary);
+
 bool section_boolean_lookup(Dictionary dict, const char *s);
 bool pair_boolean_lookup(Dictionary dict, const char *s);
 
-Exp* make_exprs(Dictionary dict, const Handle& germ);
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
-Exp* make_pair_exprs(Dictionary dict, const Handle& germ);
-Exp* make_cart_pairs(Dictionary dict, const Handle& germ, int arity, bool any);
-Exp* make_any_exprs(Dictionary dict);
+Exp* make_cart_pairs(Dictionary dict, const Handle& germ, Pool_desc*,
+                     const HandleSeq&, int arity, bool any);
+Exp* make_any_exprs(Dictionary dict, Pool_desc*);
 
-void or_enchain(Dictionary, Exp* &orhead, Exp*);
-void and_enchain_left(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);
-void and_enchain_right(Dictionary, Exp* &orhead, Exp* &ortail, Exp*);
+void make_dn(Dictionary, Exp*, const char*);
 
+// These work with both Dictionary and Sentence Exp_pools.
+void or_enchain(Pool_desc*, Exp* &orhead, Exp*);
+void and_enchain_left(Pool_desc*, Exp* &orhead, Exp* &ortail, Exp*);
+void and_enchain_right(Pool_desc*, Exp* &orhead, Exp* &ortail, Exp*);
+
+Handle get_lg_conn(Local*, const Handle& pair);
 std::string cached_linkname(Local*, const Handle& pair);
 
 //----
