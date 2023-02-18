@@ -216,18 +216,14 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 {
 	Dictionary dict = sent->dict;
 	const size_t wordpos = w->sent_wordidx;
-
 	const char *s = w->subword;
-	X_node * we = NULL;
 
 	lgdebug(+D_DWE, "Word %zu subword %zu:'%s' status %s",
 	        wordpos, w->node_num, s, gword_status(sent, w));
 	if (NULL != sent->word[wordpos].unsplit_word)
 		lgdebug(D_DWE, " (unsplit '%s')", sent->word[wordpos].unsplit_word);
 
-	/* Generate an "alternatives" component. */
-	altappend(sent, &sent->word[wordpos].alternatives, s);
-
+	X_node * we = NULL;
 	if (w->status & WS_INDICT)
 	{
 		we = build_word_expressions(sent, w, NULL, opts);
@@ -250,7 +246,7 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	}
 	else
 	{
-		prt_error("Error: Word '%s': word is unknown\n", w->subword);
+		prt_error("Error: Word '%s': word is unknown\n", s);
 		return false;
 	}
 
@@ -277,8 +273,8 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	{
 		/* Print the X_node details for the word. */
 		prt_error("Debug: Tokenize word/alt=%zu/%zu '%s' re=%s\n\\",
-				 wordpos, altlen(sent->word[wordpos].alternatives), s,
-				 w->regex_name ? w->regex_name : "");
+				wordpos, altlen(sent->word[wordpos].alternatives),
+				s, w->regex_name ? w->regex_name : "");
 		while (we)
 		{
 			prt_error("Debug:  string='%s' status=%s expr=%s\n",
@@ -302,8 +298,22 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 bool build_sentence_expressions(Sentence sent, Parse_Options opts)
 {
 	Dictionary dict = sent->dict;
-	bool have_unknown_words = false;
 
+	// Set up word alternatives, before starting dictionary lookups
+	for (size_t i=0; i<sent->length; i++)
+	{
+		Gword *gw = sent->word[i].gwords[0];
+		int igw = 0;
+		while (gw)
+		{
+			altappend(sent, &sent->word[i].alternatives, gw->subword);
+			igw ++;
+			gw = sent->word[i].gwords[igw];
+		}
+	}
+
+	// Perform X_node lookups
+	bool have_unknown_words = false;
 	dict->start_lookup(dict, sent);
 	for (size_t i=0; i<sent->length; i++)
 	{
