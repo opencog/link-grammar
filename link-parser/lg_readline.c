@@ -368,19 +368,14 @@ char *lg_readline(const char *mb_prompt)
 	static HistoryW *hist = NULL;
 	static HistEventW ev;
 	static EditLine *el = NULL;
-	static char *mb_line;
-
-	size_t byte_len;
-	const wchar_t *wc_line;
-	char *nl;
+	static char *mb_line = NULL;
 
 	if (!is_init)
 	{
-		size_t sz;
 #define HFILE ".lg_history"
 		is_init = true;
 
-		sz = mbstowcs(NULL, mb_prompt, 0) + 4;
+		size_t sz = mbstowcs(NULL, mb_prompt, 0) + 4;
 		wc_prompt = malloc (sz*sizeof(wchar_t));
 		mbstowcs(wc_prompt, mb_prompt, sz);
 
@@ -408,7 +403,7 @@ char *lg_readline(const char *mb_prompt)
 	}
 
 	int numc = 1; /*  Uninitialized at libedit. */
-	wc_line = el_wgets(el, &numc);
+	const wchar_t *wc_line = el_wgets(el, &numc);
 
 	/* Received end-of-file */
 	if (numc <= 0)
@@ -430,8 +425,8 @@ char *lg_readline(const char *mb_prompt)
 	}
 	/* fwprintf(stderr, L"==> got %d %ls", numc, wc_line); */
 
-	byte_len = wcstombs(NULL, wc_line, 0) + 4;
-	free(mb_line);
+	size_t byte_len = wcstombs(NULL, wc_line, 0) + 4;
+	free(mb_line);  // free previous.
 	if (byte_len == (size_t)-1)
 	{
 		prt_error("Error: Unable to process UTF8 in input string.\n");
@@ -443,7 +438,7 @@ char *lg_readline(const char *mb_prompt)
 
 	/* In order to be compatible with regular libedit, we have to
 	 * strip away the trailing newline, if any. */
-	nl = strchr(mb_line, '\n');
+	char *nl = strchr(mb_line, '\n');
 	if (nl) *nl = 0x0;
 
 	return mb_line;
@@ -455,7 +450,7 @@ char *lg_readline(const char *mb_prompt)
 
 char *lg_readline(const char *prompt)
 {
-	static char *pline;
+	static char *pline = NULL;
 
 	free(pline);
 	pline = readline(prompt);
