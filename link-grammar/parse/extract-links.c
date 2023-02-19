@@ -826,7 +826,8 @@ static void list_links(Linkage lkg, const Parse_set * set, int index)
 	Parse_choice *pc;
 	count_t n; /* No overflow - see extract_links() and process_linkages() */
 
-	if (set == NULL || set->first == NULL) return;
+	assert(set != NULL, "Unexpected NULL Parse_set");
+	if (set->first == NULL) return;
 	for (pc = set->first; pc != NULL; pc = pc->next) {
 		n = pc->set[0]->count * pc->set[1]->count;
 		if (index < n) break;
@@ -844,7 +845,8 @@ static void list_random_links(Linkage lkg, unsigned int *rand_state,
 	Parse_choice *pc;
 	int num_pc, new_index;
 
-	if (set == NULL || set->first == NULL) return;
+	assert(set != NULL, "Unexpected NULL Parse_set");
+	if (set->first == NULL) return;
 
 	/* Most of the time, there is only one list element. */
 	if (set->first->next == NULL)
