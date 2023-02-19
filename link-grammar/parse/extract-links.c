@@ -49,8 +49,9 @@ struct Parse_choice_struct
  * tracons l_id and r_id on words lw and rw, correspondingly. */
 struct Parse_set_struct
 {
-	Parse_choice   *first;
 	Connector      *le, *re;
+	Parse_choice   *first;
+	unsigned int   num_pc;    /* number of Parse_choice elements */
 	uint8_t        lw, rw;     /* left and right word index */
 	uint8_t        null_count; /* number of island words */
 
@@ -124,6 +125,7 @@ static void record_choice(
 	// Chain it into the parse set.
 	pc->next = s->first;
 	s->first = pc;
+	s->num_pc++;
 }
 
 /**
@@ -324,6 +326,7 @@ static Pset_bucket * x_table_store(int lw, int rw,
 	n->set.re = (NULL != re) ? re : dummy_null_tracon(rw);
 	n->set.count = 0;
 	n->set.first = NULL;
+	n->set.num_pc = 0;
 
 	n->next = *t;
 	*t = n;
@@ -821,7 +824,7 @@ static void issue_links_for_choice(Linkage lkg, Parse_choice *pc,
  * For S0: (Nindex % pc->set[0]->count) ranges from 0 to (S0ₘ-1).
  * For S1: (Nindex / pc->set[0]->count) ranges from 0 to (S1ₘ-1).
  */
-static void list_links(Linkage lkg, const Parse_set * set, int index)
+static void list_links(Linkage lkg, Parse_set * set, int index)
 {
 	Parse_choice *pc;
 	count_t n; /* No overflow - see extract_links() and process_linkages() */
@@ -840,33 +843,18 @@ static void list_links(Linkage lkg, const Parse_set * set, int index)
 }
 
 static void list_random_links(Linkage lkg, unsigned int *rand_state,
-                              const Parse_set * set)
+                              Parse_set * set)
 {
-	Parse_choice *pc;
-	int num_pc, new_index;
-
 	assert(set != NULL, "Unexpected NULL Parse_set");
 	if (set->first == NULL) return;
 
-	/* Most of the time, there is only one list element. */
-	if (set->first->next == NULL)
-	{
-		pc = set->first;
-	}
-	else
-	{
-		num_pc = 0;
-		for (pc = set->first; pc != NULL; pc = pc->next) {
-			num_pc++;
-		}
+	/* Avoid calling rand_r() for the common case of a single element. */
+	unsigned int new_index = (set->num_pc == 1) ? 0 :
+		rand_r(rand_state) % set->num_pc;
 
-		new_index = rand_r(rand_state) % num_pc;
-
-		num_pc = 0;
-		for (pc = set->first; new_index != num_pc; pc = pc->next) {
-			num_pc++;
-		}
-	}
+	Parse_choice *pc;
+	for (pc = set->first; new_index > 0; pc = pc->next)
+		new_index--;
 
 	issue_links_for_choice(lkg, pc, set);
 	list_random_links(lkg, rand_state, pc->set[0]);
