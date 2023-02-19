@@ -201,8 +201,8 @@ extractor_t * extractor_new(Sentence sent)
 	pex->x_table_size = (1 << log2_table_size);
 
 #ifdef DEBUG_X_TABLE
-		printf("Allocating x_table of size %u (nwords %d)\n",
-		       pex->x_table_size, nwords);
+		printf("Allocating x_table of size %u (log2 %d)\n",
+		       pex->x_table_size, log2_table_size);
 #endif /* DEBUG_X_TABLE */
 
 	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
