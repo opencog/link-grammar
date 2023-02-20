@@ -806,12 +806,6 @@ static Disjunct *pack_disjuncts(Sentence sent, Tracon_sharing *ts,
 
 #define TLSZ 8192         /* Initial size of the tracon list table */
 
-/* Reserved tracon ID space for NULL connectors (zero-length tracons).
- * Currently, tracons are unique per word. So this is actually the max.
- * number of words in a sentence rounded up to a power of 2.
- * FIXME: Derive it from MAX_SENTENCE. */
-#define WORD_OFFSET 256
-
 /** Create a context descriptor for disjuncts & connector memory "packing".
  *   Allocate a memory block for all the disjuncts & connectors.
  *   The current Connector struct size is 32 bytes, and the intention is
@@ -873,7 +867,7 @@ static Tracon_sharing *pack_sentence_init(Sentence sent, bool is_pruning)
 	ts->dblock = dblock;
 	ts->num_connectors = ccnt;
 	ts->num_disjuncts = dcnt;
-	ts->word_offset = is_pruning ? 1 : WORD_OFFSET;
+	ts->word_offset = is_pruning ? 1 : NULL_TRACON_BLOCK;
 	ts->is_pruning = is_pruning;
 	ts->next_id[0] = ts->next_id[1] = ts->word_offset;
 	ts->last_token = (uintptr_t)-1;
