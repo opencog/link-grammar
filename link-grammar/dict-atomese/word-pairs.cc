@@ -84,7 +84,7 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
 	{
-		local->stnp->fetch_incoming_by_type(rawpr, EVALUATION_LINK);
+		local->stnp->fetch_incoming_by_type(rawpr, EDGE_LINK);
 		cnt++;
 	}
 	local->stnp->barrier();
@@ -155,7 +155,7 @@ static bool have_pairs(Local* local, const Handle& germ)
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
 	{
-		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
+		Handle evpr = asp->get_link(EDGE_LINK, hpr, rawpr);
 		if (nullptr == evpr) continue;
 
 		// The lookup will discard pairs with too low an MI.
@@ -215,7 +215,7 @@ static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
 	{
-		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
+		Handle evpr = asp->get_link(EDGE_LINK, hpr, rawpr);
 		if (nullptr == evpr) continue;
 
 		double mi = pair_mi(local, evpr);
