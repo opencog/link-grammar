@@ -168,8 +168,8 @@ bool as_open(Dictionary dict)
 	}
 
 	// Create the connector predicate.
-	// This will be used to cache LG connector strings.
-	local->linkp = local->asp->add_node(PREDICATE_NODE, "*-LG link string-*");
+	// This will be used to avoid accidental aliasing.
+	local->bany = local->asp->add_node(BOND_NODE, "ANY");
 
 	// Internal-use only. Do we have this pair yet?
 	local->prk = local->asp->add_node(PREDICATE_NODE, "*-fetched-pair-*");

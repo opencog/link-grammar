@@ -8,6 +8,7 @@
 #ifdef HAVE_ATOMESE
 
 #include <cstdlib>
+#include <opencog/util/oc_assert.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/persist/api/StorageNode.h>
 #include <opencog/persist/cog-storage/CogStorage.h>
@@ -85,45 +86,61 @@ bool section_boolean_lookup(Dictionary dict, const char *s)
 /// Mapping LG connectors to AtomSpace connectors, and v.v.
 ///
 /// An LG connector is a string of capital letters. It's generated on
-/// the fly. It's associated with a `(Set (Word ..) (Word ...))`. There
-/// are two lookup tasks. In this blob of code, when given the Set, we
+/// the fly. It's associated with `(List (Word ..) (Word ...))`. There
+/// are two lookup tasks. In this blob of code, when given the List, we
 /// need to find the matching LG string. For users of LG, we have the
-/// inverse problem: given the LG string, what's the Set?
+/// inverse problem: given the LG string, what's the List?
 ///
-/// As of just right now, the best solution seems to be the traditional
-/// one:
+/// There are several possible solutionhs:
 ///
-///    (Evaluation (Predicate "*-LG connector string-*")
-///       (LgConnNode "ABC") (Set (Word ..) (Word ...)))
+///    (Edge (BondNode "ABC") (List (Word ..) (Word ...)))
 ///
-/// As of just right now, the above is held only in the local AtomSpace;
-/// it is never written back to storage.
+///    (Edge (LgConnNode "ABC") (List (Word ..) (Word ...)))
+///
+///    (Edge (Predicate "*-LG connector string-*")
+///       (LgConnNode "ABC") (List (Word ..) (Word ...)))
+///
+///     (Grant (List (Word ...) (Word ...))
+///         (Predicate "*-LG connector string-*")
+///         (LgLinkNode "ASDF"))
+///
+/// The first seems to be the best, and is implemented here.
+///
+/// As of just right now, this pair is held only in the local AtomSpace;
+/// it is never written back to storage. This is fine casual use with
+/// a private local AtomSpace. Users working with a shared attached
+/// AtomSpace will probably keep counts, and store the pair. This will
+/// then require taking care to avoid issuing duplicate LG link strings.
 
-/// int to base-26 capital letters. Except it has gaps in that
-/// sequence, and the order is reversed. Whatever. Doesn't matter.
+/// int to base-26 capital letters. zero = 'A'.
 static std::string idtostr(uint64_t aid)
 {
 	std::string s;
+	aid ++;
 	do
 	{
+		aid --;
 		char c = (aid % 26) + 'A';
-		s.push_back(c);
+		// Slightly more human-readable than s.push_back()
+		s.insert(s.begin(), c);
 	}
 	while (0 < (aid /= 26));
 
+	// Generated strings always end with star.
+	// s.push_back('*');
 	return s;
 }
 
 /// Given a `(List (Word ...) (Word ...))` denoting a link, find the
-/// corresponding LgConnNode, if it exists. The string name of that
-/// LgConnNode is the name of the LG link for that word-pair.
+/// corresponding BondNode, if it exists. The string name of that
+/// BondNode is the name of the LG link for that word-pair.
 Handle get_lg_conn(Local* local, const Handle& wpair)
 {
-	const Handle& key = local->linkp;
 	for (const Handle& edge : wpair->getIncomingSetByType(EDGE_LINK))
 	{
-		if (edge->getOutgoingAtom(0) == key)
-			return edge->getOutgoingAtom(1);
+		const Handle& bond = edge->getOutgoingAtom(0);
+		if (bond != local->bany)
+			return bond;
 	}
 	return Handle::UNDEFINED;
 }
@@ -132,10 +149,6 @@ Handle get_lg_conn(Local* local, const Handle& wpair)
 /// Assigns a new name, if one does not exist.
 /// The Handle `lnk` is an ordered pair, left-right, two words/classes.
 /// That is, `lnk` is `(List (Word ...) (Word ...))`
-/// The link name is stored in an LgLinkNode, having the format
-///
-///     (Edge (Predicate "*-LG connector string-*")
-///              (LgLinkNode "ASDF") (List (Word ...) (Word ...)))
 ///
 std::string cached_linkname(Local* local, const Handle& lnk)
 {
@@ -147,12 +160,12 @@ std::string cached_linkname(Local* local, const Handle& lnk)
 
 	static uint64_t lid = 0;
 
-	// idtostr(16562) is "ANY" and we want to reserve "ANY"
-	if (16562 == lid) lid++;
+	// idtostr(1064) is "ANY" and we want to reserve "ANY"
+	if (1064 == lid) lid++;
 	std::string slnk = idtostr(lid++);
 
-	lgc = createNode(LG_LINK_NODE, slnk);
-	local->asp->add_link(EDGE_LINK, local->linkp, lgc, lnk);
+	lgc = createNode(BOND_NODE, slnk);
+	local->asp->add_link(EDGE_LINK, lgc, lnk);
 	return slnk;
 }
 
@@ -231,7 +244,7 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 // will be sentence-specific. This is doable, but just ... not right
 // now. Maybe later, after we get the basics down.
 HandleSeq sent_words;
-assert(0, "Not supported yet!");
+OC_ASSERT(0, "Not supported yet!");
 		extras = make_cart_pairs(dict, germ, nullptr, sent_words,
 		                         local->extra_pairs,
 		                         local->extra_any);

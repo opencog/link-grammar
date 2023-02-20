@@ -21,7 +21,7 @@ public:
 	bool using_external_as; // If false, then `asp` below is private.
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;   // Might be nullptr
-	Handle linkp;          // (Predicate "*-LG link string-*")
+	Handle bany;           // (BondNode "ANY")
 	Handle prk;            // (Predicate "*-fetched-pair-*")
 
 	// Section config
