@@ -84,7 +84,7 @@ static size_t fetch_pairs(Local* local, const Handle& germ)
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
 	{
-		local->stnp->fetch_incoming_by_type(rawpr, EVALUATION_LINK);
+		local->stnp->fetch_incoming_by_type(rawpr, EDGE_LINK);
 		cnt++;
 	}
 	local->stnp->barrier();
@@ -141,21 +141,28 @@ static double pair_mi(Local* local, const Handle& evpr)
 }
 
 /// Return true if there are any word-pairs for `germ`.
-/// The will automatically fetch from storage, as needed.
+/// This will automatically fetch from storage, as needed.
+///
+/// This assumes the semi-hard-coded form
+///    (Edge local->prp (List (Word ...) (Word ...)))
+/// where `local->prp` is taken from `#define pair-predicate` in
+/// the dict. It currently defaults to `(BondNode "ANY")`, although
+/// past use included `(Predicate "word-pair")`.
+///
 static bool have_pairs(Local* local, const Handle& germ)
 {
 	if (need_pair_fetch(local, germ))
 		fetch_pairs(local, germ);
 
 	const AtomSpacePtr& asp = local->asp;
-	const Handle& hpr = local->prp; // (Predicate "word-pair")
+	const Handle& hpr = local->prp; // (BondNode "ANY")
 
 	// Are there any pairs in the local AtomSpace?
 	// If there's at least one, just return `true`.
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
 	{
-		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
+		Handle evpr = asp->get_link(EDGE_LINK, hpr, rawpr);
 		if (nullptr == evpr) continue;
 
 		// The lookup will discard pairs with too low an MI.
@@ -209,13 +216,13 @@ static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 	const AtomSpacePtr& asp = local->asp;
 	Exp* orhead = nullptr;
 
-	const Handle& hpr = local->prp; // (Predicate "pair")
+	const Handle& hpr = local->prp; // (BondNode "ANY")
 
 	size_t cnt = 0;
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);
 	for (const Handle& rawpr : rprs)
 	{
-		Handle evpr = asp->get_link(EVALUATION_LINK, hpr, rawpr);
+		Handle evpr = asp->get_link(EDGE_LINK, hpr, rawpr);
 		if (nullptr == evpr) continue;
 
 		double mi = pair_mi(local, evpr);
@@ -350,6 +357,10 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 	lgdebug(D_USER_INFO,
 		"Atomese: After pre-pruning, found %d sentence pairs for >>%s<<\n",
 		nfound, wrd);
+
+	// Avoid null-pointer deref.
+	if (0 == nfound)
+		return make_zeroary_node(pool);
 
 	// Unary OR exps not allowed.
 	if (2 > nfound)

@@ -9,6 +9,7 @@
 
 #include <cstdlib>
 #include <opencog/atomspace/AtomSpace.h>
+#include <opencog/atoms/truthvalue/CountTruthValue.h>
 #include <opencog/persist/api/StorageNode.h>
 #include <opencog/persist/cog-simple/CogSimpleStorage.h>
 #include <opencog/persist/cog-storage/CogStorage.h>
@@ -168,11 +169,15 @@ bool as_open(Dictionary dict)
 	}
 
 	// Create the connector predicate.
-	// This will be used to cache LG connector strings.
-	local->linkp = local->asp->add_node(PREDICATE_NODE, "*-LG link string-*");
+	// This will be used to avoid accidental aliasing.
+	local->bany = local->asp->add_node(BOND_NODE, "ANY");
 
 	// Internal-use only. Do we have this pair yet?
 	local->prk = local->asp->add_node(PREDICATE_NODE, "*-fetched-pair-*");
+
+	// Internal-use only. What is the last ID we've issued?
+	local->idanch = local->asp->add_node(ANCHOR_NODE, "*-LG-issued-link-id-*");
+	local->last_id = 0;
 
 	// -----------------------------------------------------
 	// Rationale for default values for costs:
@@ -325,6 +330,13 @@ bool as_open(Dictionary dict)
 		local->stnp->barrier();
 	}
 
+	// Used to hold issued link ID's.
+	local->stnp->fetch_atom(local->idanch);
+	const TruthValuePtr& tv = local->idanch->getTruthValue();
+	const CountTruthValuePtr ctv(CountTruthValueCast(tv));
+	if (ctv)
+		local->last_id = std::round(ctv->get_count());
+
 	return true;
 }
 
@@ -338,6 +350,12 @@ void as_storage_close(Dictionary dict)
 {
 	if (nullptr == dict->as_server) return;
 	Local* local = (Local*) (dict->as_server);
+
+	// Record the last unissued id.
+	TruthValuePtr tvp(createCountTruthValue(1, 0, local->last_id));
+	local->asp->set_truthvalue(local->idanch, tvp);
+	if (local->stnp)
+		local->stnp->store_atom(local->idanch);
 
 	if (not local->using_external_as and local->stnp)
 		local->stnp->close();

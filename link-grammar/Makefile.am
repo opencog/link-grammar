@@ -107,6 +107,7 @@ liblink_grammar_la_SOURCES =        \
 	dict-ram/dict-ram.c              \
 	dict-sql/read-sql.c              \
 	dict-atomese/read-atomese.c      \
+	dict-atomese/link-names.cc       \
 	dict-atomese/lookup-atomese.cc   \
 	dict-atomese/fetch-cats.cc       \
 	dict-atomese/sections.cc         \

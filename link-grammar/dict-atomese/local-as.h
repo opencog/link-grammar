@@ -21,7 +21,9 @@ public:
 	bool using_external_as; // If false, then `asp` below is private.
 	AtomSpacePtr asp;
 	StorageNodePtr stnp;   // Might be nullptr
-	Handle linkp;          // (Predicate "*-LG link string-*")
+	Handle idanch;         // (Anchor "*-LG-issued-link-id-*")
+	uint64_t last_id;      // Numeric value of above
+	Handle bany;           // (BondNode "ANY")
 	Handle prk;            // (Predicate "*-fetched-pair-*")
 
 	// Section config
@@ -43,7 +45,7 @@ public:
 
 	// Word-pairs
 	Dictionary pair_dict;  // Cache of pre-computed word-pair exprs.
-	Handle prp;            // (Predicate "*-word pair-*")
+	Handle prp;            // (Predicate "word-pair") or (Bond "ANY")
 	Handle mikey;          // (Predicate "*-Mutual Info Key-*")
 	Handle miformula;      // (DefinedProcedure "*-dynamic MI ANY")
 	int pair_index;        // Offset into the FloatValue
