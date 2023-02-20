@@ -351,6 +351,10 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 		"Atomese: After pre-pruning, found %d sentence pairs for >>%s<<\n",
 		nfound, wrd);
 
+	// Avoid null-pointer deref.
+	if (0 == nfound)
+		return make_zeroary_node(pool);
+
 	// Unary OR exps not allowed.
 	if (2 > nfound)
 		return sentex;
