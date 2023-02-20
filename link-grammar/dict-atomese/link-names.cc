@@ -102,11 +102,9 @@ std::string cached_linkname(Local* local, const Handle& lnk)
 	if (lgc)
 		return lgc->get_name();
 
-	static uint64_t lid = 0;
-
 	// idtostr(1064) is "ANY" and we want to reserve "ANY"
-	if (1064 == lid) lid++;
-	std::string slnk = idtostr(lid++);
+	if (1064 == local->last_id) local->last_id++;
+	std::string slnk = idtostr(local->last_id++);
 
 	lgc = createNode(BOND_NODE, slnk);
 	local->asp->add_link(EDGE_LINK, lgc, lnk);
