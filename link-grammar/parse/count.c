@@ -119,6 +119,9 @@ struct count_context_s
 	Table_lrcnt table_lrcnt[2];  /* Left/right wordvec */
 	Resources current_resources;
 	COUNT_COST(uint64_t count_cost[3];)
+	/* Match list cache. */
+	Pool_desc *mld_pool;      /* Disjunct pointers */
+	Pool_desc *mlc_pool;      /* Linkage counts */
 };
 
 /* Wikipedia claims that load factors of 0.6 to 0.75 are OK, and that
@@ -324,11 +327,48 @@ static void free_table_lrcnt(count_context_t *ctxt)
 		}
 	}
 
+	pool_delete(ctxt->mld_pool);
+	pool_delete(ctxt->mlc_pool);
+
 	for (unsigned int dir = 0; dir < 2; dir++)
 	{
 		free(ctxt->table_lrcnt[dir].tracon_wvp);
 		ctxt->table_lrcnt[dir].tracon_wvp = NULL;
 	}
+}
+
+/// Estimate the proper size of the match pool based on experimental
+/// data. An upper bound of twice the number of expressions seems to
+/// handle almost all cases. This is based on the graph in
+/// https://github.com/opencog/link-grammar/discussions/1402#discussioncomment-4826342
+/// The estimate is meant to be an *upper bound* for how many will be
+/// needed; the goal is to avoid allocation to get more, because it is
+/// expensive.
+///
+/// FYI, Expression pool sizes in excess of 10M entries have been observed.
+static size_t match_list_pool_size_estimate(Sentence sent)
+{
+	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
+
+	size_t mlpse = 2 * expsz;
+	if (mlpse < 4090) mlpse = 4090;
+
+	// Code below does a pool_alloc_vec(match_list_size) and we want to
+	// ensure that this estimate is greater than the match list size.
+	// The match list size can never be larger than the number of
+	// disjuncts, so the pool_alloc_vec() will never fail if we do this:
+	size_t maxndj = 0;
+	for (WordIdx w = 0; w < sent->length; w++)
+		if (maxndj < sent->word[w].num_disjuncts)
+			maxndj = sent->word[w].num_disjuncts;
+
+	// Generation can have millions of disjuncts on the wild-cards.
+	// But the match list will never get that big.
+	if (512*1024 < maxndj) maxndj = 512*1024;
+
+	if (mlpse < maxndj) mlpse = maxndj;
+
+	return mlpse;
 }
 
 static void init_table_lrcnt(count_context_t *ctxt)
@@ -356,6 +396,19 @@ static void init_table_lrcnt(count_context_t *ctxt)
 			         sizeof(count_expectation), /*zero_out*/true,
 			         /*align*/false, /*exact*/false);
 	}
+
+	const size_t match_list_pool_size = match_list_pool_size_estimate(sent);
+
+	/* FIXME: Modify pool_alloc_vec() to use dynamic block sizes. */
+	ctxt->mld_pool =
+		pool_new(__func__, "Match list cache",
+		         /*num_elements*/match_list_pool_size, sizeof(Disjunct *),
+		         /*zero_out*/false, /*align*/false, /*exact*/false);
+	ctxt->mlc_pool =
+		pool_new(__func__, "Match list counts",
+		         /*num_elements*/match_list_pool_size, sizeof(count_t),
+		         /*zero_out*/false, /*align*/false, /*exact*/false);
+
 }
 
 #ifdef DEBUG
@@ -686,11 +739,12 @@ static void lrcnt_keep_count(wordvecp lrcnt_cache, bool dir, Disjunct *d,
 /**
  * Cache the match list elements that yield a non-zero count.
  */
-static void lrcnt_cache_match_list(wordvecp lrcnt_cache, fast_matcher_t *mchxt,
+static void lrcnt_cache_match_list(wordvecp lrcnt_cache, count_context_t *ctxt,
                                    size_t mlb, bool dir)
 {
 	size_t dcnt = 0;
 	size_t i  = 0;
+	fast_matcher_t *mchxt = ctxt->mchxt;
 
 	for (i = mlb; get_match_list_element(mchxt, i) != NULL; i++)
 	{
@@ -702,8 +756,8 @@ static void lrcnt_cache_match_list(wordvecp lrcnt_cache, fast_matcher_t *mchxt,
 	lgdebug(+9, "MATCH_LIST %9d dir=%d mlb %zu cached %zu/%zu\n",
 	        get_match_list_element(mchxt, mlb)->match_id, dir, mlb, dcnt, i-mlb);
 
-	Disjunct **ml = pool_alloc_vec(mchxt->mld_pool, dcnt + 1);
-	count_t *c = pool_alloc_vec(mchxt->mlc_pool, dcnt);
+	Disjunct **ml = pool_alloc_vec(ctxt->mld_pool, dcnt + 1);
+	count_t *c = pool_alloc_vec(ctxt->mlc_pool, dcnt);
 
 	if ((ml == NULL) || (c == NULL)) return; /* Cannot allocate cache array */
 
@@ -1556,7 +1610,7 @@ static Count_bin do_count(
 				lrcnt_cache_changed = true;
 			}
 			if (lrcnt_found && (ctxt->sent->null_count == 0))
-				lrcnt_cache_match_list(lrcnt_cache, mchxt, mlb, /*dir*/le == NULL);
+				lrcnt_cache_match_list(lrcnt_cache, ctxt, mlb, /*dir*/le == NULL);
 		}
 
 		pop_match_list(mchxt, mlb);

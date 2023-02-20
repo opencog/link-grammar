@@ -42,10 +42,6 @@ struct fast_matcher_s
 	Disjunct ** match_list;      /* match-list stack */
 	size_t match_list_end;       /* index to the match-list stack end */
 	size_t match_list_size;      /* number of allocated elements */
-
-	/* Match list cache. */
-	Pool_desc *mld_pool; /* disjuncts pointers */
-	Pool_desc *mlc_pool; /* linkage counts */
 };
 
 /* See the source file for documentation. */
