@@ -39,7 +39,7 @@ using namespace opencog;
 ///
 ///    (Edge (BondNode "ABC") (List (Word ..) (Word ...)))
 ///
-///    (Edge (LgConnNode "ABC") (List (Word ..) (Word ...)))
+///    (Edge (LgLinkNode "ABC") (List (Word ..) (Word ...)))
 ///
 ///    (Edge (Predicate "*-LG connector string-*")
 ///       (LgConnNode "ABC") (List (Word ..) (Word ...)))

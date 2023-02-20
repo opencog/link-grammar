@@ -22,7 +22,9 @@
 #include "memory-pool.h"                // Pool_desc
 #include "utilities.h"                  // locale_t
 
-#define EMPTY_CONNECTOR "ZZZ"
+// EMPTY_CONNECTOR must be at least 6 or 7 chars long, to avoid
+// collisions with autogened connectors in the Atomese dict.
+#define EMPTY_CONNECTOR "ZZZZZZZZZ"
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
 #define LIMITED_CONNECTORS_WORD ("LENGTH-LIMIT-")
 #define IS_GENERATION(dict) (dict->category != NULL)
