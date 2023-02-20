@@ -141,14 +141,21 @@ static double pair_mi(Local* local, const Handle& evpr)
 }
 
 /// Return true if there are any word-pairs for `germ`.
-/// The will automatically fetch from storage, as needed.
+/// This will automatically fetch from storage, as needed.
+///
+/// This assumes the semi-hard-coded form
+///    (Edge local->prp (List (Word ...) (Word ...)))
+/// where `local->prp` is taken from `#define pair-predicate` in
+/// the dict. It currently defaults to `(BondNode "ANY")`, although
+/// past use included `(Predicate "word-pair")`.
+///
 static bool have_pairs(Local* local, const Handle& germ)
 {
 	if (need_pair_fetch(local, germ))
 		fetch_pairs(local, germ);
 
 	const AtomSpacePtr& asp = local->asp;
-	const Handle& hpr = local->prp; // (Predicate "word-pair")
+	const Handle& hpr = local->prp; // (BondNode "ANY")
 
 	// Are there any pairs in the local AtomSpace?
 	// If there's at least one, just return `true`.
@@ -209,7 +216,7 @@ static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 	const AtomSpacePtr& asp = local->asp;
 	Exp* orhead = nullptr;
 
-	const Handle& hpr = local->prp; // (Predicate "pair")
+	const Handle& hpr = local->prp; // (BondNode "ANY")
 
 	size_t cnt = 0;
 	HandleSeq rprs = germ->getIncomingSetByType(LIST_LINK);

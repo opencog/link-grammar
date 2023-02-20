@@ -43,7 +43,7 @@ public:
 
 	// Word-pairs
 	Dictionary pair_dict;  // Cache of pre-computed word-pair exprs.
-	Handle prp;            // (Predicate "*-word pair-*")
+	Handle prp;            // (Predicate "word-pair") or (Bond "ANY")
 	Handle mikey;          // (Predicate "*-Mutual Info Key-*")
 	Handle miformula;      // (DefinedProcedure "*-dynamic MI ANY")
 	int pair_index;        // Offset into the FloatValue
