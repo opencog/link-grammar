@@ -372,7 +372,7 @@ char *lg_readline(const char *mb_prompt)
 
 	if (!is_init)
 	{
-#define HFILE ".lg_history"
+#define HFILE "~/.cache/link-grammar/history"
 		is_init = true;
 
 		size_t sz = mbstowcs(NULL, mb_prompt, 0) + 4;
@@ -384,7 +384,9 @@ char *lg_readline(const char *mb_prompt)
 		history_w(hist, &ev, H_SETSIZE, 100);
 		history_w(hist, &ev, H_SETUNIQUE, 1);
 		el_wset(el, EL_HIST, history_w, hist);
-		history_w(hist, &ev, H_LOAD, HFILE);
+		char * chist = expand_homedir(HFILE);
+		history_w(hist, &ev, H_LOAD, chist);
+		free(chist);
 
 		el_set(el, EL_SIGNAL, 1); /* Restore tty setting on returning to shell */
 
@@ -421,7 +423,9 @@ char *lg_readline(const char *mb_prompt)
 	if (1 < numc)
 	{
 		history_w(hist, &ev, H_ENTER, wc_line);
-		history_w(hist, &ev, H_SAVE, HFILE);
+		char * chist = expand_homedir(HFILE);
+		history_w(hist, &ev, H_SAVE, chist);
+		free(chist);
 	}
 	/* fwprintf(stderr, L"==> got %d %ls", numc, wc_line); */
 
