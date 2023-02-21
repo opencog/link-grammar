@@ -25,6 +25,7 @@
 #include <pwd.h>
 #include <signal.h>
 #include <sys/ioctl.h>
+#include <sys/stat.h>
 #include <sys/types.h>
 #include <termios.h>
 #include <unistd.h>
@@ -105,6 +106,17 @@ char *expand_homedir(const char *filename)
 #endif
 
 	return eh_filename;
+}
+
+void create_dir(const char *filename)
+{
+#ifndef _WIN32
+	char *fpath = strdupa(filename);
+	char *p = strrchr(fpath, '/');
+	if (p) *p = 0;
+	// Ignore error if mkdir fails.
+	mkdir(fpath, S_IRWXU);
+#endif
 }
 
 #ifdef _WIN32

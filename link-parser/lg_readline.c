@@ -372,6 +372,8 @@ char *lg_readline(const char *mb_prompt)
 
 	if (!is_init)
 	{
+// This seems like the defacto convention for modern-day
+// dot-files on Linux systems. But what about Windows or Apple?
 #define HFILE "~/.cache/link-grammar/history"
 		is_init = true;
 
@@ -424,6 +426,7 @@ char *lg_readline(const char *mb_prompt)
 	{
 		history_w(hist, &ev, H_ENTER, wc_line);
 		char * chist = expand_homedir(HFILE);
+		create_dir(chist);
 		history_w(hist, &ev, H_SAVE, chist);
 		free(chist);
 	}
