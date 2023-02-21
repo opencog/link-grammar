@@ -163,10 +163,12 @@ GNUC_UNUSED static void print_x_node(X_node *x)
  *  quotes that don't get the QUc/QUd links.
  *
  * This function is called only if ZZZ is defined in the dictionary.
+ * This is currently used only by the English dict, to allow quotes to
+ * appear anywhere in the sentence.
  */
 static void add_empty_word(Sentence sent, X_node *x)
 {
-	const char *ZZZ = linkgrammar_get_dict_define(dict, EMPTY_CONNECTOR);
+	const char *ZZZ = linkgrammar_get_dict_define(sent->dict, EMPTY_CONNECTOR);
 
 	/* The left-wall already has ZZZ-. The right-wall will not arrive here. */
 	if (MT_WALL == x->word->morpheme_type) return;
