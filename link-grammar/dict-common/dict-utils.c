@@ -297,9 +297,8 @@ static bool exp_has_connector(const Exp * e, int depth,
  **/
 bool is_exp_like_empty_word(Dictionary dict, Exp *exp)
 {
-	const char *cs = linkgrammar_get_dict_define(dict, EMPTY_CONNECTOR);
-	if (NULL == cs) return false;
-	return exp_has_connector(exp, 2, cs, '-');
+	if (NULL == dict->zzz_connector) return false;
+	return exp_has_connector(exp, 2, dict->zzz_connector, '-');
 }
 
 /* ======================================================== */

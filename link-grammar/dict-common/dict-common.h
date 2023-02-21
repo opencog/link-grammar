@@ -123,9 +123,12 @@ struct Dictionary_s
 	const char * version;
 	const char * locale;    /* Locale name */
 	locale_t     lctype;    /* Locale argument for the *_l() functions */
+
 	int          num_entries;
 	float default_max_disjunct_cost;
 	dfine_s      dfine;    /* Name-value definitions */
+
+	const char * zzz_connector;
 
 	bool         use_unknown_word;
 	bool         unknown_word_defined;
