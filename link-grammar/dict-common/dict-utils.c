@@ -288,7 +288,7 @@ static bool exp_has_connector(const Exp * e, int depth,
 }
 
 /**
- * Find if an expression has a connector ZZZ- (that an empty-word has).
+ * Check if an expression has a connector ZZZ- (that an empty-word has).
  * This is a costly way to find it. To reduce the overhead, the
  * exp_has_connector() "depth" argument limits the expression depth check,
  * supposing the ZZZ- connectors are not deep in the word expression.
@@ -297,7 +297,7 @@ static bool exp_has_connector(const Exp * e, int depth,
  **/
 bool is_exp_like_empty_word(Dictionary dict, Exp *exp)
 {
-	const char *cs = string_set_lookup(EMPTY_CONNECTOR, dict->string_set);
+	const char *cs = linkgrammar_get_dict_define(dict, EMPTY_CONNECTOR);
 	if (NULL == cs) return false;
 	return exp_has_connector(exp, 2, cs, '-');
 }

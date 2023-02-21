@@ -161,12 +161,12 @@ GNUC_UNUSED static void print_x_node(X_node *x)
  *  This function was mainly used to support using empty-words, a concept
  *  that has been eliminated. However, it is still used to support linking of
  *  quotes that don't get the QUc/QUd links.
+ *
+ * This function is called only if ZZZ is defined in the dictionary.
  */
 static void add_empty_word(Sentence sent, X_node *x)
 {
-	Exp *zn, *an;
-	const char *ZZZ = string_set_lookup(EMPTY_CONNECTOR, sent->dict->string_set);
-	/* This function is called only if ZZZ is in the dictionary. */
+	const char *ZZZ = linkgrammar_get_dict_define(dict, EMPTY_CONNECTOR);
 
 	/* The left-wall already has ZZZ-. The right-wall will not arrive here. */
 	if (MT_WALL == x->word->morpheme_type) return;
@@ -180,11 +180,11 @@ static void add_empty_word(Sentence sent, X_node *x)
 		//lgdebug(+0, "Processing '%s'\n", x->string);
 
 		/* zn points at {ZZZ+} */
-		zn = make_connector_node(sent->dict, sent->Exp_pool, ZZZ, '+', false);
+		Exp *zn = make_connector_node(sent->dict, sent->Exp_pool, ZZZ, '+', false);
 		zn = make_optional_node(sent->Exp_pool, zn);
 
 		/* an will be {ZZZ+} & (plain-word-exp) */
-		an = make_and_node(sent->Exp_pool, zn, x->exp);
+		Exp *an = make_and_node(sent->Exp_pool, zn, x->exp);
 
 		x->exp = an;
 	}
@@ -257,7 +257,17 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	 * supposing that the word has it in all of its dict entries
 	 * (in any case, currently there is only 1 entry for each such word).
 	 * Note that ZZZ_added starts by 0 and so also wordpos, and that the
-	 * first sentence word (usually LEFT-WALL) doesn't need a check. */
+	 * first sentence word (usually LEFT-WALL) doesn't need a check.
+	 *
+	 * At this time, the empty-connector device is used only by the
+	 * English dict, to allow quotation marks to appear in random
+	 * locations in sentences. Rather than writing the English dict
+	 * so that *every word* has an optional {ZZZ-} & connector on it,
+	 * which would double the size of the dict, we instead add it here,
+	 * dynamically, on-the-fly, as needed. This whole thing feels
+	 * half-baked to me. It works, but is this weird exception being
+	 * made for one language.
+	 */
 	if ((wordpos != *ZZZ_added) && is_exp_like_empty_word(dict, we->exp))
 	{
 		lgdebug(D_DWE, " (has ZZZ-)");

@@ -692,12 +692,16 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 	 * to facilitate using diff on sentence batch runs. */
 	if (test_enabled("removeZZZ"))
 	{
-		for (i=0; i<linkage->num_links; i++)
+		const char* ZZZ = linkgrammar_get_dict_define(sent->dict, EMPTY_CONNECTOR);
+		if (ZZZ)
 		{
-			Link *lnk = &(linkage->link_array[i]);
+			for (i=0; i<linkage->num_links; i++)
+			{
+				Link *lnk = &(linkage->link_array[i]);
 
-			if (0 == strcmp("ZZZ", lnk->link_name))
-				chosen_words[lnk->rw] = NULL;
+				if (0 == strcmp(ZZZ, lnk->link_name))
+					chosen_words[lnk->rw] = NULL;
+			}
 		}
 	}
 

@@ -52,6 +52,10 @@
  % This is mostly fixed, except that some uses of <noun-main-m>
  % remain, below.
 
+% empty-connector is used for hard-coded handling of unpaired
+% quote marks in the C code.
+#define empty-connector ZZZ;
+
 % Capitalization handling (null effect for now- behave as empty words).
 <1stCAP>: ZZZ-;
 <nonCAP>: ZZZ-;
