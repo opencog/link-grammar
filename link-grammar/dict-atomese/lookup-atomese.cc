@@ -9,7 +9,6 @@
 
 #include <cstdlib>
 #include <opencog/atomspace/AtomSpace.h>
-#include <opencog/atoms/truthvalue/CountTruthValue.h>
 #include <opencog/persist/api/StorageNode.h>
 #include <opencog/persist/cog-simple/CogSimpleStorage.h>
 #include <opencog/persist/cog-storage/CogStorage.h>
@@ -330,12 +329,8 @@ bool as_open(Dictionary dict)
 		local->stnp->barrier();
 	}
 
-	// Used to hold issued link ID's.
-	local->stnp->fetch_atom(local->idanch);
-	const TruthValuePtr& tv = local->idanch->getTruthValue();
-	const CountTruthValuePtr ctv(CountTruthValueCast(tv));
-	if (ctv)
-		local->last_id = std::round(ctv->get_count());
+	// Get last issued link ID.
+	fetch_link_id(local);
 
 	return true;
 }
@@ -352,10 +347,7 @@ void as_storage_close(Dictionary dict)
 	Local* local = (Local*) (dict->as_server);
 
 	// Record the last unissued id.
-	TruthValuePtr tvp(createCountTruthValue(1, 0, local->last_id));
-	local->asp->set_truthvalue(local->idanch, tvp);
-	if (local->stnp)
-		local->stnp->store_atom(local->idanch);
+	store_link_id(local);
 
 	if (not local->using_external_as and local->stnp)
 		local->stnp->close();

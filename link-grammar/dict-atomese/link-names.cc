@@ -8,9 +8,8 @@
 #ifdef HAVE_ATOMESE
 
 #include <cstdlib>
-//#include <opencog/util/oc_assert.h>
+#include <opencog/atoms/truthvalue/CountTruthValue.h>
 #include <opencog/atomspace/AtomSpace.h>
-//#include <opencog/persist/api/StorageNode.h>
 #include <opencog/nlp/types/atom_types.h>
 
 #undef STRINGIFY
@@ -104,11 +103,38 @@ std::string cached_linkname(Local* local, const Handle& lnk)
 
 	// idtostr(1064) is "ANY" and we want to reserve "ANY"
 	if (1064 == local->last_id) local->last_id++;
-	std::string slnk = idtostr(local->last_id++);
+	store_link_id(local);
 
+	std::string slnk = idtostr(local->last_id++);
 	lgc = createNode(BOND_NODE, slnk);
 	local->asp->add_link(EDGE_LINK, lgc, lnk);
 	return slnk;
 }
 
+// ===============================================================
+
+// Get the last issued link ID from the data store.
+void fetch_link_id(Local* local)
+{
+	if (nullptr == local->stnp) return;
+
+	// Used to hold issued link ID's.
+	local->stnp->fetch_atom(local->idanch);
+	const TruthValuePtr& tv = local->idanch->getTruthValue();
+	const CountTruthValuePtr ctv(CountTruthValueCast(tv));
+	if (ctv)
+		local->last_id = std::round(ctv->get_count());
+}
+
+// Record the last unissued id.
+void store_link_id(Local* local)
+{
+	if (nullptr == local->stnp) return;
+
+	TruthValuePtr tvp(createCountTruthValue(1, 0, local->last_id));
+	local->asp->set_truthvalue(local->idanch, tvp);
+	local->stnp->store_atom(local->idanch);
+}
+
+// ===============================================================
 #endif /* HAVE_ATOMESE */
