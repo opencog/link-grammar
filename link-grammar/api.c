@@ -78,16 +78,6 @@ Parse_Options parse_options_create(void)
 #endif
 	po->linkage_limit = 100;
 
-	// Do not even attempt parsing if the sentance has more than this
-	// many disjuncts. This is a heuristic; sentences with more than
-	// this many disjuncts will take more than 60 seconds to parse.
-	// They'll also chew up tens of gigabytes of RAM during parsing.
-	// This limit is never encountered in the conventional, hand-written
-	// dictionaries, but will be hit when working with MST dictionaries.
-	// The goal is to avoid out-of-control RAM usage.
-	// Set to -1 to disable.
-	po->disjunct_limit = 105123;
-
 	// Disable spell-guessing by default. Aspell 0.60.8 and possibly
 	// others leak memory.
 	po->use_spell_guess = 0;

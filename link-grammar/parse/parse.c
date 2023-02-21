@@ -705,14 +705,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		free_count_context(ctxt, sent);
 		ctxt = alloc_count_context(sent, ts_parsing);
 
-		if ((0 < opts->disjunct_limit) &&
-		    ((unsigned) opts->disjunct_limit < sent->num_disjuncts))
-		{
-			lgdebug(+2, "Sentence disjunct count %u exceeded limit %d\n",
-				sent->num_disjuncts, opts->disjunct_limit);
-			sent->num_linkages_found = 0;
-			goto parse_end_cleanup;
-		}
 		sent->num_linkages_found = do_parse(sent, mchxt, ctxt, opts);
 
 		print_time(opts, "Counted parses (%d w/%u null%s)",
