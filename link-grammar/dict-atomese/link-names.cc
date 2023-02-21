@@ -116,10 +116,12 @@ std::string cached_linkname(Local* local, const Handle& lnk)
 // Get the last issued link ID from the data store.
 void fetch_link_id(Local* local)
 {
-	if (nullptr == local->stnp) return;
+	if (not local->using_external_as) return;
 
-	// Used to hold issued link ID's.
-	local->stnp->fetch_atom(local->idanch);
+	// Location where issued link ID's are stored.
+	if (local->stnp)
+		local->stnp->fetch_atom(local->idanch);
+
 	const TruthValuePtr& tv = local->idanch->getTruthValue();
 	const CountTruthValuePtr ctv(CountTruthValueCast(tv));
 	if (ctv)
@@ -129,11 +131,14 @@ void fetch_link_id(Local* local)
 // Record the last unissued id.
 void store_link_id(Local* local)
 {
-	if (nullptr == local->stnp) return;
+	if (not local->using_external_as) return;
 
 	TruthValuePtr tvp(createCountTruthValue(1, 0, local->last_id));
 	local->asp->set_truthvalue(local->idanch, tvp);
-	local->stnp->store_atom(local->idanch);
+
+	// Store, if there is storage.
+	if (local->stnp)
+		local->stnp->store_atom(local->idanch);
 }
 
 // ===============================================================
