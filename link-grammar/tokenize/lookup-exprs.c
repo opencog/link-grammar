@@ -181,7 +181,7 @@ static void add_empty_word(Sentence sent, X_node *x)
 
 		/* zn points at {ZZZ+} */
 		Exp *zn = make_connector_node(sent->dict,
-			 sent->Exp_pool, dict->zzz_connector, '+', false);
+			 sent->Exp_pool, sent->dict->zzz_connector, '+', false);
 		zn = make_optional_node(sent->Exp_pool, zn);
 
 		/* an will be {ZZZ+} & (plain-word-exp) */
