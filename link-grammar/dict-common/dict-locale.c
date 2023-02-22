@@ -443,7 +443,8 @@ bool dictionary_setup_defines(Dictionary dict)
 
 	// Used for unattached quote marks, in the English dict only.
 	dict->zzz_connector = linkgrammar_get_dict_define(dict, EMPTY_CONNECTOR);
-	dict->zzz_connector = string_set_add(dict->zzz_connector, dict->string_set);
+	if (NULL != dict->zzz_connector)
+		dict->zzz_connector = string_set_add(dict->zzz_connector, dict->string_set);
 
 	dictionary_setup_locale(dict);
 
