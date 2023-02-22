@@ -168,21 +168,20 @@ GNUC_UNUSED static void print_x_node(X_node *x)
  */
 static void add_empty_word(Sentence sent, X_node *x)
 {
-	const char *ZZZ = linkgrammar_get_dict_define(sent->dict, EMPTY_CONNECTOR);
-
 	/* The left-wall already has ZZZ-. The right-wall will not arrive here. */
 	if (MT_WALL == x->word->morpheme_type) return;
 
 	/* Replace plain-word-exp by {ZZZ+} & (plain-word-exp) in each X_node.  */
 	for(; NULL != x; x = x->next)
 	{
-		/* Ignore stems for now, decreases a little the overhead for
-		 * stem-suffix languages. */
+		/* Ignore stems for now; this decreases the overhead a little
+		 * for stem-suffix languages. */
 		if (is_stem(x->string)) continue; /* Avoid an unneeded overhead. */
 		//lgdebug(+0, "Processing '%s'\n", x->string);
 
 		/* zn points at {ZZZ+} */
-		Exp *zn = make_connector_node(sent->dict, sent->Exp_pool, ZZZ, '+', false);
+		Exp *zn = make_connector_node(sent->dict,
+			 sent->Exp_pool, dict->zzz_connector, '+', false);
 		zn = make_optional_node(sent->Exp_pool, zn);
 
 		/* an will be {ZZZ+} & (plain-word-exp) */
