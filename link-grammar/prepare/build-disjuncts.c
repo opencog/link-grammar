@@ -33,7 +33,7 @@ typedef struct clause_struct Clause;
 struct clause_struct
 {
 	Clause * next;
-	float cost;
+	float totcost;
 	float maxcost;
 	Tconnector * c;
 };
@@ -138,7 +138,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 		Clause *c1 = pool_alloc(ct->Clause_pool);
 		c1->c = NULL;
 		c1->next = NULL;
-		c1->cost = 0.0;
+		c1->totcost = 0.0;
 		c1->maxcost = 0.0;
 		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 		{
@@ -154,7 +154,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 
 					Clause *c5 = pool_alloc(ct->Clause_pool);
 					if ((c_head == NULL) && (c_last != NULL)) *c_last = c5;
-					c5->cost = c3->cost + c4->cost;
+					c5->totcost = c3->totcost + c4->totcost;
 					c5->maxcost = maxcost;
 					c5->c = catenate(c4->c, c3->c, ct->Tconnector_pool);
 					c5->next = c_head;
@@ -191,7 +191,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 	{
 		c = pool_alloc(ct->Clause_pool);
 		c->c = build_terminal(e, ct);
-		c->cost = 0.0;
+		c->totcost = 0.0;
 		c->maxcost = 0.0;
 		c->next = NULL;
 		if (c_last != NULL) *c_last = c;
@@ -204,7 +204,7 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 	/* c now points to the list of clauses */
 	for (Clause *c1 = c; c1 != NULL; c1 = c1->next)
 	{
-		c1->cost += e->cost;
+		c1->totcost += e->cost;
 		/* c1->maxcost = MAX(c1->maxcost,e->cost);  */
 		/* Above is how Dennis had it. Someone changed it to below.
 		 * However, this can sometimes lead to a maxcost that is less
@@ -286,7 +286,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 		if (sat_solver || (!IS_GENERATION(sent->dict) || (' ' != string[0])))
 		{
 			ndis->word_string = string;
-			ndis->cost = cl->cost;
+			ndis->cost = cl->totcost;
 			ndis->is_category = 0;
 		}
 		else
@@ -300,8 +300,8 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			assert(sat_solver || ((ndis->category[0].num > 0) &&
 			       (ndis->category[0].num < 64*1024)),
 			       "Insane category %u", ndis->category[0].num);
-			ndis->category[0].cost = cl->cost;
-			// ndis->cost = cl->cost; No! clobbers memory!
+			ndis->category[0].cost = cl->totcost;
+			// ndis->cost = cl->totcost; No! clobbers memory!
 		}
 
 		ndis->originating_gword = (gword_set*)gs; /* XXX remove constness */
@@ -364,7 +364,7 @@ GNUC_UNUSED static void print_clause_list(Clause * c)
 {
 	for (;c != NULL; c=c->next) {
 		printf("  Clause: ");
-		printf("(%4.2f, %4.2f) ", c->cost, c->maxcost);
+		printf("(%4.2f, %4.2f) ", c->totcost, c->maxcost);
 		print_Tconnector_list(c->c);
 		printf("\n");
 	}
