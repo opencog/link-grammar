@@ -22,9 +22,9 @@
 #include "memory-pool.h"                // Pool_desc
 #include "utilities.h"                  // locale_t
 
-// EMPTY_CONNECTOR must be at least 6 or 7 chars long, to avoid
-// collisions with autogened connectors in the Atomese dict.
-#define EMPTY_CONNECTOR "ZZZZZZZZZ"
+
+// Dict may have `#define empty-connector ZZZ` in it.
+#define EMPTY_CONNECTOR "empty-connector"
 #define UNLIMITED_CONNECTORS_WORD ("UNLIMITED-CONNECTORS")
 #define LIMITED_CONNECTORS_WORD ("LENGTH-LIMIT-")
 #define IS_GENERATION(dict) (dict->category != NULL)
@@ -123,9 +123,12 @@ struct Dictionary_s
 	const char * version;
 	const char * locale;    /* Locale name */
 	locale_t     lctype;    /* Locale argument for the *_l() functions */
+
 	int          num_entries;
 	float default_max_disjunct_cost;
 	dfine_s      dfine;    /* Name-value definitions */
+
+	const char * zzz_connector;
 
 	bool         use_unknown_word;
 	bool         unknown_word_defined;
