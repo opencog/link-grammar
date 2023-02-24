@@ -519,7 +519,7 @@ static void sort_linkages(Sentence sent, Parse_Options opts)
 	for (uint32_t i=0; i<sent->num_linkages_alloced; i++)
 		sent->lnkages[i].dupe = false;
 
-	/* Sorting will also mark some of hem as being duplicates */
+	/* Sorting will also mark some of them as being duplicates */
 	qsort((void *)sent->lnkages, sent->num_linkages_alloced,
 	      sizeof(struct Linkage_s),
 	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
