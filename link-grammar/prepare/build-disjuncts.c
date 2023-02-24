@@ -33,8 +33,8 @@ typedef struct clause_struct Clause;
 struct clause_struct
 {
 	Clause * next;
-	float totcost;
-	float maxcost;
+	float totcost;   // Total cost of all connectors in the clause
+	float maxcost;   // Cost of the most costly lingle connector.
 	Tconnector * c;
 };
 
@@ -148,14 +148,10 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 			{
 				for (Clause *c4 = c2; c4 != NULL; c4 = c4->next)
 				{
-					float maxcost = MAX(c3->maxcost,c4->maxcost);
-					/* Cannot use this shortcut due to negative costs. */
-					//if (maxcost + e->cost > ct->cost_cutoff) continue;
-
 					Clause *c5 = pool_alloc(ct->Clause_pool);
 					if ((c_head == NULL) && (c_last != NULL)) *c_last = c5;
+					c5->maxcost = MAX(c3->maxcost, c4->maxcost);
 					c5->totcost = c3->totcost + c4->totcost;
-					c5->maxcost = maxcost;
 					c5->c = catenate(c4->c, c3->c, ct->Tconnector_pool);
 					c5->next = c_head;
 					c_head = c5;
@@ -204,14 +200,19 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 	/* c now points to the list of clauses */
 	for (Clause *c1 = c; c1 != NULL; c1 = c1->next)
 	{
-		c1->totcost += e->cost;
-		/* c1->maxcost = MAX(c1->maxcost,e->cost);  */
-		/* Above is how Dennis had it. Someone changed it to below.
-		 * However, this can sometimes lead to a maxcost that is less
-		 * than the cost ! -- which seems wrong to me ... seems Dennis
-		 * had it right!?
+		/* The maxcost is the most costly single connector in the
+		 * expression. It is used, in conjunction with the cost_cutoff,
+		 * to reject clauses which contain a single costly connector
+		 * in them. This allows cost_cutoff to be raised for panic
+		 * parses, thus allowing perhaps-dubious disjuncts into the
+		 * parse.  Note that maxcost can be less than totcost, because
+		 * the totcost might be the sum of many low-cost connectors,
+		 * sum sums can get large. (maxcost is the Banach l_0 norm,
+		 * while totcost is the Banach l_1 norm).
 		 */
-		c1->maxcost += e->cost;
+		c1->maxcost = MAX(c1->maxcost, e->cost);
+		c1->totcost += e->cost;
+
 		/* Note: The above computation is used as a saving shortcut in
 		 * the inner loop of AND_type. If it is changed here, it needs to be
 		 * changed there too. */
