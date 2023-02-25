@@ -84,7 +84,6 @@ struct extractor_s
 	Pool_desc *    Pset_bucket_pool;
 	Pool_desc *    Parse_choice_pool;
 	bool           islands_ok;
-	bool           sort_match_list;
 
 	/* thread-safe random number state */
 	unsigned int rand_state;
@@ -346,34 +345,6 @@ static Parse_set* dummy_set(int lw, int rw,
 	return &dummy->set;
 }
 
-static int cost_compare(const void *a, const void *b)
-{
-	const Disjunct * const * da = a;
-	const Disjunct * const * db = b;
-	if ((*da)->cost < (*db)->cost) return -1;
-	if ((*da)->cost > (*db)->cost) return 1;
-	return 0;
-}
-
-/**
- * Sort the match-list into ascending disjunct cost. The goal here
- * is to issue the lowest-cost disjuncts first, so that the parse
- * set ends up quasi-sorted. This is not enough to get us a totally
- * sorted parse set, but it does guarantee that at least the very
- * first parse really will be the lowest cost.
- */
-static void sort_match_list(fast_matcher_t *mchxt, size_t mlb)
-{
-	size_t i = mlb;
-
-	while (get_match_list_element(mchxt, i) != NULL)
-		i++;
-
-	if (i - mlb < 2) return;
-
-	qsort(get_match_list(mchxt, mlb), i - mlb, sizeof(Disjunct *), cost_compare);
-}
-
 /**
  * returns NULL if there are no ways to parse, or returns a pointer
  * to a set structure representing all the ways to parse.
@@ -529,7 +500,6 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 			mlcr = get_cached_match_list(ctxt, 1, w, re);
 
 		size_t mlb = form_match_list(mchxt, w, le, lw, fml_re, rw, mlcl, mlcr);
-		if (pex->sort_match_list) sort_match_list(mchxt, mlb);
 
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
@@ -721,7 +691,6 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 {
 	pex->words = sent->word;
 	pex->islands_ok = opts->islands_ok;
-	pex->sort_match_list = test_enabled("sort-match-list");
 
 	pex->parse_set =
 		mk_parse_set(mchxt, ctxt,
