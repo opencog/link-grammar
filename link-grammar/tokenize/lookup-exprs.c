@@ -242,11 +242,16 @@ static bool determine_word_expressions(Sentence sent, Gword *w,
 	else if (dict->unknown_word_defined && dict->use_unknown_word)
 	{
 		we = build_word_expressions(sent, w, UNKNOWN_WORD, opts);
-		assert(we, UNKNOWN_WORD " must be defined in the dictionary!");
+		assert(we, UNKNOWN_WORD " has no expressions in the dictionary!");
 		w->status |= WS_UNKNOWN;
 	}
 	else
 	{
+		if (dictionary_word_is_known(dict, s))
+		{
+			prt_error("Internal Error: Word '%s' has bad status\n", s);
+			return false;
+		}
 		prt_error("Error: Word '%s': word is unknown\n", s);
 		return false;
 	}
