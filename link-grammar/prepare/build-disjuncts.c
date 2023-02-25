@@ -33,9 +33,8 @@ typedef struct clause_struct Clause;
 struct clause_struct
 {
 	Clause * next;
-	float totcost;   // Total cost of all connectors in the clause
-	float maxcost;   // Cost of the most costly lingle connector.
 	Tconnector * c;
+	float totcost;   // Total cost of all connectors in the clause
 };
 
 typedef struct
@@ -139,7 +138,6 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 		c1->c = NULL;
 		c1->next = NULL;
 		c1->totcost = 0.0;
-		c1->maxcost = 0.0;
 		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 		{
 			Clause *c2 = build_clause(opd, ct, NULL);
@@ -150,7 +148,6 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 				{
 					Clause *c5 = pool_alloc(ct->Clause_pool);
 					if ((c_head == NULL) && (c_last != NULL)) *c_last = c5;
-					c5->maxcost = MAX(c3->maxcost, c4->maxcost);
 					c5->totcost = c3->totcost + c4->totcost;
 					c5->c = catenate(c4->c, c3->c, ct->Tconnector_pool);
 					c5->next = c_head;
@@ -188,7 +185,6 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 		c = pool_alloc(ct->Clause_pool);
 		c->c = build_terminal(e, ct);
 		c->totcost = 0.0;
-		c->maxcost = 0.0;
 		c->next = NULL;
 		if (c_last != NULL) *c_last = c;
 	}
@@ -199,24 +195,8 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 
 	/* c now points to the list of clauses */
 	for (Clause *c1 = c; c1 != NULL; c1 = c1->next)
-	{
-		/* The maxcost is the most costly single connector in the
-		 * expression. It is used, in conjunction with the cost_cutoff,
-		 * to reject clauses which contain a single costly connector
-		 * in them. This allows cost_cutoff to be raised for panic
-		 * parses, thus allowing perhaps-dubious disjuncts into the
-		 * parse.  Note that maxcost can be less than totcost, because
-		 * the totcost might be the sum of many low-cost connectors,
-		 * sum sums can get large. (maxcost is the Banach l_0 norm,
-		 * while totcost is the Banach l_1 norm).
-		 */
-		c1->maxcost = MAX(c1->maxcost, e->cost);
 		c1->totcost += e->cost;
 
-		/* Note: The above computation is used as a saving shortcut in
-		 * the inner loop of AND_type. If it is changed here, it needs to be
-		 * changed there too. */
-	}
 	return c;
 }
 
@@ -240,7 +220,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 	for (; cl != NULL; cl = cl->next)
 	{
 		if (unlikely(NULL == cl->c)) continue; /* no connectors */
-		if (cl->maxcost > cost_cutoff) continue;
+		if (cl->totcost > cost_cutoff) continue;
 
 #if USE_SAT_SOLVER
 		if (sat_solver) /* For the SAT-parser, until fixed. */
@@ -365,7 +345,7 @@ GNUC_UNUSED static void print_clause_list(Clause * c)
 {
 	for (;c != NULL; c=c->next) {
 		printf("  Clause: ");
-		printf("(%4.2f, %4.2f) ", c->totcost, c->maxcost);
+		printf("(%4.2f) ", c->totcost);
 		print_Tconnector_list(c->c);
 		printf("\n");
 	}
