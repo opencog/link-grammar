@@ -726,6 +726,13 @@ char * get_default_locale(void)
 }
 
 /**
+ * A locale-independent version of strtof(). At this time (2023), the
+ * C Standards Committee does not offer a locale-independent version of
+ * strtof(). Trying to set LC_NUMERIC to "C", temporarily, while
+ * reading the dictionary, has proven painful and non-portable. The
+ * blob of code below, although large and complex, avoids the locale
+ * issues. C'est la vie.
+ *
  * Convert to float a scaled integer string in the format:
  * ([-+])?0*\d{,1}(\.\d*)?
  * The string should contain at least one digit.
