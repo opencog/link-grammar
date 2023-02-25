@@ -10938,7 +10938,7 @@ changequote dnl
 % XXX the correct solution to this is to add a new domain rule ! XXX
 
 ",":
-  ({[@Xca-]-0.05 or [[[@Xc-]]]} & (({[EBx+]} & Xd+) or Xc-))
+  ({[@Xca-]-0.05} & (({[EBx+]} & Xd+) or Xc-))
   or [<semicol>];
 
 % ,.j
