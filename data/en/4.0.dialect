@@ -44,6 +44,10 @@
 %    sense in a headline context, it can, and will generate bad
 %    parses when applied to non-headline contexts. By making
 %    determiners optional, many other rules are thrown off.
+%
+% Dialects can be disabled by setting the cost to any large value,
+% as long as it is greater than the `max-disjunct-cost` setting in
+% the dictionary.
 
 [default]
 no-headline
@@ -51,13 +55,13 @@ bad-spelling: 0
 colloquial: 0
 
 [no-headline]
-headline: 4
+headline: 99
 
 [headline]
 headline: 0
 
 [no-bad-spelling]
-bad-spelling: 4
+bad-spelling: 99
 
 % Examples.
 %[irish1]  %this is a test

@@ -23,8 +23,10 @@ changecom(`%')
 #define dictionary-locale         en_US.UTF-8;
 
 % The default largest disjunct cost to consider during parsing.
-#define max-disjunct-cost         2.7;
-#define panic-max-disjunct-cost   4.0;
+% Setting this to 5 or larger effectively disables the use of cost
+% cutoffs, as nothing in this dict can go this high.
+#define max-disjunct-cost         10.0;
+#define panic-max-disjunct-cost   10.0;
 
  % _ORGANIZATION OF THE DICTIONARY_
  %
