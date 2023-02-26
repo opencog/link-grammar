@@ -4,7 +4,7 @@
 !short=20
 !constituents=1
 !spell=0
-!timeout=1000
+!timeout=600
 
 % Example sentences showing BUG FIXES since link-grammar 4.1b
 % as well as demonstating bugs that remain to be fixed.
@@ -65,3 +65,9 @@ In Buddhism there are 84 Mahasiddhas: Acinta, Ajogi, Anangapa, Aryadeva, Babhaha
 
 % 2/2;
 And yet he should be always ready to have a perfectly terrible scene, whenever we want one, and to become miserable, absolutely miserable, at a moment’s notice, and to overwhelm us with just reproaches in less than twenty minutes, and to be positively violent at the end of half an hour, and to leave us for ever at a quarter to eight, when we have to go and dress for dinner when, after that, one has seen him for really the last time, and he has refused to take back the little things he has given one, and promised never to communicate with one again, or to write one any foolish letters, he should be perfectly broken-hearted, and telegraph to one all day long, and send one little notes every half-hour by a private hansom, and dine quite alone at the club, so that every one should know how unhappy he was.
+
+% --------------------------------------------------------------------
+% Long sentence w/208 words; more-or-less guaranteed to timeout.
+% Note MAX_SENTENCE is 254
+
+There will be other ships I am sure, I was half asleep when I wrote this can you tell, Mentions of Sex, Cussing, channeling your inner daichi is a thing, trust me my former volleyball captain did it she was terrifying, volleyball captains are either really cool or utterly terrifying there is no middle ground, Asahi works at Starbucks, bokuto and mai are siblings which probably only makes sense to me, you need no knowledge of ghost hunt whatsoever to read this, the main focus is the volleyball nerds, there is a spider in chapter one, some ships are only mentioned but everyone gets screen time, especially ennoshita, Team Captain Ennoshita Chikara, team captain yahaba shigeru, team captain akaashi keiji, team captain yamamoto taketora, cause the last one would be hilarious tbh, asahi makes really really strong coffee and bokuto is not allowed to drink it, murderous liberos, alcohol mention, underage drinking mention, daichi can't cook, Fake tsukki/kags dating inspired by my beautiful best friends who really fucked up, gotta love it when you aren't the one fucking up for a change, it's like Irish Alzheimer's, you forget everything but the grudges, ~irregular updates~, yay!, Was edited so if you want to re-read it's a little more coherent
