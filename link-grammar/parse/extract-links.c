@@ -51,7 +51,7 @@ struct Parse_set_struct
 {
 	Connector      *le, *re;
 	Parse_choice   *first;
-	unsigned int   num_pc;    /* number of Parse_choice elements */
+	unsigned int   num_pc;     /* number of Parse_choice elements */
 	uint8_t        lw, rw;     /* left and right word index */
 	uint8_t        null_count; /* number of island words */
 
@@ -752,27 +752,52 @@ static void issue_links_for_choice(Linkage lkg, Parse_choice *pc,
  *
  * In order to generate all the possible linkages, the top-level function
  * is repetitively invoked, when \p index is changing from 0 to
- * \c num_linkages_found-1 (by extract_links(), see process_linkages()).
+ * \k num_linkages_found-1 (by extract_links(), see process_linkages()).
  *
  * How it works:
  *
- * Each "level" in the parse-set tree consists of a linked lists of
- * Parse_choice elements. Each such element is pointed to by a
- * Parse_choice element of an upper level. Each parse_choice element
- * contains two Parse_set elements, that are denoted below as S0 and S1.
+ * Each linkage has the abstact form of a binary tree, with left and
+ * right subtrees.  The Parse_set is an encoding for all possible
+ * trees. Selecting a linkage is then a matter of selecting  tree from
+ * out of the parse-set.
+ *
+ * Each "level" in the parse-set S consists of a linked list of
+ * Parse_choice elements, denoted by Cₘ in the diagram below (running
+ * from C₀ thru Cₖ).  Each Parse_choice contains pointers to two
+ * Parse_set elements, denoted below as S0ₘ and S1ₘ. The structure is
+ * recursive, so that S0ₘ and S1ₘ in turn point to link lists of
+ * Parse_choice. This is shown in ASCII-art below.
+ *
+ *         S
+ *         |
+ *         C₀-------------C₁----------C₂--------C₃- ... --Cₖ
+ *        / \            / \         / \       / \
+ *       /   \          /   \       /   \
+ *     S0₀    S1₀     S0₁    S1₁  S0₂    S1₂
+ *      |     |
+ *      |     C----C-----C
+ *      |
+ *      C---C----C----C
+ *
+ * A single linkage is (conceptually) a tree of Parse_choice, selected
+ * from the Parse_set as follows. Starting from the top S, pick one Cₘ.
+ * This becomes the linkage root. Under it are  S0ₘ and S1ₘ. Pick some
+ * C (any C) from the list of C's given by S0ₘ. Likewise, pick some C
+ * from the S1ₘ list. These two become the left and right sides under
+ * the linkage root. Continue recursively, until leaves are reached.
  *
  * The algo is based on our knowledge of the exact number of paths in each
  * Parse_set element. Note that the count of the root Parse_set (used at
  * the top-level invocation) is equal to num_linkages_found.
  *
  * Each list_links() invocation is done with an \p index parameter
- * within the range of 0 to \c set->count-1 in order to extract all the
+ * within the range of 0 to \k set->count-1 in order to extract all the
  * paths from this set. All the \p index values in that range are used.
  *
  * First a selection of the Parse_choice element within the given
- * Parse_set (with cardinality c) is done.
+ * Parse_set (with cardinality k) is done.
  * We know that:
- *             c-1
+ *             k-1
  * set->count = ∑ S0ₘ * S1ₘ
  *             m=0
  * when S0ₘ and S1ₘ are the number of elements in S0  and S1
