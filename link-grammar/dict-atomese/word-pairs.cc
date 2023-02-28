@@ -264,6 +264,10 @@ static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		char cdir = '+';
 		if (rawpr->getOutgoingAtom(1) == germ) cdir  = '-';
 
+		// Protect the dict->Exp_pool. If this lock runs hot, perhaps
+		// it can be moved out of the loop?
+		std::lock_guard<std::mutex> guard(local->dict_mutex);
+
 		// Create the connector
 		Exp* eee = make_connector_node(dict,
 			dict->Exp_pool, slnk.c_str(), cdir, false);
