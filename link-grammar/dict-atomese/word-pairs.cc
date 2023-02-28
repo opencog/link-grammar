@@ -177,24 +177,15 @@ static bool have_pairs(Local* local, const Handle& germ)
 
 /// Return true if the given word occurs in some word-pair, else return
 /// false. As a side-effect, word-pairs are loaded from storage.
-bool pair_boolean_lookup(Dictionary dict, const char *s)
+static bool as_boolean_lookup(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
-
-	// Don't bother going to the AtomSpace, if we've looked this up
-	// word before. This will be faster, in all cases.
-	const auto& havew = local->have_pword.find(s);
-	if (local->have_pword.end() != havew)
-		return havew->second;
 
 	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
 	// Are there any pairs that contain this word?
 	if (have_pairs(local, wrd))
-	{
-		local->have_pword.insert({s,true});
 		return true;
-	}
 
 	// Does this word belong to any classes?
 	size_t nclass = wrd->getIncomingSetSizeByType(MEMBER_LINK);
@@ -211,15 +202,34 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 
 		// If there's at least one, return it.
 		if (have_pairs(local, wcl))
-		{
-			local->have_pword.insert({s,true});
 			return true;
-		}
 	}
 
-	local->have_pword.insert({s,false});
 	return false;
 }
+
+/// Return true if the given word occurs in some word-pair, else return
+/// false. As a side-effect, word-pairs are loaded from storage.
+bool pair_boolean_lookup(Dictionary dict, const char *s)
+{
+	Local* local = (Local*) (dict->as_server);
+
+	// Don't bother going to the AtomSpace, if we've looked this up
+	// word before. This will be faster, in all cases.
+	{
+		std::lock_guard<std::mutex> guard(local->dict_mutex);
+		const auto& havew = local->have_pword.find(s);
+		if (local->have_pword.end() != havew)
+			return havew->second;
+	}
+
+	bool rc = as_boolean_lookup(dict, s);
+
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
+	local->have_pword.insert({s,rc});
+	return rc;
+}
+
 
 /// Create a list of connectors, one for each available word pair
 /// containing the word in the germ. These are simply OR'ed together.
@@ -291,17 +301,22 @@ static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 
 	const char* wrd = germ->get_name().c_str();
 	Dictionary prdct = local->pair_dict;
-	Dict_node* dn = dict_node_lookup(prdct, wrd);
-
-	if (dn)
 	{
-		lgdebug(D_USER_INFO, "Atomese: Found pairs in cache: >>%s<<\n", wrd);
-		Exp* exp = dn->exp;
-		dict_node_free_lookup(prdct, dn);
-		return exp;
+		std::lock_guard<std::mutex> guard(local->dict_mutex);
+		Dict_node* dn = dict_node_lookup(prdct, wrd);
+
+		if (dn)
+		{
+			lgdebug(D_USER_INFO, "Atomese: Found pairs in cache: >>%s<<\n", wrd);
+			Exp* exp = dn->exp;
+			dict_node_free_lookup(prdct, dn);
+			return exp;
+		}
 	}
 
 	Exp* exp = make_pair_exprs(dict, germ);
+
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
 	const char* ssc = string_set_add(wrd, dict->string_set);
 	make_dn(prdct, exp, ssc);
 	return exp;
@@ -350,6 +365,8 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 
 	Exp* sentex = nullptr;
 	int nfound = 0;
+
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
 	// The allexp is an OR_type expression. A linked list of connectors
 	// follow, chained along `operand_next`.
@@ -455,6 +472,9 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 
 	Exp* epr = get_sent_pair_exprs(dict, germ, pool, sent_words);
 	if (nullptr == epr) return nullptr;
+
+	Local* local = (Local*) (dict->as_server);
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
 	// Tack on ANY connectors, if requested.
 	if (with_any)

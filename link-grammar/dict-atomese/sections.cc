@@ -200,6 +200,7 @@ OC_ASSERT(0, "Not supported yet!");
 			/* Assign an upper-case name to the link. */
 			const std::string& slnk = get_linkname(local, germ, ctcr);
 
+			std::lock_guard<std::mutex> guard(local->dict_mutex);
 			Exp* eee = make_connector_node(dict,
 				dict->Exp_pool, slnk.c_str(), cdir, false);
 
@@ -216,6 +217,8 @@ OC_ASSERT(0, "Not supported yet!");
 				sect->to_short_string().c_str());
 			continue;
 		}
+
+		std::lock_guard<std::mutex> guard(local->dict_mutex);
 
 		// Tack on extra connectors, as configured.
 		if (extras)

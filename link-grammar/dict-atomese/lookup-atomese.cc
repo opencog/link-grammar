@@ -447,19 +447,25 @@ void as_end_lookup(Dictionary dict, Sentence sent)
 		sent->orig_sentence);
 }
 
+/// Thread-safe dict
+static bool atomic_dict_node_exists_lookup(Dictionary dict, const char *s)
+{
+	Local* local = (Local*) (dict->as_server);
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
+	return dict_node_exists_lookup(dict, s);
+}
+
 /// Return true if the given word can be found in the dictionary,
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
 {
-	Local* local = (Local*) (dict->as_server);
-	std::lock_guard<std::mutex> guard(local->dict_mutex);
-
-	if (dict_node_exists_lookup(dict, s))
+	if (atomic_dict_node_exists_lookup(dict, s))
 	{
 		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
 		return true;
 	}
 
+	Local* local = (Local*) (dict->as_server);
 	if (local->enable_unknown_word and 0 == strcmp(s, "<UNKNOWN-WORD>"))
 		return true;
 
