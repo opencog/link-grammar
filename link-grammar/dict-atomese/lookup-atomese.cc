@@ -599,25 +599,28 @@ void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
-	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
-	// Do we already have this word cached? If so, pull from
-	// the cache.
-	Dict_node* dn = dict_node_lookup(dict, s);
-	if (dn)
 	{
-		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
+		std::lock_guard<std::mutex> guard(local->dict_mutex);
 
-		// The dict cache contains only full sections. We never store
-		// cartesian pairs, as this has an explosively large number of
-		// disjuncts. So, if the user wants these, we have to generate
-		// them on the fly.
-		if (local->enable_sections and
-		    (0 < local->pair_disjuncts or 0 < local->extra_pairs))
+		// Do we already have this word cached? If so, pull from
+		// the cache.
+		Dict_node* dn = dict_node_lookup(dict, s);
+		if (dn)
 		{
+			lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
+
+			// The dict cache contains only full sections. We never store
+			// cartesian pairs, as this has an explosively large number of
+			// disjuncts. So, if the user wants these, we have to generate
+			// them on the fly.
+			if (local->enable_sections and
+			    (0 < local->pair_disjuncts or 0 < local->extra_pairs))
+			{
 throw FatalErrorException(TRACE_INFO, "Sorry! Not implemented yet! (word=%s)", s);
+			}
+			return dn;
 		}
-		return dn;
 	}
 
 	if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
@@ -645,6 +648,10 @@ throw FatalErrorException(TRACE_INFO, "Sorry! Not implemented yet! (word=%s)", s
 	}
 
 	Exp* exp = nullptr;
+
+	// XXX TODO move this lock so it does not surround AtomSpace
+	// operations (which are slow, and don't need a lock.)
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
 
 	// Create disjuncts consisting entirely of "ANY" links.
 	if (local->any_disjuncts)

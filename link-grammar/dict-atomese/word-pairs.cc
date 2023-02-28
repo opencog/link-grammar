@@ -473,9 +473,6 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 	Exp* epr = get_sent_pair_exprs(dict, germ, pool, sent_words);
 	if (nullptr == epr) return nullptr;
 
-	Local* local = (Local*) (dict->as_server);
-	std::lock_guard<std::mutex> guard(local->dict_mutex);
-
 	// Tack on ANY connectors, if requested.
 	if (with_any)
 	{
