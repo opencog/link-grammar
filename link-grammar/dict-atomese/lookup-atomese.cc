@@ -720,6 +720,8 @@ Dict_node * as_lookup_wild(Dictionary dict, const char *s)
 // as well as the expression pool.
 // And also the local AtomSpace.
 //
+// This can be called by link-parser command line, with the !clear
+// "special" command.
 void as_clear_cache(Dictionary dict)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -731,6 +733,8 @@ void as_clear_cache(Dictionary dict)
 	free_dict_node_recursive(dict->root);
 	free_dict_node_recursive(local->pair_dict->root);
 	pool_reuse(dict->Exp_pool);
+
+	local->have_pword.clear();
 
 	// Clear the local AtomSpace too.
 	// Easiest way to do this is to just close and reopen
