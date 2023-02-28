@@ -45,6 +45,7 @@ public:
 
 	// Word-pairs
 	Dictionary pair_dict;  // Cache of pre-computed word-pair exprs.
+	std::unordered_map<std::string, bool> have_pword;  // T/F cache.
 	Handle prp;            // (Predicate "word-pair") or (Bond "ANY")
 	Handle mikey;          // (Predicate "*-Mutual Info Key-*")
 	Handle miformula;      // (DefinedProcedure "*-dynamic MI ANY")
@@ -82,6 +83,5 @@ Handle get_lg_conn(Local*, const Handle& pair);
 std::string cached_linkname(Local*, const Handle& pair);
 void fetch_link_id(Local*);
 void store_link_id(Local*);
-
 
 //----

@@ -180,10 +180,21 @@ static bool have_pairs(Local* local, const Handle& germ)
 bool pair_boolean_lookup(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
+
+	// Don't bother going to the AtomSpace, if we've looked this up
+	// word before. This will be faster, in all cases.
+	const auto& havew = local->have_pword.find(s);
+	if (local->have_pword.end() != havew)
+		return havew->second;
+
 	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
 	// Are there any pairs that contain this word?
-	if (have_pairs(local, wrd)) return true;
+	if (have_pairs(local, wrd))
+	{
+		local->have_pword.insert({s,true});
+		return true;
+	}
 
 	// Does this word belong to any classes?
 	size_t nclass = wrd->getIncomingSetSizeByType(MEMBER_LINK);
@@ -199,9 +210,14 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 		if (WORD_CLASS_NODE != wcl->get_type()) continue;
 
 		// If there's at least one, return it.
-		if (have_pairs(local, wcl)) return true;
+		if (have_pairs(local, wcl))
+		{
+			local->have_pword.insert({s,true});
+			return true;
+		}
 	}
 
+	local->have_pword.insert({s,false});
 	return false;
 }
 
