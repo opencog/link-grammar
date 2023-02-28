@@ -447,8 +447,8 @@ void as_end_lookup(Dictionary dict, Sentence sent)
 		sent->orig_sentence);
 }
 
-/// Thread-safe dict
-static bool atomic_dict_node_exists_lookup(Dictionary dict, const char *s)
+/// Thread-safe dict lookup.
+static bool locked_dict_node_exists_lookup(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
 	std::lock_guard<std::mutex> guard(local->dict_mutex);
@@ -459,7 +459,7 @@ static bool atomic_dict_node_exists_lookup(Dictionary dict, const char *s)
 /// else return false.
 bool as_boolean_lookup(Dictionary dict, const char *s)
 {
-	if (atomic_dict_node_exists_lookup(dict, s))
+	if (locked_dict_node_exists_lookup(dict, s))
 	{
 		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
 		return true;
@@ -554,35 +554,14 @@ void and_enchain_right(Pool_desc* pool, Exp* &andhead, Exp* &andtail, Exp* item)
 	andtail = item;
 }
 
+// Report Number of entries in the dict, and also RAM usage.
 static void report_dict_usage(Dictionary dict)
 {
-	Dict_node* most_used = nullptr;
-	Dict_node* least_used = nullptr;
-	unsigned long most_cnt = 0;
-	unsigned long least_cnt = 4000123123;
-	for (Dict_node* dn = dict->root; dn; dn = dn->right)
-	{
-		if (dn->use_count > most_cnt)
-		{
-			most_cnt = dn->use_count;
-			most_used = dn;
-		}
-		if (dn->use_count < least_cnt)
-		{
-			least_cnt = dn->use_count;
-			least_used = dn;
-		}
-	}
-	logger().info("LG Dict: %lu entries; most-used: %lu %s least-used: %lu %s",
-		dict->num_entries, most_cnt, most_used->string,
-		least_cnt, least_used->string);
-
-	// Also report RAM usage.
 	size_t psz = pool_size(dict->Exp_pool);
-	size_t apparent = (psz * dict->Exp_pool->element_size) / (1024 * 1024);
 	size_t actual = pool_bytes(dict->Exp_pool) / (1024 * 1024);
-	logger().info("LG Dict: %lu of %lu pool elts in use. %lu/%lu MiBytes apparent/actual",
-		pool_num_elements_issued(dict->Exp_pool), psz, apparent, actual);
+	logger().info("LG Dict: %lu entries; %lu of %lu Exp_pool elts in use; %lu MiBytes",
+		dict->num_entries,
+		pool_num_elements_issued(dict->Exp_pool), psz, actual);
 }
 
 /// Given an expression, wrap  it with a Dict_node and insert it into
