@@ -557,11 +557,12 @@ void and_enchain_right(Pool_desc* pool, Exp* &andhead, Exp* &andtail, Exp* item)
 // Report Number of entries in the dict, and also RAM usage.
 static void report_dict_usage(Dictionary dict)
 {
-	size_t psz = pool_size(dict->Exp_pool);
-	size_t actual = pool_bytes(dict->Exp_pool) / (1024 * 1024);
-	logger().info("LG Dict: %lu entries; %lu of %lu Exp_pool elts in use; %lu MiBytes",
+	// We could also print pool_num_elements_issued() but this is not
+	// interesting; its slightly less than pool_size().
+	logger().info("LG Dict: %lu entries; %lu Exp_pool elts; %lu MiBytes",
 		dict->num_entries,
-		pool_num_elements_issued(dict->Exp_pool), psz, actual);
+		pool_size(dict->Exp_pool),
+		pool_bytes(dict->Exp_pool) / (1024 * 1024));
 }
 
 /// Given an expression, wrap  it with a Dict_node and insert it into
