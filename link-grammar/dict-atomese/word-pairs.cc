@@ -264,10 +264,6 @@ static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		char cdir = '+';
 		if (rawpr->getOutgoingAtom(1) == germ) cdir  = '-';
 
-		// Protect the dict->Exp_pool. If this lock runs hot, perhaps
-		// it can be moved out of the loop?
-		std::lock_guard<std::mutex> guard(local->dict_mutex);
-
 		// Create the connector
 		Exp* eee = make_connector_node(dict,
 			dict->Exp_pool, slnk.c_str(), cdir, false);
@@ -303,24 +299,29 @@ static Exp* get_pair_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 
+	// Single big fat lock. The goal of this lock is to protect the
+	// Exp_pool in `local->pair_dict`. We have to hold it, begining
+	// to end, because two different threads might be trying to create
+	// expressions for the same word, which then trip over a
+	// duplicate_word error during the second dictionary insert.
+	// Sadly, this wraps a big, fat slow Atomese section in the middle,
+	// but I don't see a way out. Over time, lookups should become
+	// increasingly rare, so this shouldn't matter, after a while.
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
+
 	const char* wrd = germ->get_name().c_str();
 	Dictionary prdct = local->pair_dict;
-	{
-		std::lock_guard<std::mutex> guard(local->dict_mutex);
-		Dict_node* dn = dict_node_lookup(prdct, wrd);
+	Dict_node* dn = dict_node_lookup(prdct, wrd);
 
-		if (dn)
-		{
-			lgdebug(D_USER_INFO, "Atomese: Found pairs in cache: >>%s<<\n", wrd);
-			Exp* exp = dn->exp;
-			dict_node_free_lookup(prdct, dn);
-			return exp;
-		}
+	if (dn)
+	{
+		lgdebug(D_USER_INFO, "Atomese: Found pairs in cache: >>%s<<\n", wrd);
+		Exp* exp = dn->exp;
+		dict_node_free_lookup(prdct, dn);
+		return exp;
 	}
 
 	Exp* exp = make_pair_exprs(dict, germ);
-
-	std::lock_guard<std::mutex> guard(local->dict_mutex);
 	const char* ssc = string_set_add(wrd, dict->string_set);
 	make_dn(prdct, exp, ssc);
 	return exp;
