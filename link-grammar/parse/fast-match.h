@@ -20,6 +20,12 @@
 #include "link-includes.h"              // for Sentence
 #include "memory-pool.h"
 
+typedef struct match_list_cache_sruct
+{
+	Disjunct *d_lkg;        /* Disjuncts with a jet linkage */
+	Count_bin count;          /* The counts for that linkage */
+} match_list_cache;
+
 typedef struct Match_node_struct Match_node;
 struct Match_node_struct
 {
@@ -49,7 +55,7 @@ fast_matcher_t* alloc_fast_matcher(const Sentence, unsigned int *[]);
 void free_fast_matcher(Sentence sent, fast_matcher_t*);
 
 size_t form_match_list(fast_matcher_t *, int, Connector *, int, Connector *,
-                       int, Disjunct ***, Disjunct ***);
+                       int, match_list_cache *, match_list_cache *);
 
 /**
  * Return the match-list element at the given index.

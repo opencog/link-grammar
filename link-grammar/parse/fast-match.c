@@ -401,7 +401,8 @@ static void match_stats(Connector *c1, Connector *c2)
 static void print_match_list(fast_matcher_t *ctxt, uint16_t id, size_t mlb, int w,
                              Connector *lc, int lw,
                              Connector *rc, int rw,
-                             Disjunct ***mlcl, Disjunct ***mlcr)
+                             match_list_cache *mlcl,
+                             match_list_cache *mlcr)
 {
 	if (!verbosity_level(D_FAST_MATCHER)) return;
 	Disjunct **m = &ctxt->match_list[mlb];
@@ -521,10 +522,11 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
  * Return the match list start.
  */
 static size_t terminate_match_list(fast_matcher_t *ctxt, uint16_t id,
-                             size_t ml_start, int w,
-                             Connector *lc, int lw,
-                             Connector *rc, int rw,
-                             Disjunct ***mlcl, Disjunct ***mlcr)
+                                   size_t ml_start, int w,
+                                   Connector *lc, int lw,
+                                   Connector *rc, int rw,
+                                   match_list_cache *mlcl,
+                                   match_list_cache *mlcr)
 {
 	push_match_list_element(ctxt, 0, NULL);
 	print_match_list(ctxt, id, ml_start, w, lc, lw, rc, rw, mlcl, mlcr);
@@ -558,17 +560,14 @@ size_t
 form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw,
-                Disjunct ***mlcl, Disjunct ***mlcr)
+                match_list_cache *mlcl, match_list_cache *mlcr)
 {
 	Match_node *mx, *mr_end;
 	size_t front = get_match_list_position(ctxt);
 	Match_node *ml = NULL, *mr = NULL; /* Initialize in case of NULL lc or rc. */
-	Disjunct **cmx;
+	match_list_cache *cmx;
 	match_cache mc;
 	gword_cache gc = { .same_alternative = false };
-
-	if ((mlcl != NULL) && (*mlcl == NULL)) mlcl = NULL;
-	if ((mlcr != NULL) && (*mlcr == NULL)) mlcr = NULL;
 
 	if (mlcl == NULL)
 	{
@@ -603,7 +602,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 #endif
 
 	lgdebug(+D_FAST_MATCHER, "MATCH_LIST %c%c %5d mlb %zu\n",
-		       (mlcl == NULL) ? ' ' : 'L', (mlcr == NULL) ? ' ' : 'R', id, front);
+	        (mlcl == NULL) ? ' ' : 'L', (mlcr == NULL) ? ' ' : 'R', id, front);
 
 	if (mlcr == NULL)
 	{
@@ -616,9 +615,9 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	else
 	{
-		for (cmx = *mlcr; *cmx != NULL; cmx++)
+		for (cmx = mlcr; cmx->d_lkg != NULL; cmx++)
 		{
-			(*cmx)->match_left = false;
+			cmx->d_lkg->match_left = false;
 		}
 		mr_end = NULL; /* Prevent a gcc "may be uninitialized" warning */
 	}
@@ -647,11 +646,11 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	else
 	{
-		for (cmx = *mlcl; *cmx != NULL; cmx++)
+		for (cmx = mlcl; cmx->d_lkg != NULL; cmx++)
 		{
-			(*cmx)->match_left = true;
-			(*cmx)->match_right = false;
-			push_match_list_element(ctxt, lid, *cmx);
+			cmx->d_lkg->match_left = true;
+			cmx->d_lkg->match_right = false;
+			push_match_list_element(ctxt, lid, cmx->d_lkg);
 		}
 	}
 
@@ -678,13 +677,13 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	else
 	{
-		for (cmx = *mlcr; *cmx != NULL; cmx++)
+		for (cmx = mlcr; cmx->d_lkg != NULL; cmx++)
 		{
-			if ((lc != NULL) && !(*cmx)->match_left) continue; /* lc optimization*/
-			(*cmx)->match_right = true;
-			(*cmx)->rcount_index = (uint32_t)(cmx - *mlcr);
-			if ((*cmx)->match_left) continue;
-			push_match_list_element(ctxt, lid, *cmx);
+			if ((lc != NULL) && !cmx->d_lkg->match_left) continue; /* lc optimization*/
+			cmx->d_lkg->match_right = true;
+			cmx->d_lkg->rcount_index = (uint32_t)(cmx - mlcr);
+			if (cmx->d_lkg->match_left) continue;
+			push_match_list_element(ctxt, lid, cmx->d_lkg);
 		}
 	}
 

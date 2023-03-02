@@ -68,12 +68,12 @@ struct Table_tracon_s
  * The check_next filed indicates the next word to be checked. Each
  * word-vector is updated each time one of its elements gets updated, so
  * check_next skips all the words for which the count is known to be zero. */
+
 typedef struct
 {
 	/* Arrays of match list information for sentences with null_count==0.
 	 * The count at index x is due to the disjuncts at the same index x. */
-	Disjunct **d_lkg_nc0;    /* Disjuncts with a jet linkage */
-	count_t *count_nc0;      /* The counts for that linkage */
+	match_list_cache *mlc0;
 
 	null_count_m null_count; /* status==0 valid up to this null count */
 	int8_t status;           /* -1: Needs update; 0: No count; 1: Count possible */
@@ -117,11 +117,9 @@ struct count_context_s
 	size_t table_available_count; /* derated table_size by hash load factor */
 	Table_tracon ** table;
 	Table_lrcnt table_lrcnt[2];  /* Left/right wordvec */
+	Pool_desc *mlc_pool;         /* Match list cache */
 	Resources current_resources;
 	COUNT_COST(uint64_t count_cost[3];)
-	/* Match list cache. */
-	Pool_desc *mld_pool;      /* Disjunct pointers */
-	Pool_desc *mlc_pool;      /* Linkage counts */
 };
 
 /* Wikipedia claims that load factors of 0.6 to 0.75 are OK, and that
@@ -288,10 +286,10 @@ static void free_table_lrcnt(count_context_t *ctxt)
 			if (t->status == 1)
 			{
 				nonzero++;
-				if (t->d_lkg_nc0 && (t->d_lkg_nc0 != NULL))
+				if (t->mlc0 != NULL)
 				{
 					cml++;
-					for (Disjunct **d = t->d_lkg_nc0; *d != NULL; d++)
+					for (Disjunct *d = t->mlc0->d_lkg; d != NULL; d++)
 						cml_disjunct++;
 				}
 			}
@@ -327,7 +325,6 @@ static void free_table_lrcnt(count_context_t *ctxt)
 		}
 	}
 
-	pool_delete(ctxt->mld_pool);
 	pool_delete(ctxt->mlc_pool);
 
 	for (unsigned int dir = 0; dir < 2; dir++)
@@ -400,15 +397,10 @@ static void init_table_lrcnt(count_context_t *ctxt)
 	const size_t match_list_pool_size = match_list_pool_size_estimate(sent);
 
 	/* FIXME: Modify pool_alloc_vec() to use dynamic block sizes. */
-	ctxt->mld_pool =
-		pool_new(__func__, "Match list cache",
-		         /*num_elements*/match_list_pool_size, sizeof(Disjunct *),
-		         /*zero_out*/false, /*align*/false, /*exact*/false);
 	ctxt->mlc_pool =
-		pool_new(__func__, "Match list counts",
-		         /*num_elements*/match_list_pool_size, sizeof(count_t),
+		pool_new(__func__, "Match list cache",
+		         /*num_elements*/match_list_pool_size, sizeof(match_list_cache),
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
-
 }
 
 #ifdef DEBUG
@@ -756,10 +748,8 @@ static void lrcnt_cache_match_list(wordvecp lrcnt_cache, count_context_t *ctxt,
 	lgdebug(+9, "MATCH_LIST %9d dir=%d mlb %zu cached %zu/%zu\n",
 	        get_match_list_element(mchxt, mlb)->match_id, dir, mlb, dcnt, i-mlb);
 
-	Disjunct **ml = pool_alloc_vec(ctxt->mld_pool, dcnt + 1);
-	count_t *c = pool_alloc_vec(ctxt->mlc_pool, dcnt);
-
-	if ((ml == NULL) || (c == NULL)) return; /* Cannot allocate cache array */
+	match_list_cache *ml = pool_alloc_vec(ctxt->mlc_pool, dcnt + 1);
+	if (ml == NULL) return; /* Cannot allocate cache array */
 
 	dcnt = 0;
 	for (i = mlb; get_match_list_element(mchxt, i) != NULL; i++)
@@ -767,16 +757,15 @@ static void lrcnt_cache_match_list(wordvecp lrcnt_cache, count_context_t *ctxt,
 		Disjunct *d = get_match_list_element(mchxt, i);
 		if ((dir == 0) ? d->match_left : d->match_right)
 		{
-			ml[dcnt] = d;
+			ml[dcnt].d_lkg = d;
 			assert(d->lrcount > 0, "Invalid linkage count %d", d->lrcount);
-			c[dcnt] = d->lrcount;
+			ml[dcnt].count = d->lrcount;
 			dcnt++;
 		}
 	}
-	ml[dcnt] = NULL;
+	ml[dcnt].d_lkg = NULL;
 
-	lrcnt_cache->d_lkg_nc0 = ml;
-	lrcnt_cache->count_nc0 = c;
+	lrcnt_cache->mlc0 = ml;
 }
 
 /**
@@ -874,8 +863,8 @@ bool no_count(count_context_t *ctxt, int dir, Connector *c,
 	return (lrcnt_check(lrcnt_cache, null_count, NULL) == &lrcnt_cache_zero);
 }
 
-Disjunct ***get_cached_match_list(count_context_t *ctxt, int dir, int w,
-                                  Connector *c)
+match_list_cache *get_cached_match_list(count_context_t *ctxt, int dir, int w,
+                                        Connector *c)
 {
 	if (ctxt->sent->null_count != 0) return NULL;
 	if (ctxt->is_short) return NULL;
@@ -883,22 +872,7 @@ Disjunct ***get_cached_match_list(count_context_t *ctxt, int dir, int w,
 	wordvecp wv = ctxt->table_lrcnt[dir].tracon_wvp[c->tracon_id];
 	if (wv == NULL) return NULL;
 
-	return &wv[w - ((dir == 0) ? c->nearest_word : c->farthest_word)].d_lkg_nc0;
-}
-
-static Count_bin *get_cached_count(count_context_t *ctxt, int dir, int w,
-                                    Connector *c)
-{
-	if (ctxt->sent->null_count != 0) return NULL;
-
-	wordvecp wv = ctxt->table_lrcnt[dir].tracon_wvp[c->tracon_id];
-	if (wv == NULL) return NULL;
-
-	Count_bin *count =
-		wv[w - ((dir == 0) ? c->nearest_word : c->farthest_word)].count_nc0;
-	if (count == NULL) return NULL;
-
-	return count;
+	return wv[w - ((dir == 0) ? c->nearest_word : c->farthest_word)].mlc0;
 }
 
 static bool lrcnt_expectation_update(wordvecp wv, bool lrcnt_found,
@@ -1277,10 +1251,8 @@ static Count_bin do_count(
 		unsigned int lnull_start = 0; /* First null_count to check */
 		unsigned int lnull_end = null_count; /* Last null_count to check */
 		Connector *fml_re = re;       /* For form_match_list() only */
-		Disjunct ***mlcl = NULL, ***mlcr = NULL;
+		match_list_cache *mlcl = NULL, *mlcr = NULL;
 		bool using_cached_match_list = false;
-		Count_bin *l_cache = NULL;
-		Count_bin *r_cache = NULL;
 		unsigned int lcount_index = 0; /* Cached left count index */
 
 		if (ctxt->is_short)
@@ -1337,12 +1309,10 @@ static Count_bin do_count(
 
 				if (le != NULL)
 				{
-					l_cache = get_cached_count(ctxt, 0, w, le);
 					mlcl = get_cached_match_list(ctxt, 0, w, le);
 				}
 				if (fml_re != NULL && ((le == NULL) || (re->farthest_word <= w)))
 				{
-					r_cache = get_cached_count(ctxt, 1, w, re);
 					mlcr = get_cached_match_list(ctxt, 1, w, re);
 				}
 			}
@@ -1384,15 +1354,15 @@ static Count_bin do_count(
 				 * but for the cached right count we depend on form_match_list()
 				 * to set d->rcount_index as the index into the corresponding
 				 * cached right count array. */
-				if (Lmatch && (l_cache != NULL))
+				if (Lmatch && (mlcl != NULL))
 				{
 					leftpcount = true;
-					leftcount = l_cache[lcount_index++];
+					leftcount = mlcl[lcount_index++].count;
 				}
-				if (Rmatch && (r_cache != NULL))
+				if (Rmatch && (mlcr != NULL))
 				{
 					rightpcount = true;
-					rightcount = r_cache[d->rcount_index];
+					rightcount = mlcr[d->rcount_index].count;
 				}
 			}
 
