@@ -492,7 +492,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 		}
 		/* End of nonzero leftcount/rightcount range cache check. */
 
-		Disjunct ***mlcl = NULL, ***mlcr = NULL;
+		match_list_cache *mlcl = NULL, *mlcr = NULL;
 
 		if (le != NULL)
 			mlcl = get_cached_match_list(ctxt, 0, w, le);

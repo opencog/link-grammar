@@ -98,8 +98,6 @@ void free_fast_matcher(Sentence sent, fast_matcher_t *mchxt)
 	lgdebug(+6, "Sentence length %zu, match_list_size %zu\n",
 	        mchxt->size, mchxt->match_list_size);
 
-	pool_delete(mchxt->mld_pool);
-	pool_delete(mchxt->mlc_pool);
 	xfree(mchxt->l_table_size, mchxt->size * sizeof(unsigned int));
 	xfree(mchxt->l_table, mchxt->size * sizeof(Match_node **));
 	xfree(mchxt, sizeof(fast_matcher_t));
@@ -230,40 +228,6 @@ static void sort_by_nearest_word(Match_node *m, sortbin *sbin, int nearest_word)
 #endif
 }
 
-/// Estimate the proper size of the match pool based on experimental
-/// data. An upper bound of twice the number of expressions seems to
-/// handle almost all cases. This is based on the graph in
-/// https://github.com/opencog/link-grammar/discussions/1402#discussioncomment-4826342
-/// The estimate is meant to be an *upper bound* for how many will be
-/// needed; the goal is to avoid allocation to get more, because it is
-/// expensive.
-///
-/// FYI, Expression pool sizes in excess of 10M entries have been observed.
-static size_t match_list_pool_size_estimate(Sentence sent)
-{
-	size_t expsz = pool_num_elements_issued(sent->Exp_pool);
-
-	size_t mlpse = 2 * expsz;
-	if (mlpse < 4090) mlpse = 4090;
-
-	// Code below does a pool_alloc_vec(match_list_size) and we want to
-	// ensure that this estimate is greater than the match list size.
-	// The match list size can never be larger than the number of
-	// disjuncts, so the pool_alloc_vec() will never fail if we do this:
-	size_t maxndj = 0;
-	for (WordIdx w = 0; w < sent->length; w++)
-		if (maxndj < sent->word[w].num_disjuncts)
-			maxndj = sent->word[w].num_disjuncts;
-
-	// Generation can have millions of disjuncts on the wild-cards.
-	// But the match list will never get that big.
-	if (512*1024 < maxndj) maxndj = 512*1024;
-
-	if (mlpse < maxndj) mlpse = maxndj;
-
-	return mlpse;
-}
-
 fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 {
 	assert(sent->length > 0, "Sentence length is 0");
@@ -293,18 +257,6 @@ fast_matcher_t* alloc_fast_matcher(const Sentence sent, unsigned int *ncu[])
 			         /*num_elements*/2048, sizeof(Match_node),
 			         /*zero_out*/false, /*align*/true, /*exact*/false);
 	}
-
-	const size_t match_list_pool_size = match_list_pool_size_estimate(sent);
-
-	/* FIXME: Modify pool_alloc_vec() to use dynamic block sizes. */
-	ctxt->mld_pool =
-		pool_new(__func__, "Match list cache",
-		         /*num_elements*/match_list_pool_size, sizeof(Disjunct *),
-		         /*zero_out*/false, /*align*/false, /*exact*/false);
-	ctxt->mlc_pool =
-		pool_new(__func__, "Match list counts",
-		         /*num_elements*/match_list_pool_size, sizeof(count_t),
-		         /*zero_out*/false, /*align*/false, /*exact*/false);
 
 	sortbin *sbin = alloca(sent->length * sizeof(sortbin));
 
@@ -449,7 +401,8 @@ static void match_stats(Connector *c1, Connector *c2)
 static void print_match_list(fast_matcher_t *ctxt, uint16_t id, size_t mlb, int w,
                              Connector *lc, int lw,
                              Connector *rc, int rw,
-                             Disjunct ***mlcl, Disjunct ***mlcr)
+                             match_list_cache *mlcl,
+                             match_list_cache *mlcr)
 {
 	if (!verbosity_level(D_FAST_MATCHER)) return;
 	Disjunct **m = &ctxt->match_list[mlb];
@@ -569,10 +522,11 @@ static bool alt_connection_possible(Connector *c1, Connector *c2,
  * Return the match list start.
  */
 static size_t terminate_match_list(fast_matcher_t *ctxt, uint16_t id,
-                             size_t ml_start, int w,
-                             Connector *lc, int lw,
-                             Connector *rc, int rw,
-                             Disjunct ***mlcl, Disjunct ***mlcr)
+                                   size_t ml_start, int w,
+                                   Connector *lc, int lw,
+                                   Connector *rc, int rw,
+                                   match_list_cache *mlcl,
+                                   match_list_cache *mlcr)
 {
 	push_match_list_element(ctxt, 0, NULL);
 	print_match_list(ctxt, id, ml_start, w, lc, lw, rc, rw, mlcl, mlcr);
@@ -606,17 +560,14 @@ size_t
 form_match_list(fast_matcher_t *ctxt, int w,
                 Connector *lc, int lw,
                 Connector *rc, int rw,
-                Disjunct ***mlcl, Disjunct ***mlcr)
+                match_list_cache *mlcl, match_list_cache *mlcr)
 {
 	Match_node *mx, *mr_end;
 	size_t front = get_match_list_position(ctxt);
 	Match_node *ml = NULL, *mr = NULL; /* Initialize in case of NULL lc or rc. */
-	Disjunct **cmx;
+	match_list_cache *cmx;
 	match_cache mc;
 	gword_cache gc = { .same_alternative = false };
-
-	if ((mlcl != NULL) && (*mlcl == NULL)) mlcl = NULL;
-	if ((mlcr != NULL) && (*mlcr == NULL)) mlcr = NULL;
 
 	if (mlcl == NULL)
 	{
@@ -651,7 +602,7 @@ form_match_list(fast_matcher_t *ctxt, int w,
 #endif
 
 	lgdebug(+D_FAST_MATCHER, "MATCH_LIST %c%c %5d mlb %zu\n",
-		       (mlcl == NULL) ? ' ' : 'L', (mlcr == NULL) ? ' ' : 'R', id, front);
+	        (mlcl == NULL) ? ' ' : 'L', (mlcr == NULL) ? ' ' : 'R', id, front);
 
 	if (mlcr == NULL)
 	{
@@ -664,9 +615,9 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	else
 	{
-		for (cmx = *mlcr; *cmx != NULL; cmx++)
+		for (cmx = mlcr; cmx->d_lkg != NULL; cmx++)
 		{
-			(*cmx)->match_left = false;
+			cmx->d_lkg->match_left = false;
 		}
 		mr_end = NULL; /* Prevent a gcc "may be uninitialized" warning */
 	}
@@ -695,11 +646,11 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	else
 	{
-		for (cmx = *mlcl; *cmx != NULL; cmx++)
+		for (cmx = mlcl; cmx->d_lkg != NULL; cmx++)
 		{
-			(*cmx)->match_left = true;
-			(*cmx)->match_right = false;
-			push_match_list_element(ctxt, lid, *cmx);
+			cmx->d_lkg->match_left = true;
+			cmx->d_lkg->match_right = false;
+			push_match_list_element(ctxt, lid, cmx->d_lkg);
 		}
 	}
 
@@ -726,13 +677,13 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	else
 	{
-		for (cmx = *mlcr; *cmx != NULL; cmx++)
+		for (cmx = mlcr; cmx->d_lkg != NULL; cmx++)
 		{
-			if ((lc != NULL) && !(*cmx)->match_left) continue; /* lc optimization*/
-			(*cmx)->match_right = true;
-			(*cmx)->rcount_index = (uint32_t)(cmx - *mlcr);
-			if ((*cmx)->match_left) continue;
-			push_match_list_element(ctxt, lid, *cmx);
+			if ((lc != NULL) && !cmx->d_lkg->match_left) continue; /* lc optimization*/
+			cmx->d_lkg->match_right = true;
+			cmx->d_lkg->rcount_index = (uint32_t)(cmx - mlcr);
+			if (cmx->d_lkg->match_left) continue;
+			push_match_list_element(ctxt, lid, cmx->d_lkg);
 		}
 	}
 
