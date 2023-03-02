@@ -289,7 +289,7 @@ static void connector_encode_lc(const char *lc_string, condesc_t *desc)
  *
  * Note: check_connector() has already validated the connector string.
  */
-static void calculate_connector_info(condesc_t * c)
+void calculate_connector_info(condesc_t * c)
 {
 	const char *s;
 
@@ -365,7 +365,7 @@ static uint32_t connector_str_hash(const char *s)
 /**
  * Compare connector UC parts, for qsort.
  */
-static int condesc_by_uc_constring(const void * a, const void * b)
+int condesc_by_uc_constring(const void * a, const void * b)
 {
 	const condesc_t * const * cda = a;
 	const condesc_t * const * cdb = b;
@@ -550,6 +550,7 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 		lgdebug(+11, "Creating connector '%s' (%zu)\n", constring, ct->num_con);
 		h->desc = pool_alloc(ct->mempool);
 		h->desc->string = constring;
+		h->desc->uc_num = UINT32_MAX;
 		h->str_hash = hash;
 		ct->num_con++;
 
@@ -589,4 +590,5 @@ void condesc_setup(Dictionary dict)
 	set_all_condesc_length_limit(dict);
 	free(dict->contable.sdesc);
 }
+
 /* ========================= END OF FILE ============================== */

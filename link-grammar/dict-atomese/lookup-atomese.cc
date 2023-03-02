@@ -363,6 +363,7 @@ void as_storage_close(Dictionary dict)
 /// usable after a close.
 void as_close(Dictionary dict)
 {
+	prt_error("Atomese: Close dict\n");
 	if (nullptr == dict->as_server) return;
 	Local* local = (Local*) (dict->as_server);
 	if (not local->using_external_as and local->stnp)
@@ -374,6 +375,90 @@ void as_close(Dictionary dict)
 	// Clear the cache as well
 	free_dictionary_root(dict);
 	dict->num_entries = 0;
+}
+
+// ===============================================================
+
+/**
+ * Specialized version of `condesc_setup()`, tuned for Atomese.
+ * When new expressions are created (even temporary ones, e.g. for MST)
+ * the connectors in those expressions are placed into a connector
+ * hash table. The connectors are then compiled into a form that is
+ * used to speed up matching. For a one-time dictionary load, this is
+ * done by `condesc_setup()`.
+ *
+ * For Atomese, new connectors dribble in with each new sentance.
+ * As there are millions grand-total, calling `condesc_setup()` is
+ * stunningly inefficient; only the new ones need to be processed.
+ * That's what this routine does.
+ *
+ * Limitations:
+ * ++ All connectors are marked UNLIMITED_LEN.
+ * ++ All connectors are assumed to be upper-case only, with no
+ *    lower-case parts. (That means that there will never be two or
+ *    more connectors with the same upper-case part, thus shortening
+ *    the qsort, below.)
+ */
+static void update_condesc(Dictionary dict)
+{
+	ConTable *ct = &dict->contable;
+
+	// How many new ones are there?
+	size_t num_new = ct->num_con - ct->last_num;
+	if (0 == num_new) return;
+
+	condesc_t **sdesc = (condesc_t **) malloc(num_new * sizeof(condesc_t *));
+	size_t i = 0;
+	for (size_t n = 0; n < ct->size; n++)
+	{
+		condesc_t *condesc = ct->hdesc[n].desc;
+
+		if (NULL == condesc) continue;
+		if (UINT32_MAX != condesc->uc_num) continue;
+
+		calculate_connector_info(condesc);
+		condesc->length_limit = UNLIMITED_LEN;
+		sdesc[i++] = condesc;
+	}
+
+	qsort(sdesc, num_new, sizeof(condesc_t *),
+	      condesc_by_uc_constring);
+
+	/* Enumerate the connectors according to their UC part. */
+	int uc_num = ct->num_uc;
+
+	sdesc[0]->uc_num = uc_num;
+	for (size_t n=1; n < num_new; n++)
+	{
+		condesc_t **condesc = &sdesc[n];
+
+		if (condesc[0]->uc_length != condesc[-1]->uc_length)
+		{
+			/* We know that the UC part has been changed. */
+			uc_num++;
+		}
+		else
+		{
+			const char *uc1 = &condesc[0]->string[condesc[0]->uc_start];
+			const char *uc2 = &condesc[-1]->string[condesc[-1]->uc_start];
+			if (0 != strncmp(uc1, uc2, condesc[0]->uc_length))
+			{
+				uc_num++;
+			}
+		}
+
+		//printf("%5d constring=%s\n", uc_num, condesc[0]->string);
+		condesc[0]->uc_num = uc_num;
+	}
+
+	lgdebug(+11, "Dictionary %s: added %zu different connectors "
+	        "(%d with a different UC part)\n",
+	        dict->name, ct->num_con, uc_num+1);
+
+	ct->num_uc = uc_num + 1;
+	ct->last_num = ct->num_con;
+
+	free(sdesc);
 }
 
 // ===============================================================
@@ -438,13 +523,12 @@ void as_end_lookup(Dictionary dict, Sentence sent)
 		sent_words.clear();
 	}
 
-	std::lock_guard<std::mutex> guard(local->dict_mutex);
-
-	// Deal with any new connector descriptors that have arrived.
-	condesc_setup(dict);
-
 	lgdebug(D_USER_INFO, "Atomese: Finish dictionary lookup for >>%s<<\n",
 		sent->orig_sentence);
+
+	// Create connector descriptors for any new connectors.
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
+	update_condesc(dict);
 }
 
 /// Thread-safe dict lookup.

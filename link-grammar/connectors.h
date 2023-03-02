@@ -121,6 +121,7 @@ typedef struct
 	size_t size;          /* Allocated size */
 	size_t num_con;       /* Number of connector types */
 	size_t num_uc;        /* Number of connector types with different UC part */
+	size_t last_num;      /* All condescs up to here have been done already. */
 	Pool_desc *mempool;
 	length_limit_def_t *length_limit_def;
 	length_limit_def_t **length_limit_def_next;
@@ -200,6 +201,8 @@ static inline unsigned int connector_uc_num(const Connector * c)
 Connector * connector_new(Pool_desc *, const condesc_t *, Parse_Options);
 void set_connector_farthest_word(Exp *, int, int, Parse_Options);
 void free_connectors(Connector *);
+void calculate_connector_info(condesc_t *);
+int condesc_by_uc_constring(const void *, const void *);
 
 /**
  * Compare only the uppercase part of two connectors.
