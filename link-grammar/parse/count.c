@@ -289,7 +289,7 @@ static void free_table_lrcnt(count_context_t *ctxt)
 				if (t->mlc0 != NULL)
 				{
 					cml++;
-					for (Disjunct *d = t->mlc0->d_lkg; d != NULL; d++)
+					for (Disjunct *d = t->mlc0->d; d != NULL; d++)
 						cml_disjunct++;
 				}
 			}
@@ -757,13 +757,13 @@ static void lrcnt_cache_match_list(wordvecp lrcnt_cache, count_context_t *ctxt,
 		Disjunct *d = get_match_list_element(mchxt, i);
 		if ((dir == 0) ? d->match_left : d->match_right)
 		{
-			ml[dcnt].d_lkg = d;
+			ml[dcnt].d = d;
 			assert(d->lrcount > 0, "Invalid linkage count %d", d->lrcount);
 			ml[dcnt].count = d->lrcount;
 			dcnt++;
 		}
 	}
-	ml[dcnt].d_lkg = NULL;
+	ml[dcnt].d = NULL;
 
 	lrcnt_cache->mlc0 = ml;
 }

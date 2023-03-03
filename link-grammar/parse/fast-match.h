@@ -22,8 +22,8 @@
 
 typedef struct match_list_cache_sruct
 {
-	Disjunct *d_lkg;        /* Disjuncts with a jet linkage */
-	Count_bin count;          /* The counts for that linkage */
+	Disjunct *d;                 /* disjuncts with a jet linkage */
+	Count_bin count;             /* the counts for that linkage */
 } match_list_cache;
 
 typedef struct Match_node_struct Match_node;
