@@ -363,7 +363,7 @@ void as_storage_close(Dictionary dict)
 /// usable after a close.
 void as_close(Dictionary dict)
 {
-	prt_error("Atomese: Close dict\n");
+	logger().info("Atomese: Close dict `%s`", dict->name);
 	if (nullptr == dict->as_server) return;
 	Local* local = (Local*) (dict->as_server);
 	if (not local->using_external_as and local->stnp)
