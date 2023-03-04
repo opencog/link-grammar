@@ -353,9 +353,6 @@ void as_storage_close(Dictionary dict)
 		local->stnp->close();
 
 	local->stnp = nullptr;
-
-	if (local->pair_dict)
-		free(local->pair_dict);
 }
 
 /// Close the connection to the AtomSpace. This will also empty out
@@ -364,10 +361,13 @@ void as_storage_close(Dictionary dict)
 void as_close(Dictionary dict)
 {
 	logger().info("Atomese: Close dict `%s`", dict->name);
+
+	as_storage_close(dict);
+
 	if (nullptr == dict->as_server) return;
 	Local* local = (Local*) (dict->as_server);
-	if (not local->using_external_as and local->stnp)
-		local->stnp->close();
+	if (local->pair_dict)
+		free(local->pair_dict);
 
 	delete local;
 	dict->as_server = nullptr;
