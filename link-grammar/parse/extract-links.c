@@ -752,7 +752,7 @@ static void issue_links_for_choice(Linkage lkg, Parse_choice *pc,
  *
  * In order to generate all the possible linkages, the top-level function
  * is repetitively invoked, when \p index is changing from 0 to
- * \k num_linkages_found-1 (by extract_links(), see process_linkages()).
+ * \c num_linkages_found-1 (by extract_links(), see process_linkages()).
  *
  * How it works:
  *
@@ -791,7 +791,7 @@ static void issue_links_for_choice(Linkage lkg, Parse_choice *pc,
  * the top-level invocation) is equal to num_linkages_found.
  *
  * Each list_links() invocation is done with an \p index parameter
- * within the range of 0 to \k set->count-1 in order to extract all the
+ * within the range of 0 to \c set->count-1 in order to extract all the
  * paths from this set. All the \p index values in that range are used.
  *
  * First a selection of the Parse_choice element within the given
