@@ -367,7 +367,10 @@ void as_close(Dictionary dict)
 	if (nullptr == dict->as_server) return;
 	Local* local = (Local*) (dict->as_server);
 	if (local->pair_dict)
+	{
+		free_dict_node_recursive(local->pair_dict->root);
 		free(local->pair_dict);
+	}
 
 	delete local;
 	dict->as_server = nullptr;
@@ -649,7 +652,7 @@ static void report_dict_usage(Dictionary dict)
 		pool_bytes(dict->Exp_pool) / (1024 * 1024));
 }
 
-/// Given an expression, wrap  it with a Dict_node and insert it into
+/// Given an expression, wrap it with a Dict_node and insert it into
 /// the dictionary.
 void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 {
