@@ -127,7 +127,6 @@ static void record_choice(
 	s->num_pc++;
 }
 
-#ifdef USE_XTABLE_VS_DJ_ESTIMATOR
 /**
  * Return an estimate of the required hash table size. The estimate is
  * based on actual measurements, presented at
@@ -144,33 +143,16 @@ static int estimate_log2_table_size(Sentence sent)
 	double lscale = log2(sent->num_disjuncts + 1.0) - 0.5 * log2(sent->length);
 	double lo_est = lscale + 4.0;
 	double hi_est = 1.5 * lscale;
-	int log2_table_size = floor(fmax(lo_est, hi_est));
+	double dj_est = fmax(lo_est, hi_est);
 
-	// Enforce min and max sizes.
-	if (log2_table_size < 4) log2_table_size = 4;
-	if (24 < log2_table_size) log2_table_size = 24;
-
-	return log2_table_size;
-}
-#endif // USE_XTABLE_VS_DJ_ESTIMATOR
-
-
-/**
- * Return an estimate of the required hash table size. The estimate
- * is based on actual measurements, which show that the number of
- * PSet_buckets that will get allocatied is very nearly identical to
- *
- *   pool_num_elements_issued(sent->Table_tracon_pool);
- *
- * This is perhaps not a surprise; tracons ae obtained during counting.
- * This makes the estimate very easy: just take log2, and adjust a bit
- * for a reasonable fill factor.
- */
-static int estimate_log2_table_size(Sentence sent)
-{
+	/* For MST disjuncts, the number of elements issued for
+	 * pex->Pset_bucket_pool is almost exactly equal to the num elts
+	 * issued for sent->Table_tracon_pool.  This provides a better
+	 * estimate when parsing with MST, when the above is too low.  */
 	double ntracon = pool_num_elements_issued(sent->Table_tracon_pool);
-	double lscale = log2(ntracon);
-	int log2_table_size = floor(lscale) + 2;
+	double ltra = log2(ntracon) + 1.0;  // + 1.0 because floor()
+
+	int log2_table_size = floor(fmax(dj_est, ltra));
 
 	// Enforce min and max sizes.
 	if (log2_table_size < 4) log2_table_size = 4;
