@@ -1,4 +1,4 @@
-Version 5.12.1 (XXX 2023)
+Version 5.12.1 (5 March 2023)
  * Assorted enhancements and fixes for the AtomSpace dictionary. #1362
  * Fix missing HAVE_THREADS_H, affects Apple Homebrew. #1363
  * Fix regex thread-safety issue. #1370
