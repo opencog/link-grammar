@@ -143,7 +143,16 @@ static int estimate_log2_table_size(Sentence sent)
 	double lscale = log2(sent->num_disjuncts + 1.0) - 0.5 * log2(sent->length);
 	double lo_est = lscale + 4.0;
 	double hi_est = 1.5 * lscale;
-	int log2_table_size = floor(fmax(lo_est, hi_est));
+	double dj_est = fmax(lo_est, hi_est);
+
+	/* For MST disjuncts, the number of elements issued for
+	 * pex->Pset_bucket_pool is almost exactly equal to the num elts
+	 * issued for sent->Table_tracon_pool.  This provides a better
+	 * estimate when parsing with MST, when the above is too low.  */
+	double ntracon = pool_num_elements_issued(sent->Table_tracon_pool);
+	double ltra = log2(ntracon) + 1.0;  // + 1.0 because floor()
+
+	int log2_table_size = floor(fmax(dj_est, ltra));
 
 	// Enforce min and max sizes.
 	if (log2_table_size < 4) log2_table_size = 4;
@@ -209,9 +218,9 @@ extractor_t * extractor_new(Sentence sent)
 
 	// What's good for the goose is good for the gander.
 	// The pex->x_table_size is a good upper-bound estimate for how
-	// many buckets we will be allocating. Divide by two, based on
+	// many buckets we will be allocating. Divide by four, based on
 	// the observed fill ratio.
-	size_t pbsze = pex->x_table_size / 2;
+	size_t pbsze = pex->x_table_size / 4;
 	pex->Pset_bucket_pool =
 		pool_new(__func__, "Pset_bucket",
 		         /*num_elements*/pbsze, sizeof(Pset_bucket),
