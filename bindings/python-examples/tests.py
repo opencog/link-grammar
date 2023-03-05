@@ -1101,13 +1101,14 @@ class XExp_resolving_test(unittest.TestCase):
         # exp_old to exp_new and validate them.
         # Locations 2 and 4 are in exp_old. Locations 6 and 7 are in exp_new.
         # () is the null expression that is controlled by "headline".
+        # 99.000 is the current headline cost placed into 4.0.dialect
         str_comb = str(exp_old) + '%' + str(exp_new)
         diff = re.search(r'^([^%]*)(\(Ds\*\*x- or \([^%]*?\)\)\)\))([^%]*)(\(Ds\*\*c- or \([^%]*?\)\)\)\))([^%]*)%\1(.*)\3(.*)\5$', str_comb)
         #                      1                2                     3                4                     5        6     7
         self.assertEqual(diff.group(2), '(Ds**x- or (())))')
         self.assertEqual(diff.group(4), '(Ds**c- or (())))')
-        self.assertEqual(diff.group(6), '(Ds**x- or ([[[[()]]]])))')
-        self.assertEqual(diff.group(7), '(Ds**c- or ([[[[()]]]])))')
+        self.assertEqual(diff.group(6), '(Ds**x- or ([()]99.000)))')
+        self.assertEqual(diff.group(7), '(Ds**c- or ([()]99.000)))')
 
 
 # Currently, the dictionary creating function sets the generation mode if
