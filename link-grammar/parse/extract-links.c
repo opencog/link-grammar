@@ -127,6 +127,7 @@ static void record_choice(
 	s->num_pc++;
 }
 
+#ifdef USE_XTABLE_VS_DJ_ESTIMATOR
 /**
  * Return an estimate of the required hash table size. The estimate is
  * based on actual measurements, presented at
@@ -144,6 +145,32 @@ static int estimate_log2_table_size(Sentence sent)
 	double lo_est = lscale + 4.0;
 	double hi_est = 1.5 * lscale;
 	int log2_table_size = floor(fmax(lo_est, hi_est));
+
+	// Enforce min and max sizes.
+	if (log2_table_size < 4) log2_table_size = 4;
+	if (24 < log2_table_size) log2_table_size = 24;
+
+	return log2_table_size;
+}
+#endif // USE_XTABLE_VS_DJ_ESTIMATOR
+
+
+/**
+ * Return an estimate of the required hash table size. The estimate
+ * is based on actual measurements, which show that the number of
+ * PSet_buckets that will get allocatied is very nearly identical to
+ *
+ *   pool_num_elements_issued(sent->Table_tracon_pool);
+ *
+ * This is perhaps not a surprise; tracons ae obtained during counting.
+ * This makes the estimate very easy: just take log2, and adjust a bit
+ * for a reasonable fill factor.
+ */
+static int estimate_log2_table_size(Sentence sent)
+{
+	double ntracon = pool_num_elements_issued(sent->Table_tracon_pool);
+	double lscale = log2(ntracon);
+	int log2_table_size = floor(lscale) + 2;
 
 	// Enforce min and max sizes.
 	if (log2_table_size < 4) log2_table_size = 4;
@@ -209,9 +236,9 @@ extractor_t * extractor_new(Sentence sent)
 
 	// What's good for the goose is good for the gander.
 	// The pex->x_table_size is a good upper-bound estimate for how
-	// many buckets we will be allocating. Divide by two, based on
+	// many buckets we will be allocating. Divide by four, based on
 	// the observed fill ratio.
-	size_t pbsze = pex->x_table_size / 2;
+	size_t pbsze = pex->x_table_size / 4;
 	pex->Pset_bucket_pool =
 		pool_new(__func__, "Pset_bucket",
 		         /*num_elements*/pbsze, sizeof(Pset_bucket),
