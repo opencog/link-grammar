@@ -3031,9 +3031,10 @@ static void wordgraph_terminator(Sentence const sent)
 #endif
 
 /**
- * The string s has just been read in from standard input.
- * This function breaks it up into words and stores these words in
- * the sent->word[] array.  Returns true if all is well, false otherwise.
+ * Split up the string in `sent->orig_sentence` into distinct words.
+ * The resulting word-sequence DAG is stored in the sent->word[]
+ * array.  (Its a DAG, because the splitting may not be unique).
+ * Returns true if all is well, false otherwise.
  */
 bool separate_sentence(Sentence sent, Parse_Options opts)
 {
