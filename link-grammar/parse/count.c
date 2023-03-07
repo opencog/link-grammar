@@ -99,7 +99,7 @@ static count_expectation lrcnt_cache_zero; /* A sentinel indicating status==0 */
 typedef struct
 {
 	wordvecp *tracon_wvp;      /* Indexed by tracon_id */
-	uint32_t sz;
+	uint32_t num_tracon_id;    /* Number of tracon IDs */
 } Table_lrcnt;
 
 struct count_context_s
@@ -313,15 +313,15 @@ static void free_table_lrcnt(count_context_t *ctxt)
 		{
 			unsigned int table_usage = 0;
 
-			for (size_t i = 0; i < ctxt->table_lrcnt[dir].sz; i++)
+			for (size_t i = 0; i < ctxt->table_lrcnt[dir].num_tracon_id; i++)
 			{
 				if (ctxt->table_lrcnt[dir].tracon_wvp[i] != NULL) continue;
 				table_usage++;
 			}
 
 			lgdebug(+0, "Direction %u: Using %u/%u tracons %.2f%%\n\\",
-			        dir, table_usage, ctxt->table_lrcnt[dir].sz,
-			        100.0f*table_usage / ctxt->table_lrcnt[dir].sz);
+			        dir, table_usage, ctxt->table_lrcnt[dir].num_tracon_id,
+			        100.0f*table_usage / ctxt->table_lrcnt[dir].num_tracon_id);
 		}
 	}
 
@@ -374,13 +374,13 @@ static void init_table_lrcnt(count_context_t *ctxt)
 
 	for (unsigned int dir = 0; dir < 2; dir++)
 	{
-		const size_t sz = sizeof(wordvecp) * ctxt->table_lrcnt[dir].sz;
+		const size_t sz = sizeof(wordvecp) * ctxt->table_lrcnt[dir].num_tracon_id;
 		ctxt->table_lrcnt[dir].tracon_wvp = malloc(sz);
 		memset(ctxt->table_lrcnt[dir].tracon_wvp, 0, sz);
 	}
 
 	const size_t initial_size = MIN(sent->length/2, 16) *
-		                   (ctxt->table_lrcnt[0].sz + ctxt->table_lrcnt[1].sz);
+		(ctxt->table_lrcnt[0].num_tracon_id + ctxt->table_lrcnt[1].num_tracon_id);
 
 	if (NULL != sent->wordvec_pool)
 	{
@@ -444,13 +444,13 @@ static void table_stat(count_context_t *ctxt)
 			assert(t->hash != 0, "Invalid hash value: 0");
 			assert((hist_total(&t->count)>=0)&&(hist_total(&t->count) <= INT_MAX),
 			       "Invalid count %"COUNT_FMT, hist_total(&t->count));
-			assert((ctxt->table_lrcnt[0].sz == 0) ||
+			assert((ctxt->table_lrcnt[0].num_tracon_id == 0) ||
 			       t->l_id < (int)ctxt->sent->length ||
-			       ((t->l_id >= 255)&&(t->l_id < (int)ctxt->table_lrcnt[0].sz)),
+			       ((t->l_id >= 255)&&(t->l_id < (int)ctxt->table_lrcnt[0].num_tracon_id)),
 			       "invalid l_id %d", t->l_id);
-			assert((ctxt->table_lrcnt[1].sz == 0) ||
+			assert((ctxt->table_lrcnt[1].num_tracon_id == 0) ||
 			       t->r_id <= (int)ctxt->sent->length ||
-			       ((t->r_id > 255)&&(t->r_id < (int)ctxt->table_lrcnt[1].sz)),
+			       ((t->r_id > 255)&&(t->r_id < (int)ctxt->table_lrcnt[1].num_tracon_id)),
 			       "invalid r_id %d", t->r_id);
 		}
 		for (; t != NULL; t = t->next)
@@ -1652,7 +1652,7 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	{
 		/* next_id keeps the last tracon_id used, so we need +1 for array size.  */
 		for (unsigned int dir = 0; dir < 2; dir++)
-			ctxt->table_lrcnt[dir].sz = ts->next_id[!dir] + 1;
+			ctxt->table_lrcnt[dir].num_tracon_id = ts->next_id[!dir] + 1;
 
 		init_table_lrcnt(ctxt);
 	}
