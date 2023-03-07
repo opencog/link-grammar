@@ -686,6 +686,14 @@ void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 /// expressions for that word.
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
 {
+	// The tokenizer might call us, asking about COMMON_ENTITY_MARKER
+	// in order to figure out if a word can be down-cased. This will
+	// happen outside the sentence-begin-end expression context, so
+	// sentlo will be null. Just ignore this; we don't have entity
+	// markers. Anyway, handling of this kind of stuff needs to be
+	// done differently, anyway. Meanwhile, avoid null ptr derefernce.
+	if (nullptr == sentlo) return nullptr;
+
 	Local* local = (Local*) (dict->as_server);
 
 	{
