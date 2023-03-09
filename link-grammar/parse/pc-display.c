@@ -55,10 +55,9 @@ static void draw_pset_horizontal(dyn_str *pcd, Parse_set * pset)
 	if (NULL == pset->first->next) return;
 
 	// Horizontal row for parse choices
-	dyn_strcat(pcd, "    subgraph HZ { rank=same \n");
-	// dyn_strcat(pcd, "    cluster=true;\n");
+	dyn_strcat(pcd, "    subgraph HZ {rank=same; ");
+	// dyn_strcat(pcd, "cluster=true; ");
 
-	dyn_strcat(pcd, "        ");
 	Parse_choice * pc = pset->first;
 	while (pc)
 	{
@@ -70,7 +69,7 @@ static void draw_pset_horizontal(dyn_str *pcd, Parse_set * pset)
 	}
 	dyn_strcat(pcd, " [label=next]");
 	dyn_strcat(pcd, " [minlen=0.5]");
-	dyn_strcat(pcd, ";\n    };\n");
+	dyn_strcat(pcd, "};\n");
 }
 
 static void draw_pset_recursive(dyn_str *, Parse_set *);
@@ -118,9 +117,9 @@ static void draw_pchoice(dyn_str *pcd, Parse_choice * pc)
 
 	// dyn_strcat(pcd, "    subgraph RECURSE {");
 	dyn_strcat(pcd, "    {");
-	// dyn_strcat(pcd, "    newrank=true ");
-	// dyn_strcat(pcd, "    rankdir=LR ");
-	// dyn_strcat(pcd, "    rankdir=TB ");
+	// dyn_strcat(pcd, " newrank=true; ");
+	// dyn_strcat(pcd, " rankdir=LR; ");
+	// dyn_strcat(pcd, " rankdir=TB; ");
 	draw_pset_recursive(pcd, pc->set[0]);
 	draw_pset_recursive(pcd, pc->set[1]);
 	dyn_strcat(pcd, "};\n");
