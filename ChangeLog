@@ -1,3 +1,6 @@
+Version 5.12.3 (XXX 2023)
+ * Nothing yet.
+
 Version 5.12.2 (9 March 2023)
  * Fix null-pointer deref in Atomese code.
 
