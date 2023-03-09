@@ -43,6 +43,10 @@ struct Parse_choice_struct
 	Parse_set * set[2];
 	Disjunct    *md;           /* the chosen disjunct for the middle word */
 	int32_t     l_id, r_id;    /* the tracon IDs used in this disjunct */
+#ifdef PC_DISPLAY
+	bool done;
+	bool dolr;
+#endif
 };
 
 /* Parse_set serves as a header of Parse_choice chained elements, that
@@ -112,6 +116,10 @@ make_choice(Parse_set *lset, Connector * lrc,
 	pc->l_id = (lrc == NULL) ? -1 : lrc->tracon_id;
 	pc->r_id = (rlc == NULL) ? -1 : rlc->tracon_id;
 	pc->md = md;
+#ifdef PC_DISPLAY
+	pc->done = false;
+	pc->dolr = false;
+#endif
 	return pc;
 }
 
@@ -857,6 +865,7 @@ static void list_links(Linkage lkg, Parse_set * set, int index)
 	}
 	assert(pc != NULL, "walked off the end in list_links");
 	issue_links_for_choice(lkg, pc, set);
+
 	list_links(lkg, pc->set[0], index % pc->set[0]->count);
 	list_links(lkg, pc->set[1], index / pc->set[0]->count);
 }
@@ -925,3 +934,8 @@ void mark_used_disjuncts(extractor_t *pex, bool *disjunct_used)
 			mark_used_disjunct(&t->set, disjunct_used);
 	}
 }
+
+// ==================================================
+#ifdef PC_DISPLAY
+#include "pc-display.c"
+#endif
