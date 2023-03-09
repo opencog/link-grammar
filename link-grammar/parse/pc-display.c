@@ -70,6 +70,7 @@ static void draw_pset_horizontal(dyn_str *pcd, Parse_set * pset)
 			dyn_strcat(pcd, " -> ");
 	}
 	dyn_strcat(pcd, " [label=next]");
+	dyn_strcat(pcd, " [minlen=0.5]");
 	dyn_strcat(pcd, ";\n    };\n");
 }
 
@@ -99,12 +100,13 @@ static void draw_pchoice(dyn_str *pcd, Parse_choice * pc)
 	draw_pset_name(pcd, pc->set[1], "r");
 	if (both) dyn_strcat(pcd, "}");
 	// dyn_strcat(pcd, " [label=lr]");
+	dyn_strcat(pcd, " [minlen=2]");
 	dyn_strcat(pcd, "};\n");
 
 	// Attempt to force a left-right order.
 	if (both)
 	{
-		dyn_strcat(pcd, "{edge[style=invisible]; ");
+		dyn_strcat(pcd, "    {edge[style=invisible]; ");
 		draw_pset_name(pcd, pc->set[0], "l");
 		dyn_strcat(pcd, " -> ");
 		draw_pset_name(pcd, pc->set[1], "r");
