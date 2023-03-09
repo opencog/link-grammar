@@ -23,11 +23,10 @@ static void pchoice_node(dyn_str *pcd, Parse_choice * pc)
 	dyn_strcat(pcd, buf);
 }
 
-// Uncomment to draw null parse-sets. This idea is to be able to see
+// Set to 1 to draw null parse-sets. This idea is to be able to see
 // the binary-tree shape of the parse-set, even if some of the leaves
-// are null. Works great on small graphs, confuses the dot visualizer
-// on large graphs.
-// #define DRAW_NUL
+// are null. Each null node needs to be given a unique name.
+#define DRAW_NUL 0
 
 // Append the main pset name, or null if null.
 static void draw_pset_name(dyn_str *pcd, Parse_set * pset, const char* lr)
@@ -35,7 +34,7 @@ static void draw_pset_name(dyn_str *pcd, Parse_set * pset, const char* lr)
 	if (NULL == pset) return;  // Can't ever happen
 	if (NULL == pset->first)
 	{
-#ifdef DRAW_NUL
+#if DRAW_NUL
 		char buf[80];
 		sprintf(buf, "\"nu%s %lx\" ", lr, ((uint64_t)pset) & 0xffff);
 		dyn_strcat(pcd, buf);
@@ -86,7 +85,7 @@ static void draw_pchoice(dyn_str *pcd, Parse_choice * pc)
 	if (!eith) return;
 
 	// Draw the left and right sides of binary tree.
-	if (pc->set[0]->first)
+	if (pc->set[0]->first || DRAW_NUL)
 	{
 		dyn_strcat(pcd, "    subgraph LEFT { ");
 		pchoice_node(pcd, pc);
@@ -96,7 +95,7 @@ static void draw_pchoice(dyn_str *pcd, Parse_choice * pc)
 		dyn_strcat(pcd, "};\n");
 	}
 
-	if (pc->set[1]->first)
+	if (pc->set[1]->first || DRAW_NUL)
 	{
 		dyn_strcat(pcd, "    subgraph RIGHT { ");
 		pchoice_node(pcd, pc);
@@ -108,7 +107,7 @@ static void draw_pchoice(dyn_str *pcd, Parse_choice * pc)
 
 	// Attempt to force a left-right order.
 	bool both = pc->set[0]->first && pc->set[1]->first;
-	if (both)
+	if (both || DRAW_NUL)
 	{
 		dyn_strcat(pcd, "    {edge[style=invisible][dir=none]; ");
 		draw_pset_name(pcd, pc->set[0], "l");
