@@ -86,24 +86,28 @@ static void draw_pchoice(dyn_str *pcd, Parse_choice * pc)
 	if (!eith) return;
 
 	// Draw the left and right sides of binary tree.
-	dyn_strcat(pcd, "    subgraph TREE { ");
-	pchoice_node(pcd, pc);
-	dyn_strcat(pcd, " -> ");
+	if (pc->set[0]->first)
+	{
+		dyn_strcat(pcd, "    subgraph LEFT { ");
+		pchoice_node(pcd, pc);
+		dyn_strcat(pcd, " -> ");
+		draw_pset_name(pcd, pc->set[0], "l");
+		dyn_strcat(pcd, " [minlen=2]");
+		dyn_strcat(pcd, "};\n");
+	}
 
-	bool both = pc->set[0]->first && pc->set[1]->first;
-#ifdef DRAW_NUL
-	both=true;
-#endif
-
-	if (both) dyn_strcat(pcd, "{ rank=same ");
-	draw_pset_name(pcd, pc->set[0], "l");
-	draw_pset_name(pcd, pc->set[1], "r");
-	if (both) dyn_strcat(pcd, "}");
-	// dyn_strcat(pcd, " [label=lr]");
-	dyn_strcat(pcd, " [minlen=2]");
-	dyn_strcat(pcd, "};\n");
+	if (pc->set[1]->first)
+	{
+		dyn_strcat(pcd, "    subgraph RIGHT { ");
+		pchoice_node(pcd, pc);
+		dyn_strcat(pcd, " -> ");
+		draw_pset_name(pcd, pc->set[1], "r");
+		dyn_strcat(pcd, " [minlen=2]");
+		dyn_strcat(pcd, "};\n");
+	}
 
 	// Attempt to force a left-right order.
+	bool both = pc->set[0]->first && pc->set[1]->first;
 	if (both)
 	{
 		dyn_strcat(pcd, "    {edge[style=invisible]; ");
