@@ -110,7 +110,7 @@ static void draw_pchoice(dyn_str *pcd, Parse_choice * pc)
 	bool both = pc->set[0]->first && pc->set[1]->first;
 	if (both)
 	{
-		dyn_strcat(pcd, "    {edge[style=invisible]; ");
+		dyn_strcat(pcd, "    {edge[style=invisible][dir=none]; ");
 		draw_pset_name(pcd, pc->set[0], "l");
 		dyn_strcat(pcd, " -> ");
 		draw_pset_name(pcd, pc->set[1], "r");
