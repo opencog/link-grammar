@@ -117,7 +117,8 @@ static void draw_pchoice(dyn_str *pcd, Parse_choice * pc)
 		dyn_strcat(pcd, " }\n");
 	}
 
-	dyn_strcat(pcd, "    subgraph RECURSE {");
+	// dyn_strcat(pcd, "    subgraph RECURSE {");
+	dyn_strcat(pcd, "    {");
 	// dyn_strcat(pcd, "    newrank=true ");
 	// dyn_strcat(pcd, "    rankdir=LR ");
 	// dyn_strcat(pcd, "    rankdir=TB ");
