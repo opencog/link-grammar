@@ -1,5 +1,5 @@
-Version 5.12.2 (XXX 2023)
- * Nothing yet.
+Version 5.12.2 (9 March 2023)
+ * Fix null-pointer deref in Atomese code.
 
 Version 5.12.1 (5 March 2023)
  * Assorted enhancements and fixes for the AtomSpace dictionary. #1362
