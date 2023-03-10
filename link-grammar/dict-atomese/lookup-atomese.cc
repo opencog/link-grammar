@@ -481,6 +481,7 @@ thread_local HandleSeq sent_words;
 void as_start_lookup(Dictionary dict, Sentence sent)
 {
 	Local* local = (Local*) (dict->as_server);
+	sentlo = sent;
 
 	lgdebug(D_USER_INFO, "Atomese: Start dictionary lookup for >>%s<<\n",
 		sent->orig_sentence);
@@ -489,7 +490,6 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 	// if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	if (0 < local->pair_disjuncts)
 	{
-		sentlo = sent;
 		for(size_t i=0; i<sent->length; i++)
 		{
 			const char* wstr = sent->word[i].unsplit_word;
@@ -519,12 +519,12 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 void as_end_lookup(Dictionary dict, Sentence sent)
 {
 	Local* local = (Local*) (dict->as_server);
+	sentlo = nullptr;
 
+	// XXX FIXME Someday handle extra_pairs, too.
+	// if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	if (0 < local->pair_disjuncts)
-	{
-		sentlo = nullptr;
 		sent_words.clear();
-	}
 
 	lgdebug(D_USER_INFO, "Atomese: Finish dictionary lookup for >>%s<<\n",
 		sent->orig_sentence);
