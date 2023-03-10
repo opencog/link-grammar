@@ -111,6 +111,7 @@ bool as_open(Dictionary dict)
 {
 	Local* local = new Local;
 	local->stnp = nullptr;
+	local->pair_dict = nullptr;
 
 	// If an external atomspace is specified, then use that.
 	if (external_atomspace)
@@ -679,8 +680,10 @@ void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 #define ENCHAIN(ORHEAD,EXP) \
 	if (nullptr == ORHEAD)   \
 		ORHEAD = (EXP);       \
-	else                     \
-		ORHEAD = make_or_node(dict->Exp_pool, ORHEAD, (EXP));
+	else {                   \
+		std::lock_guard<std::mutex> guard(local->dict_mutex); \
+		ORHEAD = make_or_node(dict->Exp_pool, ORHEAD, (EXP)); \
+	}
 
 /// Given a word, return the collection of Dict_nodes holding the
 /// expressions for that word.
@@ -745,13 +748,10 @@ throw FatalErrorException(TRACE_INFO, "Sorry! Not implemented yet! (word=%s)", s
 
 	Exp* exp = nullptr;
 
-	// XXX TODO move this lock so it does not surround AtomSpace
-	// operations (which are slow, and don't need a lock.)
-	std::lock_guard<std::mutex> guard(local->dict_mutex);
-
 	// Create disjuncts consisting entirely of "ANY" links.
 	if (local->any_disjuncts)
 	{
+		std::lock_guard<std::mutex> guard(local->dict_mutex);
 		Exp* any = make_any_exprs(dict, dict->Exp_pool);
 		or_enchain(dict->Exp_pool, exp, any);
 	}
