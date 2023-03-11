@@ -13,6 +13,7 @@ extern "C" {
 #include "error.h"                      // assert()
 #include "dict-common/dict-common.h"
 #include "tokenize/tok-structures.h"    // gword_set
+#include "tokenize/word-structures.h"   // X_node
 #include "tokenize/wordgraph.h"         // in_same_alternative()
 };
 

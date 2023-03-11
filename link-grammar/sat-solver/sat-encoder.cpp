@@ -1793,7 +1793,7 @@ Exp* SATEncoderConjunctionFreeSentences::PositionConnector2exp(const PositionCon
 bool SATEncoderConjunctionFreeSentences::sat_extract_links(Linkage lkg)
 {
   Disjunct *d;
-  int current_link = 0;
+  uint32_t current_link = 0;
 
   Exp **exp_word = (Exp **)alloca(_sent->length * sizeof(Exp *));
   memset(exp_word, 0, _sent->length * sizeof(Exp *));

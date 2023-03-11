@@ -1,4 +1,5 @@
 #include "link-includes.h"
+#include "tokenize/word-structures.h"
 
 #include "word-tag.hpp"
 
