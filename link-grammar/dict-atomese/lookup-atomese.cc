@@ -716,7 +716,35 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 			if (local->enable_sections and
 			    (0 < local->pair_disjuncts or 0 < local->extra_pairs))
 			{
-throw FatalErrorException(TRACE_INFO, "Sorry! Not implemented yet! (word=%s)", s);
+				if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
+				const char* ssc = string_set_add(s, dict->string_set);
+				Handle germ = local->asp->get_node(WORD_NODE, ssc);
+				Exp* extras = make_cart_pairs(dict, germ, sentlo->Exp_pool,
+				                              sent_words,
+				                              local->extra_pairs,
+				                              local->extra_any);
+
+				// No word-pairs found! Return the plain expression.
+				if (nullptr == extras)
+					return dn;
+
+				Exp* andhead = nullptr;
+				Exp* andtail = nullptr;
+
+				// Place the dictionary expresssion in the middle;
+				// wrap on the left and right with extra word-pairs.
+				Exp* eee = dn->exp;
+				and_enchain_right(sentlo->Exp_pool, andhead, andtail, eee);
+
+				Exp* optex = make_optional_node(sentlo->Exp_pool, extras);
+				and_enchain_left(sentlo->Exp_pool, andhead, andtail, optex);
+				optex = make_optional_node(sentlo->Exp_pool, extras);
+				and_enchain_right(sentlo->Exp_pool, andhead, andtail, optex);
+
+				Dict_node * dsn = dict_node_new();
+				dsn->string = ssc;
+				dsn->exp = andhead;
+				return dsn;
 			}
 			return dn;
 		}
