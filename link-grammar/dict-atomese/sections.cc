@@ -16,6 +16,7 @@
 
 extern "C" {
 #include "../link-includes.h"            // For Dictionary
+#include "../api-structures.h"           // For Sentence_s
 #include "../dict-common/dict-common.h"  // for Dictionary_s
 #include "../dict-common/dict-utils.h"   // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
@@ -140,22 +141,20 @@ void print_section(Dictionary dict, const Handle& sect)
 
 // ===============================================================
 
+extern thread_local Sentence sentlo;
+extern thread_local HandleSeq sent_words;
+
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 	Exp* orhead = nullptr;
 	Exp* extras = nullptr;
 
-	// Create some optional word-pair links; these may be nullptr's.
+	// Create some optional word-pair links; this may be nullptr.
 	if (0 < local->extra_pairs)
 	{
-// We need to restructure the code to pass in the sentence-words,
-// and then also to not cahce the resultiong exprs, because they
-// will be sentence-specific. This is doable, but just ... not right
-// now. Maybe later, after we get the basics down.
-HandleSeq sent_words;
-OC_ASSERT(0, "Not supported yet!");
-		extras = make_cart_pairs(dict, germ, nullptr, sent_words,
+		extras = make_cart_pairs(dict, germ, sentlo->Exp_pool,
+		                         sent_words,
 		                         local->extra_pairs,
 		                         local->extra_any);
 	}

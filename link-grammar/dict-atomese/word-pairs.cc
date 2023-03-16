@@ -444,8 +444,8 @@ static Exp* make_any_conns(Dictionary dict, Pool_desc* pool)
 ///
 /// FYI, this is a work-around for the lack of a commmutative
 /// multi-product. What we really want to do here is to have the
-/// expression `(@A+ com @B- com @C+)` where `com` is a commutative
-/// product.  The `@` sign denotes a multi-connector, so that `@A+`
+/// expression `({@A+} com {@B-} com {@C+})` where `com` is a commutative
+/// product.  The `@` sign denotes a multi-connector, so that `{@A+}`
 /// is the same things as `(() or A+ or (A+ & A+) or ...)` and the
 /// commutative product allows any of these to commute, i.e. so that
 /// disjuncts such as `(A+ & C+ & A+ & C+)` are possible. But we do
