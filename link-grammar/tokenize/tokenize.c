@@ -3038,14 +3038,13 @@ static void wordgraph_terminator(Sentence const sent)
  */
 bool separate_sentence(Sentence sent, Parse_Options opts)
 {
-	const char * word_end;
-	//bool quote_found;
 	Dictionary dict = sent->dict;
-	mbstate_t mbs;
-	const char * word_start = sent->orig_sentence;
-	Gword *word;
 
 	sent->length = 0;
+
+	// User might have passed in a zero-length string. In this case,
+	// an assert in wordgraph.c:31 will trigger. Do not want that.
+	if (0 == sent->orig_sentence[0]) return false;
 
 	wordgraph_create(sent);
 
@@ -3053,8 +3052,10 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		add_gword(sent, LEFT_WALL_WORD, NULL, MT_WALL);
 
 	/* Reset the multibyte shift state to the initial state */
+	mbstate_t mbs;
 	memset(&mbs, 0, sizeof(mbs));
 
+	const char * word_start = sent->orig_sentence;
 #ifdef DEBUG_WORDGRAPH
 	/* Skip a synthetic sentence mark, if any. See synthetic_split(). */
 	if (SYNTHETIC_SENTENCE_MARK == sent->orig_sentence[0]) word_start++;
@@ -3077,7 +3078,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 		if ('\0' == *word_start) break;
 
 		/* Loop over non-blank characters until word-end is found. */
-		word_end = word_start;
+		const char * word_end = word_start;
 		nb = mbrtowc(&c, word_end, MB_CUR_MAX, &mbs);
 		if (0 > nb) BAD_UTF;
 		while (!is_space(c, dict->lctype) && (c != 0) && (0 < nb))
@@ -3100,6 +3101,7 @@ bool separate_sentence(Sentence sent, Parse_Options opts)
 
 	wordgraph_terminator(sent);
 
+	Gword *word;
 	while ((word = wordgraph_getqueue_word(sent)))
 	{
 		if (TS_DONE == word->tokenizing_step)

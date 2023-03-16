@@ -15,7 +15,7 @@ dictionaries maintained in the AtomSpace.  This provides several benefits:
 This is meant to work with dictionaries created by the code located
 in the [OpenCog learn repo](https://github.com/opencog/learn).
 
-**Version 0.9.3** -- All basic features have been implemented.
+**Version 0.9.4** -- All basic features have been implemented.
 All known bugs have been fixed. Some more complex modes have not
 yet been implemented. The code base is not stable, and is subject
 to change, including possibly large revisions.
