@@ -238,6 +238,7 @@ EXTRA_DIST=                         \
 	dict-sql/demo.sql                \
 	dict-sql/README.md               \
 	dict-atomese/README.md           \
+	parse/pc-display.c               \
 	tokenize/README.md
 
 # -----------------------------------------------------------

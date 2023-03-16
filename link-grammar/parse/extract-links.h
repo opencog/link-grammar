@@ -29,4 +29,10 @@ void extract_links(extractor_t*, Linkage);
 
 void mark_used_disjuncts(extractor_t *, bool *);
 
+// Uncomment to enable graphviz display of parse choice
+// #define PC_DISPLAY
+#ifdef PC_DISPLAY
+void display_parse_choice(extractor_t *);
+#endif
+
 #endif /* _EXTRACT_LINKS_H */

@@ -727,6 +727,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 			process_linkages(sent, pex, opts);
 			if (IS_GENERATION(sent->dict))
 			    find_unused_disjuncts(sent, pex);
+#ifdef PC_DISPLAY
+			display_parse_choice(pex);
+#endif
 			free_extractor(pex);
 
 			post_process_lkgs(sent, opts);
