@@ -717,47 +717,46 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	if (dn)
 	{
 		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
+		if (0 >= local->extra_pairs) return dn;
 
-		// The dict cache contains only full sections. We never store
-		// cartesian pairs, as this has an explosively large number of
-		// disjuncts. So, if the user wants these, we have to generate
-		// them on the fly.
-		if (local->enable_sections and
-		    (0 < local->pair_disjuncts or 0 < local->extra_pairs))
-		{
-			if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
-			const char* ssc = ss_add(s, dict);
-			Handle germ = local->asp->get_node(WORD_NODE, ssc);
-			Exp* extras = make_cart_pairs(dict, germ, sentlo->Exp_pool,
-			                              sent_words,
-			                              local->extra_pairs,
-			                              local->extra_any);
+		// If we are here, then we have to tack on extra connectors,
+		// created from word-pairs. Doing this naively results in
+		// a combinatorial explosion, and so instead, we only add the
+		// the word-pairs for words occurring in the sentence. These
+		// must not be cached, and so they are rebuilt every time.
+		// A per-thread sentlo->expression_pool is used.
 
-			// No word-pairs found! Return the plain expression.
-			if (nullptr == extras)
-				return dn;
+		if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
+		const char* ssc = ss_add(s, dict);
+		Handle germ = local->asp->get_node(WORD_NODE, ssc);
+		Exp* extras = make_cart_pairs(dict, germ, sentlo->Exp_pool,
+		                              sent_words,
+		                              local->extra_pairs,
+		                              local->extra_any);
 
-			Exp* andhead = nullptr;
-			Exp* andtail = nullptr;
+		// No word-pairs found! Return the plain expression.
+		if (nullptr == extras)
+			return dn;
 
-			std::lock_guard<std::mutex> guard(local->dict_mutex);
+		Exp* andhead = nullptr;
+		Exp* andtail = nullptr;
 
-			// Place the dictionary expresssion in the middle;
-			// wrap on the left and right with extra word-pairs.
-			Exp* eee = dn->exp;
-			and_enchain_right(sentlo->Exp_pool, andhead, andtail, eee);
+		std::lock_guard<std::mutex> guard(local->dict_mutex);
 
-			Exp* optex = make_optional_node(sentlo->Exp_pool, extras);
-			and_enchain_left(sentlo->Exp_pool, andhead, andtail, optex);
-			optex = make_optional_node(sentlo->Exp_pool, extras);
-			and_enchain_right(sentlo->Exp_pool, andhead, andtail, optex);
+		// Place the dictionary expresssion in the middle;
+		// wrap on the left and right with extra word-pairs.
+		Exp* eee = dn->exp;
+		and_enchain_right(sentlo->Exp_pool, andhead, andtail, eee);
 
-			Dict_node * dsn = dict_node_new();
-			dsn->string = ssc;
-			dsn->exp = andhead;
-			return dsn;
-		}
-		return dn;
+		Exp* optex = make_optional_node(sentlo->Exp_pool, extras);
+		and_enchain_left(sentlo->Exp_pool, andhead, andtail, optex);
+		optex = make_optional_node(sentlo->Exp_pool, extras);
+		and_enchain_right(sentlo->Exp_pool, andhead, andtail, optex);
+
+		Dict_node * dsn = dict_node_new();
+		dsn->string = ssc;
+		dsn->exp = andhead;
+		return dsn;
 	}
 
 	if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
