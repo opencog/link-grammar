@@ -724,7 +724,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		// a combinatorial explosion, and so instead, we only add the
 		// the word-pairs for words occurring in the sentence. These
 		// must not be cached, and so they are rebuilt every time.
-		// A per-thread sentlo->expression_pool is used.
+		// A per-thread Sentence::Exp_pool is used.
 
 		if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
 		const char* ssc = ss_add(s, dict);
@@ -741,11 +741,11 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		Exp* andhead = nullptr;
 		Exp* andtail = nullptr;
 
-		std::lock_guard<std::mutex> guard(local->dict_mutex);
-
-		// Place the dictionary expresssion in the middle;
+		// Place the dictionary expression in the middle;
 		// wrap on the left and right with extra word-pairs.
 		Exp* eee = dn->exp;
+		dict_node_free_lookup(dict, dn);
+
 		and_enchain_right(sentlo->Exp_pool, andhead, andtail, eee);
 
 		Exp* optex = make_optional_node(sentlo->Exp_pool, extras);
@@ -766,10 +766,6 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 
 	// Create expressions consisting entirely of word-pair links.
 	// These are "temporary", and always go into Sentence::Exp_pool.
-	// XXX FIXME, because these live in a different pool, they cannot
-	// be mixed with dictionary expressions. *However* we can mix the
-	// Dict_nodes, and so mashups of pairs and sections need to be done
-	// at the Dict_node level.
 	if (0 < local->pair_disjuncts)
 	{
 		Exp* cpr = make_cart_pairs(dict, wrd, sentlo->Exp_pool, sent_words,
