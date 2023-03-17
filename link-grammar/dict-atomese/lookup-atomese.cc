@@ -685,6 +685,13 @@ void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 		ORHEAD = make_or_node(dict->Exp_pool, ORHEAD, (EXP)); \
 	}
 
+const char* ss_add(const char *s, Dictionary dict)
+{
+	Local* local = (Local*) (dict->as_server);
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
+	return string_set_add(s, dict->string_set);
+}
+
 /// Given a word, return the collection of Dict_nodes holding the
 /// expressions for that word.
 Dict_node * as_lookup_list(Dictionary dict, const char *s)
@@ -699,61 +706,62 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 
 	Local* local = (Local*) (dict->as_server);
 
+	// Do we already have this word cached? If so, pull from
+	// the cache.
+	Dict_node* dn;
 	{
 		std::lock_guard<std::mutex> guard(local->dict_mutex);
+		dn = dict_node_lookup(dict, s);
+	}
 
-		// Do we already have this word cached? If so, pull from
-		// the cache.
-		Dict_node* dn = dict_node_lookup(dict, s);
-		if (dn)
+	if (dn)
+	{
+		lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
+
+		// The dict cache contains only full sections. We never store
+		// cartesian pairs, as this has an explosively large number of
+		// disjuncts. So, if the user wants these, we have to generate
+		// them on the fly.
+		if (local->enable_sections and
+		    (0 < local->pair_disjuncts or 0 < local->extra_pairs))
 		{
-			lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
+			if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
+			const char* ssc = ss_add(s, dict);
+			Handle germ = local->asp->get_node(WORD_NODE, ssc);
+			Exp* extras = make_cart_pairs(dict, germ, sentlo->Exp_pool,
+			                              sent_words,
+			                              local->extra_pairs,
+			                              local->extra_any);
 
-			// The dict cache contains only full sections. We never store
-			// cartesian pairs, as this has an explosively large number of
-			// disjuncts. So, if the user wants these, we have to generate
-			// them on the fly.
-			if (local->enable_sections and
-			    (0 < local->pair_disjuncts or 0 < local->extra_pairs))
-			{
-				if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
-				const char* ssc = string_set_add(s, dict->string_set);
-				Handle germ = local->asp->get_node(WORD_NODE, ssc);
-				Exp* extras = make_cart_pairs(dict, germ, sentlo->Exp_pool,
-				                              sent_words,
-				                              local->extra_pairs,
-				                              local->extra_any);
+			// No word-pairs found! Return the plain expression.
+			if (nullptr == extras)
+				return dn;
 
-				// No word-pairs found! Return the plain expression.
-				if (nullptr == extras)
-					return dn;
+			Exp* andhead = nullptr;
+			Exp* andtail = nullptr;
 
-				Exp* andhead = nullptr;
-				Exp* andtail = nullptr;
+			std::lock_guard<std::mutex> guard(local->dict_mutex);
 
-				// Place the dictionary expresssion in the middle;
-				// wrap on the left and right with extra word-pairs.
-				Exp* eee = dn->exp;
-				and_enchain_right(sentlo->Exp_pool, andhead, andtail, eee);
+			// Place the dictionary expresssion in the middle;
+			// wrap on the left and right with extra word-pairs.
+			Exp* eee = dn->exp;
+			and_enchain_right(sentlo->Exp_pool, andhead, andtail, eee);
 
-				Exp* optex = make_optional_node(sentlo->Exp_pool, extras);
-				and_enchain_left(sentlo->Exp_pool, andhead, andtail, optex);
-				optex = make_optional_node(sentlo->Exp_pool, extras);
-				and_enchain_right(sentlo->Exp_pool, andhead, andtail, optex);
+			Exp* optex = make_optional_node(sentlo->Exp_pool, extras);
+			and_enchain_left(sentlo->Exp_pool, andhead, andtail, optex);
+			optex = make_optional_node(sentlo->Exp_pool, extras);
+			and_enchain_right(sentlo->Exp_pool, andhead, andtail, optex);
 
-				Dict_node * dsn = dict_node_new();
-				dsn->string = ssc;
-				dsn->exp = andhead;
-				return dsn;
-			}
-			return dn;
+			Dict_node * dsn = dict_node_new();
+			dsn->string = ssc;
+			dsn->exp = andhead;
+			return dsn;
 		}
+		return dn;
 	}
 
 	if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
-
-	const char* ssc = string_set_add(s, dict->string_set);
-
+	const char* ssc = ss_add(s, dict);
 	Handle wrd = local->asp->get_node(WORD_NODE, ssc);
 	if (nullptr == wrd) return nullptr;
 
