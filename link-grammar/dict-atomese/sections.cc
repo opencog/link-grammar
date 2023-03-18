@@ -81,7 +81,7 @@ bool section_boolean_lookup(Dictionary dict, const char *s)
 		double now = total_usage_time();
 		char buf[128] = "";
 		snprintf(buf, sizeof(buf),
-			"Classes: %lu Sections: %lu %lu for >>%s<<",
+			"Cls: %lu Scts: %lu %lu for >>%s<<",
 			nclass, nwrdsects, nclssects, s);
 		prt_error("Atomese: %-*s %6.2f seconds\n",
 			RES_COL_WIDTH, buf, now - start);
@@ -160,16 +160,6 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 	Exp* orhead = nullptr;
-	Exp* extras = nullptr;
-
-	// Create some optional word-pair links; this may be nullptr.
-	if (0 < local->extra_pairs)
-	{
-		extras = make_cart_pairs(dict, germ, sentlo->Exp_pool,
-		                         sent_words,
-		                         local->extra_pairs,
-		                         local->extra_any);
-	}
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
@@ -230,15 +220,6 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 		}
 
 		std::lock_guard<std::mutex> guard(local->dict_mutex);
-
-		// Tack on extra connectors, as configured.
-		if (extras)
-		{
-			Exp* optex = make_optional_node(dict->Exp_pool, extras);
-			and_enchain_left(dict->Exp_pool, andhead, andtail, optex);
-			optex = make_optional_node(dict->Exp_pool, extras);
-			and_enchain_right(dict->Exp_pool, andhead, andtail, optex);
-		}
 
 		// Optional: shorten the expression,
 		// if there's only one connector in it.
