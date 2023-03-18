@@ -17,6 +17,7 @@
 #include <opencog/persist/rocks/RocksStorage.h>
 #include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
+#include <opencog/util/oc_assert.h>
 #include <opencog/util/Logger.h>
 
 #undef STRINGIFY
@@ -717,14 +718,15 @@ static Dict_node * lookup_plain_section(Dictionary dict, const char *s)
 		or_enchain(dict->Exp_pool, exp, any);
 	}
 
-xxxx
-locks in wrong place
+	const char* ssc = ss_add(s, dict);
+	Handle germ = local->asp->get_node(WORD_NODE, ssc);
+
 	// Create expressions from Sections
-	Exp* sects = make_sect_exprs(dict, wrd);
+	Exp* sects = make_sect_exprs(dict, germ);
 	ENCHAIN(exp, sects);
 
 	// Get expressions, where the word is in some class.
-	for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
+	for (const Handle& memb : germ->getIncomingSetByType(MEMBER_LINK))
 	{
 		const Handle& wcl = memb->getOutgoingAtom(1);
 		if (WORD_CLASS_NODE != wcl->get_type()) continue;
@@ -741,6 +743,7 @@ locks in wrong place
 	if (nullptr == exp)
 		return nullptr;
 
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
 	lgdebug(D_USER_INFO, "Atomese: Created plain expressions for >>%s<<\n", ssc);
 	make_dn(dict, exp, ssc);
 	return dict_node_lookup(dict, ssc);
@@ -853,6 +856,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	}
 
 	OC_ASSERT(0, "Internal Error! Must have sections, pair or any!");
+	return nullptr;
 }
 
 // This is supposed to provide a wild-card lookup.  However,
