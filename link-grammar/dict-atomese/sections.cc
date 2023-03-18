@@ -311,8 +311,9 @@ static Dict_node * lookup_plain_section(Dictionary dict, const char *s)
 	if (nullptr == exp)
 		return nullptr;
 
+	lgdebug(D_USER_INFO, "Atomese: Created %d plain exprs for >>%s<<\n",
+		size_of_expression(exp), ssc);
 	std::lock_guard<std::mutex> guard(local->dict_mutex);
-	lgdebug(D_USER_INFO, "Atomese: Created plain expressions for >>%s<<\n", ssc);
 	make_dn(dict, exp, ssc);
 	return dict_node_lookup(dict, ssc);
 }
@@ -370,6 +371,9 @@ Dict_node * lookup_section(Dictionary dict, const char *s)
 	and_enchain_left(sentlo->Exp_pool, andhead, andtail, optex);
 	optex = make_optional_node(sentlo->Exp_pool, extras);
 	and_enchain_right(sentlo->Exp_pool, andhead, andtail, optex);
+
+	lgdebug(D_USER_INFO, "Atomese: Decorated %d exprs for >>%s<<\n",
+		size_of_expression(andhead), ssc);
 
 	Dict_node * dsn = dict_node_new();
 	dsn->string = ssc;

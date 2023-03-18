@@ -666,9 +666,6 @@ void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
 
-	lgdebug(D_USER_INFO, "make_dn num_entries=%d for >>%s<< nexpr=%d\n",
-		dict->num_entries, ssc, size_of_expression(exp));
-
 	// Rebalance the tree every now and then.
 	if (0 == dict->num_entries%60)
 	{
