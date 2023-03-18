@@ -564,6 +564,8 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	if (local->enable_sections and section_boolean_lookup(dict, s))
 	{
 		lgdebug(D_USER_INFO, "Atomese: Found in section: >>%s<<\n", s);
+		if (0 < local->extra_pairs or 0 < local->pair_disjuncts)
+			pair_boolean_lookup(dict, s);
 		return true;
 	}
 
@@ -666,7 +668,7 @@ void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
 
-	lgdebug(D_USER_INFO, "make_dn %d for >>%s<< nexpr=%d\n",
+	lgdebug(D_USER_INFO, "make_dn num_entries=%d for >>%s<< nexpr=%d\n",
 		dict->num_entries, ssc, size_of_expression(exp));
 
 	// Rebalance the tree every now and then.

@@ -177,7 +177,7 @@ static bool have_pairs(Local* local, const Handle& germ)
 
 /// Return true if the given word occurs in some word-pair, else return
 /// false. As a side-effect, word-pairs are loaded from storage.
-static bool as_boolean_lookup(Dictionary dict, const char *s)
+static bool bool_pair_fetch(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
 
@@ -223,7 +223,7 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 			return havew->second;
 	}
 
-	bool rc = as_boolean_lookup(dict, s);
+	bool rc = bool_pair_fetch(dict, s);
 
 	std::lock_guard<std::mutex> guard(local->dict_mutex);
 	local->have_pword.insert({s,rc});
