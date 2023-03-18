@@ -33,7 +33,7 @@ using namespace opencog;
  * Returns the CPU usage time, summed over all threads, in seconds.
  * Most of the time lost in Atomese is going to be in some other thread.
  */
-static double total_usage_time(void)
+double total_usage_time(void)
 {
 	struct rusage u;
 	getrusage (RUSAGE_SELF, &u);

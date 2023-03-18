@@ -79,12 +79,12 @@ bool section_boolean_lookup(Dictionary dict, const char *s)
 	if (D_USER_TIMES <= verbosity)
 	{
 		double now = total_usage_time();
-		char s[128] = "";
-		snprintf(s, sizeof(s),
+		char buf[128] = "";
+		snprintf(buf, sizeof(buf),
 			"Classes: %lu Sections: %lu %lu for >>%s<<",
 			nclass, nwrdsects, nclssects, s);
 		prt_error("Atomese: %-*s %6.2f seconds\n",
-			RES_COL_WIDTH, s, now - start);
+			RES_COL_WIDTH, buf, now - start);
 	}
 
 	return 0 != (nwrdsects + nclssects);

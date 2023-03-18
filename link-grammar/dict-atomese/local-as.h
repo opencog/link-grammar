@@ -66,6 +66,8 @@ Dictionary create_pair_cache_dict(Dictionary);
 
 const char* ss_add(const char *, Dictionary);
 
+double total_usage_time(void);
+
 bool section_boolean_lookup(Dictionary, const char*);
 bool pair_boolean_lookup(Dictionary, const char*);
 
