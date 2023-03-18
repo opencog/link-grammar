@@ -208,31 +208,31 @@ static Disjunct *
 build_disjunct(Sentence sent, Clause * cl, const char * string,
                const gword_set *gs, float cost_cutoff, Parse_Options opts)
 {
-	Disjunct *dis, *ndis;
-	Pool_desc *connector_pool = NULL;
+	Pool_desc *connector_pool = sent->Connector_pool;
+	Pool_desc *disjunct_pool = sent->Disjunct_pool;
 	bool sat_solver = false;
 
 #if USE_SAT_SOLVER
-		sat_solver = (opts != NULL) && opts->use_sat_solver;
+	sat_solver = (opts != NULL) && opts->use_sat_solver;
 #endif /* USE_SAT_SOLVER */
 
-	dis = NULL;
+	Disjunct *dis = NULL;
 	for (; cl != NULL; cl = cl->next)
 	{
+		Disjunct *ndis;
+
 		if (unlikely(NULL == cl->c)) continue; /* no connectors */
 		if (cl->totcost > cost_cutoff) continue;
 
 #if USE_SAT_SOLVER
 		if (sat_solver) /* For the SAT-parser, until fixed. */
-		{
 			ndis = xalloc(sizeof(Disjunct));
-		}
 		else
+			ndis = pool_alloc(disjunct_pool);
+#else
+		ndis = pool_alloc(disjunct_pool);
 #endif
-		{
-			ndis = pool_alloc(sent->Disjunct_pool);
-			connector_pool = sent->Connector_pool;
-		}
+
 		ndis->left = ndis->right = NULL;
 
 		/* Build a list of connectors from the Tconnectors. */
