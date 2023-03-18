@@ -283,6 +283,10 @@ static Dict_node * lookup_plain_section(Dictionary dict, const char *s)
 		if (dn) return dn;
 	}
 
+	const char* ssc = ss_add(s, dict);
+	Handle germ = local->asp->get_node(WORD_NODE, ssc);
+	if (nullptr == germ) return nullptr;
+
 	Exp* exp = nullptr;
 
 	// Create disjuncts consisting entirely of "ANY" links.
@@ -292,9 +296,6 @@ static Dict_node * lookup_plain_section(Dictionary dict, const char *s)
 		Exp* any = make_any_exprs(dict, dict->Exp_pool);
 		or_enchain(dict->Exp_pool, exp, any);
 	}
-
-	const char* ssc = ss_add(s, dict);
-	Handle germ = local->asp->get_node(WORD_NODE, ssc);
 
 	// Create expressions from Sections
 	Exp* sects = make_sect_exprs(dict, germ);
