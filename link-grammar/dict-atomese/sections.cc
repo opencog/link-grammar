@@ -50,6 +50,9 @@ static size_t count_sections(Local* local, const Handle& germ)
 /// from storage.
 bool section_boolean_lookup(Dictionary dict, const char *s)
 {
+	double start = 0.0;
+	if (D_USER_TIMES <= verbosity) start = total_usage_time();
+
 	Local* local = (Local*) (dict->as_server);
 	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
@@ -72,9 +75,17 @@ bool section_boolean_lookup(Dictionary dict, const char *s)
 		nclssects += count_sections(local, wcl);
 	}
 
-	lgdebug(+D_SPEC+5,
-		"section_boolean_lookup for >>%s<< found class=%lu nsects=%lu %lu\n",
-		s, nclass, nwrdsects, nclssects);
+#define RES_COL_WIDTH 37
+	if (D_USER_TIMES <= verbosity)
+	{
+		double now = total_usage_time();
+		char s[128] = "";
+		snprintf(s, sizeof(s),
+			"Classes: %lu Sections: %lu %lu for >>%s<<",
+			nclass, nwrdsects, nclssects, s);
+		prt_error("Atomese: %-*s %6.2f seconds\n",
+			RES_COL_WIDTH, s, now - start);
+	}
 
 	return 0 != (nwrdsects + nclssects);
 }

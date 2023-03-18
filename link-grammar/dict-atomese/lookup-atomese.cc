@@ -563,7 +563,6 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 
 	if (local->enable_sections and section_boolean_lookup(dict, s))
 	{
-		lgdebug(D_USER_INFO, "Atomese: Found in section: >>%s<<\n", s);
 		if (0 < local->extra_pairs or 0 < local->pair_disjuncts)
 			pair_boolean_lookup(dict, s);
 		return true;
@@ -572,7 +571,6 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 	if ((0 < local->pair_disjuncts or 0 < local->extra_pairs) and
 	    pair_boolean_lookup(dict, s))
 	{
-		lgdebug(D_USER_INFO, "Atomese: Found in pairs: >>%s<<\n", s);
 		return true;
 	}
 
