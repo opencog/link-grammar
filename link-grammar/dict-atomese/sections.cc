@@ -354,13 +354,16 @@ Dict_node * lookup_section(Dictionary dict, const char *s)
 	Exp* andhead = nullptr;
 	Exp* andtail = nullptr;
 
-	// We realy expect dn to not be null here, but ... perhaps it
+	// We really expect dn to not be null here, but ... perhaps it
 	// is, if its just not been observed before.
 	Exp* eee = nullptr;
 	if (dn)
 	{
 		eee = dn->exp;
 		dict_node_free_lookup(dict, dn);
+
+		// Isolate the expression, so that it's not edited.
+		eee = make_and_node(sentlo->Exp_pool, eee, NULL);
 	}
 
 	// Place the dictionary expression in the middle;
