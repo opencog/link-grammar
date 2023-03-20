@@ -121,9 +121,9 @@
 % It can happen that there are no full linkages, despite all words in
 % the sentence appearing with sections or in word-pairs. This can happen
 % around "the fringes", with rarely used words (slang, loan-words,
-% jargon). Such words may appear in wor-pairs, or even in sections, but
-% are being used in a sentence in a novel, unexpected way, and thus
-% become unlinkable.  To avoid this, and obtain a complete linkage no
+% jargon). Such words may appear in word-pairs, or even in sections,
+% but are being used in a sentence in a novel, unexpected way, and thus
+% become unlinkable.  To avoid this, and obtain a complete linkage, no
 % matter what, words can be given expressions consisting entirely of
 % "ANY" connectors. This will be enough to link to expressions decorated
 % with extra "ANY" connectors, configured above.
