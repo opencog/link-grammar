@@ -81,7 +81,7 @@ bool section_boolean_lookup(Dictionary dict, const char *s)
 		double now = total_usage_time();
 		char buf[128] = "";
 		snprintf(buf, sizeof(buf),
-			"Cls: %lu Scts: %lu %lu for >>%s<<",
+			"Cls: %lu Scts: %lu+%lu for >>%s<<",
 			nclass, nwrdsects, nclssects, s);
 		prt_error("Atomese: %-*s %6.2f seconds\n",
 			RES_COL_WIDTH, buf, now - start);
