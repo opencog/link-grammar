@@ -156,6 +156,8 @@ void print_section(Dictionary dict, const Handle& sect)
 extern thread_local Sentence sentlo;
 extern thread_local HandleSeq sent_words;
 
+/// Create expressions for sections on a word. This is unconditional;
+/// no caches are used.
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -263,21 +265,20 @@ Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 /// Given a word, return the collection of Dict_nodes holding the
 /// expressions for that word. Valid only when sections are enabled.
 /// Returns the "plain" node, without any word-pair decorations.
-static Dict_node * lookup_plain_section(Dictionary dict, const char *s)
+///
+/// The dictnode is always cached, and the cached node is returned.
+static Dict_node * lookup_plain_section(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
+	const char* ssc = germ->get_name().c_str();
 
 	// Do we already have this word cached? If so, pull from
 	// the cache.
 	{
 		std::lock_guard<std::mutex> guard(local->dict_mutex);
-		Dict_node* dn = dict_node_lookup(dict, s);
+		Dict_node* dn = dict_node_lookup(dict, ssc);
 		if (dn) return dn;
 	}
-
-	const char* ssc = ss_add(s, dict);
-	Handle germ = local->asp->get_node(WORD_NODE, ssc);
-	if (nullptr == germ) return nullptr;
 
 	Exp* exp = nullptr;
 
@@ -318,17 +319,16 @@ static Dict_node * lookup_plain_section(Dictionary dict, const char *s)
 	return dict_node_lookup(dict, ssc);
 }
 
-/// Given a word, return the collection of Dict_nodes holding the
-/// expressions for that word. Valid only when sections are enabled.
-/// This is the "plain" expression, plus extra word-pair decorations,
-/// if requested.
-Dict_node * lookup_section(Dictionary dict, const char *s)
+/// Given a word, return a Dict_node holding the expressions for that
+/// word. Valid only when sections are enabled.  This is the "plain"
+/// expression, wrapped with extra word-pair decorations, if requested.
+Dict_node * lookup_section(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 
-	// Get the "plain" expressions, without any addtional word-pair
+	// Get the "plain" expressions, without any additional word-pair
 	// decorations.
-	Dict_node* dn = lookup_plain_section(dict, s);
+	Dict_node* dn = lookup_plain_section(dict, germ);
 	if (0 >= local->extra_pairs) return dn;
 
 	// If we are here, then we have to tack on extra connectors,
@@ -337,10 +337,6 @@ Dict_node * lookup_section(Dictionary dict, const char *s)
 	// the word-pairs for words occurring in the sentence. These
 	// must not be cached, and so they are rebuilt every time.
 	// A per-thread Sentence::Exp_pool is used.
-
-	if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
-	const char* ssc = ss_add(s, dict);
-	Handle germ = local->asp->get_node(WORD_NODE, ssc);
 	Exp* extras = make_cart_pairs(dict, germ, sentlo->Exp_pool,
 	                              sent_words,
 	                              local->extra_pairs,
@@ -375,6 +371,7 @@ Dict_node * lookup_section(Dictionary dict, const char *s)
 	optex = make_optional_node(sentlo->Exp_pool, extras);
 	and_enchain_right(sentlo->Exp_pool, andhead, andtail, optex);
 
+	const char* ssc = germ->get_name().c_str();
 	lgdebug(D_USER_INFO, "Atomese: Decorated %d exprs for >>%s<<\n",
 		size_of_expression(andhead), ssc);
 
