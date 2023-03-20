@@ -15,9 +15,11 @@
 #undef STRINGIFY
 
 extern "C" {
-#include "../link-includes.h"            // For Dictionary
-#include "../dict-common/dict-common.h"  // for Dictionary_s
-#include "../dict-common/dict-utils.h"   // for size_of_expression()
+#include "../link-includes.h"              // For Dictionary
+#include "../api-structures.h"             // For Sentence_s
+#include "../dict-common/dict-common.h"    // for Dictionary_s
+#include "../dict-common/dict-internals.h" // for dict_node_new()
+#include "../dict-common/dict-utils.h"     // for size_of_expression()
 #include "../dict-ram/dict-ram.h"
 #include "lookup-atomese.h"
 };
@@ -48,6 +50,9 @@ static size_t count_sections(Local* local, const Handle& germ)
 /// from storage.
 bool section_boolean_lookup(Dictionary dict, const char *s)
 {
+	double start = 0.0;
+	if (D_USER_TIMES <= verbosity) start = total_usage_time();
+
 	Local* local = (Local*) (dict->as_server);
 	Handle wrd = local->asp->add_node(WORD_NODE, s);
 
@@ -70,9 +75,17 @@ bool section_boolean_lookup(Dictionary dict, const char *s)
 		nclssects += count_sections(local, wcl);
 	}
 
-	lgdebug(+D_SPEC+5,
-		"section_boolean_lookup for >>%s<< found class=%lu nsects=%lu %lu\n",
-		s, nclass, nwrdsects, nclssects);
+#define RES_COL_WIDTH 37
+	if (D_USER_TIMES <= verbosity)
+	{
+		double now = total_usage_time();
+		char buf[128] = "";
+		snprintf(buf, sizeof(buf),
+			"Cls: %lu Scts: %lu %lu for >>%s<<",
+			nclass, nwrdsects, nclssects, s);
+		prt_error("Atomese: %-*s %6.2f seconds\n",
+			RES_COL_WIDTH, buf, now - start);
+	}
 
 	return 0 != (nwrdsects + nclssects);
 }
@@ -140,25 +153,13 @@ void print_section(Dictionary dict, const Handle& sect)
 
 // ===============================================================
 
+extern thread_local Sentence sentlo;
+extern thread_local HandleSeq sent_words;
+
 Exp* make_sect_exprs(Dictionary dict, const Handle& germ)
 {
 	Local* local = (Local*) (dict->as_server);
 	Exp* orhead = nullptr;
-	Exp* extras = nullptr;
-
-	// Create some optional word-pair links; these may be nullptr's.
-	if (0 < local->extra_pairs)
-	{
-// We need to restructure the code to pass in the sentence-words,
-// and then also to not cahce the resultiong exprs, because they
-// will be sentence-specific. This is doable, but just ... not right
-// now. Maybe later, after we get the basics down.
-HandleSeq sent_words;
-OC_ASSERT(0, "Not supported yet!");
-		extras = make_cart_pairs(dict, germ, nullptr, sent_words,
-		                         local->extra_pairs,
-		                         local->extra_any);
-	}
 
 	// Loop over all Sections on the word.
 	HandleSeq sects = germ->getIncomingSetByType(SECTION);
@@ -220,15 +221,6 @@ OC_ASSERT(0, "Not supported yet!");
 
 		std::lock_guard<std::mutex> guard(local->dict_mutex);
 
-		// Tack on extra connectors, as configured.
-		if (extras)
-		{
-			Exp* optex = make_optional_node(dict->Exp_pool, extras);
-			and_enchain_left(dict->Exp_pool, andhead, andtail, optex);
-			optex = make_optional_node(dict->Exp_pool, extras);
-			and_enchain_right(dict->Exp_pool, andhead, andtail, optex);
-		}
-
 		// Optional: shorten the expression,
 		// if there's only one connector in it.
 		if (nullptr == andhead->operand_first->operand_next)
@@ -258,6 +250,138 @@ OC_ASSERT(0, "Not supported yet!");
 	}
 
 	return orhead;
+}
+
+#define ENCHAIN(ORHEAD,EXP) \
+	if (nullptr == ORHEAD)   \
+		ORHEAD = (EXP);       \
+	else {                   \
+		std::lock_guard<std::mutex> guard(local->dict_mutex); \
+		ORHEAD = make_or_node(dict->Exp_pool, ORHEAD, (EXP)); \
+	}
+
+/// Given a word, return the collection of Dict_nodes holding the
+/// expressions for that word. Valid only when sections are enabled.
+/// Returns the "plain" node, without any word-pair decorations.
+static Dict_node * lookup_plain_section(Dictionary dict, const char *s)
+{
+	Local* local = (Local*) (dict->as_server);
+
+	// Do we already have this word cached? If so, pull from
+	// the cache.
+	{
+		std::lock_guard<std::mutex> guard(local->dict_mutex);
+		Dict_node* dn = dict_node_lookup(dict, s);
+		if (dn) return dn;
+	}
+
+	const char* ssc = ss_add(s, dict);
+	Handle germ = local->asp->get_node(WORD_NODE, ssc);
+	if (nullptr == germ) return nullptr;
+
+	Exp* exp = nullptr;
+
+	// Create disjuncts consisting entirely of "ANY" links.
+	if (local->any_disjuncts)
+	{
+		std::lock_guard<std::mutex> guard(local->dict_mutex);
+		Exp* any = make_any_exprs(dict, dict->Exp_pool);
+		or_enchain(dict->Exp_pool, exp, any);
+	}
+
+	// Create expressions from Sections
+	Exp* sects = make_sect_exprs(dict, germ);
+	ENCHAIN(exp, sects);
+
+	// Get expressions, where the word is in some class.
+	for (const Handle& memb : germ->getIncomingSetByType(MEMBER_LINK))
+	{
+		const Handle& wcl = memb->getOutgoingAtom(1);
+		if (WORD_CLASS_NODE != wcl->get_type()) continue;
+
+		Exp* clexp = make_sect_exprs(dict, wcl);
+		if (nullptr == clexp) continue;
+
+		lgdebug(+D_SPEC+5, "as_lookup_list class for >>%s<< nexpr=%d\n",
+			ssc, size_of_expression(clexp));
+
+		ENCHAIN(exp, clexp);
+	}
+
+	if (nullptr == exp)
+		return nullptr;
+
+	lgdebug(D_USER_INFO, "Atomese: Created %d plain exprs for >>%s<<\n",
+		size_of_expression(exp), ssc);
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
+	make_dn(dict, exp, ssc);
+	return dict_node_lookup(dict, ssc);
+}
+
+/// Given a word, return the collection of Dict_nodes holding the
+/// expressions for that word. Valid only when sections are enabled.
+/// This is the "plain" expression, plus extra word-pair decorations,
+/// if requested.
+Dict_node * lookup_section(Dictionary dict, const char *s)
+{
+	Local* local = (Local*) (dict->as_server);
+
+	// Get the "plain" expressions, without any addtional word-pair
+	// decorations.
+	Dict_node* dn = lookup_plain_section(dict, s);
+	if (0 >= local->extra_pairs) return dn;
+
+	// If we are here, then we have to tack on extra connectors,
+	// created from word-pairs. Doing this naively results in
+	// a combinatorial explosion, and so instead, we only add the
+	// the word-pairs for words occurring in the sentence. These
+	// must not be cached, and so they are rebuilt every time.
+	// A per-thread Sentence::Exp_pool is used.
+
+	if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
+	const char* ssc = ss_add(s, dict);
+	Handle germ = local->asp->get_node(WORD_NODE, ssc);
+	Exp* extras = make_cart_pairs(dict, germ, sentlo->Exp_pool,
+	                              sent_words,
+	                              local->extra_pairs,
+	                              local->extra_any);
+
+	// No word-pairs found! Very unexpected, but OK.
+	// Return the plain expression.
+	if (nullptr == extras)
+		return dn;
+
+	Exp* andhead = nullptr;
+	Exp* andtail = nullptr;
+
+	// We really expect dn to not be null here, but ... perhaps it
+	// is, if its just not been observed before.
+	Exp* eee = nullptr;
+	if (dn)
+	{
+		eee = dn->exp;
+		dict_node_free_lookup(dict, dn);
+
+		// Isolate the expression, so that it's not edited.
+		eee = make_and_node(sentlo->Exp_pool, eee, NULL);
+	}
+
+	// Place the dictionary expression in the middle;
+	// wrap on the left and right with extra word-pairs.
+	and_enchain_right(sentlo->Exp_pool, andhead, andtail, eee);
+
+	Exp* optex = make_optional_node(sentlo->Exp_pool, extras);
+	and_enchain_left(sentlo->Exp_pool, andhead, andtail, optex);
+	optex = make_optional_node(sentlo->Exp_pool, extras);
+	and_enchain_right(sentlo->Exp_pool, andhead, andtail, optex);
+
+	lgdebug(D_USER_INFO, "Atomese: Decorated %d exprs for >>%s<<\n",
+		size_of_expression(andhead), ssc);
+
+	Dict_node * dsn = dict_node_new();
+	dsn->string = ssc;
+	dsn->exp = andhead;
+	return dsn;
 }
 
 #endif /* HAVE_ATOMESE */

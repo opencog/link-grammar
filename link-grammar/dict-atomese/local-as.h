@@ -64,13 +64,19 @@ public:
 
 Dictionary create_pair_cache_dict(Dictionary);
 
-bool section_boolean_lookup(Dictionary dict, const char *s);
-bool pair_boolean_lookup(Dictionary dict, const char *s);
+const char* ss_add(const char *, Dictionary);
 
-Exp* make_sect_exprs(Dictionary dict, const Handle& germ);
-Exp* make_cart_pairs(Dictionary dict, const Handle& germ, Pool_desc*,
+double total_usage_time(void);
+
+bool section_boolean_lookup(Dictionary, const char*);
+bool pair_boolean_lookup(Dictionary, const char*);
+
+Dict_node * lookup_section(Dictionary, const char *);
+
+Exp* make_sect_exprs(Dictionary, const Handle& germ);
+Exp* make_cart_pairs(Dictionary, const Handle& germ, Pool_desc*,
                      const HandleSeq&, int arity, bool any);
-Exp* make_any_exprs(Dictionary dict, Pool_desc*);
+Exp* make_any_exprs(Dictionary, Pool_desc*);
 
 void make_dn(Dictionary, Exp*, const char*);
 

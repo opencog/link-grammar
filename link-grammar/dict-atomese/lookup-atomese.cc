@@ -17,6 +17,7 @@
 #include <opencog/persist/rocks/RocksStorage.h>
 #include <opencog/persist/sexpr/Sexpr.h>
 #include <opencog/nlp/types/atom_types.h>
+#include <opencog/util/oc_assert.h>
 #include <opencog/util/Logger.h>
 
 #undef STRINGIFY
@@ -473,12 +474,12 @@ thread_local Sentence sentlo = nullptr;
 thread_local HandleSeq sent_words;
 
 /// Make a note of all of the words in the sentence. We need this,
-/// to pre-prune MST word-pairs.
+/// to pre-prune MST word-pairs, as well as disjuncts decorated with
+/// extra pairs.
 ///
-/// XXX FIXME: At this time, pre-pruning is done only when MST
-/// parsing. It could be extended to also pre-prune extra pairs
-/// added to disjuncts. Or even to the connectors on the disjuncts
-/// themselves.
+/// XXX A future enhancement would be to pre-prune disjuncts as well,
+/// although it is not obvious that we could do any better here, than
+/// the generic expression pruning code could do.
 void as_start_lookup(Dictionary dict, Sentence sent)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -487,9 +488,7 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 	lgdebug(D_USER_INFO, "Atomese: Start dictionary lookup for >>%s<<\n",
 		sent->orig_sentence);
 
-	// XXX FIXME Someday handle extra_pairs, too.
-	// if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
-	if (0 < local->pair_disjuncts)
+	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	{
 		for(size_t i=0; i<sent->length; i++)
 		{
@@ -522,9 +521,7 @@ void as_end_lookup(Dictionary dict, Sentence sent)
 	Local* local = (Local*) (dict->as_server);
 	sentlo = nullptr;
 
-	// XXX FIXME Someday handle extra_pairs, too.
-	// if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
-	if (0 < local->pair_disjuncts)
+	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 		sent_words.clear();
 
 	lgdebug(D_USER_INFO, "Atomese: Finish dictionary lookup for >>%s<<\n",
@@ -562,14 +559,14 @@ bool as_boolean_lookup(Dictionary dict, const char *s)
 
 	if (local->enable_sections and section_boolean_lookup(dict, s))
 	{
-		lgdebug(D_USER_INFO, "Atomese: Found in section: >>%s<<\n", s);
+		if (0 < local->extra_pairs or 0 < local->pair_disjuncts)
+			pair_boolean_lookup(dict, s);
 		return true;
 	}
 
 	if ((0 < local->pair_disjuncts or 0 < local->extra_pairs) and
 	    pair_boolean_lookup(dict, s))
 	{
-		lgdebug(D_USER_INFO, "Atomese: Found in pairs: >>%s<<\n", s);
 		return true;
 	}
 
@@ -665,9 +662,6 @@ void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 	dict->root = dict_node_insert(dict, dict->root, dn);
 	dict->num_entries++;
 
-	lgdebug(D_USER_INFO, "make_dn %d for >>%s<< nexpr=%d\n",
-		dict->num_entries, ssc, size_of_expression(exp));
-
 	// Rebalance the tree every now and then.
 	if (0 == dict->num_entries%60)
 	{
@@ -677,13 +671,12 @@ void make_dn(Dictionary dict, Exp* exp, const char* ssc)
 	}
 }
 
-#define ENCHAIN(ORHEAD,EXP) \
-	if (nullptr == ORHEAD)   \
-		ORHEAD = (EXP);       \
-	else {                   \
-		std::lock_guard<std::mutex> guard(local->dict_mutex); \
-		ORHEAD = make_or_node(dict->Exp_pool, ORHEAD, (EXP)); \
-	}
+const char* ss_add(const char *s, Dictionary dict)
+{
+	Local* local = (Local*) (dict->as_server);
+	std::lock_guard<std::mutex> guard(local->dict_mutex);
+	return string_set_add(s, dict->string_set);
+}
 
 /// Given a word, return the collection of Dict_nodes holding the
 /// expressions for that word.
@@ -698,43 +691,16 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	if (nullptr == sentlo) return nullptr;
 
 	Local* local = (Local*) (dict->as_server);
-
-	{
-		std::lock_guard<std::mutex> guard(local->dict_mutex);
-
-		// Do we already have this word cached? If so, pull from
-		// the cache.
-		Dict_node* dn = dict_node_lookup(dict, s);
-		if (dn)
-		{
-			lgdebug(D_USER_INFO, "Atomese: Found in local dict: >>%s<<\n", s);
-
-			// The dict cache contains only full sections. We never store
-			// cartesian pairs, as this has an explosively large number of
-			// disjuncts. So, if the user wants these, we have to generate
-			// them on the fly.
-			if (local->enable_sections and
-			    (0 < local->pair_disjuncts or 0 < local->extra_pairs))
-			{
-throw FatalErrorException(TRACE_INFO, "Sorry! Not implemented yet! (word=%s)", s);
-			}
-			return dn;
-		}
-	}
+	if (local->enable_sections)
+		return lookup_section(dict, s);
 
 	if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
-
-	const char* ssc = string_set_add(s, dict->string_set);
-
+	const char* ssc = ss_add(s, dict);
 	Handle wrd = local->asp->get_node(WORD_NODE, ssc);
 	if (nullptr == wrd) return nullptr;
 
 	// Create expressions consisting entirely of word-pair links.
 	// These are "temporary", and always go into Sentence::Exp_pool.
-	// XXX FIXME, because these live in a different pool, they cannot
-	// be mixed with dictionary expressions. *However* we can mix the
-	// Dict_nodes, and so mashups of pairs and sections need to be done
-	// at the Dict_node level.
 	if (0 < local->pair_disjuncts)
 	{
 		Exp* cpr = make_cart_pairs(dict, wrd, sentlo->Exp_pool, sent_words,
@@ -746,44 +712,20 @@ throw FatalErrorException(TRACE_INFO, "Sorry! Not implemented yet! (word=%s)", s
 		return dn;
 	}
 
-	Exp* exp = nullptr;
-
 	// Create disjuncts consisting entirely of "ANY" links.
 	if (local->any_disjuncts)
 	{
 		std::lock_guard<std::mutex> guard(local->dict_mutex);
 		Exp* any = make_any_exprs(dict, dict->Exp_pool);
-		or_enchain(dict->Exp_pool, exp, any);
+
+		Dict_node * dn = dict_node_new();
+		dn->string = ssc;
+		dn->exp = any;
+		return dn;
 	}
 
-	// Create expressions from Sections
-	if (local->enable_sections)
-	{
-		Exp* sects = make_sect_exprs(dict, wrd);
-		ENCHAIN(exp, sects);
-
-		// Get expressions, where the word is in some class.
-		for (const Handle& memb : wrd->getIncomingSetByType(MEMBER_LINK))
-		{
-			const Handle& wcl = memb->getOutgoingAtom(1);
-			if (WORD_CLASS_NODE != wcl->get_type()) continue;
-
-			Exp* clexp = make_sect_exprs(dict, wcl);
-			if (nullptr == clexp) continue;
-
-			lgdebug(+D_SPEC+5, "as_lookup_list class for >>%s<< nexpr=%d\n",
-				ssc, size_of_expression(clexp));
-
-			ENCHAIN(exp, clexp);
-		}
-	}
-
-	if (nullptr == exp)
-		return nullptr;
-
-	lgdebug(D_USER_INFO, "Atomese: Created expressions for >>%s<<\n", ssc);
-	make_dn(dict, exp, ssc);
-	return dict_node_lookup(dict, ssc);
+	OC_ASSERT(0, "Internal Error! Must have sections, pair or any!");
+	return nullptr;
 }
 
 // This is supposed to provide a wild-card lookup.  However,

@@ -33,7 +33,7 @@ using namespace opencog;
  * Returns the CPU usage time, summed over all threads, in seconds.
  * Most of the time lost in Atomese is going to be in some other thread.
  */
-static double total_usage_time(void)
+double total_usage_time(void)
 {
 	struct rusage u;
 	getrusage (RUSAGE_SELF, &u);
@@ -177,7 +177,7 @@ static bool have_pairs(Local* local, const Handle& germ)
 
 /// Return true if the given word occurs in some word-pair, else return
 /// false. As a side-effect, word-pairs are loaded from storage.
-static bool as_boolean_lookup(Dictionary dict, const char *s)
+static bool bool_pair_fetch(Dictionary dict, const char *s)
 {
 	Local* local = (Local*) (dict->as_server);
 
@@ -223,7 +223,7 @@ bool pair_boolean_lookup(Dictionary dict, const char *s)
 			return havew->second;
 	}
 
-	bool rc = as_boolean_lookup(dict, s);
+	bool rc = bool_pair_fetch(dict, s);
 
 	std::lock_guard<std::mutex> guard(local->dict_mutex);
 	local->have_pword.insert({s,rc});
@@ -337,8 +337,12 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
                                 const HandleSeq& sent_words)
 {
 	Exp* allexp = get_pair_exprs(dict, germ);
+
+	// Wrap the pair-expressions with a solitary AND-node from the
+	// temporary Sentance::Exp_pool, as otherwise the operand_next
+	// pointer gets corrupted.
 	if (0 == sent_words.size())
-		return allexp;
+		return make_and_node(pool, allexp, NULL);
 
 	// Unary nodes are possible, in which case, it is just a connector.
 	// Don't bother pruning.
@@ -409,6 +413,7 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 	Exp* orhead = Exp_create(pool);
 	orhead->type = OR_type;
 	orhead->operand_first = sentex;
+	orhead->operand_next = nullptr;
 	return orhead;
 }
 
@@ -444,8 +449,8 @@ static Exp* make_any_conns(Dictionary dict, Pool_desc* pool)
 ///
 /// FYI, this is a work-around for the lack of a commmutative
 /// multi-product. What we really want to do here is to have the
-/// expression `(@A+ com @B- com @C+)` where `com` is a commutative
-/// product.  The `@` sign denotes a multi-connector, so that `@A+`
+/// expression `({@A+} com {@B-} com {@C+})` where `com` is a commutative
+/// product.  The `@` sign denotes a multi-connector, so that `{@A+}`
 /// is the same things as `(() or A+ or (A+ & A+) or ...)` and the
 /// commutative product allows any of these to commute, i.e. so that
 /// disjuncts such as `(A+ & C+ & A+ & C+)` are possible. But we do
