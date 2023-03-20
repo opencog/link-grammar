@@ -142,11 +142,16 @@
 
 % -----------------------
 % Cost configuration parameters.
+% In order for the above configurations to be effective, the relative
+% costs of sections, pairs and ANY links must be adjusted. The algos
+% that produce AtomSpace data are not directly compatible with the LG
+% cost subsystem, and so they need to be mapped in. The mapping is in
+% the form of a linear rescaling.
 
 % Location where disjunct costs are stored. The cost will be obtained
 % from the floating point value located at the `cost-key` Value on the
 % Sections. It's assumed that this is a FloatValue, which is a vector;
-% the index specifies the location in this vector.
+% the index specifies the offset into this vector (zero-indexed.)
 #define cost-key "(Predicate "*-Mutual Info Key cover-section")";
 #define cost-index 1;
 
@@ -170,6 +175,9 @@
 % "better", the more positive it is.  The LG costs, however, are
 % "better" when they are smaller (less positive). Thus, a sign-flip
 % is called for.
+%
+% The choice below maps the MI interval [0,4] to the cost interval
+% [3,2]. Higher MI's will be mapped to lower costs.
 #define cost-scale -0.25;
 #define cost-offset 3.0;
 
@@ -185,13 +193,13 @@
 % but are for word-pairs.
 
 % Word-pairs are encoded in the dictionary as
-%    (Evaluation pair-predicate (List (Word "leftword") (Word "rightword")))
+%    (Edge pair-predicate (List (Word "leftword") (Word "rightword")))
 % The pair-predicate is configurable, as below.
 
 % The demo dictionary uses a simple PredicateNode:
 #define pair-predicate "(Predicate "wrdpr")";
 
-% Current AtomSpace configuartions use the BondNode
+% Current AtomSpace configurations use the BondNode
 % #define pair-predicate "(BondNode "ANY")";
 
 % Older dictionaries use the "(LgLinkNode "ANY")" to mark word pairs.
