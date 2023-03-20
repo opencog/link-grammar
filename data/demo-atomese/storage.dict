@@ -57,83 +57,91 @@
 
 % -----------------------
 % Data structure configuration. By default, Link Grammar expressions and
-% disjuncts are created from Atomese Sections. But they can also be created
+% disjuncts are created from Atomese Sections. They can also be created
 % from word-pairs, thus offering a form of Maximum Spanning Tree (MST)
-% parsing, and Maximum Planar Graph (MPG) parsing. Also, existing sections
-% can be supplemented with word-pair links ("optional expressions", in LG).
-% Finally, if word pairs are not in the dictionary, but are needed to
-% obtain a full parse, the ANY link type can be used to provide the missing
-% link. Finally, if sections and word-pairs are disabled, but ANY is
-% enabled, then the parses will be random planar graphs, with a uniform
-% sampling (Just like the `any` language, each graph appears with equal
-% probability).  There are a dozen parameters that control the above.
+% parsing and Maximum Planar Graph (MPG) parsing. Existing sections can
+% be supplemented with word-pair links ("optional expressions", in LG).
+% If it is not possible to get a full parse with section and/or word-
+% pairs, then the ANY link type can be used to provide the missing link.
+% If sections and word-pairs are disabled, but ANY is enabled, then the
+% parses will be random planar graphs, with a uniform sampling (Just like
+% the `any` language, each graph appears with equal probability).  There
+% are a dozen parameters to enable and control each component above.
 %
-% Obtain expressions from Atomese Sections. The default mode.
-% Set to 0 to disable.  Each section has a cost determined by the previous
-% config parameters, above.
+% Bool flag: obtain expressions from Atomese Sections. This is the
+% default mode.  Set to 0 to disable.
 #define enable-sections 1;
 
 % Supplement existing sections with optional links, obtained from word-
-% pair relations.  For example, if an existing disjunct `A- & B+` on word
-% "wrd" is supplemented with pairs, the new disjunct will be
+% pair relations.  For example, if an existing disjunct `A- & B+` on
+% word "wrd" is supplemented with pairs, the new disjunct will be
 % `{J- or K+} & A- & B+ & {L- or M+}`, where `J-` and `L-` are obtained
 % from pairs of the form ("other", "wrd") and `K+` and `M+` are obtained
-% from pairs of the for ("wrd", "more"). That is, the links `J`, `K`, `L`
-% and `M` are formed only if the AtomSpace has the corresponding word-pairs
-% in it.
-%
-% The cost of these connectors is determined by the pair-config, above.
+% from pairs of the for ("wrd", "more"). The links `J`, `K`, `L` and `M`
+% are formed only if the AtomSpace has the corresponding word-pairs in it.
 %
 % If set to zero, these supplementary links will not be generated. If set
-% to 2 or more, then that many extra optional connectors will be added.
+% to 2 or more, then that many extra optional connectors, on each side,
+% will be added.
 %
 % If sections are not enabled, then this parameter has no effect.
 #define extra-pairs 1;
 
-% Same as above, but the supplementary connectors will all be of type `ANY`,
-% and thus can connect to anything. Since these can connect to anything,
-% they will not, in general, improve the parse. They are mostly useful for
-% dealing with new, unknown words, and generating quasi-random linkages to
-% those unknown words. The be effective, the cost should be set high enough
-% so that these are more costly than existing word-pairs.
+% Same as above, but the supplementary connectors will all be of type
+% `ANY`, and thus can connect to anything. Since these can connect to
+% anything, they will not, in general, improve the parse. They are
+% mostly useful for dealing with new, unknown words, and generating
+% quasi-random linkages to those unknown words. The be effective,
+% the cost should be set high enough so that these are more costly
+% than existing word-pairs.
 %
 % This is a bool on/off flag. Setting to zero disables this.
 % If sections are disabled, the this parameter has no effect.
 #define extra-any 1;
 
+% Note that if a linkage cannot make use of the existing sections on a
+% word, then the above "extra" decorations will not have any effect.
+% To ensure complete linkage, disjuncts can be created out of word
+% pairs only, or even out of ANY links only. These are configured below.
+
 % Create expressions that consist entirely of word-pair relationships.
-% The disjuncts will have up to the specified number of connectors; 4 is
-% the default. Setting this to zero disables the creation of such
-% disjuncts. If `enable-sections` above is turned off, the result will be
-% pure MPG parsing.
-%
-% Each connector has a cost is that is determined by the config parameters,
-% above.
+% The disjuncts will have up to the specified number of connectors; 4
+% is the default. Setting this to zero disables the creation of such
+% disjuncts. If `enable-sections` above is turned off, the result will
+% be pure MST/MPG parsing.
 #define pair-disjuncts 4;
 
-% Supplement the above with additional connectors of type "ANY". This is
-% useful for providing links between words that don't already exist as
-% pairs in the dataset. This has no effect, if `pair-disjuncts` (above)
-% is set to zero.  This is a bool on/off value; setting to zero disables.
+% Supplement pure pair-only disjuncts with additional connectors of type
+% "ANY". This is useful for providing links between words that don't
+% already exist as pairs in the dataset. This has no effect, if
+% `pair-disjuncts` (above) is set to zero.  This is a bool on/off value;
+% setting to zero disables.
 #define pair-with-any 1;
 
-% Create expressions that consist entirely of "ANY" link-types. This
-% is a bool on/off parameter; setting this to zero disables the cretion
-% of such disjuncts. If `enable-sections` and `pair-disjuncts` (above)
-% are turned off, the result will be pure random planar tree parsing.
+% It can happen that there are no full linkages, despite all words in
+% the sentence appearing with sections or in word-pairs. This can happen
+% around "the fringes", with rarely used words (slang, loan-words,
+% jargon). Such words may appear in wor-pairs, or even in sections, but
+% are being used in a sentence in a novel, unexpected way, and thus
+% become unlinkable.  To avoid this, and obtain a complete linkage no
+% matter what, words can be given expressions consisting entirely of
+% "ANY" connectors. This will be enough to link to expressions decorated
+% with extra "ANY" connectors, configured above.
 %
-% Each connector has a cost is that is determined by the config
-% parameters, above.
-#define any-disjuncts 0;
+% Bool flag: Create expressions that consist entirely of "ANY"
+% connectors. If `enable-sections` and `pair-disjuncts` (above) are
+% turned off, the result will be pure random planar tree parsing.
+#define any-disjuncts 1;
 
 % Enable the automatic generation of <UNKNOWN-WORD>. It will be
 % automatically added to the dictionary, with multi-ANY connectors
-% on it. The ANY connectors will be used, irresepctive of the other
-% `any` setting above.
+% on it. The ANY connector will be used to link the unknown word
+% to some existing word, even if "extra" decorations are disabled
+% above.
 #define enable-unknown-word 1;
 
 % -----------------------
-% Additional configuration parameters.
+% Cost configuration parameters.
 
 % Location where disjunct costs are stored. The cost will be obtained
 % from the floating point value located at the `cost-key` Value on the
