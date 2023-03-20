@@ -474,12 +474,12 @@ thread_local Sentence sentlo = nullptr;
 thread_local HandleSeq sent_words;
 
 /// Make a note of all of the words in the sentence. We need this,
-/// to pre-prune MST word-pairs.
+/// to pre-prune MST word-pairs, as well as disjuncts decorated with
+/// extra pairs.
 ///
-/// XXX FIXME: At this time, pre-pruning is done only when MST
-/// parsing. It could be extended to also pre-prune extra pairs
-/// added to disjuncts. Or even to the connectors on the disjuncts
-/// themselves.
+/// XXX A future enhancement would be to pre-prune disjuncts as well,
+/// although it is not obvious that we could do any better here, than
+/// the generic expression pruning code could do.
 void as_start_lookup(Dictionary dict, Sentence sent)
 {
 	Local* local = (Local*) (dict->as_server);
@@ -488,9 +488,7 @@ void as_start_lookup(Dictionary dict, Sentence sent)
 	lgdebug(D_USER_INFO, "Atomese: Start dictionary lookup for >>%s<<\n",
 		sent->orig_sentence);
 
-	// XXX FIXME Someday handle extra_pairs, too.
-	// if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
-	if (0 < local->pair_disjuncts)
+	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 	{
 		for(size_t i=0; i<sent->length; i++)
 		{
@@ -523,9 +521,7 @@ void as_end_lookup(Dictionary dict, Sentence sent)
 	Local* local = (Local*) (dict->as_server);
 	sentlo = nullptr;
 
-	// XXX FIXME Someday handle extra_pairs, too.
-	// if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
-	if (0 < local->pair_disjuncts)
+	if (0 < local->pair_disjuncts or 0 < local->extra_pairs)
 		sent_words.clear();
 
 	lgdebug(D_USER_INFO, "Atomese: Finish dictionary lookup for >>%s<<\n",
