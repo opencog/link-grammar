@@ -337,8 +337,12 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
                                 const HandleSeq& sent_words)
 {
 	Exp* allexp = get_pair_exprs(dict, germ);
+
+	// Wrap the pair-expressions with a solitary AND-node from the
+	// temporary Sentance::Exp_pool, as otherwise the operand_next
+	// pointer gets corrupted.
 	if (0 == sent_words.size())
-		return allexp;
+		return make_and_node(pool, allexp, NULL);
 
 	// Unary nodes are possible, in which case, it is just a connector.
 	// Don't bother pruning.
@@ -409,6 +413,7 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 	Exp* orhead = Exp_create(pool);
 	orhead->type = OR_type;
 	orhead->operand_first = sentex;
+	orhead->operand_next = nullptr;
 	return orhead;
 }
 
