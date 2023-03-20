@@ -697,16 +697,31 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	Handle wrd = local->asp->get_node(WORD_NODE, ssc);
 	if (nullptr == wrd) return nullptr;
 
-	if (local->enable_sections)
-		return lookup_section(dict, wrd);
-
 	// Create expressions consisting entirely of word-pair links.
 	// These are "temporary", and always go into Sentence::Exp_pool.
+	Exp* cpr = nullptr;
 	if (0 < local->pair_disjuncts)
+		cpr = make_cart_pairs(dict, wrd, sentlo->Exp_pool, sent_words,
+		                      local->pair_disjuncts,
+		                      local->pair_with_any);
+
+	// If sections are enabled, get those. Or-chain them to pairs.
+	if (local->enable_sections)
 	{
-		Exp* cpr = make_cart_pairs(dict, wrd, sentlo->Exp_pool, sent_words,
-		                           local->pair_disjuncts,
-		                           local->pair_with_any);
+		Dict_node* dn = lookup_section(dict, wrd);
+		if (nullptr == cpr) return dn;
+
+		// Splice in pairs.
+		if (dn)
+		{
+			dn->exp = make_or_node(sentlo->Exp_pool, dn->exp, cpr);
+			return dn;
+		}
+	}
+
+	// If we are here, then thre are only pairs, no sections.
+	if (cpr)
+	{
 		Dict_node * dn = dict_node_new();
 		dn->string = ssc;
 		dn->exp = cpr;
