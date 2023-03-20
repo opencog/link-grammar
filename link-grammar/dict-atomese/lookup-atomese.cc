@@ -691,13 +691,14 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	if (nullptr == sentlo) return nullptr;
 
 	Local* local = (Local*) (dict->as_server);
-	if (local->enable_sections)
-		return lookup_section(dict, s);
 
 	if (0 == strcmp(s, LEFT_WALL_WORD)) s = "###LEFT-WALL###";
 	const char* ssc = ss_add(s, dict);
 	Handle wrd = local->asp->get_node(WORD_NODE, ssc);
 	if (nullptr == wrd) return nullptr;
+
+	if (local->enable_sections)
+		return lookup_section(dict, wrd);
 
 	// Create expressions consisting entirely of word-pair links.
 	// These are "temporary", and always go into Sentence::Exp_pool.

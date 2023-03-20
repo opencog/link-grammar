@@ -71,7 +71,7 @@ double total_usage_time(void);
 bool section_boolean_lookup(Dictionary, const char*);
 bool pair_boolean_lookup(Dictionary, const char*);
 
-Dict_node * lookup_section(Dictionary, const char *);
+Dict_node * lookup_section(Dictionary, const Handle& germ);
 
 Exp* make_sect_exprs(Dictionary, const Handle& germ);
 Exp* make_cart_pairs(Dictionary, const Handle& germ, Pool_desc*,
