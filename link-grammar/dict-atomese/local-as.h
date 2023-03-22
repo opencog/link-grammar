@@ -16,6 +16,7 @@ class Local
 {
 public:
 	std::mutex dict_mutex; // Avoid corruption of Dictionary
+	std::mutex pair_mutex; // Guarantee unique link-name assignment
 
 	// General housekeeping
 	bool using_external_as; // If false, then `asp` below is private.

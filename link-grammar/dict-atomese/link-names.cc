@@ -101,13 +101,38 @@ std::string cached_linkname(Local* local, const Handle& lnk)
 	if (lgc)
 		return lgc->get_name();
 
+	// Use a lock, to make sure that link ID's are issued only
+	// once, ever.  The GrantLink could also be used for this;
+	// the GrantLink was invented to solve this problem. But
+	// GrantLink is awkward for edges, because the arguments are
+	// "backwards". We really need a UniqueEdgeLink, instead.
+	//
+	// Also: FYI, we could use Atom::incremenetCount() instead
+	// of doing the last_id++ but, again, for now, it seems
+	// easier to do it as below.
+	std::lock_guard<std::mutex> guard(local->pair_mutex);
+
+	// Maybe it's in storage?
+	if (local->stnp)
+		local->stnp->fetch_incoming_by_type(lnk, EDGE_LINK);
+
+	// Try again, under the lock, in case threads are racing.
+	lgc = get_lg_conn(local, lnk);
+	if (lgc)
+		return lgc->get_name();
+
 	// idtostr(1064) is "ANY" and we want to reserve "ANY"
 	if (1064 == local->last_id) local->last_id++;
 	store_link_id(local);
 
 	std::string slnk = idtostr(local->last_id++);
 	lgc = createNode(BOND_NODE, slnk);
-	local->asp->add_link(EDGE_LINK, lgc, lnk);
+	Handle he = local->asp->add_link(EDGE_LINK, lgc, lnk);
+
+	// Store, if there is storage.
+	if (local->stnp)
+		local->stnp->store_atom(he);
+
 	return slnk;
 }
 

@@ -337,7 +337,7 @@ bool as_open(Dictionary dict)
 	return true;
 }
 
-/// Close the connection to the StorageNode (e.g. cogserver.)
+/// Close the connection to the StorageNode (e.g. CogServer.)
 /// To be used only if the everything has been fetched, and the
 /// dict is now in local RAM. The dict remains usable, after
 /// closing the connection. Only local StorageNodes are closed.
