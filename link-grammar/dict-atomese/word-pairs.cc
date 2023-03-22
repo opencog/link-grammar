@@ -481,14 +481,19 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 	if (0 >= arity) return nullptr;
 
 	Exp* epr = get_sent_pair_exprs(dict, germ, pool, sent_words);
-	if (nullptr == epr) return nullptr;
 
 	// Tack on ANY connectors, if requested.
 	if (with_any)
 	{
 		Exp* ap = make_any_conns(dict, pool);
-		or_enchain(pool, epr, ap);
+
+		if (nullptr == epr)
+			epr = ap;
+		else
+			or_enchain(pool, epr, ap);
 	}
+	if (nullptr == epr) return nullptr;
+
 	Exp* optex = make_optional_node(pool, epr);
 
 	// If its 1-dimensional, we are done.
