@@ -270,12 +270,13 @@ bool as_open(Dictionary dict)
 
 	dict->as_server = (void*) local;
 
+	local->any_expr = make_any_exprs(dict, dict->Exp_pool);
+
 	local->enable_unknown_word = atoi(LDEF(ENABLE_UNKNOWN_WORD_STRING, "1"));
 	if (local->enable_unknown_word)
 	{
-		const char* ukw = string_set_add("<UNKNOWN-WORD>", dict->string_set);
-		Exp* exp = make_any_exprs(dict, dict->Exp_pool);
-		make_dn(dict, exp, ukw);
+		const char* ukw = string_set_add(UNKNOWN_WORD, dict->string_set);
+		make_dn(dict, local->any_expr, ukw);
 	}
 
 	if (local->using_external_as) return true;
@@ -732,12 +733,14 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 	if (local->any_disjuncts)
 	{
 		std::lock_guard<std::mutex> guard(local->dict_mutex);
-		Exp* any = make_any_exprs(dict, dict->Exp_pool);
 
-		Dict_node * dn = dict_node_new();
-		dn->string = ssc;
-		dn->exp = any;
-		return dn;
+		// If it's cached, just return that.
+		Dict_node* dn = dict_node_lookup(dict, ssc);
+		if (dn) return dn;
+
+		// Make a new one.
+		make_dn(dict, local->any_expr, ssc);
+		return dict_node_lookup(dict, ssc);
 	}
 
 	OC_ASSERT(0, "Internal Error! Must have sections, pair or any!");

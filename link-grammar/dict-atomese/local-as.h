@@ -59,6 +59,7 @@ public:
 	// Any link type
 	bool any_disjuncts;   // Create disjuncts created entirely from ANY
 	double any_default;   // Default cost (post-scaling)
+	Exp* any_expr;        // Everyone can share this.
 
 	bool enable_unknown_word;
 };
