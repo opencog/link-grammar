@@ -11,24 +11,22 @@
 /*                                                                       */
 /*************************************************************************/
 
-/* This file is somewhat misnamed, as everything here defines the
- * link-private, internal-use-only "api", which is subject to change
- * from revision to revision. No external code should link to this
- * stuff.
- */
-
-/*****************************************************************************
-*
-* NOTE: There are five basic "types" used within the link parser.  These are:
-*
-*       Dictionary, Parse_Options, Sentence, Linkage, PostProcessor
-*
-* To make the use of the API simpler, each of these is typedef'ed as a pointer
-* to a data structure.  As a result, some of the code may look a little funny,
-* since it uses pointers in a way that is syntactically inconsistent.  After
-* working a bit with these basic types enough, this should not be confusing.
-*
-******************************************************************************/
+/**********************************************************************
+ *
+ * This file is misnamed, as all of these structures are private to
+ * the implementation. These are all subject to change from revision
+ * to revision. No external code should link to this stuff.
+ *
+ * There are five data types used by the public link-grammar library
+ * API. These are:
+ *
+ *    Dictionary, Parse_Options, Sentence, Linkage, PostProcessor
+ *
+ * To make the API simpler, each of these is typedef'ed as a pointer
+ * to a data structure.  If you're not used to this, some of the code
+ * may look strange, since its not plain that these types are pointers.
+ *
+ *********************************************************************/
 
 #ifndef _API_STRUCTURESH_
 #define _API_STRUCTURESH_
