@@ -2764,12 +2764,11 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 */
 			bool word_is_capitalizable = is_capitalizable(dict, unsplit_word);
 
-			if ('\0' == downcase[0])
-				downcase_utf8_str(downcase, word, downcase_size, dict->lctype);
-			lc_word_is_in_dict = dict_has_word(dict, downcase);
-
 			if (word_is_capitalizable)
 			{
+				downcase_utf8_str(downcase, word, downcase_size, dict->lctype);
+				lc_word_is_in_dict = dict_has_word(dict, downcase);
+
 				if (lc_word_is_in_dict)
 				{
 					/* Issue the lowercase version of the word. */
