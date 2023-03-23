@@ -1550,6 +1550,9 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
  */
 static bool is_capitalizable(const Dictionary dict, const Gword *word)
 {
+	/* Do not use these hard-coded capitalization rules. */
+	if (dict->disable_downcasing) return false;
+
 	/* Words at the start of sentences are capitalizable */
 	if (MT_WALL == word->prev[0]->morpheme_type) return true;
 	if (MT_INFRASTRUCTURE == word->prev[0]->morpheme_type) return true;

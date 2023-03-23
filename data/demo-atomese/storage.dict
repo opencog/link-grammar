@@ -14,6 +14,9 @@
 #define dictionary-locale         en_US.UTF-8;
 #define dictionary-version-number 5.12.3;
 
+% Never use LG built-in capitalization and downcasing rules.
+#define disable-downcasing true;
+
 % -----------------------
 % Dictionary data location.
 % The dictionary location is specified with a StorageNode. Any valid

@@ -39,6 +39,7 @@ static const float DEFAULT_MAX_DISJUNCT_COST = 2.7f;
 #define LG_DISJUNCT_COST                        "max-disjunct-cost"
 #define LG_DICTIONARY_VERSION_NUMBER            "dictionary-version-number"
 #define LG_DICTIONARY_LOCALE                    "dictionary-locale"
+#define LG_DISABLE_DOWNCASING                   "disable-downcasing"
 
 /* Forward decls */
 typedef struct Afdict_class_struct Afdict_class;
@@ -136,6 +137,7 @@ struct Dictionary_s
 	bool         right_wall_defined;
 	bool         shuffle_linkages;
 	bool         dynamic_lookup;
+	bool         disable_downcasing;
 
 	/* Duplicate words are disallowed in 4.0.dict unless
 	 * allow_duplicate_words is defined to "true".

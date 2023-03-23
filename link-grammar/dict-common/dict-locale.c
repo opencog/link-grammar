@@ -448,6 +448,12 @@ bool dictionary_setup_defines(Dictionary dict)
 
 	dictionary_setup_locale(dict);
 
+	dict->disable_downcasing = false;
+	const char * ddn =
+		linkgrammar_get_dict_define(dict, LG_DISABLE_DOWNCASING);
+	if (NULL != ddn && 0 != strcmp(ddn, "false") && 0 != strcmp(ddn, "0"))
+		dict->disable_downcasing = true;
+
 	if (!dictionary_setup_max_disjunct_cost(dict)) return false;
 
 	return true;

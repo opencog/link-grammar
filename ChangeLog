@@ -1,6 +1,7 @@
 Version 5.12.3 (XXX 2023)
  * Assorted Atomese fixes.
  * Fix SAT-solver build breaks.
+ * Add dictionary flag to disable built-in capitlization rules. #1468
 
 Version 5.12.2 (9 March 2023)
  * Fix null-pointer deref in Atomese code.
