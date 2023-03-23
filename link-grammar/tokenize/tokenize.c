@@ -47,8 +47,6 @@ typedef const char *stripped_t[MAX_STRIP];
 /* I've left these here, as an example of what to expect. */
 /*static char * strip_left[] = {"(", "$", "``", NULL}; */
 /*static char * strip_right[] = {")", "%", ",", ".", ":", ";", "?", "!", "''", "'", "'s", NULL};*/
-/* Single-quotes are used for abbreviations, don't mess with them */
-/*//const char * qs = "\"\'«»《》【】『』‘’`„“"; */
 /*const char* qs = "\"«»《》【】『』`„“"; */
 
 #define ENTITY_MARKER   "<marker-entity>"
@@ -172,38 +170,6 @@ static bool is_space(wchar_t wc, locale_t dict_locale)
 
 	return false;
 }
-
-#if 0
-/**
- * Returns true if the word can be interpreted as a number.
- * The ":" is included here so we allow "10:30" to be a number.
- * The "." and "," allow numbers in both US and European notation:
- * e.g. American million: 1,000,000.00  Euro million: 1.000.000,00
- * We also allow U+00A0 "no-break space"
- */
-static bool is_number(Dictionary dict, const char * s)
-{
-	mbstate_t mbs;
-	int nb = 1;
-	wchar_t c;
-	if (!is_utf8_digit(s, Dictionary dict)) return false;
-
-	memset(&mbs, 0, sizeof(mbs));
-	while ((*s != 0) && (0 < nb))
-	{
-		nb = mbrtowc(&c, s, MB_CUR_MAX, &mbs);
-		/* XXX check nb < 0 */
-		if (iswdigit_l(dict, c)) { s += nb; }
-
-		/* U+00A0 no break space */
-		else if (0xa0 == c) { s += nb; }
-
-		else if ((*s == '.') || (*s == ',') || (*s == ':')) { s++; }
-		else return false;
-	}
-	return true;
-}
-#endif
 
 static void gwordqueue_add(const Sentence sent, Gword *const word)
 {
@@ -2764,12 +2730,11 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 			 */
 			bool word_is_capitalizable = is_capitalizable(dict, unsplit_word);
 
-			if ('\0' == downcase[0])
-				downcase_utf8_str(downcase, word, downcase_size, dict->lctype);
-			lc_word_is_in_dict = dict_has_word(dict, downcase);
-
 			if (word_is_capitalizable)
 			{
+				downcase_utf8_str(downcase, word, downcase_size, dict->lctype);
+				lc_word_is_in_dict = dict_has_word(dict, downcase);
+
 				if (lc_word_is_in_dict)
 				{
 					/* Issue the lowercase version of the word. */
