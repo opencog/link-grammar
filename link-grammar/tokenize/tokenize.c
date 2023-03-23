@@ -47,8 +47,6 @@ typedef const char *stripped_t[MAX_STRIP];
 /* I've left these here, as an example of what to expect. */
 /*static char * strip_left[] = {"(", "$", "``", NULL}; */
 /*static char * strip_right[] = {")", "%", ",", ".", ":", ";", "?", "!", "''", "'", "'s", NULL};*/
-/* Single-quotes are used for abbreviations, don't mess with them */
-/*//const char * qs = "\"\'«»《》【】『』‘’`„“"; */
 /*const char* qs = "\"«»《》【】『』`„“"; */
 
 #define ENTITY_MARKER   "<marker-entity>"
