@@ -47,7 +47,7 @@ struct Table_tracon_s
 {
 	Table_tracon     *next;
 	int              l_id, r_id;
-	Count_bin        count;      // normally int_32_t
+	Count_bin        count;      // Normally int32_t.
 	null_count_m     null_count;
 	size_t           hash;       // Generation needs more than 32 bits.
 };
