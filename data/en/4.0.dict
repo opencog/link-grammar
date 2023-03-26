@@ -1042,11 +1042,11 @@ attestation.n:
       <rel-clause-s>))
     or (<Dsc> & SIs- & <noun-rel-s>)
     or ({<Dsc>} & <noun-and-s>)
+    or ({<Dsc>} & Wa-)
     or (YS+ & <Dsc>)
     or ({NM+} & {Ss+} & Wd-)
     or (GN+ & (DD- or [()]))
-    or Us-
-    or <noun-assert>);
+    or Us-);
 
 % Vowel form of the below
 acknowledgment.n acknowledgement.n understanding.n assurance.n
