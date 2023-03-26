@@ -5135,18 +5135,21 @@ figuring.v: <verb-pg> & <vc-figure>;
 %    "you indicate this why?"
 % O+ & I*j+: "I would have said so, were he there"
 %            Could also have solved this with <vc-trans> & {I*j+}
+% [()]: "Go question! Go analyze! Go discover!"
 <vc-predict>:
   (<vc-trans> & {{Xc+} & QN+})
   or (O+ & <mv-coord> & I*j+)
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Zs- or VC+))
-  or ({@MV+} & (<QI+pref> & {MV+}));
+  or ({@MV+} & (<QI+pref> & {MV+}))
+  or [[()]];
 
 % See also: words.v.10 for paraphrasing verbs
 % I- & B- & <embed-verb>: "What did John say you should do?"
-predict.v realize.v discover.v determine.v announce.v say.v mention.v admit.v
-recall.v reveal.v divulge.v state.v observe.v indicate.v stammer.v bawl.v
-analyse.v analyze.v assess.v establish.v evaluate.v examine.v question.v test.v
-hypothesize.v hypothesise.v document.v envisage.v:
+predict.v realize.v discover.v determine.v announce.v say.v mention.v
+admit.v recall.v reveal.v divulge.v state.v observe.v indicate.v
+stammer.v bawl.v analyse.v analyze.v assess.v establish.v evaluate.v
+examine.v question.v test.v hypothesize.v hypothesise.v document.v
+envisage.v:
   VERB_PLI(<vc-predict>)
   or (I- & <b-minus> & <embed-verb>);
 

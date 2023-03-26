@@ -1,10 +1,10 @@
 Version 5.12.4 (XXX 2023)
- * Nothing yet.
+ * Minor English dict fixes. #1470
 
 Version 5.12.3 (24 March 2023)
  * Assorted Atomese fixes.
  * Fix SAT-solver build breaks.
- * Add dictionary flag to disable built-in capitlization rules. #1468
+ * Add dictionary flag to disable built-in capitalization rules. #1468
 
 Version 5.12.2 (9 March 2023)
  * Fix null-pointer deref in Atomese code.
