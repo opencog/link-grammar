@@ -36,12 +36,18 @@
 typedef uint8_t null_count_m;  /* Storage representation of null_count */
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 
+/* Allow to disable the use of the various caches (for debug). */
+const bool ENABLE_WORD_SKIP_VECTOR = true;
+const bool ENABLE_MATCH_LIST_CACHE = true;
+const bool ENABLE_TABLE_LRCNT = true;  // Also controls the above two caches.
+const bool USE_TABLE_TRACON = true;    // The table is always maintained.
+
 typedef struct Table_tracon_s Table_tracon;
 struct Table_tracon_s
 {
 	Table_tracon     *next;
 	int              l_id, r_id;
-	Count_bin        count;      // normally int_32_t
+	Count_bin        count;      // Normally int32_t.
 	null_count_m     null_count;
 	size_t           hash;       // Generation needs more than 32 bits.
 };
@@ -99,7 +105,7 @@ static count_expectation lrcnt_cache_zero; /* A sentinel indicating status==0 */
 typedef struct
 {
 	wordvecp *tracon_wvp;      /* Indexed by tracon_id */
-	uint32_t sz;
+	uint32_t num_tracon_id;    /* Number of tracon IDs */
 } Table_lrcnt;
 
 struct count_context_s
@@ -289,7 +295,7 @@ static void free_table_lrcnt(count_context_t *ctxt)
 				if (t->mlc0 != NULL)
 				{
 					cml++;
-					for (Disjunct *d = t->mlc0->d_lkg; d != NULL; d++)
+					for (Disjunct *d = t->mlc0->d; d != NULL; d++)
 						cml_disjunct++;
 				}
 			}
@@ -313,15 +319,15 @@ static void free_table_lrcnt(count_context_t *ctxt)
 		{
 			unsigned int table_usage = 0;
 
-			for (size_t i = 0; i < ctxt->table_lrcnt[dir].sz; i++)
+			for (size_t i = 0; i < ctxt->table_lrcnt[dir].num_tracon_id; i++)
 			{
 				if (ctxt->table_lrcnt[dir].tracon_wvp[i] != NULL) continue;
 				table_usage++;
 			}
 
 			lgdebug(+0, "Direction %u: Using %u/%u tracons %.2f%%\n\\",
-			        dir, table_usage, ctxt->table_lrcnt[dir].sz,
-			        100.0f*table_usage / ctxt->table_lrcnt[dir].sz);
+			        dir, table_usage, ctxt->table_lrcnt[dir].num_tracon_id,
+			        100.0f*table_usage / ctxt->table_lrcnt[dir].num_tracon_id);
 		}
 	}
 
@@ -374,13 +380,13 @@ static void init_table_lrcnt(count_context_t *ctxt)
 
 	for (unsigned int dir = 0; dir < 2; dir++)
 	{
-		const size_t sz = sizeof(wordvecp) * ctxt->table_lrcnt[dir].sz;
+		const size_t sz = sizeof(wordvecp) * ctxt->table_lrcnt[dir].num_tracon_id;
 		ctxt->table_lrcnt[dir].tracon_wvp = malloc(sz);
 		memset(ctxt->table_lrcnt[dir].tracon_wvp, 0, sz);
 	}
 
 	const size_t initial_size = MIN(sent->length/2, 16) *
-		                   (ctxt->table_lrcnt[0].sz + ctxt->table_lrcnt[1].sz);
+		(ctxt->table_lrcnt[0].num_tracon_id + ctxt->table_lrcnt[1].num_tracon_id);
 
 	if (NULL != sent->wordvec_pool)
 	{
@@ -444,13 +450,13 @@ static void table_stat(count_context_t *ctxt)
 			assert(t->hash != 0, "Invalid hash value: 0");
 			assert((hist_total(&t->count)>=0)&&(hist_total(&t->count) <= INT_MAX),
 			       "Invalid count %"COUNT_FMT, hist_total(&t->count));
-			assert((ctxt->table_lrcnt[0].sz == 0) ||
+			assert((ctxt->table_lrcnt[0].num_tracon_id == 0) ||
 			       t->l_id < (int)ctxt->sent->length ||
-			       ((t->l_id >= 255)&&(t->l_id < (int)ctxt->table_lrcnt[0].sz)),
+			       ((t->l_id >= 255)&&(t->l_id < (int)ctxt->table_lrcnt[0].num_tracon_id)),
 			       "invalid l_id %d", t->l_id);
-			assert((ctxt->table_lrcnt[1].sz == 0) ||
+			assert((ctxt->table_lrcnt[1].num_tracon_id == 0) ||
 			       t->r_id <= (int)ctxt->sent->length ||
-			       ((t->r_id > 255)&&(t->r_id < (int)ctxt->table_lrcnt[1].sz)),
+			       ((t->r_id > 255)&&(t->r_id < (int)ctxt->table_lrcnt[1].num_tracon_id)),
 			       "invalid r_id %d", t->r_id);
 		}
 		for (; t != NULL; t = t->next)
@@ -562,6 +568,23 @@ static Count_bin table_store(count_context_t *ctxt,
 
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
+
+	if (!USE_TABLE_TRACON)
+	{
+		// In case a table count already exist, check its consistency.
+		Count_bin *e = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
+		if (e != NULL)
+		{
+			assert((e == NULL) || (hist_total(&c) == hist_total(e)),
+			       "Inconsistent count for w(%d,%d) tracon_id(%d,%d)",
+			       lw, rw, l_id, r_id);
+			return c;
+		}
+
+		// The count is still stored, for the above consistency check
+		// and for mk_parse_set().
+	}
+
 	size_t i = hash & ctxt->table_mask;
 	Table_tracon *n = pool_alloc(ctxt->sent->Table_tracon_pool);
 
@@ -591,11 +614,17 @@ table_lookup(count_context_t *ctxt, int lw, int rw,
              const Connector *le, const Connector *re,
              unsigned int null_count, size_t *hash)
 {
+
 	int l_id = (NULL != le) ? le->tracon_id : lw;
 	int r_id = (NULL != re) ? re->tracon_id : rw;
-
 	size_t h = pair_hash(lw, rw, l_id, r_id, null_count);
 	Table_tracon *t = ctxt->table[h & ctxt->table_mask];
+
+	if (!USE_TABLE_TRACON && (hash != NULL))
+	{
+		*hash = h;
+		return NULL;
+	}
 
 	for (; t != NULL; t = t->next)
 	{
@@ -627,6 +656,8 @@ static void generate_word_skip_vector(count_context_t *ctxt, wordvecp wv,
                                       int start_word, int end_word,
                                       int lw, int rw)
 {
+	if (!ENABLE_WORD_SKIP_VECTOR) return;
+
 	if (le != NULL)
 	{
 		int check_word = start_word;
@@ -738,6 +769,8 @@ static void lrcnt_cache_match_list(wordvecp lrcnt_cache, count_context_t *ctxt,
 	size_t i  = 0;
 	fast_matcher_t *mchxt = ctxt->mchxt;
 
+	if (!ENABLE_MATCH_LIST_CACHE) return;
+
 	for (i = mlb; get_match_list_element(mchxt, i) != NULL; i++)
 	{
 		Disjunct *d = get_match_list_element(mchxt, i);
@@ -757,13 +790,13 @@ static void lrcnt_cache_match_list(wordvecp lrcnt_cache, count_context_t *ctxt,
 		Disjunct *d = get_match_list_element(mchxt, i);
 		if ((dir == 0) ? d->match_left : d->match_right)
 		{
-			ml[dcnt].d_lkg = d;
+			ml[dcnt].d = d;
 			assert(d->lrcount > 0, "Invalid linkage count %d", d->lrcount);
 			ml[dcnt].count = d->lrcount;
 			dcnt++;
 		}
 	}
-	ml[dcnt].d_lkg = NULL;
+	ml[dcnt].d = NULL;
 
 	lrcnt_cache->mlc0 = ml;
 }
@@ -938,6 +971,8 @@ static Count_bin pseudocount(count_context_t * ctxt,
 	 * nearest_word checks in form_match_list(). */
 	if ((le != NULL) && (re != NULL) && (le->nearest_word > re->nearest_word))
 		return hist_zero();
+
+	if (!USE_TABLE_TRACON) return count_unknown;
 
 	Count_bin *count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	if (NULL == count) return count_unknown;
@@ -1645,14 +1680,14 @@ count_context_t * alloc_count_context(Sentence sent, Tracon_sharing *ts)
 	memset(ctxt, 0, sizeof(count_context_t));
 
 	ctxt->sent = sent;
-	ctxt->is_short =
-		(sent->length <= min_len_word_vector) && !IS_GENERATION(ctxt->sent->dict);
+	ctxt->is_short = !ENABLE_TABLE_LRCNT ||
+		((sent->length <= min_len_word_vector) && !IS_GENERATION(ctxt->sent->dict));
 
 	if (!ctxt->is_short)
 	{
 		/* next_id keeps the last tracon_id used, so we need +1 for array size.  */
 		for (unsigned int dir = 0; dir < 2; dir++)
-			ctxt->table_lrcnt[dir].sz = ts->next_id[!dir] + 1;
+			ctxt->table_lrcnt[dir].num_tracon_id = ts->next_id[!dir] + 1;
 
 		init_table_lrcnt(ctxt);
 	}

@@ -615,9 +615,9 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	else
 	{
-		for (cmx = mlcr; cmx->d_lkg != NULL; cmx++)
+		for (cmx = mlcr; cmx->d != NULL; cmx++)
 		{
-			cmx->d_lkg->match_left = false;
+			cmx->d->match_left = false;
 		}
 		mr_end = NULL; /* Prevent a gcc "may be uninitialized" warning */
 	}
@@ -646,11 +646,11 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	else
 	{
-		for (cmx = mlcl; cmx->d_lkg != NULL; cmx++)
+		for (cmx = mlcl; cmx->d != NULL; cmx++)
 		{
-			cmx->d_lkg->match_left = true;
-			cmx->d_lkg->match_right = false;
-			push_match_list_element(ctxt, lid, cmx->d_lkg);
+			cmx->d->match_left = true;
+			cmx->d->match_right = false;
+			push_match_list_element(ctxt, lid, cmx->d);
 		}
 	}
 
@@ -677,13 +677,13 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 	else
 	{
-		for (cmx = mlcr; cmx->d_lkg != NULL; cmx++)
+		for (cmx = mlcr; cmx->d != NULL; cmx++)
 		{
-			if ((lc != NULL) && !cmx->d_lkg->match_left) continue; /* lc optimization*/
-			cmx->d_lkg->match_right = true;
-			cmx->d_lkg->rcount_index = (uint32_t)(cmx - mlcr);
-			if (cmx->d_lkg->match_left) continue;
-			push_match_list_element(ctxt, lid, cmx->d_lkg);
+			if ((lc != NULL) && !cmx->d->match_left) continue; /* lc optimization*/
+			cmx->d->match_right = true;
+			cmx->d->rcount_index = (uint32_t)(cmx - mlcr);
+			if (cmx->d->match_left) continue;
+			push_match_list_element(ctxt, lid, cmx->d);
 		}
 	}
 
