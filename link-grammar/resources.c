@@ -48,7 +48,7 @@ int getrusage(int who, struct rusage *rusage);
 /** Returns the CPU usage time, for this thread only, in seconds. */
 static double current_usage_time(void)
 {
-#if !defined(_WIN32)
+#if !defined(_WIN32) && !defined(__APPLE__)
 	struct rusage u;
 	getrusage (RUSAGE_THREAD, &u);
 	return (u.ru_utime.tv_sec + ((double) u.ru_utime.tv_usec) / 1000000.0);
