@@ -298,7 +298,7 @@ void free_extractor(extractor_t * pex)
 
 	xfree((void *) pex, sizeof(extractor_t));
 
-#if defined __GLIBC__ && defined HAVE_MALLOC_TRIM
+#if defined __GLIBC__
 	// malloc_trim() is a gnu extension.  An alternative would be
 	// to call madvise(MADV_DONTNEED) but this is more complicated.
 	if (trim) malloc_trim(0);
