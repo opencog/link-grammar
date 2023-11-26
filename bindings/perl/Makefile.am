@@ -52,7 +52,7 @@ if OS_NETBSD
 AVOID_VERSION = -avoid-version
 endif
 
-clinkgrammar_la_LDFLAGS = -version-info $(AVOID_VERSION) @VERSION_INFO@ \
+clinkgrammar_la_LDFLAGS = -version-info @VERSION_INFO@ $(AVOID_VERSION)\
 								  $(PERL_LDFLAGS) -module -no-undefined
 clinkgrammar_la_LIBADD = $(top_builddir)/link-grammar/liblink-grammar.la
 
