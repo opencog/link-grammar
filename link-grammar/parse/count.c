@@ -1490,21 +1490,17 @@ static Count_bin do_count(
 					}
 				}
 
-#define COUNT(c, do_count) \
-	{ c = TRACE_LABEL(c, do_count); }
-
+				/* Perform a table lookup for a possible cyclic solution. */
 				if (leftpcount)
 				{
-					/* Evaluate using the left match, but not the right. */
-					COUNT(l_bnr, do_count(ctxt, w, rw, d->right, re, rnull_cnt));
+					l_bnr = pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
 				}
 				else
 				{
 					if (!rightpcount) continue; /* Left and right counts are 0. */
 					if (le == NULL)
 					{
-						/* Evaluate using the right match, but not the left. */
-						COUNT(r_bnl, do_count(ctxt, lw, w, le, d->left, lnull_cnt));
+						r_bnl = pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
 					}
 				}
 
