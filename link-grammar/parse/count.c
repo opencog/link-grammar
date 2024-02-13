@@ -948,35 +948,64 @@ static bool is_panic(count_context_t *ctxt)
 #endif
 Count_bin count_unknown = INIT_NO_COUNT;
 
-/**
- * psuedocount is used to check to see if a parse is even possible,
- * so that we don't waste CPU time performing an actual count, only
- * to discover that it is zero.
- *
- * A table entry with a count 0 indicates that the parse is not possible.
- * In that case we can skip parsing. If it is not 0, it is the parse
- * result and we can use it and skip parsing too.
- * However, if an entry is not in the hash table, we have to assume the
- * worst case: that the count might be non-zero.  To indicate that case,
- * return the special sentinel value \c count_unknown.
+/*
+ * Lookup the tracon table for the count of the given range. If exists,
+ * return it. Else return the sentinel value \c count_unknown.
  */
-static Count_bin pseudocount(count_context_t * ctxt,
-                           int lw, int rw, Connector *le, Connector *re,
-                           unsigned int null_count)
+static Count_bin table_count(count_context_t * ctxt,
+                             int lw, int rw, Connector *le, Connector *re,
+                             unsigned int null_count)
 {
+	if (!USE_TABLE_TRACON) return true;
+
 	/* This check is not necessary for correctness, but it saves CPU time.
-	 * If a cross link would result, immediately return 0. Note that there is
-	 * no need to check here if the nearest_word fields are in the range
-	 * [lw, rw] due to the way start_word/end_word are computed, and due to
-	 * nearest_word checks in form_match_list(). */
+	 * If a cross link would result, we know that the count would be 0.
+	 * Note that there is no need to check here if the nearest_word fields
+	 * are in the range [lw, rw] due to the way start_word/end_word are
+	 * computed, and due to nearest_word checks in form_match_list(). */
 	if ((le != NULL) && (re != NULL) && (le->nearest_word > re->nearest_word))
 		return hist_zero();
-
-	if (!USE_TABLE_TRACON) return count_unknown;
 
 	Count_bin *count = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	if (NULL == count) return count_unknown;
 	return *count;
+}
+
+/**
+ * Check to see if a parse is even possible, so that we don't later waste
+ * CPU time performing an actual count, only to discover that it is zero.
+ *
+ * Depending whether the end connectors of the given range are multi or
+ * not, up to 4 components need to be summed up to yield its count. Lookup
+ * them in the tracon table, and return false iff all of them are found to
+ * be zero.
+ *
+ * In case a non-zero table entry (or \c count_unknown) is found, cache it
+ * in \p count.
+ */
+static bool pseudocount(count_context_t * ctxt, Count_bin *count,
+                        int lw, int rw, Connector *le, Connector *re,
+                        unsigned int null_count)
+{
+	count[0] = table_count(ctxt, lw, rw, le->next, re->next, null_count);
+	if (hist_total(&count[0]) != 0) return true;
+	if (le->multi)
+	{
+		count[1] = table_count(ctxt, lw, rw, le, re->next, null_count);
+		if (hist_total(&count[1]) != 0) return true;
+	}
+	if (re->multi)
+	{
+		count[2] = table_count(ctxt, lw, rw, le->next, re, null_count);
+		if (hist_total(&count[2]) != 0) return true;;
+	}
+	if (le->multi && re->multi)
+	{
+		count[3] = table_count(ctxt, lw, rw, le, re, null_count);
+		if (hist_total(&count[3]) != 0) return true;;
+	}
+
+	return false;
 }
 
 /**
@@ -1417,15 +1446,7 @@ static Count_bin do_count(
 					rightpcount = false;
 				}
 
-				Count_bin l_any = INIT_NO_COUNT;
-				Count_bin r_any = INIT_NO_COUNT;
-				Count_bin l_cmulti = INIT_NO_COUNT;
-				Count_bin l_dmulti = INIT_NO_COUNT;
-				Count_bin l_dcmulti = INIT_NO_COUNT;
 				Count_bin l_bnr = INIT_NO_COUNT;
-				Count_bin r_cmulti = INIT_NO_COUNT;
-				Count_bin r_dmulti = INIT_NO_COUNT;
-				Count_bin r_dcmulti = INIT_NO_COUNT;
 				Count_bin r_bnl = (le == NULL) ? INIT_NO_COUNT : hist_zero();
 
 				/* Now, we determine if (based on table only) we can see that
@@ -1439,68 +1460,34 @@ static Count_bin do_count(
 				 * the pseudocount is zero, then we know that the true
 				 * count will be zero.
 				 *
-				 * Cache the result in the l_* and r_* variables, so a table
+				 * Cache the result in the lcount and rcount arrays, so a table
 				 * lookup can be skipped in cases we cannot skip the actual
 				 * calculation and a table entry exists. */
+				Count_bin lcount[4] = { NO_COUNT, NO_COUNT, NO_COUNT, NO_COUNT };
 				if (Lmatch && !leftpcount)
 				{
-					l_any = pseudocount(ctxt, lw, w, le->next, d->left->next, lnull_cnt);
-					leftpcount = (hist_total(&l_any) != 0);
-					if (!leftpcount && le->multi)
-					{
-						l_cmulti =
-							pseudocount(ctxt, lw, w, le, d->left->next, lnull_cnt);
-						leftpcount |= (hist_total(&l_cmulti) != 0);
-					}
-					if (!leftpcount && d->left->multi)
-					{
-						l_dmulti =
-							pseudocount(ctxt, lw, w, le->next, d->left, lnull_cnt);
-						leftpcount |= (hist_total(&l_dmulti) != 0);
-					}
-					if (!leftpcount && le->multi && d->left->multi)
-					{
-						l_dcmulti =
-							pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
-						leftpcount |= (hist_total(&l_dcmulti) != 0);
-					}
+					leftpcount =
+						pseudocount(ctxt, lcount, lw, w, le, d->left, lnull_cnt);
 				}
 
+				Count_bin rcount[4] = { NO_COUNT, NO_COUNT, NO_COUNT, NO_COUNT };
 				if (Rmatch && !rightpcount && (leftpcount || (le == NULL)))
 				{
-					r_any = pseudocount(ctxt, w, rw, d->right->next, re->next, rnull_cnt);
-					rightpcount = (hist_total(&r_any) != 0);
-					if (!rightpcount && re->multi)
-					{
-						r_cmulti =
-							pseudocount(ctxt, w, rw, d->right->next, re, rnull_cnt);
-						rightpcount |= (hist_total(&r_cmulti) != 0);
-					}
-					if (!rightpcount && d->right->multi)
-					{
-						r_dmulti =
-							pseudocount(ctxt, w,rw, d->right, re->next, rnull_cnt);
-						rightpcount |= (hist_total(&r_dmulti) != 0);
-					}
-					if (!rightpcount && d->right->multi && re->multi)
-					{
-						r_dcmulti =
-							pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
-						rightpcount |= (hist_total(&r_dcmulti) != 0);
-					}
+					rightpcount =
+						pseudocount(ctxt, rcount, w, rw, d->right, re, rnull_cnt);
 				}
 
 				/* Perform a table lookup for a possible cyclic solution. */
 				if (leftpcount)
 				{
-					l_bnr = pseudocount(ctxt, w, rw, d->right, re, rnull_cnt);
+					l_bnr = table_count(ctxt, w, rw, d->right, re, rnull_cnt);
 				}
 				else
 				{
 					if (!rightpcount) continue; /* Left and right counts are 0. */
 					if (le == NULL)
 					{
-						r_bnl = pseudocount(ctxt, lw, w, le, d->left, lnull_cnt);
+						r_bnl = table_count(ctxt, lw, w, le, d->left, lnull_cnt);
 					}
 				}
 
@@ -1527,16 +1514,16 @@ static Count_bin do_count(
 				{
 					if (hist_total(&leftcount) == NO_COUNT)
 					{
-						CACHE_COUNT(l_any, leftcount = count,
+						CACHE_COUNT(lcount[0], leftcount = count,
 							do_count(ctxt, lw, w, le->next, d->left->next, lnull_cnt));
 						if (le->multi)
-							CACHE_COUNT(l_cmulti, hist_accumv(&leftcount, d->cost, count),
+							CACHE_COUNT(lcount[1], hist_accumv(&leftcount, d->cost, count),
 								do_count(ctxt, lw, w, le, d->left->next, lnull_cnt));
 						if (d->left->multi)
-							CACHE_COUNT(l_dmulti, hist_accumv(&leftcount, d->cost, count),
+							CACHE_COUNT(lcount[2], hist_accumv(&leftcount, d->cost, count),
 								do_count(ctxt, lw, w, le->next, d->left, lnull_cnt));
 						if (d->left->multi && le->multi)
-							CACHE_COUNT(l_dcmulti, hist_accumv(&leftcount, d->cost, count),
+							CACHE_COUNT(lcount[3], hist_accumv(&leftcount, d->cost, count),
 								do_count(ctxt, lw, w, le, d->left, lnull_cnt));
 					}
 
@@ -1557,16 +1544,16 @@ static Count_bin do_count(
 				{
 					if (hist_total(&rightcount) == NO_COUNT)
 					{
-						CACHE_COUNT(r_any, rightcount = count,
+						CACHE_COUNT(rcount[0], rightcount = count,
 							do_count(ctxt, w, rw, d->right->next, re->next, rnull_cnt));
 						if (re->multi)
-							CACHE_COUNT(r_cmulti, hist_accumv(&rightcount, d->cost, count),
+							CACHE_COUNT(rcount[1], hist_accumv(&rightcount, d->cost, count),
 								do_count(ctxt, w, rw, d->right->next, re, rnull_cnt));
 						if (d->right->multi)
-							CACHE_COUNT(r_dmulti, hist_accumv(&rightcount, d->cost, count),
+							CACHE_COUNT(rcount[2], hist_accumv(&rightcount, d->cost, count),
 								do_count(ctxt, w, rw, d->right, re->next, rnull_cnt));
 						if (d->right->multi && re->multi)
-							CACHE_COUNT(r_dcmulti, hist_accumv(&rightcount, d->cost, count),
+							CACHE_COUNT(rcount[3], hist_accumv(&rightcount, d->cost, count),
 								do_count(ctxt, w, rw, d->right, re, rnull_cnt));
 					}
 
