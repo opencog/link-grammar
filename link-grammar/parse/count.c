@@ -1033,20 +1033,20 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 	 prt_error("%-*s", LBLSZ, STRINGIFY(l)) : 0, do_count)
 #define V(c) (!c?"(nil)":connector_string(c))
 #define ID(c,w) (!c?w:c->tracon_id)
-static Count_bin do_count1(int lineno, count_context_t *ctxt,
-                         int lw, int rw,
-                         Connector *le, Connector *re,
-                         unsigned int null_count);
+static Count_bin do_count1(count_context_t *ctxt,
+                           int lw, int rw,
+                           Connector *le, Connector *re,
+                           unsigned int null_count);
 
-static Count_bin do_count(int lineno, count_context_t *ctxt,
-                        int lw, int rw,
-                        Connector *le, Connector *re,
-                        unsigned int null_count)
+static Count_bin do_count(count_context_t *ctxt,
+                          int lw, int rw,
+                          Connector *le, Connector *re,
+                          unsigned int null_count)
 {
 	static int level;
 
 	if (!verbosity_level(D_COUNT_TRACE))
-		return do_count1(lineno, ctxt, lw, rw, le, re, null_count);
+		return do_count1(ctxt, lw, rw, le, re, null_count);
 
 	Count_bin *c = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	char m_result[64] = "";
@@ -1055,10 +1055,10 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 
 	level++;
 	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s(%d) re=%s(%d) null_count=%u\n\\",
-		level*2, "", m_result, lineno, lw, rw, V(le),ID(le,lw), V(re),ID(re,rw), null_count);
-	Count_bin r = do_count1(lineno, ctxt, lw, rw, le, re, null_count);
+		level*2, "", m_result, level, lw, rw, V(le),ID(le,lw), V(re),ID(re,rw), null_count);
+	Count_bin r = do_count1(ctxt, lw, rw, le, re, null_count);
 	prt_error("%*sreturn%.*s:%d=%"COUNT_FMT"\n",
-	          LBLSZ+level*2, "", (!!c)*3, "(M)", lineno, hist_total(&r));
+	          LBLSZ+level*2, "", (!!c)*3, "(M)", level, hist_total(&r));
 	level--;
 
 	return r;
@@ -1114,17 +1114,14 @@ static Count_bin do_count(int lineno, count_context_t *ctxt,
 #else
 #define TRACE_LABEL(l, do_count) (do_count)
 #endif /* DO_COUNT TRACE */
-static Count_bin do_count(
-#ifdef DO_COUNT_TRACE
-#undef do_count
-#define do_count(...) do_count(__LINE__, __VA_ARGS__)
-                          int lineno,
-#endif
-                          count_context_t *ctxt,
+static Count_bin do_count(count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
                           unsigned int null_count)
 {
+#ifdef DO_COUNT_TRACE
+#undef do_count
+#endif
 	w_Count_bin total = hist_zero();
 	int start_word, end_word, w;
 
