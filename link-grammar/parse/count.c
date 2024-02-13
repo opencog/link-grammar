@@ -1042,7 +1042,7 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 #define TRACE_LABEL(l, do_count) (do_count)
 #endif
 
-static Count_bin do_count(count_context_t *ctxt,
+static Count_bin do_count(const char dlabel[], count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
                           unsigned int null_count);
@@ -1078,24 +1078,24 @@ static Count_bin do_count(count_context_t *ctxt,
  *
  * @return Sum of the counts as mentioned above.
  */
-static Count_bin scount(count_context_t *ctxt, Count_bin ccount[4],
-                        int lw, int rw,
+static Count_bin scount(const char dlabel[], count_context_t *ctxt,
+                        Count_bin ccount[4], int lw, int rw,
                         Connector *le, Connector *re,
                         unsigned int null_count)
 {
 	Count_bin totcount;
 
 	CACHE_COUNT(ccount[0], totcount = count,
-	            do_count(ctxt, lw, rw, le->next, re->next, null_count));
+	            do_count(dlabel, ctxt, lw, rw, le->next, re->next, null_count));
 	if (le->multi)
 		CACHE_COUNT(ccount[1], hist_accumv(&totcount, d->cost, count),
-		            do_count(ctxt, lw, rw, le, re->next, null_count));
+		            do_count(dlabel, ctxt, lw, rw, le, re->next, null_count));
 	if (re->multi)
 		CACHE_COUNT(ccount[2], hist_accumv(&totcount, d->cost, count),
-		            do_count(ctxt, lw, rw, le->next, re, null_count));
+		            do_count(dlabel, ctxt, lw, rw, le->next, re, null_count));
 	if (re->multi && le->multi)
 		CACHE_COUNT(ccount[3], hist_accumv(&totcount, d->cost, count),
-		            do_count(ctxt, lw, rw, le, re, null_count));
+		            do_count(dlabel, ctxt, lw, rw, le, re, null_count));
 
 	return totcount;
 }
@@ -1103,12 +1103,12 @@ static Count_bin scount(count_context_t *ctxt, Count_bin ccount[4],
 #ifdef DO_COUNT_TRACE
 #define V(c) (!c?"(nil)":connector_string(c))
 #define ID(c,w) (!c?w:c->tracon_id)
-static Count_bin do_count1(count_context_t *ctxt,
+static Count_bin do_count1(const char dlabel[], count_context_t *ctxt,
                            int lw, int rw,
                            Connector *le, Connector *re,
                            unsigned int null_count);
 
-static Count_bin do_count(count_context_t *ctxt,
+static Count_bin do_count(const char dlabel[], count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
                           unsigned int null_count)
@@ -1116,7 +1116,7 @@ static Count_bin do_count(count_context_t *ctxt,
 	static int level;
 
 	if (!verbosity_level(D_COUNT_TRACE))
-		return do_count1(ctxt, lw, rw, le, re, null_count);
+		return do_count1(dlabel, ctxt, lw, rw, le, re, null_count);
 
 	Count_bin *c = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 	char m_result[64] = "";
@@ -1124,11 +1124,11 @@ static Count_bin do_count(count_context_t *ctxt,
 		snprintf(m_result, sizeof(m_result), "(M=%"COUNT_FMT")", hist_total(c));
 
 	level++;
-	prt_error("%*sdo_count%s:%d lw=%d rw=%d le=%s(%d) re=%s(%d) null_count=%u\n\\",
-		level*2, "", m_result, level, lw, rw, V(le),ID(le,lw), V(re),ID(re,rw), null_count);
-	Count_bin r = do_count1(ctxt, lw, rw, le, re, null_count);
-	prt_error("%*sreturn%.*s:%d=%"COUNT_FMT"\n",
-	          LBLSZ+level*2, "", (!!c)*3, "(M)", level, hist_total(&r));
+	prt_error("%*s%s do_count%s:%d lw=%d rw=%d le=%s(%d) re=%s(%d) null_count=%u\n\\",
+		level*2, "", dlabel, m_result, level, lw, rw, V(le),ID(le,lw), V(re),ID(re,rw), null_count);
+	Count_bin r = do_count1(dlabel, ctxt, lw, rw, le, re, null_count);
+	prt_error("%*s%s return%.*s:%d=%"COUNT_FMT"\n",
+	          LBLSZ+level*2, "", dlabel, (!!c)*3, "(M)", level, hist_total(&r));
 	level--;
 
 	return r;
@@ -1182,7 +1182,7 @@ static Count_bin do_count(count_context_t *ctxt,
 
 #define do_count do_count1
 #endif /* DO_COUNT TRACE */
-static Count_bin do_count(count_context_t *ctxt,
+static Count_bin do_count(const char dlabel[], count_context_t *ctxt,
                           int lw, int rw,
                           Connector *le, Connector *re,
                           unsigned int null_count)
@@ -1280,12 +1280,12 @@ static Count_bin do_count(count_context_t *ctxt,
 				if (d->left == NULL)
 				{
 					hist_accumv(&total, d->cost,
-						do_count(ctxt, w, rw, d->right, NULL, try_null_count-1));
+						do_count("I", ctxt, w, rw, d->right, NULL, try_null_count-1));
 				}
 			}
 
 			hist_accumv(&total, 0.0,
-				do_count(ctxt, w, rw, NULL, NULL, try_null_count-1));
+				do_count("N", ctxt, w, rw, NULL, NULL, try_null_count-1));
 		}
 
 		if (parse_count_clamp(&total))
@@ -1574,7 +1574,7 @@ static Count_bin do_count(count_context_t *ctxt,
 					if (hist_total(&leftcount) == NO_COUNT)
 					{
 						leftcount =
-							scount(ctxt, lcount, lw, w, le, d->left, lnull_cnt);
+							scount("L", ctxt, lcount, lw, w, le, d->left, lnull_cnt);
 					}
 
 					if (0 < hist_total(&leftcount))
@@ -1585,7 +1585,7 @@ static Count_bin do_count(count_context_t *ctxt,
 
 						/* Evaluate using the left match, but not the right */
 						CACHE_COUNT(l_bnr, hist_muladdv(&total, &leftcount, d->cost, count),
-							do_count(ctxt, w, rw, d->right, re, rnull_cnt));
+							do_count("C", ctxt, w, rw, d->right, re, rnull_cnt));
 					}
 				}
 
@@ -1595,7 +1595,7 @@ static Count_bin do_count(count_context_t *ctxt,
 					if (hist_total(&rightcount) == NO_COUNT)
 					{
 						rightcount =
-							scount(ctxt, rcount, w, rw, d->right, re, rnull_cnt);
+							scount("R", ctxt, rcount, w, rw, d->right, re, rnull_cnt);
 					}
 
 					if (0 < hist_total(&rightcount))
@@ -1608,7 +1608,7 @@ static Count_bin do_count(count_context_t *ctxt,
 
 							/* Evaluate using the right match, but not the left */
 							CACHE_COUNT(r_bnl, hist_muladdv(&total, &rightcount, d->cost, count),
-								do_count(ctxt, lw, w, le, d->left, lnull_cnt));
+								do_count("C", ctxt, lw, w, le, d->left, lnull_cnt));
 						}
 						else
 						{
@@ -1691,7 +1691,7 @@ int do_parse(Sentence sent, fast_matcher_t *mchxt, count_context_t *ctxt,
 	ctxt->islands_ok = opts->islands_ok;
 	ctxt->mchxt = mchxt;
 
-	hist = do_count(ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
+	hist = do_count("E", ctxt, -1, sent->length, NULL, NULL, sent->null_count+1);
 
 	table_stat(ctxt);
 	return (int)hist_total(&hist);
