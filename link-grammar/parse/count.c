@@ -1021,6 +1021,13 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 	return n;
 }
 
+#define CACHE_COUNT(c, how_to_count, do_count) \
+	{ \
+		Count_bin count = (hist_total(&c) == NO_COUNT) ? \
+			TRACE_LABEL(c, do_count) : c; \
+		how_to_count; \
+	}
+
 #ifdef DEBUG
 #define DO_COUNT_TRACE
 #endif
@@ -1031,6 +1038,69 @@ static int num_optional_words(count_context_t *ctxt, int w1, int w2)
 #define TRACE_LABEL(l, do_count) \
 	(verbosity_level(D_COUNT_TRACE, "do_count") ? \
 	 prt_error("%-*s", LBLSZ, STRINGIFY(l)) : 0, do_count)
+#else
+#define TRACE_LABEL(l, do_count) (do_count)
+#endif
+
+static Count_bin do_count(count_context_t *ctxt,
+                          int lw, int rw,
+                          Connector *le, Connector *re,
+                          unsigned int null_count);
+
+/**
+ * Invoked by do_count() to count for each side.
+ *
+ * do_count(), when at least one of its end connectors is non-NULL,
+ * splits its given word range into two parts in all possible ways
+ * that could yield a count.
+ *
+ * For each resulting part with a non-NULL end connector, do_count()
+ * invokes this function, passing it this non-NULL connector, when the
+ * other connector matches a shallow connector on a disjunct of a middle
+ * word that is shared between the parts.
+ *
+ * Consequently, both \p le and \p re in this function are never NULL,
+ * as one is explicitly non-NULL and the other is its matching
+ * counterpart. Each connector can be either a regular or a "multi"
+ * connector, with "multi" connectors treated as regular for initial
+ * matches but potentially reused for subsequent matches if they
+ * continue to match.
+ *
+ * This function first counts using the next end connectors, without
+ * regard to whether the current end connectors are "multi". Following
+ * this initial step, it then performs counting using the multi-matching
+ * feature of "multi" connectors if needed. Specifically:
+ *   - If one of the end connectors is "multi", it is reused with the
+ *     next connector on the opposite end.
+ *   - If both are "multi", both are reused as end connectors. Notably,
+ *     the scenario of using two "multi" end connectors simultaneously
+ *     has not been encountered with the included dictionaries.
+ *
+ * @return Sum of the counts as mentioned above.
+ */
+static Count_bin scount(count_context_t *ctxt, Count_bin ccount[4],
+                        int lw, int rw,
+                        Connector *le, Connector *re,
+                        unsigned int null_count)
+{
+	Count_bin totcount;
+
+	CACHE_COUNT(ccount[0], totcount = count,
+	            do_count(ctxt, lw, rw, le->next, re->next, null_count));
+	if (le->multi)
+		CACHE_COUNT(ccount[1], hist_accumv(&totcount, d->cost, count),
+		            do_count(ctxt, lw, rw, le, re->next, null_count));
+	if (re->multi)
+		CACHE_COUNT(ccount[2], hist_accumv(&totcount, d->cost, count),
+		            do_count(ctxt, lw, rw, le->next, re, null_count));
+	if (re->multi && le->multi)
+		CACHE_COUNT(ccount[3], hist_accumv(&totcount, d->cost, count),
+		            do_count(ctxt, lw, rw, le, re, null_count));
+
+	return totcount;
+}
+
+#ifdef DO_COUNT_TRACE
 #define V(c) (!c?"(nil)":connector_string(c))
 #define ID(c,w) (!c?w:c->tracon_id)
 static Count_bin do_count1(count_context_t *ctxt,
@@ -1111,8 +1181,6 @@ static Count_bin do_count(count_context_t *ctxt,
  */
 
 #define do_count do_count1
-#else
-#define TRACE_LABEL(l, do_count) (do_count)
 #endif /* DO_COUNT TRACE */
 static Count_bin do_count(count_context_t *ctxt,
                           int lw, int rw,
@@ -1488,12 +1556,6 @@ static Count_bin do_count(count_context_t *ctxt,
 					}
 				}
 
-#define CACHE_COUNT(c, how_to_count, do_count) \
-	{ \
-		Count_bin count = (hist_total(&c) == NO_COUNT) ? \
-			TRACE_LABEL(c, do_count) : c; \
-		how_to_count; \
-	}
 				/* If the pseudocounting above indicates one of the terms
 				 * in the count multiplication is zero,
 				 * we know that the true total is zero. So we don't
@@ -1511,17 +1573,8 @@ static Count_bin do_count(count_context_t *ctxt,
 				{
 					if (hist_total(&leftcount) == NO_COUNT)
 					{
-						CACHE_COUNT(lcount[0], leftcount = count,
-							do_count(ctxt, lw, w, le->next, d->left->next, lnull_cnt));
-						if (le->multi)
-							CACHE_COUNT(lcount[1], hist_accumv(&leftcount, d->cost, count),
-								do_count(ctxt, lw, w, le, d->left->next, lnull_cnt));
-						if (d->left->multi)
-							CACHE_COUNT(lcount[2], hist_accumv(&leftcount, d->cost, count),
-								do_count(ctxt, lw, w, le->next, d->left, lnull_cnt));
-						if (d->left->multi && le->multi)
-							CACHE_COUNT(lcount[3], hist_accumv(&leftcount, d->cost, count),
-								do_count(ctxt, lw, w, le, d->left, lnull_cnt));
+						leftcount =
+							scount(ctxt, lcount, lw, w, le, d->left, lnull_cnt);
 					}
 
 					if (0 < hist_total(&leftcount))
@@ -1541,17 +1594,8 @@ static Count_bin do_count(count_context_t *ctxt,
 				{
 					if (hist_total(&rightcount) == NO_COUNT)
 					{
-						CACHE_COUNT(rcount[0], rightcount = count,
-							do_count(ctxt, w, rw, d->right->next, re->next, rnull_cnt));
-						if (re->multi)
-							CACHE_COUNT(rcount[1], hist_accumv(&rightcount, d->cost, count),
-								do_count(ctxt, w, rw, d->right->next, re, rnull_cnt));
-						if (d->right->multi)
-							CACHE_COUNT(rcount[2], hist_accumv(&rightcount, d->cost, count),
-								do_count(ctxt, w, rw, d->right, re->next, rnull_cnt));
-						if (d->right->multi && re->multi)
-							CACHE_COUNT(rcount[3], hist_accumv(&rightcount, d->cost, count),
-								do_count(ctxt, w, rw, d->right, re, rnull_cnt));
+						rightcount =
+							scount(ctxt, rcount, w, rw, d->right, re, rnull_cnt);
 					}
 
 					if (0 < hist_total(&rightcount))
