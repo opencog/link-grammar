@@ -30,7 +30,9 @@
 #include "tokenize/word-structures.h"   // Word_Struct
 
 //#define RECOUNT
-//#define DEBUG_X_TABLE
+#ifdef DEBUG
+#define DEBUG_X_TABLE
+#endif
 
 typedef struct Parse_choice_struct Parse_choice;
 
@@ -221,11 +223,6 @@ extractor_t * extractor_new(Sentence sent)
 	pex->log2_x_table_size = log2_table_size;
 	pex->x_table_size = (1 << log2_table_size);
 
-#ifdef DEBUG_X_TABLE
-		printf("Allocating x_table of size %u (log2 %d)\n",
-		       pex->x_table_size, log2_table_size);
-#endif /* DEBUG_X_TABLE */
-
 	pex->x_table = (Pset_bucket**) xalloc(pex->x_table_size * sizeof(Pset_bucket*));
 	memset(pex->x_table, 0, pex->x_table_size * sizeof(Pset_bucket*));
 
@@ -249,35 +246,32 @@ extractor_t * extractor_new(Sentence sent)
 }
 
 /**
- * This is the function that should be used to free the set structure. Since
- * it's a dag, a recursive free function won't work.  Every time we create
- * a set element, we put it in the hash table, so this is OK.
+ * Free the x_table memory by freeing the hash table pointers and the
+ * memory pools of the Pset_bucket and Parse_choice elements.
  */
 void free_extractor(extractor_t * pex)
 {
 	if (!pex) return;
 
 #ifdef DEBUG_X_TABLE
-	int N = 0;
+	unsigned int num_entries = 0;
+
 	for (unsigned int i = 0; i < pex->x_table_size; i++)
 	{
-		int c = 0;
-		for (Pset_bucket *t = pex->x_table[i]; t != NULL; t = t->next)
-			c++;
-
-		if (c > 0)
-			;//printf("I %d: chain %d\n", i, c);
-		else
-			N++;
+		if (pex->x_table[i] == NULL) continue;
+		num_entries++;
 	}
-	printf("Used x_table %u/%u %.2f%%\n",
-	       pex->x_table_size-N, pex->x_table_size,
-	       100.0f*(pex->x_table_size-N)/pex->x_table_size);
+	printf("x_table: used=%u/%u (%.2f%%) pset_bucket=%zu (avg chain %.2f) "
+	       "parse_choice=%zu\n",
+	       num_entries, pex->x_table_size,
+	       100.0f*num_entries / pex->x_table_size,
+	       pool_num_elements_issued(pex->Pset_bucket_pool),
+	       1.0f*pool_num_elements_issued(pex->Pset_bucket_pool) / pex->x_table_size,
+	       pool_size(pex->Parse_choice_pool));
 #endif /* DEBUG_X_TABLE */
 
 	pex->parse_set = NULL;
 
-	//printf("Freeing x_table of size %d\n", pex->x_table_size);
 	xfree((void *) pex->x_table, pex->x_table_size * sizeof(Pset_bucket*));
 	pex->x_table_size = 0;
 	pex->x_table = NULL;
