@@ -145,7 +145,7 @@ bool resources_memory_exhausted(Resources r)
 	else return (r->memory_exhausted || (get_space_in_use() > r->max_memory));
 }
 
-#define RES_COL_WIDTH 40
+#define RES_COL_WIDTH 52
 
 /** print out the cpu ticks since this was last called */
 GNUC_PRINTF(2,0)
