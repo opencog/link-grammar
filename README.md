@@ -50,7 +50,7 @@ The terms of the license are given in the LICENSE file included with
 this software.
 
 Please see the
-[main web page](http://www.abisource.com/projects/link-grammar/)
+[main web page](https://opencog.github.io/link-grammar-website/)
 for more information.  This version is a continuation of the
 [original CMU parser](http://www.link.cs.cmu.edu/link).
 
@@ -105,7 +105,7 @@ the noun to the determiner: it again confirms that the noun is singular,
 and also that the noun starts with a consonant. (The `PH` link, not
 required here, is used to force phonetic agreement, distinguishing
 'a' from 'an').  These link types are documented in the
-[English Link Documentation](https://www.abisource.com/projects/link-grammar/dict/index.html).
+[English Link Documentation](https://opencog.github.io/link-grammar-website/dict/index.html).
 
 The bottom of the display is a listing of the "disjuncts" used for
 each word. The disjuncts are simply a list of the connectors that
@@ -138,7 +138,7 @@ The `LL` link connects the stem 'тест' to the suffix 'а'. The `MVA`
 link connects only to the suffix, because, in Russian, it is the
 suffixes that carry all of the syntactic structure, and not the stems.
 The Russian lexis is
-[documented here](https://www.abisource.com/projects/link-grammar/russian/doc/).
+[documented here](https://opencog.github.io/link-grammar-website/russian/doc/).
 
 The Thai dictionary is now fully developed, effectively covering the
 entire language.  An example in Thai:
@@ -242,10 +242,10 @@ topic:
   1992 *AAAI Symposium on Probabilistic Approaches to Natural Language*.
 
 There are many more papers and references listed on the
-[primary Link Grammar website](https://www.abisource.com/projects/link-grammar/).
+[primary Link Grammar website](https://opencog.github.io/link-grammar-website/)
 
 See also the
-[C/C++ API documentation](https://www.abisource.com/projects/link-grammar/api/index.html).
+[C/C++ API documentation](https://opencog.github.io/link-grammar-website/api/index.html).
 Bindings for other programming languages, including python3, java
 and node.js, can be found in the [bindings directory](bindings).
 (There are two sets of javascript bindings: one set for the library API,
@@ -310,7 +310,7 @@ it can be extracted using the `tar -zxf link-grammar.tar.gz` command
 at the command line.
 
 A tarball of the latest version can be downloaded from:<br>
-http://www.abisource.com/downloads/link-grammar
+[https://www.gnucash.org/link-grammar/downloads/](https://www.gnucash.org/link-grammar/downloads/)
 
 The files have been digitally signed to make sure that there was no
 corruption of the dataset during download, and to help ensure that
