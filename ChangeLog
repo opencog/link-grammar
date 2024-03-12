@@ -1,7 +1,8 @@
-Version 5.12.4 (XXX 2023)
+Version 5.12.4 (XXX 2024)
  * Minor English dict fixes. #1470
  * Use correct guard macro for glibc heap functions. #1471
  * MacOS build fix #1473
+ * Silence javascript build errors. #1377
 
 Version 5.12.3 (24 March 2023)
  * Assorted Atomese fixes.
