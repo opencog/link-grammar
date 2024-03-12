@@ -11,11 +11,18 @@ rm -rf dist
 mkdir dist
 
 # Compile link-parser.js & link-parser.wasm
-cp ../../../link-parser/.libs/link-parser link-parser.bc
+# XXX Do we really need to do this?? It seems that a link-parser.wasm
+# file was already created in the ../../../link-parser/.libs directory;
+# can't we just use that? Someone who knows jas & wasm needs to fix this...
+cp ../../../link-parser/link_parser-command-line.o command-line.bc
+cp ../../../link-parser/link_parser-lg_readline.o lg_readline.bc
+cp ../../../link-parser/link_parser-parser-utilities.o parser-utilities.bc
+cp ../../../link-parser/link_parser-link-parser.o link-parser.bc
 # Originally, this had `emcc liblink-grammar.so` but the .so
 # is not available on Apple Mac's (I guess it's called .shlib ??)
 # So change to .a which should work for all OS'es.
-emcc -O3 link-parser.bc ../../../link-grammar/.libs/liblink-grammar.a \
+emcc -O3 link-parser.bc command-line.bc lg_readline.bc parser-utilities.bc \
+	../../../link-grammar/.libs/liblink-grammar.a \
 	--pre-js pre.js \
 	-s WASM=1 \
 	-s ALLOW_MEMORY_GROWTH=1 \

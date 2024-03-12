@@ -15,10 +15,10 @@ emmake make clean
 emmake make
 popd
 
+# TODO: Build link-grammar
+# emcc -O3 ../../link-grammar/.libs/liblink-grammar.so -o liblink-grammar.js
+
 # Build link-parser
 ./link-parser/build.sh
-
-# TODO: Build link-grammar
-# emcc -O3 link-grammar/.libs/liblink-grammar.so -o liblink-grammar.js
 
 popd
