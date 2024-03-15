@@ -421,6 +421,37 @@ static bool fetch_counts(count_context_t *ctxt, count_t count[4],
 	return (count[0] > 0) || (count[1] > 0) || (count[2] > 0) || (count[3] > 0);
 }
 
+static
+Parse_set *mk_parse_set(fast_matcher_t *mchxt,
+                        count_context_t *ctxt, count_t count,
+                        int lw, int rw,
+                        Connector *le, Connector *re, unsigned int null_count,
+                        extractor_t *pex);
+static
+bool smk_parse_set(fast_matcher_t *mchxt,
+                   count_context_t *ctxt, count_t count[4],
+                   int lw, int rw,
+                   Connector *le, Connector *re, unsigned int null_count,
+                   extractor_t *pex, Parse_set *s[4])
+{
+	s[0] = mk_parse_set(mchxt, ctxt, count[0], lw, rw, le->next, re->next,
+	                    null_count, pex);
+
+	if (le->multi)
+		s[1] = mk_parse_set(mchxt, ctxt, count[1], lw, rw, le, re->next,
+		                    null_count, pex);
+
+	if (re->multi)
+		s[2] = mk_parse_set(mchxt, ctxt, count[2], lw, rw, le->next, re,
+		                    null_count, pex);
+
+	if (le->multi && re->multi)
+		s[3] = mk_parse_set(mchxt, ctxt, count[3], lw, rw, le, re,
+		                    null_count, pex);
+
+	return ((s[0] != NULL) || (s[1] != NULL) || (s[2] != NULL) || (s[3] != NULL));
+}
+
 /**
  * returns NULL if there are no ways to parse, or returns a pointer
  * to a set structure representing all the ways to parse.
@@ -583,10 +614,6 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 			for (unsigned int lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
-				int i, j;
-				Parse_set *ls[4], *rs[4];
-				bool ls_exists = false;
-
 				/* Here, lnull_count and rnull_count are the null_counts
 				 * we're assigning to those parts respectively. */
 				unsigned int rnull_count = null_count - lnull_count;
@@ -610,38 +637,24 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 						r_bnl = table_count(ctxt, lw, w, le, d->left, lnull_count);
 				}
 
-				for (i=0; i<4; i++) { ls[i] = rs[i] = NULL; }
+				Parse_set *ls[4] = { NULL };
+				bool ls_exists = false;
 				if (Lmatch &&  (Rmatch || (l_bnr > 0)))
 				{
-					ls[0] = mk_parse_set(mchxt, ctxt, lcount[0],
-					             lw, w, le->next, d->left->next,
-					             lnull_count, pex);
+					ls_exists = smk_parse_set(mchxt, ctxt, lcount,
+					                          lw, w, le, d->left,
+					                          lnull_count, pex, ls);
 
-					if (le->multi)
-						ls[1] = mk_parse_set(mchxt, ctxt, lcount[1],
-						              lw, w, le, d->left->next,
-						              lnull_count, pex);
 
-					if (d->left->multi)
-						ls[2] = mk_parse_set(mchxt, ctxt, lcount[2],
-						              lw, w, le->next, d->left,
-						              lnull_count, pex);
-
-					if (le->multi && d->left->multi)
-						ls[3] = mk_parse_set(mchxt, ctxt, lcount[3],
-						              lw, w, le, d->left,
-						              lnull_count, pex);
-
-					if (ls[0] != NULL || ls[1] != NULL || ls[2] != NULL || ls[3] != NULL)
+					if (ls_exists)
 					{
-						ls_exists = true;
 						/* Evaluate using the left match, but not the right */
 						Parse_set* rset = mk_parse_set(mchxt, ctxt, l_bnr,
 						                               w, rw, d->right, re,
 						                               rnull_count, pex);
 						if (rset != NULL)
 						{
-							for (i=0; i<4; i++)
+							for (int i  =0; i < 4; i++)
 							{
 								if (ls[i] == NULL) continue;
 								/* this ordering is probably not consistent with
@@ -657,26 +670,12 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 				if (Rmatch && (ls_exists || (r_bnl > 0)))
 				{
-					rs[0] = mk_parse_set(mchxt, ctxt, rcount[0],
-					                 w, rw, d->right->next, re->next,
-					                 rnull_count, pex);
+					Parse_set *rs[4] = { NULL };
+					bool rs_exists = smk_parse_set(mchxt, ctxt, rcount,
+					                               w, rw, d->right, re,
+					                               rnull_count, pex, rs);
 
-					if (d->right->multi)
-						rs[1] = mk_parse_set(mchxt, ctxt, rcount[1],
-					                 w, rw, d->right, re->next,
-						              rnull_count, pex);
-
-					if (re->multi)
-						rs[2] = mk_parse_set(mchxt, ctxt, rcount[2],
-						              w, rw, d->right->next, re,
-						              rnull_count, pex);
-
-					if (d->right->multi && re->multi)
-						rs[3] = mk_parse_set(mchxt, ctxt, rcount[3],
-						              w, rw, d->right, re,
-						              rnull_count, pex);
-
-					if ((rs[0] != NULL || rs[1] != NULL || rs[2] != NULL || rs[3] != NULL))
+					if (rs_exists)
 					{
 						if (le == NULL)
 						{
@@ -687,7 +686,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 							if (lset != NULL)
 							{
-								for (j=0; j<4; j++)
+								for (int j = 0; j < 4; j++)
 								{
 									if (rs[j] == NULL) continue;
 									/* this ordering is probably not consistent with
@@ -702,12 +701,12 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 						}
 						else
 						{
-							for (i=0; i<4; i++)
+							for (int  i = 0; i < 4; i++)
 							{
+								if (ls[i] == NULL) continue;
 								/* This ordering is probably not consistent with that
 								 * needed to use list_links. (??) */
-								if (ls[i] == NULL) continue;
-								for (j=0; j<4; j++)
+								for (int j = 0; j < 4; j++)
 								{
 									if (rs[j] == NULL) continue;
 									record_choice(ls[i], d->left,
