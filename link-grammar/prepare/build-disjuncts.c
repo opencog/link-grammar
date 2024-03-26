@@ -201,11 +201,11 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 }
 
 /**
- * Build a disjunct list out of the clause list c.
- * string is the print name of word that generated this disjunct.
+ * Build a disjunct list out of the clause list cl.
+ * wstring is the print name of word that generated this disjunct.
  */
 static Disjunct *
-build_disjunct(Sentence sent, Clause * cl, const char * string,
+build_disjunct(Sentence sent, Clause * cl, const char * wstring,
                const gword_set *gs, float cost_cutoff, Parse_Options opts)
 {
 	Pool_desc *connector_pool = sent->Connector_pool;
@@ -219,11 +219,10 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 	Disjunct *dis = NULL;
 	for (; cl != NULL; cl = cl->next)
 	{
-		Disjunct *ndis;
-
 		if (unlikely(NULL == cl->c)) continue; /* no connectors */
 		if (cl->totcost > cost_cutoff) continue;
 
+		Disjunct *ndis;
 #if USE_SAT_SOLVER
 		if (sat_solver) /* For the SAT-parser, until fixed. */
 			ndis = xalloc(sizeof(Disjunct));
@@ -264,9 +263,9 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 
 		/* XXX add_category() starts category strings by ' '.
 		 * FIXME Replace it by a better indication. */
-		if (sat_solver || (!IS_GENERATION(sent->dict) || (' ' != string[0])))
+		if (sat_solver || (!IS_GENERATION(sent->dict) || (' ' != wstring[0])))
 		{
-			ndis->word_string = string;
+			ndis->word_string = wstring;
 			ndis->cost = cl->totcost;
 			ndis->is_category = 0;
 		}
@@ -276,7 +275,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * string,
 			ndis->category =
 				malloc(sizeof(*ndis->category) * ndis->num_categories_alloced);
 			ndis->num_categories = 1;
-			ndis->category[0].num = strtol(string, NULL, 16);
+			ndis->category[0].num = strtol(wstring, NULL, 16);
 			ndis->category[1].num = 0; /* API array terminator */
 			assert(sat_solver || ((ndis->category[0].num > 0) &&
 			       (ndis->category[0].num < 64*1024)),
