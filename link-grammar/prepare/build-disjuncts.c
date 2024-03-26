@@ -155,20 +155,18 @@ static unsigned long count_clauses(Exp *e)
  */
 static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 {
-	Clause *c = NULL;
-
 	assert(e != NULL, "build_clause called with null parameter");
 	if (e->type == AND_type)
 	{
-		Clause *c1 = pool_alloc(ct->Clause_pool);
-		c1->c = NULL;
-		c1->next = NULL;
-		c1->totcost = 0.0;
+		Clause *c = pool_alloc(ct->Clause_pool);
+		c->c = NULL;
+		c->next = NULL;
+		c->totcost = 0.0;
 		for (Exp *opd = e->operand_first; opd != NULL; opd = opd->operand_next)
 		{
 			Clause *c2 = build_clause(opd, ct, NULL);
 			Clause *c_head = NULL;
-			for (Clause *c3 = c1; c3 != NULL; c3 = c3->next)
+			for (Clause *c3 = c; c3 != NULL; c3 = c3->next)
 			{
 				for (Clause *c4 = c2; c4 != NULL; c4 = c4->next)
 				{
@@ -181,20 +179,24 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 				}
 			}
 #if BUILD_DISJUNCTS_FREE_INETERMEDIATE_MEMORY /* Undefined - CPU overhead. */
-			free_clause_list(c1, ct);
+			free_clause_list(c, ct);
 			free_clause_list(c2, ct);
 #endif
-			c1 = c_head;
+			c = c_head;
 		}
-		c = c1;
 		if ((c != NULL) && (c->next == NULL) && (c_last != NULL)) *c_last = c;
 		debug_last(c, c_last, "AND_type");
+
+		for (Clause *c1 = c; c1 != NULL; c1 = c1->next)
+			c1->totcost += e->cost;
+		return c;
 	}
-	else if (e->type == OR_type)
+
+	if (e->type == OR_type)
 	{
 		Clause *or_last = NULL;
+		Clause *c = build_clause(e->operand_first, ct, &or_last);
 
-		c = build_clause(e->operand_first, ct, &or_last);
 		/* We'll concatenate the lists of clauses. */
 		for (Exp *opd = e->operand_first->operand_next; opd != NULL; opd = opd->operand_next)
 		{
@@ -205,25 +207,23 @@ static Clause * build_clause(Exp *e, clause_context *ct, Clause **c_last)
 
 		if (c_last != NULL) *c_last = or_last;
 		debug_last(c, c_last, "OR_type");
+
+		for (Clause *c1 = c; c1 != NULL; c1 = c1->next)
+			c1->totcost += e->cost;
+		return c;
 	}
-	else if (e->type == CONNECTOR_type)
+
+	if (e->type == CONNECTOR_type)
 	{
-		c = pool_alloc(ct->Clause_pool);
+		Clause *c = pool_alloc(ct->Clause_pool);
 		c->c = build_terminal(e, ct);
-		c->totcost = 0.0;
 		c->next = NULL;
+		c->totcost = e->cost;
 		if (c_last != NULL) *c_last = c;
-	}
-	else
-	{
-		assert(false, "Unknown expression type %d", (int)e->type);
+		return c;
 	}
 
-	/* c now points to the list of clauses */
-	for (Clause *c1 = c; c1 != NULL; c1 = c1->next)
-		c1->totcost += e->cost;
-
-	return c;
+	assert(false, "Unknown expression type %d", (int)e->type);
 }
 
 /**
