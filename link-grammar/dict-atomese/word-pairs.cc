@@ -337,6 +337,7 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
                                 const HandleSeq& sent_words)
 {
 	Exp* allexp = get_pair_exprs(dict, germ);
+	if (nullptr == allexp) return allexp;
 
 	// Wrap the pair-expressions with a solitary AND-node from the
 	// temporary Sentance::Exp_pool, as otherwise the operand_next

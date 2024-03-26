@@ -725,7 +725,7 @@ Dict_node * as_lookup_list(Dictionary dict, const char *s)
 		}
 	}
 
-	// If we are here, then thre are only pairs, no sections.
+	// If we are here, then there are only pairs, no sections.
 	if (cpr)
 	{
 		Dict_node * dn = dict_node_new();
