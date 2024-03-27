@@ -87,7 +87,7 @@ dict-common/regex-morph.lo: CFLAGS =
 endif
 
 liblink_grammar_la_SOURCES =        \
-	api.c                            \
+	config.c                         \
 	connectors.c                     \
 	dict-common/dialect.c            \
 	dict-common/dict-affix-impl.c    \
@@ -122,6 +122,7 @@ liblink_grammar_la_SOURCES =        \
 	linkage/sane.c                   \
 	linkage/score.c                  \
 	memory-pool.c                    \
+	options.c                        \
 	parse/count.c                    \
 	parse/extract-links.c            \
 	parse/fast-match.c               \
@@ -140,6 +141,7 @@ liblink_grammar_la_SOURCES =        \
 	print/print-util.c               \
 	print/wcwidth.c                  \
 	resources.c                      \
+	sentence.c                       \
 	string-set.c                     \
 	string-id.c                      \
 	tokenize/anysplit.c              \
