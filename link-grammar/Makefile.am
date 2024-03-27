@@ -122,6 +122,7 @@ liblink_grammar_la_SOURCES =        \
 	linkage/sane.c                   \
 	linkage/score.c                  \
 	memory-pool.c                    \
+	options.c                        \
 	parse/count.c                    \
 	parse/extract-links.c            \
 	parse/fast-match.c               \
