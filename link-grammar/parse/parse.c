@@ -677,7 +677,6 @@ void classic_parse(Sentence sent, Parse_Options opts)
 
 		if (NULL != ts_pruning)
 		{
-
 			free_tracon_sharing(ts_parsing);
 			ts_parsing = pack_sentence_for_parsing(sent);
 			print_time(opts, "Encoded for parsing");
