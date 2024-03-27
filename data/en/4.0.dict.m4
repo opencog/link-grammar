@@ -19,7 +19,7 @@ changecom(`%')
  %                                                                           %
  %***************************************************************************%
 
-#define dictionary-version-number 5.12.1;
+#define dictionary-version-number 5.12.4;
 #define dictionary-locale         en_US.UTF-8;
 
 % The default largest disjunct cost to consider during parsing.
