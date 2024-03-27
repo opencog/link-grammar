@@ -609,11 +609,11 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 		for (size_t mle = mlb; get_match_list_element(mchxt, mle) != NULL; mle++)
 		{
 			Disjunct *d = get_match_list_element(mchxt, mle);
-			bool Lmatch = d->match_left;
-			bool Rmatch = d->match_right;
 
 			for (unsigned int lnull_count = 0; lnull_count <= null_count; lnull_count++)
 			{
+				bool Lmatch = d->match_left;
+				bool Rmatch = d->match_right;
 				/* Here, lnull_count and rnull_count are the null_counts
 				 * we're assigning to those parts respectively. */
 				unsigned int rnull_count = null_count - lnull_count;
