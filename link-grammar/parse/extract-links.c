@@ -29,6 +29,8 @@
 #include "linkage/linkage.h"
 #include "tokenize/word-structures.h"   // Word_Struct
 
+#define D_EXTRACT 5 /* General debug level for this file. */
+
 //#define RECOUNT
 #ifdef DEBUG
 #define DEBUG_X_TABLE
@@ -254,20 +256,23 @@ void free_extractor(extractor_t * pex)
 	if (!pex) return;
 
 #ifdef DEBUG_X_TABLE
-	unsigned int num_entries = 0;
-
-	for (unsigned int i = 0; i < pex->x_table_size; i++)
+	if (verbosity_level(D_EXTRACT))
 	{
-		if (pex->x_table[i] == NULL) continue;
-		num_entries++;
+		unsigned int num_entries = 0;
+
+		for (unsigned int i = 0; i < pex->x_table_size; i++)
+		{
+			if (pex->x_table[i] == NULL) continue;
+			num_entries++;
+		}
+		printf("x_table: used=%u/%u (%.2f%%) pset_bucket=%zu (avg chain %.2f) "
+				 "parse_choice=%zu\n",
+				 num_entries, pex->x_table_size,
+				 100.0f*num_entries / pex->x_table_size,
+				 pool_num_elements_issued(pex->Pset_bucket_pool),
+				 1.0f*pool_num_elements_issued(pex->Pset_bucket_pool) / pex->x_table_size,
+				 pool_size(pex->Parse_choice_pool));
 	}
-	printf("x_table: used=%u/%u (%.2f%%) pset_bucket=%zu (avg chain %.2f) "
-	       "parse_choice=%zu\n",
-	       num_entries, pex->x_table_size,
-	       100.0f*num_entries / pex->x_table_size,
-	       pool_num_elements_issued(pex->Pset_bucket_pool),
-	       1.0f*pool_num_elements_issued(pex->Pset_bucket_pool) / pex->x_table_size,
-	       pool_size(pex->Parse_choice_pool));
 #endif /* DEBUG_X_TABLE */
 
 	pex->parse_set = NULL;
