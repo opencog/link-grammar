@@ -21,7 +21,6 @@
 #include "dict-common/dict-utils.h"     // patch_subscript
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
-#include "dict-file/dict-file.h"
 #include "dict-ram/dict-ram.h"
 #include "error.h"
 #include "externs.h"
@@ -121,6 +120,17 @@
   Subscripts that start with "_" are reserved for words that are
   automatically generated (currently only for idioms).
 */
+
+struct File_Dictionary_s
+{
+	const char    * input;
+	const char    * pin;
+	bool            recursive_error;
+	bool            is_special;
+	int             already_got_it; /* For char, but needs to hold EOF */
+	char            token[MAX_TOKEN_LENGTH];
+};
+typedef struct File_Dictionary_s * File_Dictionary;
 
 static bool link_advance(Dictionary dict);
 
@@ -1006,15 +1016,12 @@ static bool read_entry(Dictionary dict)
 				          dict->name, dict->line_number-1, dict_name);
 				goto syntax_error;
 			}
-			fdict->input = instr;
-			fdict->pin = fdict->input;
 
-			/* The line number and dict name are used for error reporting */
-			dict->line_number = 1;
+			/* The dict name are used for error reporting */
 			dict->name = dict_name;
 
 			/* Now read the thing in. */
-			rc = read_dictionary(dict);
+			rc = read_dictionary(dict, instr);
 
 			dict->name            = save_name;
 			fdict->is_special     = save_is_special;
@@ -1121,8 +1128,16 @@ syntax_error:
 	return false;
 }
 
-bool read_dictionary(Dictionary dict)
+bool read_dictionary(Dictionary dict, const char * input)
 {
+	File_Dictionary fdict = dict->file_data;
+	if (NULL == fdict)
+		fdict = malloc(sizeof(struct File_Dictionary_s));
+
+	fdict->input = input;
+	fdict->pin = fdict->input;
+	dict->line_number = 1;
+
 	if (!link_advance(dict))
 		return false;
 
@@ -1130,7 +1145,6 @@ bool read_dictionary(Dictionary dict)
 	 * Note: At the end of reading a dictionary, dict->pin points to one
 	 * character after the input. Referring its [-1] element is safe even if
 	 * the dict file size is 0. */
-	File_Dictionary fdict = dict->file_data;
 	while ('\0' != fdict->pin[-1])
 	{
 		if (!read_entry(dict))
