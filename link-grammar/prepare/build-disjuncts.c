@@ -11,7 +11,7 @@
 /*                                                                       */
 /*************************************************************************/
 
-/* stuff for transforming a dictionary entry into a disjunct list */
+/* Code that transforms a dictionary entry into a disjunct list */
 
 #include "build-disjuncts.h"
 #include "connectors.h"
