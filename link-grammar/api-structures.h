@@ -104,7 +104,8 @@ struct Parse_Options_s
 #endif
 
 	/* Options governing the parser internals operation */
-	float disjunct_cost;  /* Max disjunct cost to allow */
+	int max_disjuncts;     /* Max number of disjuncts. */
+	float disjunct_cost;   /* Max disjunct cost to allow */
 	short min_null_count;  /* The minimum number of null links to allow */
 	short max_null_count;  /* The maximum number of null links to allow */
 	bool islands_ok;       /* If TRUE, then linkages with islands
@@ -112,7 +113,7 @@ struct Parse_Options_s
 	                          will be generated (default=FALSE) */
 	size_t short_length;   /* Links that are limited in length can be
 	                          no longer than this.  Default = 16 */
-	bool all_short;        /* If true, there can be no connectors that are exempt */
+	bool all_short;        /* If true, no connectors that are exempt. */
 	bool repeatable_rand;  /* Reset rand number gen after every parse. */
 
 	/* Options governing post-processing */

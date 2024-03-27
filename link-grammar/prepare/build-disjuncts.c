@@ -350,37 +350,36 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	pool_reuse(ct.Clause_pool);
 	pool_reuse(ct.Tconnector_pool);
 
-#define STOCHASTIC_TRIM
-#ifdef STOCHASTIC_TRIM
+	/* We are done, in the concvetional case. */
+	if (0 == opts->max_disjuncts) return dis;
+
 	/* If there are more than the allowed number of disjuncts,
 	 * then randomly discard some of them. The discard is done
 	 * with uniform weighting; no attempt to look at the cost
 	 * is made. A fancier algo might selectively choose those
 	 * with lower cost.
 	 */
+	unsigned int maxdj = opts->max_disjuncts;
 	unsigned int discnt = count_disjuncts(dis);
-	unsigned int maxdj = 250000;
-	if (maxdj < discnt)
-	{
-		unsigned int rst = sent->rand_state;
-		Disjunct *kdis = dis;
-		Disjunct *ktail = dis;
-		for (Disjunct *d = dis->next; d != NULL; d=d->next)
-		{
-			unsigned int pick = rand_r(&rst) % discnt;
-			if (pick < maxdj)
-			{
-				ktail->next = d;
-				ktail = d;
-			}
-		}
-		ktail->next = NULL;
-		if (0 != sent->rand_state) sent->rand_state = rst;
+	if (discnt < maxdj) return dis;
 
-		return kdis;
+	/* If we are here, we need to trim down the list */
+	unsigned int rst = sent->rand_state;
+	Disjunct *kdis = dis;
+	Disjunct *ktail = dis;
+	for (Disjunct *d = dis->next; d != NULL; d=d->next)
+	{
+		unsigned int pick = rand_r(&rst) % discnt;
+		if (pick < maxdj)
+		{
+			ktail->next = d;
+			ktail = d;
+		}
 	}
-#endif
-	return dis;
+	ktail->next = NULL;
+	if (0 != sent->rand_state) sent->rand_state = rst;
+
+	return kdis;
 }
 
 #ifdef DEBUG
