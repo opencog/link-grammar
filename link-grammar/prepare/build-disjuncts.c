@@ -349,6 +349,37 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	// print_disjunct_list(dis);
 	pool_reuse(ct.Clause_pool);
 	pool_reuse(ct.Tconnector_pool);
+
+#define STOCHASTIC_TRIM
+#ifdef STOCHASTIC_TRIM
+	/* If there are more than the allowed number of disjuncts,
+	 * then randomly discard some of them. The discard is done
+	 * with uniform weighting; no attempt to look at the cost
+	 * is made. A fancier algo might selectively choose those
+	 * with lower cost.
+	 */
+	unsigned int discnt = count_disjuncts(dis);
+	unsigned int maxdj = 250000;
+	if (maxdj < discnt)
+	{
+		unsigned int rst = sent->rand_state;
+		Disjunct *kdis = dis;
+		Disjunct *ktail = dis;
+		for (Disjunct *d = dis->next; d != NULL; d=d->next)
+		{
+			unsigned int pick = rand_r(&rst) % discnt;
+			if (pick < maxdj)
+			{
+				ktail->next = d;
+				ktail = d;
+			}
+		}
+		ktail->next = NULL;
+		if (0 != sent->rand_state) sent->rand_state = rst;
+
+		return kdis;
+	}
+#endif
 	return dis;
 }
 
