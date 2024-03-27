@@ -198,7 +198,7 @@ static inline unsigned int connector_uc_num(const Connector * c)
 
 
 /* Connector utilities ... */
-Connector * connector_new(Pool_desc *, const condesc_t *, Parse_Options);
+Connector * connector_new(Pool_desc *, const condesc_t *);
 void set_connector_farthest_word(Exp *, int, int, Parse_Options);
 void free_connectors(Connector *);
 void calculate_connector_info(condesc_t *);

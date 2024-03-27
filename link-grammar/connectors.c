@@ -77,8 +77,7 @@ void set_connector_farthest_word(Exp *e, int w, int sent_length,
 	}
 }
 
-Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc,
-                          Parse_Options opts)
+Connector * connector_new(Pool_desc *connector_pool, const condesc_t *desc)
 {
 	Connector *c;
 

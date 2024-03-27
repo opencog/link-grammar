@@ -276,7 +276,7 @@ build_disjunct(Sentence sent, Clause * cl, const char * wstring,
 				continue;
 			}
 
-			Connector *n = connector_new(connector_pool, t->e->condesc, opts);
+			Connector *n = connector_new(connector_pool, t->e->condesc);
 			t->tracon = n; /* cache this tracon */
 
 			n->exp_pos = t->e->pos;
