@@ -88,6 +88,7 @@ endif
 
 liblink_grammar_la_SOURCES =        \
 	api.c                            \
+	config.c                         \
 	connectors.c                     \
 	dict-common/dialect.c            \
 	dict-common/dict-affix-impl.c    \
