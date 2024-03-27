@@ -53,7 +53,11 @@ Parse_Options parse_options_create(void)
 	debug = po->debug = (char *)"";
 	test = po->test = (char *)"";
 
-	/* Set dijunct_cost to a bogus value of -10000. The dict-common
+	/* Disable cap on number of disjuncts. Individual dicts might
+	 * over-ride. Atomese dicts often have crazy-large numbers. */
+	po->max_disjuncts = UNINITIALIZED_MAX_DISJUNCTS;
+
+	/* Set disjunct_cost to a bogus value of -10000. The dict-common
 	 * code will set this to a more reasonable default. */
 	po->disjunct_cost = UNINITIALIZED_MAX_DISJUNCT_COST;
 	po->min_null_count = 0;

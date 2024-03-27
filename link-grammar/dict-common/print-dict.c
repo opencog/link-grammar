@@ -1073,8 +1073,6 @@ static char *display_word_split(Dictionary dict,
                char * (*display)(Dictionary, const char *, const void **),
                const char **arg)
 {
-	Sentence sent;
-
 	if ('\0' == *word) return NULL; /* avoid trying null strings */
 
 	/* SUBSCRIPT_DOT in a sentence word is not interpreted as SUBSCRIPT_MARK,
@@ -1088,7 +1086,7 @@ static char *display_word_split(Dictionary dict,
 
 	int spell_option = parse_options_get_spell_guess(opts);
 	parse_options_set_spell_guess(opts, 0);
-	sent = sentence_create(pword, dict);
+	Sentence sent = sentence_create(pword, dict);
 
 	if (pword[0] == '<' && (strchr(pword, '>') != NULL) &&
 	    ((strchr(pword, '>')[1] == '\0') ||

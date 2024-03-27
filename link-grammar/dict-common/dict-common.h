@@ -34,12 +34,14 @@
  * is used. */
 static const float UNINITIALIZED_MAX_DISJUNCT_COST = -10000.0f;
 static const float DEFAULT_MAX_DISJUNCT_COST = 2.7f;
+static const float UNINITIALIZED_MAX_DISJUNCTS = -1;
 
 /* We need some of these as literal strings. */
-#define LG_DISJUNCT_COST                        "max-disjunct-cost"
 #define LG_DICTIONARY_VERSION_NUMBER            "dictionary-version-number"
 #define LG_DICTIONARY_LOCALE                    "dictionary-locale"
 #define LG_DISABLE_DOWNCASING                   "disable-downcasing"
+#define LG_DISJUNCT_COST                        "max-disjunct-cost"
+#define LG_MAX_DISJUNCTS                        "max-disjuncts"
 
 /* Forward decls */
 typedef struct Afdict_class_struct Afdict_class;
@@ -126,11 +128,16 @@ struct Dictionary_s
 	locale_t     lctype;    /* Locale argument for the *_l() functions */
 
 	int          num_entries;
-	float default_max_disjunct_cost;
 	dfine_s      dfine;    /* Name-value definitions */
+
+	/* Parse options for which defaults are provided by the dictionary. */
+	float        default_max_disjunct_cost; /* Dictionary-specific scale. */
+	int          default_max_disjuncts;     /* Max number of disjuncts. */
 
 	const char * zzz_connector;
 
+	/* Dictionary-defined parameters. Control behavior of how
+	 * words are looked up in the dictionary. */
 	bool         use_unknown_word;
 	bool         unknown_word_defined;
 	bool         left_wall_defined;
@@ -183,13 +190,14 @@ struct Dictionary_s
 	void (*clear_cache)(Dictionary);
 	void (*close)(Dictionary);
 
-	pp_knowledge  * base_knowledge;    /* Core post-processing rules */
-	pp_knowledge  * hpsg_knowledge;    /* Head-Phrase Structure rules */
 	String_set *    string_set;        /* Set of link names in the dictionary */
 	Word_file *     word_file_header;
 	ConTable        contable;
+	Pool_desc *     Exp_pool;
 
-	Pool_desc  * Exp_pool;
+	/* Post-processing */
+	pp_knowledge  * base_knowledge;    /* Core post-processing rules */
+	pp_knowledge  * hpsg_knowledge;    /* Head-Phrase Structure rules */
 
 	/* Sentence generation */
 	unsigned int num_categories;

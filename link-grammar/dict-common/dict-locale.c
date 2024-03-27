@@ -393,24 +393,21 @@ void dictionary_setup_locale(Dictionary dict)
 
 static bool dictionary_setup_max_disjunct_cost(Dictionary dict)
 {
-	const char *disjunct_cost_str =
-		linkgrammar_get_dict_define(dict, LG_DISJUNCT_COST);
-	if (NULL == disjunct_cost_str)
+	const char *valstr = linkgrammar_get_dict_define(dict, LG_DISJUNCT_COST);
+	if (NULL == valstr)
 	{
 		dict->default_max_disjunct_cost = DEFAULT_MAX_DISJUNCT_COST;
-	}
-	else
-	{
-		float disjunct_cost_value;
-		if (!strtofC(disjunct_cost_str, &disjunct_cost_value))
-		{
-			prt_error("Error: %s: Invalid cost \"%s\"\n", LG_DISJUNCT_COST,
-			          disjunct_cost_str);
-			return false;
-		}
-		dict->default_max_disjunct_cost = disjunct_cost_value;
+		return true;
 	}
 
+	float value;
+	if (!strtofC(valstr, &value))
+	{
+		prt_error("Error: %s: Invalid cost \"%s\"\n",
+		          LG_DISJUNCT_COST, valstr);
+		return false;
+	}
+	dict->default_max_disjunct_cost = value;
 	return true;
 }
 
@@ -454,8 +451,13 @@ bool dictionary_setup_defines(Dictionary dict)
 	if (NULL != ddn && 0 != strcmp(ddn, "false") && 0 != strcmp(ddn, "0"))
 		dict->disable_downcasing = true;
 
-	if (!dictionary_setup_max_disjunct_cost(dict)) return false;
+	/* Parse options that have default values in dictionaries */
+	dict->default_max_disjuncts = 0;
+	const char *mdstr = linkgrammar_get_dict_define(dict, LG_MAX_DISJUNCTS);
+	if (mdstr)
+		dict->default_max_disjuncts = atoi(mdstr);
 
+	if (!dictionary_setup_max_disjunct_cost(dict)) return false;
 	return true;
 }
 

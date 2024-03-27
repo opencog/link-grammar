@@ -250,6 +250,9 @@ int sentence_parse(Sentence sent, Parse_Options opts)
 	if (opts->disjunct_cost == UNINITIALIZED_MAX_DISJUNCT_COST)
 		opts->disjunct_cost = dict->default_max_disjunct_cost;
 
+	if (opts->max_disjuncts == UNINITIALIZED_MAX_DISJUNCTS)
+		opts->max_disjuncts = dict->default_max_disjuncts;
+
 	sent->num_valid_linkages = 0;
 
 	/* If the sentence has not yet been split, do so now.
