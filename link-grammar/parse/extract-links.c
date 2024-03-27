@@ -282,7 +282,7 @@ void free_extractor(extractor_t * pex)
 	pex->x_table_size = 0;
 	pex->x_table = NULL;
 
-#if defined __GLIBC__
+#if HAVE_MALLOC_TRIM
 	// MST parsing can result in pathological cases, with almost a
 	// billion elts in the Parse_choice_pool. This blows up the
 	// resident-set size (RSS) over time. Avoid this issue by trimming.
@@ -298,7 +298,7 @@ void free_extractor(extractor_t * pex)
 
 	xfree((void *) pex, sizeof(extractor_t));
 
-#if defined __GLIBC__
+#if HAVE_MALLOC_TRIM
 	// malloc_trim() is a gnu extension.  An alternative would be
 	// to call madvise(MADV_DONTNEED) but this is more complicated.
 	if (trim) malloc_trim(0);

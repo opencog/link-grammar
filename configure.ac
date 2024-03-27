@@ -105,7 +105,7 @@ AC_LANG([C])
 
 AC_C_CONST
 
-AC_CHECK_FUNCS(strndup strtok_r sigaction)
+AC_CHECK_FUNCS(strndup strtok_r sigaction malloc_trim)
 AC_CHECK_FUNCS(aligned_alloc posix_memalign _aligned_malloc)
 
 AC_FUNC_ALLOCA
