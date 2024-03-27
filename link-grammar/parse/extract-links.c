@@ -543,7 +543,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 			{
 				dummy = dummy_set(lw, w, null_count-1, pex);
 				record_choice(dummy, NULL,
-				              pset,  NULL,
+				              pset, NULL,
 				              NULL, &xtp->set, pex);
 				RECOUNT({xtp->set.recount += pset->recount;})
 			}
@@ -626,13 +626,13 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 				/* Now, we determine if (based on table only) we can see that
 				   the current range is not parsable. */
 
-				count_t lcount[4] = { 0 }, rcount[4] =  { 0 };
+				count_t lcount[4] = { 0 }, rcount[4] = { 0 };
 				if (Lmatch)
 					Lmatch = fetch_counts(ctxt, lcount, lw, w, le, d->left, lnull_count);
 				if (Rmatch && (Lmatch || (le == NULL)))
 					Rmatch = fetch_counts(ctxt, rcount, w, rw, d->right, re, rnull_count);
 
-				count_t l_bnr =  0, r_bnl = 0;
+				count_t l_bnr = 0, r_bnl = 0;
 				if (Lmatch)
 					l_bnr = table_count(ctxt, w, rw, d->right, re, rnull_count);
 				else
@@ -644,7 +644,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 
 				Parse_set *ls[4] = { NULL };
 				bool ls_exists = false;
-				if (Lmatch &&  (Rmatch || (l_bnr > 0)))
+				if (Lmatch && (Rmatch || (l_bnr > 0)))
 				{
 					ls_exists = smk_parse_set(mchxt, ctxt, lcount,
 					                          lw, w, le, d->left,
@@ -659,13 +659,13 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 						                               rnull_count, pex);
 						if (rset != NULL)
 						{
-							for (int i  =0; i < 4; i++)
+							for (int i = 0; i < 4; i++)
 							{
 								if (ls[i] == NULL) continue;
 								/* this ordering is probably not consistent with
 								 * that needed to use list_links */
 								record_choice(ls[i], d->left,
-								              rset,  NULL /* d->right */,
+								              rset, NULL /* d->right */,
 								              d, &xtp->set, pex);
 								RECOUNT({xtp->set.recount += (w_count_t)ls[i]->recount * rset->recount;})
 							}
@@ -706,7 +706,7 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 						}
 						else
 						{
-							for (int  i = 0; i < 4; i++)
+							for (int i = 0; i < 4; i++)
 							{
 								if (ls[i] == NULL) continue;
 								/* This ordering is probably not consistent with that
@@ -742,7 +742,7 @@ static bool set_node_overflowed(Parse_set *set)
 
 	for (pc = set->first; pc != NULL; pc = pc->next)
 	{
-		n  += (w_count_t)pc->set[0]->count * pc->set[1]->count;
+		n += (w_count_t)pc->set[0]->count * pc->set[1]->count;
 		if (PARSE_NUM_OVERFLOW < n) return true;
 	}
 	return false;
