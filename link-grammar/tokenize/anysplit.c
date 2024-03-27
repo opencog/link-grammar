@@ -242,13 +242,10 @@ static int split(int word_length, int nparts, split_cache *scl)
  */
 static int rng_uniform(unsigned int *seedp, size_t nsplits)
 {
-	int res;
-
-	res = rand_r(seedp);
+	int res = rand_r(seedp);
 
 	/* I don't mind the slight skew */
 	return res % nsplits;
-
 }
 
 /**
