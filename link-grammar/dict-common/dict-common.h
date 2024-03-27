@@ -177,6 +177,7 @@ struct Dictionary_s
 #ifdef HAVE_ATOMESE
 	void *          as_server;         /* cogserver connection */
 #endif
+	void *          file_data;         /* file-back dictionary */
 
 	void (*insert_entry)(Dictionary, Dict_node *, int);
 
@@ -205,19 +206,9 @@ struct Dictionary_s
 	Category * category;      /* Word lists - indexed by category number */
 	bool generate_walls;      /* Generate walls too for wildcard words */
 
-	/* Private data elements that come in play only while file-backed
-	 * dictionaries are being read, and are not otherwise used.
-	 * TODO: These should be moved to a private structure, accessible
-	 * only to the file backend.
-	 */
-	const char    * input;
-	const char    * pin;
-	bool            recursive_error;
-	bool            is_special;
-	int             already_got_it; /* For char, but needs to hold EOF */
+	/* File I/O cruft */
 	int             line_number;
 	char            current_idiom[IDIOM_LINK_SZ];
-	char            token[MAX_TOKEN_LENGTH];
 };
 
 bool is_stem(const char *);

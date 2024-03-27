@@ -24,6 +24,7 @@
 #include "dict-common/file-utils.h"
 #include "dict-common/idiom.h"
 #include "dict-common/regex-morph.h"
+#include "dict-file/dict-file.h"
 #include "dict-ram/dict-ram.h"
 #include "post-process/pp_knowledge.h"
 #include "read-dialect.h"
@@ -228,9 +229,11 @@ dictionary_six_str(const char * lang,
 	                          /*align*/false, /*exact*/false);
 
 	/* Read dictionary from the input string. */
+	File_Dictionary fdict = malloc(sizeof(struct File_Dictionary_s));
+	dict->file_data = fdict;
 
-	dict->input = input;
-	dict->pin = dict->input;
+	fdict->input = input;
+	fdict->pin = fdict->input;
 	if (!read_dictionary(dict))
 	{
 		goto failure;
