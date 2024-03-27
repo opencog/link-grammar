@@ -11,27 +11,21 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <string.h>
-
 #include "api-structures.h"
-#include "dict-common/dict-defines.h"
-#include "dict-common/dialect.h"
+#include "dict-common/dict-common.h"
 #include "dict-common/dict-utils.h"
 #include "disjunct-utils.h"             // free_sentence_disjuncts
 #include "linkage/linkage.h"
-#include "memory-pool.h"
 #include "parse/histogram.h"            // PARSE_NUM_OVERFLOW
 #include "parse/parse.h"
 #include "post-process/post-process.h"  // post_process_new
 #include "prepare/exprune.h"
-#include "string-set.h"
-#include "tokenize/wordgraph.h"         // wordgraph_delete
 #include "resources.h"
 #include "sat-solver/sat-encoder.h"
 #include "tokenize/lookup-exprs.h"
 #include "tokenize/tokenize.h"
+#include "tokenize/wordgraph.h"         // wordgraph_delete
 #include "tokenize/word-structures.h"   // Word_struct
-#include "utilities.h"
 
 /***************************************************************
 *
