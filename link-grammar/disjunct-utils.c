@@ -197,10 +197,7 @@ Disjunct * catenate_disjuncts(Disjunct *d1, Disjunct *d2)
 unsigned int count_disjuncts(Disjunct * d)
 {
 	unsigned int count = 0;
-	for (; d != NULL; d = d->next)
-	{
-		count++;
-	}
+	for (; d != NULL; d = d->next) count++;
 	return count;
 }
 
@@ -220,6 +217,7 @@ static unsigned int count_connectors(Sentence sent)
 
 	return ccnt;
 }
+
 /* ============================================================= */
 
 typedef struct disjunct_dup_table_s disjunct_dup_table;
