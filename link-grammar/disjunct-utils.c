@@ -962,9 +962,9 @@ void free_tracon_memblock(Tracon_sharing *ts)
  * tracon memory and generate tracon IDs (for parsing) or tracon lists
  * with reference count (for pruning). Aka "connector encoding".
  *
- * The disjunct and connectors packing in a contiguous memory facilitate a
+ * Packing the disjunct and connectors into contiguous memory facilitate
  * better memory caching for long sentences (a performance gain of a few
- * percents in the initial implementation, in which this was the sole
+ * percent in the initial implementation, in which this was the sole
  * purpose of this packing.) In addition, tracon memory sharing
  * drastically reduces the memory used for connectors.
  *
