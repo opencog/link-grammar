@@ -351,7 +351,7 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	pool_reuse(ct.Tconnector_pool);
 
 	/* We are done, in the concvetional case. */
-	if (0 == opts->max_disjuncts) return dis;
+	if (NULL == opts || 0 == opts->max_disjuncts) return dis;
 
 	/* If there are more than the allowed number of disjuncts,
 	 * then randomly discard some of them. The discard is done
