@@ -965,51 +965,31 @@ static bool read_entry(FileCursor fcurs)
 		}
 		else if (0 == strcmp(fcurs->token, "#include"))
 		{
-			bool rc;
-			char* instr;
-			char* dict_name;
-			const char * save_name;
-			bool save_is_special;
-			const char * save_input;
-			const char * save_pin;
-			int save_already_got_it;
-			int save_line_number;
-			size_t skip_slash;
-
 			if (!link_advance(fcurs)) goto syntax_error;
 
-			Dictionary dict = fcurs->dict;
-
-			skip_slash          = ('/' == fcurs->token[0]) ? 1 : 0;
-			dict_name           = strdupa(fcurs->token);
-			save_name           = fcurs->dict->name;
-			save_is_special     = fcurs->is_special;
-			save_input          = fcurs->input;
-			save_pin            = fcurs->pin;
-			save_already_got_it = fcurs->already_got_it;
-			save_line_number    = dict->line_number;
-
 			/* OK, token contains the filename to read ... */
-			instr = get_file_contents(dict_name + skip_slash);
+			char* dict_name = strdupa(fcurs->token);
+			size_t skip_slash = ('/' == fcurs->token[0]) ? 1 : 0;
+			char* instr = get_file_contents(dict_name + skip_slash);
 			if (NULL == instr)
 			{
+				Dictionary dict = fcurs->dict;
 				prt_error("Error: While parsing dictionary \"%s\":\n"
 				          "\t Line %d: Could not open subdictionary \"%s\"\n",
 				          dict->name, dict->line_number-1, dict_name);
 				goto syntax_error;
 			}
 
-			/* The dict name are used for error reporting */
+			/* The dict name and line-number are used for error reporting */
+			Dictionary dict = fcurs->dict;
+			const char * save_name = dict->name;
+			int save_line_number = dict->line_number;
 			dict->name = dict_name;
 
 			/* Now read the thing in. */
-			rc = read_dictionary(dict, instr);
+			bool rc = read_dictionary(dict, instr);
 
 			dict->name            = save_name;
-			fcurs->is_special     = save_is_special;
-			fcurs->input          = save_input;
-			fcurs->pin            = save_pin;
-			fcurs->already_got_it = save_already_got_it;
 			dict->line_number     = save_line_number;
 
 			free_file_contents(instr);
@@ -1112,15 +1092,8 @@ syntax_error:
 	return false;
 }
 
-bool read_dictionary(Dictionary dict, const char * input)
+static bool fread_dict(FileCursor fcurs)
 {
-	FileCursor fcurs = alloca(sizeof(struct FileCursor_s));
-
-	dict->line_number = 1;
-	fcurs->dict = dict;
-	fcurs->input = input;
-	fcurs->pin = fcurs->input;
-
 	if (!link_advance(fcurs))
 		return false;
 
@@ -1134,6 +1107,7 @@ bool read_dictionary(Dictionary dict, const char * input)
 			return false;
 	}
 
+	Dictionary dict = fcurs->dict;
 	if (dict->category != NULL)
 	{
 		/* Create a category element which contains 0 words, to signify the
@@ -1148,6 +1122,18 @@ bool read_dictionary(Dictionary dict, const char * input)
 	dict->root = dsw_tree_to_vine(dict->root);
 	dict->root = dsw_vine_to_tree(dict->root, dict->num_entries);
 	return true;
+}
+
+bool read_dictionary(Dictionary dict, const char * input)
+{
+	FileCursor fcurs = alloca(sizeof(struct FileCursor_s));
+
+	dict->line_number = 1;
+	fcurs->dict = dict;
+	fcurs->input = input;
+	fcurs->pin = fcurs->input;
+
+	return fread_dict(fcurs);
 }
 
 /* ======================================================================= */
