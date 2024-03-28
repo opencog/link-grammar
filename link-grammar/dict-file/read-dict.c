@@ -121,7 +121,7 @@
   automatically generated (currently only for idioms).
 */
 
-struct File_Dict_s
+struct FileCursor_s
 {
 	Dictionary      dict;
 	const char    * input;
@@ -131,43 +131,43 @@ struct File_Dict_s
 	int             already_got_it; /* For char, but needs to hold EOF */
 	char            token[MAX_TOKEN_LENGTH];
 };
-typedef struct File_Dict_s * File_Dict;
+typedef struct FileCursor_s * FileCursor;
 
-static bool link_advance(File_Dict);
+static bool link_advance(FileCursor);
 
-static void dict_error2(File_Dict fdict, const char * s, const char *s2)
+static void dict_error2(FileCursor fcurs, const char * s, const char *s2)
 {
 	/* The link_advance used to print the error message can
 	 * throw more errors while printing... */
-	if (fdict->recursive_error) return;
-	fdict->recursive_error = true;
+	if (fcurs->recursive_error) return;
+	fcurs->recursive_error = true;
 
-	Dictionary dict = fdict->dict;
+	Dictionary dict = fcurs->dict;
 	char token[MAX_TOKEN_LENGTH];
-	strcpy(token, fdict->token);
-	bool save_is_special    = fdict->is_special;
-	const char * save_input = fdict->input;
-	const char * save_pin   = fdict->pin;
-	int save_already_got_it = fdict->already_got_it;
+	strcpy(token, fcurs->token);
+	bool save_is_special    = fcurs->is_special;
+	const char * save_input = fcurs->input;
+	const char * save_pin   = fcurs->pin;
+	int save_already_got_it = fcurs->already_got_it;
 	int save_line_number    = dict->line_number;
 
 #define ERRBUFLEN 1024
 	char tokens[ERRBUFLEN], t[ERRBUFLEN];
 	int pos = 1;
 	tokens[0] = '\0';
-	for (int i=0; i<5 && fdict->token[0] != '\0'; i++)
+	for (int i=0; i<5 && fcurs->token[0] != '\0'; i++)
 	{
-		pos += snprintf(t, ERRBUFLEN, "\"%s\" ", fdict->token);
+		pos += snprintf(t, ERRBUFLEN, "\"%s\" ", fcurs->token);
 		strncat(tokens, t, ERRBUFLEN-1-pos);
-		if (!link_advance(fdict)) break;
+		if (!link_advance(fcurs)) break;
 	}
 	tokens[pos] = '\0';
 
-	strcpy(fdict->token, token);
-	fdict->is_special     = save_is_special;
-	fdict->input          = save_input;
-	fdict->pin            = save_pin;
-	fdict->already_got_it = save_already_got_it;
+	strcpy(fcurs->token, token);
+	fcurs->is_special     = save_is_special;
+	fcurs->input          = save_input;
+	fcurs->pin            = save_pin;
+	fcurs->already_got_it = save_already_got_it;
 	dict->line_number     = save_line_number;
 
 	if (s2)
@@ -182,19 +182,19 @@ static void dict_error2(File_Dict fdict, const char * s, const char *s2)
 		          "%s\n\t Line %d, next tokens: %s\n",
 		          dict->name, s, dict->line_number, tokens);
 	}
-	fdict->recursive_error = false;
+	fcurs->recursive_error = false;
 }
 
-static void dict_error(File_Dict fdict, const char * s)
+static void dict_error(FileCursor fcurs, const char * s)
 {
-	dict_error2(fdict, s, NULL);
+	dict_error2(fcurs, s, NULL);
 }
 
-static void warning(File_Dict fdict, const char * s)
+static void warning(FileCursor fcurs, const char * s)
 {
 	prt_error("Warning: %s\n"
 	        "\tline %d, current token = \"%s\"\n",
-	        s, fdict->dict->line_number, fdict->token);
+	        s, fcurs->dict->line_number, fcurs->token);
 }
 
 /**
@@ -204,19 +204,19 @@ static void warning(File_Dict fdict, const char * s)
  */
 #define MAXUTFLEN 7
 typedef char utf8char[MAXUTFLEN];
-static bool get_character(File_Dict fdict, int quote_mode, utf8char uc)
+static bool get_character(FileCursor fcurs, int quote_mode, utf8char uc)
 {
-	Dictionary dict = fdict->dict;
+	Dictionary dict = fcurs->dict;
 
 	int i = 0;
 	while (1)
 	{
-		char c = *(fdict->pin++);
+		char c = *(fcurs->pin++);
 
 		/* Skip over all comments */
 		if ((c == '%') && (!quote_mode))
 		{
-			while ((c != 0x0) && (c != '\n')) c = *(fdict->pin++);
+			while ((c != 0x0) && (c != '\n')) c = *(fcurs->pin++);
 			if (c == 0x0) break;
 			dict->line_number++;
 			continue;
@@ -238,18 +238,18 @@ static bool get_character(File_Dict fdict, int quote_mode, utf8char uc)
 		i = 1;
 		while (i < MAXUTFLEN-1)
 		{
-			c = *(fdict->pin++);
+			c = *(fcurs->pin++);
 			/* If we're onto the next char, we're done. */
 			if (((c & 0x80) == 0x0) || ((c & 0xc0) == 0xc0))
 			{
-				fdict->pin--;
+				fcurs->pin--;
 				uc[i] = 0x0;
 				return true;
 			}
 			uc[i] = c;
 			i++;
 		}
-		dict_error(fdict, "UTF8 char is too long.");
+		dict_error(fcurs, "UTF8 char is too long.");
 		return false;
 	}
 	uc[0] = 0x0;
@@ -286,28 +286,28 @@ static bool char_is_special(char c)
  * Return 1 if a character was read, else return 0 (and print a warning).
  */
 NO_SAN_DICT
-static bool link_advance(File_Dict fdict)
+static bool link_advance(FileCursor fcurs)
 {
 	bool quote_mode = false;
-	fdict->is_special = false;
+	fcurs->is_special = false;
 
-	if (fdict->already_got_it != '\0')
+	if (fcurs->already_got_it != '\0')
 	{
-		fdict->is_special = char_is_special(fdict->already_got_it);
-		if (fdict->already_got_it == EOF) {
-			fdict->token[0] = '\0';
+		fcurs->is_special = char_is_special(fcurs->already_got_it);
+		if (fcurs->already_got_it == EOF) {
+			fcurs->token[0] = '\0';
 		} else {
-			fdict->token[0] = (char)fdict->already_got_it; /* specials are one byte */
-			fdict->token[1] = '\0';
+			fcurs->token[0] = (char)fcurs->already_got_it; /* specials are one byte */
+			fcurs->token[1] = '\0';
 		}
-		fdict->already_got_it = '\0';
+		fcurs->already_got_it = '\0';
 		return true;
 	}
 
 	utf8char c;
 	do
 	{
-		bool ok = get_character(fdict, false, c);
+		bool ok = get_character(fcurs, false, c);
 		if (!ok) return false;
 	}
 	while (lg_isspace((unsigned char)c[0]));
@@ -316,7 +316,7 @@ static bool link_advance(File_Dict fdict)
 	for (;;)
 	{
 		if (i > MAX_TOKEN_LENGTH-3) {
-			dict_error(fdict, "Token too long.");
+			dict_error(fcurs, "Token too long.");
 			return false;
 		}
 
@@ -334,53 +334,53 @@ static bool link_advance(File_Dict fdict)
 		if (quote_mode) {
 			if (c[0] == '"' &&
 			    /* Check the next character too, to allow " in words */
-			    (*fdict->pin == ':' || *fdict->pin == ';' ||
-			    lg_isspace((unsigned char)*fdict->pin))) {
+			    (*fcurs->pin == ':' || *fcurs->pin == ';' ||
+			    lg_isspace((unsigned char)*fcurs->pin))) {
 
-				fdict->token[i] = '\0';
+				fcurs->token[i] = '\0';
 				return true;
 			}
 
 			if (c[0] == '\0')
 			{
-				dict_error(fdict, "EOF while reading quoted token.");
+				dict_error(fcurs, "EOF while reading quoted token.");
 				return false;
 			}
 
 			/* Copy all of the UTF8 bytes. */
 			int nr = 0;
-			while (c[nr]) {fdict->token[i] = c[nr]; i++; nr++; }
+			while (c[nr]) {fcurs->token[i] = c[nr]; i++; nr++; }
 		} else {
 			if ('\0' == c[1] && char_is_special(c[0]))
 			{
 				if (i == 0)
 				{
-					fdict->token[0] = c[0];  /* special toks are one char always */
-					fdict->token[1] = '\0';
-					fdict->is_special = true;
+					fcurs->token[0] = c[0];  /* special toks are one char always */
+					fcurs->token[1] = '\0';
+					fcurs->is_special = true;
 					return true;
 				}
-				fdict->token[i] = '\0';
-				fdict->already_got_it = c[0];
+				fcurs->token[i] = '\0';
+				fcurs->already_got_it = c[0];
 				return true;
 			}
 			if (c[0] == 0x0) {
-				if (i != 0) fdict->already_got_it = '\0';
-				fdict->token[0] = '\0';
+				if (i != 0) fcurs->already_got_it = '\0';
+				fcurs->token[0] = '\0';
 				return true;
 			}
 			if (lg_isspace((unsigned char)c[0])) {
-				fdict->token[i] = '\0';
+				fcurs->token[i] = '\0';
 				return true;
 			}
 			if (c[0] == '\"') {
 				quote_mode = true;
 			} else {
 				int nr = 0;
-				while (c[nr]) {fdict->token[i] = c[nr]; i++; nr++; }
+				while (c[nr]) {fcurs->token[i] = c[nr]; i++; nr++; }
 			}
 		}
-		bool ok = get_character(fdict, quote_mode, c);
+		bool ok = get_character(fcurs, quote_mode, c);
 		if (!ok) return false;
 	}
 	/* unreachable */
@@ -389,11 +389,11 @@ static bool link_advance(File_Dict fdict)
 /**
  * Returns true if this token is a special token and it is equal to c
  */
-static int is_equal(File_Dict fdict, char c)
+static int is_equal(FileCursor fcurs, char c)
 {
-	return (fdict->is_special &&
-	        c == fdict->token[0] &&
-	        fdict->token[1] == '\0');
+	return (fcurs->is_special &&
+	        c == fcurs->token[0] &&
+	        fcurs->token[1] == '\0');
 }
 
 /**
@@ -401,30 +401,30 @@ static int is_equal(File_Dict fdict, char c)
  * Return true if the connector is valid, else return false,
  * and print an appropriate warning message.
  */
-static bool check_connector(File_Dict fdict, const char * s)
+static bool check_connector(FileCursor fcurs, const char * s)
 {
 	int i;
 	i = strlen(s);
 	if (i < 1) {
-		dict_error(fdict, "Expecting a connector.");
+		dict_error(fcurs, "Expecting a connector.");
 		return false;
 	}
 	i = s[i-1];  /* the last character of the token */
 	if ((i != '+') && (i != '-') && (i != ANY_DIR)) {
-		dict_error(fdict, "A connector must end in a \"+\", \"-\" or \"$\".");
+		dict_error(fcurs, "A connector must end in a \"+\", \"-\" or \"$\".");
 		return false;
 	}
 	if (*s == '@') s++;
 	if (('h' == *s) || ('d' == *s)) s++;
 	if (!is_connector_name_char(*s)) {
-		dict_error2(fdict, "Invalid character in connector "
+		dict_error2(fcurs, "Invalid character in connector "
 		            "(connectors must start with an uppercase letter "
 		            "after an optional \"h\" or \"d\"):", (char[]){*s, '\0'});
 		return false;
 	}
 	if (*s == '_')
 	{
-		dict_error(fdict, "Invalid character in connector "
+		dict_error(fcurs, "Invalid character in connector "
 		           "(an initial \"_\" is reserved for internal use).");
 		return false;
 	}
@@ -433,7 +433,7 @@ static bool check_connector(File_Dict fdict, const char * s)
 	do { s++; } while (is_connector_name_char(*s));
 	while (s[1]) {
 		if (!is_connector_subscript_char(*s) && (*s != WILD_TYPE)) {
-			dict_error2(fdict, "Invalid character in connector subscript "
+			dict_error2(fcurs, "Invalid character in connector subscript "
 			            "(only lowercase letters, digits, and \"*\" are allowed):",
 			            (char[]){*s, '\0'});
 			return false;
@@ -450,20 +450,20 @@ static bool check_connector(File_Dict fdict, const char * s)
  *
  * Assumes the current token is the connector.
  */
-static Exp * make_dir_connector(Dictionary dict, File_Dict fdict, int i)
+static Exp * make_dir_connector(Dictionary dict, FileCursor fcurs, int i)
 {
 	char *constring;
 	bool multi = false;
 
-	char dir = fdict->token[i];
-	fdict->token[i] = '\0';   /* get rid of the + or - */
-	if (fdict->token[0] == '@')
+	char dir = fcurs->token[i];
+	fcurs->token[i] = '\0';   /* get rid of the + or - */
+	if (fcurs->token[0] == '@')
 	{
-		constring = fdict->token+1;
+		constring = fcurs->token+1;
 		multi = true;
 	}
 	else
-		constring = fdict->token;
+		constring = fcurs->token;
 
 	return  make_connector_node(dict, dict->Exp_pool,
 	                            constring, dir, multi);
@@ -498,31 +498,31 @@ static unsigned int exptag_macro_add(Dictionary dict, const char *tag)
  *
  * Assumes the current token is a connector or dictionary word.
  */
-static Exp * make_connector(File_Dict fdict)
+static Exp * make_connector(FileCursor fcurs)
 {
-	Dictionary dict = fdict->dict;
+	Dictionary dict = fcurs->dict;
 	Exp * n;
 
-	int i = strlen(fdict->token) - 1;  /* this must be +, - or $ if a connector */
-	if ((fdict->token[i] != '+') &&
-	    (fdict->token[i] != '-') &&
-	    (fdict->token[i] != ANY_DIR))
+	int i = strlen(fcurs->token) - 1;  /* this must be +, - or $ if a connector */
+	if ((fcurs->token[i] != '+') &&
+	    (fcurs->token[i] != '-') &&
+	    (fcurs->token[i] != ANY_DIR))
 	{
 		/* If we are here, token is a word */
-		patch_subscript(fdict->token);
-		Dict_node * dn = strict_lookup_list(dict, fdict->token);
+		patch_subscript(fcurs->token);
+		Dict_node * dn = strict_lookup_list(dict, fcurs->token);
 		if (dn == NULL)
 		{
-			dict_error2(fdict, "Perhaps missing + or - in a connector.\n"
+			dict_error2(fcurs, "Perhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the subscript on a word.\n"
 			                 "Or perhaps the word is used before it is defined:",
-			                 fdict->token);
+			                 fcurs->token);
 			return NULL;
 		}
 		if (dn->right != NULL)
 		{
 			dict_node_free_list(dn);
-			dict_error2(fdict, "Referencing a duplicate word:", fdict->token);
+			dict_error2(fcurs, "Referencing a duplicate word:", fcurs->token);
 			/* Note: A word which becomes duplicate latter evades this check. */
 			return NULL;
 		}
@@ -537,38 +537,38 @@ static Exp * make_connector(File_Dict fdict)
 	else
 	{
 		/* If we are here, token is a connector */
-		if (!check_connector(fdict, fdict->token))
+		if (!check_connector(fcurs, fcurs->token))
 		{
 			return NULL;
 		}
-		if ((fdict->token[i] == '+') || (fdict->token[i] == '-'))
+		if ((fcurs->token[i] == '+') || (fcurs->token[i] == '-'))
 		{
 			/* A simple, unidirectional connector. Just make that. */
-			n = make_dir_connector(dict, fdict, i);
+			n = make_dir_connector(dict, fcurs, i);
 			if (NULL == n) return NULL;
 		}
-		else if (fdict->token[i] == ANY_DIR)
+		else if (fcurs->token[i] == ANY_DIR)
 		{
 			Exp *plu, *min;
 			/* If we are here, then it's a bi-directional connector.
 			 * Make both a + and a - version, and or them together.  */
-			fdict->token[i] = '+';
-			plu = make_dir_connector(dict, fdict, i);
+			fcurs->token[i] = '+';
+			plu = make_dir_connector(dict, fcurs, i);
 			if (NULL == plu) return NULL;
-			fdict->token[i] = '-';
-			min = make_dir_connector(dict, fdict, i);
+			fcurs->token[i] = '-';
+			min = make_dir_connector(dict, fcurs, i);
 			if (NULL == min) return NULL;
 
 			n = make_or_node(dict->Exp_pool, plu, min);
 		}
 		else
 		{
-			dict_error(fdict, "Unknown connector direction type.");
+			dict_error(fcurs, "Unknown connector direction type.");
 			return NULL;
 		}
 	}
 
-	if (!link_advance(fdict))
+	if (!link_advance(fcurs))
 	{
 		free(n);
 		return NULL;
@@ -598,9 +598,9 @@ static bool is_number(const char * str)
  * with the current token.  At the end, the token is the first one not
  * part of this expression.
  */
-static Exp *make_expression(File_Dict fdict)
+static Exp *make_expression(FileCursor fcurs)
 {
-	Dictionary dict = fdict->dict;
+	Dictionary dict = fcurs->dict;
 
 	Exp *nl = NULL;
 	Exp *e_head = NULL;
@@ -609,55 +609,55 @@ static Exp *make_expression(File_Dict fdict)
 
 	while (true)
 	{
-		if (is_equal(fdict, '('))
+		if (is_equal(fcurs, '('))
 		{
-			if (!link_advance(fdict)) {
+			if (!link_advance(fcurs)) {
 				return NULL;
 			}
-			nl = make_expression(fdict);
+			nl = make_expression(fcurs);
 			if (nl == NULL) {
 				return NULL;
 			}
-			if (!is_equal(fdict, ')')) {
-				dict_error(fdict, "Expecting a \")\".");
+			if (!is_equal(fcurs, ')')) {
+				dict_error(fcurs, "Expecting a \")\".");
 				return NULL;
 			}
-			if (!link_advance(fdict)) {
+			if (!link_advance(fcurs)) {
 				return NULL;
 			}
 		}
-		else if (is_equal(fdict, '{'))
+		else if (is_equal(fcurs, '{'))
 		{
-			if (!link_advance(fdict)) {
+			if (!link_advance(fcurs)) {
 				return NULL;
 			}
-			nl = make_expression(fdict);
+			nl = make_expression(fcurs);
 			if (nl == NULL) {
 				return NULL;
 			}
-			if (!is_equal(fdict, '}')) {
-				dict_error(fdict, "Expecting a \"}\".");
+			if (!is_equal(fcurs, '}')) {
+				dict_error(fcurs, "Expecting a \"}\".");
 				return NULL;
 			}
-			if (!link_advance(fdict)) {
+			if (!link_advance(fcurs)) {
 				return NULL;
 			}
 			nl = make_optional_node(dict->Exp_pool, nl);
 		}
-		else if (is_equal(fdict, '['))
+		else if (is_equal(fcurs, '['))
 		{
-			if (!link_advance(fdict)) {
+			if (!link_advance(fcurs)) {
 				return NULL;
 			}
-			nl = make_expression(fdict);
+			nl = make_expression(fcurs);
 			if (nl == NULL) {
 				return NULL;
 			}
-			if (!is_equal(fdict, ']')) {
-				dict_error(fdict, "Expecting a \"]\".");
+			if (!is_equal(fcurs, ']')) {
+				dict_error(fcurs, "Expecting a \"]\".");
 				return NULL;
 			}
-			if (!link_advance(fdict)) {
+			if (!link_advance(fcurs)) {
 				return NULL;
 			}
 
@@ -667,32 +667,32 @@ static Exp *make_expression(File_Dict fdict)
 			 * is used as an expression tag. Else, the cost of a
 			 * square bracket is 1.0.
 			 */
-			if (is_number(fdict->token))
+			if (is_number(fcurs->token))
 			{
 				float cost;
 
-				if (strtofC(fdict->token, &cost))
+				if (strtofC(fcurs->token, &cost))
 				{
 					nl->cost += cost;
 				}
 				else
 				{
-					warning(fdict, "Invalid cost (using 1.0)\n");
+					warning(fcurs, "Invalid cost (using 1.0)\n");
 					nl->cost += 1.0F;
 				}
-				if (!link_advance(fdict)) {
+				if (!link_advance(fcurs)) {
 					return NULL;
 				}
 			}
-			else if ((strcmp(fdict->token, "or") != 0) &&
-			         (strcmp(fdict->token, "and") != 0) &&
-			         isalpha((unsigned char)fdict->token[0]))
+			else if ((strcmp(fcurs->token, "or") != 0) &&
+			         (strcmp(fcurs->token, "and") != 0) &&
+			         isalpha((unsigned char)fcurs->token[0]))
 			{
-				const char *bad = valid_dialect_name(fdict->token);
+				const char *bad = valid_dialect_name(fcurs->token);
 				if (bad != NULL)
 				{
 					char badchar[] = { *bad, '\0' };
-					dict_error2(fdict, "Invalid character in dialect tag name:",
+					dict_error2(fcurs, "Invalid character in dialect tag name:",
 					           badchar);
 					return NULL;
 				}
@@ -700,9 +700,9 @@ static Exp *make_expression(File_Dict fdict)
 				{
 					nl = make_unary_node(dict->Exp_pool, nl);
 				}
-				nl->tag_id = exptag_dialect_add(dict, fdict->token);
+				nl->tag_id = exptag_dialect_add(dict, fcurs->token);
 				nl->tag_type = Exptag_dialect;
-				if (!link_advance(fdict)) {
+				if (!link_advance(fcurs)) {
 					return NULL;
 				}
 			}
@@ -711,21 +711,21 @@ static Exp *make_expression(File_Dict fdict)
 				nl->cost += 1.0F;
 			}
 		}
-		else if (!fdict->is_special)
+		else if (!fcurs->is_special)
 		{
-			nl = make_connector(fdict);
+			nl = make_connector(fcurs);
 			if (nl == NULL) {
 				return NULL;
 			}
 		}
-		else if (is_equal(fdict, ')') || is_equal(fdict, ']'))
+		else if (is_equal(fcurs, ')') || is_equal(fcurs, ']'))
 		{
 			/* allows "()" or "[]" */
 			nl = make_zeroary_node(dict->Exp_pool);
 		}
 		else
 		{
-			dict_error(fdict, "Connector, \"(\", \"[\", or \"{\" expected.");
+			dict_error(fcurs, "Connector, \"(\", \"[\", or \"{\" expected.");
 			return NULL;
 		}
 
@@ -758,17 +758,17 @@ static Exp *make_expression(File_Dict fdict)
 		Exp_type op;
 
 		/* Non-commuting AND */
-		if (is_equal(fdict, '&') || (strcmp(fdict->token, "and") == 0))
+		if (is_equal(fcurs, '&') || (strcmp(fcurs->token, "and") == 0))
 		{
 			op = AND_type;
 		}
 		/* Commuting OR */
-		else if (is_equal(fdict, '|') || (strcmp(fdict->token, "or") == 0))
+		else if (is_equal(fcurs, '|') || (strcmp(fcurs->token, "or") == 0))
 		{
 			op =  OR_type;
 		}
 		/* Commuting AND */
-		else if (is_equal(fdict, SYM_AND) || (strcmp(fdict->token, "sym") == 0))
+		else if (is_equal(fcurs, SYM_AND) || (strcmp(fcurs->token, "sym") == 0))
 		{
 			/* Part 1/2 of SYM_AND processing */
 			op = AND_type; /* allow mixing with ordinary ands at the same level */
@@ -791,12 +791,12 @@ static Exp *make_expression(File_Dict fdict)
 		{
 			if (e_head->type != op)
 			{
-				dict_error(fdict, "\"and\" and \"or\" at the same level in an expression.");
+				dict_error(fcurs, "\"and\" and \"or\" at the same level in an expression.");
 				return NULL;
 			}
 		}
 
-		if (!link_advance(fdict)) {
+		if (!link_advance(fcurs)) {
 			return NULL;
 		}
 
@@ -935,15 +935,15 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
  * and is terminated by a semi-colon.
  * Add these words to the dictionary.
  */
-static bool read_entry(File_Dict fdict)
+static bool read_entry(FileCursor fcurs)
 {
 	Dict_node *dnx, *dn = NULL;
 
-	while (!is_equal(fdict, ':'))
+	while (!is_equal(fcurs, ':'))
 	{
-		if (fdict->is_special)
+		if (fcurs->is_special)
 		{
-			dict_error(fdict, "I expected a word but didn\'t get it.");
+			dict_error(fcurs, "I expected a word but didn\'t get it.");
 			goto syntax_error;
 		}
 
@@ -951,19 +951,19 @@ static bool read_entry(File_Dict fdict)
 		/* However, be careful to reject "/.v" which is the division symbol
 		 * used in equations (.v means verb-like). Also reject an affix regex
 		 * specification (may appear only in the affix file). */
-		if ((fdict->token[0] == '/') &&
-		    (fdict->token[1] != '.') && (get_affix_regex_cg(fdict->token) < 0))
+		if ((fcurs->token[0] == '/') &&
+		    (fcurs->token[1] != '.') && (get_affix_regex_cg(fcurs->token) < 0))
 		{
-			Dict_node *new_dn = read_word_file(fdict->dict, dn, fdict->token);
+			Dict_node *new_dn = read_word_file(fcurs->dict, dn, fcurs->token);
 			if (new_dn == NULL)
 			{
-				prt_error("Error: Cannot open word file \"%s\".\n", fdict->token);
+				prt_error("Error: Cannot open word file \"%s\".\n", fcurs->token);
 
 				goto syntax_error; /* not a syntax error, but need to free dn */
 			}
 			dn = new_dn;
 		}
-		else if (0 == strcmp(fdict->token, "#include"))
+		else if (0 == strcmp(fcurs->token, "#include"))
 		{
 			bool rc;
 			char* instr;
@@ -976,17 +976,17 @@ static bool read_entry(File_Dict fdict)
 			int save_line_number;
 			size_t skip_slash;
 
-			if (!link_advance(fdict)) goto syntax_error;
+			if (!link_advance(fcurs)) goto syntax_error;
 
-			Dictionary dict = fdict->dict;
+			Dictionary dict = fcurs->dict;
 
-			skip_slash          = ('/' == fdict->token[0]) ? 1 : 0;
-			dict_name           = strdupa(fdict->token);
-			save_name           = fdict->dict->name;
-			save_is_special     = fdict->is_special;
-			save_input          = fdict->input;
-			save_pin            = fdict->pin;
-			save_already_got_it = fdict->already_got_it;
+			skip_slash          = ('/' == fcurs->token[0]) ? 1 : 0;
+			dict_name           = strdupa(fcurs->token);
+			save_name           = fcurs->dict->name;
+			save_is_special     = fcurs->is_special;
+			save_input          = fcurs->input;
+			save_pin            = fcurs->pin;
+			save_already_got_it = fcurs->already_got_it;
 			save_line_number    = dict->line_number;
 
 			/* OK, token contains the filename to read ... */
@@ -1006,39 +1006,39 @@ static bool read_entry(File_Dict fdict)
 			rc = read_dictionary(dict, instr);
 
 			dict->name            = save_name;
-			fdict->is_special     = save_is_special;
-			fdict->input          = save_input;
-			fdict->pin            = save_pin;
-			fdict->already_got_it = save_already_got_it;
+			fcurs->is_special     = save_is_special;
+			fcurs->input          = save_input;
+			fcurs->pin            = save_pin;
+			fcurs->already_got_it = save_already_got_it;
 			dict->line_number     = save_line_number;
 
 			free_file_contents(instr);
 			if (!rc) goto syntax_error;
 
 			/* when we return, point to the next entry */
-			if (!link_advance(fdict)) goto syntax_error;
+			if (!link_advance(fcurs)) goto syntax_error;
 
 			/* If a semicolon follows the include, that's OK... ignore it. */
-			if (';' == fdict->token[0])
+			if (';' == fcurs->token[0])
 			{
-				if (!link_advance(fdict)) goto syntax_error;
+				if (!link_advance(fcurs)) goto syntax_error;
 			}
 
 			return true;
 		}
-		else if (0 == strcmp(fdict->token, "#define"))
+		else if (0 == strcmp(fcurs->token, "#define"))
 		{
-			if (!link_advance(fdict)) goto syntax_error;
-			const char *name = strdupa(fdict->token);
+			if (!link_advance(fcurs)) goto syntax_error;
+			const char *name = strdupa(fcurs->token);
 
 			/* Get the value. */
-			if (!link_advance(fdict)) goto syntax_error;
-			add_define(fdict->dict, name, fdict->token);
+			if (!link_advance(fcurs)) goto syntax_error;
+			add_define(fcurs->dict, name, fcurs->token);
 
-			if (!link_advance(fdict)) goto syntax_error;
-			if (!is_equal(fdict, ';'))
+			if (!link_advance(fcurs)) goto syntax_error;
+			if (!is_equal(fcurs, ';'))
 			{
-				dict_error(fdict, "Expecting \";\" at the end of #define.");
+				dict_error(fcurs, "Expecting \";\" at the end of #define.");
 				goto syntax_error;
 			}
 		}
@@ -1053,33 +1053,33 @@ static bool read_entry(File_Dict fdict)
 
 			/* Note: The following patches a dot in regexes appearing in
 			 * the affix file... It is corrected later. */
-			patch_subscript(fdict->token);
-			dn->string = string_set_add(fdict->token, fdict->dict->string_set);
+			patch_subscript(fcurs->token);
+			dn->string = string_set_add(fcurs->token, fcurs->dict->string_set);
 		}
 
 		/* Advance to next entry, unless error */
-		if (!link_advance(fdict)) goto syntax_error;
+		if (!link_advance(fcurs)) goto syntax_error;
 	}
 
 	/* pass the : */
-	if (!link_advance(fdict))
+	if (!link_advance(fcurs))
 	{
 		goto syntax_error;
 	}
 
-	Exp * n = make_expression(fdict);
+	Exp * n = make_expression(fcurs);
 	if (n == NULL)
 		goto syntax_error;
 
-	if (!is_equal(fdict, ';'))
+	if (!is_equal(fcurs, ';'))
 	{
-		dict_error(fdict, "Expecting \";\" at the end of an entry.");
+		dict_error(fcurs, "Expecting \";\" at the end of an entry.");
 		goto syntax_error;
 	}
 
 	if (dn == NULL)
 	{
-		dict_error(fdict, "Expecting a token before \":\".");
+		dict_error(fcurs, "Expecting a token before \":\".");
 		goto syntax_error;
 	}
 
@@ -1092,14 +1092,14 @@ static bool read_entry(File_Dict fdict)
 		i++;
 	}
 
-	Dictionary dict = fdict->dict;
+	Dictionary dict = fcurs->dict;
 	if (IS_GENERATION(dict))
 		add_category(dict, n, dn, i);
 
 	dict->insert_entry(dict, dn, i);
 
 	/* pass the ; */
-	if (!link_advance(fdict))
+	if (!link_advance(fcurs))
 	{
 		/* Avoid freeing dn, since it is already inserted into the dict. */
 		return false;
@@ -1114,23 +1114,23 @@ syntax_error:
 
 bool read_dictionary(Dictionary dict, const char * input)
 {
-	File_Dict fdict = alloca(sizeof(struct File_Dict_s));
+	FileCursor fcurs = alloca(sizeof(struct FileCursor_s));
 
 	dict->line_number = 1;
-	fdict->dict = dict;
-	fdict->input = input;
-	fdict->pin = fdict->input;
+	fcurs->dict = dict;
+	fcurs->input = input;
+	fcurs->pin = fcurs->input;
 
-	if (!link_advance(fdict))
+	if (!link_advance(fcurs))
 		return false;
 
 	/* The last character of a dictionary is NUL.
 	 * Note: At the end of reading a dictionary, dict->pin points to one
 	 * character after the input. Referring its [-1] element is safe even if
 	 * the dict file size is 0. */
-	while ('\0' != fdict->pin[-1])
+	while ('\0' != fcurs->pin[-1])
 	{
-		if (!read_entry(fdict))
+		if (!read_entry(fcurs))
 			return false;
 	}
 
