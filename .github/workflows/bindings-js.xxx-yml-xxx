@@ -1,6 +1,7 @@
 name: bindings/js CI
 
 # Disable. It's failing, its pointless
+# Do not run this job!
 # on: [push, pull_request]
 jobs:
   build:
