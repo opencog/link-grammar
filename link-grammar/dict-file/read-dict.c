@@ -1132,6 +1132,10 @@ bool read_dictionary(Dictionary dict, const char * input)
 	fcurs->dict = dict;
 	fcurs->input = input;
 	fcurs->pin = fcurs->input;
+	fcurs->recursive_error = false;
+	fcurs->is_special = false;
+	fcurs->already_got_it = false;
+	fcurs->token[0] = 0;
 
 	return fread_dict(fcurs);
 }
