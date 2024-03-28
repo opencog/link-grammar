@@ -3,6 +3,8 @@ Version 5.12.4 (XXX 2024)
  * Use correct guard macro for glibc heap functions. #1471
  * MacOS build fix #1473
  * Silence javascript build errors. #1377
+ * Reduce memory use, improve performance, via Parse_set. #1480
+ * Optimize solutions with cycles. #1481
 
 Version 5.12.3 (24 March 2023)
  * Assorted Atomese fixes.
