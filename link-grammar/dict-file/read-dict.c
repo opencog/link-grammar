@@ -123,6 +123,7 @@
 
 struct File_Dict_s
 {
+	Dictionary      dict;
 	const char    * input;
 	const char    * pin;
 	bool            recursive_error;
@@ -132,32 +133,16 @@ struct File_Dict_s
 };
 typedef struct File_Dict_s * File_Dict;
 
-static bool link_advance(Dictionary dict);
+static bool link_advance(File_Dict);
 
-void dict_error2(Dictionary dict, const char * s, const char *s2)
+static void dict_error2(File_Dict fdict, const char * s, const char *s2)
 {
-	if (IS_DYNAMIC_DICT(dict))
-	{
-		if (s2)
-		{
-			prt_error("Error: While handling storage-node\n  \"%s\":\n"
-			          "%s \"%s\"\n", dict->name, s, s2);
-		}
-		else
-		{
-			prt_error("Error: While handling storage-node\n  \"%s\":\n"
-			          "%s\n", dict->name, s);
-		}
-		return;
-	}
-
-	File_Dict fdict = dict->file_data;
-
 	/* The link_advance used to print the error message can
 	 * throw more errors while printing... */
 	if (fdict->recursive_error) return;
 	fdict->recursive_error = true;
 
+	Dictionary dict = fdict->dict;
 	char token[MAX_TOKEN_LENGTH];
 	strcpy(token, fdict->token);
 	bool save_is_special    = fdict->is_special;
@@ -174,7 +159,7 @@ void dict_error2(Dictionary dict, const char * s, const char *s2)
 	{
 		pos += snprintf(t, ERRBUFLEN, "\"%s\" ", fdict->token);
 		strncat(tokens, t, ERRBUFLEN-1-pos);
-		if (!link_advance(dict)) break;
+		if (!link_advance(fdict)) break;
 	}
 	tokens[pos] = '\0';
 
@@ -200,17 +185,16 @@ void dict_error2(Dictionary dict, const char * s, const char *s2)
 	fdict->recursive_error = false;
 }
 
-static void dict_error(Dictionary dict, const char * s)
+static void dict_error(File_Dict fdict, const char * s)
 {
-	dict_error2(dict, s, NULL);
+	dict_error2(fdict, s, NULL);
 }
 
-static void warning(Dictionary dict, const char * s)
+static void warning(File_Dict fdict, const char * s)
 {
-	File_Dict fdict = dict->file_data;
 	prt_error("Warning: %s\n"
 	        "\tline %d, current token = \"%s\"\n",
-	        s, dict->line_number, fdict->token);
+	        s, fdict->dict->line_number, fdict->token);
 }
 
 /**
@@ -220,9 +204,9 @@ static void warning(Dictionary dict, const char * s)
  */
 #define MAXUTFLEN 7
 typedef char utf8char[MAXUTFLEN];
-static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
+static bool get_character(File_Dict fdict, int quote_mode, utf8char uc)
 {
-	File_Dict fdict = dict->file_data;
+	Dictionary dict = fdict->dict;
 
 	int i = 0;
 	while (1)
@@ -265,7 +249,7 @@ static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 			uc[i] = c;
 			i++;
 		}
-		dict_error(dict, "UTF8 char is too long.");
+		dict_error(fdict, "UTF8 char is too long.");
 		return false;
 	}
 	uc[0] = 0x0;
@@ -302,11 +286,9 @@ static bool char_is_special(char c)
  * Return 1 if a character was read, else return 0 (and print a warning).
  */
 NO_SAN_DICT
-static bool link_advance(Dictionary dict)
+static bool link_advance(File_Dict fdict)
 {
-	File_Dict fdict = dict->file_data;
 	bool quote_mode = false;
-
 	fdict->is_special = false;
 
 	if (fdict->already_got_it != '\0')
@@ -325,7 +307,7 @@ static bool link_advance(Dictionary dict)
 	utf8char c;
 	do
 	{
-		bool ok = get_character(dict, false, c);
+		bool ok = get_character(fdict, false, c);
 		if (!ok) return false;
 	}
 	while (lg_isspace((unsigned char)c[0]));
@@ -334,7 +316,7 @@ static bool link_advance(Dictionary dict)
 	for (;;)
 	{
 		if (i > MAX_TOKEN_LENGTH-3) {
-			dict_error(dict, "Token too long.");
+			dict_error(fdict, "Token too long.");
 			return false;
 		}
 
@@ -361,7 +343,7 @@ static bool link_advance(Dictionary dict)
 
 			if (c[0] == '\0')
 			{
-				dict_error(dict, "EOF while reading quoted token.");
+				dict_error(fdict, "EOF while reading quoted token.");
 				return false;
 			}
 
@@ -398,7 +380,7 @@ static bool link_advance(Dictionary dict)
 				while (c[nr]) {fdict->token[i] = c[nr]; i++; nr++; }
 			}
 		}
-		bool ok = get_character(dict, quote_mode, c);
+		bool ok = get_character(fdict, quote_mode, c);
 		if (!ok) return false;
 	}
 	/* unreachable */
@@ -407,9 +389,8 @@ static bool link_advance(Dictionary dict)
 /**
  * Returns true if this token is a special token and it is equal to c
  */
-static int is_equal(Dictionary dict, char c)
+static int is_equal(File_Dict fdict, char c)
 {
-	File_Dict fdict = dict->file_data;
 	return (fdict->is_special &&
 	        c == fdict->token[0] &&
 	        fdict->token[1] == '\0');
@@ -420,30 +401,30 @@ static int is_equal(Dictionary dict, char c)
  * Return true if the connector is valid, else return false,
  * and print an appropriate warning message.
  */
-static bool check_connector(Dictionary dict, const char * s)
+static bool check_connector(File_Dict fdict, const char * s)
 {
 	int i;
 	i = strlen(s);
 	if (i < 1) {
-		dict_error(dict, "Expecting a connector.");
+		dict_error(fdict, "Expecting a connector.");
 		return false;
 	}
 	i = s[i-1];  /* the last character of the token */
 	if ((i != '+') && (i != '-') && (i != ANY_DIR)) {
-		dict_error(dict, "A connector must end in a \"+\", \"-\" or \"$\".");
+		dict_error(fdict, "A connector must end in a \"+\", \"-\" or \"$\".");
 		return false;
 	}
 	if (*s == '@') s++;
 	if (('h' == *s) || ('d' == *s)) s++;
 	if (!is_connector_name_char(*s)) {
-		dict_error2(dict, "Invalid character in connector "
+		dict_error2(fdict, "Invalid character in connector "
 		            "(connectors must start with an uppercase letter "
 		            "after an optional \"h\" or \"d\"):", (char[]){*s, '\0'});
 		return false;
 	}
 	if (*s == '_')
 	{
-		dict_error(dict, "Invalid character in connector "
+		dict_error(fdict, "Invalid character in connector "
 		           "(an initial \"_\" is reserved for internal use).");
 		return false;
 	}
@@ -452,7 +433,7 @@ static bool check_connector(Dictionary dict, const char * s)
 	do { s++; } while (is_connector_name_char(*s));
 	while (s[1]) {
 		if (!is_connector_subscript_char(*s) && (*s != WILD_TYPE)) {
-			dict_error2(dict, "Invalid character in connector subscript "
+			dict_error2(fdict, "Invalid character in connector subscript "
 			            "(only lowercase letters, digits, and \"*\" are allowed):",
 			            (char[]){*s, '\0'});
 			return false;
@@ -469,9 +450,8 @@ static bool check_connector(Dictionary dict, const char * s)
  *
  * Assumes the current token is the connector.
  */
-static Exp * make_dir_connector(Dictionary dict, int i)
+static Exp * make_dir_connector(Dictionary dict, File_Dict fdict, int i)
 {
-	File_Dict fdict = dict->file_data;
 	char *constring;
 	bool multi = false;
 
@@ -518,9 +498,9 @@ static unsigned int exptag_macro_add(Dictionary dict, const char *tag)
  *
  * Assumes the current token is a connector or dictionary word.
  */
-static Exp * make_connector(Dictionary dict)
+static Exp * make_connector(File_Dict fdict)
 {
-	File_Dict fdict = dict->file_data;
+	Dictionary dict = fdict->dict;
 	Exp * n;
 
 	int i = strlen(fdict->token) - 1;  /* this must be +, - or $ if a connector */
@@ -533,7 +513,7 @@ static Exp * make_connector(Dictionary dict)
 		Dict_node * dn = strict_lookup_list(dict, fdict->token);
 		if (dn == NULL)
 		{
-			dict_error2(dict, "Perhaps missing + or - in a connector.\n"
+			dict_error2(fdict, "Perhaps missing + or - in a connector.\n"
 			                 "Or perhaps you forgot the subscript on a word.\n"
 			                 "Or perhaps the word is used before it is defined:",
 			                 fdict->token);
@@ -542,7 +522,7 @@ static Exp * make_connector(Dictionary dict)
 		if (dn->right != NULL)
 		{
 			dict_node_free_list(dn);
-			dict_error2(dict, "Referencing a duplicate word:", fdict->token);
+			dict_error2(fdict, "Referencing a duplicate word:", fdict->token);
 			/* Note: A word which becomes duplicate latter evades this check. */
 			return NULL;
 		}
@@ -557,14 +537,14 @@ static Exp * make_connector(Dictionary dict)
 	else
 	{
 		/* If we are here, token is a connector */
-		if (!check_connector(dict, fdict->token))
+		if (!check_connector(fdict, fdict->token))
 		{
 			return NULL;
 		}
 		if ((fdict->token[i] == '+') || (fdict->token[i] == '-'))
 		{
 			/* A simple, unidirectional connector. Just make that. */
-			n = make_dir_connector(dict, i);
+			n = make_dir_connector(dict, fdict, i);
 			if (NULL == n) return NULL;
 		}
 		else if (fdict->token[i] == ANY_DIR)
@@ -573,22 +553,22 @@ static Exp * make_connector(Dictionary dict)
 			/* If we are here, then it's a bi-directional connector.
 			 * Make both a + and a - version, and or them together.  */
 			fdict->token[i] = '+';
-			plu = make_dir_connector(dict, i);
+			plu = make_dir_connector(dict, fdict, i);
 			if (NULL == plu) return NULL;
 			fdict->token[i] = '-';
-			min = make_dir_connector(dict, i);
+			min = make_dir_connector(dict, fdict, i);
 			if (NULL == min) return NULL;
 
 			n = make_or_node(dict->Exp_pool, plu, min);
 		}
 		else
 		{
-			dict_error(dict, "Unknown connector direction type.");
+			dict_error(fdict, "Unknown connector direction type.");
 			return NULL;
 		}
 	}
 
-	if (!link_advance(dict))
+	if (!link_advance(fdict))
 	{
 		free(n);
 		return NULL;
@@ -618,9 +598,10 @@ static bool is_number(const char * str)
  * with the current token.  At the end, the token is the first one not
  * part of this expression.
  */
-static Exp *make_expression(Dictionary dict)
+static Exp *make_expression(File_Dict fdict)
 {
-	File_Dict fdict = dict->file_data;
+	Dictionary dict = fdict->dict;
+
 	Exp *nl = NULL;
 	Exp *e_head = NULL;
 	Exp *e_tail = NULL; /* last part of the expression */
@@ -628,55 +609,55 @@ static Exp *make_expression(Dictionary dict)
 
 	while (true)
 	{
-		if (is_equal(dict, '('))
+		if (is_equal(fdict, '('))
 		{
-			if (!link_advance(dict)) {
+			if (!link_advance(fdict)) {
 				return NULL;
 			}
-			nl = make_expression(dict);
+			nl = make_expression(fdict);
 			if (nl == NULL) {
 				return NULL;
 			}
-			if (!is_equal(dict, ')')) {
-				dict_error(dict, "Expecting a \")\".");
+			if (!is_equal(fdict, ')')) {
+				dict_error(fdict, "Expecting a \")\".");
 				return NULL;
 			}
-			if (!link_advance(dict)) {
+			if (!link_advance(fdict)) {
 				return NULL;
 			}
 		}
-		else if (is_equal(dict, '{'))
+		else if (is_equal(fdict, '{'))
 		{
-			if (!link_advance(dict)) {
+			if (!link_advance(fdict)) {
 				return NULL;
 			}
-			nl = make_expression(dict);
+			nl = make_expression(fdict);
 			if (nl == NULL) {
 				return NULL;
 			}
-			if (!is_equal(dict, '}')) {
-				dict_error(dict, "Expecting a \"}\".");
+			if (!is_equal(fdict, '}')) {
+				dict_error(fdict, "Expecting a \"}\".");
 				return NULL;
 			}
-			if (!link_advance(dict)) {
+			if (!link_advance(fdict)) {
 				return NULL;
 			}
 			nl = make_optional_node(dict->Exp_pool, nl);
 		}
-		else if (is_equal(dict, '['))
+		else if (is_equal(fdict, '['))
 		{
-			if (!link_advance(dict)) {
+			if (!link_advance(fdict)) {
 				return NULL;
 			}
-			nl = make_expression(dict);
+			nl = make_expression(fdict);
 			if (nl == NULL) {
 				return NULL;
 			}
-			if (!is_equal(dict, ']')) {
-				dict_error(dict, "Expecting a \"]\".");
+			if (!is_equal(fdict, ']')) {
+				dict_error(fdict, "Expecting a \"]\".");
 				return NULL;
 			}
-			if (!link_advance(dict)) {
+			if (!link_advance(fdict)) {
 				return NULL;
 			}
 
@@ -696,10 +677,10 @@ static Exp *make_expression(Dictionary dict)
 				}
 				else
 				{
-					warning(dict, "Invalid cost (using 1.0)\n");
+					warning(fdict, "Invalid cost (using 1.0)\n");
 					nl->cost += 1.0F;
 				}
-				if (!link_advance(dict)) {
+				if (!link_advance(fdict)) {
 					return NULL;
 				}
 			}
@@ -711,7 +692,7 @@ static Exp *make_expression(Dictionary dict)
 				if (bad != NULL)
 				{
 					char badchar[] = { *bad, '\0' };
-					dict_error2(dict, "Invalid character in dialect tag name:",
+					dict_error2(fdict, "Invalid character in dialect tag name:",
 					           badchar);
 					return NULL;
 				}
@@ -721,7 +702,7 @@ static Exp *make_expression(Dictionary dict)
 				}
 				nl->tag_id = exptag_dialect_add(dict, fdict->token);
 				nl->tag_type = Exptag_dialect;
-				if (!link_advance(dict)) {
+				if (!link_advance(fdict)) {
 					return NULL;
 				}
 			}
@@ -732,19 +713,19 @@ static Exp *make_expression(Dictionary dict)
 		}
 		else if (!fdict->is_special)
 		{
-			nl = make_connector(dict);
+			nl = make_connector(fdict);
 			if (nl == NULL) {
 				return NULL;
 			}
 		}
-		else if (is_equal(dict, ')') || is_equal(dict, ']'))
+		else if (is_equal(fdict, ')') || is_equal(fdict, ']'))
 		{
 			/* allows "()" or "[]" */
 			nl = make_zeroary_node(dict->Exp_pool);
 		}
 		else
 		{
-			dict_error(dict, "Connector, \"(\", \"[\", or \"{\" expected.");
+			dict_error(fdict, "Connector, \"(\", \"[\", or \"{\" expected.");
 			return NULL;
 		}
 
@@ -777,17 +758,17 @@ static Exp *make_expression(Dictionary dict)
 		Exp_type op;
 
 		/* Non-commuting AND */
-		if (is_equal(dict, '&') || (strcmp(fdict->token, "and") == 0))
+		if (is_equal(fdict, '&') || (strcmp(fdict->token, "and") == 0))
 		{
 			op = AND_type;
 		}
 		/* Commuting OR */
-		else if (is_equal(dict, '|') || (strcmp(fdict->token, "or") == 0))
+		else if (is_equal(fdict, '|') || (strcmp(fdict->token, "or") == 0))
 		{
 			op =  OR_type;
 		}
 		/* Commuting AND */
-		else if (is_equal(dict, SYM_AND) || (strcmp(fdict->token, "sym") == 0))
+		else if (is_equal(fdict, SYM_AND) || (strcmp(fdict->token, "sym") == 0))
 		{
 			/* Part 1/2 of SYM_AND processing */
 			op = AND_type; /* allow mixing with ordinary ands at the same level */
@@ -810,12 +791,12 @@ static Exp *make_expression(Dictionary dict)
 		{
 			if (e_head->type != op)
 			{
-				dict_error(dict, "\"and\" and \"or\" at the same level in an expression.");
+				dict_error(fdict, "\"and\" and \"or\" at the same level in an expression.");
 				return NULL;
 			}
 		}
 
-		if (!link_advance(dict)) {
+		if (!link_advance(fdict)) {
 			return NULL;
 		}
 
@@ -954,16 +935,15 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
  * and is terminated by a semi-colon.
  * Add these words to the dictionary.
  */
-static bool read_entry(Dictionary dict)
+static bool read_entry(File_Dict fdict)
 {
-	File_Dict fdict = dict->file_data;
 	Dict_node *dnx, *dn = NULL;
 
-	while (!is_equal(dict, ':'))
+	while (!is_equal(fdict, ':'))
 	{
 		if (fdict->is_special)
 		{
-			dict_error(dict, "I expected a word but didn\'t get it.");
+			dict_error(fdict, "I expected a word but didn\'t get it.");
 			goto syntax_error;
 		}
 
@@ -974,7 +954,7 @@ static bool read_entry(Dictionary dict)
 		if ((fdict->token[0] == '/') &&
 		    (fdict->token[1] != '.') && (get_affix_regex_cg(fdict->token) < 0))
 		{
-			Dict_node *new_dn = read_word_file(dict, dn, fdict->token);
+			Dict_node *new_dn = read_word_file(fdict->dict, dn, fdict->token);
 			if (new_dn == NULL)
 			{
 				prt_error("Error: Cannot open word file \"%s\".\n", fdict->token);
@@ -996,11 +976,13 @@ static bool read_entry(Dictionary dict)
 			int save_line_number;
 			size_t skip_slash;
 
-			if (!link_advance(dict)) goto syntax_error;
+			if (!link_advance(fdict)) goto syntax_error;
+
+			Dictionary dict = fdict->dict;
 
 			skip_slash          = ('/' == fdict->token[0]) ? 1 : 0;
 			dict_name           = strdupa(fdict->token);
-			save_name           = dict->name;
+			save_name           = fdict->dict->name;
 			save_is_special     = fdict->is_special;
 			save_input          = fdict->input;
 			save_pin            = fdict->pin;
@@ -1034,29 +1016,29 @@ static bool read_entry(Dictionary dict)
 			if (!rc) goto syntax_error;
 
 			/* when we return, point to the next entry */
-			if (!link_advance(dict)) goto syntax_error;
+			if (!link_advance(fdict)) goto syntax_error;
 
 			/* If a semicolon follows the include, that's OK... ignore it. */
 			if (';' == fdict->token[0])
 			{
-				if (!link_advance(dict)) goto syntax_error;
+				if (!link_advance(fdict)) goto syntax_error;
 			}
 
 			return true;
 		}
 		else if (0 == strcmp(fdict->token, "#define"))
 		{
-			if (!link_advance(dict)) goto syntax_error;
+			if (!link_advance(fdict)) goto syntax_error;
 			const char *name = strdupa(fdict->token);
 
 			/* Get the value. */
-			if (!link_advance(dict)) goto syntax_error;
-			add_define(dict, name, fdict->token);
+			if (!link_advance(fdict)) goto syntax_error;
+			add_define(fdict->dict, name, fdict->token);
 
-			if (!link_advance(dict)) goto syntax_error;
-			if (!is_equal(dict, ';'))
+			if (!link_advance(fdict)) goto syntax_error;
+			if (!is_equal(fdict, ';'))
 			{
-				dict_error(dict, "Expecting \";\" at the end of #define.");
+				dict_error(fdict, "Expecting \";\" at the end of #define.");
 				goto syntax_error;
 			}
 		}
@@ -1072,32 +1054,32 @@ static bool read_entry(Dictionary dict)
 			/* Note: The following patches a dot in regexes appearing in
 			 * the affix file... It is corrected later. */
 			patch_subscript(fdict->token);
-			dn->string = string_set_add(fdict->token, dict->string_set);
+			dn->string = string_set_add(fdict->token, fdict->dict->string_set);
 		}
 
 		/* Advance to next entry, unless error */
-		if (!link_advance(dict)) goto syntax_error;
+		if (!link_advance(fdict)) goto syntax_error;
 	}
 
 	/* pass the : */
-	if (!link_advance(dict))
+	if (!link_advance(fdict))
 	{
 		goto syntax_error;
 	}
 
-	Exp * n = make_expression(dict);
+	Exp * n = make_expression(fdict);
 	if (n == NULL)
 		goto syntax_error;
 
-	if (!is_equal(dict, ';'))
+	if (!is_equal(fdict, ';'))
 	{
-		dict_error(dict, "Expecting \";\" at the end of an entry.");
+		dict_error(fdict, "Expecting \";\" at the end of an entry.");
 		goto syntax_error;
 	}
 
 	if (dn == NULL)
 	{
-		dict_error(dict, "Expecting a token before \":\".");
+		dict_error(fdict, "Expecting a token before \":\".");
 		goto syntax_error;
 	}
 
@@ -1109,13 +1091,15 @@ static bool read_entry(Dictionary dict)
 		dnx->exp = n;
 		i++;
 	}
+
+	Dictionary dict = fdict->dict;
 	if (IS_GENERATION(dict))
 		add_category(dict, n, dn, i);
 
 	dict->insert_entry(dict, dn, i);
 
 	/* pass the ; */
-	if (!link_advance(dict))
+	if (!link_advance(fdict))
 	{
 		/* Avoid freeing dn, since it is already inserted into the dict. */
 		return false;
@@ -1130,15 +1114,14 @@ syntax_error:
 
 bool read_dictionary(Dictionary dict, const char * input)
 {
-	File_Dict fdict = dict->file_data;
-	if (NULL == fdict)
-		fdict = malloc(sizeof(struct File_Dict_s));
+	File_Dict fdict = alloca(sizeof(struct File_Dict_s));
 
+	dict->line_number = 1;
+	fdict->dict = dict;
 	fdict->input = input;
 	fdict->pin = fdict->input;
-	dict->line_number = 1;
 
-	if (!link_advance(dict))
+	if (!link_advance(fdict))
 		return false;
 
 	/* The last character of a dictionary is NUL.
@@ -1147,7 +1130,7 @@ bool read_dictionary(Dictionary dict, const char * input)
 	 * the dict file size is 0. */
 	while ('\0' != fdict->pin[-1])
 	{
-		if (!read_entry(dict))
+		if (!read_entry(fdict))
 			return false;
 	}
 

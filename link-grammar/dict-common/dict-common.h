@@ -177,7 +177,6 @@ struct Dictionary_s
 #ifdef HAVE_ATOMESE
 	void *          as_server;         /* cogserver connection */
 #endif
-	void *          file_data;         /* file-back dictionary */
 
 	void (*insert_entry)(Dictionary, Dict_node *, int);
 
