@@ -17,7 +17,6 @@
 #include "dict-common/dict-internals.h"
 #include "dict-common/dict-utils.h"     // patch_subscript
 #include "dict-common/idiom.h"
-#include "dict-file/read-dict.h"        // dict_error2
 #include "string-id.h"
 #include "string-set.h"
 
@@ -591,7 +590,6 @@ static int dup_word_status(Dictionary dict, const Dict_node *newnode)
 
 static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 {
-
 	if (dup_word_status(dict, newnode) == 1) return false;
 
 	if (dict->allow_duplicate_words == 0)
@@ -606,8 +604,19 @@ static bool dup_word_error(Dictionary dict, Dict_node *newnode)
 		if (dup_word_status(dict, newnode) == 1) return false;
 	}
 
-	dict_error2(dict, "Ignoring word which has been multiply defined:",
-	            newnode->string);
+
+	if (IS_DYNAMIC_DICT(dict))
+	{
+		prt_error("Error: While handling storage-node\n  \"%s\":\n"
+		          "Ignoring word which has been multiply defined: \"%s\"\n",
+		          dict->name, newnode->string);
+	} else {
+		// File-backed dictionary sets a line number, for debugging.
+		prt_error("Error: While parsing dictionary \"%s\":\n"
+		          "Ignoring word which has been multiply defined: \"%s\"\n"
+		          "\t Line %d\n",
+		          dict->name, newnode->string, dict->line_number);
+	}
 
 	/* Too late to skip insertion - insert it with a null expression. */
 	newnode->exp = make_zeroary_node(dict->Exp_pool);

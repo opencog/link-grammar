@@ -228,13 +228,8 @@ dictionary_six_str(const char * lang,
 	                          /*align*/false, /*exact*/false);
 
 	/* Read dictionary from the input string. */
-
-	dict->input = input;
-	dict->pin = dict->input;
-	if (!read_dictionary(dict))
-	{
+	if (!read_dictionary(dict, input))
 		goto failure;
-	}
 
 	if (NULL == affix_name)
 	{
