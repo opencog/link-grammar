@@ -121,7 +121,7 @@
   automatically generated (currently only for idioms).
 */
 
-struct File_Dictionary_s
+struct File_Dict_s
 {
 	const char    * input;
 	const char    * pin;
@@ -130,7 +130,7 @@ struct File_Dictionary_s
 	int             already_got_it; /* For char, but needs to hold EOF */
 	char            token[MAX_TOKEN_LENGTH];
 };
-typedef struct File_Dictionary_s * File_Dictionary;
+typedef struct File_Dict_s * File_Dict;
 
 static bool link_advance(Dictionary dict);
 
@@ -151,7 +151,7 @@ void dict_error2(Dictionary dict, const char * s, const char *s2)
 		return;
 	}
 
-	File_Dictionary fdict = dict->file_data;
+	File_Dict fdict = dict->file_data;
 
 	/* The link_advance used to print the error message can
 	 * throw more errors while printing... */
@@ -207,7 +207,7 @@ static void dict_error(Dictionary dict, const char * s)
 
 static void warning(Dictionary dict, const char * s)
 {
-	File_Dictionary fdict = dict->file_data;
+	File_Dict fdict = dict->file_data;
 	prt_error("Warning: %s\n"
 	        "\tline %d, current token = \"%s\"\n",
 	        s, dict->line_number, fdict->token);
@@ -222,7 +222,7 @@ static void warning(Dictionary dict, const char * s)
 typedef char utf8char[MAXUTFLEN];
 static bool get_character(Dictionary dict, int quote_mode, utf8char uc)
 {
-	File_Dictionary fdict = dict->file_data;
+	File_Dict fdict = dict->file_data;
 
 	int i = 0;
 	while (1)
@@ -304,7 +304,7 @@ static bool char_is_special(char c)
 NO_SAN_DICT
 static bool link_advance(Dictionary dict)
 {
-	File_Dictionary fdict = dict->file_data;
+	File_Dict fdict = dict->file_data;
 	bool quote_mode = false;
 
 	fdict->is_special = false;
@@ -409,7 +409,7 @@ static bool link_advance(Dictionary dict)
  */
 static int is_equal(Dictionary dict, char c)
 {
-	File_Dictionary fdict = dict->file_data;
+	File_Dict fdict = dict->file_data;
 	return (fdict->is_special &&
 	        c == fdict->token[0] &&
 	        fdict->token[1] == '\0');
@@ -471,7 +471,7 @@ static bool check_connector(Dictionary dict, const char * s)
  */
 static Exp * make_dir_connector(Dictionary dict, int i)
 {
-	File_Dictionary fdict = dict->file_data;
+	File_Dict fdict = dict->file_data;
 	char *constring;
 	bool multi = false;
 
@@ -520,7 +520,7 @@ static unsigned int exptag_macro_add(Dictionary dict, const char *tag)
  */
 static Exp * make_connector(Dictionary dict)
 {
-	File_Dictionary fdict = dict->file_data;
+	File_Dict fdict = dict->file_data;
 	Exp * n;
 
 	int i = strlen(fdict->token) - 1;  /* this must be +, - or $ if a connector */
@@ -620,7 +620,7 @@ static bool is_number(const char * str)
  */
 static Exp *make_expression(Dictionary dict)
 {
-	File_Dictionary fdict = dict->file_data;
+	File_Dict fdict = dict->file_data;
 	Exp *nl = NULL;
 	Exp *e_head = NULL;
 	Exp *e_tail = NULL; /* last part of the expression */
@@ -956,7 +956,7 @@ void insert_list(Dictionary dict, Dict_node * p, int l)
  */
 static bool read_entry(Dictionary dict)
 {
-	File_Dictionary fdict = dict->file_data;
+	File_Dict fdict = dict->file_data;
 	Dict_node *dnx, *dn = NULL;
 
 	while (!is_equal(dict, ':'))
@@ -1130,9 +1130,9 @@ syntax_error:
 
 bool read_dictionary(Dictionary dict, const char * input)
 {
-	File_Dictionary fdict = dict->file_data;
+	File_Dict fdict = dict->file_data;
 	if (NULL == fdict)
-		fdict = malloc(sizeof(struct File_Dictionary_s));
+		fdict = malloc(sizeof(struct File_Dict_s));
 
 	fdict->input = input;
 	fdict->pin = fdict->input;
