@@ -1,4 +1,4 @@
-Version 5.12.4 (XXX 2024)
+Version 5.12.4 (28 March 2024)
  * Minor English dict fixes. #1470
  * Use correct guard macro for glibc heap functions. #1471
  * MacOS build fix #1473

@@ -1,11 +1,13 @@
-# This file is processed by the Windows build system using confvar.bat. It
-# assumes AC_INIT is the first command, with no blank lines before it and with
-# a blank line after it. If this things are changed, change confvar.bat
-# accordingly.
+#
+# This file is processed by the Windows build system using confvar.bat.
+# It assumes AC_INIT is the first command, with no blank lines before
+# it and with a blank line after it. If this things are changed, change
+# confvar.bat accordingly.
+#
 # Don't end the URLs with a slash even if it appears in the official address,
 # because we may append a component. Also, they cannot include "!".
-AC_INIT([link-grammar],[5.12.3],[https://github.com/opencog/link-grammar],[],
-		  [https://www.abisource.com/projects/link-grammar])
+AC_INIT([link-grammar],[5.12.4],[https://github.com/opencog/link-grammar],[],
+		  [https://opencog.github.io/link-grammar-website])
 
 # Check whether we want to set defaults for CFLAGS and CXXFLAGS
 AC_MSG_CHECKING([whether configure should try to set CFLAGS/CXXFLAGS])
@@ -37,7 +39,7 @@ LINK_MINOR_VERSION=12
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=3
+LINK_MICRO_VERSION=4
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
