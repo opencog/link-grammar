@@ -78,8 +78,8 @@ static unsigned int find_prime_for(size_t count)
 	for (i = 0; i < MAX_S_PRIMES; i ++)
 	   if (count < MAX_TRACON_SET_TABLE_SIZE(s_prime[i])) return i;
 
-	assert(0, "%zu: Absurdly big count", count);
-	return 0;
+	lgdebug(+0, "Warning: %zu: Absurdly big count", count);
+	return -1;
 }
 #endif
 
