@@ -61,6 +61,17 @@ static unsigned int hash_connectors(const Connector *c, unsigned int shallow)
 	return accum;
 }
 
+#if 0
+/**
+ * @count Expected number of table elements.
+ * @return Prime number to use
+ *
+ * This function was used for shrinking the table in a try to cause less
+ * cache/swap trashing if the table temporary grows very big. However, it
+ * had a bug, and it is not clear when to shrink the table - shrinking it
+ * unnecessarily can cause an overhead of a table growth. Keep for
+ * possible reimlementation of a similar idea.
+ */
 static unsigned int find_prime_for(size_t count)
 {
 	size_t i;
@@ -70,6 +81,7 @@ static unsigned int find_prime_for(size_t count)
 	assert(0, "%zu: Absurdly big count", count);
 	return 0;
 }
+#endif
 
 void tracon_set_reset(Tracon_set *ss)
 {
