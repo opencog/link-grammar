@@ -11,6 +11,8 @@
 /*                                                                       */
 /*************************************************************************/
 
+#define D_TRACON_SET 8                 // Debug level for this file
+
 #ifdef DEBUG
 #include <inttypes.h>                   // format macros
 #endif
@@ -128,7 +130,7 @@ uint64_t fp_count;
 uint64_t coll_count;
 static void prt_stat(void)
 {
-	lgdebug(+5, "tracon_set: %"PRIu64" accesses, chain %.4f\n",
+	lgdebug(D_TRACON_SET, "tracon_set: %"PRIu64" accesses, chain %.4f\n",
 	        fp_count, 1.*(fp_count+coll_count)/fp_count);
 }
 #define PRT_STAT(...) __VA_ARGS__
