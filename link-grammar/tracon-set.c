@@ -73,23 +73,7 @@ static unsigned int find_prime_for(size_t count)
 
 void tracon_set_reset(Tracon_set *ss)
 {
-	size_t ncount = MAX(ss->count, ss->ocount);
-
-	/* Table sizing heuristic: The number of tracons as a function of
-	 * word number is usually first increasing and then decreasing.
-	 * Continue the trend of the last 2 words. */
-	if (ss->count > ss->ocount)
-		ncount = ncount * 3 / 4;
-	else
-		ncount = ncount * 4 / 3;
-	unsigned int prime_idx = find_prime_for(ncount);
-	if (prime_idx < ss->prime_idx) ss->prime_idx = prime_idx;
-
-	ss->size = s_prime[ss->prime_idx];
-	ss->mod_func = prime_mod_func[ss->prime_idx];
 	memset(ss->table, 0, ss->size * sizeof(clist_slot));
-	ss->ocount = ss->count;
-	ss->count = 0;
 	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
 }
 
@@ -102,7 +86,6 @@ Tracon_set *tracon_set_create(void)
 	ss->mod_func = prime_mod_func[ss->prime_idx];
 	ss->table = (clist_slot *) malloc(ss->size * sizeof(clist_slot));
 	memset(ss->table, 0, ss->size * sizeof(clist_slot));
-	ss->count = ss->ocount = 0;
 	ss->shallow = false;
 	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
 
@@ -219,7 +202,6 @@ Connector **tracon_set_add(Connector *clist, Tracon_set *ss)
 		return &ss->table[p].clist;
 
 	ss->table[p].hash = h;
-	ss->count++;
 	ss->available_count--;
 
 	return &ss->table[p].clist;
