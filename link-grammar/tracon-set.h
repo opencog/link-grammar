@@ -21,6 +21,12 @@
 #include "const-prime.h"
 #include "error.h"
 
+#ifdef DEBUG
+#ifndef TRACON_SET_DEBUG
+#define TRACON_SET_DEBUG
+#endif
+#endif
+
 typedef struct
 {
 	Connector *clist;

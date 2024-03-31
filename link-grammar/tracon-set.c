@@ -13,14 +13,14 @@
 
 #define D_TRACON_SET 8                 // Debug level for this file
 
-#ifdef DEBUG
-#include <inttypes.h>                   // format macros
-#endif
-
 #include "const-prime.h"
 #include "connectors.h"
 #include "tracon-set.h"
 #include "utilities.h"
+
+#ifdef TRACON_SET_DEBUG
+#include <inttypes.h>                   // format macros
+#endif
 
 /**
  * This is an adaptation of the string_set module for detecting unique
@@ -125,7 +125,7 @@ static bool connector_list_equal(const Connector *c1, const Connector *c2)
 	return (c1 == NULL) && (c2 == NULL);
 }
 
-#if defined DEBUG || defined TRACON_SET_DEBUG
+#ifdef TRACON_SET_DEBUG
 uint64_t fp_count;
 uint64_t coll_count;
 static void prt_stat(void)
@@ -133,9 +133,6 @@ static void prt_stat(void)
 	lgdebug(D_TRACON_SET, "tracon_set: %"PRIu64" accesses, chain %.4f\n",
 	        fp_count, 1.*(fp_count+coll_count)/fp_count);
 }
-#define PRT_STAT(...) __VA_ARGS__
-#else
-#define PRT_STAT(...)
 #endif
 
 static bool place_found(const Connector *c, const clist_slot *slot,
@@ -155,14 +152,19 @@ static bool place_found(const Connector *c, const clist_slot *slot,
 static unsigned int find_place(const Connector *c, unsigned int h,
                                Tracon_set *ss)
 {
-	PRT_STAT(if (fp_count == 0) atexit(prt_stat); fp_count++;)
+#ifdef TRACON_SET_DEBUG
+	if (fp_count == 0) atexit(prt_stat);
+	fp_count++;
+#endif
 	unsigned int coll_num = 0;
 	unsigned int key = ss->mod_func(h);
 
 	/* Quadratic probing. */
 	while (!place_found(c, &ss->table[key], h, ss))
 	{
-		PRT_STAT(coll_count++;)
+#ifdef TRACON_SET_DEBUG
+		coll_count++;
+#endif
 		key += 2 * ++coll_num - 1;
 		if (key >= ss->size) key = ss->mod_func(key);
 	}
@@ -174,7 +176,9 @@ static void grow_table(Tracon_set *ss)
 {
 	Tracon_set old = *ss;
 
-	PRT_STAT(uint64_t fp_count_save = fp_count;)
+#ifdef TRACON_SET_DEBUG
+	uint64_t fp_count_save = fp_count;
+#endif
 	ss->prime_idx++;
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
@@ -191,8 +195,10 @@ static void grow_table(Tracon_set *ss)
 	ss->available_count = MAX_STRING_SET_TABLE_SIZE(ss->size) -
 		MAX_STRING_SET_TABLE_SIZE(old.size);
 
+#ifdef TRACON_SET_DEBUG
 	/* printf("growing from %zu to %zu\n", old.size, ss->size); */
-	PRT_STAT(fp_count = fp_count_save);
+	fp_count = fp_count_save;
+#endif
 	free(old.table);
 }
 
