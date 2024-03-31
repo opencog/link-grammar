@@ -38,8 +38,8 @@ typedef struct
 	size_t size;       /* the current size of the table */
 	size_t available_count;     /* number of available entries */
 	clist_slot *table; /* the table itself */
-	unsigned int prime_idx;     /* current prime number table index */
 	prime_mod_func_t mod_func;  /* the function to compute a prime modulo */
+	unsigned int prime_idx;     /* current prime number table index */
 	bool shallow;      /* consider shallow connector */
 } Tracon_set;
 
