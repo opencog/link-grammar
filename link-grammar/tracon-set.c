@@ -87,6 +87,10 @@ static unsigned int find_prime_for(size_t count)
 
 void tracon_set_reset(Tracon_set *ss)
 {
+#ifdef TRACON_SET_DEBUG
+	lgdebug(+D_TRACON_SET, "%p: prime_idx %u available_count %zu\n",
+	        ss, ss->prime_idx, ss->available_count);
+#endif
 	memset(ss->table, 0, ss->size * sizeof(clist_slot));
 	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
 }
@@ -102,6 +106,11 @@ Tracon_set *tracon_set_create(void)
 	ss->table = (clist_slot *) malloc(ss->size * sizeof(clist_slot));
 	memset(ss->table, 0, ss->size * sizeof(clist_slot));
 	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
+
+#ifdef TRACON_SET_DEBUG
+	lgdebug(+D_TRACON_SET, "%p: prime_idx %u available_count %zu\n",
+	        ss, ss->prime_idx, ss->available_count);
+#endif
 
 	return ss;
 }
@@ -178,6 +187,7 @@ static void grow_table(Tracon_set *ss)
 
 #ifdef TRACON_SET_DEBUG
 	uint64_t fp_count_save = fp_count;
+	prt_stat();
 #endif
 	ss->prime_idx++;
 	ss->size = s_prime[ss->prime_idx];
@@ -198,6 +208,8 @@ static void grow_table(Tracon_set *ss)
 #ifdef TRACON_SET_DEBUG
 	/* printf("growing from %zu to %zu\n", old.size, ss->size); */
 	fp_count = fp_count_save;
+	lgdebug(+D_TRACON_SET, " %p: prime_idx %u, available_count %zu\n",
+	        ss, ss->prime_idx, ss->available_count);
 #endif
 	free(old.table);
 }
@@ -237,6 +249,10 @@ Connector *tracon_set_lookup(const Connector *clist, Tracon_set *ss)
 void tracon_set_delete(Tracon_set *ss)
 {
 	if (ss == NULL) return;
+#ifdef TRACON_SET_DEBUG
+	lgdebug(+D_TRACON_SET, " %p: prime_idx %u, available_count %zu\n",
+	        ss, ss->prime_idx, ss->available_count);
+#endif
 	free(ss->table);
 	free(ss);
 }
