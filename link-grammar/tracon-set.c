@@ -93,12 +93,12 @@ Tracon_set *tracon_set_create(void)
 {
 	Tracon_set *ss = (Tracon_set *) malloc(sizeof(Tracon_set));
 
-	ss->prime_idx = 0;
+	memset(ss, 0, sizeof(Tracon_set));
+	// ss->prime_idx = 0;
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
 	ss->table = (clist_slot *) malloc(ss->size * sizeof(clist_slot));
 	memset(ss->table, 0, ss->size * sizeof(clist_slot));
-	ss->shallow = false;
 	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
 
 	return ss;
