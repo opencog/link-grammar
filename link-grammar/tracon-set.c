@@ -53,9 +53,9 @@ static unsigned int hash_connectors(const Connector *c, unsigned int shallow)
 	for (; c != NULL; c = c->next)
 	{
 		accum = (19 * accum) +
-		((c->desc->uc_num)<<18) +
-		(((unsigned int)c->multi)<<31) +
-		(unsigned int)c->desc->lc_letters;
+		c->desc->uc_num +
+		(((unsigned int)c->multi)<<20) +
+		(((unsigned int)c->desc->lc_letters)<<22);
 	}
 
 	return accum;
