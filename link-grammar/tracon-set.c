@@ -191,7 +191,8 @@ static void grow_table(Tracon_set *ss)
 			ss->table[p] = old.table[i];
 		}
 	}
-	ss->available_count = MAX_STRING_SET_TABLE_SIZE(ss->size);
+	ss->available_count = MAX_STRING_SET_TABLE_SIZE(ss->size) -
+		MAX_STRING_SET_TABLE_SIZE(old.size);
 
 	/* printf("growing from %zu to %zu\n", old.size, ss->size); */
 	PRT_STAT(fp_count = fp_count_save);
