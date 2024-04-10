@@ -27,10 +27,11 @@
 #endif
 #endif
 
+typedef size_t tid_hash_t;
 typedef struct
 {
 	Connector *clist;
-	unsigned int hash;
+	tid_hash_t hash;
 } clist_slot;
 
 typedef struct

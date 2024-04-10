@@ -48,9 +48,9 @@
  * (only, their value remains intact).
  */
 
-static unsigned int hash_connectors(const Connector *c, unsigned int shallow)
+static tid_hash_t hash_connectors(const Connector *c, unsigned int shallow)
 {
-	unsigned int accum = shallow && c->shallow;
+	tid_hash_t accum = shallow && c->shallow;
 
 	for (; c != NULL; c = c->next)
 	{
@@ -145,7 +145,7 @@ static void prt_stat(void)
 #endif
 
 static bool place_found(const Connector *c, const clist_slot *slot,
-                        unsigned int hash, Tracon_set *ss)
+                        tid_hash_t hash, Tracon_set *ss)
 {
 	if (slot->clist == NULL) return true;
 	if (hash != slot->hash) return false;
@@ -158,15 +158,15 @@ static bool place_found(const Connector *c, const clist_slot *slot,
  * lookup the given string in the table.  Return an index
  * to the place it is, or the place where it should be.
  */
-static unsigned int find_place(const Connector *c, unsigned int h,
-                               Tracon_set *ss)
+static tid_hash_t find_place(const Connector *c, tid_hash_t h,
+                             Tracon_set *ss)
 {
 #ifdef TRACON_SET_DEBUG
 	if (fp_count == 0) atexit(prt_stat);
 	fp_count++;
 #endif
 	unsigned int coll_num = 0;
-	unsigned int key = ss->mod_func(h);
+	tid_hash_t key = ss->mod_func(h);
 
 	/* Quadratic probing. */
 	while (!place_found(c, &ss->table[key], h, ss))
@@ -198,7 +198,7 @@ static void grow_table(Tracon_set *ss)
 	{
 		if (old.table[i].clist != NULL)
 		{
-			unsigned int p = find_place(old.table[i].clist, old.table[i].hash, ss);
+			tid_hash_t p = find_place(old.table[i].clist, old.table[i].hash, ss);
 			ss->table[p] = old.table[i];
 		}
 	}
@@ -227,8 +227,8 @@ Connector **tracon_set_add(Connector *clist, Tracon_set *ss)
 	 * first we grow it. */
 	if (ss->available_count == 0) grow_table(ss);
 
-	unsigned int h = hash_connectors(clist, ss->shallow);
-	unsigned int p = find_place(clist, h, ss);
+	tid_hash_t h = hash_connectors(clist, ss->shallow);
+	tid_hash_t p = find_place(clist, h, ss);
 
 	if (ss->table[p].clist != NULL)
 		return &ss->table[p].clist;
@@ -241,8 +241,8 @@ Connector **tracon_set_add(Connector *clist, Tracon_set *ss)
 
 Connector *tracon_set_lookup(const Connector *clist, Tracon_set *ss)
 {
-	unsigned int h = hash_connectors(clist, ss->shallow);
-	unsigned int p = find_place(clist, h, ss);
+	tid_hash_t h = hash_connectors(clist, ss->shallow);
+	tid_hash_t p = find_place(clist, h, ss);
 	return ss->table[p].clist;
 }
 
