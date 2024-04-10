@@ -32,6 +32,10 @@ typedef struct
 {
 	Connector *clist;
 	tid_hash_t hash;
+#ifdef TRACON_SET_DEBUG
+	unsigned int pri_collN;
+	unsigned int sec_collN;
+#endif
 } clist_slot;
 
 typedef struct
@@ -42,6 +46,13 @@ typedef struct
 	prime_mod_func_t mod_func;  /* the function to compute a prime modulo */
 	unsigned int prime_idx;     /* current prime number table index */
 	bool shallow;      /* consider shallow connector */
+#ifdef TRACON_SET_DEBUG
+	/* size_t is used here instead of uint64_t to prevent the need for PRIu64. */
+	size_t addN;       /* Number of tries to add */
+	size_t pri_collN;  /* Number of primary collisions */
+	size_t sec_collN;  /* Number of secondary collisions */
+	unsigned int resetN;       /* Number of table resets */
+#endif
 } Tracon_set;
 
 /* If the table gets too big, we grow it. Too big is defined as being
