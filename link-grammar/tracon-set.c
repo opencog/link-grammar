@@ -55,7 +55,8 @@ static tid_hash_t hash_connectors(const Connector *c, unsigned int shallow)
 	{
 		accum = (19 * accum) +
 		c->desc->uc_num +
-		(((unsigned int)c->multi)<<20) +
+		(((unsigned int)c->multi)<<19) +
+		((((unsigned int)c->desc->lc_mask) & 1)<<20) +
 		(((unsigned int)c->desc->lc_letters)<<22);
 	}
 

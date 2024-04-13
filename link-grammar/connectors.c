@@ -541,7 +541,7 @@ static bool condesc_grow(ConTable *ct)
 
 condesc_t *condesc_add(ConTable *ct, const char *constring)
 {
-	uint32_t hash = (connector_hash_t)connector_str_hash(constring);
+	uint32_t hash = (connector_uc_hash_t)connector_str_hash(constring);
 	hdesc_t *h = condesc_find(ct, constring, hash);
 
 	if (NULL == h->desc)
