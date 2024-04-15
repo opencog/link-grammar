@@ -18,6 +18,7 @@
 #include <stdint.h>
 
 #include "api-types.h"
+#include "connectors.h"
 #include "const-prime.h"
 #include "error.h"
 
@@ -27,7 +28,7 @@
 #endif
 #endif
 
-typedef size_t tid_hash_t;
+typedef connector_hash_t tid_hash_t;
 typedef struct
 {
 	Connector *clist;

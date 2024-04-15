@@ -49,18 +49,9 @@
 
 static tid_hash_t hash_connectors(const Connector *c, unsigned int shallow)
 {
-	tid_hash_t accum = shallow && c->shallow;
+	tid_hash_t accum = (shallow && c->shallow) ? 1000003 : 0;
 
-	for (; c != NULL; c = c->next)
-	{
-		accum = (19 * accum) +
-		c->desc->uc_num +
-		(((unsigned int)c->multi)<<19) +
-		((((unsigned int)c->desc->lc_mask) & 1)<<20) +
-		(((unsigned int)c->desc->lc_letters)<<22);
-	}
-
-	return accum;
+	return accum + connector_list_hash(c);
 }
 
 #if 0
