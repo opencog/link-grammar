@@ -236,17 +236,15 @@ struct disjunct_dup_table_s
 static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt,
                                              Disjunct * d, bool string_too)
 {
-	unsigned int i;
-	i = 0;
-	for (Connector *e = d->left; e != NULL; e = e->next) {
-		i = (41 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
-	}
-	for (Connector *e = d->right; e != NULL; e = e->next) {
-		i = (41 * (i + e->desc->uc_num)) + (unsigned int)e->desc->lc_letters + 7;
-	}
+	unsigned int i = 0;
+
+	if (NULL != d->left)
+		i = connector_list_hash(d->left);
+	if (NULL != d->right)
+		i += 19 * connector_list_hash(d->right);
 	if (string_too)
 		i += string_hash(d->word_string);
-	i += (i>>10);
+	//i += (i>>10);
 
 	d->dup_hash = i;
 	return (i & (dt->dup_table_size-1));
