@@ -49,8 +49,8 @@ struct String_id_s
 };
 
 /* If the table gets too big, we grow it. Too big is defined as being
- * more than 3/8 full. There's a huge boost from keeping this sparse. */
-#define MAX_STRING_SET_TABLE_SIZE(s) ((s) * 3 / 8)
+ * more than 3/4 full. There's a huge boost from keeping this sparse. */
+#define MAX_STRING_SET_TABLE_SIZE(s) ((s) * 3 / 4)
 
 String_id *string_id_create(void);
 unsigned int  string_id_add(const char *source_string, String_id *ss);
