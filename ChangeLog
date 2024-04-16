@@ -1,5 +1,6 @@
 Version 5.12.5 (XXX 2024)
  * Bugfix tracon table size management. #1486
+ * Bugfix connector hashing for fewer hash collisions #1487
 
 Version 5.12.4 (28 March 2024)
  * Minor English dict fixes. #1470
