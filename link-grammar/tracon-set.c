@@ -11,12 +11,13 @@
 /*                                                                       */
 /*************************************************************************/
 
-#ifdef DEBUG
-#include <inttypes.h>                   // format macros
-#endif
+#define D_TRACON_SET 8                 // Debug level for this file
 
 #include "const-prime.h"
 #include "connectors.h"
+#ifdef TRACON_SET_DEBUG
+#include "disjunct-utils.h"            // print_connector_list_str
+#endif
 #include "tracon-set.h"
 #include "utilities.h"
 
@@ -46,50 +47,79 @@
  * (only, their value remains intact).
  */
 
-static unsigned int hash_connectors(const Connector *c, unsigned int shallow)
+static tid_hash_t hash_connectors(const Connector *c, unsigned int shallow)
 {
-	unsigned int accum = shallow && c->shallow;
+	tid_hash_t accum = (shallow && c->shallow) ? 1000003 : 0;
 
-	for (; c != NULL; c = c->next)
-	{
-		accum = (19 * accum) +
-		c->desc->uc_num +
-		(((unsigned int)c->multi)<<20) +
-		(((unsigned int)c->desc->lc_letters)<<22);
-	}
-
-	return accum;
+	return accum + connector_list_hash(c);
 }
 
+#if 0
+/**
+ * @count Expected number of table elements.
+ * @return Prime number to use
+ *
+ * This function was used for shrinking the table in a try to cause less
+ * cache/swap trashing if the table temporary grows very big. However, it
+ * had a bug, and it is not clear when to shrink the table - shrinking it
+ * unnecessarily can cause an overhead of a table growth. Keep for
+ * possible reimlementation of a similar idea.
+ */
 static unsigned int find_prime_for(size_t count)
 {
 	size_t i;
 	for (i = 0; i < MAX_S_PRIMES; i ++)
 	   if (count < MAX_TRACON_SET_TABLE_SIZE(s_prime[i])) return i;
 
-	assert(0, "%zu: Absurdly big count", count);
-	return 0;
+	lgdebug(+0, "Warning: %zu: Absurdly big count", count);
+	return -1;
 }
+#endif
+
+#ifdef TRACON_SET_DEBUG
+static void tracon_set_print(Tracon_set *ss)
+{
+	if (test_enabled("tracon-set-print"))
+	{
+		clist_slot *t;
+
+		printf("tracon_set_print %p:\n", ss);
+		for (size_t i = 0; i < ss->size; i++)
+		{
+			t = &ss->table[i];
+			if (0 == t->hash) continue;
+			tid_hash_t x = ss->mod_func(t->hash);
+			char *cstr = print_connector_list_str(t->clist, 0);
+			printf("[%zu]: h %zu pri %u sec %u %c %s\n", i, (size_t)t->hash, t->pri_collN,
+			       t->sec_collN, "yn"[i == x], cstr);
+			free(cstr);
+		}
+	}
+}
+
+static void tracon_set_stats(Tracon_set *a, Tracon_set *ss, const char *where)
+{
+	lgdebug(+D_TRACON_SET,
+	        "%p: %s: reset %u prime_idx %u acc %zu used %2.2f%% "
+	        "coll/acc %.4f chain %.4f\n",
+	        a, where, ss->resetN, ss->prime_idx, ss->addN,
+	        100.f * ((int)MAX_TRACON_SET_TABLE_SIZE(ss->size) - ss->available_count) / ss->size,
+	        1.* ss->pri_collN/ss->addN,
+	        1. * (ss->pri_collN + ss->sec_collN) / ss->addN);
+}
+#else
+static void tracon_set_print(Tracon_set *ss){};
+static void tracon_set_stats(Tracon_set *a, Tracon_set *ss, const char *where){};
+#endif
 
 void tracon_set_reset(Tracon_set *ss)
 {
-	size_t ncount = MAX(ss->count, ss->ocount);
-
-	/* Table sizing heuristic: The number of tracons as a function of
-	 * word number is usually first increasing and then decreasing.
-	 * Continue the trend of the last 2 words. */
-	if (ss->count > ss->ocount)
-		ncount = ncount * 3 / 4;
-	else
-		ncount = ncount * 4 / 3;
-	unsigned int prime_idx = find_prime_for(ncount);
-	if (prime_idx < ss->prime_idx) ss->prime_idx = prime_idx;
-
-	ss->size = s_prime[ss->prime_idx];
-	ss->mod_func = prime_mod_func[ss->prime_idx];
+#ifdef TRACON_SET_DEBUG
+	ss->resetN++;
+#endif
+	tracon_set_stats(ss, ss, "reset");
+	tracon_set_print(ss);
 	memset(ss->table, 0, ss->size * sizeof(clist_slot));
-	ss->ocount = ss->count;
-	ss->count = 0;
 	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
 }
 
@@ -97,14 +127,18 @@ Tracon_set *tracon_set_create(void)
 {
 	Tracon_set *ss = (Tracon_set *) malloc(sizeof(Tracon_set));
 
-	ss->prime_idx = 0;
+	memset(ss, 0, sizeof(Tracon_set));
+	// ss->prime_idx = 0;
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
 	ss->table = (clist_slot *) malloc(ss->size * sizeof(clist_slot));
 	memset(ss->table, 0, ss->size * sizeof(clist_slot));
-	ss->count = ss->ocount = 0;
-	ss->shallow = false;
 	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size);
+
+#ifdef TRACON_SET_DEBUG
+	lgdebug(+D_TRACON_SET, "%p: prime_idx %u available_count %zu\n",
+	        ss, ss->prime_idx, ss->available_count);
+#endif
 
 	return ss;
 }
@@ -128,21 +162,8 @@ static bool connector_list_equal(const Connector *c1, const Connector *c2)
 	return (c1 == NULL) && (c2 == NULL);
 }
 
-#if defined DEBUG || defined TRACON_SET_DEBUG
-uint64_t fp_count;
-uint64_t coll_count;
-static void prt_stat(void)
-{
-	lgdebug(+5, "tracon_set: %"PRIu64" accesses, chain %.4f\n",
-	        fp_count, 1.*(fp_count+coll_count)/fp_count);
-}
-#define PRT_STAT(...) __VA_ARGS__
-#else
-#define PRT_STAT(...)
-#endif
-
 static bool place_found(const Connector *c, const clist_slot *slot,
-                        unsigned int hash, Tracon_set *ss)
+                        tid_hash_t hash, Tracon_set *ss)
 {
 	if (slot->clist == NULL) return true;
 	if (hash != slot->hash) return false;
@@ -155,17 +176,27 @@ static bool place_found(const Connector *c, const clist_slot *slot,
  * lookup the given string in the table.  Return an index
  * to the place it is, or the place where it should be.
  */
-static unsigned int find_place(const Connector *c, unsigned int h,
-                               Tracon_set *ss)
+static tid_hash_t find_place(const Connector *c, tid_hash_t h,
+                             Tracon_set *ss)
 {
-	PRT_STAT(if (fp_count == 0) atexit(prt_stat); fp_count++;)
 	unsigned int coll_num = 0;
-	unsigned int key = ss->mod_func(h);
+	tid_hash_t key = ss->mod_func(h);
 
 	/* Quadratic probing. */
 	while (!place_found(c, &ss->table[key], h, ss))
 	{
-		PRT_STAT(coll_count++;)
+#ifdef TRACON_SET_DEBUG
+		if (0 == coll_num)
+		{
+			ss->pri_collN++;
+			ss->table[key].pri_collN++;
+		}
+		else
+		{
+			ss->sec_collN++;
+			ss->table[key].sec_collN++;
+		}
+#endif
 		key += 2 * ++coll_num - 1;
 		if (key >= ss->size) key = ss->mod_func(key);
 	}
@@ -177,7 +208,7 @@ static void grow_table(Tracon_set *ss)
 {
 	Tracon_set old = *ss;
 
-	PRT_STAT(uint64_t fp_count_save = fp_count;)
+	tracon_set_stats(ss, &old, "before grow");
 	ss->prime_idx++;
 	ss->size = s_prime[ss->prime_idx];
 	ss->mod_func = prime_mod_func[ss->prime_idx];
@@ -187,15 +218,14 @@ static void grow_table(Tracon_set *ss)
 	{
 		if (old.table[i].clist != NULL)
 		{
-			unsigned int p = find_place(old.table[i].clist, old.table[i].hash, ss);
+			tid_hash_t p = find_place(old.table[i].clist, old.table[i].hash, ss);
 			ss->table[p] = old.table[i];
 		}
 	}
 	ss->available_count = MAX_STRING_SET_TABLE_SIZE(ss->size) -
 		MAX_STRING_SET_TABLE_SIZE(old.size);
 
-	/* printf("growing from %zu to %zu\n", old.size, ss->size); */
-	PRT_STAT(fp_count = fp_count_save);
+	tracon_set_stats(ss, ss, "after grow");
 	free(old.table);
 }
 
@@ -207,19 +237,21 @@ void tracon_set_shallow(bool shallow, Tracon_set *ss)
 Connector **tracon_set_add(Connector *clist, Tracon_set *ss)
 {
 	assert(clist != NULL, "Can't insert a null list");
+#ifdef TRACON_SET_DEBUG
+	ss->addN++;
+#endif
 
 	/* We may need to add it to the table. If the table got too big,
 	 * first we grow it. */
 	if (ss->available_count == 0) grow_table(ss);
 
-	unsigned int h = hash_connectors(clist, ss->shallow);
-	unsigned int p = find_place(clist, h, ss);
+	tid_hash_t h = hash_connectors(clist, ss->shallow);
+	tid_hash_t p = find_place(clist, h, ss);
 
 	if (ss->table[p].clist != NULL)
 		return &ss->table[p].clist;
 
 	ss->table[p].hash = h;
-	ss->count++;
 	ss->available_count--;
 
 	return &ss->table[p].clist;
@@ -227,14 +259,16 @@ Connector **tracon_set_add(Connector *clist, Tracon_set *ss)
 
 Connector *tracon_set_lookup(const Connector *clist, Tracon_set *ss)
 {
-	unsigned int h = hash_connectors(clist, ss->shallow);
-	unsigned int p = find_place(clist, h, ss);
+	tid_hash_t h = hash_connectors(clist, ss->shallow);
+	tid_hash_t p = find_place(clist, h, ss);
 	return ss->table[p].clist;
 }
 
 void tracon_set_delete(Tracon_set *ss)
 {
 	if (ss == NULL) return;
+	tracon_set_stats(ss, ss, "delete");
+	tracon_set_print(ss);
 	free(ss->table);
 	free(ss);
 }

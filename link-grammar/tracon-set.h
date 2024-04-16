@@ -18,25 +18,42 @@
 #include <stdint.h>
 
 #include "api-types.h"
+#include "connectors.h"
 #include "const-prime.h"
 #include "error.h"
 
+#ifdef DEBUG
+#ifndef TRACON_SET_DEBUG
+#define TRACON_SET_DEBUG
+#endif
+#endif
+
+typedef connector_hash_t tid_hash_t;
 typedef struct
 {
 	Connector *clist;
-	unsigned int hash;
+	tid_hash_t hash;
+#ifdef TRACON_SET_DEBUG
+	unsigned int pri_collN;
+	unsigned int sec_collN;
+#endif
 } clist_slot;
 
 typedef struct
 {
 	size_t size;       /* the current size of the table */
-	size_t count;      /* number of things currently in the table */
 	size_t available_count;     /* number of available entries */
-	size_t ocount;     /* the count before reset */
 	clist_slot *table; /* the table itself */
-	unsigned int prime_idx;     /* current prime number table index */
 	prime_mod_func_t mod_func;  /* the function to compute a prime modulo */
+	unsigned int prime_idx;     /* current prime number table index */
 	bool shallow;      /* consider shallow connector */
+#ifdef TRACON_SET_DEBUG
+	/* size_t is used here instead of uint64_t to prevent the need for PRIu64. */
+	size_t addN;       /* Number of tries to add */
+	size_t pri_collN;  /* Number of primary collisions */
+	size_t sec_collN;  /* Number of secondary collisions */
+	unsigned int resetN;       /* Number of table resets */
+#endif
 } Tracon_set;
 
 /* If the table gets too big, we grow it. Too big is defined as being

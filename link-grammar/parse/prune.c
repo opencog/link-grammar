@@ -447,7 +447,7 @@ static void power_table_init(Sentence sent, Tracon_sharing *ts, power_table *pt)
 static void clean_table(unsigned int size, C_list **t)
 {
 	/* Table entry tombstone. */
-#define UC_NUM_TOMBSTONE ((connector_hash_t)-1)
+#define UC_NUM_TOMBSTONE ((connector_uc_hash_t)-1)
 	static condesc_t desc_no_match =
 	{
 		.string = "TOMBSTONE",

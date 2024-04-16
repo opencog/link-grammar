@@ -50,7 +50,7 @@
 
 typedef uint64_t lc_enc_t;
 
-typedef uint32_t connector_hash_t;
+typedef uint32_t connector_uc_hash_t;
 
 #define CD_HEAD_DEPENDENT    (1<<0) /* Has a leading 'h' or 'd'. */
 #define CD_HEAD              (1<<1) /* 0: dependent; 1: head; */
@@ -85,7 +85,7 @@ struct condesc_struct
 
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
 	// float *cost;    /* Array of cost by connector length (cost[0]: default) */
-	connector_hash_t uc_num; /* uc part enumeration. */
+	connector_uc_hash_t uc_num; /* uc part enumeration. */
 	uint8_t length_limit; /* If not 0, it gives the limit of the length of the
 	                       * link that can be used on this connector type. The
 	                       * value UNLIMITED_LEN specifies no limit.
@@ -111,7 +111,7 @@ typedef struct length_limit_def
 typedef struct hdesc
 {
 	condesc_t *desc;
-	connector_hash_t str_hash;
+	connector_uc_hash_t str_hash;
 } hdesc_t;
 
 typedef struct
@@ -307,6 +307,29 @@ static inline uint32_t string_hash(const char *s)
 		s++;
 	}
 	return i;
+}
+
+typedef uint32_t connector_hash_t;
+
+static inline connector_hash_t connector_hash(const Connector *c)
+{
+	return c->desc->uc_num +
+		(c->multi << 19) +
+		(((connector_hash_t)c->desc->lc_mask & 1) << 20) +
+		(connector_hash_t)c->desc->lc_letters;
+}
+
+/**
+ * \p c is assumed to be non-NULL.
+ */
+static inline connector_hash_t connector_list_hash(const Connector *c)
+{
+	connector_hash_t accum = connector_hash(c);
+
+	for (c = c->next; c != NULL; c = c->next)
+		accum = (19 * accum) + connector_hash(c);
+
+	return accum;
 }
 
 /**
