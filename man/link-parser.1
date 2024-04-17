@@ -125,11 +125,10 @@ LEFT\-WALL reading.g a man.ij page.n is.v informative.a .
 .SH BACKGROUND
 The \fBlink\-parser\fP command-line tool is useful for
 general exploration and use, although it is presumed that, for the
-parsing of large quantities of text, a custom application, making
-use of the \%link\-grammar library, will be written.  Several such
+parsing of large quantities of text, developers will create a custom
+application, making use of the \%link\-grammar library.  Several such
 applications are described on the Link Grammar web page (see SEE ALSO
-below); these include
-the AbiWord grammar checker, and the RelEx semantic relation extractor.
+below).
 .PP
 The theory of Link Grammar is explained in many academic papers.
 In the first of these, Daniel Sleator and Davy Temperley,
@@ -478,10 +477,14 @@ in that case the actual location is displayed as "System data directory" when
 
 .SH SEE ALSO
 .nh
+The
+\fBlink\-generator\fP command can be used to generate random sentences
+from a given dictionary.
+.PP
 Information on the \%link\-grammar shared-library API and the link types
 used in the parse is available at the
-.UR http://www.abisource.com/projects/link-grammar/
-AbiWord website
+.UR https://opencog.github.io/link-grammar-website/
+Link Grammar website
 .UE .
 .PP
 Peer-reviewed papers explaining Link Grammar can be found at
@@ -505,6 +508,6 @@ link-grammar Google group
 Sleator <sleator@cs.cmu.edu>, Davy Temperley <dtemp@theory.esm.rochester.edu>,
 and John Lafferty <lafferty@cs.cmu.edu>
 .PP
-This manual page was written by Ken Bloom <kbloom@gmail.com>,
-for the Debian project, and updated by Linas Vepstas
+This manual page was written by Ken Bloom <kbloom@gmail.com>
+for the Debian project and updated by Linas Vepstas
 <linasvepstas@gmail.com>.
