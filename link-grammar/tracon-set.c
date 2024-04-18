@@ -15,11 +15,12 @@
 
 #include "const-prime.h"
 #include "connectors.h"
+#include "tracon-set.h"
+#include "utilities.h"
+
 #ifdef TRACON_SET_DEBUG
 #include "disjunct-utils.h"            // print_connector_list_str
 #endif
-#include "tracon-set.h"
-#include "utilities.h"
 
 /**
  * This is an adaptation of the string_set module for detecting unique
