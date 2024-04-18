@@ -358,9 +358,10 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	 * with uniform weighting; no attempt to look at the cost
 	 * is made. A fancier algo might selectively choose those
 	 * with lower cost.
+	 * We don't care for now that this doesn't work if discnt > INT_MAX.
 	 */
-	unsigned int maxdj = opts->max_disjuncts;
-	unsigned int discnt = count_disjuncts(dis);
+	int maxdj = opts->max_disjuncts;
+	int discnt = count_disjuncts(dis);
 	if (discnt < maxdj) return dis;
 
 	/* If we are here, we need to trim down the list */
@@ -369,7 +370,7 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	Disjunct *ktail = dis;
 	for (Disjunct *d = dis->next; d != NULL; d=d->next)
 	{
-		unsigned int pick = rand_r(&rst) % discnt;
+		int pick = rand_r(&rst) % discnt;
 		if (pick < maxdj)
 		{
 			ktail->next = d;
