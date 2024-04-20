@@ -15,8 +15,8 @@ jobs:
     - uses: actions/checkout@v3
     - name: install packages
       run: sudo apt-get install autoconf-archive flex libpcre2-dev
-    - name: autoconf
-      run: ./autogen.sh
+    - name: autogen
+      run: ./autogen.sh --no-configure
     - name: configure
       run: ./configure
     - name: make
