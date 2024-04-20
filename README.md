@@ -380,9 +380,6 @@ implementation, and needed for correctness on FreeBSD and Cygwin).<br>
 Using `libpcre2-dev` is strongly recommended. It must be used on certain
 systems (as specified in their BUILDING sections).
 
-Note: BSD-derived operating systems (including macOS) need the
-`argp-standalone` library in order to build the `link-generator` program.
-
 ### Editline
 If `libedit-dev` is installed, then the arrow keys can be used to edit
 the input to the link-parser tool; the up and down arrow keys will
