@@ -560,9 +560,10 @@ case "$host_os$host_cpu" in
 		default_hunspell_dictdir=/usr/share/myspell/dicts
 		;;
 esac
-AC_ARG_WITH([hunspell-dictdir], [AS_HELP_STRING([--with-hunspell-dictdir=DIR],
-	[Use DIR to find HunSpell files (default=$default_hunspell_dictdir])],
-	[], with_hunspell_dictdir=)
+
+AC_ARG_WITH([hunspell-dictdir], AS_HELP_STRING([--with-hunspell-dictdir=DIR],
+       [Use DIR to find HunSpell files (the default is system dependent)]),
+       [], [with_hunspell_dictdir=$default_hunspell_dictdir])
 
 # ====================================================================
 
@@ -586,10 +587,7 @@ if test x"$do_hunspell" = xyes; then
 		AC_SUBST(HUNSPELL_CFLAGS)
 
 		# Now, look for the dictionaries.
-		HunSpellDictDir=$default_hunspell_dictdir
-		if test -n "$with_hunspell_dictdir"; then
-			HunSpellDictDir=$with_hunspell_dictdir
-		fi
+		HunSpellDictDir=$with_hunspell_dictdir
 
 		if test "$native_win32" = yes; then
 			# Convert to native format with forward slashes
@@ -606,7 +604,12 @@ if test x"$do_hunspell" = xyes; then
 		fi
 
 		if ! test -d "$HunSpellDictDir" ; then
-			AC_MSG_WARN([HunSpell dictionary directory "$HunSpellDictDir" not found.])
+			if test "$withval" = yes; then
+				AC_MSG_WARN([Default HunSpell directory "$HunSpellDictDir" not found. Use --with_hunspell_dictdir=DIR to change it.])
+			else
+				AC_MSG_WARN([HunSpell directory "$HunSpellDictDir" not found.])
+			fi
+
 			HunSpellDictDir_status=' (not found)'
 		fi
 		AC_DEFINE_UNQUOTED(HUNSPELL_DICT_DIR, "$HunSpellDictDir", [Defining the  dictionary path])
