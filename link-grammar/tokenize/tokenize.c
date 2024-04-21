@@ -3124,12 +3124,7 @@ static Word *word_new(Sentence sent)
 		const size_t len = sent->length;
 
 		sent->word = realloc(sent->word, (len+1)*sizeof(*sent->word));
-		sent->word[len].d = NULL;
-		sent->word[len].x = NULL;
-		sent->word[len].unsplit_word = NULL;
-		sent->word[len].alternatives = NULL;
-		sent->word[len].gwords = NULL;
-		sent->word[len].optional = false;
+		memset(&sent->word[len], 0, sizeof(sent->word[0]));
 		sent->length++;
 
 		return &sent->word[len];
