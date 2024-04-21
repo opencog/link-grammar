@@ -446,7 +446,7 @@ and `tests.py` runs unit tests.
 
 - macOS:
    * Due to file permissions settings, macOS users may need to install
-     python bindindings into custom directory locations. This can be
+     python bindings into custom directory locations. This can be
      done by saying
      `make install pythondir=/where/to/install`
 
@@ -871,7 +871,7 @@ d matches h or nothing. This is a new feature in version 5.1.0
 (August 2014). The website provides additional documentation.
 
 Although the English-language link-grammar links are un-oriented,
-it seems that a defacto direction can be given to them that is
+it seems that a de facto direction can be given to them that is
 completely consistent with standard conceptions of a dependency
 grammar.
 
@@ -955,7 +955,7 @@ below is an actual working example, already implemented in the current
 LG English dictionary. *All* link crossings can be implemented in this
 way!  So we do not have to actually abandon the current parsing
 algorithms to get non-planar diagrams. We don't even have to modify them!
-Hurrahh!
+Hurrah!
 
 Here is a working example: "I want to look at and listen to everything."
 This wants two `J` links pointing to 'everything'.  The desired diagram
@@ -1153,7 +1153,7 @@ for details.
 
 The foundational LG papers make comments to this effect; however, see
 also work by Bob Coecke on category theory and grammar.  Coecke's
-diagramatic approach is essentially identical to the diagrams given in
+diagrammatic approach is essentially identical to the diagrams given in
 the foundational LG papers; it becomes abundantly clear that the
 category theoretic approach is equivalent to Link Grammar. See, for
 example, this introductory sketch
@@ -1295,7 +1295,7 @@ Some complex phantom constructions:
  * If this is true, then (you should) do it.
  * Perhaps he will (do it), if he sees enough of her.
 
-See also [github issue #224](https://github.com/opencog/link-grammar/issues/224).
+See also [GitHub issue #224](https://github.com/opencog/link-grammar/issues/224).
 
 Actual ellipsis:
  * At first, it seemed like ...
@@ -1576,7 +1576,7 @@ http://www.corpus.bham.ac.uk/publications/index.shtml
    only... but also ...) which have a long-range structure similar to
    quoted text (he said ...).
 
-   See also [github issue #42](https://github.com/opencog/link-grammar/issues/42).
+   See also [GitHub issue #42](https://github.com/opencog/link-grammar/issues/42).
 
 ### Semantification of the dictionary:
   "to be fishing": Link grammar offers four parses of "I was fishing for
