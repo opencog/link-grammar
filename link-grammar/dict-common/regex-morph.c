@@ -189,7 +189,7 @@ static pcre2_match_data* alloc_match_data(void)
 #else
 
 	// No threads. Malloc once, forever, and we are done.
-	static pcre2_match_data *pmd = nullptr;
+	static pcre2_match_data *pmd = NULL;
 	if (pmd) return pmd;
 	pmd = pcre2_match_data_create(MAX_CAPTURE_GROUPS, NULL);
 	if (pmd) return pmd;
