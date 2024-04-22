@@ -166,8 +166,10 @@ static void create_wildcard_word_disjunct_list(Sentence sent,
 	build_sentence_disjuncts(wc_word_list, opts->disjunct_cost, opts);
 
 	Word *word0 = &wc_word_list->word[0];
-	eliminate_duplicate_disjuncts(word0->d, false);
-	eliminate_duplicate_disjuncts(word0->d, true);
+	unsigned int Ndeleted;
+	Ndeleted = eliminate_duplicate_disjuncts(word0->d, false);
+	Ndeleted += eliminate_duplicate_disjuncts(word0->d, true);
+	print_time(opts, "Eliminated duplicate disjuncts (%u deleted)", Ndeleted);
 
 	wc_word_list->min_len_encoding = 2; /* Don't share/encode. */
 	Tracon_sharing *t = pack_sentence_for_pruning(wc_word_list);
