@@ -8,13 +8,24 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
-
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-12, macos-13, macos-14, ubuntu-latest]
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     steps:
     - uses: actions/checkout@v4
     - name: install packages
-      run: sudo apt-get install autoconf-archive flex libpcre2-dev
+      run: |
+        case $RUNNER_OS in
+          Linux)
+            sudo apt-get install autoconf autoconf-archive automake flex libpcre2-dev libtool
+            ;;
+          macOS)
+            brew install autoconf autoconf-archive automake pcre2 libtool
+            ;;
+        esac
     - name: autogen
       run: ./autogen.sh --no-configure
     - name: configure
