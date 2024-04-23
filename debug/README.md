@@ -122,7 +122,7 @@ messages.)
 
 Or, in order to display the word array:
 
-`link-parser -v=7 -debug=tokenize.c,print_sentence_word_alternatives`
+`link-parser -v=8 -debug=build_sentence_expressions,print_sentence_word_alternatives`
 
 5) Debug post-processing:
 

@@ -24,22 +24,22 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">&lt;nul set/p x="Invoking "&amp; where.exe swig.exe
 echo on
 cd $(IntDir)
-swig.exe -c++ -python -py3 -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
+swig.exe -c++ -python -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
 %40echo off</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">&lt;nul set/p x="Invoking "&amp; where.exe swig.exe
 echo on
 cd $(IntDir)
-swig.exe -c++ -python -py3 -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
+swig.exe -c++ -python -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
 %40echo off</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">&lt;nul set/p x="Invoking "&amp; where.exe swig.exe
 echo on
 cd $(IntDir)
-swig.exe -c++ -python -py3 -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
+swig.exe -c++ -python -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
 %40echo off</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">&lt;nul set/p x="Invoking "&amp; where.exe swig.exe
 echo on
 cd $(IntDir)
-swig.exe -c++ -python -py3 -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
+swig.exe -c++ -python -outdir $(OutDir) -module clinkgrammar -I..\..\..\link-grammar -o lg_python_wrap.cpp "%(FullPath)"
 %40echo off</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Generating Python3 wrapper ^&amp; interface</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)\lg_python_wrap.cpp;$(OutDir)\clinkgrammar.py</Outputs>
