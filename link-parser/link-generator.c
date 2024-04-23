@@ -61,7 +61,7 @@ typedef struct
 /* Originally, this program used argp, but now it uses getopt in
  * order to make the porting to MS Windows easy. The original
  * definitions are still being used here because they are more readable
- * and the also allow easy a dynamic generation of an help message.
+ * and also allow an easy dynamic generation of a help message.
  * They are converted to getopt options.  Only the minimal needed
  * conversion is done (e.g. flags are not supported).
  */

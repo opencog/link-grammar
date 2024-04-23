@@ -350,7 +350,7 @@ Disjunct *build_disjuncts_for_exp(Sentence sent, Exp* exp, const char *word,
 	pool_reuse(ct.Clause_pool);
 	pool_reuse(ct.Tconnector_pool);
 
-	/* We are done, in the concvetional case. */
+	/* We are done, in the convectional case. */
 	if (NULL == opts || 0 == opts->max_disjuncts) return dis;
 
 	/* If there are more than the allowed number of disjuncts,

@@ -1090,12 +1090,12 @@ class XExp_resolving_test(unittest.TestCase):
 
     def test_resolving(self):
         """
-        Test expression resolving using the default headline:4 setting from
+        Test expression resolving using the default headline:99 setting from
         data/en/4.0.dialect.
         """
         dictnode = clg.dictionary_lookup_list(self.d._obj, sm('book.n'))
         exp_old = dictnode[0].exp
-        exp_new = clg.lg_exp_resolve(self.d._obj, exp_old, ParseOptions()._obj)  # headline:4
+        exp_new = clg.lg_exp_resolve(self.d._obj, exp_old, ParseOptions()._obj)  # headline:99
 
         # Find the 2 locations with a difference when comparing
         # exp_old to exp_new and validate them.

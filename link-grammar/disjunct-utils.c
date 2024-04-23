@@ -265,7 +265,7 @@ static bool disjuncts_equal(Disjunct * d1, Disjunct * d2, bool ignore_string)
 
 	/* A shortcut to detect NULL and non-NULL jets on the same side.
 	 * Note that it is not possible to share memory between the
-	 * right/left jets due to filed value differences (sharing would
+	 * right/left jets due to field value differences (sharing would
 	 * invalidate this check). */
 	if (d1->left == d2->right) return false;
 

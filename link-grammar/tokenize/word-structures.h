@@ -43,7 +43,7 @@ struct Word_struct
 
 	X_node * x;             /* Sentence starts out with these, */
 	Disjunct * d;           /* eventually these get generated. */
-	uint32_t num_disjuncts; /* Length of above */
+	uint32_t num_disjuncts; /* Length of above. */
 
 	bool optional;          /* Linkage is optional. */
 

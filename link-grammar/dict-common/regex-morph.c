@@ -347,7 +347,7 @@ static void reg_free(Regex_node *rn)
 
 /**
  * Check the specified capture group of the pattern (if any).
- * Return true if no capture group specified if it is valid,
+ * Return true if no capture group specified or if it is valid,
  * and -1 on error.
  *
  * Algo: Append the specified capture group specification to the pattern

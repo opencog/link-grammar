@@ -148,14 +148,14 @@ struct Connector_struct
 	Connector *next;
 	union
 	{
-		const gword_set *originating_gword; /* Used while and after parsing */
+		const gword_set *originating_gword; /* Used while and after parsing. */
 		struct
 		{
 			int32_t refcount;  /* Memory-sharing reference count - for pruning. */
 			uint16_t exp_pos;  /* The position in the originating expression,
 			                    * currently used only for debugging dict macros. */
 			bool shallow;      /* TRUE if this is a shallow connector.
-			                    * A connectors is shallow if it is the first in
+			                    * A connector is shallow if it is the first in
 			                    * its list on its disjunct. (It is deep if it is
 			                    * not the first in its list; it is deepest if it
 			                    * is the last on its list.) */

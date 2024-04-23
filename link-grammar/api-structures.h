@@ -55,10 +55,10 @@
  * included tracon sharing) should always be done. And now the overhead
  * is negligible.
  *
- * Note: setting this to non-zero values disables some of the more
+ * Note: setting this to 254(MAX_SENTENCE) disables some of the more
  * subtle tracon encoding code, and thus can be used to create a
- * baseline parse, skipping that code. This can be setin with the
- * test_enabled("min-len-encoding") flag (see api.c)
+ * baseline parse, skipping that code. This can be done using
+ * -test="min-len-encoding:254" (see sentence.c).
  */
 #define SENTENCE_MIN_LENGTH_TRAILING_HASH 0
 

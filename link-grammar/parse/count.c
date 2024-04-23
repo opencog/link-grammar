@@ -31,7 +31,7 @@
 
 /* This file contains the exhaustive search algorithm. */
 
-#define D_COUNT 5 /* General debug level for this file. */
+#define D_COUNT 5 /* General debug level for this file */
 
 typedef uint8_t null_count_m;  /* Storage representation of null_count */
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */
@@ -571,7 +571,7 @@ static Count_bin table_store(count_context_t *ctxt,
 
 	if (!USE_TABLE_TRACON)
 	{
-		// In case a table count already exist, check its consistency.
+		// In case a table count already exists, check its consistency.
 		Count_bin *e = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 		if (e != NULL)
 		{
