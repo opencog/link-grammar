@@ -17,22 +17,28 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: install packages
+      id: info
       run: |
         case $RUNNER_OS in
           Linux)
             sudo apt-get install autoconf autoconf-archive automake flex libpcre2-dev libtool
+            cpus=$(nproc)
             ;;
           macOS)
             brew install autoconf autoconf-archive automake pcre2 libtool
+            cpus=$(sysctl -n hw.activecpu)
             ;;
+          *)
+            cpus=1
         esac
+        echo "cpus=$cpus" >> "$GITHUB_OUTPUT"
     - name: autogen
       run: ./autogen.sh --no-configure
     - name: configure
       run: ./configure --disable-silent-rules
     - name: make
-      run: make
+      run: make -j${{ steps.info.outputs.cpus }}
     - name: make check
-      run: make check
+      run: make check -j${{ steps.info.outputs.cpus }}
     - name: make distcheck
-      run: make distcheck
+      run: make distcheck -j${{ steps.info.outputs.cpus }}
