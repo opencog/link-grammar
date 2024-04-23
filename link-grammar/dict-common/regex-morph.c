@@ -166,8 +166,11 @@ static void reg_free(Regex_node *rn)
 /* ========================================================================= */
 #if HAVE_PCRE2_H
 
+#if HAVE_THREADS_H && !__EMSCRIPTEN__
 static once_flag call_once_flag = ONCE_FLAG_INIT;
 static tss_t re_md_key;
+#endif // HAVE_THREADS_H && !__EMSCRIPTEN__
+
 static void alloc_key(void)
 {
 	int rc = tss_create(&re_md_key, (tss_dtor_t) pcre2_match_data_free);
