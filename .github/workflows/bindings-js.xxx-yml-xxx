@@ -7,7 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: install packages
       run: sudo apt-get install autoconf-archive flex libpcre2-dev
     - name: autoconf
