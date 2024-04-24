@@ -385,11 +385,6 @@ AC_ARG_ENABLE( sat-solver,
 	fi], [enable_sat_solver=no])
 
 AS_IF([test "x$enable_sat_solver" = xyes], [
-	# The sat-solver code is in C++; so the link-grammar library should now
-	# directly require libstdc++ instead of indirectly depend on its
-	# availability via the minisat2 library.
-	#test x${apple_osx} = xyes || AC_CHECK_LIB(stdc++, main)
-
 	# We want to check for C++; the easiest way to do this is to
 	# use c++ to compile stdio.h and bomb if it fails.
 	AC_LANG([C++])
