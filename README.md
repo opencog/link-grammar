@@ -596,9 +596,6 @@ configure with:
 ./configure --disable-java-bindings
 ```
 
-By default, java requires a 64-bit binary, and not all macOS systems
-have a 64-bit devel environment installed.
-
 If you do want Java bindings, be sure to set the JDK_HOME environment
 variable to wherever `<Headers/jni.h>` is.   Set the JAVA_HOME variable
 to the location of the java compiler.  Make sure you have ant
