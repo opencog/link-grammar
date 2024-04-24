@@ -14,6 +14,8 @@
 #ifndef _LG_DICT_COMMON_H_
 #define  _LG_DICT_COMMON_H_
 
+#include <limits.h>                     // INT_MAX
+
 #include "api-types.h"                  // pp_knowledge
 #include "connectors.h"                 // ConTable
 #include "dict-defines.h"
@@ -34,7 +36,7 @@
  * is used. */
 static const float UNINITIALIZED_MAX_DISJUNCT_COST = -10000.0f;
 static const float DEFAULT_MAX_DISJUNCT_COST = 2.7f;
-static const float UNINITIALIZED_MAX_DISJUNCTS = -1;
+static const int UNINITIALIZED_MAX_DISJUNCTS = INT_MAX;
 
 /* We need some of these as literal strings. */
 #define LG_DICTIONARY_VERSION_NUMBER            "dictionary-version-number"

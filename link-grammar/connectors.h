@@ -14,10 +14,10 @@
 #ifndef _LINK_GRAMMAR_CONNECTORS_H_
 #define _LINK_GRAMMAR_CONNECTORS_H_
 
-#include <ctype.h>   // for islower()
+#include <ctype.h>                      // islower()
 #include <stdlib.h>
 #include <stdbool.h>
-#include <stdint.h>  // for uint8_t
+#include <stdint.h>                     // uint8_t ...
 
 #include "api-types.h"
 #include "error.h"
@@ -100,6 +100,9 @@ struct condesc_struct
 };
 typedef struct condesc_struct condesc_t;
 
+/* Length-limits for how far connectors can reach out. */
+#define UNLIMITED_LEN 255
+
 typedef struct length_limit_def
 {
 	const char *defword;
@@ -145,17 +148,17 @@ struct Connector_struct
 	Connector *next;
 	union
 	{
-		const gword_set *originating_gword; /* Used while and after parsing */
+		const gword_set *originating_gword; /* Used while and after parsing. */
 		struct
 		{
-			int32_t refcount;/* Memory-sharing reference count - for pruning. */
-			uint16_t exp_pos; /* The position in the originating expression,
-			                   currently used only for debugging dict macros. */
-			bool shallow;   /* TRUE if this is a shallow connector.
-			                 * A connectors is shallow if it is the first in
-			                 * its list on its disjunct. (It is deep if it is
-			                 * not the first in its list; it is deepest if it
-			                 * is the last on its list.) */
+			int32_t refcount;  /* Memory-sharing reference count - for pruning. */
+			uint16_t exp_pos;  /* The position in the originating expression,
+			                    * currently used only for debugging dict macros. */
+			bool shallow;      /* TRUE if this is a shallow connector.
+			                    * A connector is shallow if it is the first in
+			                    * its list on its disjunct. (It is deep if it is
+			                    * not the first in its list; it is deepest if it
+			                    * is the last on its list.) */
 		};
 	};
 };
@@ -224,9 +227,6 @@ static inline Connector *connector_deepest(const Connector *c)
 		;
 	return (Connector *)c; /* Note: Constness removed. */
 }
-
-/* Length-limits for how far connectors can reach out. */
-#define UNLIMITED_LEN 255
 
 /**
  * Returns TRUE if s and t match according to the connector matching
@@ -383,17 +383,20 @@ static inline size_t pair_hash(int lw, int rw,
 
 /**
  * Get the word number of the given tracon.
- * c is the leading tracon connector. The word number is extracted from
- * the nearest_word of the deepest connector.
+ * It is extracted from the nearest_word of the deepest connector.
+ * @param c The leading tracon connector.
+ * @param dir Direction - 0: left; 1: right.
+ * @return Sentence word number.
+ *
  * This function depends on setup_connectors() (which initializes
- * nearest_word). It should not be called after power_prune() (which
- * changes nearest_word).
+ * nearest_word). It should not be called during or after power_prune()
+ * (which changes nearest_word).
  *
  * Note: An alternative for getting the word number of a tracon is to keep
  * it in the tracon list table or in a separate array. Both ways add
  * noticeable overhead, maybe due to the added CPU cache footprint.
- * However, if the word number will be needed after power_prune() there
- * will be a need to keep it in an alternative way.
+ * However, if the need arises for the word number of a tracon during/after
+ * power_prune(), there will be a need to keep it in an alternative way.
  */
 static inline int get_tracon_word_number(Connector *c, int dir)
 {

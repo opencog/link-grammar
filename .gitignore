@@ -57,3 +57,4 @@ data/th/old_words/**
 # a.wasm is created by "emcc" (in "emconfigure ./configure").
 # For now just ignore it.
 a.wasm
+Session.vim

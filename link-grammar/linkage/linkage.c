@@ -127,10 +127,9 @@ static Gword *wordgraph_null_join(Sentence sent, Gword **start, Gword **end)
  * Add a display wordgraph placeholder for a combined morpheme with links
  * that are not discardable.
  * This is needed only when hiding morphology. This is a kind of a hack.
- * It it is not deemed nice, the "hide morphology" mode should just not be
+ * If it is not deemed nice, the "hide morphology" mode should just not be
  * used for languages with morphemes which have links that cannot be
  * discarded on that mode (like Hebrew).
- * Possible FIXME: Currently it is also used by w/ in English.
  */
 static Gword *wordgraph_link_placeholder(Sentence sent, Gword *w)
 {

@@ -31,7 +31,7 @@
 
 /* This file contains the exhaustive search algorithm. */
 
-#define D_COUNT 5 /* General debug level for this file. */
+#define D_COUNT 5 /* General debug level for this file */
 
 typedef uint8_t null_count_m;  /* Storage representation of null_count */
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */
@@ -39,8 +39,9 @@ typedef uint8_t WordIdx_m;     /* Storage representation of word index */
 /* Allow to disable the use of the various caches (for debug). */
 const bool ENABLE_WORD_SKIP_VECTOR = true;
 const bool ENABLE_MATCH_LIST_CACHE = true;
-const bool ENABLE_TABLE_LRCNT = true;  // Also controls the above two caches.
-const bool USE_TABLE_TRACON = true;    // The table is always maintained.
+const bool ENABLE_TABLE_LRCNT = true; // Also controls the above two caches.
+const bool USE_TABLE_TRACON = true;   // The table is always maintained.
+const bool USE_PSEUDOCOUNT = true;    // Controls only the non-cyclic solutions.
 
 typedef struct Table_tracon_s Table_tracon;
 struct Table_tracon_s
@@ -571,7 +572,7 @@ static Count_bin table_store(count_context_t *ctxt,
 
 	if (!USE_TABLE_TRACON)
 	{
-		// In case a table count already exist, check its consistency.
+		// In case a table count already exists, check its consistency.
 		Count_bin *e = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 		if (e != NULL)
 		{
@@ -971,6 +972,7 @@ static Count_bin table_count(count_context_t * ctxt,
 	return *count;
 }
 
+#ifdef USE_PSEUDOCOUNT
 /**
  * Check to see if a parse is even possible, so that we don't later waste
  * CPU time performing an actual count, only to discover that it is zero.
@@ -1007,6 +1009,7 @@ static bool pseudocount(count_context_t * ctxt, Count_bin *count,
 
 	return false;
 }
+#endif // USE_PSEUDOCOUNT
 
 /**
  * Return the number of optional words strictly between w1 and w2.
@@ -1529,18 +1532,23 @@ static Count_bin do_count(const char dlabel[], count_context_t *ctxt,
 				 * lookup can be skipped in cases we cannot skip the actual
 				 * calculation and a table entry exists. */
 				Count_bin lcount[4] = { NO_COUNT, NO_COUNT, NO_COUNT, NO_COUNT };
+				Count_bin rcount[4] = { NO_COUNT, NO_COUNT, NO_COUNT, NO_COUNT };
+#ifdef USE_PSEUDOCOUNT
 				if (Lmatch && !leftpcount)
 				{
 					leftpcount =
 						pseudocount(ctxt, lcount, lw, w, le, d->left, lnull_cnt);
 				}
 
-				Count_bin rcount[4] = { NO_COUNT, NO_COUNT, NO_COUNT, NO_COUNT };
 				if (Rmatch && !rightpcount && (leftpcount || (le == NULL)))
 				{
 					rightpcount =
 						pseudocount(ctxt, rcount, w, rw, d->right, re, rnull_cnt);
 				}
+#else
+				leftpcount = Lmatch;
+				rightpcount = Rmatch;
+#endif // USE_PSEUDOCOUNT
 
 				/* Perform a table lookup for a possible cyclic solution. */
 				if (leftpcount)

@@ -44,7 +44,7 @@ static size_t align_size(size_t element_size)
  * Create a memory pool descriptor.
  * 1. If required, set the allocation size to a power of 2 of the element size.
  * 2. Save the given parameters in the pool descriptor, to be used by
- *    pool_alloc();
+ *    pool_alloc_vec();
  * 3. Chain the pool descriptor to the given pool_list, so it can be
  *    automatically freed. [ Not implemented. ]
  */

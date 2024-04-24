@@ -132,7 +132,7 @@ static bool load_regexes(Dictionary dict, const char *regex_name)
 }
 
 /**
- * Read dictionary entries from a wide-character string "input".
+ * Read dictionary entries from a utf-8 string "input".
  * All other parts are read from files.
  */
 #define D_DICT 10
