@@ -174,18 +174,6 @@ esac
 AC_MSG_RESULT([$cygwin])
 AM_CONDITIONAL(OS_CYGWIN, test "x$cygwin" = "xyes")
 
-AC_MSG_CHECKING([for 64-bit Apple OSX])
-case "$host_os" in
-  x86_64-*darwin*)
-    apple_osx=yes
-    ;;
-  *)
-    apple_osx=no
-    ;;
-esac
-AC_MSG_RESULT([$apple_osx])
-AM_CONDITIONAL(OS_X, test "x$apple_osx" = "xyes")
-
 AC_MSG_CHECKING([for NetBSD])
 case "$host_os" in
   *netbsd*)
