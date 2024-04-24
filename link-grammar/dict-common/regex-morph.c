@@ -169,7 +169,6 @@ static void reg_free(Regex_node *rn)
 #if HAVE_THREADS_H && !__EMSCRIPTEN__
 static once_flag call_once_flag = ONCE_FLAG_INIT;
 static tss_t re_md_key;
-#endif // HAVE_THREADS_H && !__EMSCRIPTEN__
 
 static void alloc_key(void)
 {
@@ -177,6 +176,7 @@ static void alloc_key(void)
 	if (thrd_success == rc) return;
 	prt_error("Error: pcre2 alloc per-thread key failed\n");
 }
+#endif // HAVE_THREADS_H && !__EMSCRIPTEN__
 
 static pcre2_match_data* alloc_match_data(void)
 {
