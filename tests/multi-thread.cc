@@ -85,7 +85,7 @@ static void parse_sents(Dictionary dict, Parse_Options opts, int thread_id, int 
 		"習近平: 堅守 實體經濟落實高品 質發展",
 		"文在寅希望半島對話氛 圍在平昌冬奧會後能延續",
 		"土耳其出兵 搶先機 美土俄棋局怎麼走?",
-		"默克爾努力獲突破 德社民黨同意開展組閣談判"
+		"默克爾努力獲突破 德社民黨同意開展組閣談判",
 
 		// Thai test sentences from corpus.batch
 		"ตำรวจ กิน ข้าว",
