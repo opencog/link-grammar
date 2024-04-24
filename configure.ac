@@ -776,14 +776,6 @@ AC_SUBST(REGEX_CFLAGS)
 JNIfound=no
 
 if test "x$enable_java_bindings" = "xyes"; then
-
-	if test x${apple_osx} = xyes; then
-		# Java on Apple OSX requires a 64-bit build. However, even
-		# modern 64-bit Apple machines build 32-bit binaries by default.
-		# So force a 64-bit build if a 64-bit CPU is found.
-		CFLAGS="-arch x86_64 ${CFLAGS}"
-	fi
-
 	absolute_srcdir=`(cd "$srcdir"; pwd)`
 	JAVA_SRCDIR=$absolute_srcdir/bindings/java
 	if test "$native_win32" = yes; then
