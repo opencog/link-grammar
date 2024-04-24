@@ -174,18 +174,6 @@ esac
 AC_MSG_RESULT([$cygwin])
 AM_CONDITIONAL(OS_CYGWIN, test "x$cygwin" = "xyes")
 
-AC_MSG_CHECKING([for 64-bit Apple OSX])
-case "$host_os" in
-  x86_64-*darwin*)
-    apple_osx=yes
-    ;;
-  *)
-    apple_osx=no
-    ;;
-esac
-AC_MSG_RESULT([$apple_osx])
-AM_CONDITIONAL(OS_X, test "x$apple_osx" = "xyes")
-
 AC_MSG_CHECKING([for NetBSD])
 case "$host_os" in
   *netbsd*)
@@ -385,11 +373,6 @@ AC_ARG_ENABLE( sat-solver,
 	fi], [enable_sat_solver=no])
 
 AS_IF([test "x$enable_sat_solver" = xyes], [
-	# The sat-solver code is in C++; so the link-grammar library should now
-	# directly require libstdc++ instead of indirectly depend on its
-	# availability via the minisat2 library.
-	#test x${apple_osx} = xyes || AC_CHECK_LIB(stdc++, main)
-
 	# We want to check for C++; the easiest way to do this is to
 	# use c++ to compile stdio.h and bomb if it fails.
 	AC_LANG([C++])
@@ -781,14 +764,6 @@ AC_SUBST(REGEX_CFLAGS)
 JNIfound=no
 
 if test "x$enable_java_bindings" = "xyes"; then
-
-	if test x${apple_osx} = xyes; then
-		# Java on Apple OSX requires a 64-bit build. However, even
-		# modern 64-bit Apple machines build 32-bit binaries by default.
-		# So force a 64-bit build if a 64-bit CPU is found.
-		CFLAGS="-arch x86_64 ${CFLAGS}"
-	fi
-
 	absolute_srcdir=`(cd "$srcdir"; pwd)`
 	JAVA_SRCDIR=$absolute_srcdir/bindings/java
 	if test "$native_win32" = yes; then
