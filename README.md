@@ -257,6 +257,9 @@ Contents
 | Content       | Description |
 | ------------- |-------------|
 | LICENSE     | The license describing terms of use |
+| ChangeLog | A compendium of recent changes. |
+| configure | The GNU configuration script |
+| autogen.sh | Developer's configure maintenance tool |
 | link-grammar/*.c | The program.  (Written in ANSI-C) |
 | ---- | ---- |
 | bindings/autoit/  | Optional AutoIt language bindings. |
@@ -295,10 +298,6 @@ Contents
 | morphology/ar/ | An Arabic morphology analyzer |
 | morphology/fa/ | An Persian morphology analyzer |
 | ---- | ---- |
-| LICENSE | The license for this code and data |
-| ChangeLog | A compendium of recent changes. |
-| configure | The GNU configuration script |
-| autogen.sh | Developer's configure maintenance tool |
 | debug/ | Information about debugging the library |
 | msvc/ | Microsoft Visual-C project files |
 | mingw/ | Information on using MinGW under MSYS or Cygwin |
