@@ -21,6 +21,9 @@ if test ! -d `aclocal --print-ac-dir 2>> autogen.err`; then
   exit 1
 fi
 
+# Update the m4 macros
+autoreconf -fvi
+
 # Produce aclocal.m4, so autoconf gets the automake macros it needs
 #
 case `uname` in
