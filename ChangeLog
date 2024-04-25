@@ -823,12 +823,12 @@ Version 4.7.0 (12 September 2010):
 Version 4.6.7 (16 April 2010)
  * Fix: configure handling of --enable-hunspell (bugtracker issue 46)
  * Fix: conjoined modifier phrases: "the black and white cat sleeps."
- * Fix: MSWindows+MingGW compilation issue.
+ * Fix: MSWindows+MinGW compilation issue.
  * Update msvc9 Microsoft Visual C 2008 project, from Boris Iordanov.
 
 Version 4.6.6 (19 March 2010)
  * Minor fixes to handling of units.
- * Fix: MSWindows+Cygwin/MingGW compilation issues.
+ * Fix: MSWindows+Cygwin/MinGW compilation issues.
  * Use pkgconfig for editline (from Vincent Untz)
  * Fix: "I want it back."
  * Additional titular prefixes, suffixes: Maj. Ph.D.
