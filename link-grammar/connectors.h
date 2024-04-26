@@ -342,7 +342,11 @@ static inline connector_hash_t connector_list_hash(const Connector *c)
 	connector_hash_t accum = connector_hash(c);
 
 	for (c = c->next; c != NULL; c = c->next)
+#ifdef FEEDBACK_HASH
+		accum = (19 * accum) + (accum >> 24) + connector_hash(c);
+#else
 		accum = (19 * accum) + connector_hash(c);
+#endif
 
 	return accum;
 }
