@@ -223,8 +223,8 @@ static void grow_table(Tracon_set *ss)
 			ss->table[p] = old.table[i];
 		}
 	}
-	ss->available_count = MAX_STRING_SET_TABLE_SIZE(ss->size) -
-		MAX_STRING_SET_TABLE_SIZE(old.size);
+	ss->available_count = MAX_TRACON_SET_TABLE_SIZE(ss->size) -
+		MAX_TRACON_SET_TABLE_SIZE(old.size);
 
 	tracon_set_stats(ss, ss, "after grow");
 	free(old.table);
