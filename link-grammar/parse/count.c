@@ -1079,14 +1079,18 @@ static Count_bin do_count(const char dlabel[], count_context_t *ctxt,
  *     the scenario of using two "multi" end connectors simultaneously
  *     has not been encountered with the included dictionaries.
  *
+ * To enable 31-bit overflow detection, totcount is signed 64-bit. The
+ * ccount array values are already clamped values. So the result will
+ * never be more than 4*2^31 which is less than 2^63-1.
+ *
  * @return Sum of the counts as mentioned above.
  */
-static Count_bin scount(const char dlabel[], count_context_t *ctxt,
-                        Count_bin ccount[4], int lw, int rw,
-                        Connector *le, Connector *re,
-                        unsigned int null_count)
+static w_Count_bin scount(const char dlabel[], count_context_t *ctxt,
+                          Count_bin ccount[4], int lw, int rw,
+                          Connector *le, Connector *re,
+                          unsigned int null_count)
 {
-	Count_bin totcount;
+	w_Count_bin totcount;
 
 	CACHE_COUNT(ccount[0], totcount = count,
 	            do_count(dlabel, ctxt, lw, rw, le->next, re->next, null_count));
