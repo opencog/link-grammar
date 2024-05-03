@@ -85,7 +85,7 @@ void free_categories(Sentence);
 void free_categories_from_disjunct_array(Disjunct *, unsigned int);
 unsigned int count_disjuncts(Disjunct *);
 Disjunct * catenate_disjuncts(Disjunct *, Disjunct *);
-Disjunct * eliminate_duplicate_disjuncts(Disjunct *, bool);
+unsigned int eliminate_duplicate_disjuncts(Disjunct *, bool);
 int left_connector_count(Disjunct *);
 int right_connector_count(Disjunct *);
 

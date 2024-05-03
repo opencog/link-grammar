@@ -334,10 +334,15 @@ static void disjunct_dup_table_delete(disjunct_dup_table *dt)
 }
 
 /**
- * Takes the list of disjuncts pointed to by d, eliminates all
- * duplicates, and returns a pointer to a new list.
+ * Takes the list of disjuncts pointed to by dw, eliminates all
+ * duplicates. The elimination is done in-place. Because the first
+ * disjunct can never be eliminated (it cannot be a duplicate of
+ * anything before it), the argument disjunct list always points to the
+ * new list.
+ *
+ * @return The number of eliminated disjuncts.
  */
-Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
+unsigned int eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 {
 	unsigned int count = 0;
 	disjunct_dup_table *dt;
@@ -408,7 +413,7 @@ Disjunct *eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 	        multi_string ? " (different word-strings)" : "");
 
 	disjunct_dup_table_delete(dt);
-	return dw;
+	return count;
 }
 
 /* ============================================================= */

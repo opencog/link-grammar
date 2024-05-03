@@ -166,8 +166,10 @@ static void create_wildcard_word_disjunct_list(Sentence sent,
 	build_sentence_disjuncts(wc_word_list, opts->disjunct_cost, opts);
 
 	Word *word0 = &wc_word_list->word[0];
-	word0->d = eliminate_duplicate_disjuncts(word0->d, false);
-	word0->d = eliminate_duplicate_disjuncts(word0->d, true);
+	unsigned int Ndeleted;
+	Ndeleted = eliminate_duplicate_disjuncts(word0->d, false);
+	Ndeleted += eliminate_duplicate_disjuncts(word0->d, true);
+	print_time(opts, "Eliminated duplicate disjuncts (%u deleted)", Ndeleted);
 
 	wc_word_list->min_len_encoding = 2; /* Don't share/encode. */
 	Tracon_sharing *t = pack_sentence_for_pruning(wc_word_list);
@@ -208,15 +210,16 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 	}
 	print_time(opts, "Built disjuncts");
 
+	unsigned int Ndeleted = 0;
 	for (i=0; i<sent->length; i++)
 	{
-		sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, false);
+		Ndeleted += eliminate_duplicate_disjuncts(sent->word[i].d, false);
 		if (IS_GENERATION(sent->dict))
 		{
 			if ((sent->word[i].d != NULL) && (sent->word[i].d->is_category != 0))
 			{
 				/* Also with different word_string. */
-				sent->word[i].d = eliminate_duplicate_disjuncts(sent->word[i].d, true);
+				Ndeleted += eliminate_duplicate_disjuncts(sent->word[i].d, true);
 
 				/* XXX This ordinal numbering is just plain wrong.
 				 * Most of the disjuncts have already been pruned away,
@@ -248,7 +251,7 @@ void prepare_to_parse(Sentence sent, Parse_Options opts)
 			return;
 #endif
 	}
-	print_time(opts, "Eliminated duplicate disjuncts");
+	print_time(opts, "Eliminated duplicate disjuncts (%u deleted)", Ndeleted);
 
 	if (verbosity_level(D_PREP))
 	{

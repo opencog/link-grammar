@@ -14,6 +14,9 @@
 #ifndef _WORD_STRUCTURE_H_
 #define _WORD_STRUCTURE_H_
 
+#include <inttypes.h>
+#include "stdbool.h"
+
 #include "api-types.h"
 
 typedef struct X_node_struct X_node;

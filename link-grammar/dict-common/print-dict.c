@@ -822,8 +822,7 @@ static char *display_disjuncts(Dictionary dict, const Dict_node *dn,
 		                                      max_cost, NULL);
 
 		unsigned int dnum0 = count_disjuncts(d);
-		d = eliminate_duplicate_disjuncts(d, false);
-		unsigned int dnum1 = count_disjuncts(d);
+		unsigned int dnum1 = dnum0 - eliminate_duplicate_disjuncts(d, false);
 
 		if ((flags != NULL) && (strchr(flags, 'm') != NULL))
 		{
