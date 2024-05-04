@@ -46,13 +46,16 @@ static Dict_node *dictionary_all_categories(Dictionary dict)
 /**
  * build_word_expressions() -- build list of expressions for a word.
  *
- * Looks up a word in the dictionary, fetching from it matching words and their
- * expressions.  Returns NULL if it's not there.  If there, it builds the list
- * of expressions for the word, and returns a pointer to it.
- * The subword of Gword w is used for this lookup, unless the subword is
- * explicitly given as parameter s. The subword of Gword w is always used as
- * the base word for each expression, and its subscript is the one from the
- * dictionary word of the expression.
+ * Look up the subword of \p w in the dictionary, fetching from it
+ * matching words and their expressions. Return NULL if it's not there.
+ * If there, build an X_node list for the word and return it.
+ *
+ * For each dictionary word and its expression, set the X_node string
+ * and exp fields accordingly. However, if a non-NULL \p s is provided,
+ * use it instead of the dictionary word, and as its subscript, use the
+ * subscript of the dictionary word. Note that this means that the
+ * X_node strings (which are later assigned to the disjuncts that are
+ * derived from them) may be from two different string sets.
  */
 static X_node * build_word_expressions(Sentence sent, const Gword *w,
                                        const char *s, Parse_Options opts)
