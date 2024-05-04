@@ -312,10 +312,12 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 		Link * plk = &lpv->link_array[li];
 		Link * nlk = &lnx->link_array[li];
 
-		// String set guarantees that if the pointer differs,
-		// then the string does too.
-		if (plk->link_name != nlk->link_name)
-			return strcmp(plk->link_name, nlk->link_name);
+		// Note (see intersect_strings()):
+		// link_name is not always in the same string set, so inequality
+		// test cannot be done here.
+		if (plk->link_name == nlk->link_name) continue;
+		int lncmp = strcmp(plk->link_name, nlk->link_name);
+		if (lncmp) return lncmp;
 	}
 
 	// Compare words. The chosen_disjuncts->word_string is the
@@ -338,8 +340,13 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 			if (NULL == ndj) continue;
 			return 1;
 		}
-		if (pdj->word_string != ndj->word_string)
-			return strcmp(pdj->word_string, ndj->word_string);
+
+		// Note (see build_word_expressions()):
+		// word_string is not always in the same string set, so inequality
+		// test cannot be done here.
+		if (pdj->word_string == ndj->word_string) continue;
+		int wscmp = strcmp(pdj->word_string, ndj->word_string);
+		if (wscmp) return wscmp;
 	}
 
 	// Compare connector types at the link endpoints. If we are here,
