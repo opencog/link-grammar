@@ -27,8 +27,10 @@
  * If the GCD is equal to one of them, a pointer to it is returned.
  * Otherwise a new string for the GCD is put in the string set.
  *
- * Note: The head and dependent indicators (lower-case h and d) are
- * ignored, as the intersection cannot include them.
+ * Notes:
+ * 1. The head and dependent indicators (lower-case h and d) are
+ *    ignored, as the intersection cannot include them.
+ * 2. The returned strings is not always in the same string set.
  */
 const char *intersect_strings(String_set *sset, const Connector *c1,
                                      const Connector *c2)
