@@ -27,6 +27,9 @@
 
 static Dict_node *dictionary_all_categories(Dictionary dict)
 {
+	// Avoid bad pointer math below.
+	assert(0 != dict->num_categories, "No categories in dict!");
+
 	Dict_node * dn = malloc(sizeof(*dn) * dict->num_categories);
 
 	for (size_t i = 0; i < dict->num_categories; i++)
