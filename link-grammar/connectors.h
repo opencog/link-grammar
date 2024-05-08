@@ -214,6 +214,10 @@ static inline unsigned int connector_uc_num(const Connector * c)
 	return c->desc->uc_num;
 }
 
+static inline unsigned int connector_num(const Connector * c)
+{
+	return 2 * c->desc->con_num + c->multi;
+}
 
 /* Connector utilities ... */
 Connector * connector_new(Pool_desc *, const condesc_t *);
@@ -328,25 +332,11 @@ typedef uint32_t connector_hash_t;
 
 static inline connector_hash_t connector_hash(const Connector *c)
 {
-	// The use of (c->desc->lc_mask & 1) during hashing is important;
-	// See pull req #1487 for details. This raises other questions
-	// about hashing. Two forms are attempted below. They appear to
-	// be equivalent, in terms of measured elapsed-time performance.
-	// (I did not look at the quality of the distribution.)
-	// The second form uses some mixing bitshifts:
-	// 266281 == sum of 1 8 32 4096 (256*1024) It is a prime number
-	// 524429 == sum of 1 4 8 128 (512*1024) and it is a prime number
-#ifdef SIMPLE_HASH
-	return c->desc->uc_num +
-		(c->multi << 19) +
-		(((connector_hash_t)c->desc->lc_mask & 1) << 20) +
-		(connector_hash_t)c->desc->lc_letters;
-#else
-	return c->desc->uc_num +
-		c->multi * 266281 +
-		(((connector_hash_t)c->desc->lc_mask & 1) * 524429) +
-		((connector_hash_t)c->desc->lc_letters) * 101;
-#endif
+	// connector_num() is different for each connector string + its multi
+	// attribute, and it naturally depends also on its head-dependent
+	// attribute, if any. For the importance of considering the
+	// head-dependent attribute during hashing see pull req #1487;
+	return connector_num(c);
 }
 
 /**
