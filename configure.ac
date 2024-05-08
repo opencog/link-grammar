@@ -100,51 +100,6 @@ AC_PROG_LEX(noyywrap)
 	AC_MSG_ERROR([No flex/lex program found. Please install the "flex" or
                  "btyacc" package.])
 
-# The below says "use the C compiler for all remaining tests".
-# That way, if g++ is not installed, configure won't crap out
-# (with a mystery error about not finding regex.h)
-AC_LANG([C])
-
-AC_CHECK_FUNCS(strndup strtok_r sigaction malloc_trim)
-AC_CHECK_FUNCS(aligned_alloc posix_memalign _aligned_malloc)
-
-AC_FUNC_ALLOCA
-
-# For the Wordgraph display code
-AC_FUNC_FORK
-AC_CHECK_FUNCS(prctl)
-
-# CentOS-7 (at least) needs these to expose the C99 format and
-# limit macros in C++ source code.  They are needed for minisat.
-AC_DEFINE(__STDC_FORMAT_MACROS)
-AC_DEFINE(__STDC_LIMIT_MACROS)
-
-# Check for a keyword for Thread Local Storage declaration.
-# If found - define TLS to it.
-lg_tls=no
-AX_TLS(,:)
-test "$ac_cv_tls" != "none" && lg_tls=yes
-
-AX_PTHREAD
-if test -n "$ax_pthread_ok"; then
-	CC="${PTHREAD_CC:-CC}"
-	dnl #CCX="${PTHREAD_CC:-CCX}"
-
-	dnl Currently, libtool uses --nostdlib when linking shared libraries,
-	dnl which causes the -pthread flag to be ignored. Try to work around that
-	dnl by explicitly specifying the pthread library unless it is already set.
-	if test -z "$PTHREAD_LIBS"; then
-		PTHREAD_LIBS=-lpthread
-	fi
-fi
-
-dnl Check if we can use C11 threads functions
-AC_CHECK_HEADERS_ONCE([threads.h])
-
-dnl If the visibility __attribute__  is supported, define HAVE_VISIBILITY
-dnl and a variable CFLAG_VISIBILITY, to be added to CFLAGS/CXXFLAGS.
-LG_C_ATTRIBUTE_VISIBILITY
-
 # ====================================================================
 # Check for specific OSs
 
@@ -210,6 +165,10 @@ if test -n "$ax_pthread_ok" -a "x$freebsd" = "xyes"; then
 fi
 
 # ====================================================================
+# The below says "use the C compiler for all remaining tests".
+# That way, if g++ is not installed, configure won't crap out
+# (with a mystery error about not finding regex.h)
+AC_LANG([C])
 
 CXXFLAGS="${CXXFLAGS} -Wall"
 
@@ -242,6 +201,48 @@ CXXFLAGS="-D_DEFAULT_SOURCE ${CXXFLAGS}"
 # in #define ARRAY_SIZE (utilities.h).
 AX_GCC_BUILTIN(__builtin_types_compatible_p)
 AC_C_TYPEOF
+
+AC_CHECK_FUNCS(strndup strtok_r sigaction malloc_trim)
+AC_CHECK_FUNCS(aligned_alloc posix_memalign _aligned_malloc)
+
+# For the Wordgraph display code.
+AC_FUNC_FORK
+AC_CHECK_FUNCS(prctl)
+
+AC_FUNC_ALLOCA
+
+# Check for a keyword for Thread Local Storage declaration.
+# If found - define TLS to it.
+lg_tls=no
+AX_TLS(,:)
+test "$ac_cv_tls" != "none" && lg_tls=yes
+
+AX_PTHREAD
+if test -n "$ax_pthread_ok"; then
+	CC="${PTHREAD_CC:-CC}"
+	dnl #CCX="${PTHREAD_CC:-CCX}"
+
+	dnl Currently, libtool uses --nostdlib when linking shared libraries,
+	dnl which causes the -pthread flag to be ignored. Try to work around that
+	dnl by explicitly specifying the pthread library unless it is already set.
+	if test -z "$PTHREAD_LIBS"; then
+		PTHREAD_LIBS=-lpthread
+	fi
+fi
+
+# Check if we can use C11 threads functions.
+AC_CHECK_HEADERS_ONCE([threads.h])
+
+# If the visibility __attribute__  is supported, define HAVE_VISIBILITY
+# and a variable CFLAG_VISIBILITY, to be added to CFLAGS/CXXFLAGS.
+LG_C_ATTRIBUTE_VISIBILITY
+
+# CentOS-7 (at least) needs these to expose the C99 format and
+# limit macros in C++ source code.  They are needed for minisat.
+AC_DEFINE(__STDC_FORMAT_MACROS)
+AC_DEFINE(__STDC_LIMIT_MACROS)
+
+# End of checks for C compiler supported features.
 
 if test x${native_win32} = xyes; then
 	# We need the shlwapi for PathRemoveFileSpecA().
