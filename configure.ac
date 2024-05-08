@@ -229,6 +229,11 @@ CXXFLAGS="${CXXFLAGS} -Wall"
 CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAG_VISIBILITY} ${CFLAGS}"
 CXXFLAGS="-std=c++17 ${CFLAG_VISIBILITY} ${CXXFLAGS}"
 
+# Check for keywords to support pointer argument rejection
+# in #define ARRAY_SIZE (utilities.h).
+AX_GCC_BUILTIN(__builtin_types_compatible_p)
+AC_C_TYPEOF
+
 if test x${native_win32} = xyes; then
 	# We need the shlwapi for PathRemoveFileSpecA().
 	LDFLAGS="${LDFLAGS} -lshlwapi"

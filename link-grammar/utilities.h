@@ -226,7 +226,6 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
 #endif
 
 /* From ccan array_size.h and build_assert.h, which are under a CC0 license */
-#define BUILD_ASSERT_OR_ZERO(cond) (sizeof(char [1 - 2*!(cond)]) - 1)
 #if !defined(ARRAY_SIZE)
 /**
  * ARRAY_SIZE: Get the number of elements in a visible array
@@ -238,10 +237,11 @@ static inline char *_strndupa3(char *new_s, const char *s, size_t n)
  */
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + _array_size_chk(arr))
 
-#if HAVE_BUILTIN_TYPES_COMPATIBLE_P && HAVE_TYPEOF
+#if HAVE___BUILTIN_TYPES_COMPATIBLE_P && HAVE_TYPEOF
+#define BUILD_ASSERT_OR_ZERO(cond) (sizeof(char [1 - 2*!(cond)]) - 1)
 /* Two gcc extensions.
  * &a[0] degrades to a pointer: a different type from an array */
-#define _array_size_chk(arr)
+#define _array_size_chk(arr) \
 	BUILD_ASSERT_OR_ZERO(!__builtin_types_compatible_p(typeof(arr), \
 							typeof(&(arr)[0])))
 #else
