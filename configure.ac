@@ -227,6 +227,17 @@ CXXFLAGS="${CXXFLAGS} -Wall"
 CFLAGS="-std=c11 -D_BSD_SOURCE -D_SVID_SOURCE -D_GNU_SOURCE -D_ISOC11_SOURCE ${CFLAG_VISIBILITY} ${CFLAGS}"
 CXXFLAGS="-std=c++17 ${CFLAG_VISIBILITY} ${CXXFLAGS}"
 
+# _BSD_SOURCE and _SVID_SOURCE are deprecated in glibc>=2.20. _DEFAULT_SOURCE
+# is used there instead, but _BSD_SOURCE and _SVID_SOURCE can still be
+# specified (no effect). So just add it.
+CFLAGS="-D_DEFAULT_SOURCE ${CFLAGS}"
+CXXFLAGS="-D_DEFAULT_SOURCE ${CXXFLAGS}"
+
+#
+# After setting the compiler's C standard and flags,
+# we can check for supported features.
+#
+
 # Check for keywords to support pointer argument rejection
 # in #define ARRAY_SIZE (utilities.h).
 AX_GCC_BUILTIN(__builtin_types_compatible_p)
@@ -247,11 +258,6 @@ if test x${native_win32} = xyes; then
 	AC_DEFINE(_WIN32_WINNT, _WIN32_WINNT_VISTA)
 fi
 
-# _BSD_SOURCE and _SVID_SOURCE are deprecated in glibc>=2.20. _DEFAULT_SOURCE
-# is used there instead, but _BSD_SOURCE and _SVID_SOURCE can still be
-# specified (no effect). So just add it.
-CFLAGS="-D_DEFAULT_SOURCE ${CFLAGS}"
-CXXFLAGS="-D_DEFAULT_SOURCE ${CXXFLAGS}"
 
 # ====================================================================
 
