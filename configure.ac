@@ -105,8 +105,6 @@ AC_PROG_LEX(noyywrap)
 # (with a mystery error about not finding regex.h)
 AC_LANG([C])
 
-AC_C_CONST
-
 AC_CHECK_FUNCS(strndup strtok_r sigaction malloc_trim)
 AC_CHECK_FUNCS(aligned_alloc posix_memalign _aligned_malloc)
 
