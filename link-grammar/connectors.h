@@ -31,6 +31,9 @@
  */
 #define MAX_SENTENCE 254        /* Maximum number of words in a sentence */
 
+/* Length-limits for how far connectors can reach out. */
+#define UNLIMITED_LEN 255
+
 /* Since tracon IDs are unique per sentence, for convenience NULL
  * connectors (zero-length tracons) have tracon IDs equal to the word
  * number on which their disjunct resides. To that end an initial block
@@ -99,9 +102,6 @@ struct condesc_struct
 	uint8_t uc_start;    /* uc start position */
 };
 typedef struct condesc_struct condesc_t;
-
-/* Length-limits for how far connectors can reach out. */
-#define UNLIMITED_LEN 255
 
 typedef struct length_limit_def
 {
