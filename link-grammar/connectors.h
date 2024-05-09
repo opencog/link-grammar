@@ -79,6 +79,14 @@ static inline bool is_connector_subscript_char(unsigned char c)
 }
 /* End of connector string character validation. */
 
+typedef struct condesc_struct condesc_t;
+
+typedef struct hdesc
+{
+	condesc_t *desc;
+	connector_uc_hash_t str_hash;
+} hdesc_t;
+
 /* Note: If more byte-size fields are needed, to save space
  * uc_length and uc_start may be moved to struct hdesc. */
 struct condesc_struct
@@ -101,7 +109,6 @@ struct condesc_struct
 	uint8_t uc_length;   /* uc part length */
 	uint8_t uc_start;    /* uc start position */
 };
-typedef struct condesc_struct condesc_t;
 
 typedef struct length_limit_def
 {
@@ -110,12 +117,6 @@ typedef struct length_limit_def
 	struct length_limit_def *next;
 	int length_limit;
 } length_limit_def_t;
-
-typedef struct hdesc
-{
-	condesc_t *desc;
-	connector_uc_hash_t str_hash;
-} hdesc_t;
 
 typedef struct
 {
