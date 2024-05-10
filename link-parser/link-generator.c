@@ -35,9 +35,9 @@
 int verbosity_level = 1;
 
 static const char prompt[] = "linkgenerator> ";
-static const char *use_prompt(int verbosity)
+static const char *use_prompt(int verbosity_setting)
 {
-	return (0 == verbosity)? "" : prompt;
+	return (0 == verbosity_setting)? "" : prompt;
 }
 
 /* Argument parsing for the generator */
