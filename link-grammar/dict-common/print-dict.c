@@ -194,7 +194,7 @@ static void print_expression_parens(Dictionary dict, dyn_str *e, const Exp *n,
 	if (n->type == CONNECTOR_type)
 	{
 		if (n->multi) dyn_strcat(e, "@");
-		dyn_strcat(e, n->condesc ? n->condesc->string : "error-null-connector");
+		dyn_strcat(e, n->condesc ? n->condesc->more->string : "error-null-connector");
 		dyn_strcat(e, (const char []){ n->dir, '\0' });
 	}
 	else if (is_expression_optional(n))
@@ -257,7 +257,7 @@ static bool exp_contains_connector(const Exp *e, int *pos, int find_pos)
 	{
 #if 0
 		printf("exp_contains_connector: pos=%d C=%s%s%c %s\n",
-		       *pos,e->multi?"@":"",e->condesc->string,e->dir,
+		       *pos,e->multi?"@":"",e->condesc->more->string,e->dir,
 		       (find_pos == *pos) ? "FOUND" : "");
 #endif
 		return (find_pos == (*pos)++);
@@ -317,7 +317,7 @@ static void print_connector_macros(cmacro_context *cmc, const Exp *n)
 			cmc->is_after_connector = true;
 			if (n->multi) dyn_strcat(cmc->e, "@");
 			dyn_strcat(cmc->e,
-			           n->condesc ? n->condesc->string : "error-null-connector");
+			           n->condesc ? n->condesc->more->string : "error-null-connector");
 			dyn_strcat(cmc->e, (const char []){ n->dir, '\0' });
 			cmc->find_pos++; /* each expression position is used only once */
 		}
@@ -388,7 +388,7 @@ GNUC_UNUSED void prt_exp(Exp *e, int i)
 	else
 	{
 		for(int j =0; j<i; j++) printf(" ");
-		printf("con=%s\n", e->condesc->string);
+		printf("con=%s\n", e->condesc->more->string);
 	}
 }
 #endif
@@ -503,7 +503,7 @@ static void prt_exp_all(dyn_str *s, Exp *e, int i, Dictionary dict)
 	{
 		append_string(s, " %s%s%c cost=%s%s\n",
 		              e->multi ? "@" : "",
-		              e->condesc ? e->condesc->string : "(condesc=(null))",
+		              e->condesc ? e->condesc->more->string : "(condesc=(null))",
 		              e->dir, cost_stringify(e->cost),
 		              stringify_Exp_tag(e, dict));
 	}

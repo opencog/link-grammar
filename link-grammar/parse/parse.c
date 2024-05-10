@@ -364,7 +364,7 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 		if (plk->lc != nlk->lc)
 		{
 			if (plk->lc->desc != nlk->lc->desc)
-				return strcmp(plk->lc->desc->string, nlk->lc->desc->string);
+				return strcmp(connector_string(plk->lc), connector_string(nlk->lc));
 
 			int md = plk->lc->multi - nlk->lc->multi;
 			if (md) return md;
@@ -372,7 +372,7 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 		if (plk->rc != nlk->rc)
 		{
 			if (plk->rc->desc != nlk->rc->desc)
-				return strcmp(plk->rc->desc->string, nlk->rc->desc->string);
+				return strcmp(connector_string(plk->rc), connector_string(nlk->rc));
 
 			int md = plk->rc->multi - nlk->rc->multi;
 			if (md) return md;

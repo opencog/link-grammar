@@ -81,22 +81,14 @@ static inline bool is_connector_subscript_char(unsigned char c)
 
 typedef struct condesc_struct condesc_t;
 
+/* The connector descriptors (see below) are pointed from a hash table
+ * with these elements. */
 typedef struct hdesc
 {
 	condesc_t *desc;
-	connector_uc_hash_t str_hash;
-} hdesc_t;
-
-/* Note: If more byte-size fields are needed, to save space
- * uc_length and uc_start may be moved to struct hdesc. */
-struct condesc_struct
-{
-	lc_enc_t lc_letters;
-	lc_enc_t lc_mask;
-
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
-	// float *cost;    /* Array of cost by connector length (cost[0]: default) */
-	connector_uc_hash_t uc_num; /* uc part enumeration. */
+	// float *cost;      // Array of cost by connector length (cost[0]: default)
+	connector_uc_hash_t str_hash;
 	uint8_t length_limit; /* If not 0, it gives the limit of the length of the
 	                       * link that can be used on this connector type. The
 	                       * value UNLIMITED_LEN specifies no limit.
@@ -108,6 +100,23 @@ struct condesc_struct
 	/* For connector match speedup when sorting the connector table. */
 	uint8_t uc_length;   /* uc part length */
 	uint8_t uc_start;    /* uc start position */
+} hdesc_t;
+
+/* Each connector type has a connector descriptor. The size of this
+ * struct is 32 byes, to facilitate CPU memory caching during parsing.
+ * The "more" field points to connector information that is needed in
+ * other steps. The con_num field is used a lot in steps that need
+ * connector hashing, and it is included here to avoid extra
+ * redirections.
+ * Multi connectors are considering the same type as their non-multi
+ * version, so the multi indication is kept in Connector_struct. */
+struct condesc_struct
+{
+	lc_enc_t lc_letters;
+	lc_enc_t lc_mask;
+	hdesc_t *more;       /* More information, for keeping small struct size. */
+	connector_uc_hash_t uc_num; /* uc part enumeration. */
+	uint32_t con_num;    /* Connector ordinal number. */
 };
 
 typedef struct length_limit_def
@@ -177,12 +186,17 @@ void condesc_reuse(Dictionary);
  * accesses connectors */
 static inline const char * connector_string(const Connector *c)
 {
-	return c->desc->string;
+	return c->desc->more->string;
 }
 
 static inline unsigned int connector_uc_start(const Connector *c)
 {
-	return c->desc->uc_start;
+	return c->desc->more->uc_start;
+}
+
+static inline unsigned int connector_uc_length(const Connector *c)
+{
+	return c->desc->more->uc_length;
 }
 
 static inline const condesc_t *connector_desc(const Connector *c)
@@ -205,7 +219,7 @@ static inline unsigned int connector_uc_num(const Connector * c)
 Connector * connector_new(Pool_desc *, const condesc_t *);
 void set_connector_farthest_word(Exp *, int, int, Parse_Options);
 void free_connectors(Connector *);
-void calculate_connector_info(condesc_t *);
+void calculate_connector_info(hdesc_t *);
 int condesc_by_uc_constring(const void *, const void *);
 
 /**

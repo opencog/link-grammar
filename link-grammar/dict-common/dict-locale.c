@@ -204,7 +204,7 @@ const char * linkgrammar_get_dict_locale(Dictionary dict)
 		}
 		else
 		{
-			locale = dn->exp->condesc->string;
+			locale = dn->exp->condesc->more->string;
 		}
 	}
 
@@ -318,7 +318,7 @@ const char * linkgrammar_get_dict_version(Dictionary dict)
 	if (NULL == dn) return "[unknown]";
 
 	e = dn->exp;
-	ver = strdup(&e->condesc->string[1]);
+	ver = strdup(&e->condesc->more->string[1]);
 	p = strchr(ver, 'v');
 	while (p)
 	{
