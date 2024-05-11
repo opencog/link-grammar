@@ -65,7 +65,7 @@ static bool need_pair_fetch(Local* local, const Handle& germ)
 	if (fpv) return false;
 
 	// Just tag it. We could tag it with a date. That way, we'd know
-	// how old it is, to re-fetch it !?
+	// how old it is, to re-fetch it !? Or we could use CachingProxy.
 	local->asp->set_value(germ, local->prk, createFloatValue(1.0));
 	return true;
 }
