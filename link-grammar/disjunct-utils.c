@@ -363,6 +363,7 @@ unsigned int eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 		{
 			if (d->dup_hash != dx->dup_hash) continue;
 			if (disjuncts_equal(dx, d, multi_string)) break;
+			//fprintf(stderr, "N"); // The same hash but a different disjunct.
 		}
 
 		if (dx != NULL)

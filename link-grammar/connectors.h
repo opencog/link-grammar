@@ -342,14 +342,18 @@ static inline connector_hash_t connector_hash(const Connector *c)
 /**
  * \p c is assumed to be non-NULL.
  */
+// To check hash functions, enable the "N" printing in
+// eliminate_duplicate_disjuncts().
+#define FEEDBACK_HASH 1
 static inline connector_hash_t connector_list_hash(const Connector *c)
 {
 	connector_hash_t accum = connector_hash(c);
 
 	for (c = c->next; c != NULL; c = c->next)
-#ifdef FEEDBACK_HASH
-		accum = (19 * accum) + (accum >> 24) + connector_hash(c);
+#if FEEDBACK_HASH
+		accum = (accum<<6) + (accum<<16) + (accum >> 16) - connector_hash(c);
 #else
+		// Bad.
 		accum = (19 * accum) + connector_hash(c);
 #endif
 
