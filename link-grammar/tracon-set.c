@@ -170,7 +170,7 @@ static bool place_found(const Connector *c, const clist_slot *slot,
 	if (hash != slot->hash) return false;
 	if (!connector_list_equal(slot->clist, c)) return false;
 	if (ss->shallow && (slot->clist->shallow != c->shallow)) return false;
-	return connector_list_equal(slot->clist, c);
+	return true;
 }
 
 /**
