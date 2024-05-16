@@ -333,6 +333,7 @@ static void disjunct_dup_table_delete(disjunct_dup_table *dt)
 	free(dt);
 }
 
+#define DEDUP_DEBUG 0
 /**
  * Takes the list of disjuncts pointed to by dw, eliminates all
  * duplicates. The elimination is done in-place. Because the first
@@ -354,6 +355,9 @@ unsigned int eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 
 	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(dw)));
 
+#if DEDUP_DEBUG
+	unsigned int coll = 0;
+#endif
 	for (Disjunct *d = dw; d != NULL; d = d->next)
 	{
 		Disjunct *dx;
@@ -402,11 +406,27 @@ unsigned int eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 		}
 		else
 		{
+#if DEDUP_DEBUG
+			if (dt->dup_table[h]) coll++;
+#endif
 			d->dup_table_next = dt->dup_table[h];
 			dt->dup_table[h] = d;
 			prev = d;
 		}
 	}
+
+#if DEDUP_DEBUG
+#if 1
+	// For particular words only.
+	unsigned int pw[] = { 2, 7, 12, 22, 34, 46 , 0};
+	for (int i = 0; pw[i] != 0; i++)
+		if (dw->originating_gword->o_gword->sent_wordidx == pw[i])
+#endif
+		{
+			fprintf(stderr, "edd: %.2f%% coll %u/%u\n",
+			        100.f * coll / count_disjuncts(dw), coll, count_disjuncts(dw));
+		}
+#endif
 
 	lgdebug(+D_DISJ+(0==count)*1024, "w%zu: Killed %u duplicates%s\n",
 	        dw->originating_gword == NULL ? 0 :
