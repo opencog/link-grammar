@@ -52,7 +52,7 @@ static tid_hash_t hash_connectors(const Connector *c, unsigned int shallow)
 {
 	tid_hash_t accum = (shallow && c->shallow) ? 1000003 : 0;
 
-	return accum + connector_list_hash(c);
+	return (accum + connector_list_hash(c)) * FIBONACCI_MULT;
 }
 
 #if 0

@@ -329,6 +329,7 @@ static inline uint32_t string_hash(const char *s)
 }
 
 typedef uint32_t connector_hash_t;
+static const connector_hash_t FIBONACCI_MULT = 0x9E3779B9;
 
 static inline connector_hash_t connector_hash(const Connector *c)
 {
@@ -351,7 +352,7 @@ static inline connector_hash_t connector_list_hash(const Connector *c)
 
 	for (c = c->next; c != NULL; c = c->next)
 #if FEEDBACK_HASH
-		accum = (accum<<6) + (accum<<16) + (accum >> 16) - connector_hash(c);
+		accum = (accum<<7) + (accum<<14) + (accum >> 16) - connector_hash(c);
 #else
 		// Bad.
 		accum = (19 * accum) + connector_hash(c);

@@ -534,4 +534,16 @@ static inline size_t next_power_of_two_up(size_t i)
 	return j;
 }
 
+/**
+ * Return log2 of a given power-of-2 \p i.
+ */
+static inline unsigned int power_of_2_log2(size_t i)
+{
+	unsigned int n = 0;
+	while (i >>= 1)
+		n++;
+	return n;
+}
+
+
 #endif /* _LINK_GRAMMAR_UTILITIES_H_ */
