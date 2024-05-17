@@ -234,10 +234,10 @@ struct disjunct_dup_table_s
  * This is the old version that doesn't check for domination, just
  * equality.
  */
-static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt,
-                                             Disjunct * d, bool string_too)
+static inline connector_hash_t old_hash_disjunct(disjunct_dup_table *dt,
+                                                 Disjunct * d, bool string_too)
 {
-	unsigned int i = 0;
+	connector_hash_t i = 0;
 
 	if (NULL != d->left)
 		i = connector_list_hash(d->left);
@@ -365,7 +365,7 @@ unsigned int eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 	for (Disjunct *d = dw; d != NULL; d = d->next)
 	{
 		Disjunct *dx;
-		unsigned int h = old_hash_disjunct(dt, d, /*string_too*/!multi_string);
+		connector_hash_t h = old_hash_disjunct(dt, d, /*string_too*/!multi_string);
 
 		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->dup_table_next)
 		{
