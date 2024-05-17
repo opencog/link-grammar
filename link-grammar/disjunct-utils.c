@@ -223,8 +223,8 @@ static unsigned int count_connectors(Sentence sent)
 typedef struct disjunct_dup_table_s disjunct_dup_table;
 struct disjunct_dup_table_s
 {
-	unsigned int dup_table_size;
-	unsigned int log2_size;
+	unsigned int table_size_minus_1;
+	unsigned int log2_divisor;
 	Disjunct *dup_table[];
 };
 
@@ -250,7 +250,7 @@ static inline connector_hash_t old_hash_disjunct(disjunct_dup_table *dt,
 
 	i *= FIBONACCI_MULT;
 	// Feed back log2(table_size) MSBs.
-	return ((i ^ (i>>(32-dt->log2_size))) & (dt->dup_table_size-1));
+	return ((i ^ (i>>dt->log2_divisor)) & (dt->table_size_minus_1));
 }
 
 /**
@@ -324,8 +324,8 @@ static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
 	disjunct_dup_table *dt;
 
 	dt = malloc(sz * sizeof(Disjunct *) + sizeof(disjunct_dup_table));
-	dt->dup_table_size = sz;
-	dt->log2_size = power_of_2_log2(sz);
+	dt->table_size_minus_1 = sz - 1;
+	dt->log2_divisor = (sizeof(connector_hash_t)*CHAR_BIT) - power_of_2_log2(sz);
 
 	memset(dt->dup_table, 0, sz * sizeof(Disjunct *));
 
