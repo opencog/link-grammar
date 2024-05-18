@@ -59,6 +59,8 @@ done
 if $run_configure; then
     mkdir -p build
     cd build
+    echo
+    echo "Running 'configure'..."
     ../configure --enable-maintainer-mode "$@"
     status=$?
     if [ $status -eq 0 ]; then
