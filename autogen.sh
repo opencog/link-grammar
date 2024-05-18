@@ -5,6 +5,24 @@
 
 rm -f autogen.err
 
+run_configure=true
+while [ -n "$1" ]
+do
+    case "$1" in
+        --no-configure)
+            run_configure=false
+            shift
+            ;;
+        --clean)
+            # Start from a clean state.
+            rm -rf config.cache autom4te*.cache
+            shift
+            ;;
+        *)
+            break 2
+    esac
+done
+
 # For version x.y>1.4, x should not be 0, and y should be [4-9] or more than one digit.
 automake --version >/dev/null &&
    automake --version | test "`sed -En '/^automake \(GNU automake\) [^0]\.([4-9]|[1-9][0-9])/p'`"
@@ -44,17 +62,6 @@ if [ -f config.cache ]; then
   )
   rm -f "$OLD_CONFIGURE"
 fi
-
-run_configure=true
-for arg in $*; do
-    case $arg in
-        --no-configure)
-            run_configure=false
-            ;;
-        *)
-            ;;
-    esac
-done
 
 if $run_configure; then
     mkdir -p build
