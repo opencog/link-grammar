@@ -15,8 +15,10 @@ fi
 
 # If there's a config.cache file, we may need to delete it.
 # If we have an existing configure script, save a copy for comparison.
+# (Based on Subversion's autogen.sh, see also the deletion code below.)
+OLD_CONFIGURE="${TMPDIR:-/tmp}/configure.$$.tmp"
 if [ -f config.cache ] && [ -f configure ]; then
-  cp configure configure.$$.tmp
+  cp configure "$OLD_CONFIGURE"
 fi
 
 echo "Creating configure..."
@@ -29,6 +31,18 @@ if [ $status -ne 0 ]; then
     echo "* * * Warning: autoreconf returned bad status ($status) - check autogen.err"
     echo ""
     exit 1
+fi
+
+# If we have a config.cache file, toss it if the configure script has
+# changed, or if we just built it for the first time.
+if [ -f config.cache ]; then
+  (
+    [ -f "$OLD_CONFIGURE" ] && cmp configure "$OLD_CONFIGURE" > /dev/null 2>&1
+  ) || (
+    echo "Tossing config.cache, since configure has changed."
+    rm config.cache
+  )
+  rm -f "$OLD_CONFIGURE"
 fi
 
 run_configure=true
