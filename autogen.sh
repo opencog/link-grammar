@@ -3,6 +3,11 @@
 # Run this before configure
 #
 
+if [ ! -f "autogen.sh" ]; then
+    echo "$0: This script must be run in the top-level directory"
+    exit 1
+fi
+
 rm -f autogen.err
 
 run_configure=true
