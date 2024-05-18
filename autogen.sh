@@ -5,7 +5,6 @@
 
 rm -f autogen.err
 
-automake --version | perl -ne 'if (/\(GNU automake\) (([0-9]+).([0-9]+))/) {print; if ($2 < 1 || ($2 == 1 && $3 < 4)) {exit 1;}}'
 # For version x.y>1.4, x should not be 0, and y should be [4-9] or more than one digit.
 automake --version >/dev/null &&
    automake --version | test "`sed -En '/^automake \(GNU automake\) [^0]\.([4-9]|[1-9][0-9])/p'`"
@@ -14,20 +13,10 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-if test ! -d `aclocal --print-ac-dir 2>> autogen.err`; then
-  echo "Bad aclocal (automake) installation"
-  exit 1
-fi
-
 # Update the m4 macros
 autoreconf -fvi
 
-# Produce aclocal.m4, so autoconf gets the automake macros it needs
-#
 case `uname` in
-    CYGWIN*)
-        include_dir='-I m4' # Needed for Cygwin only.
-        ;;
     Darwin)
         [ "$LIBTOOLIZE" = "" ] && LIBTOOLIZE=glibtoolize
         ;;
@@ -37,10 +26,6 @@ esac
     echo "error: libtoolize failed"
     exit 1
 }
-
-echo "Creating aclocal.m4: aclocal $include_dir $ACLOCAL_FLAGS"
-
-aclocal $include_dir $ACLOCAL_FLAGS 2>> autogen.err
 
 # Produce all the `GNUmakefile.in's and create neat missing things
 # like `install-sh', etc.
