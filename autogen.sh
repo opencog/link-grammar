@@ -13,18 +13,16 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# Update the m4 macros
-autoreconf -fvi
-
 # If there's a config.cache file, we may need to delete it.
 # If we have an existing configure script, save a copy for comparison.
 if [ -f config.cache ] && [ -f configure ]; then
   cp configure configure.$$.tmp
 fi
 
-# Produce ./configure
-#
 echo "Creating configure..."
+
+# Update the m4 macros
+autoreconf -fvi
 
 run_configure=true
 for arg in $*; do
