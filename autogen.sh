@@ -21,7 +21,7 @@ fi
 
 echo "Creating configure..."
 
-# Update the m4 macros
+# Regenerate configuration scripts with the latest autotools updates.
 autoreconf -fvi 2>autogen.err
 status=$?
 if [ $status -ne 0 ]; then
