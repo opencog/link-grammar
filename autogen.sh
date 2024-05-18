@@ -16,17 +16,6 @@ fi
 # Update the m4 macros
 autoreconf -fvi
 
-case `uname` in
-    Darwin)
-        [ "$LIBTOOLIZE" = "" ] && LIBTOOLIZE=glibtoolize
-        ;;
-esac
-
-    ${LIBTOOLIZE:=libtoolize} --force --copy || {
-    echo "error: libtoolize failed"
-    exit 1
-}
-
 # Produce all the `GNUmakefile.in's and create neat missing things
 # like `install-sh', etc.
 #
