@@ -9,6 +9,10 @@ run_configure=true
 while [ -n "$1" ]
 do
     case "$1" in
+        --help|-help|-h)
+            echo "Usage: $0 [--no-configure] [--clean]"
+            exit 0
+            ;;
         --no-configure)
             run_configure=false
             shift
