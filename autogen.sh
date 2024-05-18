@@ -22,7 +22,14 @@ fi
 echo "Creating configure..."
 
 # Update the m4 macros
-autoreconf -fvi
+autoreconf -fvi 2>autogen.err
+status=$?
+if [ $status -ne 0 ]; then
+    echo ""
+    echo "* * * Warning: autoreconf returned bad status ($status) - check autogen.err"
+    echo ""
+    exit 1
+fi
 
 run_configure=true
 for arg in $*; do
