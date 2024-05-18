@@ -6,7 +6,9 @@
 rm -f autogen.err
 
 automake --version | perl -ne 'if (/\(GNU automake\) (([0-9]+).([0-9]+))/) {print; if ($2 < 1 || ($2 == 1 && $3 < 4)) {exit 1;}}'
-
+# For version x.y>1.4, x should not be 0, and y should be [4-9] or more than one digit.
+automake --version >/dev/null &&
+   automake --version | test "`sed -En '/^automake \(GNU automake\) [^0]\.([4-9]|[1-9][0-9])/p'`"
 if [ $? -ne 0 ]; then
     echo "Error: you need automake 1.4 or later.  Please upgrade."
     exit 1
