@@ -26,13 +26,6 @@ fi
 #
 echo "Creating configure..."
 
-autoconf 2>> autogen.err || {
-    echo ""
-    echo "* * * warning: possible errors while running automake - check autogen.err"
-    echo ""
-    grep 'Undefined AX_ macro' autogen.err && exit 1
-}
-
 run_configure=true
 for arg in $*; do
     case $arg in
