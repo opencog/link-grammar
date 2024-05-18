@@ -2,10 +2,6 @@
 #
 # Run this before configure
 #
-# This file blatantly ripped off from subversion.
-#
-# Note: this dependency on Perl is fine: only developers use autogen.sh
-#       and we can state that dev people need Perl on their machine
 
 rm -f autogen.err
 
