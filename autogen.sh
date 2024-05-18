@@ -21,7 +21,7 @@ if [ -f config.cache ] && [ -f configure ]; then
   cp configure "$OLD_CONFIGURE"
 fi
 
-echo "Creating configure..."
+echo "Creating 'configure'..."
 
 # Regenerate configuration scripts with the latest autotools updates.
 autoreconf -fvi 2>autogen.err
@@ -39,7 +39,7 @@ if [ -f config.cache ]; then
   (
     [ -f "$OLD_CONFIGURE" ] && cmp configure "$OLD_CONFIGURE" > /dev/null 2>&1
   ) || (
-    echo "Tossing config.cache, since configure has changed."
+    echo "Tossing config.cache, since 'configure' has changed."
     rm config.cache
   )
   rm -f "$OLD_CONFIGURE"
@@ -68,7 +68,7 @@ if $run_configure; then
       echo "Now type 'make' to compile link-grammar (in the 'build' directory)."
     else
       echo
-      echo "\"configure\" returned a bad status ($status)."
+      echo "'configure' returned a bad status ($status)."
     fi
 else
     echo
