@@ -1512,7 +1512,8 @@ class divert_start(object):
         if not self.filename:
             return ""
         os.lseek(self.fd, os.SEEK_SET, 0)
-        content = os.read(self.fd, 1024) # 1024 is more than needed
+        with os.fdopen(self.fd, 'rb') as file:
+            content = file.read()
         os.dup2(self.savedfd, self.fd)
         os.close(self.savedfd)
         os.unlink(self.filename)
