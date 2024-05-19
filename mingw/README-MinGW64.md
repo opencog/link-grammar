@@ -63,7 +63,7 @@ Then build and install link-grammar with
 
      mkdir build
      cd build
-     ../configure
+     sh ../configure
      make
      make install
 
