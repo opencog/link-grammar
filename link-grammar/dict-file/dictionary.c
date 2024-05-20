@@ -47,7 +47,7 @@ static const char * word_only_connector(Dict_node * dn)
 {
 	Exp * e = dn->exp;
 	if (CONNECTOR_type == e->type)
-		return e->condesc->string;
+		return e->condesc->more->string;
 	return NULL;
 }
 

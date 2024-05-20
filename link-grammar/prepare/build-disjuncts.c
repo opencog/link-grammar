@@ -391,7 +391,7 @@ static void print_Tconnector_list(Tconnector *t)
 	for (; t != NULL; t = t->next)
 	{
 		if (t->e->multi) printf("@");
-		printf("%s", t->e->condesc->string);
+		printf("%s", t->e->condesc->more->string);
 		printf("%c", t->e->dir);
 		if (t->next != NULL) printf(" ");
 	}

@@ -46,12 +46,12 @@ const char *intersect_strings(String_set *sset, const Connector *c1,
 	lc_enc_t lc_label = lc1_letters | lc2_letters;
 
 	/* This catches ~95% of the cases (it would work without this). */
-	if (lc_label == lc1_letters) return &connector_string(c1)[d1->uc_start];
-	if (lc_label == lc2_letters) return &connector_string(c2)[d2->uc_start];
+	if (lc_label == lc1_letters) return &connector_string(c1)[d1->more->uc_start];
+	if (lc_label == lc2_letters) return &connector_string(c2)[d2->more->uc_start];
 
-	memcpy(l, &connector_string(c1)[d1->uc_start], d1->uc_length);
+	memcpy(l, &connector_string(c1)[d1->more->uc_start], d1->more->uc_length);
 
-	for (size_t i = d1->uc_length; /* see note below */; i++)
+	for (size_t i = d1->more->uc_length; /* see note below */; i++)
 	{
 		l[i] = lc_label & LC_MASK;
 		if (l[i] == '\0') l[i] = '*';
@@ -67,8 +67,8 @@ const char *intersect_strings(String_set *sset, const Connector *c1,
 	 * So after MAX_CONNECTOR_LC_LENGTH shifts lc_label must be 0. */
 
 #ifdef DEBUG
-	const char *s1 =  &connector_string(c1)[d1->uc_start];
-	const char *s2 =  &connector_string(c1)[d1->uc_start];
+	const char *s1 =  &connector_string(c1)[d1->more->uc_start];
+	const char *s2 =  &connector_string(c1)[d1->more->uc_start];
 	do
 	{
 		assert(is_connector_name_char(*s1) == is_connector_name_char(*s2),

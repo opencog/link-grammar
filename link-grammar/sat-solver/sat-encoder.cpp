@@ -514,7 +514,7 @@ Exp* SATEncoder::join_alternatives(int w)
 void SATEncoder::generate_link_cw_ordinary_definition(size_t wi, int pi,
                                                       Exp* e, size_t wj)
 {
-  const char* Ci = e->condesc->string;
+  const char* Ci = e->condesc->more->string;
   char dir = e->dir;
   double cost = e->cost;
   Lit lhs = Lit(_variables->link_cw(wj, wi, pi, Ci));
@@ -1684,7 +1684,7 @@ void SATEncoderConjunctionFreeSentences::determine_satisfaction(int w, char* nam
 void SATEncoderConjunctionFreeSentences::generate_satisfaction_for_connector(
     int wi, int pi, Exp *e, char* var)
 {
-  const char* Ci = e->condesc->string;
+  const char* Ci = e->condesc->more->string;
   char dir = e->dir;
   bool multi = e->multi;
   double cost = e->cost;

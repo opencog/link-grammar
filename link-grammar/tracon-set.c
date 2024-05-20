@@ -52,7 +52,7 @@ static tid_hash_t hash_connectors(const Connector *c, unsigned int shallow)
 {
 	tid_hash_t accum = (shallow && c->shallow) ? 1000003 : 0;
 
-	return accum + connector_list_hash(c);
+	return (accum + connector_list_hash(c)) * FIBONACCI_MULT;
 }
 
 #if 0
@@ -170,7 +170,7 @@ static bool place_found(const Connector *c, const clist_slot *slot,
 	if (hash != slot->hash) return false;
 	if (!connector_list_equal(slot->clist, c)) return false;
 	if (ss->shallow && (slot->clist->shallow != c->shallow)) return false;
-	return connector_list_equal(slot->clist, c);
+	return true;
 }
 
 /**

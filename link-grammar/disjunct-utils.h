@@ -63,7 +63,7 @@ struct Disjunct_struct
 	/* Shared by different steps. For what | when. */
 	union
 	{
-		uint32_t dup_hash;        /* Duplicate elimination | before pruning */
+		connector_hash_t dup_hash;/* Duplicate elimination | before pruning */
 		int32_t ordinal;          /* Generation mode | after d. elimination */
 	}; /* 4 bytes */
 

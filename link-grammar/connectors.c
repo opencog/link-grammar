@@ -46,7 +46,7 @@ static unsigned int get_connector_length_limit(condesc_t *cd,
 
 	int short_len = opts->short_length;
 	bool all_short = opts->all_short;
-	int length_limit = cd->length_limit;
+	int length_limit = cd->more->length_limit;
 
 	if ((all_short && (length_limit > short_len)) || (0 == length_limit))
 		return short_len;
@@ -165,7 +165,7 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 		if (econlist[en]->uc_num != sdesc[cn]->uc_num) continue;
 		restart_cn = cn;
 
-		const char *wc_str = econlist[en]->string;
+		const char *wc_str = econlist[en]->more->string;
 		char *uc_wildcard = strchr(wc_str, LENGTH_LINIT_WILD_TYPE);
 
 		for (; cn < ct->num_con; cn++)
@@ -181,11 +181,11 @@ static void set_condesc_length_limit(Dictionary dict, const Exp *e, int length_l
 			else
 			{
 				/* The uppercase part is a prefix. */
-				if (0 != strncmp(wc_str, sdesc[cn]->string, uc_wildcard - wc_str))
+				if (0 != strncmp(wc_str, sdesc[cn]->more->string, uc_wildcard - wc_str))
 					break;
 			}
 
-			sdesc[cn]->length_limit = length_limit;
+			sdesc[cn]->more->length_limit = length_limit;
 		}
 	}
 }
@@ -221,8 +221,8 @@ static void set_all_condesc_length_limit(Dictionary dict)
 
 		for (size_t en = 0; en < ct->num_con; en++)
 		{
-			if (0 == sdesc[en]->length_limit)
-				sdesc[en]->length_limit = UNLIMITED_LEN;
+			if (0 == sdesc[en]->more->length_limit)
+				sdesc[en]->more->length_limit = UNLIMITED_LEN;
 		}
 	}
 
@@ -234,7 +234,7 @@ static void set_all_condesc_length_limit(Dictionary dict)
 		for (size_t n = 0; n < ct->num_con; n++)
 		{
 			prt_error("%5zu %6u %3d %s\n\\", n, ct->sdesc[n]->uc_num,
-			       ct->sdesc[n]->length_limit, ct->sdesc[n]->string);
+			       ct->sdesc[n]->more->length_limit, ct->sdesc[n]->more->string);
 		}
 		prt_error("\n");
 	}
@@ -277,8 +277,8 @@ static void connector_encode_lc(const char *lc_string, condesc_t *desc)
 					 lc_string, (int)(s-lc_string), MAX_CONNECTOR_LC_LENGTH);
 	}
 
-	desc->lc_mask = (lc_mask << 1) + !!(desc->flags & CD_HEAD_DEPENDENT);
-	desc->lc_letters = (lc_value << 1) + !!(desc->flags & CD_HEAD);
+	desc->lc_mask = (lc_mask << 1) + !!(desc->more->flags & CD_HEAD_DEPENDENT);
+	desc->lc_letters = (lc_value << 1) + !!(desc->more->flags & CD_HEAD);
 }
 
 /**
@@ -288,27 +288,27 @@ static void connector_encode_lc(const char *lc_string, condesc_t *desc)
  *
  * Note: check_connector() has already validated the connector string.
  */
-void calculate_connector_info(condesc_t * c)
+void calculate_connector_info(hdesc_t *hdesc)
 {
 	const char *s;
 
-	s = c->string;
+	s = hdesc->string;
 	if (islower((unsigned char)*s))
 	{
-		dassert((c->string[0] == 'h') || (c->string[0] == 'd'),
-	        "\'%c\': Bad head/dependent character", c->string[0]);
+		dassert((hdesc->string[0] == 'h') || (hdesc->string[0] == 'd'),
+	        "\'%hdesc\': Bad head/dependent character", hdesc->string[0]);
 
-		if ((*s == 'h') || (*s == 'd')) c->flags |= CD_HEAD_DEPENDENT;
-		if (*s == 'h') c->flags |= CD_HEAD;
+		if ((*s == 'h') || (*s == 'd')) hdesc->flags |= CD_HEAD_DEPENDENT;
+		if (*s == 'h') hdesc->flags |= CD_HEAD;
 		s++; /* Ignore head-dependent indicator. */
 	}
 
-	c->uc_start = (uint8_t)(s - c->string);
+	hdesc->uc_start = (uint8_t)(s - hdesc->string);
 	/* Skip the uppercase part. */
 	do { s++; } while (is_connector_name_char(*s));
-	c->uc_length = (uint8_t)(s - c->string - c->uc_start);
+	hdesc->uc_length = (uint8_t)(s - hdesc->string - hdesc->uc_start);
 
-	connector_encode_lc(s, c);
+	connector_encode_lc(s, hdesc->desc);
 }
 
 /* ================= Connector descriptor table. ====================== */
@@ -373,11 +373,11 @@ int condesc_by_uc_constring(const void * a, const void * b)
 	if (NULL == *cda) return (NULL != *cdb);
 	if (NULL == *cdb) return -1;
 
-	const char *sa = &(*cda)->string[(*cda)->uc_start];
-	const char *sb = &(*cdb)->string[(*cdb)->uc_start];
+	const char *sa = &(*cda)->more->string[(*cda)->more->uc_start];
+	const char *sb = &(*cdb)->more->string[(*cdb)->more->uc_start];
 
-	int la = (*cda)->uc_length;
-	int lb = (*cdb)->uc_length;
+	int la = (*cda)->more->uc_length;
+	int lb = (*cdb)->more->uc_length;
 
 	if (la == lb)
 	{
@@ -424,7 +424,7 @@ static bool sort_condesc_by_uc_constring(Dictionary dict)
 		condesc_t *condesc = dict->contable.hdesc[n].desc;
 
 		if (NULL == condesc) continue;
-		calculate_connector_info(condesc);
+		calculate_connector_info(&dict->contable.hdesc[n]);
 		sdesc[i++] = dict->contable.hdesc[n].desc;
 	}
 
@@ -439,7 +439,7 @@ static bool sort_condesc_by_uc_constring(Dictionary dict)
 	{
 		condesc_t **condesc = &sdesc[n];
 
-		if (condesc[0]->uc_length != condesc[-1]->uc_length)
+		if (condesc[0]->more->uc_length != condesc[-1]->more->uc_length)
 
 		{
 			/* We know that the UC part has been changed. */
@@ -447,9 +447,9 @@ static bool sort_condesc_by_uc_constring(Dictionary dict)
 		}
 		else
 		{
-			const char *uc1 = &condesc[0]->string[condesc[0]->uc_start];
-			const char *uc2 = &condesc[-1]->string[condesc[-1]->uc_start];
-			if (0 != strncmp(uc1, uc2, condesc[0]->uc_length))
+			const char *uc1 = &condesc[0]->more->string[condesc[0]->more->uc_start];
+			const char *uc2 = &condesc[-1]->more->string[condesc[-1]->more->uc_start];
+			if (0 != strncmp(uc1, uc2, condesc[0]->more->uc_length))
 			{
 				uc_num++;
 			}
@@ -495,7 +495,7 @@ static hdesc_t *condesc_find(ConTable *ct, const char *constring, uint32_t hash)
 	uint32_t i = hash & (ct->size-1);
 
 	while ((NULL != ct->hdesc[i].desc) &&
-	       !string_set_cmp(constring, ct->hdesc[i].desc->string))
+	       !string_set_cmp(constring, ct->hdesc[i].string))
 	{
 		i = (i + 1) & (ct->size-1);
 	}
@@ -524,7 +524,7 @@ static bool condesc_grow(ConTable *ct)
 	{
 		hdesc_t *old_h = &old_hdesc[i];
 		if (NULL == old_h->desc) continue;
-		hdesc_t *new_h = condesc_find(ct, old_h->desc->string, old_h->str_hash);
+		hdesc_t *new_h = condesc_find(ct, old_h->string, old_h->str_hash);
 
 		if (NULL != new_h->desc)
 		{
@@ -533,6 +533,7 @@ static bool condesc_grow(ConTable *ct)
 			return false;
 		}
 		*new_h = *old_h;
+		new_h->desc->more = new_h;
 	}
 
 	free(old_hdesc);
@@ -548,9 +549,11 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 	{
 		lgdebug(+11, "Creating connector '%s' (%zu)\n", constring, ct->num_con);
 		h->desc = pool_alloc(ct->mempool);
-		h->desc->string = constring;
+		h->string = constring;
 		h->desc->uc_num = UINT32_MAX;
 		h->str_hash = hash;
+		h->desc->more = h;
+		h->desc->con_num = ct->num_con;
 		ct->num_con++;
 
 		if ((8 * ct->num_con) > (3 * ct->size))

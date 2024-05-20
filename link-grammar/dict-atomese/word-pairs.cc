@@ -385,7 +385,7 @@ static Exp* get_sent_pair_exprs(Dictionary dict, const Handle& germ,
 	{
 		assert(CONNECTOR_type == orch->type, "unexpected expression!");
 
-		if (links.end() != links.find(orch->condesc->string))
+		if (links.end() != links.find(orch->condesc->more->string))
 		{
 			Exp* cpe = (Exp*) pool_alloc(pool);
 			*cpe = *orch;

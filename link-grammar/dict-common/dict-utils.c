@@ -94,7 +94,7 @@ static Exp *create_external_exp(const Exp *e, Exp **exp_mem, Parse_Options opts)
 
 const char * lg_exp_get_string(const Exp* exp)
 {
-	return exp->condesc->string;
+	return exp->condesc->more->string;
 }
 
 /**
@@ -273,7 +273,7 @@ static bool exp_has_connector(const Exp * e, int depth,
 	if (e->type == CONNECTOR_type)
 	{
 		if (direction != e->dir) return false;
-		return string_set_cmp(e->condesc->string, cs);
+		return string_set_cmp(e->condesc->more->string, cs);
 	}
 
 	if (depth == 0) return false;

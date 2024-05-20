@@ -31,6 +31,9 @@
  */
 #define MAX_SENTENCE 254        /* Maximum number of words in a sentence */
 
+/* Length-limits for how far connectors can reach out. */
+#define UNLIMITED_LEN 255
+
 /* Since tracon IDs are unique per sentence, for convenience NULL
  * connectors (zero-length tracons) have tracon IDs equal to the word
  * number on which their disjunct resides. To that end an initial block
@@ -76,16 +79,16 @@ static inline bool is_connector_subscript_char(unsigned char c)
 }
 /* End of connector string character validation. */
 
-/* Note: If more byte-size fields are needed, to save space
- * uc_length and uc_start may be moved to struct hdesc. */
-struct condesc_struct
-{
-	lc_enc_t lc_letters;
-	lc_enc_t lc_mask;
+typedef struct condesc_struct condesc_t;
 
+/* The connector descriptors (see below) are pointed from a hash table
+ * with these elements. */
+typedef struct hdesc
+{
+	condesc_t *desc;
 	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
-	// float *cost;    /* Array of cost by connector length (cost[0]: default) */
-	connector_uc_hash_t uc_num; /* uc part enumeration. */
+	// float *cost;      // Array of cost by connector length (cost[0]: default)
+	connector_uc_hash_t str_hash;
 	uint8_t length_limit; /* If not 0, it gives the limit of the length of the
 	                       * link that can be used on this connector type. The
 	                       * value UNLIMITED_LEN specifies no limit.
@@ -97,11 +100,24 @@ struct condesc_struct
 	/* For connector match speedup when sorting the connector table. */
 	uint8_t uc_length;   /* uc part length */
 	uint8_t uc_start;    /* uc start position */
-};
-typedef struct condesc_struct condesc_t;
+} hdesc_t;
 
-/* Length-limits for how far connectors can reach out. */
-#define UNLIMITED_LEN 255
+/* Each connector type has a connector descriptor. The size of this
+ * struct is 32 byes, to facilitate CPU memory caching during parsing.
+ * The "more" field points to connector information that is needed in
+ * other steps. The con_num field is used a lot in steps that need
+ * connector hashing, and it is included here to avoid extra
+ * redirections.
+ * Multi connectors are considering the same type as their non-multi
+ * version, so the multi indication is kept in Connector_struct. */
+struct condesc_struct
+{
+	lc_enc_t lc_letters;
+	lc_enc_t lc_mask;
+	hdesc_t *more;       /* More information, for keeping small struct size. */
+	connector_uc_hash_t uc_num; /* uc part enumeration. */
+	uint32_t con_num;    /* Connector ordinal number. */
+};
 
 typedef struct length_limit_def
 {
@@ -110,12 +126,6 @@ typedef struct length_limit_def
 	struct length_limit_def *next;
 	int length_limit;
 } length_limit_def_t;
-
-typedef struct hdesc
-{
-	condesc_t *desc;
-	connector_uc_hash_t str_hash;
-} hdesc_t;
 
 typedef struct
 {
@@ -176,12 +186,17 @@ void condesc_reuse(Dictionary);
  * accesses connectors */
 static inline const char * connector_string(const Connector *c)
 {
-	return c->desc->string;
+	return c->desc->more->string;
 }
 
 static inline unsigned int connector_uc_start(const Connector *c)
 {
-	return c->desc->uc_start;
+	return c->desc->more->uc_start;
+}
+
+static inline unsigned int connector_uc_length(const Connector *c)
+{
+	return c->desc->more->uc_length;
 }
 
 static inline const condesc_t *connector_desc(const Connector *c)
@@ -199,12 +214,16 @@ static inline unsigned int connector_uc_num(const Connector * c)
 	return c->desc->uc_num;
 }
 
+static inline unsigned int connector_num(const Connector * c)
+{
+	return 2 * c->desc->con_num + c->multi;
+}
 
 /* Connector utilities ... */
 Connector * connector_new(Pool_desc *, const condesc_t *);
 void set_connector_farthest_word(Exp *, int, int, Parse_Options);
 void free_connectors(Connector *);
-void calculate_connector_info(condesc_t *);
+void calculate_connector_info(hdesc_t *);
 int condesc_by_uc_constring(const void *, const void *);
 
 /**
@@ -310,41 +329,32 @@ static inline uint32_t string_hash(const char *s)
 }
 
 typedef uint32_t connector_hash_t;
+static const connector_hash_t FIBONACCI_MULT = 0x9E3779B9;
 
 static inline connector_hash_t connector_hash(const Connector *c)
 {
-	// The use of (c->desc->lc_mask & 1) during hashing is important;
-	// See pull req #1487 for details. This raises other questions
-	// about hashing. Two forms are attempted below. They appear to
-	// be equivalent, in terms of measured elapsed-time performance.
-	// (I did not look at the quality of the distribution.)
-	// The second form uses some mixing bitshifts:
-	// 266281 == sum of 1 8 32 4096 (256*1024) It is a prime number
-	// 524429 == sum of 1 4 8 128 (512*1024) and it is a prime number
-#ifdef SIMPLE_HASH
-	return c->desc->uc_num +
-		(c->multi << 19) +
-		(((connector_hash_t)c->desc->lc_mask & 1) << 20) +
-		(connector_hash_t)c->desc->lc_letters;
-#else
-	return c->desc->uc_num +
-		c->multi * 266281 +
-		(((connector_hash_t)c->desc->lc_mask & 1) * 524429) +
-		((connector_hash_t)c->desc->lc_letters) * 101;
-#endif
+	// connector_num() is different for each connector string + its multi
+	// attribute, and it naturally depends also on its head-dependent
+	// attribute, if any. For the importance of considering the
+	// head-dependent attribute during hashing see pull req #1487;
+	return connector_num(c);
 }
 
 /**
  * \p c is assumed to be non-NULL.
  */
+// To check hash functions, enable the "N" printing in
+// eliminate_duplicate_disjuncts().
+#define FEEDBACK_HASH 1
 static inline connector_hash_t connector_list_hash(const Connector *c)
 {
 	connector_hash_t accum = connector_hash(c);
 
 	for (c = c->next; c != NULL; c = c->next)
-#ifdef FEEDBACK_HASH
-		accum = (19 * accum) + (accum >> 24) + connector_hash(c);
+#if FEEDBACK_HASH
+		accum = (accum<<7) + (accum<<14) + (accum >> 16) - connector_hash(c);
 #else
+		// Bad.
 		accum = (19 * accum) + connector_hash(c);
 #endif
 

@@ -28,7 +28,7 @@ struct PositionConnector
       eps_right(er), eps_left(el), word_xnode(w_xnode)
   {
     if (word_xnode == NULL) {
-       cerr << "Internal error: Word" << w << ": " << "; connector: '" << e->condesc->string << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
+       cerr << "Internal error: Word" << w << ": " << "; connector: '" << e->condesc->more->string << "'; X_node: " << (word_xnode?word_xnode->string: "(null)") << endl;
     }
 
     // Initialize some fields in the connector struct.

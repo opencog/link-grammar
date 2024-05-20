@@ -422,8 +422,8 @@ static void update_condesc(Dictionary dict)
 		if (NULL == condesc) continue;
 		if (UINT32_MAX != condesc->uc_num) continue;
 
-		calculate_connector_info(condesc);
-		condesc->length_limit = UNLIMITED_LEN;
+		calculate_connector_info(&ct->hdesc[n]);
+		condesc->more->length_limit = UNLIMITED_LEN;
 		sdesc[i++] = condesc;
 	}
 
@@ -438,16 +438,16 @@ static void update_condesc(Dictionary dict)
 	{
 		condesc_t **condesc = &sdesc[n];
 
-		if (condesc[0]->uc_length != condesc[-1]->uc_length)
+		if (condesc[0]->more->uc_length != condesc[-1]->more->uc_length)
 		{
 			/* We know that the UC part has been changed. */
 			uc_num++;
 		}
 		else
 		{
-			const char *uc1 = &condesc[0]->string[condesc[0]->uc_start];
-			const char *uc2 = &condesc[-1]->string[condesc[-1]->uc_start];
-			if (0 != strncmp(uc1, uc2, condesc[0]->uc_length))
+			const char *uc1 = &condesc[0]->more->string[condesc[0]->more->uc_start];
+			const char *uc2 = &condesc[-1]->more->string[condesc[-1]->more->uc_start];
+			if (0 != strncmp(uc1, uc2, condesc[0]->more->uc_length))
 			{
 				uc_num++;
 			}

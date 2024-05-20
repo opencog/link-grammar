@@ -223,7 +223,8 @@ static unsigned int count_connectors(Sentence sent)
 typedef struct disjunct_dup_table_s disjunct_dup_table;
 struct disjunct_dup_table_s
 {
-	size_t dup_table_size;
+	unsigned int table_size_minus_1;
+	unsigned int log2_divisor;
 	Disjunct *dup_table[];
 };
 
@@ -233,10 +234,10 @@ struct disjunct_dup_table_s
  * This is the old version that doesn't check for domination, just
  * equality.
  */
-static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt,
-                                             Disjunct * d, bool string_too)
+static inline connector_hash_t old_hash_disjunct(disjunct_dup_table *dt,
+                                                 Disjunct * d, bool string_too)
 {
-	unsigned int i = 0;
+	connector_hash_t i = 0;
 
 	if (NULL != d->left)
 		i = connector_list_hash(d->left);
@@ -244,10 +245,12 @@ static inline unsigned int old_hash_disjunct(disjunct_dup_table *dt,
 		i += 19 * connector_list_hash(d->right);
 	if (string_too)
 		i += string_hash(d->word_string);
-	//i += (i>>10);
 
 	d->dup_hash = i;
-	return (i & (dt->dup_table_size-1));
+
+	i *= FIBONACCI_MULT;
+	// Feed back log2(table_size) MSBs.
+	return ((i ^ (i>>dt->log2_divisor)) & (dt->table_size_minus_1));
 }
 
 /**
@@ -321,7 +324,8 @@ static disjunct_dup_table * disjunct_dup_table_new(size_t sz)
 	disjunct_dup_table *dt;
 
 	dt = malloc(sz * sizeof(Disjunct *) + sizeof(disjunct_dup_table));
-	dt->dup_table_size = sz;
+	dt->table_size_minus_1 = sz - 1;
+	dt->log2_divisor = (sizeof(connector_hash_t)*CHAR_BIT) - power_of_2_log2(sz);
 
 	memset(dt->dup_table, 0, sz * sizeof(Disjunct *));
 
@@ -333,6 +337,7 @@ static void disjunct_dup_table_delete(disjunct_dup_table *dt)
 	free(dt);
 }
 
+#define DEDUP_DEBUG 0
 /**
  * Takes the list of disjuncts pointed to by dw, eliminates all
  * duplicates. The elimination is done in-place. Because the first
@@ -354,15 +359,19 @@ unsigned int eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 
 	dt = disjunct_dup_table_new(next_power_of_two_up(2 * count_disjuncts(dw)));
 
+#if DEDUP_DEBUG
+	unsigned int coll = 0;
+#endif
 	for (Disjunct *d = dw; d != NULL; d = d->next)
 	{
 		Disjunct *dx;
-		unsigned int h = old_hash_disjunct(dt, d, /*string_too*/!multi_string);
+		connector_hash_t h = old_hash_disjunct(dt, d, /*string_too*/!multi_string);
 
 		for (dx = dt->dup_table[h]; dx != NULL; dx = dx->dup_table_next)
 		{
 			if (d->dup_hash != dx->dup_hash) continue;
 			if (disjuncts_equal(dx, d, multi_string)) break;
+			//fprintf(stderr, "N"); // The same hash but a different disjunct.
 		}
 
 		if (dx != NULL)
@@ -401,11 +410,27 @@ unsigned int eliminate_duplicate_disjuncts(Disjunct *dw, bool multi_string)
 		}
 		else
 		{
+#if DEDUP_DEBUG
+			if (dt->dup_table[h]) coll++;
+#endif
 			d->dup_table_next = dt->dup_table[h];
 			dt->dup_table[h] = d;
 			prev = d;
 		}
 	}
+
+#if DEDUP_DEBUG
+#if 1
+	// For particular words only.
+	unsigned int pw[] = { 2, 7, 12, 22, 34, 46 , 0};
+	for (int i = 0; pw[i] != 0; i++)
+		if (dw->originating_gword->o_gword->sent_wordidx == pw[i])
+#endif
+		{
+			fprintf(stderr, "edd: %.2f%% coll %u/%u\n",
+			        100.f * coll / count_disjuncts(dw), coll, count_disjuncts(dw));
+		}
+#endif
 
 	lgdebug(+D_DISJ+(0==count)*1024, "w%zu: Killed %u duplicates%s\n",
 	        dw->originating_gword == NULL ? 0 :
