@@ -380,19 +380,17 @@ apply_contains_none(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 static bool
 apply_contains_one_globally(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 {
-	size_t i, j, count;
+	size_t i;
 	for (i = 0; i < sublinkage->num_links; i++)
 	{
-		assert(sublinkage->link_array[i].lw != SIZE_MAX, "Missing word in link");
 		if (post_process_match(rule->selector, sublinkage->link_array[i].link_name)) break;
 	}
 	if (i == sublinkage->num_links) return true;
 
 	/* selector link of rule appears in sentence */
-	count = 0;
-	for (j = 0; j < sublinkage->num_links && count == 0; j++)
+	size_t count = 0;
+	for (size_t j = 0; j < sublinkage->num_links && count == 0; j++)
 	{
-		assert(sublinkage->link_array[j].lw != SIZE_MAX, "Missing word in link");
 		if (string_in_list(sublinkage->link_array[j].link_name, rule->link_array))
 		{
 			count = 1;
@@ -501,47 +499,44 @@ apply_bounded(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
  */
 static void build_graph(Postprocessor *pp, Linkage sublinkage)
 {
-	size_t link;
-	List_o_links * lol;
 	PP_data *pp_data = &pp->pp_data;
 
 	/* Get more size, if needed */
 	if (pp_data->wowlen <= pp_data->num_words)
 	{
-		size_t newsz;
 		pp_data->wowlen += pp_data->num_words;
-		newsz = pp_data->wowlen * sizeof(List_o_links *);
+		size_t newsz = pp_data->wowlen * sizeof(List_o_links *);
 		pp_data->word_links = (List_o_links **) realloc(
 			pp_data->word_links, newsz);
 	}
 	memset(pp_data->word_links, 0, pp_data->wowlen * sizeof(List_o_links *));
 
-	for (link = 0; link < sublinkage->num_links; link++)
+	for (size_t link = 0; link < sublinkage->num_links; link++)
 	{
-		assert (sublinkage->link_array[link].lw != SIZE_MAX, "Missing word in link");
 		if (NULL == sublinkage->link_array[link].link_name) continue;
-		if (pp_linkset_match(pp->knowledge->ignore_these_links,
-		                     sublinkage->link_array[link].link_name))
-		{
-			lol = (List_o_links *) malloc(sizeof(List_o_links));
-			lol->next = pp_data->links_to_ignore;
-			pp_data->links_to_ignore = lol;
-			lol->link = link;
-			lol->word = sublinkage->link_array[link].rw;
-			continue;
-		}
 
-		lol = (List_o_links *) malloc(sizeof(List_o_links));
-		lol->next = pp_data->word_links[sublinkage->link_array[link].lw];
-		pp_data->word_links[sublinkage->link_array[link].lw] = lol;
+		List_o_links * lol = (List_o_links *) malloc(sizeof(List_o_links));
 		lol->link = link;
 		lol->word = sublinkage->link_array[link].rw;
 
+		if (pp_linkset_match(pp->knowledge->ignore_these_links,
+		                     sublinkage->link_array[link].link_name))
+		{
+			lol->next = pp_data->links_to_ignore;
+			pp_data->links_to_ignore = lol;
+			continue;
+		}
+
+		lol->next = pp_data->word_links[sublinkage->link_array[link].lw];
+		pp_data->word_links[sublinkage->link_array[link].lw] = lol;
+
+		/* Do it again, for left word */
 		lol = (List_o_links *) malloc(sizeof(List_o_links));
-		lol->next = pp_data->word_links[sublinkage->link_array[link].rw];
-		pp_data->word_links[sublinkage->link_array[link].rw] = lol;
 		lol->link = link;
 		lol->word = sublinkage->link_array[link].lw;
+
+		lol->next = pp_data->word_links[sublinkage->link_array[link].rw];
+		pp_data->word_links[sublinkage->link_array[link].rw] = lol;
 	}
 }
 
@@ -709,17 +704,13 @@ static int domain_compare(const Domain * d1, const Domain * d2)
 
 static void build_domains(Postprocessor *pp, Linkage sublinkage)
 {
-	size_t link, i, d;
-	const char *s;
 	PP_data *pp_data = &pp->pp_data;
-
 	pp_data->N_domains = 0;
 
-	for (link = 0; link<sublinkage->num_links; link++)
+	for (size_t link = 0; link<sublinkage->num_links; link++)
 	{
-		assert (sublinkage->link_array[link].lw != SIZE_MAX, "Missing word in link");
 		if (NULL == sublinkage->link_array[link].link_name) continue;
-		s = sublinkage->link_array[link].link_name;
+		const char *s = sublinkage->link_array[link].link_name;
 
 		if (pp_linkset_match(pp->knowledge->ignore_these_links, s)) continue;
 		if (pp_linkset_match(pp->knowledge->domain_starter_links, s))
@@ -771,9 +762,9 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 		(int (*)(const void *, const void *)) domain_compare);
 
 	/* sanity check: all links in all domains have a legal domain name */
-	for (d = 0; d < pp_data->N_domains; d++)
+	for (size_t d = 0; d < pp_data->N_domains; d++)
 	{
-		i = find_domain_name(pp, pp_data->domain_array[d].string);
+		size_t i = find_domain_name(pp, pp_data->domain_array[d].string);
 		if (i == SIZE_MAX)
 			prt_error("Error: post_process(): Need an entry for %s in LINK_TYPE_TABLE\n",
 			          pp_data->domain_array[d].string);
@@ -783,14 +774,12 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 
 static void build_domain_forest(PP_data *pp_data, Linkage sublinkage)
 {
-	size_t d, d1, link;
-	DTreeLeaf * dtl;
-
 	if (0 == pp_data->N_domains) return;
 
 	pp_data->domain_array[pp_data->N_domains-1].parent = NULL;
-	for (d=0; d < pp_data->N_domains-1; d++)
+	for (size_t d=0; d < pp_data->N_domains-1; d++)
 	{
+		size_t d1;
 		for (d1 = d+1; d1 < pp_data->N_domains; d1++)
 		{
 			if (contained_in(&pp_data->domain_array[d], &pp_data->domain_array[d1], sublinkage))
@@ -808,19 +797,18 @@ static void build_domain_forest(PP_data *pp_data, Linkage sublinkage)
 
 	/* The parent links of domain nodes have been established.
 	 * Now do the leaves. */
-	for (d = 0; d < pp_data->N_domains; d++)
+	for (size_t d = 0; d < pp_data->N_domains; d++)
 	{
 		pp_data->domain_array[d].child = NULL;
 	}
 
-	for (link=0; link < sublinkage->num_links; link++)
+	for (size_t link=0; link < sublinkage->num_links; link++)
 	{
-		assert (sublinkage->link_array[link].lw != SIZE_MAX, "Missing word in link");
-		for (d=0; d<pp_data->N_domains; d++)
+		for (size_t d=0; d<pp_data->N_domains; d++)
 		{
 			if (link_in_domain(link, &pp_data->domain_array[d]))
 			{
-				dtl = (DTreeLeaf *) malloc(sizeof(DTreeLeaf));
+				DTreeLeaf * dtl = (DTreeLeaf *) malloc(sizeof(DTreeLeaf));
 				dtl->link = link;
 				dtl->parent = &pp_data->domain_array[d];
 				dtl->next = pp_data->domain_array[d].child;
@@ -834,7 +822,6 @@ static void build_domain_forest(PP_data *pp_data, Linkage sublinkage)
 static int
 internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 {
-	size_t i;
 	PP_data *pp_data = &pp->pp_data;
 
 	/* quick test: try applying just the relevant global rules */
@@ -843,7 +830,7 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 	                          pp->knowledge->contains_one_rules,
 	                          pp->relevant_contains_one_rules, msg))
 	{
-		for (i = 0; i < pp_data->wowlen; i++)
+		for (size_t i = 0; i < pp_data->wowlen; i++)
 			pp_data->word_links[i] = NULL;
 		pp_data->N_domains = 0;
 		return -1;
@@ -1017,8 +1004,6 @@ static void post_process_scan_linkage(Postprocessor *pp, Linkage linkage)
 	if (pp == NULL) return;
 	for (i = 0; i < linkage->num_links; i++)
 	{
-		assert(linkage->link_array[i].lw != SIZE_MAX, "Missing word in link");
-
 		pp_linkset_add(pp->set_of_links_of_sentence,
 			linkage->link_array[i].link_name);
 	}
@@ -1027,8 +1012,7 @@ static void post_process_scan_linkage(Postprocessor *pp, Linkage linkage)
 static size_t report_rule_use(pp_rule *set)
 {
 	size_t cnt = 0;
-	size_t i;
-	for (i=0; set[i].msg != NULL; i++)
+	for (size_t i=0; set[i].msg != NULL; i++)
 	{
 		err_msg(lg_Debug, "Used: %d rule: %s\n", set[i].use_count, set[i].msg);
 		cnt++;
@@ -1038,9 +1022,8 @@ static size_t report_rule_use(pp_rule *set)
 
 static size_t report_unused_rule(pp_rule *set)
 {
-	size_t i;
 	size_t cnt = 0;
-	for (i=0; set[i].msg != NULL; i++)
+	for (size_t i=0; set[i].msg != NULL; i++)
 	{
 		if (0 == set[i].use_count)
 		{
