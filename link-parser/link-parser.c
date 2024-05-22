@@ -53,6 +53,7 @@
 
 #include "parser-utilities.h"
 #include "command-line.h"
+#include "lg_readline.h"                // find_history_file
 
 #define DISPLAY_MAX 1024
 
@@ -62,6 +63,7 @@ static char * debug = (char *)"";
 static char * test = (char *)"";
 static bool isatty_io; /* Both input and output are tty. */
 
+static const char prog[] = "link-parser"; // If cannot obtain the program name
 static const char prompt[] = "linkparser> ";
 static const char *use_prompt(int verbosity_level)
 {
@@ -697,6 +699,9 @@ int main(int argc, char * argv[])
 		prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
 			linkgrammar_get_version());
 	}
+
+	if (isatty_io)
+		find_history_filepath(dictionary_get_lang(dict), argv[0], prog);
 
 	/* Main input loop */
 	while (true)

@@ -25,6 +25,9 @@ void initialize_screen_width(Command_Options *);
 #define MAX_INPUT_LINE 2048
 
 #ifdef _WIN32
+#ifndef mkdir
+#define mkdir(d, a) mkdir(d)
+#endif
 #ifndef __MINGW32__
 /* There is no ssize_t definition in native Windows. */
 #include <BaseTsd.h>
@@ -47,9 +50,9 @@ int lg_isatty(int);
 bool get_line(const char *, char **, unsigned int, FILE *, FILE *, bool);
 
 #if !HAVE_ASPRINTF
-int vasprintf(char ** __restrict__, const char * __restrict__, va_list)
+int vasprintf(char ** restrict, const char * restrict, va_list)
 	GNUC_PRINTF(2,0);
-int asprintf(char ** __restrict__, const char * __restrict__, ...)
+int asprintf(char ** restrict, const char * restrict, ...)
 	GNUC_PRINTF(2,3);
 #endif /* !HAVE_ASPRINTF */
 

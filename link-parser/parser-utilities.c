@@ -593,7 +593,7 @@ int __mingw_vprintf (const char * __restrict__ fmt, va_list vl)
 #endif /* __MINGW32__ */
 
 #if !HAVE_ASPRINTF
-int vasprintf(char ** __restrict__ buf, const char * __restrict__ fmt, va_list vl)
+int vasprintf(char ** restrict buf, const char * restrict fmt, va_list vl)
 {
 	va_list vl_copy;
 	va_copy(vl_copy, vl);

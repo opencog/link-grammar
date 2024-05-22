@@ -91,6 +91,8 @@ static bool make_dirpath(const char *path)
 	// Skip Windows UNC path \\X
 	if (is_sep(dir[0]) && is_sep(dir[1]))
 	{
+		const char *p;
+
 		// Start from the root or network share
 		for (p = dir + 2; *p != '\0'; p++)
 			if (is_sep(*p)) break;
@@ -103,6 +105,7 @@ static bool make_dirpath(const char *path)
 		char sep = *p;
 		if (is_sep(*p))
 		{
+			if (is_sep(p[-1])) continue; // Ignore directory separator sequences
 			*p = '\0'; // Now dir is the path up to this point
 			//prt_error("DEBUG: mkdir: '%s'\n", dir);
 			mkdir(dir, S_IRWXU); // Try to create the directory
@@ -120,6 +123,12 @@ static bool make_dirpath(const char *path)
 	return true;
 }
 
+/**
+ * @brief Get the home directory for the given XDG base directory type.
+ *
+ * @param bd_type The XDG base directory type.
+ * @return const char* The home directory path (freed by caller).
+ */
 const char *xdg_get_home(xdg_basedir_type bd_type)
 {
 	const char *def_suffix = xdg_def[bd_type].rel_path;
@@ -165,6 +174,12 @@ const char *xdg_get_home(xdg_basedir_type bd_type)
 	return def_dir;
 }
 
+/**
+ * @brief Get the program name from the provided path.
+ *
+ * @param argv0 The path to the executable.
+ * @return const char* The program name.
+ */
 const char *xdg_get_program_name(const char *argv0)
 {
 	if ((NULL == argv0) || ('\0' == argv0[0])) return NULL;
@@ -178,9 +193,21 @@ const char *xdg_get_program_name(const char *argv0)
 	return basename;
 }
 
+
+/**
+ * @brief Construct a full path within the specified XDG base directory.
+ *
+ * @param bd_type The XDG base directory type.
+ * @param fmt The format string for the path.
+ * @param ... Additional arguments for the format string.
+ * @return const char* The constructed full path (freed by caller).
+ */
+
 const char *xdg_make_path(xdg_basedir_type bd_typec, const char *fmt, ...)
 {
 	const char *xdg_home = xdg_get_home(bd_typec);
+
+	if (NULL == xdg_home) return NULL;
 
 	char *xdg_fmt;
 	asprintf(&xdg_fmt, "%s/%s", xdg_home, fmt);
