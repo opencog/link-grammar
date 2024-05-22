@@ -573,6 +573,7 @@ int __mingw_vfprintf (FILE * __restrict__ stream, const char * __restrict__ fmt,
 	int n = vsnprintf(NULL, 0, fmt, vl);
 	if (0 > n) return n;
 	char *buf = malloc(n+1);
+	if (NULL == buf) return -1;
 	n = vsnprintf(buf, n+1, fmt, vl);
 	if (0 > n)
 	{
