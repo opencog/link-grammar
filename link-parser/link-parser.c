@@ -63,7 +63,6 @@ static char * debug = (char *)"";
 static char * test = (char *)"";
 static bool isatty_io; /* Both input and output are tty. */
 
-static const char prog[] = "link-parser"; // If cannot obtain the program name
 static const char prompt[] = "linkparser> ";
 static const char *use_prompt(int verbosity_level)
 {
@@ -701,7 +700,9 @@ int main(int argc, char * argv[])
 	}
 
 	if (isatty_io)
-		find_history_filepath(dictionary_get_lang(dict), argv[0], prog);
+	{
+		find_history_filepath(dictionary_get_lang(dict), argv[0], "link-parser");
+	}
 
 	/* Main input loop */
 	while (true)

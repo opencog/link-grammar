@@ -59,7 +59,7 @@ static wchar_t * prompt(EditLine *el)
 //    arguments. So replace them with a new struct "io_params".
 static const char *history_file;
 
-static const char history_file_basename[] = "lg_history";
+static const char history_file_basename[] = "_history";
 
 void find_history_filepath(const char *dictname, const char *argv0,
                            const char *prog)
@@ -67,13 +67,21 @@ void find_history_filepath(const char *dictname, const char *argv0,
 	const char *xdg_prog = xdg_get_program_name(argv0);
 	if (NULL == xdg_prog) xdg_prog = prog;
 
+	// Prefix the history file name with a dict indication.
+	// To support sharing the history file by several similar dicts,
+	// use the dict name up to the first ":" if exists.
+	char *dictpref = strdup(dictname);
+	dictpref[strcspn(dictpref, ":")] = '\0';
+
 	// Find the location of the history file.
-	const char *hfile =
-		xdg_make_path(XDG_BD_STATE, "%s/%s", xdg_prog, history_file_basename);
+	const char *hfile = xdg_make_path(XDG_BD_STATE, "%s/%s%s", xdg_prog,
+	                                  dictpref, history_file_basename);
+	free(dictpref);
+
 	if (NULL == hfile)
 	{
-		prt_error("Warning: xdg_get_home(XDG_BD_STATE) failed - "
-		          "history file will be in the current directory\n");
+		prt_error("Warning: xdg_get_home(XDG_BD_STATE) failed; "
+		          "input history will not be supported.\n");
 		history_file = strdup("dev/null");
 		return;
 	}
