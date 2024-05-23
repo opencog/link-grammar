@@ -108,12 +108,23 @@ static bool make_dirpath(const char *path)
 			if (is_sep(p[-1])) continue; // Ignore directory separator sequences
 			*p = '\0'; // Now dir is the path up to this point
 			//prt_error("DEBUG: mkdir: '%s'\n", dir);
-			mkdir(dir, S_IRWXU); // Try to create the directory
-			if (stat(dir, &sb) != 0 || !S_ISDIR(sb.st_mode))
+			if (mkdir(dir, S_IRWXU) == -1)
 			{
-				prt_error("Error: Cannot create directory '%s'\n", dir);
-				free(dir);
-				return false;
+				int save_errno = errno;
+				if (errno == EEXIST)
+				{
+					if (stat(dir, &sb) != 0 || !S_ISDIR(sb.st_mode))
+						goto mkdir_error;
+					errno = 0;
+				}
+mkdir_error:
+				if (errno != 0)
+				{
+					prt_error("Error: Cannot create directory '%s': %s.\n",
+					          dir, strerror(save_errno));
+					free(dir);
+					return false;
+				}
 			}
 			*p = sep;
 		}
