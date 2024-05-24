@@ -476,7 +476,7 @@ void condesc_delete(Dictionary dict)
 	ConTable *ct = &dict->contable;
 
 	free(ct->hdesc);
-	pool_delete(ct->mempool);
+	pool_delete(ct->desc_pool);
 	condesc_length_limit_def_delete(ct);
 }
 
@@ -487,7 +487,7 @@ void condesc_reuse(Dictionary dict)
 	ct->num_con = 0;
 	ct->num_uc = 0;
 	memset(ct->hdesc, 0, ct->size * sizeof(hdesc_t));
-	pool_reuse(ct->mempool);
+	pool_reuse(ct->desc_pool);
 }
 
 static hdesc_t *condesc_find(ConTable *ct, const char *constring, uint32_t hash)
@@ -548,7 +548,7 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 	if (NULL == h->desc)
 	{
 		lgdebug(+11, "Creating connector '%s' (%zu)\n", constring, ct->num_con);
-		h->desc = pool_alloc(ct->mempool);
+		h->desc = pool_alloc(ct->desc_pool);
 		h->string = constring;
 		h->desc->uc_num = UINT32_MAX;
 		h->str_hash = hash;
@@ -570,7 +570,7 @@ void condesc_init(Dictionary dict, size_t num_con)
 {
 	ConTable *ct = &dict->contable;
 
-	ct->mempool = pool_new(__func__, "ConTable",
+	ct->desc_pool = pool_new(__func__, "condesc_t",
 								  /*num_elements*/num_con, sizeof(condesc_t),
 								  /*zero_out*/true, /*align*/true, /*exact*/false);
 

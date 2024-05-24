@@ -135,7 +135,8 @@ typedef struct
 	size_t num_con;       /* Number of connector types */
 	size_t num_uc;        /* Number of connector types with different UC part */
 	size_t last_num;      /* All condescs up to here have been done already. */
-	Pool_desc *mempool;
+	Pool_desc *desc_pool; /* For condesc_t elements. */
+	Pool_desc *more_pool; /* For condesc_t::more. */
 	length_limit_def_t *length_limit_def;
 	length_limit_def_t **length_limit_def_next;
 } ConTable;
