@@ -422,7 +422,7 @@ static void update_condesc(Dictionary dict)
 		if (NULL == condesc) continue;
 		if (UINT32_MAX != condesc->uc_num) continue;
 
-		calculate_connector_info(&ct->hdesc[n]);
+		calculate_connector_info(condesc);
 		condesc->more->length_limit = UNLIMITED_LEN;
 		sdesc[i++] = condesc;
 	}

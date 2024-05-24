@@ -86,8 +86,11 @@ typedef struct condesc_struct condesc_t;
 typedef struct hdesc
 {
 	condesc_t *desc;
-	const char *string;  /* The connector name w/o the direction mark, e.g. AB */
-	// float *cost;      // Array of cost by connector length (cost[0]: default)
+} hdesc_t;
+
+typedef struct
+{
+	const char *string; /* The connector name w/o the direction mark, e.g. ABc */
 	connector_uc_hash_t str_hash;
 	uint8_t length_limit; /* If not 0, it gives the limit of the length of the
 	                       * link that can be used on this connector type. The
@@ -100,7 +103,9 @@ typedef struct hdesc
 	/* For connector match speedup when sorting the connector table. */
 	uint8_t uc_length;   /* uc part length */
 	uint8_t uc_start;    /* uc start position */
-} hdesc_t;
+
+	// float *cost;      // Array of cost by connector length (cost[0]: default)
+} condesc_more_t;
 
 /* Each connector type has a connector descriptor. The size of this
  * struct is 32 byes, to facilitate CPU memory caching during parsing.
@@ -114,7 +119,7 @@ struct condesc_struct
 {
 	lc_enc_t lc_letters;
 	lc_enc_t lc_mask;
-	hdesc_t *more;       /* More information, for keeping small struct size. */
+	condesc_more_t *more;/* More information, for keeping small struct size. */
 	connector_uc_hash_t uc_num; /* uc part enumeration. */
 	uint32_t con_num;    /* Connector ordinal number. */
 };
@@ -224,7 +229,7 @@ static inline unsigned int connector_num(const Connector * c)
 Connector * connector_new(Pool_desc *, const condesc_t *);
 void set_connector_farthest_word(Exp *, int, int, Parse_Options);
 void free_connectors(Connector *);
-void calculate_connector_info(hdesc_t *);
+void calculate_connector_info(condesc_t *);
 int condesc_by_uc_constring(const void *, const void *);
 
 /**

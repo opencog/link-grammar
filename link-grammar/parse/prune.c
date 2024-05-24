@@ -448,14 +448,14 @@ static void clean_table(unsigned int size, C_list **t)
 {
 	/* Table entry tombstone. */
 #define UC_NUM_TOMBSTONE ((connector_uc_hash_t)-1)
-	static hdesc_t hdesc_no_match =
+	static condesc_more_t cm_no_match =
 	{
 		.string = "TOMBSTONE",
 	};
 	static condesc_t desc_no_match =
 	{
 		.uc_num = UC_NUM_TOMBSTONE, /* get_power_table_entry() will skip. */
-		.more = &hdesc_no_match
+		.more = &cm_no_match
 	};
 	static Connector con_no_match =
 	{
