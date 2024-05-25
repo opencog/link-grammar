@@ -295,21 +295,15 @@ static char *
 build_linkage_postscript_string(const Linkage linkage,
                                 bool display_walls, ps_ctxt_t *pctx)
 {
-	int link, i,j;
-	int d;
 	bool print_word_0 = true, print_word_N = true;
 	int N_links = linkage->num_links;
 	Link *ppla = linkage->link_array;
-	dyn_str * string;
-	int N_words_to_print;
-
-	string = dyn_str_new();
 
 	/* Do we want to print the left and right walls? */
 	if (!display_walls)
 	{
 		int N_wall_connectors = 0;
-		for (j=0; j<N_links; j++)
+		for (int j=0; j<N_links; j++)
 		{
 			if (0 == ppla[j].lw)
 			{
@@ -326,7 +320,7 @@ build_linkage_postscript_string(const Linkage linkage,
 		}
 
 		N_wall_connectors = 0;
-		for (j=0; j<N_links; j++)
+		for (int j=0; j<N_links; j++)
 		{
 			if (ppla[j].rw == linkage->num_words-1)
 			{
@@ -342,38 +336,38 @@ build_linkage_postscript_string(const Linkage linkage,
 		}
 	}
 
-	if (print_word_0) d=0; else d=1;
-
-	i = 0;
-	N_words_to_print = linkage->num_words;
+	int N_words_to_print = linkage->num_words;
 	if (!print_word_N) N_words_to_print--;
 
+	/* The postscriipt string */
+	dyn_str * string = dyn_str_new();
 	dyn_strcat(string, "[");
-	for (j=d; j<N_words_to_print; j++) {
-		if ((i%10 == 0) && (i>0)) dyn_strcat(string, "\n");
-		i++;
+
+	int doff = print_word_0 ? 0 : 1;
+	for (int j=doff; j<N_words_to_print; j++)
+	{
+		if ((j%10 == 0) && (j>doff)) dyn_strcat(string, "\n");
 		append_string(string, "(%s)", linkage->word[j]);
 	}
 	dyn_strcat(string,"]");
 	dyn_strcat(string,"\n");
 
 	dyn_strcat(string,"[");
-	j = 0;
-	for (link=0; link<N_links; link++) {
+	int k = 0;
+	for (int link=0; link<N_links; link++) {
 		if (!print_word_0 && (ppla[link].lw == 0)) continue;
 		if (!print_word_N && (ppla[link].rw == linkage->num_words-1)) continue;
-		assert (ppla[link].lw != SIZE_MAX, "Missing word in link");
-		if ((j%7 == 0) && (j>0)) dyn_strcat(string,"\n");
-		j++;
+		if ((k%7 == 0) && (k>0)) dyn_strcat(string,"\n");
+		k++;
 		append_string(string,"[%d %d %d",
-				ppla[link].lw - d, ppla[link].rw - d,
+				ppla[link].lw - doff, ppla[link].rw - doff,
 				pctx->link_heights[link]);
 		append_string(string," (%s)]", ppla[link].link_name);
 	}
 	dyn_strcat(string,"]");
 	dyn_strcat(string,"\n");
 	dyn_strcat(string,"[");
-	for (j=0; j < pctx->N_rows; j++)
+	for (int j=0; j < pctx->N_rows; j++)
 	{
 		if (j>0) append_string(string, " %d", pctx->row_starts[j]);
 		else append_string(string,"%d", pctx->row_starts[j]);
@@ -434,8 +428,6 @@ static void sort_link_lengths(Link *ppla, link_by_length *ll,
 	for (unsigned int j = 0; j < N_links; j++)
 	{
 		Link *lnk = &ppla[j];
-
-		assert(lnk->lw != SIZE_MAX, "Missing word in link");
 		assert(lnk->link_name != NULL, "Missing link name");
 
 		lla[j] = &ll_tmp[j];
