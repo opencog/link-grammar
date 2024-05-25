@@ -288,27 +288,27 @@ static void connector_encode_lc(const char *lc_string, condesc_t *desc)
  *
  * Note: check_connector() has already validated the connector string.
  */
-void calculate_connector_info(hdesc_t *hdesc)
+void calculate_connector_info(condesc_t *condesc)
 {
 	const char *s;
+	condesc_more_t *m = condesc->more;
 
-	s = hdesc->string;
+	s = m->string;
 	if (islower((unsigned char)*s))
 	{
-		dassert((hdesc->string[0] == 'h') || (hdesc->string[0] == 'd'),
-	        "\'%hdesc\': Bad head/dependent character", hdesc->string[0]);
+		dassert((s[0] == 'h') || (s[0] == 'd'), "'%s': Bad head/dependent", s);
 
-		if ((*s == 'h') || (*s == 'd')) hdesc->flags |= CD_HEAD_DEPENDENT;
-		if (*s == 'h') hdesc->flags |= CD_HEAD;
+		if ((s[0] == 'h') || (s[0] == 'd')) m->flags |= CD_HEAD_DEPENDENT;
+		if (s[0] == 'h') m->flags |= CD_HEAD;
 		s++; /* Ignore head-dependent indicator. */
 	}
 
-	hdesc->uc_start = (uint8_t)(s - hdesc->string);
+	m->uc_start = (uint8_t)(s - m->string);
 	/* Skip the uppercase part. */
 	do { s++; } while (is_connector_name_char(*s));
-	hdesc->uc_length = (uint8_t)(s - hdesc->string - hdesc->uc_start);
+	m->uc_length = (uint8_t)(s - m->string - m->uc_start);
 
-	connector_encode_lc(s, hdesc->desc);
+	connector_encode_lc(s, condesc);
 }
 
 /* ================= Connector descriptor table. ====================== */
@@ -407,35 +407,36 @@ int condesc_by_uc_constring(const void * a, const void * b)
  */
 static bool sort_condesc_by_uc_constring(Dictionary dict)
 {
-	if ((0 == dict->contable.num_con) && !IS_DYNAMIC_DICT(dict))
+	ConTable *ct = &dict->contable;
+
+	if ((0 == ct->num_con) && !IS_DYNAMIC_DICT(dict))
 	{
 		prt_error("Error: Dictionary %s: No connectors found.\n", dict->name);
 		return false;
 	}
 
 	/* An SQL dict without <UNKNOWN-WORD> may have 0 connectors here. */
-	if (0 == dict->contable.num_con)
+	if (0 == ct->num_con)
 		return true;
 
-	condesc_t **sdesc = malloc(dict->contable.num_con * sizeof(condesc_t *));
+	condesc_t **sdesc = malloc(ct->num_con * sizeof(condesc_t *));
 	size_t i = 0;
-	for (size_t n = 0; n < dict->contable.size; n++)
+	for (size_t n = 0; n < ct->size; n++)
 	{
-		condesc_t *condesc = dict->contable.hdesc[n].desc;
+		condesc_t *condesc = ct->hdesc[n].desc;
 
 		if (NULL == condesc) continue;
-		calculate_connector_info(&dict->contable.hdesc[n]);
-		sdesc[i++] = dict->contable.hdesc[n].desc;
+		calculate_connector_info(condesc);
+		sdesc[i++] = condesc;
 	}
 
-	qsort(sdesc, dict->contable.num_con, sizeof(*dict->contable.sdesc),
-	      condesc_by_uc_constring);
+	qsort(sdesc, ct->num_con, sizeof(*ct->sdesc), condesc_by_uc_constring);
 
 	/* Enumerate the connectors according to their UC part. */
 	int uc_num = 0;
 
 	sdesc[0]->uc_num = uc_num;
-	for (size_t n = 1; n < dict->contable.num_con; n++)
+	for (size_t n = 1; n < ct->num_con; n++)
 	{
 		condesc_t **condesc = &sdesc[n];
 
@@ -461,10 +462,10 @@ static bool sort_condesc_by_uc_constring(Dictionary dict)
 
 	lgdebug(+11, "Dictionary %s: %zu different connectors "
 	        "(%d with a different UC part)\n",
-	        dict->name, dict->contable.num_con, uc_num+1);
+	        dict->name, ct->num_con, uc_num+1);
 
-	dict->contable.sdesc = sdesc;
-	dict->contable.num_uc = uc_num + 1;
+	ct->sdesc = sdesc;
+	ct->num_uc = uc_num + 1;
 
 	/* hdesc is not freed here because it is needed for finding ZZZ.
 	 * It could be freed here if we have ZZZ cached in the dict structure. */
@@ -476,7 +477,8 @@ void condesc_delete(Dictionary dict)
 	ConTable *ct = &dict->contable;
 
 	free(ct->hdesc);
-	pool_delete(ct->mempool);
+	pool_delete(ct->desc_pool);
+	pool_delete(ct->more_pool);
 	condesc_length_limit_def_delete(ct);
 }
 
@@ -487,7 +489,8 @@ void condesc_reuse(Dictionary dict)
 	ct->num_con = 0;
 	ct->num_uc = 0;
 	memset(ct->hdesc, 0, ct->size * sizeof(hdesc_t));
-	pool_reuse(ct->mempool);
+	pool_reuse(ct->desc_pool);
+	pool_reuse(ct->more_pool);
 }
 
 static hdesc_t *condesc_find(ConTable *ct, const char *constring, uint32_t hash)
@@ -495,7 +498,7 @@ static hdesc_t *condesc_find(ConTable *ct, const char *constring, uint32_t hash)
 	uint32_t i = hash & (ct->size-1);
 
 	while ((NULL != ct->hdesc[i].desc) &&
-	       !string_set_cmp(constring, ct->hdesc[i].string))
+	       !string_set_cmp(constring, ct->hdesc[i].desc->more->string))
 	{
 		i = (i + 1) & (ct->size-1);
 	}
@@ -522,18 +525,18 @@ static bool condesc_grow(ConTable *ct)
 
 	for (size_t i = 0; i < old_size; i++)
 	{
-		hdesc_t *old_h = &old_hdesc[i];
-		if (NULL == old_h->desc) continue;
-		hdesc_t *new_h = condesc_find(ct, old_h->string, old_h->str_hash);
+		condesc_t *old_desc = old_hdesc[i].desc;
+		if (NULL == old_desc) continue;
+		hdesc_t *new_hdesc =
+			condesc_find(ct, old_desc->more->string, old_desc->more->str_hash);
 
-		if (NULL != new_h->desc)
+		if (NULL != new_hdesc->desc)
 		{
 			prt_error("Fatal Error: condesc_grow(): Internal error\n");
 			free(old_hdesc);
 			return false;
 		}
-		*new_h = *old_h;
-		new_h->desc->more = new_h;
+		new_hdesc->desc = old_desc;
 	}
 
 	free(old_hdesc);
@@ -548,12 +551,15 @@ condesc_t *condesc_add(ConTable *ct, const char *constring)
 	if (NULL == h->desc)
 	{
 		lgdebug(+11, "Creating connector '%s' (%zu)\n", constring, ct->num_con);
-		h->desc = pool_alloc(ct->mempool);
-		h->string = constring;
+
+		h->desc = pool_alloc(ct->desc_pool);
 		h->desc->uc_num = UINT32_MAX;
-		h->str_hash = hash;
-		h->desc->more = h;
 		h->desc->con_num = ct->num_con;
+
+		condesc_more_t *m = h->desc->more = pool_alloc(ct->desc_pool);
+		m->string = constring;
+		m->str_hash = hash;
+
 		ct->num_con++;
 
 		if ((8 * ct->num_con) > (3 * ct->size))
@@ -570,8 +576,11 @@ void condesc_init(Dictionary dict, size_t num_con)
 {
 	ConTable *ct = &dict->contable;
 
-	ct->mempool = pool_new(__func__, "ConTable",
+	ct->desc_pool = pool_new(__func__, "condesc_t",
 								  /*num_elements*/num_con, sizeof(condesc_t),
+								  /*zero_out*/true, /*align*/true, /*exact*/false);
+	ct->more_pool = pool_new(__func__, "condesc_more_t",
+								  /*num_elements*/num_con, sizeof(condesc_more_t),
 								  /*zero_out*/true, /*align*/true, /*exact*/false);
 
 	// Connector hash table must be an exact power of two.
