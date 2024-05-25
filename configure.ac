@@ -202,7 +202,7 @@ CXXFLAGS="-D_DEFAULT_SOURCE ${CXXFLAGS}"
 AX_GCC_BUILTIN(__builtin_types_compatible_p)
 AC_C_TYPEOF
 
-AC_CHECK_FUNCS(strndup strtok_r sigaction malloc_trim)
+AC_CHECK_FUNCS(strndup strtok_r sigaction malloc_trim asprintf)
 AC_CHECK_FUNCS(aligned_alloc posix_memalign _aligned_malloc)
 
 # For the Wordgraph display code.

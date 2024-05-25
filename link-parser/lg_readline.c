@@ -39,6 +39,7 @@
 
 #include "command-line.h"
 #include "parser-utilities.h"
+#include "lg_xdg.h"
 
 extern Switch default_switches[];
 static const Switch **sorted_names; /* sorted command names */
@@ -46,6 +47,46 @@ static wchar_t * wc_prompt = NULL;
 static wchar_t * prompt(EditLine *el)
 {
 	return wc_prompt;
+}
+
+// lg_readline()is called via a chain of functions:
+// fget_input_string -> get_line -> get_terminal_line -> lg_readline.
+// To avoid changing all of them, this variable is static for now.
+// FIXME: Move the call of find_history_filepath() to lg_readline(), and
+// implement one of these:
+// 1. Add the dictionary, argv[0] and prog to the call of each function.
+// 2. Option 1 is cumbersome since the first 3 functions have numerous
+//    arguments. So replace them with a new struct "io_params".
+static const char *history_file;
+
+static const char history_file_basename[] = "_history";
+
+void find_history_filepath(const char *dictname, const char *argv0,
+                           const char *prog)
+{
+	const char *xdg_prog = xdg_get_program_name(argv0);
+	if (NULL == xdg_prog) xdg_prog = prog;
+
+	// Prefix the history file name with a dict indication.
+	// To support sharing the history file by several similar dicts,
+	// use the dict name up to the first ":" if exists.
+	char *dictpref = strdup(dictname);
+	dictpref[strcspn(dictpref, ":")] = '\0';
+
+	// Find the location of the history file.
+	const char *hfile = xdg_make_path(XDG_BD_STATE, "%s/%s%s", xdg_prog,
+	                                  dictpref, history_file_basename);
+	free(dictpref);
+
+	if (NULL == hfile)
+	{
+		prt_error("Warning: xdg_get_home(XDG_BD_STATE) failed; "
+		          "input history will not be supported.\n");
+		history_file = strdup("dev/null");
+		return;
+	}
+
+	history_file = hfile;
 }
 
 /**
@@ -372,7 +413,6 @@ char *lg_readline(const char *mb_prompt)
 
 	if (!is_init)
 	{
-#define HFILE ".lg_history"
 		is_init = true;
 
 		size_t sz = mbstowcs(NULL, mb_prompt, 0) + 4;
@@ -384,7 +424,7 @@ char *lg_readline(const char *mb_prompt)
 		history_w(hist, &ev, H_SETSIZE, 100);
 		history_w(hist, &ev, H_SETUNIQUE, 1);
 		el_wset(el, EL_HIST, history_w, hist);
-		history_w(hist, &ev, H_LOAD, HFILE);
+		history_w(hist, &ev, H_LOAD, history_file);
 
 		el_set(el, EL_SIGNAL, 1); /* Restore tty setting on returning to shell */
 
@@ -410,6 +450,7 @@ char *lg_readline(const char *mb_prompt)
 	{
 		el_end(el);
 		history_wend(hist);
+		free((void *)history_file);
 		free(wc_prompt);
 		wc_prompt = NULL;
 		hist = NULL;
@@ -421,7 +462,7 @@ char *lg_readline(const char *mb_prompt)
 	if (1 < numc)
 	{
 		history_w(hist, &ev, H_ENTER, wc_line);
-		history_w(hist, &ev, H_SAVE, HFILE);
+		history_w(hist, &ev, H_SAVE, history_file);
 	}
 	/* fwprintf(stderr, L"==> got %d %ls", numc, wc_line); */
 

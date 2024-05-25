@@ -35,6 +35,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#if !HAVE_ASPRINTF
+#include <stdarg.h>
+#endif // !HAVE_ASPRINTF
 
 #include "parser-utilities.h"
 #include "lg_readline.h"
@@ -570,6 +573,7 @@ int __mingw_vfprintf (FILE * __restrict__ stream, const char * __restrict__ fmt,
 	int n = vsnprintf(NULL, 0, fmt, vl);
 	if (0 > n) return n;
 	char *buf = malloc(n+1);
+	if (NULL == buf) return -1;
 	n = vsnprintf(buf, n+1, fmt, vl);
 	if (0 > n)
 	{
@@ -587,3 +591,38 @@ int __mingw_vprintf (const char * __restrict__ fmt, va_list vl)
 	return __mingw_vfprintf(stdout, fmt, vl);
 }
 #endif /* __MINGW32__ */
+
+#if !HAVE_ASPRINTF
+int vasprintf(char ** restrict buf, const char * restrict fmt, va_list vl)
+{
+	va_list vl_copy;
+	va_copy(vl_copy, vl);
+
+	int n = vsnprintf(NULL, 0, fmt, vl);
+	if (n < 0) {
+		va_end(vl_copy);
+		return n;
+	}
+
+	*buf = malloc(n + 1);
+	if (*buf == NULL) {
+		va_end(vl_copy);
+		return -1;
+	}
+
+	n = vsnprintf(*buf, n + 1, fmt, vl_copy);
+	if (n < 0) free(*buf);
+
+	va_end(vl_copy);
+	return n;
+}
+
+int asprintf(char ** restrict buf, const char * restrict fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	int result = vasprintf(buf, fmt, args);
+	va_end(args);
+	return result;
+}
+#endif /* !HAVE_ASPRINTF */

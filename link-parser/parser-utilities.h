@@ -13,6 +13,7 @@
 #ifndef _PARSER_UTILITIES_
 #define _PARSER_UTILITIES_
 
+
 #include "../link-grammar/link-includes.h"
 
 #include "command-line.h"
@@ -24,6 +25,9 @@ void initialize_screen_width(Command_Options *);
 #define MAX_INPUT_LINE 2048
 
 #ifdef _WIN32
+#ifndef mkdir
+#define mkdir(d, a) mkdir(d)
+#endif
 #ifndef __MINGW32__
 /* There is no ssize_t definition in native Windows. */
 #include <BaseTsd.h>
@@ -44,4 +48,12 @@ int lg_isatty(int);
 #endif /* _WIN32 */
 
 bool get_line(const char *, char **, unsigned int, FILE *, FILE *, bool);
+
+#if !HAVE_ASPRINTF
+int vasprintf(char ** restrict, const char * restrict, va_list)
+	GNUC_PRINTF(2,0);
+int asprintf(char ** restrict, const char * restrict, ...)
+	GNUC_PRINTF(2,3);
+#endif /* !HAVE_ASPRINTF */
+
 #endif // _PARSER_UTILITIES_

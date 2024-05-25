@@ -53,6 +53,7 @@
 
 #include "parser-utilities.h"
 #include "command-line.h"
+#include "lg_readline.h"                // find_history_file
 
 #define DISPLAY_MAX 1024
 
@@ -696,6 +697,11 @@ int main(int argc, char * argv[])
 			linkgrammar_get_dict_locale(dict));
 		prt_error("Info: Library version %s. Enter \"!help\" for help.\n",
 			linkgrammar_get_version());
+	}
+
+	if (isatty_io)
+	{
+		find_history_filepath(dictionary_get_lang(dict), argv[0], "link-parser");
 	}
 
 	/* Main input loop */
