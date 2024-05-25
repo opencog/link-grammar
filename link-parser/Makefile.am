@@ -13,8 +13,8 @@ link_parser_SOURCES = link-parser.c \
                       parser-utilities.c \
                       command-line.h \
                       lg_readline.h \
-							 lg_xdg.c \
-							 lg_xdg.h
+                      lg_xdg.c \
+                      lg_xdg.h
 
 # -I$(top_builddir) to pick up autogened link-grammar/link-features.h
 link_parser_CPPFLAGS = -I$(top_srcdir) -I$(top_builddir)
