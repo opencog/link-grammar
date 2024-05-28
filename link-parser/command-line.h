@@ -63,6 +63,7 @@ typedef struct {
 } Command_Options;
 
 void put_local_vars_in_opts(Command_Options *);
+void put_opts_in_local_vars(Command_Options *);
 void setup_panic_parse_options(Command_Options *, int);
 
 typedef enum

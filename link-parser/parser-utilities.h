@@ -21,6 +21,7 @@
 char *expand_homedir(const char *fn);
 void set_screen_width(Command_Options*);
 void initialize_screen_width(Command_Options *);
+int get_verbosity(void); // Defined in command-line.c
 
 #define MAX_INPUT_LINE 2048
 

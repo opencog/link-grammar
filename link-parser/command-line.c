@@ -122,8 +122,6 @@ Switch default_switches[] =
 	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
-static void put_opts_in_local_vars(Command_Options *);
-
 /*
  * Record the parse options default values.
  *
@@ -147,6 +145,15 @@ void save_default_opts(Command_Options *copts)
 static void restore_default_local_vars(void)
 {
 	local = saved_defaults;
+}
+
+// Return the value of the static verbosity.
+// This avoids the need to define "verbosity" as extern, which may clash
+// with the library "verbosity", and make the parse options "verbosity"
+// available before the main loop in link-parser.c.
+int get_verbosity(void)
+{
+	return local.verbosity;
 }
 
 /**
@@ -1009,7 +1016,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	return -1;
 }
 
-static void put_opts_in_local_vars(Command_Options* copts)
+void put_opts_in_local_vars(Command_Options* copts)
 {
 	Parse_Options opts = copts->popts;
 	local.verbosity = parse_options_get_verbosity(opts);

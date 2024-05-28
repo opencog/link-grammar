@@ -685,6 +685,7 @@ int main(int argc, char * argv[])
 			linkgrammar_get_version());
 	}
 
+	put_opts_in_local_vars(copts); /* Update local.verbosity etc. */
 	initialize_screen_width(copts);
 	if (isatty_io)
 	{
