@@ -84,21 +84,22 @@ static bool is_sep(int c)
  */
 static bool make_dirpath(const char *path)
 {
-	char *dir = strdup(path);
 	struct stat sb;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 	// Skip Windows UNC path \\X
-	if (is_sep(dir[0]) && is_sep(dir[1]))
+	if (is_sep(path[0]) && is_sep(path[1]))
 	{
 		const char *p;
 
 		// Start from the root or network share
-		for (p = dir + 2; *p != '\0'; p++)
+		for (p = path + 2; *p != '\0'; p++)
 			if (is_sep(*p)) break;
 		if (*p == '\0') return true;  // No further subdirectories
 	}
 #endif
+
+	char *dir = strdup(path);
 
 	for (char *p = dir+1; '\0' != *p; p++)
 	{
