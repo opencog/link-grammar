@@ -175,7 +175,7 @@ static void clean_up_string(char * s)
 		if (0 == w) break;
 		if (0 > (ssize_t)w)
 		{
-			prt_error("Unable to process UTF8 command input string.\n");
+			prt_error("Error: Unable to process UTF8 command input string.\n");
 			break;
 		}
 		len -= w;
@@ -212,7 +212,7 @@ static bool is_numerical_rhs(char *s)
 		if (0 == w) break;
 		if (0 > (ssize_t)w)
 		{
-			prt_error("Unable to process UTF8 command input string.\n");
+			prt_error("Error: Unable to process UTF8 command input string.\n");
 			break;
 		}
 		len -= w;
@@ -789,9 +789,9 @@ static int handle_help_command(const Switch *as, char *line,
 			{
 				rc = -1;     /* Error indication. */
 				if (count > 1)
-					prt_error("Ambiguous command: \"%s\".  %s\n", s, helpmsg);
+					prt_error("Error: Ambiguous command: \"%s\".  %s\n", s, helpmsg);
 				else
-					prt_error("Undefined command: \"%s\".  %s\n", s, helpmsg);
+					prt_error("Error: Undefined command: \"%s\".  %s\n", s, helpmsg);
 			}
 		}
 	}
@@ -868,7 +868,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		if (count > 1)
 		{
-			prt_error("Ambiguous command \"%s\".  %s\n", s, helpmsg);
+			prt_error("Error: Ambiguous command \"%s\".  %s\n", s, helpmsg);
 			return -1;
 		}
 		if (count == 1)
@@ -879,7 +879,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 				size_t junk = strcspn(s, WHITESPACE);
 				if (junk != strlen(s))
 				{
-					prt_error("Junk after a boolean variable: \"%s\".  %s\n",
+					prt_error("Error: Junk after a boolean variable: \"%s\".  %s\n",
 					          &s[junk], helpmsg);
 					return -1;
 				}
