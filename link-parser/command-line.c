@@ -428,7 +428,7 @@ static FILE *open_help_file(int verbosity)
 		help_file = linkgrammar_open_data_file(help_filename);
 	}
 
-	if ((NULL == help_file) && (verbosity > D_USER_FILES))
+	if ((NULL == help_file) && (verbosity == D_USER_FILES))
 	{
 		prt_error("Error: Cannot open help file '%s': %s\n",
 		          help_filename, strerror(errno));
@@ -531,7 +531,7 @@ static void display_help(const Switch *sp, Command_Options *copts)
 
 	if (feof(hf))
 	{
-		if (local.verbosity >= D_USER_FILES)
+		if (local.verbosity == D_USER_FILES)
 			prt_error("Error: Cannot find command \"%s\" in help file\n",
 			          sp->string);
 	}
