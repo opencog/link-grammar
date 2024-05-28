@@ -676,8 +676,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	initialize_screen_width(copts);
-
 	if ((parse_options_get_verbosity(opts)) > 0 && (quiet_start == 0))
 	{
 		prt_error("Info: Dictionary version %s, locale %s\n",
@@ -687,6 +685,7 @@ int main(int argc, char * argv[])
 			linkgrammar_get_version());
 	}
 
+	initialize_screen_width(copts);
 	if (isatty_io)
 	{
 		find_history_filepath(dictionary_get_lang(dict), argv[0], "link-parser");
