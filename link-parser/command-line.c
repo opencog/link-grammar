@@ -125,12 +125,23 @@ Switch default_switches[] =
 static void put_opts_in_local_vars(Command_Options *);
 
 /*
- * A way to record the options default values.
+ * Record the parse options default values.
+ *
+ * We must set here the string parse options to their static default
+ * value so they don't point to a static memory returned by the library
+ * (but anyway we need to do that for the test,debug and verbosity parse
+ * options because they might have been set by command line arguments
+ * just before this function is invoked.)
  */
 void save_default_opts(Command_Options *copts)
 {
 	put_opts_in_local_vars(copts);
 	saved_defaults = local;
+	// XXX Set defaults assuming stable library settings
+	saved_defaults.test = (char *)"";
+	saved_defaults.debug = (char *)"";
+	saved_defaults.dialect = (char *)"";
+	saved_defaults.verbosity = 1;
 }
 
 static void restore_default_local_vars(void)
