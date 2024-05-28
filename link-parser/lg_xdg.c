@@ -38,7 +38,7 @@ typedef struct
 
 xdg_definition xdg_def[] =
 {
-	{ "/.local/state", "XDG_STATE_HOME"  },
+	{ "/.local/state", "XDG_STATE_HOME" },
 	// Add more definitions if needed.
 };
 
@@ -108,7 +108,7 @@ static bool make_dirpath(const char *path)
 		{
 			if (is_sep(p[-1])) continue; // Ignore directory separator sequences
 			*p = '\0'; // Now dir is the path up to this point
-			//prt_error("DEBUG: mkdir: '%s'\n", dir);
+			//prt_error("Debug: mkdir: '%s'\n", dir);
 			if (mkdir(dir, S_IRWXU) == -1)
 			{
 				int save_errno = errno;
