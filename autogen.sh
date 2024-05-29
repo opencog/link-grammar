@@ -28,7 +28,8 @@ do
             shift
             ;;
         *)
-            break 2
+            echo "$0: Error: Unknown flag \"$1\"."
+            exit 1
     esac
 done
 
