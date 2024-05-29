@@ -532,6 +532,12 @@ int main(int argc, char * argv[])
 	}
 
 	copts = command_options_create();
+	if (copts == NULL || copts->popts == NULL)
+	{
+		prt_error("Fatal error: unable to create parse options\n");
+		exit(-1);
+	}
+	opts = copts->popts;
 
 	/* First set the debug options, to allow dictionary-related debug. */
 	const char * const debug_vars[] = { "verbosity", "debug", "test" };
@@ -611,13 +617,6 @@ int main(int argc, char * argv[])
 			exit(-1);
 		}
 	}
-
-	if (copts == NULL || copts->popts == NULL)
-	{
-		prt_error("Fatal error: unable to create parse options\n");
-		exit(-1);
-	}
-	opts = copts->popts;
 
 	set_default_parse_options(opts);
 
