@@ -69,6 +69,21 @@ static const char *use_prompt(int verbosity_level)
 	return (0 == verbosity_level)? "" : prompt;
 }
 
+/**
+ * Set link-parser's default parse options.
+ */
+static void set_default_parse_options(Parse_Options opts)
+{
+	parse_options_set_max_parse_time(opts, 30);
+	parse_options_set_linkage_limit(opts, 1000);
+	parse_options_set_min_null_count(opts, 0);
+	parse_options_set_max_null_count(opts, 0);
+	parse_options_set_short_length(opts, 16);
+	parse_options_set_islands_ok(opts, false);
+	parse_options_set_display_morphology(opts, false);
+	parse_options_set_spell_guess(opts, 7);
+}
+
 typedef enum
 {
 	UNGRAMMATICAL = '*',
@@ -604,14 +619,7 @@ int main(int argc, char * argv[])
 	}
 	opts = copts->popts;
 
-	parse_options_set_max_parse_time(opts, 30);
-	parse_options_set_linkage_limit(opts, 1000);
-	parse_options_set_min_null_count(opts, 0);
-	parse_options_set_max_null_count(opts, 0);
-	parse_options_set_short_length(opts, 16);
-	parse_options_set_islands_ok(opts, false);
-	parse_options_set_display_morphology(opts, false);
-	parse_options_set_spell_guess(opts, 7);
+	set_default_parse_options(opts);
 
 	/* Get the panic disjunct cost from the dictionary. */
 	const char *panic_max_cost_str =
