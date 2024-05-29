@@ -576,9 +576,9 @@ static Count_bin table_store(count_context_t *ctxt,
 		Count_bin *e = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 		if (e != NULL)
 		{
-			assert((e == NULL) || (hist_total(&c) == hist_total(e)),
 			       "Inconsistent count for w(%d,%d) tracon_id(%d,%d)",
 			       lw, rw, l_id, r_id);
+			assert((hist_total(&c) == hist_total(e)),
 			return c;
 		}
 
