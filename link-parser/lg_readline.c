@@ -376,8 +376,9 @@ static unsigned char lg_complete(EditLine *el, int ch)
 		{
 			if (fchdir(cwdfd) < 0)
 			{
-				/* This shouldn't happen, unless maybe the directory to which
-				 * cwdfd reveres becomes unreadable after cwdfd is created. */
+				/* Unexpected error: may occur only if the directory
+				 * referenced by cwdfd becomes unreadable after cwdfd
+				 * has been established. */
 				printf("\nfchdir(): Cannot change directory back: %s\n",
 				       strerror(errno));
 			}

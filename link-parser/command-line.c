@@ -125,11 +125,11 @@ Switch default_switches[] =
 /*
  * Record the parse options default values.
  *
- * We must set here the string parse options to their static default
- * value so they don't point to a static memory returned by the library
- * (but anyway we need to do that for the test,debug and verbosity parse
- * options because they might have been set by command line arguments
- * just before this function is invoked.)
+ * Set the string parse options to their static default value so they
+ * don't point to a static (test, debug) or dynamic (dialect) memory of
+ * the library (but anyway we need to do that for the test,debug and
+ * verbosity parse options because they might have been set by command
+ * line arguments just before this function is invoked.)
  */
 void save_default_opts(Command_Options *copts)
 {
