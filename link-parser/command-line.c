@@ -157,7 +157,7 @@ int get_verbosity(void)
 }
 
 /**
- *  Gets rid of all the white space in the string s.
+ * Gets rid of all the white space in the string s.
  */
 static void clean_up_string(char * s)
 {

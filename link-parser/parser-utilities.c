@@ -146,7 +146,7 @@ int get_console_line(char *inbuf, int inbuf_size)
 		snprintf(inbuf, inbuf_size, "ReadConsoleW: Error %lu\n", GetLastError());
 		return -1;
 	}
-	winbuf[nchar] = L'\0'; /* nchar is always <= INPUT_UTF16_SIZE-1.  */
+	winbuf[nchar] = L'\0'; /* nchar is always <= INPUT_UTF16_SIZE-1. */
 
 	nchar = WideCharToMultiByte(CP_UTF8, 0, winbuf, -1, inbuf,
 	                            inbuf_size, NULL, NULL);

@@ -421,7 +421,7 @@ char *lg_readline(const char *mb_prompt)
 		wc_prompt = malloc (sz*sizeof(wchar_t));
 		mbstowcs(wc_prompt, mb_prompt, sz);
 
-		hist = history_winit();    /* Init built-in history */
+		hist = history_winit(); /* Init built-in history */
 		el = el_init("link-parser", stdin, stdout, stderr);
 		history_w(hist, &ev, H_SETSIZE, 100);
 		history_w(hist, &ev, H_SETUNIQUE, 1);
@@ -444,7 +444,7 @@ char *lg_readline(const char *mb_prompt)
 		el_source(el, NULL); /* Source the user's defaults file. */
 	}
 
-	int numc = 1; /*  Uninitialized at libedit. */
+	int numc = 1; /* Uninitialized at libedit. */
 	const wchar_t *wc_line = el_wgets(el, &numc);
 
 	/* Received end-of-file */
@@ -469,7 +469,7 @@ char *lg_readline(const char *mb_prompt)
 	/* fwprintf(stderr, L"==> got %d %ls", numc, wc_line); */
 
 	size_t byte_len = wcstombs(NULL, wc_line, 0) + 4;
-	free(mb_line);  // free previous.
+	free(mb_line); // free previous.
 	if (byte_len == (size_t)-1)
 	{
 		prt_error("Error: Unable to process UTF8 in input string.\n");
