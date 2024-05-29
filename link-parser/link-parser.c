@@ -497,6 +497,43 @@ static const char *fbasename(const char *fpath)
 	return progf + 1;
 }
 
+/**
+ * Return a dictionary handle for \p languege. Return NULL on failure.
+ * silence library verbose output if needed.
+ */
+static Dictionary dictionary_setup(const char *language, bool quiet,
+                                   Parse_Options opts)
+{
+	Dictionary dict;
+	int save_verbosity = parse_options_get_verbosity(opts);
+
+	if (quiet && (save_verbosity == 1))
+		parse_options_set_verbosity(opts, 0);
+
+	if (language && *language)
+	{
+		dict = dictionary_create_lang(language);
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open dictionary.\n");
+			return NULL;
+		}
+	}
+	else
+	{
+		dict = dictionary_create_default_lang();
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open default dictionary.\n");
+			return NULL;
+		}
+	}
+
+	parse_options_set_verbosity(opts, save_verbosity);
+
+	return dict;
+}
+
 static void print_usage(FILE *out, char *argv0, Command_Options *copts, int exit_value)
 {
 
@@ -599,24 +636,8 @@ int main(int argc, char * argv[])
 	}
 	/* End of debug options setup. */
 
-	if (language && *language)
-	{
-		dict = dictionary_create_lang(language);
-		if (dict == NULL)
-		{
-			prt_error("Fatal error: Unable to open dictionary.\n");
-			exit(-1);
-		}
-	}
-	else
-	{
-		dict = dictionary_create_default_lang();
-		if (dict == NULL)
-		{
-			prt_error("Fatal error: Unable to open default dictionary.\n");
-			exit(-1);
-		}
-	}
+	dict = dictionary_setup(language, quiet_start > 0, opts);
+	if (dict == NULL) exit(-1);
 
 	set_default_parse_options(opts);
 
