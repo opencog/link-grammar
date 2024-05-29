@@ -957,7 +957,7 @@ static Count_bin table_count(count_context_t * ctxt,
                              int lw, int rw, Connector *le, Connector *re,
                              unsigned int null_count)
 {
-	if (!USE_TABLE_TRACON) return true;
+	if (!USE_TABLE_TRACON) return count_unknown;
 
 	/* This check is not necessary for correctness, but it saves CPU time.
 	 * If a cross link would result, we know that the count would be 0.
