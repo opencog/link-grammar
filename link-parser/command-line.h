@@ -16,6 +16,8 @@
 
 #include <link-grammar/link-includes.h>
 
+#define D_USER_FILES 4 /* Debug level for files, see error.h. */
+
 #define COMMENT_CHAR '%'       /* input lines beginning with this are ignored */
 #define WHITESPACE " \t\v\r\n" /* ASCII-only is sufficient here */
 #define FIELD_WIDTH(str, width) (int)((width)+strlen(str)-utf8_strwidth(str))
@@ -61,6 +63,7 @@ typedef struct {
 } Command_Options;
 
 void put_local_vars_in_opts(Command_Options *);
+void put_opts_in_local_vars(Command_Options *);
 void setup_panic_parse_options(Command_Options *, int);
 
 typedef enum

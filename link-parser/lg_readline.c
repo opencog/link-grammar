@@ -83,10 +83,11 @@ void find_history_filepath(const char *dictname, const char *argv0,
 		prt_error("Warning: xdg_get_home(XDG_BD_STATE) failed; "
 		          "input history will not be supported.\n");
 		history_file = strdup("dev/null");
-		return;
 	}
 
 	history_file = hfile;
+	if (get_verbosity() == D_USER_FILES)
+		prt_error("Debug: Using history file \"%s\"\n", history_file);
 }
 
 /**
@@ -375,8 +376,9 @@ static unsigned char lg_complete(EditLine *el, int ch)
 		{
 			if (fchdir(cwdfd) < 0)
 			{
-				/* This shouldn't happen, unless maybe the directory to which
-				 * cwdfd reveres becomes unreadable after cwdfd is created. */
+				/* Unexpected error: may occur only if the directory
+				 * referenced by cwdfd becomes unreadable after cwdfd
+				 * has been established. */
 				printf("\nfchdir(): Cannot change directory back: %s\n",
 				       strerror(errno));
 			}
@@ -419,7 +421,7 @@ char *lg_readline(const char *mb_prompt)
 		wc_prompt = malloc (sz*sizeof(wchar_t));
 		mbstowcs(wc_prompt, mb_prompt, sz);
 
-		hist = history_winit();    /* Init built-in history */
+		hist = history_winit(); /* Init built-in history */
 		el = el_init("link-parser", stdin, stdout, stderr);
 		history_w(hist, &ev, H_SETSIZE, 100);
 		history_w(hist, &ev, H_SETUNIQUE, 1);
@@ -442,7 +444,7 @@ char *lg_readline(const char *mb_prompt)
 		el_source(el, NULL); /* Source the user's defaults file. */
 	}
 
-	int numc = 1; /*  Uninitialized at libedit. */
+	int numc = 1; /* Uninitialized at libedit. */
 	const wchar_t *wc_line = el_wgets(el, &numc);
 
 	/* Received end-of-file */
@@ -467,7 +469,7 @@ char *lg_readline(const char *mb_prompt)
 	/* fwprintf(stderr, L"==> got %d %ls", numc, wc_line); */
 
 	size_t byte_len = wcstombs(NULL, wc_line, 0) + 4;
-	free(mb_line);  // free previous.
+	free(mb_line); // free previous.
 	if (byte_len == (size_t)-1)
 	{
 		prt_error("Error: Unable to process UTF8 in input string.\n");

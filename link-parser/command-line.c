@@ -122,15 +122,24 @@ Switch default_switches[] =
 	{NULL,         Cmd,  NULL,                                     NULL}
 };
 
-static void put_opts_in_local_vars(Command_Options *);
-
 /*
- * A way to record the options default values.
+ * Record the parse options default values.
+ *
+ * Set the string parse options to their static default value so they
+ * don't point to a static (test, debug) or dynamic (dialect) memory of
+ * the library (but anyway we need to do that for the test,debug and
+ * verbosity parse options because they might have been set by command
+ * line arguments just before this function is invoked.)
  */
 void save_default_opts(Command_Options *copts)
 {
 	put_opts_in_local_vars(copts);
 	saved_defaults = local;
+	// XXX Set defaults assuming stable library settings
+	saved_defaults.test = (char *)"";
+	saved_defaults.debug = (char *)"";
+	saved_defaults.dialect = (char *)"";
+	saved_defaults.verbosity = 1;
 }
 
 static void restore_default_local_vars(void)
@@ -138,8 +147,17 @@ static void restore_default_local_vars(void)
 	local = saved_defaults;
 }
 
+// Return the value of the static verbosity.
+// This avoids the need to define "verbosity" as extern, which may clash
+// with the library "verbosity", and make the parse options "verbosity"
+// available before the main loop in link-parser.c.
+int get_verbosity(void)
+{
+	return local.verbosity;
+}
+
 /**
- *  Gets rid of all the white space in the string s.
+ * Gets rid of all the white space in the string s.
  */
 static void clean_up_string(char * s)
 {
@@ -157,7 +175,7 @@ static void clean_up_string(char * s)
 		if (0 == w) break;
 		if (0 > (ssize_t)w)
 		{
-			prt_error("Unable to process UTF8 command input string.\n");
+			prt_error("Error: Unable to process UTF8 command input string.\n");
 			break;
 		}
 		len -= w;
@@ -194,7 +212,7 @@ static bool is_numerical_rhs(char *s)
 		if (0 == w) break;
 		if (0 > (ssize_t)w)
 		{
-			prt_error("Unable to process UTF8 command input string.\n");
+			prt_error("Error: Unable to process UTF8 command input string.\n");
 			break;
 		}
 		len -= w;
@@ -272,7 +290,6 @@ static const char *switch_value_string(const Switch *as)
 #define HELPFILE_LANG_TEMPLATE_SIZE (sizeof(HELPFILE_LANG_TEMPLATE)-1)
 #define HELPFILE_TEMPLATE_SIZE \
 	(sizeof(HELPFILE_BASE HELPFILE_EXT)+HELPFILE_LANG_TEMPLATE_SIZE)
-#define D_USER_FILES 4 /* Debug level for files, see error.h. */
 #define DEFAULT_HELP_LANG "en"
 
 static FILE *help_file;
@@ -411,7 +428,7 @@ static FILE *open_help_file(int verbosity)
 		help_file = linkgrammar_open_data_file(help_filename);
 	}
 
-	if ((NULL == help_file) && (verbosity > D_USER_FILES))
+	if ((NULL == help_file) && (verbosity == D_USER_FILES))
 	{
 		prt_error("Error: Cannot open help file '%s': %s\n",
 		          help_filename, strerror(errno));
@@ -514,7 +531,7 @@ static void display_help(const Switch *sp, Command_Options *copts)
 
 	if (feof(hf))
 	{
-		if (local.verbosity >= D_USER_FILES)
+		if (local.verbosity == D_USER_FILES)
 			prt_error("Error: Cannot find command \"%s\" in help file\n",
 			          sp->string);
 	}
@@ -772,9 +789,9 @@ static int handle_help_command(const Switch *as, char *line,
 			{
 				rc = -1;     /* Error indication. */
 				if (count > 1)
-					prt_error("Ambiguous command: \"%s\".  %s\n", s, helpmsg);
+					prt_error("Error: Ambiguous command: \"%s\".  %s\n", s, helpmsg);
 				else
-					prt_error("Undefined command: \"%s\".  %s\n", s, helpmsg);
+					prt_error("Error: Undefined command: \"%s\".  %s\n", s, helpmsg);
 			}
 		}
 	}
@@ -851,7 +868,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 
 		if (count > 1)
 		{
-			prt_error("Ambiguous command \"%s\".  %s\n", s, helpmsg);
+			prt_error("Error: Ambiguous command \"%s\".  %s\n", s, helpmsg);
 			return -1;
 		}
 		if (count == 1)
@@ -862,7 +879,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 				size_t junk = strcspn(s, WHITESPACE);
 				if (junk != strlen(s))
 				{
-					prt_error("Junk after a boolean variable: \"%s\".  %s\n",
+					prt_error("Error: Junk after a boolean variable: \"%s\".  %s\n",
 					          &s[junk], helpmsg);
 					return -1;
 				}
@@ -999,7 +1016,7 @@ static int x_issue_special_command(char * line, Command_Options *copts, Dictiona
 	return -1;
 }
 
-static void put_opts_in_local_vars(Command_Options* copts)
+void put_opts_in_local_vars(Command_Options* copts)
 {
 	Parse_Options opts = copts->popts;
 	local.verbosity = parse_options_get_verbosity(opts);

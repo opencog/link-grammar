@@ -38,7 +38,7 @@ typedef struct
 
 xdg_definition xdg_def[] =
 {
-	{ "/.local/state", "XDG_STATE_HOME"  },
+	{ "/.local/state", "XDG_STATE_HOME" },
 	// Add more definitions if needed.
 };
 
@@ -84,21 +84,22 @@ static bool is_sep(int c)
  */
 static bool make_dirpath(const char *path)
 {
-	char *dir = strdup(path);
 	struct stat sb;
 
 #if defined(_WIN32) || defined(__CYGWIN__)
 	// Skip Windows UNC path \\X
-	if (is_sep(dir[0]) && is_sep(dir[1]))
+	if (is_sep(path[0]) && is_sep(path[1]))
 	{
 		const char *p;
 
 		// Start from the root or network share
-		for (p = dir + 2; *p != '\0'; p++)
+		for (p = path + 2; *p != '\0'; p++)
 			if (is_sep(*p)) break;
 		if (*p == '\0') return true;  // No further subdirectories
 	}
 #endif
+
+	char *dir = strdup(path);
 
 	for (char *p = dir+1; '\0' != *p; p++)
 	{
@@ -107,7 +108,7 @@ static bool make_dirpath(const char *path)
 		{
 			if (is_sep(p[-1])) continue; // Ignore directory separator sequences
 			*p = '\0'; // Now dir is the path up to this point
-			//prt_error("DEBUG: mkdir: '%s'\n", dir);
+			//prt_error("Debug: mkdir: '%s'\n", dir);
 			if (mkdir(dir, S_IRWXU) == -1)
 			{
 				int save_errno = errno;

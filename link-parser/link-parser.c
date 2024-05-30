@@ -69,6 +69,21 @@ static const char *use_prompt(int verbosity_level)
 	return (0 == verbosity_level)? "" : prompt;
 }
 
+/**
+ * Set link-parser's default parse options.
+ */
+static void set_default_parse_options(Parse_Options opts)
+{
+	parse_options_set_max_parse_time(opts, 30);
+	parse_options_set_linkage_limit(opts, 1000);
+	parse_options_set_min_null_count(opts, 0);
+	parse_options_set_max_null_count(opts, 0);
+	parse_options_set_short_length(opts, 16);
+	parse_options_set_islands_ok(opts, false);
+	parse_options_set_display_morphology(opts, false);
+	parse_options_set_spell_guess(opts, 7);
+}
+
 typedef enum
 {
 	UNGRAMMATICAL = '*',
@@ -482,6 +497,43 @@ static const char *fbasename(const char *fpath)
 	return progf + 1;
 }
 
+/**
+ * Return a dictionary handle for \p languege. Return NULL on failure.
+ * silence library verbose output if needed.
+ */
+static Dictionary dictionary_setup(const char *language, bool quiet,
+                                   Parse_Options opts)
+{
+	Dictionary dict;
+	int save_verbosity = parse_options_get_verbosity(opts);
+
+	if (quiet && (save_verbosity == 1))
+		parse_options_set_verbosity(opts, 0);
+
+	if (language && *language)
+	{
+		dict = dictionary_create_lang(language);
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open dictionary.\n");
+			return NULL;
+		}
+	}
+	else
+	{
+		dict = dictionary_create_default_lang();
+		if (dict == NULL)
+		{
+			prt_error("Fatal error: Unable to open default dictionary.\n");
+			return NULL;
+		}
+	}
+
+	parse_options_set_verbosity(opts, save_verbosity);
+
+	return dict;
+}
+
 static void print_usage(FILE *out, char *argv0, Command_Options *copts, int exit_value)
 {
 
@@ -517,6 +569,12 @@ int main(int argc, char * argv[])
 	}
 
 	copts = command_options_create();
+	if (copts == NULL || copts->popts == NULL)
+	{
+		prt_error("Fatal error: unable to create parse options\n");
+		exit(-1);
+	}
+	opts = copts->popts;
 
 	/* First set the debug options, to allow dictionary-related debug. */
 	const char * const debug_vars[] = { "verbosity", "debug", "test" };
@@ -578,40 +636,10 @@ int main(int argc, char * argv[])
 	}
 	/* End of debug options setup. */
 
-	if (language && *language)
-	{
-		dict = dictionary_create_lang(language);
-		if (dict == NULL)
-		{
-			prt_error("Fatal error: Unable to open dictionary.\n");
-			exit(-1);
-		}
-	}
-	else
-	{
-		dict = dictionary_create_default_lang();
-		if (dict == NULL)
-		{
-			prt_error("Fatal error: Unable to open default dictionary.\n");
-			exit(-1);
-		}
-	}
+	dict = dictionary_setup(language, quiet_start > 0, opts);
+	if (dict == NULL) exit(-1);
 
-	if (copts == NULL || copts->popts == NULL)
-	{
-		prt_error("Fatal error: unable to create parse options\n");
-		exit(-1);
-	}
-	opts = copts->popts;
-
-	parse_options_set_max_parse_time(opts, 30);
-	parse_options_set_linkage_limit(opts, 1000);
-	parse_options_set_min_null_count(opts, 0);
-	parse_options_set_max_null_count(opts, 0);
-	parse_options_set_short_length(opts, 16);
-	parse_options_set_islands_ok(opts, false);
-	parse_options_set_display_morphology(opts, false);
-	parse_options_set_spell_guess(opts, 7);
+	set_default_parse_options(opts);
 
 	/* Get the panic disjunct cost from the dictionary. */
 	const char *panic_max_cost_str =
@@ -641,22 +669,10 @@ int main(int argc, char * argv[])
 	parse_options_set_disjunct_cost(opts,
 	   linkgrammar_get_dict_max_disjunct_cost(dict));
 
-	/* Remember the debug setting, because we temporary neglect it below. */
-	int verbosity_tmp = parse_options_get_verbosity(opts);
-	char *debug_tmp = strdup(parse_options_get_debug(opts));
-	char *test_tmp = strdup(parse_options_get_test(opts));
-
-	parse_options_set_verbosity(opts, 1); /* XXX assuming 1 is the default */
-	parse_options_set_debug(opts, "");
-	parse_options_set_test(opts, "");
-	save_default_opts(copts); /* Options so far are the defaults */
-
-	/* Restore the debug setting. */
-	parse_options_set_verbosity(opts, verbosity_tmp);
-	parse_options_set_debug(opts, debug_tmp);
-	parse_options_set_test(opts, test_tmp);
-	free(debug_tmp);
-	free(test_tmp);
+	/* Options so far are the defaults (save_default_opts() ensures
+	 * saving the defaults for debug, test, and verbosity, which may have
+	 * already been set by the program's arguments at this point.) */
+	save_default_opts(copts);
 
 	/* Process non-debug command line variable-setting commands (only). */
 	for (int i = 1; i < argc; i++)
@@ -688,8 +704,6 @@ int main(int argc, char * argv[])
 		}
 	}
 
-	initialize_screen_width(copts);
-
 	if ((parse_options_get_verbosity(opts)) > 0 && (quiet_start == 0))
 	{
 		prt_error("Info: Dictionary version %s, locale %s\n",
@@ -699,6 +713,8 @@ int main(int argc, char * argv[])
 			linkgrammar_get_version());
 	}
 
+	put_opts_in_local_vars(copts); /* Update local.verbosity etc. */
+	initialize_screen_width(copts);
 	if (isatty_io)
 	{
 		find_history_filepath(dictionary_get_lang(dict), argv[0], "link-parser");
