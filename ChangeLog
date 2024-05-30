@@ -4,6 +4,7 @@ Version 5.12.5 (XXX 2024)
  * Bugfix python unit test for Thai on Apple. #1530
  * New autogen.sh #1531
  * Stop litering .lg_history in current directory. #1443 #1534
+ * MS Windows build fixes #1537
 
 Version 5.12.4 (28 March 2024)
  * Minor English dict fixes. #1470
