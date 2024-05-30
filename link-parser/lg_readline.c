@@ -74,18 +74,17 @@ void find_history_filepath(const char *dictname, const char *argv0,
 	dictpref[strcspn(dictpref, ":")] = '\0';
 
 	// Find the location of the history file.
-	const char *hfile = xdg_make_path(XDG_BD_STATE, "%s/%s%s", xdg_prog,
-	                                  dictpref, history_file_basename);
+	history_file = xdg_make_path(XDG_BD_STATE, "%s/%s%s", xdg_prog,
+	                             dictpref, history_file_basename);
 	free(dictpref);
 
-	if (NULL == hfile)
+	if (NULL == history_file)
 	{
 		prt_error("Warning: xdg_get_home(XDG_BD_STATE) failed; "
 		          "input history will not be supported.\n");
 		history_file = strdup("dev/null");
 	}
 
-	history_file = hfile;
 	if (get_verbosity() == D_USER_FILES)
 		prt_error("Debug: Using history file \"%s\"\n", history_file);
 }
