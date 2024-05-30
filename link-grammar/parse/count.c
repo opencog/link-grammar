@@ -779,8 +779,10 @@ static void lrcnt_cache_match_list(wordvecp lrcnt_cache, count_context_t *ctxt,
 	}
 	dassert(dcnt > 0, "No disjuncts to cache");
 	//if (dcnt == i-mlb) return NULL;
+#ifdef VERIFY_MATCH_LIST
 	lgdebug(+9, "MATCH_LIST %9d dir=%d mlb %zu cached %zu/%zu\n",
 	        get_match_list_element(mchxt, mlb)->match_id, dir, mlb, dcnt, i-mlb);
+#endif
 
 	match_list_cache *ml = pool_alloc_vec(ctxt->mlc_pool, dcnt + 1);
 	if (ml == NULL) return; /* Cannot allocate cache array */

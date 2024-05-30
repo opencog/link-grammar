@@ -71,12 +71,14 @@ static inline Disjunct *get_match_list_element(fast_matcher_t *ctxt, size_t mli)
 static inline void pop_match_list(fast_matcher_t *ctxt, size_t match_list_last)
 {
 	ctxt->match_list_end = match_list_last;
+#ifdef VERIFY_MATCH_LIST
 	if (verbosity_level(9))
 	{
 		if (get_match_list_element(ctxt, match_list_last) != NULL)
 			lgdebug(+9, "MATCH_LIST %9d pop\n",
 			        get_match_list_element(ctxt, match_list_last)->match_id);
 	}
+#endif
 }
 
 /**

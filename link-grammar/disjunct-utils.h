@@ -22,7 +22,7 @@
 #include "parse/histogram.h"            // count_t
 
 // Can undefine VERIFY_MATCH_LIST when done debugging...
-#define VERIFY_MATCH_LIST
+// #define VERIFY_MATCH_LIST
 
 /* On a 64-bit machine, this struct should be exactly (6+2)*8=64 bytes long.
  * Lets try to keep it that way (for performance). */
