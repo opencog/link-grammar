@@ -157,7 +157,8 @@ static void record_choice(
 static int estimate_log2_table_size(Sentence sent)
 {
 	/* Size estimate based on measurements (see #1402) */
-	double lscale = log2(sent->num_disjuncts + 1.0) - 0.5 * log2(sent->length);
+	double lscale = log2((double)sent->num_disjuncts + 1.0) -
+		             0.5 * log2((double)sent->length);
 	double lo_est = lscale + 4.0;
 	double hi_est = 1.5 * lscale;
 	double dj_est = fmax(lo_est, hi_est);
@@ -166,10 +167,10 @@ static int estimate_log2_table_size(Sentence sent)
 	 * pex->Pset_bucket_pool is almost exactly equal to the num elts
 	 * issued for sent->Table_tracon_pool.  This provides a better
 	 * estimate when parsing with MST, when the above is too low.  */
-	double ntracon = pool_num_elements_issued(sent->Table_tracon_pool);
+	double ntracon = (double)pool_num_elements_issued(sent->Table_tracon_pool);
 	double ltra = log2(ntracon) + 1.0;  // + 1.0 because floor()
 
-	int log2_table_size = floor(fmax(dj_est, ltra));
+	int log2_table_size = (int)floor(fmax(dj_est, ltra));
 
 	// Enforce min and max sizes.
 	if (log2_table_size < 4) log2_table_size = 4;

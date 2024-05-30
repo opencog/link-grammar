@@ -595,8 +595,8 @@ form_match_list(fast_matcher_t *ctxt, int w,
 	}
 
 #ifdef VERIFY_MATCH_LIST
-	static _Atomic(uint16_t) id = 0;
-	uint16_t lid = ++id; /* A local copy, for multi-threading support. */
+	static uint16_t id = 0;
+	uint16_t lid = ++id; /* A stable local copy, for multi-threading support. */
 #else
 	const uint16_t lid = 0;
 #endif

@@ -15,7 +15,7 @@
 
 #include "link-includes.h"
 #include "externs.h"                    // verbosity
-#include "utilities.h"                  // GNUC_NORETURN, STRINGIFY
+#include "utilities.h"                  // NORETURN, STRINGIFY
 
 /* User verbosity levels are 1-4, to be used for user info/debug.
  * For now hard-coded numbers are still used instead of D_USER_BASIC/TIMES. */
@@ -97,8 +97,9 @@ void lg_lib_failure(void);
 
 extern void (* assert_failure_trap)(void);
 #define FILELINE __FILE__ ":" STRINGIFY(__LINE__)
+NORETURN
 void assert_failure(const char[], const char[], const char *, const char *, ...)
-	GNUC_PRINTF(4,5) GNUC_NORETURN;
+	GNUC_PRINTF(4,5);
 
 /* Define a private version of assert() with a printf-like error
  * message. The C one is not used. */

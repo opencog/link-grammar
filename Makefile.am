@@ -46,18 +46,14 @@ EXTRA_DIST =                            \
 	msvc/LGlib-features.props            \
 	msvc/LinkGenerator.vcxproj           \
 	msvc/LinkGrammarExe.vcxproj          \
-	msvc/LinkGrammarExe.vcxproj.filters  \
 	msvc/LinkGrammarJava.vcxproj         \
-	msvc/LinkGrammarJava.vcxproj.filters \
 	msvc/LinkGrammar.sln                 \
 	msvc/LinkGrammar.vcxproj             \
-	msvc/LinkGrammar.vcxproj.filters     \
 	msvc/Local.props                     \
 	msvc/confvar.bat                     \
 	msvc/MSVC-common.props               \
 	msvc/post-build.bat                  \
 	msvc/Python3.vcxproj                 \
-	msvc/Python3.vcxproj.filters         \
 	msvc/README.md                       \
 	msvc/make-check.py                   \
 	TODO

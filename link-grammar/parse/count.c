@@ -576,10 +576,10 @@ static Count_bin table_store(count_context_t *ctxt,
 		Count_bin *e = table_lookup(ctxt, lw, rw, le, re, null_count, NULL);
 		if (e != NULL)
 		{
-			assert((e == NULL) || (hist_total(&c) == hist_total(e)),
-			       "Inconsistent count for w(%d,%d) tracon_id(%d,%d)",
-			       lw, rw, l_id, r_id);
-			return c;
+			assert((hist_total(&c) == hist_total(e)),
+			       "Inconsistent count for w(%d,%d) tracon_id(%d,%d): %zd != %zd",
+			       lw, rw, l_id, r_id, (ssize_t)hist_total(&c), (ssize_t)hist_total(e));
+			return *e;
 		}
 
 		// The count is still stored, for the above consistency check
@@ -957,7 +957,7 @@ static Count_bin table_count(count_context_t * ctxt,
                              int lw, int rw, Connector *le, Connector *re,
                              unsigned int null_count)
 {
-	if (!USE_TABLE_TRACON) return true;
+	if (!USE_TABLE_TRACON) return count_unknown;
 
 	/* This check is not necessary for correctness, but it saves CPU time.
 	 * If a cross link would result, we know that the count would be 0.
