@@ -1,4 +1,4 @@
-Version 5.12.5 (XXX 2024)
+Version 5.12.5 (31 May 2024)
  * Bugfix tracon table size management. #1486
  * Bugfix connector hashing for fewer hash collisions. #1487, #1528
  * Bugfix python unit test for Thai on Apple. #1530
