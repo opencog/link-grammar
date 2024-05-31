@@ -82,7 +82,7 @@ void find_history_filepath(const char *dictname, const char *argv0,
 	{
 		prt_error("Warning: xdg_get_home(XDG_BD_STATE) failed; "
 		          "input history will not be supported.\n");
-		history_file = strdup("dev/null");
+		history_file = strdup("/dev/null");
 	}
 
 	if (get_verbosity() == D_USER_FILES)

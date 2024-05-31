@@ -1321,9 +1321,9 @@ static unsigned int cms_hash(const char *s)
 	return (i & (CMS_SIZE-1));
 }
 
-static void reset_last_criterion(multiset_table *cmt, const char *ctiterion)
+static void reset_last_criterion(multiset_table *cmt, const char *criterion)
 {
-	unsigned int h = cms_hash(ctiterion);
+	unsigned int h = cms_hash(criterion);
 
 	for (Cms *cms = cmt->cms_table[h]; cms != NULL; cms = cms->next)
 		cms->last_criterion = false;

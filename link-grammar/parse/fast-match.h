@@ -20,7 +20,7 @@
 #include "link-includes.h"              // for Sentence
 #include "memory-pool.h"
 
-typedef struct match_list_cache_sruct
+typedef struct
 {
 	Disjunct *d;                 /* disjuncts with a jet linkage */
 	Count_bin count;             /* the counts for that linkage */

@@ -490,7 +490,7 @@ class EErrorFacilityTestCase(unittest.TestCase):
         self.numerr = LG_Error.printall(self.error_handler_test, None)
         self.assertEqual(self.numerr, self.numerr)
 
-    def test_22_defaut_handler_param(self):
+    def test_22_default_handler_param(self):
         """Test bad data parameter to default error handler"""
         # (It should be an integer >=0 and <= lg_None.)
         # Here the error handler is still set to None.
