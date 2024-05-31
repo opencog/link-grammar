@@ -354,7 +354,7 @@ static int linkage_equiv_p(Linkage lpv, Linkage lnx)
 	// names were the same. The connector types might still differ,
 	// due to intersection. The multi-connector flag might differ.
 	// However, neither of these are likely. It is plausible to skip
-	// this check entirely, its mostly a CPU-time-waster that will
+	// this check entirely, it's mostly a CPU-time-waster that will
 	// never find any differences for the almost any situation.
 	for (uint32_t li=0; li<lpv->num_links; li++)
 	{
@@ -460,7 +460,7 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 	    !sent->overflowed && (sent->num_linkages_found <= linkage_limit)))
 		return;
 
-	// Deduplicate the valid linkages only; its not worth wasting
+	// Deduplicate the valid linkages only; it's not worth wasting
 	// CPU time on the rest.  Sorting guarantees that the valid
 	// linkages come first.
 	uint32_t nl = sent->num_valid_linkages;

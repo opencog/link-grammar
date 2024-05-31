@@ -223,7 +223,7 @@ void insert_idiom(Dictionary dict, Dict_node * dn)
 
 	/* ---- end of the code alluded to above ---- */
 
-	/* now its time to insert them into the dictionary */
+	/* now it's time to insert them into the dictionary */
 
 	dn_list = start_dn_list;
 

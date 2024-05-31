@@ -49,7 +49,7 @@ static wchar_t * prompt(EditLine *el)
 	return wc_prompt;
 }
 
-// lg_readline()is called via a chain of functions:
+// lg_readline() is called via a chain of functions:
 // fget_input_string -> get_line -> get_terminal_line -> lg_readline.
 // To avoid changing all of them, this variable is static for now.
 // FIXME: Move the call of find_history_filepath() to lg_readline(), and
@@ -82,7 +82,7 @@ void find_history_filepath(const char *dictname, const char *argv0,
 	{
 		prt_error("Warning: xdg_get_home(XDG_BD_STATE) failed; "
 		          "input history will not be supported.\n");
-		history_file = strdup("dev/null");
+		history_file = strdup("/dev/null");
 	}
 
 	if (get_verbosity() == D_USER_FILES)

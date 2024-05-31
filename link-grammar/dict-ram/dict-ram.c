@@ -69,7 +69,7 @@ void free_dictionary_root(Dictionary dict)
 /**
  * dict_order_strict - order two dictionary words in proper sort order.
  * Return zero if the strings match, else return in a unique order.
- * The order is NOT (locale-dependent) UTF8 sort order; its ordered
+ * The order is NOT (locale-dependent) UTF8 sort order; it's ordered
  * based on numeric values of single bytes.  This will uniquely order
  * UTF8 strings, just not in a LANG-dependent (locale-dependent) order.
  * But we don't need/want locale-dependent ordering!
@@ -309,7 +309,7 @@ Dict_node * dict_node_wild_lookup(Dictionary dict, const char *s)
  * The in-RAM representation is NOT a binary tree; instead it is a tree
  * of lists. An Exp node contains a tag: `AND_type`, `OR_type`, etc.
  * The `operand_next` field is used to hold a linked list which is
- * joined up with the given Exp type. This is more efficent to traverse,
+ * joined up with the given Exp type. This is more efficient to traverse,
  * and also saves space, as compared to an ordinary binary tree.
  *
  * Example:  (A or B or C or D) becomes

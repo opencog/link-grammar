@@ -851,7 +851,7 @@ static void issue_links_for_choice(Linkage lkg, Parse_choice *pc,
  *
  * How it works:
  *
- * Each linkage has the abstact form of a binary tree, with left and
+ * Each linkage has the abstract form of a binary tree, with left and
  * right subtrees.  The Parse_set is an encoding for all possible
  * trees. Selecting a linkage is then a matter of selecting  tree from
  * out of the parse-set.

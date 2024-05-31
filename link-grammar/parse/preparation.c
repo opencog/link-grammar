@@ -121,7 +121,7 @@ static void build_sentence_disjuncts(Sentence sent, float cost_cutoff,
 #ifdef DEBUG
 	unsigned int dcnt, ccnt;
 	count_disjuncts_and_connectors(sent, &dcnt, &ccnt);
-	lgdebug(+D_PREP, "%u disjucts, %u connectors (%zu allocated)\n",
+	lgdebug(+D_PREP, "%u disjuncts, %u connectors (%zu allocated)\n",
 	        dcnt, ccnt,
 	        pool_num_elements_issued(sent->Connector_pool) - num_con_alloced);
 #endif

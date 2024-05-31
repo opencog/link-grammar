@@ -8,8 +8,6 @@ if [ ! -f "autogen.sh" ]; then
     exit 1
 fi
 
-rm -f autogen.err
-
 run_configure=true
 while [ -n "$1" ]
 do
@@ -28,7 +26,8 @@ do
             shift
             ;;
         *)
-            break 2
+            echo "$0: Error: Unknown flag \"$1\"."
+            exit 1
     esac
 done
 
@@ -39,6 +38,8 @@ if [ $? -ne 0 ]; then
     echo "$0: Error: you need automake 1.4 or later.  Please upgrade."
     exit 1
 fi
+
+rm -f autogen.err
 
 # If there's a config.cache file, we may need to delete it.
 # If we have an existing configure script, save a copy for comparison.

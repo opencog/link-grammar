@@ -36,7 +36,7 @@ void patch_subscript(char * s)
 	if (*de == '\0') return;
 	dp = (int) *de;
 
-	/* If it's followed by a UTF8 char, its NOT a subscript */
+	/* If it's followed by a UTF8 char, it's NOT a subscript */
 	if (127 < dp || dp < 0) return;
 	/* assert ((0 < dp) && (dp <= 127), "Bad dictionary entry!"); */
 	if (isdigit(dp)) return;

@@ -66,7 +66,7 @@ struct Table_tracon_s
  * Each element of these arrays points to a vector, called here word-vector,
  * with a size equal to abs(nearest_word - farthest_word) + 1.
  *
- * Each element of this vector predicts, in it's status field, whether the
+ * Each element of this vector predicts, in its status field, whether the
  * expected count is zero for a given null-count (when the word it
  * represents is the end word of the range).
  * This prediction is valid for null-counts up to null_count (or for any
@@ -164,7 +164,7 @@ static size_t estimate_tracon_entries(Sentence sent)
 }
 
 #if HAVE_THREADS_H && !__EMSCRIPTEN__
-/* Each thread will get it's own version of the `kept_table`.
+/* Each thread will get its own version of the `kept_table`.
  * If the program creates zillions of threads, then there will
  * be a mem-leak if this table is not released when each thread
  * exits. This code arranges so that `free_tls_table` is called

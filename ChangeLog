@@ -845,7 +845,7 @@ Version 4.6.5 (3 November 2009)
  * Fix: Take more care in distinguishing mass and count nouns.
  * Fix: Old bug w/relative clauses: Rw+ is optional, not mandatory.
  * Provide tags identifying relative, superlative adjectives.
- * Remove BioLG NUMBER-AND-UNIT handling, its been superseded.
+ * Remove BioLG NUMBER-AND-UNIT handling, it's been superseded.
  * Fix handling of parenthetical phrases/clauses.
  * Fix: handling of capitalized first words ending in letter "s".
  * Fix: support "filler-it" SF link for "It was reasoned that..."
