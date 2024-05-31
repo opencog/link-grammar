@@ -31,7 +31,7 @@ Listed in rough processing order.
 Version 5.3.14 - Improved error notification facility
 =====================================================
 
-This code is still "experimental", so it's API may be changed.
+This code is still "experimental", so its API may be changed.
 
 It is intended to be mostly compatible. It supports multi-threading -
 all of its operations are local per-thread.

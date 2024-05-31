@@ -151,7 +151,7 @@ same way, differing only in how the AtomSpace is managed.
 
 Private Mode
 ------------
-In **private mode**, the system creates and maintains it's own private
+In **private mode**, the system creates and maintains its own private
 AtomSpace, and relies on being able to access a `StorageNode` from
 which appropriate language data can be fetched. This `StorageNode`
 must be configured in the `storage.dict` file. This `StorageNode` can
@@ -202,7 +202,7 @@ Both modes work as follows:
   will be mapped, one-to-one, to LG disjuncts, and used for parsing.
   If parsing fails, and supplemental word-pairs is enabled, then
   disjuncts will be decorated with additional word-pairs, hoping to
-  obtain a parse. If word-pairs are not avilable, then disjuncts can
+  obtain a parse. If word-pairs are not available, then disjuncts can
   be supplemented with random `ANY` link types (which connect to any
   other `ANY` connector, i.e. randomly.)
 * If there are no `Sections`, or if these are disabled, then word-pairs
