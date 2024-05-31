@@ -44,7 +44,7 @@
 #define PRx(x) fprintf(stderr, ""#x)
 #define PR(...) true
 
-/* Indicator that this connector cannot be used -- that its "obsolete".  */
+/* Indicator that this connector cannot be used -- that it's "obsolete".  */
 #define BAD_WORD (MAX_SENTENCE+1)
 
 typedef uint8_t WordIdx_m;     /* Storage representation of word index */

@@ -64,7 +64,7 @@ static tid_hash_t hash_connectors(const Connector *c, unsigned int shallow)
  * cache/swap trashing if the table temporary grows very big. However, it
  * had a bug, and it is not clear when to shrink the table - shrinking it
  * unnecessarily can cause an overhead of a table growth. Keep for
- * possible reimlementation of a similar idea.
+ * possible reimplementation of a similar idea.
  */
 static unsigned int find_prime_for(size_t count)
 {

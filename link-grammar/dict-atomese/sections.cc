@@ -351,7 +351,7 @@ Dict_node * lookup_section(Dictionary dict, const Handle& germ)
 	Exp* andtail = nullptr;
 
 	// We really expect dn to not be null here, but ... perhaps it
-	// is, if its just not been observed before.
+	// is, if it's just not been observed before.
 	Exp* eee = nullptr;
 	if (dn)
 	{

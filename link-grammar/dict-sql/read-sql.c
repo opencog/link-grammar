@@ -66,7 +66,7 @@ static const char * make_expression(Dictionary dict,
 	while (*p && (lg_isspace((unsigned char)*p))) p++;
 	if (0 == *p) return p;
 
-	/* If it's an open paren, assume its the beginning of a new list */
+	/* If it's an open paren, assume it's the beginning of a new list */
 	if ('(' == *p)
 	{
 		p = make_expression(dict, ++p, pex);

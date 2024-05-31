@@ -644,7 +644,7 @@ void and_enchain_right(Pool_desc* pool, Exp* &andhead, Exp* &andtail, Exp* item)
 static void report_dict_usage(Dictionary dict)
 {
 	// We could also print pool_num_elements_issued() but this is not
-	// interesting; its slightly less than pool_size().
+	// interesting; it's slightly less than pool_size().
 	logger().info("LG Dict: %lu entries; %lu Exp_pool elts; %lu MiBytes",
 		dict->num_entries,
 		pool_size(dict->Exp_pool),

@@ -1444,7 +1444,7 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 	mprefix_list = AFCLASS(dict->affix_table, AFDICT_MPRE);
 	mp_strippable = mprefix_list->length;
 	if (0 == mp_strippable) return false;
-	/* The mprefix list is revered-sorted according to prefix length.
+	/* The mprefix list is reversed-sorted according to prefix length.
 	 * The code here depends on that. */
 	mprefix = mprefix_list->string;
 
@@ -1539,11 +1539,11 @@ static bool mprefix_split(Sentence sent, Gword *unsplit_word, const char *word)
 }
 
 /* Return true if the word might be capitalized by convention:
- * -- if its the first word of a sentence
- * -- if its the first word following a colon, a period, a question mark,
+ * -- if it's the first word of a sentence
+ * -- if it's the first word following a colon, a period, a question mark,
  *    or any bullet (For example:  VII. Ancient Rome)
- * -- if its the first word following an ellipsis
- * -- if its the first word of a quote
+ * -- if it's the first word following an ellipsis
+ * -- if it's the first word of a quote
  *
  * XXX FIXME: These rules are rather English-centric.  Someone should
  * do something about this someday.
@@ -2270,7 +2270,7 @@ static void issue_r_stripped(Sentence sent,
 		if (NULL != r_stripped[1][i])
 		{
 			/* We are going to issue a subscripted word which is not a
-			 * substring of it's unsplit_word. For now, the token position
+			 * substring of its unsplit_word. For now, the token position
 			 * computation code needs an indication for that. */
 			replabel = strdupa(label);
 			replabel[0] = REPLACEMENT_MARK[0];

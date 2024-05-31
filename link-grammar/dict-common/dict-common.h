@@ -151,7 +151,7 @@ struct Dictionary_s
 	/* Duplicate words are disallowed in 4.0.dict unless
 	 * allow_duplicate_words is defined to "true".
 	 * Duplicate idioms are allowed, unless the "test" parse option
-	 * is set to "disalow-dup-idioms" (listing them for debug).
+	 * is set to "disallow-dup-idioms" (listing them for debug).
 	 * If these variables are 0, they get their allow/disallow values
 	 * when the first duplicate word/idiom is encountered.
 	 * 0: not set; 1: allow; -1: disallow */

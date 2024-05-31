@@ -260,7 +260,7 @@ static Exp* make_pair_exprs(Dictionary dict, const Handle& germ)
 		// Get the cached link-name for this pair.
 		const std::string& slnk = cached_linkname(local, rawpr);
 
-		// Direction is easy to determine: its either left or right.
+		// Direction is easy to determine: it's either left or right.
 		char cdir = '+';
 		if (rawpr->getOutgoingAtom(1) == germ) cdir  = '-';
 
@@ -446,7 +446,7 @@ static Exp* make_any_conns(Dictionary dict, Pool_desc* pool)
 /// and arity is 3, then this will return `(A+ or B- or C+ or ())
 /// and (A+ or B- or C+ or ()) and (A+ or B- or C+ or ())`. When
 /// this is exploded into disjuncts, any combination is possible,
-/// from size zero to three. That's why its a Cartesian product.
+/// from size zero to three. That's why it's a Cartesian product.
 ///
 /// FYI, this is a work-around for the lack of a commmutative
 /// multi-product. What we really want to do here is to have the
@@ -497,7 +497,7 @@ Exp* make_cart_pairs(Dictionary dict, const Handle& germ,
 
 	Exp* optex = make_optional_node(pool, epr);
 
-	// If its 1-dimensional, we are done.
+	// If it's 1-dimensional, we are done.
 	if (1 == arity) return optex;
 
 	Exp* andhead = nullptr;

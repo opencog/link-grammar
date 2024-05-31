@@ -24,7 +24,7 @@
  *
  * To make the API simpler, each of these is typedef'ed as a pointer
  * to a data structure.  If you're not used to this, some of the code
- * may look strange, since its not plain that these types are pointers.
+ * may look strange, since it's not plain that these types are pointers.
  *
  *********************************************************************/
 
