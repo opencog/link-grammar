@@ -222,13 +222,15 @@ const char *xdg_make_path(xdg_basedir_type bd_typec, const char *fmt, ...)
 	if (NULL == xdg_home) return NULL;
 
 	char *xdg_fmt;
-	asprintf(&xdg_fmt, "%s/%s", xdg_home, fmt);
+	int rc = asprintf(&xdg_fmt, "%s/%s", xdg_home, fmt);
+	if (rc < 0) return NULL;
 
 	va_list filename_components;
 	va_start(filename_components, fmt);
 	char *xdg_filepath;
-	vasprintf(&xdg_filepath, xdg_fmt, filename_components);
+	rc = vasprintf(&xdg_filepath, xdg_fmt, filename_components);
 	va_end(filename_components);
+	if (rc < 0) return NULL;
 
 	free((void *)xdg_home);
 	free(xdg_fmt);
