@@ -1,5 +1,5 @@
-Version 5.12.6 (XXX 2024)
- * Nothing yet ...
+Version 5.12.6 (29 August 2025)
+ * Fix build break due to missing header file.
 
 Version 5.12.5 (31 May 2024)
  * Bugfix tracon table size management. #1486
