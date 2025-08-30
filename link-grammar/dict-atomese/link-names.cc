@@ -7,6 +7,7 @@
  */
 #ifdef HAVE_ATOMESE
 
+#include <cmath>
 #include <cstdlib>
 #include <opencog/atoms/truthvalue/CountTruthValue.h>
 #include <opencog/atomspace/AtomSpace.h>
