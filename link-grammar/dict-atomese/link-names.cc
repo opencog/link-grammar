@@ -9,7 +9,7 @@
 
 #include <cmath>
 #include <cstdlib>
-#include <opencog/atoms/truthvalue/CountTruthValue.h>
+#include <opencog/atoms/value/FloatValue.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/nlp/types/atom_types.h>
 
@@ -148,10 +148,11 @@ void fetch_link_id(Local* local)
 	if (local->stnp)
 		local->stnp->fetch_atom(local->idanch);
 
-	const TruthValuePtr& tv = local->idanch->getTruthValue();
-	const CountTruthValuePtr ctv(CountTruthValueCast(tv));
+	Handle key(createNode(PREDICATE_NODE, "*-LG-last-id-*"));
+	const ValuePtr& tv = local->idanch->getValue(key);
+	const FloatValuePtr ctv(FloatValueCast(tv));
 	if (ctv)
-		local->last_id = std::round(ctv->get_count());
+		local->last_id = std::round(ctv->value()[0]);
 }
 
 // Record the last unissued id.
@@ -159,8 +160,9 @@ void store_link_id(Local* local)
 {
 	if (not local->using_external_as) return;
 
-	TruthValuePtr tvp(createCountTruthValue(1, 0, local->last_id));
-	local->asp->set_truthvalue(local->idanch, tvp);
+	Handle key(createNode(PREDICATE_NODE, "*-LG-last-id-*"));
+	ValuePtr tvp(createFloatValue(local->last_id));
+	local->asp->set_value(local->idanch, key, tvp);
 
 	// Store, if there is storage.
 	if (local->stnp)
