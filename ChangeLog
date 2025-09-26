@@ -1,3 +1,6 @@
+Version 5.12.9 (XXX Maybe in 2026)
+ * (nothing yet)
+
 Version 5.12.8 (26 September 2025)
  * Fix build break ... again! Not all compilers are happy with the fix.
 
