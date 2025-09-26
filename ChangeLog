@@ -1,5 +1,5 @@
-Version 5.12.8 (XXX Maybe 2026)
- * (Nothing yet)
+Version 5.12.8 (26 September 2025)
+ * Fix build break ... again! Not all compilers are happy with the fix.
 
 Version 5.12.7 (25 September 2025)
  * Fix build break due to obsolete AtomSpace API usage.

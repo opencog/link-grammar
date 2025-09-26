@@ -316,7 +316,7 @@ corruption of the dataset during download, and to help ensure that
 no malicious changes were made to the code internals by third
 parties. The signatures can be checked with the gpg command:
 
-`gpg --verify link-grammar-5.12.7.tar.gz.asc`
+`gpg --verify link-grammar-5.12.8.tar.gz.asc`
 
 which should generate output identical to (except for the date):
 ```
