@@ -161,7 +161,7 @@ void store_link_id(Local* local)
 	if (not local->using_external_as) return;
 
 	Handle key(createNode(PREDICATE_NODE, "*-LG-last-id-*"));
-	ValuePtr tvp(createFloatValue(local->last_id));
+	ValuePtr tvp(createFloatValue((double) local->last_id));
 	local->asp->set_value(local->idanch, key, tvp);
 
 	// Store, if there is storage.
