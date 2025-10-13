@@ -10,6 +10,7 @@
 #include <cstdlib>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/persist/api/StorageNode.h>
+#include <opencog/persist/storage/storage_types.h>
 #include <opencog/persist/cog-simple/CogSimpleStorage.h>
 #include <opencog/persist/cog-storage/CogStorage.h>
 #include <opencog/persist/file/FileStorage.h>
@@ -123,7 +124,7 @@ bool as_open(Dictionary dict)
 		local->asp = external_atomspace;
 		if (external_storage)
 		{
-			Handle hsn = local->asp->add_atom(external_storage);
+			Handle hsn = local->asp->add_atom(Handle(external_storage));
 			local->stnp = StorageNodeCast(hsn);
 			if (nullptr == local->stnp)
 			{

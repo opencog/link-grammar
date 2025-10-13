@@ -9,6 +9,7 @@
 
 #include <cstdlib>
 #include <opencog/util/oc_assert.h>
+#include <opencog/atoms/value/FloatValue.h>
 #include <opencog/atomspace/AtomSpace.h>
 #include <opencog/nlp/types/atom_types.h>
 
