@@ -6,7 +6,7 @@
 #
 # Don't end the URLs with a slash even if it appears in the official address,
 # because we may append a component. Also, they cannot include "!".
-AC_INIT([link-grammar],[5.12.9],[https://github.com/opencog/link-grammar],[],
+AC_INIT([link-grammar],[5.13.0],[https://github.com/opencog/link-grammar],[],
 		  [https://opencog.github.io/link-grammar-website])
 
 # Check whether we want to set defaults for CFLAGS and CXXFLAGS
@@ -35,11 +35,11 @@ dnl     4a) Increment when removing or changing interfaces.
 LINK_MAJOR_VERSION=5
 dnl     4a) 5) Increment when adding interfaces.
 dnl     6) Set to zero when removing or changing interfaces.
-LINK_MINOR_VERSION=12
+LINK_MINOR_VERSION=13
 dnl     3) Increment when interfaces not changed at all,
 dnl        only bug fixes or internal changes made.
 dnl     4b) Set to zero when adding, removing or changing interfaces.
-LINK_MICRO_VERSION=9
+LINK_MICRO_VERSION=0
 dnl
 dnl     Set this too
 MAJOR_VERSION_PLUS_MINOR_VERSION=`expr $LINK_MAJOR_VERSION + $LINK_MINOR_VERSION`
@@ -505,17 +505,17 @@ AC_CHECK_HEADER([opencog/atomspace/AtomSpace.h], [AtomSpaceFound=yes], AtomSpace
 AC_LANG_POP()
 
 AC_LANG_PUSH([C++])
-AC_CHECK_HEADER([opencog/nlp/types/atom_types.h], [NLPTypesFound=yes], NLPTypesFound=no)
+AC_CHECK_HEADER([opencog/lg/types/atom_types.h], [LGTypesFound=yes], LGTypesFound=no)
 AC_LANG_POP()
 
 AM_CONDITIONAL(HAVE_ATOMSPACE, test x${AtomSpaceFound} = xyes)
-AM_CONDITIONAL(HAVE_NLPTYPES, test x${NLPTypesFound} = xyes)
+AM_CONDITIONAL(HAVE_LGTYPES, test x${LGTypesFound} = xyes)
 
 HaveAtomese=no
-if test x"${AtomSpaceFound}" = xyes && test x"${NLPTypesFound}" = xyes; then
+if test x"${AtomSpaceFound}" = xyes && test x"${LGTypesFound}" = xyes; then
 	HaveAtomese=yes
 	AC_DEFINE(HAVE_ATOMESE, 1, [Define for compilation])
-	ATOMSPACE_LIBS="-latom_types -lnlp-types -lstorage-types -lsexpr -lpersist-flow -Wl,--no-as-needed -lpersist-rocks -lpersist-monospace -lpersist-cog -lpersist-cog-simple -lpersist-file -Wl,--as-needed -lpersist -latomspace -L/usr/local/lib/opencog/"
+	ATOMSPACE_LIBS="-latom_types -llg-types -lstorage-types -lsexpr -lpersist-flow -Wl,--no-as-needed -lpersist-rocks -lpersist-monospace -lpersist-cog -lpersist-cog-simple -lpersist-file -Wl,--as-needed -lpersist -latomspace -L/usr/local/lib/opencog/"
 fi
 AC_SUBST(ATOMSPACE_LIBS)
 
