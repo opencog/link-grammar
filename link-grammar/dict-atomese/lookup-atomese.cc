@@ -17,7 +17,7 @@
 #include <opencog/persist/monospace/MonoStorage.h>
 #include <opencog/persist/rocks/RocksStorage.h>
 #include <opencog/persist/sexpr/Sexpr.h>
-#include <opencog/nlp/types/atom_types.h>
+#include <opencog/lg/types/atom_types.h>
 #include <opencog/util/oc_assert.h>
 #include <opencog/util/Logger.h>
 

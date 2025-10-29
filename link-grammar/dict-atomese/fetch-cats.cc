@@ -14,7 +14,7 @@ extern "C" {
 };
 
 #include "local-as.h"
-#include <opencog/nlp/types/atom_types.h>
+#include <opencog/lg/types/atom_types.h>
 
 using namespace opencog;
 

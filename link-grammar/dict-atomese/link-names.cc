@@ -11,7 +11,7 @@
 #include <cstdlib>
 #include <opencog/atoms/value/FloatValue.h>
 #include <opencog/atomspace/AtomSpace.h>
-#include <opencog/nlp/types/atom_types.h>
+#include <opencog/lg/types/atom_types.h>
 
 #undef STRINGIFY
 
