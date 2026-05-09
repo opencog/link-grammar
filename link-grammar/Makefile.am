@@ -30,7 +30,7 @@ else
    pkgdatadir_realpath := $(pkgdatadir)
 endif
 
-DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir_realpath)\" -DCC=\"$(CC)\"
+DEFS = @DEFS@ -DVERSION=\"@VERSION@\" -DDICTIONARY_DIR=\"$(pkgdatadir_realpath)\" -DCC=\"$(firstword $(CC))\"
 
 # $(top_builddir) to pick up autogened link-grammar/link-features.h
 AM_CPPFLAGS = -I$(top_builddir) -I$(top_srcdir)
