@@ -1,0 +1,43 @@
+!batch
+!echo
+!limit=1000
+!short=20
+!constituents=1
+!spell=0
+
+% Focused tests for dictionary replacements of 4.0.knowledge rules.
+% Keep examples small and diagnostic.  Artificial examples are fine when they
+% exercise a replaced postprocessing rule without depending on unrelated
+% grammar behavior.
+
+% CONTAINS_ONE rule 12: Wj requires Jw or JQ.
+% Fronted prepositions in wh questions and relatives must be licensed by the
+% matching wh object, including when the object is a multiword phrase.
+
+With whom did you play tennis?
+For whom were you mistaken?
+To what do you owe your success?
+Of which person were you speaking?
+By what means will you arrive?
+
+I know to what you owe your success.
+Sophy wondered up to what number she should count.
+Do you know in which room the procedure was performed?
+
+The man with whom I play tennis is here.
+The friend for whom Joe works is kind.
+The subject about which Mary spoke was difficult.
+The book of which I spoke was old.
+
+With whom did you say Mary played tennis?
+The man with whom John said Mary played tennis is here.
+The man with whom Mary believes John played tennis is here.
+With whom did Mary believe John played tennis?
+
+That is the man for whom and with whom Joe works.
+
+*With did you play tennis?
+*To do you owe your success?
+*Of person were you speaking?
+*The man with whom I play tennis with is here.
+*That is the man for whom and with Janet Joe works.

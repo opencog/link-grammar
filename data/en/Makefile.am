@@ -24,5 +24,6 @@ EXTRA_DIST = $(DICTS)         \
 	corpus-biolg.batch         \
 	corpus-fixes.batch         \
 	corpus-fix-long.batch      \
+	corpus-knowledge.batch     \
 	corpus-voa.batch           \
 	tiny.dict

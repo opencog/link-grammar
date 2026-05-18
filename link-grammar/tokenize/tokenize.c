@@ -51,6 +51,8 @@ typedef const char *stripped_t[MAX_STRIP];
 
 #define ENTITY_MARKER   "<marker-entity>"
 #define COMMON_ENTITY_MARKER   "<marker-common-entity>"
+#define WJ_SHADOW_WH_MARKER "<marker-wj-shadow-wh>"
+#define INSERT_MARKER_PREFIX "INSERT"
 #define REPLACEMENT_MARK "~" /* a mark for a replacement word */
 
 /* Dictionary capitalization handling */
@@ -2347,6 +2349,97 @@ static const char *print_rev_word_array(Sentence sent, const char **w,
 	return r;
 }
 
+/* Find the token named by an INSERT...+ dictionary marker.
+ * The marker is a tokenizer-only instruction: the connector is intentionally
+ * not expected to participate in a real linkage. */
+static const char *exp_insert_token(const Exp *e)
+{
+	const size_t prefix_len = sizeof(INSERT_MARKER_PREFIX) - 1;
+
+	if (CONNECTOR_type == e->type)
+	{
+		const char *connector;
+
+		if ('+' != e->dir) return NULL;
+
+		connector = e->condesc->more->string;
+		if ((0 == strncmp(connector, INSERT_MARKER_PREFIX, prefix_len)) &&
+		    ('\0' != connector[prefix_len]))
+		{
+			return connector + prefix_len;
+		}
+		return NULL;
+	}
+
+	for (Exp *opd = e->operand_first; NULL != opd; opd = opd->operand_next)
+	{
+		const char *insert_token = exp_insert_token(opd);
+		if (NULL != insert_token) return insert_token;
+	}
+	return NULL;
+}
+
+/* Return the first helper token requested by the word's dictionary entries.
+ * The returned pointer is from the dictionary string-set, so it remains valid
+ * after freeing the temporary lookup list. */
+static const char *word_insert_token(Dictionary dict, const char *word)
+{
+	Dict_node *dn_head = dictionary_lookup_list(dict, word);
+	Dict_node *dn;
+	const char *insert_token = NULL;
+
+	for (dn = dn_head; NULL != dn; dn = dn->right)
+	{
+		insert_token = exp_insert_token(dn->exp);
+		if (NULL != insert_token) break;
+	}
+
+	free_lookup_list(dict, dn_head);
+	return insert_token;
+}
+
+/* Add a helper-token alternative for marked prep+wh sequences.
+ * The dictionary marks the previous word with INSERT<token>+ and the current
+ * wh word with <marker-wj-shadow-wh>; together they request the extra token
+ * path used to satisfy the Wj CONTAINS_ONE witness in ordinary grammar. */
+static void issue_wj_shadow(Sentence sent, Gword *unsplit_word,
+                            const char *word)
+{
+#define WS_WJ_SHADOW (1<<13)
+	const char *shadow_alt[] = { word, NULL };
+	const char *insert_word;
+	Gword *alt;
+	Gword *shadow;
+
+	if (unsplit_word->status & WS_WJ_SHADOW) return;
+	if ((NULL == unsplit_word->prev) || (NULL == unsplit_word->prev[0])) return;
+
+	insert_word = word_insert_token(sent->dict, unsplit_word->prev[0]->subword);
+	if (NULL == insert_word) return;
+	if (!word_contains(sent->dict, word, WJ_SHADOW_WH_MARKER)) return;
+	shadow_alt[1] = insert_word;
+
+	/* Add a tokenization alternative after the wh word.  The ordinary one-word
+	 * path remains available; the longer path gives the dictionary a separate
+	 * word that can carry Qp when the Wj witness is used. */
+	alt = issue_word_alternative(sent, unsplit_word, REPLACEMENT_MARK "wj-shadow",
+	                             0, NULL, 2, shadow_alt, 0, NULL);
+	if (NULL == alt) return;
+
+	shadow = alt->next[0];
+	assert(NULL != shadow, "Wj shadow alternative has no helper token");
+	/* issue_word_alternative() does not queue a subword whose spelling is
+	 * identical to its unsplit word.  Preserve the dictionary-known state so
+	 * the wh half of the shadow path still receives the Jw/WJIb disjunct. */
+	alt->status |= WS_INDICT;
+	alt->tokenizing_step = TS_DONE;
+	shadow->morpheme_type = MT_FEATURE;
+	shadow->status |= WS_INDICT;
+	shadow->tokenizing_step = TS_DONE;
+	unsplit_word->status |= WS_WJ_SHADOW;
+#undef WS_WJ_SHADOW
+}
+
 /**
  * Check if the word is capitalized according to the regex definitions.
  * XXX Not nice - try to avoid the need of using it.
@@ -2438,6 +2531,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		issue_word_alternative(sent, unsplit_word, "W", 0,NULL, 1,&word, 0,NULL);
 		unsplit_word->status |= WS_INDICT;
 		word_is_known = true;
+		issue_wj_shadow(sent, unsplit_word, word);
 
 		if (IS_GENERATION(sent->dict) && is_macro(word))
 			unsplit_word->tokenizing_step = TS_DONE;
@@ -2756,6 +2850,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					/* This is the lc version. The original word can be restored
 					 * later, if needed, through the unsplit word. */
 					lc->status |= WS_FIRSTUPPER;
+					issue_wj_shadow(sent, unsplit_word, wp);
 				}
 				else /* for a comment */
 				{

@@ -168,6 +168,14 @@ static inline bool is_morphology_link(const char *link_name)
 	       (0 == strncmp(link_name, PREFIX_SUPPRESS, PREFIX_SUPPRESS_L));
 }
 
+static inline bool is_wj_shadow_word(const Gword *word)
+{
+	return (NULL != word) &&
+	       (MT_FEATURE == word->morpheme_type) &&
+	       (NULL != word->label) &&
+	       (NULL != strstr(word->label, "wj-shadow"));
+}
+
 /*
  * Remap the link array according to discarded links and words.
  *
@@ -335,6 +343,20 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 	if (verbosity_level(D_CCW))
 		print_lwg_path(lwg_path, "Linkage");
 
+	/* Hide the dictionary-inserted Wj shadow helper from display/API linkage
+	 * arrays. PP sees these links; only the post-linkage presentation is
+	 * cleaned up here. */
+	for (i=0; i<linkage->num_links; i++)
+	{
+		Link *lnk = &linkage->link_array[i];
+
+		if (is_wj_shadow_word(lwg_path[lnk->rw]) ||
+		    is_wj_shadow_word(lwg_path[lnk->lw]))
+		{
+			lnk->link_name = NULL;
+		}
+	}
+
 	/* If morphology printing is being suppressed, then all links
 	 * connecting morphemes will be discarded. */
 	if (HIDE_MORPHO)
@@ -380,6 +402,12 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 		nw = lwg_path[i+1];
 		wgp = &lwg_path[i];
 		sentence_word = wg_get_sentence_word(sent, w);
+
+		if (is_wj_shadow_word(w))
+		{
+			chosen_words[i] = NULL;
+			continue;
+		}
 
 		/* FIXME If the original word was capitalized in a capitalizable
 		 * position, the displayed null word may be its downcase version. */

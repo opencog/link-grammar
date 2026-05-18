@@ -83,6 +83,8 @@
 % <marker-entity> just in case :-)
 <marker-entity>: XXXENTITY+;
 <marker-common-entity>: XXXGIVEN+;
+<marker-wj-shadow-prep>: INSERTwjqprep+;
+<marker-wj-shadow-wh>: XXXWJSHADOWWH+;
 
 % The RJ links connect to "and"; the l,r prevent cross-linking
 <clause-conjoin>: dRJrc- or dRJlc+;
@@ -9617,11 +9619,18 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   or ({EA-} & Xd- & {Xc+} & MVx-)
   or ({EA-} & Xd- & Xc+ & MX*x-);
 
-% Wj- & Qp+: questions: By what means will you arrive?
+% JQ+ & Wj- & Qp+: questions: By what means will you arrive?
+% Wj- & WJIa+: shadow-token variant. The dictionary requests an inserted
+% helper token which carries Qp+ to the question verb, avoiding two links from
+% this preposition to the same verb.  The helper token also requires WJIb+
+% from the wh word, so this path uses the real wh-object disjunct instead of a
+% noun guess.
 <prep-main-a>:
   <prep-main-b>
   or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
-  or (Wj- & Qp+)
+  or (JQ+ & Wj- & Qp+)
+  or (Wj- & WJIa+)
+  or <marker-wj-shadow-prep>
   or <fronted>;
 
 <prep-main-t>:
@@ -9712,6 +9721,11 @@ among amongst amidst astride:
 % (Wj- & JQ+ & J+): "By what means?"  kind of a hack, for null-verb question.
 % In what way?  To what end?
 <null-prep-qu>: Wj- & JQ+ & J+;
+
+% Inserted by the tokenizer after selected wh words. It supplies the
+% question-verb Qp link on a separate token while the real preposition keeps
+% the Wj and wh-object links.
+wjqprep: WJIb- & WJIa- & Qp+;
 
 % FL+ "for long"
 for.p:
@@ -10619,10 +10633,13 @@ tenfold a_hundredfold a_thousandfold:
 % Wq- & Qw+: "who are they?"
 % Jw-: "For who were you mistaken?"
 who:
+  <marker-wj-shadow-wh>
+  or
   (R- & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or [QI-]
   or QN-
   or dSJl+ or dSJr-
+  or (Jw- & WJIb+)
   or Jw-
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
   or ({EL+ & {N+}} & Wd-)
@@ -10637,6 +10654,8 @@ who:
 % QI-: "I'll tell you what", "Say what?"
 % Jw-: "To what do you owe your success?"
 what:
+  <marker-wj-shadow-wh>
+  or
   ({EL+} &
       (D**w+
       or Ss*w+
@@ -10648,6 +10667,7 @@ what:
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
   or (D+ & JQ-)
+  or (Jw- & WJIb+)
   or Jw-
   or [QI-]0.5
   or QN-
@@ -10657,6 +10677,8 @@ what:
 % (R+ & B*w+ & (QJ+ or QJ-)): "... which to pick and which to leave behind."
 % QN- & D+: "you ate which one?"
 which:
+  <marker-wj-shadow-wh>
+  or
   ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
   or (JQ- & D+)
@@ -10664,6 +10686,7 @@ which:
   or [QI-]
   or (QN- & {D+})
   or (R+ & B*w+ & (QJ+ or QJ-))
+  or (Jw- & WJIb+)
   or Jw-;
 
 % <directive-opener> or Wi-: "Which way, left or right?"
@@ -10672,9 +10695,12 @@ which_way:
 
 % Jw-: "From whom did you run?"
 whom:
+  <marker-wj-shadow-wh>
+  or
   (R- & <porcl-verb>)
   or (R+ & B*w+ & {EW-} & (Wq- or QI*d- or BIqd- or (Xc+ & Xd- & MX*r-)))
   or (Jr- & (RS+ or <porcl-verb>))
+  or (Jw- & WJIb+)
   or Jw-;
 
 whose:
