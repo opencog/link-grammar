@@ -7206,13 +7206,19 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 % this preposition to the same verb.  The helper token also requires WJIb+
 % from the wh word, so this path uses the real wh-object disjunct instead of a
 % noun guess.
-<prep-main-a>:
+<prep-main-rel>:
+  <subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-));
+
+<prep-main-no-rel>:
   <prep-main-b>
-  or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
   or (JQ+ & Wj- & Qp+)
   or (Wj- & WJIa+)
   or <marker-wjqprep-left>
   or <fronted>;
+
+<prep-main-a>:
+  <prep-main-no-rel>
+  or <prep-main-rel>;
 
 % Continuations allowed when the same disjunct also carries a JQ link.  These
 % are the dictionary-side companions for 4.0.knowledge rule 13: a JQ domain
@@ -7222,7 +7228,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   MVp- or [Mp- & MVp-]-0.61;
 <prep-main-jq-a>:
   <prep-main-jq-b>
-  or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
+  or <prep-main-rel>
   or (Wj- & Qp+)
   or (Wj- & WJIa+)
   or <marker-wjqprep-left>;
@@ -7241,23 +7247,27 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   (Xd- & Xc+ & (MX*x- or MVx-));
 
 under beneath:
-  ({Yd-} & J+ & (<prep-main-a> or FM-))
+  ({Yd-} & J+ & (<prep-main-no-rel> or FM-))
+  or ({Yd-} & Jw+ & <prep-main-rel>)
   or ({Yd-} & JQ+ & J+ & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-]
   or (Yd- & Pp-);
 below above behind.p:
-  ({Yd-} & {J+} & (<prep-main-a> or FM-))
+  ({Yd-} & {J+} & (<prep-main-no-rel> or FM-))
+  or ({Yd-} & Jw+ & <prep-main-rel>)
   or ({Yd-} & JQ+ & J+ & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
 within w/i:
-  (J+ & <prep-main-a>)
+  (J+ & <prep-main-no-rel>)
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & J+ & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
 during:
-  (J+ & (<prep-main-a> or UN-))
+  (J+ & (<prep-main-no-rel> or UN-))
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & J+ & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
@@ -7266,7 +7276,8 @@ during:
 % {EP-} & dWl-: "Just from down below"
 % {hHM+}: "I think it's from uhh Mars"
 from:
-  ({hHM+} & {Yd-} & (FM+ or J+ or Mgp+) & (<prep-main-a> or Mp-))
+  ({hHM+} & {Yd-} & (FM+ or J+ or Mgp+) & (<prep-main-no-rel> or Mp-))
+  or ({hHM+} & {Yd-} & Jw+ & <prep-main-rel>)
   or ({hHM+} & {Yd-} & JQ+ & (FM+ or J+ or Mgp+) & <prep-main-jq-a>)
   or ({EP-} & dWl- & FM+)
   or [MVp- & B-]
@@ -7274,7 +7285,8 @@ from:
   or NIr+;
 
 at toward towards without w/o.p:
-  ((J+ or Mgp+) & <prep-main-a>)
+  ((J+ or Mgp+) & <prep-main-no-rel>)
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
@@ -7287,19 +7299,22 @@ at toward towards without w/o.p:
 % {EBm+} & J+: "but not very much"
 % [[EBm+]]: "but not very"
 except but.misc-ex:
-  ((({EBm+} & [[J+]]) or [[EBm+]] or Mgp+) & <prep-main-a>)
+  ((({EBm+} & [[J+]]) or [[EBm+]] or Mgp+) & <prep-main-no-rel>)
+  or ({EBm+} & Jw+ & <prep-main-rel>)
   or (JQ+ & (({EBm+} & [[J+]]) or [[EBm+]] or Mgp+) & <prep-main-jq-a>)
   or [MVp- & B-]
-  or ((MVp+ or <to-verb>) & <prep-main-a>);
+  or ((MVp+ or <to-verb>) & <prep-main-no-rel>);
 
 against beyond beside:
-  ((J+ or Mgp+) & <prep-main-a>)
+  ((J+ or Mgp+) & <prep-main-no-rel>)
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
 
 between:
-  ((J+ or Mgp+) & <prep-main-a>)
+  ((J+ or Mgp+) & <prep-main-no-rel>)
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-]
@@ -7307,7 +7322,8 @@ between:
 
 % w/ as a common abbreviation for with
 with w/:
-  ((J+ or Mgp+) & (<prep-main-a> or dRJrv-))
+  ((J+ or Mgp+) & (<prep-main-no-rel> or dRJrv-))
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or (Jw+ & (dRJrj- or dRJlj+))
   or [MVp- & B-]
@@ -7318,7 +7334,8 @@ with w/:
     or (Xd- & Xc+ & (MX*x- or MVx-))));
 
 among amongst amidst astride:
-  ((J+ or Mgp+) & (<prep-main-a> or FM-))
+  ((J+ or Mgp+) & (<prep-main-no-rel> or FM-))
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
@@ -7334,9 +7351,10 @@ wjqprep: WJIb- & WJIa- & Qp+;
 
 % FL+ "for long"
 for.p:
-  ((J+ or Mgp+ or TI+) & (<prep-main-a> or Mp-))
+  ((J+ or Mgp+ or TI+) & (<prep-main-no-rel> or Mp-))
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+ or TI+) & <prep-main-jq-a>)
-  or (J+ & (dRJrj- or dRJlj+))
+  or (Jw+ & (dRJrj- or dRJlj+))
   or <locative>
   or [MVp- & B-]
   or (MG- & JG+)
@@ -7344,7 +7362,8 @@ for.p:
   or <null-prep-qu>;
 
 into:
-  ((J+ or Mgp+ or QI+) & <prep-main-a>)
+  ((J+ or Mgp+ or QI+) & <prep-main-no-rel>)
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+ or QI+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
@@ -7352,7 +7371,8 @@ into:
 % re: "with regard to"
 % Xe+: optional colon
 re:
-  {Xe+} & J+ & <prep-main-a>;
+  ({Xe+} & J+ & <prep-main-no-rel>)
+  or ({Xe+} & Jw+ & <prep-main-rel>);
 
 % comparative-like links to prepositions.
 %    "He did it largely in his spare time"
@@ -7372,7 +7392,8 @@ although.c though.c but.c yet.c:
 % {EP-} & dWl-: "Just about now."
 % cost on Wl- & MV+: "about five times"
 about:
-  ((J+ or Mgp+ or QI+) & <prep-main-a>)
+  ((J+ or Mgp+ or QI+) & <prep-main-no-rel>)
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+ or QI+) & <prep-main-jq-a>)
   or EN+
   or EW+
@@ -7387,7 +7408,8 @@ about:
 % Grep also for "just_about", used as syonym for "nearly", "almost"
 % XXX is this really needed ?? Seems to duplicate other stuff ..
 just_about nearly_about almost_about right_about:
-  ((J+ or Mgp+ or QI+) & <prep-main-a>)
+  ((J+ or Mgp+ or QI+) & <prep-main-no-rel>)
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+ or QI+) & <prep-main-jq-a>)
   or EW+;
 
@@ -7397,7 +7419,8 @@ just_about nearly_about almost_about right_about:
 % right/straight through: right/straight needs to modify through, so
 % so that conjunctions can work correctly.
 through.r right_through straight_through:
-  (J+ & (<prep-main-a> or FM-))
+  (J+ & (<prep-main-no-rel> or FM-))
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & J+ & <prep-main-jq-a>)
   or (EN- & (Pp- or J-))
   or K-
@@ -7405,7 +7428,8 @@ through.r right_through straight_through:
   or [MVp- & B-];
 
 <prep-across>:
-  (J+ & (<prep-main-a> or FM-))
+  (J+ & (<prep-main-no-rel> or FM-))
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & J+ & <prep-main-jq-a>)
   or K-
   or [MVp- & B-];
@@ -7421,7 +7445,8 @@ off:
   or EP+;
 
 past.p:
-  ({Yd-} & J+ & (<prep-main-a> or FM-))
+  ({Yd-} & J+ & (<prep-main-no-rel> or FM-))
+  or ({Yd-} & Jw+ & <prep-main-rel>)
   or ({Yd-} & JQ+ & J+ & <prep-main-jq-a>)
   or K-
   or <locative>
@@ -7430,7 +7455,8 @@ past.p:
 % Pp-: preposition
 around:
   <alter-preps>
-  or ((J+ or Mgp+) & (<prep-main-a> or FM-))
+  or ((J+ or Mgp+) & (<prep-main-no-rel> or FM-))
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or K-
@@ -7463,7 +7489,8 @@ out.r up.r down.r:
 
 by:
   <alter-preps>
-  or ((J+ or Mgp+ or JT+) & (<prep-main-a> or FM-))
+  or ((J+ or Mgp+ or JT+) & (<prep-main-no-rel> or FM-))
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+ or JT+) & <prep-main-jq-a>)
   or K-
   or <locative>
@@ -7474,7 +7501,8 @@ by:
 % EN- & J-: "we stopped, about halfway in"
 in.r:
   <alter-preps>
-  or ((J+ or Mgp+ or IN+) & (<prep-main-a> or FM-))
+  or ((J+ or Mgp+ or IN+) & (<prep-main-no-rel> or FM-))
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+ or IN+) & <prep-main-jq-a>)
   or K-
   or (EN- & (Pp- or J-))
@@ -7485,7 +7513,8 @@ in.r:
 
 on upon:
   <alter-preps>
-  or ((J+ or Mgp+ or ON+ or [QI+]) & <prep-main-a>)
+  or ((J+ or Mgp+ or ON+ or [QI+]) & <prep-main-no-rel>)
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-jq-a>)
   or K-
   or <locative>
@@ -7493,7 +7522,8 @@ on upon:
 
 % o'er: poetic contraction
 over o'er:
-  ({Yd-} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-a> or FM-))
+  ({Yd-} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-no-rel> or FM-))
+  or ({Yd-} & Jw+ & <prep-main-rel>)
   or ({Yd-} & JQ+ & (J+ or Mgp+ or QI+ or [[MVp+]]) & <prep-main-jq-a>)
   or K-
   or EN+
@@ -7538,7 +7568,6 @@ of:
       or OFj-
       or OFw-
       or (Xd- & Xc+ & MX*x-)
-      or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
       or [[({Xc+ & {Xd-}} & dCO+)]]))
   or (JQ+
       & (Js+ or Jp+ or Ju+ or Jr+ or Mgp+ or (QI+ & {CV+}))
@@ -7572,7 +7601,8 @@ to.r:
     or [[R-]] ))
   or ({NT-} & TO- & Xc+)
   or I*a+
-  or (([J+] or Mgp+) & <prep-main-a>)
+  or (([J+] or Mgp+) & <prep-main-no-rel>)
+  or (Jw+ & <prep-main-rel>)
   or (JQ+ & ([J+] or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-]1.1
@@ -7846,7 +7876,8 @@ subject_to status_post in_conjunction_with sensu
  in_relation_to neath across_from circa ca. c.
  previous_to together_with as_regards s/p aka unto
  apropos_of w.i W.i:
- ((J+ or Mgp+) & <prep-main-a>)
+ ((J+ or Mgp+) & <prep-main-no-rel>)
+ or (Jw+ & <prep-main-rel>)
  or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
  or (MVp- & B-);
 
