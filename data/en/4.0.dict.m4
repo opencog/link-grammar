@@ -92,8 +92,13 @@ changecom(`%')
 % <marker-entity> just in case :-)
 <marker-entity>: XXXENTITY+;
 <marker-common-entity>: XXXGIVEN+;
-<marker-wj-shadow-prep>: INSERTwjqprep+;
-<marker-wj-shadow-wh>: XXXWJSHADOWWH+;
+
+% Helper-token insertion markers.  INSERTL<token>+ on one word and
+% INSERTR<token>+ on the following word request an optional dictionary helper
+% token named <token> after the following word.  Both markers point right, so
+% they carry tokenizer data without creating a possible grammar link.
+<marker-wjqprep-left>: INSERTLwjqprep+;
+<marker-wjqprep-right>: INSERTRwjqprep+;
 
 % The RJ links connect to "and"; the l,r prevent cross-linking
 <clause-conjoin>: dRJrc- or dRJlc+;
@@ -7196,7 +7201,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   or ({EA-} & Xd- & Xc+ & MX*x-);
 
 % JQ+ & Wj- & Qp+: questions: By what means will you arrive?
-% Wj- & WJIa+: shadow-token variant. The dictionary requests an inserted
+% Wj- & WJIa+: helper-token variant. The dictionary requests an inserted
 % helper token which carries Qp+ to the question verb, avoiding two links from
 % this preposition to the same verb.  The helper token also requires WJIb+
 % from the wh word, so this path uses the real wh-object disjunct instead of a
@@ -7206,7 +7211,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
   or (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-)))
   or (JQ+ & Wj- & Qp+)
   or (Wj- & WJIa+)
-  or <marker-wj-shadow-prep>
+  or <marker-wjqprep-left>
   or <fronted>;
 
 <prep-main-t>:
@@ -8209,7 +8214,7 @@ tenfold a_hundredfold a_thousandfold:
 % Wq- & Qw+: "who are they?"
 % Jw-: "For who were you mistaken?"
 who:
-  <marker-wj-shadow-wh>
+  <marker-wjqprep-right>
   or
   (R- & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or [QI-]
@@ -8230,7 +8235,7 @@ who:
 % QI-: "I'll tell you what", "Say what?"
 % Jw-: "To what do you owe your success?"
 what:
-  <marker-wj-shadow-wh>
+  <marker-wjqprep-right>
   or
   ({EL+} &
       (D**w+
@@ -8253,7 +8258,7 @@ what:
 % (R+ & B*w+ & (QJ+ or QJ-)): "... which to pick and which to leave behind."
 % QN- & D+: "you ate which one?"
 which:
-  <marker-wj-shadow-wh>
+  <marker-wjqprep-right>
   or
   ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
@@ -8271,7 +8276,7 @@ which_way:
 
 % Jw-: "From whom did you run?"
 whom:
-  <marker-wj-shadow-wh>
+  <marker-wjqprep-right>
   or
   (R- & <porcl-verb>)
   or (R+ & B*w+ & {EW-} & (Wq- or QI*d- or BIqd- or (Xc+ & Xd- & MX*r-)))

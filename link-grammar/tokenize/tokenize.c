@@ -51,8 +51,8 @@ typedef const char *stripped_t[MAX_STRIP];
 
 #define ENTITY_MARKER   "<marker-entity>"
 #define COMMON_ENTITY_MARKER   "<marker-common-entity>"
-#define WJ_SHADOW_WH_MARKER "<marker-wj-shadow-wh>"
-#define INSERT_MARKER_PREFIX "INSERT"
+#define INSERT_LEFT_MARKER_PREFIX "INSERTL"
+#define INSERT_RIGHT_MARKER_PREFIX "INSERTR"
 #define REPLACEMENT_MARK "~" /* a mark for a replacement word */
 
 /* Dictionary capitalization handling */
@@ -2349,12 +2349,12 @@ static const char *print_rev_word_array(Sentence sent, const char **w,
 	return r;
 }
 
-/* Find the token named by an INSERT...+ dictionary marker.
+/* Find the token named by a dictionary helper-token marker.
  * The marker is a tokenizer-only instruction: the connector is intentionally
  * not expected to participate in a real linkage. */
-static const char *exp_insert_token(const Exp *e)
+static const char *exp_insert_token(const Exp *e, const char *prefix)
 {
-	const size_t prefix_len = sizeof(INSERT_MARKER_PREFIX) - 1;
+	const size_t prefix_len = strlen(prefix);
 
 	if (CONNECTOR_type == e->type)
 	{
@@ -2363,7 +2363,7 @@ static const char *exp_insert_token(const Exp *e)
 		if ('+' != e->dir) return NULL;
 
 		connector = e->condesc->more->string;
-		if ((0 == strncmp(connector, INSERT_MARKER_PREFIX, prefix_len)) &&
+		if ((0 == strncmp(connector, prefix, prefix_len)) &&
 		    ('\0' != connector[prefix_len]))
 		{
 			return connector + prefix_len;
@@ -2373,16 +2373,41 @@ static const char *exp_insert_token(const Exp *e)
 
 	for (Exp *opd = e->operand_first; NULL != opd; opd = opd->operand_next)
 	{
-		const char *insert_token = exp_insert_token(opd);
+		const char *insert_token = exp_insert_token(opd, prefix);
 		if (NULL != insert_token) return insert_token;
 	}
 	return NULL;
 }
 
+/* Check whether a dictionary expression has a matching helper-token marker. */
+static bool exp_has_insert_token(const Exp *e, const char *prefix,
+                                 const char *token)
+{
+	const size_t prefix_len = strlen(prefix);
+
+	if (CONNECTOR_type == e->type)
+	{
+		const char *connector;
+
+		if ('+' != e->dir) return false;
+
+		connector = e->condesc->more->string;
+		return (0 == strncmp(connector, prefix, prefix_len)) &&
+		       (0 == strcmp(connector + prefix_len, token));
+	}
+
+	for (Exp *opd = e->operand_first; NULL != opd; opd = opd->operand_next)
+	{
+		if (exp_has_insert_token(opd, prefix, token)) return true;
+	}
+	return false;
+}
+
 /* Return the first helper token requested by the word's dictionary entries.
  * The returned pointer is from the dictionary string-set, so it remains valid
  * after freeing the temporary lookup list. */
-static const char *word_insert_token(Dictionary dict, const char *word)
+static const char *word_insert_token(Dictionary dict, const char *word,
+                                     const char *prefix)
 {
 	Dict_node *dn_head = dictionary_lookup_list(dict, word);
 	Dict_node *dn;
@@ -2390,7 +2415,7 @@ static const char *word_insert_token(Dictionary dict, const char *word)
 
 	for (dn = dn_head; NULL != dn; dn = dn->right)
 	{
-		insert_token = exp_insert_token(dn->exp);
+		insert_token = exp_insert_token(dn->exp, prefix);
 		if (NULL != insert_token) break;
 	}
 
@@ -2398,46 +2423,75 @@ static const char *word_insert_token(Dictionary dict, const char *word)
 	return insert_token;
 }
 
-/* Add a helper-token alternative for marked prep+wh sequences.
- * The dictionary marks the previous word with INSERT<token>+ and the current
- * wh word with <marker-wj-shadow-wh>; together they request the extra token
- * path used to satisfy the Wj CONTAINS_ONE witness in ordinary grammar. */
-static void issue_wj_shadow(Sentence sent, Gword *unsplit_word,
-                            const char *word)
+/* Return true if the word has the requested right-side helper marker. */
+static bool word_has_insert_token(Dictionary dict, const char *word,
+                                  const char *token)
 {
-#define WS_WJ_SHADOW (1<<13)
-	const char *shadow_alt[] = { word, NULL };
-	const char *insert_word;
-	Gword *alt;
-	Gword *shadow;
+	Dict_node *dn_head = dictionary_lookup_list(dict, word);
+	Dict_node *dn;
+	bool ret = false;
 
-	if (unsplit_word->status & WS_WJ_SHADOW) return;
+	for (dn = dn_head; NULL != dn; dn = dn->right)
+	{
+		if (exp_has_insert_token(dn->exp, INSERT_RIGHT_MARKER_PREFIX, token))
+		{
+			ret = true;
+			break;
+		}
+	}
+
+	free_lookup_list(dict, dn_head);
+	return ret;
+}
+
+/* Add a dictionary-requested helper-token alternative.
+ *
+ * A word with INSERTL<token>+ followed by a word with INSERTR<token>+
+ * requests a tokenization alternative that keeps the current word and inserts
+ * <token> after it.  Both markers are right-pointing connectors, so they are
+ * tokenizer data rather than a possible grammar link. */
+static void issue_dictionary_insert(Sentence sent, Gword *unsplit_word,
+                                    const char *word)
+{
+#define WS_DICT_INSERT (1<<13)
+	const char *insert_alt[] = { word, NULL };
+	const char *insert_word;
+	char *label;
+	Gword *alt;
+	Gword *helper;
+
+	if (unsplit_word->status & WS_DICT_INSERT) return;
 	if ((NULL == unsplit_word->prev) || (NULL == unsplit_word->prev[0])) return;
 
-	insert_word = word_insert_token(sent->dict, unsplit_word->prev[0]->subword);
+	insert_word = word_insert_token(sent->dict, unsplit_word->prev[0]->subword,
+	                                INSERT_LEFT_MARKER_PREFIX);
 	if (NULL == insert_word) return;
-	if (!word_contains(sent->dict, word, WJ_SHADOW_WH_MARKER)) return;
-	shadow_alt[1] = insert_word;
+	if (!word_has_insert_token(sent->dict, word, insert_word)) return;
+	insert_alt[1] = insert_word;
+
+	label = alloca(sizeof(DICT_HELPER_LABEL_PREFIX) + strlen(insert_word));
+	strcpy(label, DICT_HELPER_LABEL_PREFIX);
+	strcat(label, insert_word);
 
 	/* Add a tokenization alternative after the wh word.  The ordinary one-word
 	 * path remains available; the longer path gives the dictionary a separate
 	 * word that can carry Qp when the Wj witness is used. */
-	alt = issue_word_alternative(sent, unsplit_word, REPLACEMENT_MARK "wj-shadow",
-	                             0, NULL, 2, shadow_alt, 0, NULL);
+	alt = issue_word_alternative(sent, unsplit_word, label,
+	                             0, NULL, 2, insert_alt, 0, NULL);
 	if (NULL == alt) return;
 
-	shadow = alt->next[0];
-	assert(NULL != shadow, "Wj shadow alternative has no helper token");
+	helper = alt->next[0];
+	assert(NULL != helper, "Dictionary helper alternative has no helper token");
 	/* issue_word_alternative() does not queue a subword whose spelling is
 	 * identical to its unsplit word.  Preserve the dictionary-known state so
-	 * the wh half of the shadow path still receives the Jw/WJIb disjunct. */
+	 * the original word still receives its ordinary dictionary disjuncts. */
 	alt->status |= WS_INDICT;
 	alt->tokenizing_step = TS_DONE;
-	shadow->morpheme_type = MT_FEATURE;
-	shadow->status |= WS_INDICT;
-	shadow->tokenizing_step = TS_DONE;
-	unsplit_word->status |= WS_WJ_SHADOW;
-#undef WS_WJ_SHADOW
+	helper->morpheme_type = MT_FEATURE;
+	helper->status |= WS_INDICT;
+	helper->tokenizing_step = TS_DONE;
+	unsplit_word->status |= WS_DICT_INSERT;
+#undef WS_DICT_INSERT
 }
 
 /**
@@ -2531,7 +2585,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 		issue_word_alternative(sent, unsplit_word, "W", 0,NULL, 1,&word, 0,NULL);
 		unsplit_word->status |= WS_INDICT;
 		word_is_known = true;
-		issue_wj_shadow(sent, unsplit_word, word);
+		issue_dictionary_insert(sent, unsplit_word, word);
 
 		if (IS_GENERATION(sent->dict) && is_macro(word))
 			unsplit_word->tokenizing_step = TS_DONE;
@@ -2850,7 +2904,7 @@ static void separate_word(Sentence sent, Gword *unsplit_word, Parse_Options opts
 					/* This is the lc version. The original word can be restored
 					 * later, if needed, through the unsplit word. */
 					lc->status |= WS_FIRSTUPPER;
-					issue_wj_shadow(sent, unsplit_word, wp);
+					issue_dictionary_insert(sent, unsplit_word, wp);
 				}
 				else /* for a comment */
 				{

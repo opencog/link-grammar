@@ -168,12 +168,14 @@ static inline bool is_morphology_link(const char *link_name)
 	       (0 == strncmp(link_name, PREFIX_SUPPRESS, PREFIX_SUPPRESS_L));
 }
 
-static inline bool is_wj_shadow_word(const Gword *word)
+static inline bool is_dictionary_helper_word(const Gword *word)
 {
+	const size_t prefix_len = sizeof(DICT_HELPER_LABEL_PREFIX) - 1;
+
 	return (NULL != word) &&
 	       (MT_FEATURE == word->morpheme_type) &&
 	       (NULL != word->label) &&
-	       (NULL != strstr(word->label, "wj-shadow"));
+	       (0 == strncmp(word->label, DICT_HELPER_LABEL_PREFIX, prefix_len));
 }
 
 /*
@@ -343,15 +345,15 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 	if (verbosity_level(D_CCW))
 		print_lwg_path(lwg_path, "Linkage");
 
-	/* Hide the dictionary-inserted Wj shadow helper from display/API linkage
-	 * arrays. PP sees these links; only the post-linkage presentation is
-	 * cleaned up here. */
+	/* Hide dictionary-inserted helper tokens from display/API linkage arrays.
+	 * PP sees these links; only the post-linkage presentation is cleaned up
+	 * here. */
 	for (i=0; i<linkage->num_links; i++)
 	{
 		Link *lnk = &linkage->link_array[i];
 
-		if (is_wj_shadow_word(lwg_path[lnk->rw]) ||
-		    is_wj_shadow_word(lwg_path[lnk->lw]))
+		if (is_dictionary_helper_word(lwg_path[lnk->rw]) ||
+		    is_dictionary_helper_word(lwg_path[lnk->lw]))
 		{
 			lnk->link_name = NULL;
 		}
@@ -403,7 +405,7 @@ static void compute_chosen_words(Sentence sent, Linkage linkage,
 		wgp = &lwg_path[i];
 		sentence_word = wg_get_sentence_word(sent, w);
 
-		if (is_wj_shadow_word(w))
+		if (is_dictionary_helper_word(w))
 		{
 			chosen_words[i] = NULL;
 			continue;
