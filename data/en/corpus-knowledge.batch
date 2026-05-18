@@ -41,3 +41,14 @@ That is the man for whom and with whom Joe works.
 *Of person were you speaking?
 *The man with whom I play tennis with is here.
 *That is the man for whom and with Janet Joe works.
+
+% CONTAINS_ONE rule 13: JQ requires Mj, Wj, MX#j, or MVp.
+% Wh-preposition questions and relatives must keep a companion link in the
+% same postprocessing domain.
+
+By what means will you arrive?
+Of which person were you speaking?
+Sophy wondered up to what number she should count.
+Do you know in which room the procedure was performed?
+Exactly what mark did it reach?
+Up to what mark did it reach?
