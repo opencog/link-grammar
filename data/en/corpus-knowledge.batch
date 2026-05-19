@@ -63,6 +63,22 @@ Do you know in which room the procedure was performed?
 Exactly what mark did it reach?
 Up to what mark did it reach?
 
+% CONTAINS_ONE rule 14: Jw requires Mj, Wj, or MX#j.
+% Ordinary J object paths must not match wh-object relations. The dictionary
+% uses the distinct JW connector family for those wh-object continuations.
+
+With whom did you play tennis?
+For whom were you mistaken?
+The friend for whom Joe works is kind.
+That is the man for whom and with whom Joe works.
+
+He replied with a yes.
+He greeted me with a loud hallo!
+He wanted to look at and listen to everything.
+
+*That is the man for whom and with Janet Joe works.
+*The man with whom I play tennis with is here.
+
 % CONTAINS_ONE rules 10 and 11: Mj/MX#j require Jw or JQ.
 % Prep-object relatives must keep a wh-object or question-preposition witness.
 

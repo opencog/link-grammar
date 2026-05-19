@@ -7218,9 +7218,11 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 <prep-main-no-rel>:
   <prep-main-b>
   or (JQ+ & Wj- & Qp+)
-  or (Wj- & WJIa+)
-  or <marker-wjqprep-left>
   or <fronted>;
+
+<prep-main-whq>:
+  (Wj- & WJIa+)
+  or <marker-wjqprep-left>;
 
 <prep-main-a>:
   <prep-main-no-rel>
@@ -7254,26 +7256,26 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 
 under beneath:
   ({Yd-} & J+ & (<prep-main-no-rel> or FM-))
-  or ({Yd-} & Jw+ & <prep-main-rel>)
+  or ({Yd-} & JW+ & (<prep-main-rel> or <prep-main-whq>))
   or ({Yd-} & JQ+ & J+ & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-]
   or (Yd- & Pp-);
 below above behind.p:
   ({Yd-} & {J+} & (<prep-main-no-rel> or FM-))
-  or ({Yd-} & Jw+ & <prep-main-rel>)
+  or ({Yd-} & JW+ & (<prep-main-rel> or <prep-main-whq>))
   or ({Yd-} & JQ+ & J+ & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
 within w/i:
   (J+ & <prep-main-no-rel>)
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & J+ & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
 during:
   (J+ & (<prep-main-no-rel> or UN-))
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & J+ & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
@@ -7283,7 +7285,7 @@ during:
 % {hHM+}: "I think it's from uhh Mars"
 from:
   ({hHM+} & {Yd-} & (FM+ or J+ or Mgp+) & (<prep-main-no-rel> or Mp-))
-  or ({hHM+} & {Yd-} & Jw+ & <prep-main-rel>)
+  or ({hHM+} & {Yd-} & JW+ & (<prep-main-rel> or <prep-main-whq>))
   or ({hHM+} & {Yd-} & JQ+ & (FM+ or J+ or Mgp+) & <prep-main-jq-a>)
   or ({EP-} & dWl- & FM+)
   or [MVp- & B-]
@@ -7292,7 +7294,7 @@ from:
 
 at toward towards without w/o.p:
   ((J+ or Mgp+) & <prep-main-no-rel>)
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
@@ -7306,21 +7308,21 @@ at toward towards without w/o.p:
 % [[EBm+]]: "but not very"
 except but.misc-ex:
   ((({EBm+} & [[J+]]) or [[EBm+]] or Mgp+) & <prep-main-no-rel>)
-  or ({EBm+} & Jw+ & <prep-main-rel>)
+  or ({EBm+} & JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (({EBm+} & [[J+]]) or [[EBm+]] or Mgp+) & <prep-main-jq-a>)
   or [MVp- & B-]
   or ((MVp+ or <to-verb>) & <prep-main-no-rel>);
 
 against beyond beside:
   ((J+ or Mgp+) & <prep-main-no-rel>)
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
 
 between:
   ((J+ or Mgp+) & <prep-main-no-rel>)
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-]
@@ -7329,9 +7331,9 @@ between:
 % w/ as a common abbreviation for with
 with w/:
   ((J+ or Mgp+) & (<prep-main-no-rel> or dRJrv-))
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
-  or (Jw+ & (dRJrj- or dRJlj+))
+  or (JW+ & (dRJrj- or dRJlj+))
   or [MVp- & B-]
   or <locative>
   or (J+ & {EBm+} & ([P+] or [[<obj2-non-pronoun>]]) & (
@@ -7341,7 +7343,7 @@ with w/:
 
 among amongst amidst astride:
   ((J+ or Mgp+) & (<prep-main-no-rel> or FM-))
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
@@ -7358,9 +7360,9 @@ wjqprep: WJIb- & WJIa- & Qp+;
 % FL+ "for long"
 for.p:
   ((J+ or Mgp+ or TI+) & (<prep-main-no-rel> or Mp-))
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+ or TI+) & <prep-main-jq-a>)
-  or (Jw+ & (dRJrj- or dRJlj+))
+  or (JW+ & (dRJrj- or dRJlj+))
   or <locative>
   or [MVp- & B-]
   or (MG- & JG+)
@@ -7369,7 +7371,7 @@ for.p:
 
 into:
   ((J+ or Mgp+ or QI+) & <prep-main-no-rel>)
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+ or QI+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-];
@@ -7378,7 +7380,7 @@ into:
 % Xe+: optional colon
 re:
   ({Xe+} & J+ & <prep-main-no-rel>)
-  or ({Xe+} & Jw+ & <prep-main-rel>);
+  or ({Xe+} & JW+ & (<prep-main-rel> or <prep-main-whq>));
 
 % comparative-like links to prepositions.
 %    "He did it largely in his spare time"
@@ -7399,7 +7401,7 @@ although.c though.c but.c yet.c:
 % cost on Wl- & MV+: "about five times"
 about:
   ((J+ or Mgp+ or QI+) & <prep-main-no-rel>)
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+ or QI+) & <prep-main-jq-a>)
   or EN+
   or EW+
@@ -7415,7 +7417,7 @@ about:
 % XXX is this really needed ?? Seems to duplicate other stuff ..
 just_about nearly_about almost_about right_about:
   ((J+ or Mgp+ or QI+) & <prep-main-no-rel>)
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+ or QI+) & <prep-main-jq-a>)
   or EW+;
 
@@ -7426,7 +7428,7 @@ just_about nearly_about almost_about right_about:
 % so that conjunctions can work correctly.
 through.r right_through straight_through:
   (J+ & (<prep-main-no-rel> or FM-))
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & J+ & <prep-main-jq-a>)
   or (EN- & (Pp- or J-))
   or K-
@@ -7435,7 +7437,7 @@ through.r right_through straight_through:
 
 <prep-across>:
   (J+ & (<prep-main-no-rel> or FM-))
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & J+ & <prep-main-jq-a>)
   or K-
   or [MVp- & B-];
@@ -7452,7 +7454,7 @@ off:
 
 past.p:
   ({Yd-} & J+ & (<prep-main-no-rel> or FM-))
-  or ({Yd-} & Jw+ & <prep-main-rel>)
+  or ({Yd-} & JW+ & (<prep-main-rel> or <prep-main-whq>))
   or ({Yd-} & JQ+ & J+ & <prep-main-jq-a>)
   or K-
   or <locative>
@@ -7462,7 +7464,7 @@ past.p:
 around:
   <alter-preps>
   or ((J+ or Mgp+) & (<prep-main-no-rel> or FM-))
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or K-
@@ -7496,7 +7498,7 @@ out.r up.r down.r:
 by:
   <alter-preps>
   or ((J+ or Mgp+ or JT+) & (<prep-main-no-rel> or FM-))
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+ or JT+) & <prep-main-jq-a>)
   or K-
   or <locative>
@@ -7508,7 +7510,7 @@ by:
 in.r:
   <alter-preps>
   or ((J+ or Mgp+ or IN+) & (<prep-main-no-rel> or FM-))
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+ or IN+) & <prep-main-jq-a>)
   or K-
   or (EN- & (Pp- or J-))
@@ -7520,7 +7522,7 @@ in.r:
 on upon:
   <alter-preps>
   or ((J+ or Mgp+ or ON+ or [QI+]) & <prep-main-no-rel>)
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & (J+ or Mgp+ or ON+ or [QI+]) & <prep-main-jq-a>)
   or K-
   or <locative>
@@ -7529,7 +7531,7 @@ on upon:
 % o'er: poetic contraction
 over o'er:
   ({Yd-} & (J+ or Mgp+ or QI+ or [[MVp+]]) & (<prep-main-no-rel> or FM-))
-  or ({Yd-} & Jw+ & <prep-main-rel>)
+  or ({Yd-} & JW+ & (<prep-main-rel> or <prep-main-whq>))
   or ({Yd-} & JQ+ & (J+ or Mgp+ or QI+ or [[MVp+]]) & <prep-main-jq-a>)
   or K-
   or EN+
@@ -7560,7 +7562,7 @@ unlike:
 % Wj- & JQ+ & J+ & Qd+: "Of which person were you speaking?"
 % QI+ & CV+: "She kept an organized record of which employees took their vacations"
 %      The QI makes it interrogative, the CV links head word.
-% (Js+ or Jp+ or Ju+): we explicitly exclude Jw+ as that leads to bad parses.
+% (Js+ or Jp+ or Ju+): we explicitly exclude JW+ as that leads to bad parses.
 %
 % Mf-: allows "from the Abbey of Stratford Langthorne" so that "of"
 %      links to "Abbey" instead of something more distant.
@@ -7614,7 +7616,7 @@ to.r:
   % the required filler/gap relation. Keep that relation in the dictionary
   % instead of relying on postprocessing rule "incorrect use of 'to'6".
   or (([J+] or Mgp+) & <prep-main-no-rel>)
-  or (Jw+ & <prep-main-rel>)
+  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & ([J+] or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-]1.1
@@ -7889,7 +7891,7 @@ subject_to status_post in_conjunction_with sensu
  previous_to together_with as_regards s/p aka unto
  apropos_of w.i W.i:
  ((J+ or Mgp+) & <prep-main-no-rel>)
- or (Jw+ & <prep-main-rel>)
+ or (JW+ & (<prep-main-rel> or <prep-main-whq>))
  or (JQ+ & (J+ or Mgp+) & <prep-main-jq-a>)
  or (MVp- & B-);
 
@@ -8298,7 +8300,7 @@ tenfold a_hundredfold a_thousandfold:
 % Ws- & Bsw+ & Sp*w+: "Who have bought your flat from?"
 % {EL+ & {N+}} & Wd-: "Who?" "Who else?" "Who else not?"
 % Wq- & Qw+: "who are they?"
-% Jw-: "For who were you mistaken?"
+% JW-: "For who were you mistaken?"
 who:
   <marker-wjqprep-right>
   or
@@ -8306,8 +8308,8 @@ who:
   or [QI-]
   or QN-
   or dSJl+ or dSJr-
-  or (Jw- & WJIb+)
-  or Jw-
+  or (JW- & WJIb+)
+  or JW-
   or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
   or ({EL+ & {N+}} & Wd-)
   or (<clause-q> & Qw+)
@@ -8319,7 +8321,7 @@ who:
 % {EL+} & Ww-: "What else?" "What the fuck?"
 % Wn- & O+: "What a jerk!"
 % QI-: "I'll tell you what", "Say what?"
-% Jw-: "To what do you owe your success?"
+% JW-: "To what do you owe your success?"
 what:
   <marker-wjqprep-right>
   or
@@ -8334,8 +8336,8 @@ what:
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
     & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
   or (D+ & JQ-)
-  or (Jw- & WJIb+)
-  or Jw-
+  or (JW- & WJIb+)
+  or JW-
   or [QI-]0.5
   or QN-
   or dSJl+ or dSJr-;
@@ -8353,22 +8355,22 @@ which:
   or [QI-]
   or (QN- & {D+})
   or (R+ & B*w+ & (QJ+ or QJ-))
-  or (Jw- & WJIb+)
-  or Jw-;
+  or (JW- & WJIb+)
+  or JW-;
 
 % <directive-opener> or Wi-: "Which way, left or right?"
 which_way:
   <directive-opener> or <verb-co>;
 
-% Jw-: "From whom did you run?"
+% JW-: "From whom did you run?"
 whom:
   <marker-wjqprep-right>
   or
   (R- & <porcl-verb>)
   or (R+ & B*w+ & {EW-} & (Wq- or QI*d- or BIqd- or (Xc+ & Xd- & MX*r-)))
   or (Jr- & (RS+ or <porcl-verb>))
-  or (Jw- & WJIb+)
-  or Jw-;
+  or (JW- & WJIb+)
+  or JW-;
 
 whose:
   (D**w+ & (
@@ -8390,7 +8392,7 @@ whomever:
   or ({EL+} & dSJr-)
   or ({EL+} & (Ss*d+ or Bsd+ or {[[]]}) & Os-)
   or (Jr- & (RS+ or <porcl-verb>))
-  or Jw-;
+  or JW-;
 
 % EL+ & SJr-: "Bring him and whomever else"
 whoever: {EL+} &
@@ -8480,7 +8482,7 @@ why:
 % R+ & Bsw+: "Where does it go to?"
 % Cs+ & Bsw+ & QI-: "Can you tell us where those strange ideas came from?"
 % {EW-}: "about where did you put it?"
-% Jw-: "From where did you get it?"
+% JW-: "From where did you get it?"
 where:
   {EL+}
     & (
