@@ -10,6 +10,16 @@
 % exercise a replaced postprocessing rule without depending on unrelated
 % grammar behavior.
 
+% CONTAINS_ONE rule 6: I#a requires B#m or B#w.
+% The broad to.r I*a+ fallback was removed, so these infinitival
+% filler/gap constructions must still use licensed dictionary paths.
+
+Tell me what to do.
+Tell me which book to read.
+The book to read is here.
+What are you going to do?
+What is there to do?
+
 % CONTAINS_ONE rule 12: Wj requires Jw or JQ.
 % Fronted prepositions in wh questions and relatives must be licensed by the
 % matching wh object, including when the object is a multiword phrase.

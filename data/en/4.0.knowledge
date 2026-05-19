@@ -209,7 +209,6 @@ CONTAINS_ONE_RULES:
  SFI##* , Wq    Qd     CQ  PFc              , "Bad use of s-v inversion3" ,
  SXI   ,  Wq    Qd     CQ  PFc              , "Bad use of s-v inversion4" ,
  Ws    ,  D##w  S##w   H                    , "S-V inversion required5" ,
- I#a   ,  B#m   B#w                         , "incorrect use of 'to'6"  ,
  Wq    ,  SI    SFI   SXI                   , "S-V inversion required7" ,
  Wb    ,  SI    SFI   SXI                   , "S-V inversion required7a" ,
  Qd    ,  SI    SFI   SXI                   , "S-V inversion required8" ,
