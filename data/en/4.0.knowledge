@@ -214,7 +214,6 @@ CONTAINS_ONE_RULES:
  Wb    ,  SI    SFI   SXI                   , "S-V inversion required7a" ,
  Qd    ,  SI    SFI   SXI                   , "S-V inversion required8" ,
  PFc   ,  SI    SFI   SXI                   , "S-V inversion required9" ,
- Wj    ,  Jw    JQ                          , "Misuse of preposition12" ,
  Jw    ,  Mj    Wj    MX#j                  , "Misuse of preposition14" ,
  B#j   ,  Jr                                , "Incorrect relative15"    ,
  Jr    ,  B#j                               , "Incorrect relative16"    ,

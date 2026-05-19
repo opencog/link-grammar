@@ -122,7 +122,7 @@ corpus-fix-long.batch: 9 errors
 
 ## Rule 12: `Wj` Requires `Jw` Or `JQ`
 
-**Status:** dictionary support implemented; the PP rule is still retained.
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
 
 ### Rule / Area
 
@@ -182,8 +182,8 @@ preposition --Wj-- wh-word
 This makes the wh-object witness part of the dictionary construction instead
 of relying only on a later PP rejection.
 
-The PP rule remains present in `4.0.knowledge`. Therefore this entry documents
-implemented support and focused coverage, not final PP-rule removal.
+The PP rule has been removed from `4.0.knowledge`; the dictionary construction
+is now responsible for enforcing this condition before PP.
 
 ### Examples
 
@@ -217,8 +217,18 @@ Diagnostic bad examples include:
 
 ### Verification
 
-Focused coverage is in `data/en/corpus-knowledge.batch`. At the time this
-entry was added:
+Focused coverage is in `data/en/corpus-knowledge.batch`. Before removing the
+PP rule, the replacement was checked by suppressing rule 12 while disabling
+metric extraction:
+
+```sh
+link-parser -test=noPP:12,no-metric-extraction < ./data/en/corpus-knowledge.batch
+link-parser -test=noPP:12,no-metric-extraction < ./data/en/corpus-basic.batch
+link-parser -test=noPP:12,no-metric-extraction < ./data/en/corpus-fixes.batch
+link-parser -test=noPP:12,no-metric-extraction < ./data/en/corpus-fix-long.batch
+```
+
+After removal, the focused corpus should pass with ordinary parsing:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
