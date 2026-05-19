@@ -8728,12 +8728,20 @@ nor.j-a: hAJ- & {Xd-} & {XJn-} & hAJ+ & (A+ or Pa- or [MVa-]);
 % SJl- & AJrc+: "She was John's height, or taller"
 % Xc+ & Am+: "faster and stronger, Gracie is expected to win"
 and.j-c or.j-c but.j-c yet.j-c:
-  ((hAJlc- & hAJrc+) or
-  (Xd- & hAJlc- & hAJrc+ & Xc+) or
-  ({Xd-} & hSJl- & {EB+} & hAJrc+)) &
-    (((Pam- or Mam- or AFm+) & {@MV+}) or
+  (((hAJlc- & hAJrc+) or
+    (Xd- & hAJlc- & hAJrc+ & Xc+) or
+    ({Xd-} & hSJl- & {EB+} & hAJrc+)) &
+    (((Pam- or AFm+) & {@MV+}) or
     ({[ECa-]} & MVb-) or
-    ({Xc+} & Am+));
+    ({Xc+} & Am+)))
+  or (((hAJlc- & hMJXr+) or
+    (hMJXl- & hAJrc+) or
+    (hMJXl- & hMJXr+) or
+    (Xd- & hAJlc- & hMJXr+ & Xc+) or
+    (Xd- & hMJXl- & hAJrc+ & Xc+) or
+    (Xd- & hMJXl- & hMJXr+ & Xc+) or
+    ({Xd-} & hSJl- & {EB+} & hMJXr+)) &
+    (Mam- & {@MV+}));
 
 % [MVa-] : "he ran the fastest and the farthest"
 and.j-s:
@@ -9132,6 +9140,15 @@ just_not: <COMP-OPENER>;
 
 % Conjoined adjectives
 % Conjoined comparative adjectives, if EAm- is present.
+% Rule 64 license set for postnominal Mam comparatives. These connectors are
+% the dictionary-side witnesses that used to be checked after extraction.
+<comp-post-adj-license>:
+  MVp+ or MVt+ or MVz+ or MVh+
+  or <to-verb> or <tof-verb> or <toi-verb> or <tot-verb>
+  or TH+ or THi+ or QI+ or QIi+
+  or (OF+ & {@MV+})
+  or Ytm- or Ya-;
+
 <adj-conjoined>:
   ({[EA-]-0.1} & dAJra- & {@MV+})
   or ([EAm-]-0.1 & dAJrc- & {@MV+})
@@ -9153,6 +9170,8 @@ just_not: <COMP-OPENER>;
 %     like "He is a decidedly jolly good player"
 % EAh- & Qe+: "How big is it?"  "How tall is it?"
 define(`POST_ADJ_LIC',`((($1) & {@MV+} & {$2}) or (Ma- & {@MV+} & ($2)) or (dMJXr- & {@MV+} & ($2)))')
+define(`COMP_ADJ_POST',`((($1) & {@MV+}) or (dMJXr- & <comp-post-adj-license>) or (<comp-post-adj-license> & dMJXl+) or (Mam- & {@MV+} & <comp-post-adj-license>))')
+define(`COMP_ADJ_POST_LIC',`((($1) & {@MV+} & {$2}) or (dMJXr- & {@MV+} & ($2)) or (($2) & dMJXl+) or (Mam- & {@MV+} & ($2)))')
 
 <post-adj-mv>: Ma- & (MVp+ or MVt+ or MVz+ or MVh+);
 <post-adj-mv-left>: dMJXl+ & (MVp+ or MVt+ or MVz+ or MVh+);
@@ -9950,7 +9969,7 @@ significantly substantially:
 
 <comp-adj>:
   ({ECa-} & (
-    ((Pam- or Mam- or AFm+ or ({EA-} & dAJrc-)) & {@MV+})
+    COMP_ADJ_POST(Pam- or AFm+ or ({EA-} & dAJrc-))
     or <comp-adj-misc>
   ))
   or (DG- & (TR+ or AF+) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
@@ -9959,8 +9978,8 @@ significantly substantially:
 
 easier.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-)) & {@MV+}
-      & {(<tot-verb> or <toi-verb>) & {LE+}})
+    COMP_ADJ_POST_LIC(Pafm- or AFm+ or ({EA-} & dAJrc-),
+      (<tot-verb> or <toi-verb>) & {LE+})
     or <comp-adj-misc>
   ))
   or (DG- & (TR+ or AF+) & {@MV+}
@@ -9968,8 +9987,8 @@ easier.a-c:
 
 harder.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-))  & {@MV+}
-      & {(<tot-verb> or <toi-verb>) & {LE+}})
+    COMP_ADJ_POST_LIC(Pafm- or AFm+ or ({EA-} & dAJrc-),
+      (<tot-verb> or <toi-verb>) & {LE+})
     or <comp-adj-misc>
     or MVb-
   ))
@@ -9978,7 +9997,7 @@ harder.a-c:
 
 higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c slower.a-c:
   ({ECa-} & (
-    ((Pam- or Mam- or AFm+ or ({EA-} & dAJrc-)) & {@MV+})
+    COMP_ADJ_POST(Pam- or AFm+ or ({EA-} & dAJrc-))
     or <comp-adj-misc>
     or MVb-
     or Qe+
@@ -9988,7 +10007,7 @@ higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c slower.a-c:
 
 sooner.a-c:
   ({ECa- or Yt-} & (
-    ((Pam- or Mam- or AFm+ or ({EA-} & dAJrc-)) & {@MV+})
+    COMP_ADJ_POST(Pam- or AFm+ or ({EA-} & dAJrc-))
     or <comp-adj-misc>
     or MVb-
     or Qe+
@@ -9998,7 +10017,7 @@ sooner.a-c:
 
 longer.a-c:
   ({ECa- or Yt-} & (
-    ((Pam- or Mam- or AFm+ or ({EA-} & dAJrc-)) & {@MV+})
+    COMP_ADJ_POST(Pam- or AFm+ or ({EA-} & dAJrc-))
     or <comp-adj-misc>
     or MVb-
     or Qe+
@@ -10010,19 +10029,19 @@ longer.a-c:
 
 longer-term.a:
   ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+)
-     or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})))
+     or COMP_ADJ_POST_LIC(Pafm- or AFm+, (<toi-verb> or THi+) & {LE+})))
    or (DG- & (TR+ or AF+) & {@MV+} & {<toi-verb> or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 smarter.a-c nicer.a-c worse.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-)) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
+    COMP_ADJ_POST_LIC(Pafm- or AFm+ or ({EA-} & dAJrc-), (<toi-verb> or THi+) & {LE+})
     or <comp-adj-misc>
   ))
   or (DG- & (TR+ or AF+) & {@MV+} & {<toi-verb> or THi+} & (ER- or (Wd- & Xc+ & ER+)));
 
 better.a-c:
   ({ECa-} & (
-    ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-)) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
+    COMP_ADJ_POST_LIC(Pafm- or AFm+ or ({EA-} & dAJrc-), (<toi-verb> or THi+) & {LE+})
     or <comp-adj-misc>
     or MVb-
     or Qe+
@@ -10033,7 +10052,7 @@ better.a-c:
 
 different.a:
   ({ECa- or EA- or EF+} & (
-    ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-)) & {@MV+})
+    COMP_ADJ_POST(Pafm- or AFm+ or ({EA-} & dAJrc-))
     or <comp-adj-misc>
     or AA+
     or [[DD- & <noun-main-p>]]

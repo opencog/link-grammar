@@ -9,6 +9,150 @@ evidence.
 The entries below describe only grammar work reflected by the accompanying
 code and dictionary changes.
 
+## Changes To The English-Language Link Types
+
+This addendum summarizes English connector families and subscripted connector
+forms added or retired by the grammar changes documented below. It is not a
+replacement for the full Guide-to-Links; it records the link-type consequences
+of these specific dictionary changes.
+
+In the examples below, `h` and `d` prefixes are direction/dependency prefixes
+on a connector occurrence and are not part of the uppercase connector family.
+
+### Short Summary
+
+Added uppercase connector families:
+
+| Connector | Summary |
+| --- | --- |
+| `JW` | Connects a preposition to a wh noun-phrase object. This replaces the old subscripted `Jw` spelling so ordinary `J+` object branches cannot match wh objects. |
+| `WJI` | Internal helper-token connector used by wh-preposition questions. `WJIa` ties the preposition to the helper token; `WJIb` ties the wh word to the same helper token. |
+| `OFJ` | Certifies that an `of`-relative `Jr` path is tied to a corresponding postnominal `B#j` anchor. |
+| `MJX` | Licensed conjoined postnominal-adjective helper family. `MJXl` and `MJXr` are used when one conjoined adjective supplies the complement license for the postnominal `Ma` or comparative `Mam` relation. |
+| `INSERTL` / `INSERTR` | Tokenizer-only marker connector families. Paired `INSERTL<token>+` and `INSERTR<token>+` request an optional internal helper token named `<token>`. They are dictionary support markers, not ordinary grammar links. |
+
+Changed or retired connector forms:
+
+| Connector form | Change |
+| --- | --- |
+| `Jw` | Retired in favor of `JW`. The old spelling was a subscripted `J` form and could therefore be matched by broad ordinary `J+` branches. |
+| `WJIa`, `WJIb` | Added as subtypes of `WJI` for the two sides of the `wjqprep` helper-token path. |
+| `MJXl`, `MJXr` | Added as subtypes of `MJX` for left and right conjoined postnominal-adjective licensing; now also used by comparative `Mam` paths. |
+| `O*n` in second-object positions | Replaced by the explicit non-pronoun set `On`, `Omn`, `Opn`, `Osn`, `Otn`, `Oun`, and `Oyn`. This preserves noun-like second objects while excluding pronoun `Ox` from those positions. |
+| broad postposed `Ma` / `Mam` paths | Tightened so postposed adjective and comparative-adjective uses require a local complement license or a licensed `MJX` conjunction path. `Ma` and `Mam` remain ordinary connectors elsewhere. |
+| naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
+| `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
+| `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
+
+### `JW`: Wh Preposition Objects
+
+`JW` connects a preposition to a wh noun-phrase object in questions and
+prepositional relatives:
+
+```text
+-->Wj--+-JW-+
+|      |    |
+with.p what ...
+```
+
+Focused example:
+
+```text
+    +------------------Xp-----------------+
+    +------------->WV------------->+      |
+    |                  +----I*d----+      |
+    +-->Wj--+-JW-+     +-SIp-+     +-Osm+ |
+    |       |    |     |     |     |    | |
+LEFT-WALL with what did.v-d you open.v it ?
+```
+
+The old `Jw` spelling made this relation a subscripted form of ordinary
+prepositional-object `J`. Since broad `J+` connectors can match subscripted
+`J` forms, ordinary preposition-object paths could attach to a wh object
+without selecting the continuation that licenses a wh-preposition construction.
+The distinct `JW` family prevents that match.
+
+### `WJI`: Wh-Question Helper Token
+
+`WJI` is an internal helper-token connector family for wh-preposition
+questions. It is used with the optional helper token `wjqprep`:
+
+```text
+                +--Qp--+
+       +--WJIb--+      |
+       |        |      |
+what wjqprep did.v ...
+       |        |
+with.p +--WJIa--+
+```
+
+The preposition supplies `WJIa+`, the wh word supplies `WJIb+`, and the helper
+token supplies:
+
+```text
+WJIb- & WJIa- & Qp+
+```
+
+The displayed/API linkage suppresses the helper word and the incident `WJI`
+links after postprocessing. Thus `WJI` is a dictionary-internal certificate
+used to express the wh-preposition question relation; it is not intended to be
+visible in ordinary output.
+
+### `OFJ`: `of`-Relative Certification
+
+`OFJ` ties the special `of`-relative object path to the postnominal relative
+anchor that licenses it. It is used in cases such as:
+
+```text
+The doctors, many of whom are surgeons, were angry.
+```
+
+Focused linkage fragment:
+
+```text
+            +-----Bpj----+
+            |            |
+doctors.n , many of whom are.v surgeons.n
+       +----MXp---+OFJ+-Jr+
+       |          |   |   |
+```
+
+Here `many` carries the postnominal relative anchor (`Bpj`) and also links to
+`of` through `OFJ`. The preposition `of` then links to the relative object
+`whom` through `Jr`. This keeps `Jr` out of the broad ordinary object list for
+`of`, while preserving the intended relative construction.
+
+### `MJX`: Licensed Conjoined Postnominal Adjectives
+
+`MJX` marks conjoined postnominal adjective paths in which at least one
+adjective has the complement relation needed to license the postnominal `Ma`
+or comparative `Mam` use. It parallels the existing `MJl`/`MJr` ordering
+convention:
+
+```text
+MJXl  left-side licensed postnominal-adjective conjunction path
+MJXr  right-side licensed postnominal-adjective conjunction path
+```
+
+Focused example:
+
+```text
+                                           +--TH--+
+                                           |      |
+Democrats.n unhappy.a about ... but.j-m doubtful.a that ...
+       +----------------Ma----------------+
+                     +--MJla--+--MJXr--+
+                     |        |        |
+```
+
+In this example, `doubtful` has the `TH` complement that licenses the
+postnominal adjective construction. The `MJXr` link lets the conjunction carry
+the `Ma` anchor without allowing an unlicensed bare postnominal adjective
+path. The same mechanism is used for conjoined comparative `Mam` paths such as
+`taller and wider than Bill`, where the `MVp` license is supplied by the right
+comparative adjective. The mirror `MJXl` form is used when the left adjective
+supplies the license.
+
 ## PP Migration From `4.0.knowledge` To `4.0.dict`
 
 This section documents selected postprocessing (PP) rules being moved into
@@ -1358,8 +1502,6 @@ connector variants when they provide the `Ma-` anchor. These variants are
 exposed only by adjective paths that carry a complement license, so the old PP
 condition is now represented by dictionary connector structure.
 
-The neighboring comparative `Mam` rule 64 remains active.
-
 ### Implications
 
 This is a structural replacement for rule 63. Ordinary adjectives remain in
@@ -1397,6 +1539,129 @@ Focused rejected examples include:
 ### Verification
 
 The rule 63 migration should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+## Rule 64: Comparative Postposed `Mam` Adjectives Require A License
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Mam , TO TOf TH MVp TOt QI OF MVt MVz MVh Ytm Ya ,
+      "Bad use of adjective64"
+```
+
+The grammatical area is postnominal comparative adjective modification, as in
+`a man taller than John` or `a box bigger than this`.
+
+### Problem
+
+The dictionary exposed `Mam-` in the same broad comparative-adjective groups
+as ordinary comparative predicative and conjunction paths. This allowed raw
+postnominal comparative fragments such as:
+
+```text
+man --Mam-- taller
+box --Mam-- bigger
+```
+
+without requiring the comparative adjective to supply the relation that makes
+the postnominal use grammatical.
+
+### Old Mechanism
+
+PP accepted the completed linkage only if the same domain contained one of the
+license links listed in rule 64. Common good fragments include:
+
+```text
+man --Mam-- taller --MVp-- than
+box --Mam-- bigger --MVp-- than
+```
+
+For conjoined comparatives, the `Mam` anchor can be on the conjunction while
+the license is on one of the conjoined adjectives:
+
+```text
+man --Mam-- and --MJXr-- wider --MVp-- than
+```
+
+### Overgeneration Cause
+
+The overgeneration was the comparative counterpart of rule 63. A valid
+postnominal comparative adjective needs a local comparative or complement
+license, but the earlier `Mam` connector path did not require that license
+when the `Mam` link was formed.
+
+Conjoined comparative adjectives require the same additional witness path as
+conjoined ordinary postposed adjectives: the conjunction may carry the `Mam`
+anchor while the actual license is supplied by the left or right adjective.
+
+### Implementation
+
+The dictionary now requires `Mam-` paths to carry a local rule-64 license
+directly. The helper expression:
+
+```text
+<comp-post-adj-license>
+```
+
+enumerates the dictionary-side counterparts of the former PP criteria:
+comparative modifier links such as `MVp`, `MVt`, `MVz`, and `MVh`;
+infinitival, clausal, interrogative, and `of` complements; and measurement
+links such as `Ytm` and `Ya`.
+
+The comparative helper macros:
+
+```text
+COMP_ADJ_POST(base)
+COMP_ADJ_POST_LIC(base, license)
+```
+
+preserve the ordinary comparative adjective paths while making the `Mam-`
+variant require the relevant license. The same macros expose `MJXl` and
+`MJXr` variants for conjoined comparative adjectives, so a conjunction can
+carry `Mam-` only when one of the conjoined adjectives supplies the license.
+
+### Implications
+
+This is a structural replacement for rule 64. The dictionary no longer builds
+unlicensed postnominal comparative `Mam` fragments that PP would later reject.
+The change reuses the existing `MJX` licensed-conjunction family rather than
+adding a new public connector type.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+I saw a man taller than John.
+The man taller than John arrived.
+I need a box bigger than this.
+A box bigger than this arrived.
+A man taller and wider than Bill arrived.
+```
+
+Focused rejected examples include:
+
+```text
+*I saw a man taller.
+*The man taller arrived.
+*A man bigger quickly arrived.
+*A man taller and wider arrived.
+```
+
+### Verification
+
+The rule 64 migration should be validated with ordinary parser runs:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
