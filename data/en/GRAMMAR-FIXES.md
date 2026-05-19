@@ -416,11 +416,21 @@ The `to.r` entry has long noted that `I+ & MVi-` admits useful cases such as:
 What is there to do?
 ```
 
-but may also admit bad infinitival-gap paths such as:
+The old concern in rule 6 was narrower than all possible bad `to.r` parses:
+it concerned paths where `to.r` created an `I#a` link without a local
+filler/gap witness. Other bad `to.r` or `going to` analyses can exist through
+different `I` subscripts and are separate grammar issues.
+
+For example, sentences such as:
 
 ```text
 *He is going to do.
+*He is going to have.
 ```
+
+are not evidence that the rule-6 migration is incomplete unless their accepted
+linkage uses `I#a`. In current focused checks, these sentences parse through
+`I*d` or `If` paths, not through the removed `I#a` fallback.
 
 The old PP rule tried to reject a completed linkage containing `I#a` unless
 the linkage also contained `B#m` or `B#w`.
