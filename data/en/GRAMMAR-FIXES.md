@@ -614,6 +614,135 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
+## Rule 63: License Postposed `Ma` Adjectives In The Dictionary
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Ma** , TO TOf TH MVp TOt QI OF MVt MVz MVh Ytm Ya ,
+       "Bad use of adjective63"
+```
+
+The grammatical area is complement-licensed postposed adjective use. A
+postposed `Ma` adjective is grammatical when it has a local complement or
+modifier relation that licenses this position, such as `MVp`, `OF`, `TH`,
+`TO`, `QI`, `Ya`, or related links.
+
+### Problem
+
+Several adjective classes exposed `Ma-` in the same connector group as ordinary
+predicative or adjective-conjunction paths. This allowed a raw linkage to use a
+bare adjective as a postposed modifier before the dictionary had proved that
+the postposed use was licensed.
+
+For example, the dictionary could build local fragments such as:
+
+```text
+gift --Ma-- inexpensive
+child --Ma-- little
+```
+
+Those fragments need the later PP rule to decide whether a suitable licensing
+relation also exists.
+
+### Old Mechanism
+
+The old dictionary allowed the `Ma` connector shape broadly and relied on PP to
+reject the extracted linkage unless the same domain contained one of the
+licensing links:
+
+```text
+voters --Ma-- angry --MVp-- about
+man --Ma-- proud --OF-- of
+topic --Ma-- difficult --TOt-- to
+```
+
+This was grammatically precise enough after extraction, but it left the parse
+set with unlicensed postposed-adjective paths.
+
+### Overgeneration Cause
+
+The overgeneration was structural, not lexical. Good postposed-adjective uses
+exist, but the earlier connector group did not require the licensing
+complement at the point where the `Ma` link was created.
+
+Conjoined postposed adjectives require one additional distinction: the `Ma`
+anchor can be on the conjunction while the actual license is on one of the
+conjoined adjectives.
+
+### Implementation
+
+The dictionary now separates bare predicative/conjoined adjective paths from
+postposed-adjective paths that carry a local license.
+
+The helper macro:
+
+```text
+POST_ADJ_LIC(base, license)
+```
+
+keeps the old predicative and right-conjunction alternatives while making the
+`Ma-` and `dMJXr-` postposed-adjective variants require the specified
+complement expression. Common postposed PP complements such as `angry about
+the economy`, `loyal to Hussein`, and `heavy with sadness` are exposed through
+explicit `Ma-` / `MJX` helper paths.
+
+For conjoined postposed adjectives, conjunction entries use `MJXl` and `MJXr`
+connector variants when they provide the `Ma-` anchor. These variants are
+exposed only by adjective paths that carry a complement license, so the old PP
+condition is now represented by dictionary connector structure.
+
+The neighboring comparative `Mam` rule 64 remains active.
+
+### Implications
+
+This is a structural replacement for rule 63. Ordinary adjectives remain in
+their word classes, but common bare `Ma` postposed-adjective fragments are no
+longer generated unless the postposed use has a local complement license.
+
+The change does not try to solve every semantic question about adjective
+plausibility; it encodes the syntactic licensing condition that the old PP rule
+checked.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+I need something useful.
+The apartment available is small.
+A man proud of his work arrived.
+Voters angry about the economy will probably vote for Clinton.
+Many Democrats unhappy about the economy but doubtful that Clinton can be elected probably won't vote at all.
+We need a programmer knowledgeable about Lisp.
+It is believed that even the troops loyal to Hussein will soon be forced to surrender.
+He cried, his heart heavy with sadness.
+```
+
+Focused rejected examples include:
+
+```text
+*A gift inexpensive arrived.
+*A child little arrived.
+*A man proud arrived.
+*Many Democrats unhappy but doubtful probably won't vote at all.
+```
+
+### Verification
+
+The rule 63 migration should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
 ## Rule 65: Remove Overbroad Postnominal `MX#a` Check
 
 **Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
