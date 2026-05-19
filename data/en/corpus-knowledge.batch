@@ -129,7 +129,9 @@ You should hear him sing.
 *I gave him for his birthday it.
 
 % CONTAINS_ONE rule 63: postposed Ma adjectives need local complement
-% licensing. The neighboring Mam comparative rule remains active.
+% licensing.
+% CONTAINS_ONE rule 64: postposed Mam comparative adjectives need local
+% complement licensing.
 
 I need something useful.
 The apartment available is small.
@@ -143,3 +145,12 @@ He cried, his heart heavy with sadness.
 *A child little arrived.
 *A man proud arrived.
 *Many Democrats unhappy but doubtful probably won't vote at all.
+I saw a man taller than John.
+The man taller than John arrived.
+I need a box bigger than this.
+A box bigger than this arrived.
+A man taller and wider than Bill arrived.
+*I saw a man taller.
+*The man taller arrived.
+*A man bigger quickly arrived.
+*A man taller and wider arrived.
