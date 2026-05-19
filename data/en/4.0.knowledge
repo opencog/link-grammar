@@ -297,20 +297,12 @@ Sg   ,   Pg                                , "Bad use of present participle"
 
 ; Qd    ,  MX blocks "Joe doesn't matter what Ted does"
 CONTAINS_NONE_RULES:
- S     ,  Spxi                             , "Bad n-v agreement69" ,
- SI    ,  SIpxi                            , "Bad n-v agreement70" ,
  Ws    ,  B#m   Ca   BT                    , "Question inversion violated71" ,
  SF    ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta
                                            , "Bad use of 'filler' subject72" ,
  SFI   ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta
                                            , "Bad use of 'filler' subject73" ,
- OX    ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta
-                                           , "Bad use of 'filler' subject74" ,
- MXsr  ,  Sp#w                             , "Bad n-v agreement75" ,
- MXpr  ,  Ss#w   S#iw                      , "Bad n-v agreement76" ,
- Mr    ,  B#*                              , "Bad use of 'whose'77",
  EAy   ,  MVs                              , "Bad comparative78",
- VCz   ,  EAy                              , "Bad comparative79",
  Qd    ,  MX                               , "Bad subject inversion",
 
 ; H, O blocks "How many people you (noun)"
