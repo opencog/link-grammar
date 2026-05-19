@@ -2512,7 +2512,7 @@ per "/.per": Us+ & Mp-;
 <verb-wall>: ((dWV- or dCV- or dIV-) & {VC+}) or [()];
 % <verb-wall>: (dWV- or dCV- or dIV-) & {VC+};
 
-<mv-coord>: {@MV+} & {VC+};
+<mv-coord>: {@MV+} & {MVSWH+} & {VC+};
 
 % <of-coord>: "You were informed of this when?"
 <of-coord>: OF+ & {{Xc+} & QN+} & <mv-coord>;
@@ -9870,10 +9870,10 @@ as.e:
 
 % "as" as synonym for "while"
 % <subcl-verb> & CO+: "As we set sail, a gale blew up"
-% MVs- & Cs+ & CV+: "I slipped as I ran"
+% MVSWH- & Cs+ & CV+: "I slipped as I ran"
 as.#while:
   [[<subcl-verb> & (({Xc+ & {Xd-}} & dCO+))]0.2
-  or [MVs- & Cs+ & CV+]0.1]colloquial;
+  or [MVSWH- & Cs+ & CV+]0.1]colloquial;
 
 
 as_is: {Xd- & Xc+} & MVs-;

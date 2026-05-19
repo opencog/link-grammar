@@ -29,6 +29,7 @@ Added uppercase connector families:
 | `WJI` | Internal helper-token connector used by wh-preposition questions. `WJIa` ties the preposition to the helper token; `WJIb` ties the wh word to the same helper token. |
 | `OFJ` | Certifies that an `of`-relative `Jr` path is tied to a corresponding postnominal `B#j` anchor. |
 | `MJX` | Licensed conjoined postnominal-adjective helper family. `MJXl` and `MJXr` are used when one conjoined adjective supplies the complement license for the postnominal `Ma` or comparative `Mam` relation. |
+| `MVSWH` | Connects a verb to subordinate temporal `as` in the `as.#while` path. This keeps temporal `as` distinct from ordinary broad `MVs` modifiers. |
 | `INSERTL` / `INSERTR` | Tokenizer-only marker connector families. Paired `INSERTL<token>+` and `INSERTR<token>+` request an optional internal helper token named `<token>`. They are dictionary support markers, not ordinary grammar links. |
 
 Changed or retired connector forms:
@@ -40,6 +41,7 @@ Changed or retired connector forms:
 | `MJXl`, `MJXr` | Added as subtypes of `MJX` for left and right conjoined postnominal-adjective licensing; now also used by comparative `Mam` paths. |
 | `O*n` in second-object positions | Replaced by the explicit non-pronoun set `On`, `Omn`, `Opn`, `Osn`, `Otn`, `Oun`, and `Oyn`. This preserves noun-like second objects while excluding pronoun `Ox` from those positions. |
 | broad postposed `Ma` / `Mam` paths | Tightened so postposed adjective and comparative-adjective uses require a local complement license or a licensed `MJX` conjunction path. `Ma` and `Mam` remain ordinary connectors elsewhere. |
+| subordinate temporal `as` with `MVs` | The `as.#while` temporal path now uses `MVSWH` instead of `MVs`. Other `MVs` uses remain ordinary modifiers. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
@@ -153,6 +155,27 @@ path. The same mechanism is used for conjoined comparative `Mam` paths such as
 comparative adjective. The mirror `MJXl` form is used when the left adjective
 supplies the license.
 
+### `MVSWH`: Temporal `as` Verb Modifier
+
+`MVSWH` connects a verb to subordinate temporal `as` in examples such as:
+
+```text
+I slipped on the ice as I ran home.
+```
+
+Focused linkage fragment:
+
+```text
+slipped.v-d --MVSWH-- as.#while --Cs-- I.p --Sp*i-- ran.v-d
+                               \--CV----------------/
+```
+
+The old temporal `as.#while` path used ordinary `MVs`. That allowed adjective
+disjuncts with broad `@MV+` modifier slots to connect to temporal `as` while
+also carrying a comparative `EAy` link. The dedicated `MVSWH` family keeps the
+temporal subordinate use available to verbs without allowing comparative
+adjectives to satisfy it accidentally.
+
 ## PP Migration From `4.0.knowledge` To `4.0.dict`
 
 This section documents selected postprocessing (PP) rules being moved into
@@ -185,7 +208,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 42 | Predicate/question `BIq` | Simple removal raises the fast prefix from 1 to 3 errors and `corpus-basic.batch` from 88 to 90 errors. A prototype that moved `BI+` to a copula branch with `Ss*q-` still accepted a bad `big mind on everybody's question is who ...` parse, because a generic noun subject can match a subscripted verb-side connector and inherit the `Ss*q` link name. A replacement therefore needs a new connector family on the licensing nouns/clauses, not only a subscripted copula-side split. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | 56, 58, 59 | Comparative agreement and complement checks | Bulk removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 91 errors and `corpus-fixes.batch` from 362 to 363 errors. The protected bad paths include `Ours is more elegant than yours works`, `She interviewed more programmers than was hired`, and `I am as intelligent as John does`. |
-| 78 | `EAy` with `MVs` | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 89 errors and `corpus-fixes.batch` from 362 to 363 errors. It protects cases where the second `as` is parsed as ordinary subordinate `as.#while` with `MVs` while an earlier comparative `EAy` is active, such as `I am as intelligent as John does` and `The coffee tastes as it did last year`. A replacement likely needs a dictionary-level comparative `as` pairing. |
 
 ## Library-Assisted Dictionary Helper Tokens
 
@@ -762,7 +784,7 @@ them for the tracked behavior.
 
 The seven rules are removed from `4.0.knowledge`.
 
-Rules 71, 72, 73, and 78 remain active because they were not part of this
+Rules 71, 72, and 73 remain active because they were not part of this
 redundancy removal. The ID-less `Bad subject inversion` rule also remains
 active.
 
@@ -791,6 +813,126 @@ corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
+```
+
+## Rule 78: Separate Temporal `as` From Comparative `EAy`
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+EAy , MVs , "Bad comparative78"
+```
+
+The grammatical area is comparative `as ... as` constructions. The relevant
+valid pattern is:
+
+```text
+I am as intelligent as John.
+```
+
+with `as.e-y --EAy-- intelligent.a` and the adjective linking to the second
+`as` through an ordinary comparative continuation such as `MVp`.
+
+### Problem
+
+The broad temporal `as.#while` path also used `MVs`. Since many adjective
+disjuncts expose broad `@MV+` modifier slots, a comparative adjective could
+accidentally connect to temporal subordinate `as` while also carrying the
+first comparative `EAy` link:
+
+```text
+*I am as intelligent as John does.
+```
+
+The bad raw path has this shape:
+
+```text
+as.e-y --EAy-- intelligent.a --MVs-- as.#while --Cs/CV-- John does
+```
+
+### Old Mechanism
+
+The old PP rule rejected any completed domain containing both `EAy` and
+`MVs`. This worked as a backstop but left the parser and ordered extractor to
+generate the bad comparative/temporal combination first.
+
+### Overgeneration Cause
+
+The dictionary reused ordinary `MVs` for the temporal `as.#while` branch:
+
+```text
+MVs- & Cs+ & CV+
+```
+
+That made temporal `as` look like an ordinary broad modifier target. The
+problem is not that temporal `as` is ungrammatical; it is that this temporal
+branch must be available to verbs but not to comparative adjectives that are
+being licensed by `EAy`.
+
+### Implementation
+
+Temporal `as.#while` now uses the dedicated verb-side connector family
+`MVSWH`:
+
+```text
+verb --MVSWH-- as.#while --Cs/CV-- subordinate clause
+```
+
+The common verb modifier path exposes optional `MVSWH+`, while adjective
+`@MV+` slots do not match this distinct uppercase family. Valid temporal
+sentences such as:
+
+```text
+I slipped on the ice as I ran home.
+```
+
+therefore keep a zero-null parse, while comparative adjectives can no longer
+satisfy temporal `as.#while` by accident.
+
+This migration does not claim to solve every bad sentence involving `as`. For
+example, a bad sentence that lacks `EAy` is outside the scope of rule 78 and
+needs separate grammar analysis.
+
+### Implications
+
+This removes one complete comparative PP check from the blocker set and makes
+the relevant condition visible to dictionary parsing instead of postprocessing.
+It also makes the surface link for temporal `as.#while` more specific:
+`MVSWH` replaces `MVs` on that path.
+
+### Verification
+
+Focused examples:
+
+```text
+I am as intelligent as John.
+You are as sweet as sugar.
+Any program as good as ours should be useful.
+The coffee tastes the same as it did last year.
+I slipped on the ice as I ran home.
+*I am as intelligent as John does.
+```
+
+The removal should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
 ```
 
 ## Rules 49 And 50: Remove Overbroad `Pafc` Comparative Checks
