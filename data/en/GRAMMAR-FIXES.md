@@ -218,14 +218,13 @@ Diagnostic bad examples include:
 ### Verification
 
 Focused coverage is in `data/en/corpus-knowledge.batch`. Before removing the
-PP rule, the replacement was checked by suppressing rule 12 while disabling
-metric extraction:
+PP rule, the replacement was checked by suppressing rule 12:
 
 ```sh
-link-parser -test=noPP:12,no-metric-extraction < ./data/en/corpus-knowledge.batch
-link-parser -test=noPP:12,no-metric-extraction < ./data/en/corpus-basic.batch
-link-parser -test=noPP:12,no-metric-extraction < ./data/en/corpus-fixes.batch
-link-parser -test=noPP:12,no-metric-extraction < ./data/en/corpus-fix-long.batch
+link-parser -test=noPP:12 < ./data/en/corpus-knowledge.batch
+link-parser -test=noPP:12 < ./data/en/corpus-basic.batch
+link-parser -test=noPP:12 < ./data/en/corpus-fixes.batch
+link-parser -test=noPP:12 < ./data/en/corpus-fix-long.batch
 ```
 
 After removal, the focused corpus should pass with ordinary parsing:
@@ -328,14 +327,13 @@ infinitival-gap paths and should be handled as separate grammar work.
 ### Verification
 
 Focused coverage is in `data/en/corpus-knowledge.batch`. Before removing the
-PP rule, the replacement was checked by suppressing rule 6 while disabling
-metric extraction:
+PP rule, the replacement was checked by suppressing rule 6:
 
 ```sh
-link-parser -test=noPP:6,no-metric-extraction < ./data/en/corpus-knowledge.batch
-link-parser -test=noPP:6,no-metric-extraction < ./data/en/corpus-basic.batch
-link-parser -test=noPP:6,no-metric-extraction < ./data/en/corpus-fixes.batch
-link-parser -test=noPP:6,no-metric-extraction < ./data/en/corpus-fix-long.batch
+link-parser -test=noPP:6 < ./data/en/corpus-knowledge.batch
+link-parser -test=noPP:6 < ./data/en/corpus-basic.batch
+link-parser -test=noPP:6 < ./data/en/corpus-fixes.batch
+link-parser -test=noPP:6 < ./data/en/corpus-fix-long.batch
 ```
 
 After removal, the focused corpus should pass with ordinary parsing:
@@ -558,14 +556,13 @@ The male of which bears a tail ran.
 ### Verification
 
 Focused coverage is in `data/en/corpus-knowledge.batch`. Before removing the
-PP rules, the replacement was checked by suppressing rules 15 and 16 while
-disabling metric extraction:
+PP rules, the replacement was checked by suppressing rules 15 and 16:
 
 ```sh
-link-parser -test=noPP:15,noPP:16,no-metric-extraction < ./data/en/corpus-knowledge.batch
-link-parser -test=noPP:15,noPP:16,no-metric-extraction < ./data/en/corpus-basic.batch
-link-parser -test=noPP:15,noPP:16,no-metric-extraction < ./data/en/corpus-fixes.batch
-link-parser -test=noPP:15,noPP:16,no-metric-extraction < ./data/en/corpus-fix-long.batch
+link-parser -test=noPP:15,noPP:16 < ./data/en/corpus-knowledge.batch
+link-parser -test=noPP:15,noPP:16 < ./data/en/corpus-basic.batch
+link-parser -test=noPP:15,noPP:16 < ./data/en/corpus-fixes.batch
+link-parser -test=noPP:15,noPP:16 < ./data/en/corpus-fix-long.batch
 ```
 
 After removal, the focused corpus should pass with ordinary parsing:
