@@ -89,3 +89,11 @@ It was as if he knew.
 I left because I was tired.
 *I left because was tired.
 I know when he left.
+
+% CONTAINS_ONE rule 65: the MX#a postnominal-adjective rule was overbroad.
+% Parenthetical adjective uses should not require the old complement-style
+% criterion links.
+
+The lady, unpleased, spoke sharply.
+The lady, displeased, spoke sharply.
+The dog, unsatisfied, barked loudly.
