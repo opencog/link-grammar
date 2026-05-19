@@ -429,6 +429,78 @@ corpus-fixes.batch: 365 errors
 corpus-fix-long.batch: 9 errors
 ```
 
+## Redundant `CONTAINS_NONE` PP Checks
+
+**Status:** implemented for rules 69, 70, 74, 75, 76, 77, and 79.
+
+### Rule / Area
+
+The removed PP rules were:
+
+```text
+S    , Spxi        , "Bad n-v agreement69"
+SI   , SIpxi       , "Bad n-v agreement70"
+OX   , I* PP* TO* Pa* Pam Pg* Pv* LE* AFd* MVta,
+                  "Bad use of 'filler' subject74"
+MXsr , Sp#w        , "Bad n-v agreement75"
+MXpr , Ss#w S#iw   , "Bad n-v agreement76"
+Mr   , B#*         , "Bad use of 'whose'77"
+VCz  , EAy         , "Bad comparative79"
+```
+
+The grammatical areas are older agreement, filler-subject, possessive-relative,
+and comparative safety checks in `CONTAINS_NONE_RULES`.
+
+### Problem
+
+These checks no longer appear to carry observable behavior in the current
+English dictionary. Keeping redundant PP checks is undesirable because a future
+dictionary change can expose an old rule as an extraction blocker even when it
+does not protect the current regression behavior.
+
+### Old Mechanism
+
+Each rule rejected a completed linkage if a selector link and a prohibited
+criterion link appeared in the same PP domain. Unlike the dictionary
+migrations above, these rules are not replaced by new connector structure.
+They are removed because the current dictionary does not appear to require
+them for the tracked behavior.
+
+### Implementation
+
+The seven rules are removed from `4.0.knowledge`.
+
+Rules 71, 72, 73, and 78 remain active because they were not part of this
+redundancy removal. The ID-less `Bad subject inversion` rule also remains
+active.
+
+### Implications
+
+This removes seven complete PP checks from the blocker set without changing
+the ordinary corpus counts. If future focused examples show that one of these
+old conditions still represents real bad grammar, the preferred fix should be
+a dictionary or parser-level rule that rejects the bad path before PP.
+
+### Verification
+
+The removal should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 365 errors
+corpus-fix-long.batch: 9 errors
+```
+
 ## Rules 15 And 16: Tie `Jr` To Postnominal `B#j`
 
 **Status:** implemented; both PP rules have been removed from
