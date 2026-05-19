@@ -240,6 +240,110 @@ is expected to report:
 0 errors
 ```
 
+## Rule 6: Infinitival `to` Requires A Filler/Gap Witness
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+I#a , B#m B#w , "incorrect use of 'to'6"
+```
+
+The grammatical area is infinitival `to` in filler/gap constructions.
+
+### Background
+
+The `to.r` entry has long noted that `I+ & MVi-` admits useful cases such as:
+
+```text
+What is there to do?
+```
+
+but may also admit bad infinitival-gap paths such as:
+
+```text
+*He is going to do.
+```
+
+The old PP rule tried to reject a completed linkage containing `I#a` unless
+the linkage also contained `B#m` or `B#w`.
+
+### Problem
+
+The PP rule was downstream of extraction and global in shape. It did not prove
+that the `B` witness belonged to the same infinitival construction as the
+`I#a` link; it only required a matching `B` link somewhere in the linkage.
+
+### Old Mechanism
+
+The direct source of the bad path was the broad fallback branch in `to.r`:
+
+```text
+or I*a+
+```
+
+Because generic connectors can match subscripted variants, this branch could
+create `I#a` without a local proof of the intended filler/gap relation.
+
+### Implementation
+
+The dictionary removes the naked `I*a+` fallback from `to.r`. No replacement
+connector is added in this step. Existing licensed infinitival constructions
+continue to use their narrower dictionary paths.
+
+This is stricter and more local than the old PP rule: the dictionary should not
+generate an infinitival path whose correctness depends on finding an unrelated
+`B#m` or `B#w` elsewhere in the sentence.
+
+If future valid examples require the removed path, do not restore naked
+`I*a+`. Add a local simulated-cross-link style connector family with a new
+uppercase connector name, so generic `I-` connectors cannot accidentally match
+it.
+
+### Examples
+
+Focused examples include:
+
+```text
+Tell me what to do.
+Tell me which book to read.
+The book to read is here.
+What are you going to do?
+What is there to do?
+```
+
+The broader bad examples:
+
+```text
+*He is going to do.
+*He is going to have.
+```
+
+are not fully solved by this narrow rule-6 migration; they involve other
+infinitival-gap paths and should be handled as separate grammar work.
+
+### Verification
+
+Focused coverage is in `data/en/corpus-knowledge.batch`. Before removing the
+PP rule, the replacement was checked by suppressing rule 6 while disabling
+metric extraction:
+
+```sh
+link-parser -test=noPP:6,no-metric-extraction < ./data/en/corpus-knowledge.batch
+link-parser -test=noPP:6,no-metric-extraction < ./data/en/corpus-basic.batch
+link-parser -test=noPP:6,no-metric-extraction < ./data/en/corpus-fixes.batch
+link-parser -test=noPP:6,no-metric-extraction < ./data/en/corpus-fix-long.batch
+```
+
+After removal, the focused corpus should pass with ordinary parsing:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+```
+
 ## Rule 13: `JQ` Requires A Preposition Companion
 
 **Status:** implemented; the PP rule has been removed from `4.0.knowledge`.

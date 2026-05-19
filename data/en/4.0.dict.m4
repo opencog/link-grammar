@@ -7600,7 +7600,9 @@ to.r:
     or [<OPENER>]
     or [[R-]] ))
   or ({NT-} & TO- & Xc+)
-  or I*a+
+  % A naked I*a+ branch used to allow infinitives with no local proof of
+  % the required filler/gap relation. Keep that relation in the dictionary
+  % instead of relying on postprocessing rule "incorrect use of 'to'6".
   or (([J+] or Mgp+) & <prep-main-no-rel>)
   or (Jw+ & <prep-main-rel>)
   or (JQ+ & ([J+] or Mgp+) & <prep-main-jq-a>)
