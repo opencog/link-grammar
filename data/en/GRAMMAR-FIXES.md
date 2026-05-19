@@ -801,6 +801,158 @@ corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
 
+## Rules 55 And 57: Remove Redundant Comparative Checks
+
+**Status:** implemented for rules 55 and 57. Neighboring rules 56, 58, and
+59 remain active.
+
+### Rule / Area
+
+The removed PP rules were:
+
+```text
+U#t  , D##m D##y Om Oy Jm Jy Am MX#m , "Bad comparative55"
+Sp#c , Dmcm Dmcy Om Oy Jm Jy MX#m    , "Bad comparative57"
+```
+
+The grammatical area is comparative agreement and complement licensing in
+question and clause-comparative paths.
+
+### Problem
+
+The current dictionary no longer appears to need these two PP checks for the
+tracked behavior. Rule 55 is structurally unreachable under the current
+dictionary: the selector `U#t` can only match a three-character `U` link ending
+in `t`, such as `Upt` or `Ust`, but the English dictionary does not currently
+define any `U...t` connectors. Removing rules 55 and 57 does not change the
+agreed corpus counts or the focused comparative examples tested with this
+change.
+
+### Old Mechanism
+
+Both rules rejected completed linkages by checking for broad link-name
+co-occurrence inside PP domains. Rule 55 used `U#t` as the selector; rule 57
+used `Sp#c`. The criterion sets mixed determiner, object, comparative, and
+modifier links.
+
+### Overgeneration Cause
+
+No current agreed test requires these broad negative checks. For rule 55, the
+old selector cannot be produced by the current dictionary. Comparative `U`
+links observed in focused examples use names such as `Us`, `Up`, or `Upc`,
+which do not match `U#t`. For rule 57, the dictionary already constrains the
+tested comparative paths sufficiently.
+
+### Implementation
+
+Rules 55 and 57 are removed from `4.0.knowledge`. No replacement connector
+structure is added.
+
+Rules 56, 58, and 59 were tested as possible neighboring removals and are not
+part of this change. Each produced a `corpus-basic.batch` regression and
+therefore remains active until a narrower dictionary replacement is designed.
+
+### Implications
+
+This removes two complete comparative PP checks from the blocker set without
+changing ordinary corpus behavior. It also narrows the remaining comparative
+PP work: rules 56, 58, and 59 are not simple redundancy removals.
+
+If a future dictionary change introduces a `U...t` connector, rule 55's old
+grammar intent should be re-evaluated before the new connector is accepted.
+
+### Verification
+
+Rule 55's unreachable-selector condition can be checked directly:
+
+```sh
+rg "\bU[a-zA-Z*#]*t[+-]" data/en/4.0.dict data/en/4.0.dict.m4
+```
+
+Expected result: no matches.
+
+The removal should also be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 362 errors
+corpus-fix-long.batch: 9 errors
+```
+
+## Rule 62: Remove Redundant `TOtc` Comparative Check
+
+**Status:** implemented; the PP rule has been removed from
+`4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+TOtc , TOt , "Bad comparative62"
+```
+
+The grammatical area is infinitival comparative complements.
+
+### Problem
+
+The current dictionary no longer appears to need this PP check for the tracked
+behavior. Removing it does not change the agreed corpus counts or the focused
+infinitival-comparative examples tested with this change.
+
+### Old Mechanism
+
+The rule rejected a completed linkage when `TOtc` and `TOt` occurred in the
+same PP domain. This was a broad negative check over infinitival-comparative
+link names.
+
+### Overgeneration Cause
+
+The current dictionary already constrains the tested infinitival comparative
+paths sufficiently. No current agreed test requires this PP check.
+
+### Implementation
+
+Rule 62 is removed from `4.0.knowledge`. No replacement connector structure is
+added.
+
+### Implications
+
+This removes one complete comparative PP check from the blocker set without
+changing ordinary corpus behavior. If a future malformed infinitival
+comparative requires rejection, it should be handled with a narrower
+dictionary rule.
+
+### Verification
+
+The removal should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 362 errors
+corpus-fix-long.batch: 9 errors
+```
+
 ## Rules 15 And 16: Tie `Jr` To Postnominal `B#j`
 
 **Status:** implemented; both PP rules have been removed from
