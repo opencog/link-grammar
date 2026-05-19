@@ -97,3 +97,17 @@ I know when he left.
 The lady, unpleased, spoke sharply.
 The lady, displeased, spoke sharply.
 The dog, unsatisfied, barked loudly.
+
+% CONTAINS_ONE rule 66: second-object connectors must not accept pronoun Ox-.
+% Ditransitive-like frames keep noun/name/time/mass second objects but exclude
+% pronouns from the O*n+ family.
+
+I gave him Mary.
+I gave him a rose.
+I gave him for his birthday a very expensive present.
+Please paint it all white.
+John made himself familiar with the drawings.
+You should hear him sing.
+*I gave Mary him.
+*I gave my brother it.
+*I gave him for his birthday it.

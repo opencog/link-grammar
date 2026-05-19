@@ -111,12 +111,12 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
-At the time of the relevant commits, expected results were:
+Expected results for the current documented state are:
 
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 367 errors
+corpus-fixes.batch: 365 errors
 corpus-fix-long.batch: 9 errors
 ```
 
@@ -277,7 +277,7 @@ The direct source of the bad path was the broad fallback branch in `to.r`:
 or I*a+
 ```
 
-Because generic connectors can match subscripted variants, this branch could
+Because generic connectors can match subscripted variants, that fallback could
 create `I#a` without a local proof of the intended filler/gap relation.
 
 ### Implementation
@@ -425,7 +425,7 @@ Expected results:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 367 errors
+corpus-fixes.batch: 365 errors
 corpus-fix-long.batch: 9 errors
 ```
 
@@ -690,6 +690,102 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
+## Rule 66: Split Non-Pronoun Second Objects From `Oxn`
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Oxn , JUNK , "Bad use of pronoun66"
+```
+
+The grammatical area is ditransitive-like verb frames and related object
+complement paths. A second object in these frames may be a noun, proper name,
+time expression, or similar non-pronominal object, but it should not be an
+`Ox-` pronoun object.
+
+### Problem
+
+The dictionary used the broad `O*n+` connector family in many second-object
+positions. That connector family also matched `Ox-`, so raw linkages could
+place a pronoun in a second-object position that English word order does not
+license.
+
+### Old Mechanism
+
+The old PP rule used a deliberately impossible criterion:
+
+```text
+Oxn , JUNK , "Bad use of pronoun66"
+```
+
+There was no matching `JUNK` connector in the dictionary, so every occurrence
+of an `Oxn` link was rejected after extraction. This acted as a negative
+connector constraint, but it left the parser free to build and extract the bad
+raw linkage first.
+
+### Overgeneration Cause
+
+The overgeneration was caused by using one broad connector family for two
+different object roles. The same `O*n+` spelling was convenient for noun-like
+second objects but too broad for pronouns, because `Ox-` belongs to the same
+matched family at the link-name level.
+
+### Implementation
+
+The dictionary now defines a narrow helper macro:
+
+```text
+<obj2-non-pronoun>: On+ or Omn+ or Opn+ or Osn+ or Otn+ or Oun+ or Oyn+;
+```
+
+Second-object positions that previously used standalone `O*n+` now use
+`<obj2-non-pronoun>`. The unrelated `dCO*n+` family is unchanged. This keeps
+the intended noun/name/time/mass second-object behavior while excluding
+pronoun `Ox-` from those positions.
+
+### Implications
+
+This is a direct dictionary replacement for rule 66. It is intentionally
+conservative: the helper macro preserves the object families that were needed
+for the existing second-object uses and removes only the pronoun path that the
+old PP rule rejected.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+I gave him Mary.
+I gave him a rose.
+I gave him for his birthday a very expensive present.
+Please paint it all white.
+John made himself familiar with the drawings.
+You should hear him sing.
+```
+
+Focused rejected examples include:
+
+```text
+*I gave Mary him.
+*I gave my brother it.
+*I gave him for his birthday it.
+```
+
+### Verification
+
+The rule 66 migration should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
 ## Rules 10 And 11: `Mj` / `MX#j` Require `Jw` Or `JQ`
 
 **Status:** implemented; both PP rules have been removed from
@@ -794,6 +890,6 @@ Expected results:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 367 errors
+corpus-fixes.batch: 365 errors
 corpus-fix-long.batch: 9 errors
 ```

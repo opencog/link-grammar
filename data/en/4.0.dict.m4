@@ -2885,6 +2885,12 @@ define(`VERB_S_S',`'VERB_x_T(<verb-s-s>,$1))
 define(`VERB_S_SP',`'VERB_x_T(<verb-s-sp>,$1))
 define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 
+% Second-object connectors used by ditransitive-like verb frames.
+% This keeps the old noun/name/time/mass object matches from the broad
+% second-object connector while excluding Ox- pronoun objects, which are not
+% valid in this position.
+<obj2-non-pronoun>: On+ or Omn+ or Opn+ or Osn+ or Otn+ or Oun+ or Oyn+;
+
 % AUXILIARY VERBS
 
 % O+ & <verb-wall>: "did" is not an auxiliary, and so needs the wall.
@@ -2894,7 +2900,7 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
   ((<b-minus>
     or (O+ & {@MV+} & <verb-wall> & {{Xc+} & QN+})
     or ({@MV+} & <verb-wall> & QN+)
-    or [[@MV+ & O*n+]]
+    or [[@MV+ & <obj2-non-pronoun>]]
     or Vd+
     or ({N+} & (CX- or [[()]]))) & <mv-coord>)
   or ({N+} & I*d+);
@@ -2922,7 +2928,7 @@ do.v:
   or (<verb-co> & {I*d+} & Xc+ & SI*i+ & {Xc+})
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
-    (<b-minus> or O+ or [[@MV+ & O*n+]] or CX-) &
+    (<b-minus> or O+ or [[@MV+ & <obj2-non-pronoun>]] or CX-) &
     <mv-coord> &
     (<verb-wall> or VJrpi-))
   or ({@E-} & I*d- & <b-minus> & O+)
@@ -2951,7 +2957,7 @@ did.v-d:
 <vc-done>:
   <b-minus>
   or (O+ & <mv-coord> & {I*j+})
-  or [[@MV+ & O*n+]]
+  or [[@MV+ & <obj2-non-pronoun>]]
   or Vd+;
 
 % <verb-pv-b> & <vc-done>: Pv- & B-: "he fixed what damage there had been done"
@@ -2967,8 +2973,8 @@ done.a finished.a through.a:
   or (dAJra- & {@MV+})
   or ({@MV+} & dAJla+);
 
-doing.v: <verb-pg> & (O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & <mv-coord>;
-doing.g: ((O+ or <b-minus> or [[@MV+ & O*n+]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
+doing.v: <verb-pg> & (O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]] or Vd+) & <mv-coord>;
+doing.g: ((O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]] or Vd+) & {@MV+} & <verb-ge>) or <verb-ge-d>;
 better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 
 % <verb-wall>: "I know he didn't", "I know they don't"
@@ -3005,7 +3011,7 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 <vc-have>:
   ({@MV+} & (<to-verb> or [TO+]) & <verb-wall>)
   or ({N+} & (B- or (O+ & <verb-wall>)) & {@MV+} & {[I*j+ or Pv+]})
-  or (([[@MV+ & O*n+]] or CX- or [[()]]) & <mv-coord>)
+  or (([[@MV+ & <obj2-non-pronoun>]] or CX- or [[()]]) & <mv-coord>)
   or ({N+} & PP+);
 
 have.v:
@@ -3039,7 +3045,7 @@ had.v-d:
   (<verb-x-pp> &
     (<to-verb> or
     ((O+ or <b-minus>) & {@MV+} & {[I*j+ or Pv+]}) or
-    (([[@MV+ & O*n+]] or CX-) & <mv-coord>))) or
+    (([[@MV+ & <obj2-non-pronoun>]] or CX-) & <mv-coord>))) or
   [[(SI*j+ or SFI**j+) & PP+ & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & dCOp+))]];
 
 %we'd they'd I'd he'd she'd you'd: (PP+ or ({Vw+} & I+)) & <CLAUSE>;
@@ -3476,20 +3482,20 @@ mean.eq avg.eq avg..eq average.eq sum.eq difference.eq total.eq:
 % abbreviations for ditransitive and optionally ditransitive verbs
 % ditransitive verbs take a direct and indirect object
 % e.g. "I gave her a rose"
-% B- & O+ & O*n+: "What are the chances you'll give her a kiss?"
-% O+ & @MV+ & O*n+: "I gave him for his birthday a very expensive present"
+% B- & O+ & <obj2-non-pronoun>: "What are the chances you'll give her a kiss?"
+% O+ & @MV+ & <obj2-non-pronoun>: "I gave him for his birthday a very expensive present"
 % The above is costly because the above is an awkward construction...
 <vc-ditrans>:
-  (O+ & {[[@MV+]]} & O*n+ & {VJd+})
-  or ({@E-} & <b-minus> & O+ & O*n+);
+  (O+ & {[[@MV+]]} & <obj2-non-pronoun> & {VJd+})
+  or ({@E-} & <b-minus> & O+ & <obj2-non-pronoun>);
 
 <vc-opt-ditrans>:
-  (O+ & {{[[@MV+]]} & O*n+} & {VJd+})
-  or ({@E-} & <b-minus> & O+ & O*n+);
+  (O+ & {{[[@MV+]]} & <obj2-non-pronoun>} & {VJd+})
+  or ({@E-} & <b-minus> & O+ & <obj2-non-pronoun>);
 
 <vc-opt-ditrans-costly>:
-  (O+ & {{[[@MV+]]} & [O*n+]} & {VJd+})
-  or ({@E-} & <b-minus> & O+ & O*n+);
+  (O+ & {{[[@MV+]]} & [<obj2-non-pronoun>]} & {VJd+})
+  or ({@E-} & <b-minus> & O+ & <obj2-non-pronoun>);
 
 % -----------------------------------------------------------
 % common intransitive verbs
@@ -3626,7 +3632,7 @@ coming.v:
 % abdicate.v abide.v abort.v accelerate.v acclimate.v acclimatize.v
 % O+ & QN+: "he anchors the bolts how?"
 <vc-tr,intr>:
-  ({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>)
+  ({O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>)
   or ({O+} & QN+);
 
 /en/words/words.v.2.1: VERB_PLI(`<vc-tr,intr>');
@@ -3734,7 +3740,7 @@ rising.v falling.v:
 % words.v.6: Optionally transitive verbs that can take particles
 % like "up" and "out" -- see also words.v.8
 % average.v back.v bail.v bang.v beam.v beef.v bellow.v bend.v bind.v
-% The [[@MV+ & O*n+]] term allows some bad parses, e.g. allows:
+% The [[@MV+ & <obj2-non-pronoun>]] term allows some bad parses, e.g. allows:
 %   "she walked out of the room two minutes"
 %
 % ({@E-} & B- & O+):
@@ -3753,9 +3759,9 @@ rising.v falling.v:
 % QN+: "you bike how many miles?"
 % O+ & QN+: "you saw it when?"
 <vc-fill>:
-  (((K+ & {[[@MV+]]} & (O*n+ or ({Xc+} & (Pa+ or Pv+))))
+  (((K+ & {[[@MV+]]} & (<obj2-non-pronoun> or ({Xc+} & (Pa+ or Pv+))))
     or ({O+ or <b-minus>} & {K+})
-    or [[@MV+ & O*n+]]
+    or [[@MV+ & <obj2-non-pronoun>]]
   ) & <mv-coord>)
   or ({O+} & {K+} & QN+);
 
@@ -3853,13 +3859,13 @@ and.v-fill:
 % QN+: "you run how many miles?"
 % QN+ & MV+: "you ran to her, when?"
 <vc-run>:
-  ((K+ & {[[@MV+]]} & O*n+)
+  ((K+ & {[[@MV+]]} & <obj2-non-pronoun>)
     or Pa+
     or ({O+ or <b-minus>} & {K+})
     or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
     or ({@E-} & <b-minus> & O+ & {Pa**j+ or K+})
     or ({O+} & {K+} & {@MV+} & {Xc+} & QN+)
-    or [[@MV+ & O*n+]]
+    or [[@MV+ & <obj2-non-pronoun>]]
   ) & <mv-coord>;
 
 catch.v drive.v strike.v:
@@ -3924,7 +3930,7 @@ running.g beating.g catching.g driving.g striking.g:
 <vc-trans>:
   ((O+
    or <b-minus>
-   or [[@MV+ & O*n+]]
+   or [[@MV+ & <obj2-non-pronoun>]]
    or ({@E-} & <b-minus> & (Os+ or Op+))
   ) & <mv-coord>)
   or ({O+} & QN+);
@@ -3988,7 +3994,7 @@ beset.v mistaken.v underwritten.v:
 <vc-trans-unlikely>:
   ([O+]1.5
    or <b-minus>
-   or [[@MV+ & O*n+]]
+   or [[@MV+ & <obj2-non-pronoun>]]
    or ({@E-} & <b-minus> & O+)
   ) & <mv-coord>;
 
@@ -4073,11 +4079,11 @@ buttering.g:
 % K+ & Pa+: "it washed up, unbroken"
 % QN+: "you kicked how many balls?"
 <vc-kick>:
-  (((K+ & {[[@MV+]]} & O*n+)
+  (((K+ & {[[@MV+]]} & <obj2-non-pronoun>)
     or ((O+ or <b-minus>) & {K+})
     or (<b-minus> & O+ & {K+})
     or ({K+} & {Xc+} & Pa+)
-    or [[@MV+ & O*n+]]) & <mv-coord>)
+    or [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>)
   or ({K+} & QN+);
 
 /en/words/words.v.8.1: VERB_PLI(<vc-kick>);
@@ -4121,7 +4127,7 @@ cut.v-d:
   or <verb-ge-d>;
 
 % --------------------------------------------------------------
-<vc-raise>: (((O+ or <b-minus>) & {OD+}) or [[@MV+ & O*n+]]) & <mv-coord>;
+<vc-raise>: (((O+ or <b-minus>) & {OD+}) or [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>;
 raise.v lower.v up.v: VERB_PLI(<vc-raise>);
 raises.v lowers.v ups.v: VERB_S_T(<vc-raise>);
 raised.v-d lowered.v-d upped.v-d:
@@ -4383,7 +4389,7 @@ dreaming.v: <verb-pg> & <vc-dream>;
 <vc-think>:
   ({@MV+} & {<embed-verb> or TH+ or RSe+ or Z- or <of-coord> or BW-})
   or (<mv-coord> & <null-verb>)
-  or (O+ & {@MV+} & {O*n+ or Pa**j+});
+  or (O+ & {@MV+} & {<obj2-non-pronoun> or Pa**j+});
 
 think.v: VERB_PLI(<vc-think>);
 thinks.v: VERB_S_T(<vc-think>);
@@ -4634,8 +4640,8 @@ deserved.v-d desired.v-d pleased.v-d:
 <vc-seek>:
   ({@MV+} & <to-verb>)
   or ((((O+ or <b-minus>) & {K+})
-    or (K+ & {[[@MV+]]} & O*n+)
-    or ([[@MV+ & O*n+]])) & <mv-coord>);
+    or (K+ & {[[@MV+]]} & <obj2-non-pronoun>)
+    or ([[@MV+ & <obj2-non-pronoun>]])) & <mv-coord>);
 
 seek.v: VERB_PLI(<vc-seek>);
 seeks.v: VERB_S_T(<vc-seek>);
@@ -4673,8 +4679,8 @@ declining.v failing.v hastening.v volunteering.v aiming.v:
 <vc-fight>:
   ({@MV+} & <to-verb>) or
   ({({O+ or <b-minus>} & {K+}) or
-    (K+ & {[[@MV+]]} & O*n+) or
-    [[@MV+ & O*n+]]} & <mv-coord>);
+    (K+ & {[[@MV+]]} & <obj2-non-pronoun>) or
+    [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>);
 fight.v: VERB_PLI(<vc-fight>);
 fights.v: VERB_S_T(<vc-fight>);
 fought.v-d: VERB_SPPP_T(<vc-fight>) or (<verb-pv-b> & {K+} & <mv-coord>) or
@@ -4876,8 +4882,8 @@ beginning.v continuing.v ceasing.v: <verb-pg> & <vc-begin>;
 % <vc-trans> & QN+: "you started this when?"
 <vc-start>:
   ((({O+ or <b-minus>} & {K+ or QN+}) or
-    (K+ & {[[@MV+]]} & O*n+) or
-    [[@MV+ & O*n+]]) & <mv-coord>) or
+    (K+ & {[[@MV+]]} & <obj2-non-pronoun>) or
+    [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>) or
   ({@MV+} & ((<to-verb> & {{Xc+} & QN+}) or Pg+));
 
 start.v stop.v try.v: VERB_PLI(<vc-start>);
@@ -5093,7 +5099,7 @@ fearing.v presuming.v assuming.v wavering.v:
 % O+ & Pa**j+: "I believed it possible."
 <vc-believe>:
   {<vc-trans>}
-  or (O+ & {@MV+} & (O*n+ or Pa**j+))
+  or (O+ & {@MV+} & (<obj2-non-pronoun> or Pa**j+))
   or (<mv-coord> & (<embed-verb> or TH+ or RSe+));
 
 believe.v answer.v worry.v: VERB_PLI(<vc-believe>);
@@ -5111,8 +5117,8 @@ believing.v answering.v worrying.v: <verb-pg> & <vc-believe>;
 <vc-rule>:
   ({@MV+} & (<embed-verb> or TH+ or RSe+)) or
   ((({O+ or <b-minus>} & {K+}) or
-     (K+ & {[[@MV+]]} & O*n+) or
-     [[@MV+ & O*n+]]) & <mv-coord>);
+     (K+ & {[[@MV+]]} & <obj2-non-pronoun>) or
+     [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>);
 rule.v add.v: VERB_PLI(<vc-rule>);
 rules.v adds.v: VERB_S_T(<vc-rule>);
 ruled.v-d added.v-d:
@@ -5126,8 +5132,8 @@ ruling.v adding.v: <verb-pg> & <vc-rule>;
 % <vc-trans> with particle
 <vc-figure>:
   ({@MV+} & (TH+ or Zs- or <embed-verb>)) or
-  ((((O+ or <b-minus>) & {K+}) or (K+ & {[[@MV+]]} & O*n+)) & <mv-coord>) or
-  ([[@MV+ & O*n+]]);
+  ((((O+ or <b-minus>) & {K+}) or (K+ & {[[@MV+]]} & <obj2-non-pronoun>)) & <mv-coord>) or
+  ([[@MV+ & <obj2-non-pronoun>]]);
 figure.v: VERB_PLI(<vc-figure>);
 figures.v: VERB_S_T(<vc-figure>);
 figured.v-d:
@@ -5364,10 +5370,10 @@ over_with: <verb-pv-b>;
 % and also Pa**j for "The witch turned him green"
 <vc-turn>:
   ((O+
-    or (K+ & {[[@MV+]]} & O*n+)
+    or (K+ & {[[@MV+]]} & <obj2-non-pronoun>)
     or ({O+ or <b-minus>} & {K+})
     or ((O+ or <b-minus>) & Pa**j+)
-    or [[@MV+ & O*n+]]) & <mv-coord>)
+    or [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>)
   or ({@MV+} & (Pa+ or AF-));
 
 turn.v: VERB_PLI(<vc-turn>);
@@ -5381,7 +5387,7 @@ turning.g: (<vc-turn> & <verb-ge>) or <verb-ge-d>;
 
 % <vc-trans> plus TI
 <vc-become>:
-  ((O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]] or Pv+) & <mv-coord>)
+  ((O+ or <b-minus> or TI+ or [[@MV+ & (<obj2-non-pronoun> or TI+)]] or Pv+) & <mv-coord>)
    or ({@MV+} & (AF- or Pa+) & {QN+});
 become.v: VERB_S_PLI(<vc-become>) or (<verb-s-pp> & <vc-become>) or <verb-pv>;
 becomes.v: VERB_S_S(<vc-become>);
@@ -5395,7 +5401,7 @@ becoming.v: <verb-pg> & <vc-become>;
   ({@MV+} & (AF- or Pa+))
   or ({O+ or <b-minus>
     or TI+
-    or [[@MV+ & (O*n+ or TI+)]]
+    or [[@MV+ & (<obj2-non-pronoun> or TI+)]]
     or [Pv+]} & <mv-coord>);
 remain.v: VERB_PLI(<vc-remain>);
 remains.v: VERB_S_T(<vc-remain>);
@@ -5407,8 +5413,8 @@ remaining.v: <verb-pg> & <vc-remain>;
 <vc-grow>:
   ({@MV+} & (AF- or Pa+))
   or ((({O+ or <b-minus>} & {K+})
-    or (K+ & {[[@MV+]]} & O*n+)
-    or [[@MV+ & O*n+]]) & <mv-coord>);
+    or (K+ & {[[@MV+]]} & <obj2-non-pronoun>)
+    or [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>);
 
 % <verb-i> & QN+: "The crime rate began to grow when?"
 grow.v: VERB_PLI(<vc-grow>) or <verb-sip> or (<verb-i> & QN+);
@@ -5423,7 +5429,7 @@ growing.g: (<vc-grow> & <verb-pg,ge>) or <verb-adj> or <verb-ge-d>;
 growing.v: <verb-pg> & <vc-grow>;
 
 % <vc-trans> plus OF
-<vc-approve>: {O+ or <b-minus> or [[@MV+ & O*n+]] or ({@MV+} & OF+)} & <mv-coord>;
+<vc-approve>: {O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]] or ({@MV+} & OF+)} & <mv-coord>;
 approve.v: VERB_PLI(<vc-approve>);
 approves.v: VERB_S_T(<vc-approve>);
 approved.v-d: VERB_SPPP_T(<vc-approve>) or <verb-pv> or <verb-adj>
@@ -5432,7 +5438,7 @@ approving.g: (<vc-approve> & <verb-ge>) or <verb-ge-d>;
 approving.v: <verb-pg> & <vc-approve>;
 
 % <vc-trans> plus OF
-<vc-dispose>: (O+ or <b-minus> or [[@MV+ & O*n+]] or ({@MV+} & OF+)) & <mv-coord>;
+<vc-dispose>: (O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]] or ({@MV+} & OF+)) & <mv-coord>;
 dispose.v conceive.v: VERB_PLI(<vc-dispose>);
 disposes.v conceives.v: VERB_S_T(<vc-dispose>);
 disposed.v-d conceived.v-d: VERB_SPPP_T(<vc-dispose>) or <verb-pv> or
@@ -5442,9 +5448,9 @@ disposing.v conceiving.v: <verb-ge> & <vc-dispose>;
 
 % <vc-trans> plus particle
 <vc-speak>:
-  ((K+ & {[[@MV+]]} & O*n+)
+  ((K+ & {[[@MV+]]} & <obj2-non-pronoun>)
     or ({O+ or <b-minus>} & {K+})
-    or [[@MV+ & O*n+]]
+    or [[@MV+ & <obj2-non-pronoun>]]
     or OF+) & <mv-coord>;
 speak.v: VERB_PLI(<vc-speak>);
 speaks.v: VERB_S_T(<vc-speak>);
@@ -5482,7 +5488,7 @@ reeking.v smelling.v: <verb-pg> & <vc-smell>;
 % <vc-trans> plus particle and Vt
 % QN+: "you took which one?"
 <vc-take>:
-  (((K+ & {[[@MV+]]} & O*n+) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & O*n+]]) & <mv-coord>)
+  (((K+ & {[[@MV+]]} & <obj2-non-pronoun>) or ((O+ or <b-minus>) & {K+ or Vt+}) or [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>)
   or ({O+} & Ot+ & {@MV+} & {<tot-verb> or <toi-verb>})
   or (OXii+ & Vtg+ & {@MV+} & TH+)
   or QN+
@@ -5509,7 +5515,7 @@ for_granted: Vtg-;
 % I think the WR- here is dead and not used. See other WR- below
 % O+ & QN+: "You put it where?"
 <vc-put>:
-  ((K+ & {[[@MV+]]} & O*n+) or
+  ((K+ & {[[@MV+]]} & <obj2-non-pronoun>) or
   ((O+ or <b-minus>) & (K+ or Pp+ or WR- or QN+)) or
   (Vp+ & (Zs- or MVa+))) & <mv-coord>;
 
@@ -5526,12 +5532,12 @@ puts.v: VERB_S_T(<vc-put>);
 putting.v: <verb-pg> & <vc-put>;
 putting.g: (<vc-put> & <verb-ge>) or <verb-ge-d>;
 
-% K+ & O*n+: "He costed out the plan"
+% K+ & <obj2-non-pronoun>: "He costed out the plan"
 <vc-cost>:
   ((<vc-opt-ditrans> or
-    (K+ & O*n+) or
+    (K+ & <obj2-non-pronoun>) or
     (<b-minus> & {O+})) & <mv-coord> & {<toi-verb>}) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 cost.v-d: VERB_S_PLI(<vc-cost>) or VERB_S_SPPP(<vc-cost>);
 costed.v-d: VERB_SPPP_T(<vc-cost>) or
@@ -5544,10 +5550,10 @@ costing.g: (<vc-cost> & <verb-ge>) or <verb-ge-d>;
 % ditransitive
 <vc-find>:
   (<vc-ditrans> & <mv-coord>) or
-  (K+ & {[[@MV+]]} & O*n+) or
+  (K+ & {[[@MV+]]} & <obj2-non-pronoun>) or
   (<b-minus> & O+) or
   ((O+ or <b-minus>) & (({@MV+} & (Pa+ or AF- or Pg+)) or ({K+} & <mv-coord>))) or
-  ([[@MV+ & O*n+]]) or
+  ([[@MV+ & <obj2-non-pronoun>]]) or
   ({@MV+} & (TH+ or <embed-verb> or RSe+));
 
 find.v: VERB_PLI(<vc-find>);
@@ -5562,7 +5568,7 @@ finding.g: (<vc-find> & <verb-ge>) or <verb-ge-d>;
 <vc-get>:
   ((O+ or <b-minus>) & (({K+} & <mv-coord>) or ({@MV+} & (Pa+ or AF- or Pv+))))
   or ((<vc-ditrans>
-    or (K+ & {[[@MV+]]} & O*n+)
+    or (K+ & {[[@MV+]]} & <obj2-non-pronoun>)
     or K+
     or (<b-minus> & O+)
     ) & <mv-coord>)
@@ -5595,7 +5601,7 @@ getting.g: (<vc-get> & <verb-ge>) or <verb-ge-d>;
     (({K+} & <mv-coord>)
     or ({@MV+} & {Pa+ or AF- or Pv+ or Pg+})))
   or ({@MV+} & {Xc+} & (Pa+ or Pv+))
-  or ({(K+ & {[[@MV+]]} & O*n+) or ([[@MV+ & O*n+]])} & <mv-coord>);
+  or ({(K+ & {[[@MV+]]} & <obj2-non-pronoun>) or ([[@MV+ & <obj2-non-pronoun>]])} & <mv-coord>);
 
 leave.v: VERB_PLI(<vc-leave>);
 leaves.v: VERB_S_T(<vc-leave>);
@@ -5607,7 +5613,7 @@ leaving.v leavin'.v: <verb-pg> & <vc-leave>;
 leaving.g leavin'.g: (<vc-leave> & <verb-ge>) or <verb-ge-d>;
 
 <vc-keep>:
-  ((O+ or (K+ & {[[@MV+]]} & O*n+) or [[@MV+ & O*n+]] or Vk+) & <mv-coord>)
+  ((O+ or (K+ & {[[@MV+]]} & <obj2-non-pronoun>) or [[@MV+ & <obj2-non-pronoun>]] or Vk+) & <mv-coord>)
   or ({O+ or <b-minus>} & (([K+] & <mv-coord>) or ({@MV+} & (Pa+ or AF- or Pg+ or Pv+))));
 
 keep.v: VERB_PLI(<vc-keep>);
@@ -5623,9 +5629,9 @@ track.i: Vk- & {OF+};
 
 <vc-set>:
   (
-    (K+ & {[[@MV+]]} & O*n+) or
+    (K+ & {[[@MV+]]} & <obj2-non-pronoun>) or
     ({O+ or <b-minus>} & {K+ or Vs+}) or
-    [[@MV+ & O*n+]]
+    [[@MV+ & <obj2-non-pronoun>]]
   ) & <mv-coord>;
 
 set.v-d:
@@ -5642,10 +5648,10 @@ free.i straight.i loose.i: Vs- & {MV+};
 
 % TH+: "The court held that ..."
 <vc-hold>:
-  ((K+ & {[[@MV+]]} & O*n+)
+  ((K+ & {[[@MV+]]} & <obj2-non-pronoun>)
     or TH+
     or ({O+ or <b-minus>} & {K+ or Vh+})
-    or [[@MV+ & O*n+]]) & <mv-coord>;
+    or [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>;
 
 hold.v: VERB_PLI(<vc-hold>);
 holds.v: VERB_S_T(<vc-hold>);
@@ -5661,7 +5667,7 @@ hostage.i captive.i: Vh- or Vth-;
   ({@MV+} & (<embed-verb> or TH+ or RSe+ or Z- or <to-verb>))
   or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb>})
   or (<mv-coord> & <null-verb>)
-  or ([[@MV+ & O*n+]]);
+  or ([[@MV+ & <obj2-non-pronoun>]]);
 
 expect.v claim.v: VERB_PLI(<vc-expect>);
 expects.v claims.v: VERB_S_T(<vc-expect>);
@@ -5713,7 +5719,7 @@ daring.v: <verb-pg> & <vc-dare>;
 <vc-like>:
   ({@MV+} & (<to-verb> or [TO+] or Pg+))
   or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb>})
-  or ([[@MV+ & O*n+]]);
+  or ([[@MV+ & <obj2-non-pronoun>]]);
 
 like.v: VERB_PLI(<vc-like>);
 likes.v: VERB_S_T(<vc-like>);
@@ -5726,12 +5732,12 @@ liking.v: <verb-pg> & <vc-like>;
   ((<vc-opt-ditrans> or
     (<b-minus> & {O+})) & <mv-coord>) or
   ({@MV+} & <to-verb>) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 offer.v: VERB_PLI(<vc-offer>);
 offers.v: VERB_S_T(<vc-offer>);
 offered.v-d: VERB_SPPP_T(<vc-offer>) or (<verb-pv-b> & {O+ or <b-minus>
-or [[@MV+ & O*n+]]} & <mv-coord>) or ({O+ or [[@MV+ & O*n+]]} or <verb-phrase-opener>);
+or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or ({O+ or [[@MV+ & <obj2-non-pronoun>]]} or <verb-phrase-opener>);
 offering.g: (<vc-offer> & <verb-ge>) or <verb-ge-d>;
 offering.v: <verb-pg> & <vc-offer>;
 
@@ -5741,12 +5747,12 @@ offering.v: <verb-pg> & <vc-offer>;
   ((<vc-opt-ditrans> or
     (<b-minus> & {O+})) & <mv-coord>) or
   (<mv-coord> & {<to-verb>}) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 refuse.v: VERB_PLI(<vc-refuse>);
 refuses.v: VERB_S_T(<vc-refuse>);
 refused.v-d: VERB_SPPP_T(<vc-refuse>) or (<verb-pv-b> & {O+ or <b-minus> or
-[[@MV+ & O*n+]]} & <mv-coord>) or ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+[[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or ({O+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>);
 refusing.g: (<vc-refuse> & <verb-ge>) or <verb-ge-d>;
 refusing.v: <verb-pg> & <vc-refuse>;
 
@@ -5759,7 +5765,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
   (<mv-coord> & ({<to-verb>} or <null-verb>))
   or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+ or Pa**j+})
   or ({O+} & QN+)
-  or [[@MV+ & O*n+]]
+  or [[@MV+ & <obj2-non-pronoun>]]
   or [[CX- & <mv-coord>]];
 
 want.v:
@@ -5787,7 +5793,7 @@ wanting.v needing.v: <verb-pg> & <vc-want>;
 <vc-choose>:
   (<mv-coord> & {<to-verb>}) or
   ((O+ or <b-minus>) & <mv-coord> & {<too-verb>}) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 choose.v: VERB_PLI(<vc-choose>);
 chooses.v: VERB_S_T(<vc-choose>);
@@ -5804,7 +5810,7 @@ choosing.v: <verb-pg> & <vc-choose>;
 <vc-prepare>:
   (<mv-coord> & {<to-verb>}) or
   ((O+ or <b-minus>) & <mv-coord> & {<too-verb>}) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 prepare.v press.v: VERB_PLI(<vc-prepare>);
 prepares.v presses.v: VERB_S_T(<vc-prepare>);
@@ -5820,7 +5826,7 @@ preparing.v pressing.v: <verb-pg> & <vc-prepare>;
   ((O+ or <b-minus>) & <mv-coord> & {<too-verb>}) or
   ({@MV+} & (TH+ or <embed-verb> or TS+ or (SI*j+ & I*j+))) or
   Zs- or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 require.v: VERB_PLI(<vc-require>);
 requires.v: VERB_S_T(<vc-require>);
@@ -5835,7 +5841,7 @@ requiring.v: <verb-pg> & <vc-require>;
 <vc-command>:
   ({@MV+} & (TH+ or Zs- or TS+ or <embed-verb>)) or
   ((O+ or <b-minus>) & <mv-coord> & {<too-verb>}) or
-  ([[@MV+ & {O*n+}]]);
+  ([[@MV+ & {<obj2-non-pronoun>}]]);
 
 command.v order.v urge.v: VERB_PLI(<vc-command>);
 commands.v orders.v urges.v: VERB_S_T(<vc-command>);
@@ -5851,12 +5857,12 @@ commanding.v ordering.v urging.v: <verb-pg> & <vc-command>;
 <vc-consider>:
   ({@MV+} & (TH+ or Pg+)) or
   ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pa+}) or
-  (((O+ & (B- or ({[[@MV+]]} & O*n+))) or ([[@MV+ & O*n+]])) & <mv-coord>);
+  (((O+ & (B- or ({[[@MV+]]} & <obj2-non-pronoun>))) or ([[@MV+ & <obj2-non-pronoun>]])) & <mv-coord>);
 consider.v: VERB_PLI(<vc-consider>);
 considers.v: VERB_S_T(<vc-consider>);
 considered.v-d: VERB_SPPP_T(<vc-consider>) or (<verb-s-pv-b> &
-(({@MV+} & (<tof-verb> or Pa+)) or ({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>)))
-or ((({@MV+} & (<tof-verb> or Pa+)) or ({O+ or [[@MV+ & O*n+]]}))
+(({@MV+} & (<tof-verb> or Pa+)) or ({O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>)))
+or ((({@MV+} & (<tof-verb> or Pa+)) or ({O+ or [[@MV+ & <obj2-non-pronoun>]]}))
 & <verb-phrase-opener>);
 considering.g: (<vc-consider> & <verb-ge>) or <verb-ge-d>;
 considering.v: <verb-pg> & <vc-consider>;
@@ -5864,7 +5870,7 @@ considering.v: <verb-pg> & <vc-consider>;
 <vc-perceive>:
   ({@MV+} & (TH+ or <embed-verb>)) or
   ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb>}) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 perceive.v: VERB_PLI(<vc-perceive>);
 perceives.v: VERB_S_T(<vc-perceive>);
@@ -5876,7 +5882,7 @@ perceiving.v: <verb-pg> & <vc-perceive>;
 <vc-report>:
   (<mv-coord> & {TH+ or Z- or <embed-verb>}) or
   ((O+ or <b-minus>) & <mv-coord> & {<too-verb>}) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 report.v: VERB_PLI(<vc-report>);
 reports.v: VERB_S_T(<vc-report>);
@@ -5891,7 +5897,7 @@ reporting.v: <verb-pg> & <vc-report>;
 <vc-caution>:
   ((O+ or <b-minus>) & <mv-coord> & {TH+ or <embed-verb> or <too-verb>}) or
   (<mv-coord> & {TH+ or Zs-}) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 caution.v: VERB_PLI(<vc-caution>);
 cautions.v: VERB_S_T(<vc-caution>);
@@ -5906,7 +5912,7 @@ cautioning.v: <verb-pg> & <vc-caution>;
 <vc-warn>:
   ((O+ or <b-minus>) & <mv-coord> & {TH+ or <embed-verb> or <too-verb> or <of-coord>}) or
   (<mv-coord> & {TH+ or Zs- or <of-coord>}) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 warn.v advise.v: VERB_PLI(<vc-warn>);
 warns.v advises.v: VERB_S_T(<vc-warn>);
@@ -5920,7 +5926,7 @@ warning.v advising.v: <verb-pg> & <vc-warn>;
 <vc-hear>:
   ((O+ or <b-minus>) & <mv-coord> & {I*j+ or Pg+}) or
   (<mv-coord> & {TH+ or Zs- or <embed-verb> or <of-coord>}) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 hear.v: VERB_PLI(<vc-hear>);
 hears.v: VERB_S_T(<vc-hear>);
@@ -5938,7 +5944,7 @@ hearing.v: <verb-pg> & <vc-hear>;
   ((<b-minus> or O+) & <mv-coord> & {[I*j+]0.05 or Pg+ or AZ+ or Pv+})
   or (<b-minus> & {@MV+} & [I*j+ & Xc+])
   or (<mv-coord> & {TH+ or Zs- or QI+ or <embed-verb>})
-  or ([[@MV+ & O*n+]]);
+  or ([[@MV+ & <obj2-non-pronoun>]]);
 
 see.v spot.v: VERB_PLI(<vc-see>);
 sees.v spots.v: VERB_S_T(<vc-see>);
@@ -5955,7 +5961,7 @@ seeing.v spotting.v: <verb-pg> & <vc-see>;
 <vc-owe>:
   (<vc-opt-ditrans>
     or (B- & {O+})
-    or ([[@MV+ & O*n+]])
+    or ([[@MV+ & <obj2-non-pronoun>]])
   ) & <mv-coord>;
 
 owe.v deliver.v accord.v award.v term.v grant.v begrudge.v
@@ -5969,8 +5975,8 @@ assigns.v renames.v repays.v dubs.v entitles.v fines.v:
 owed.v-d delivered.v-d accorded.v-d awarded.v-d
 granted.v-d begrudged.v-d assigned.v-d repaid.v-d fined.v-d:
   VERB_SPPP_T(<vc-owe>)
-  or (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>)
-  or ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+  or (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>)
+  or ({O+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>);
 
 owing.v delivering.v according.v awarding.v terming.v granting.v
 begrudging.v assigning.v renaming.v repaying.v dubbing.v entitling.v fining.v:
@@ -5983,8 +5989,8 @@ assigning.g renaming.g repaying.g dubbing.g entitling.g fining.g:
 % extended linking requirements based on the above
 termed.v-d  dubbed.v-d entitled.v-d renamed.v-d:
   VERB_SPPP_T(<vc-owe>) or
-  (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>) or
-  ({O+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
+  (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
+  ({O+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>) or
   <verb-adj>;
 
 % intransitive: "we deliver!"
@@ -6009,8 +6015,8 @@ delivered.w-d:
     or (B- & {O+ or K+})
     or <vc-opt-ditrans-costly>
     or (O+ & K+)
-    or (K+ & {[[@MV+]]} & O*n+)
-    or ([[@MV+ & O*n+]])
+    or (K+ & {[[@MV+]]} & <obj2-non-pronoun>)
+    or ([[@MV+ & <obj2-non-pronoun>]])
   } & <mv-coord>;
 
 give.v send.v bring.v lend.v issue.v hand.v pour.v text.v:
@@ -6022,21 +6028,21 @@ issues.v hands.v pours.v texts.v:
 
 sent.v-d brought.v-d lent.v-d handed.v-d:
   VERB_SPPP_T(<vc-give>) or
-  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & <mv-coord>) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
+  ({O+ or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>);
 
 issued.v-d poured.v-d texted.v-d:
   VERB_SPPP_T(<vc-give>) or
   <verb-adj> or
-  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & <mv-coord>) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
+  ({O+ or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>);
 
 gave.v-d: VERB_SP_T(<vc-give>);
 given.v:
   VERB_PP(<vc-give>) or
   <verb-adj> or
-  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & <mv-coord>) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
+  ({O+ or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>);
 
 giving.g sending.g bringing.g
 lending.g issuing.g handing.g pouring.g texting.g:
@@ -6053,8 +6059,8 @@ lending.v issuing.v handing.v pouring.v texting.v:
   {(B- & {O+ or K+}) or
     <vc-opt-ditrans> or
     (O+ & K+) or
-    (K+ & {{[[@MV+]]} & O*n+}) or
-    ([[@MV+ & O*n+]])} & <mv-coord>;
+    (K+ & {{[[@MV+]]} & <obj2-non-pronoun>}) or
+    ([[@MV+ & <obj2-non-pronoun>]])} & <mv-coord>;
 
 pass.v buy.v pay.v sell.v deal.v telegraph.v wire.v: VERB_PLI(<vc-pass>);
 
@@ -6067,8 +6073,8 @@ telegraphed.v-d wired.v-d:
   VERB_SPPP_T(<vc-pass>) or
   (S- & <b-minus>) or
   <verb-adj> or
-  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & <mv-coord>) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
+  ({O+ or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>);
 
 passing.g buying.g paying.g selling.g dealing.g telegraphing.g wiring.g:
   (<vc-pass> & <verb-ge>) or <verb-ge-d>;
@@ -6085,8 +6091,8 @@ passing.v buying.v paying.v selling.v dealing.v telegraphing.v wiring.v:
   ({(B- & {O+ or Pa+ or K+})
     or <vc-opt-ditrans>
     or (O+ & (Pa+ or K+))
-    or (K+ & {{[[@MV+]]} & O*n+})
-    or ([[@MV+ & O*n+]])} & <mv-coord>)
+    or (K+ & {{[[@MV+]]} & <obj2-non-pronoun>})
+    or ([[@MV+ & <obj2-non-pronoun>]])} & <mv-coord>)
   or <vc-para-naming>;
 
 % This is not quite right:
@@ -6095,8 +6101,8 @@ call.v shout.v: VERB_PLI(<vc-call>);
 calls.v shouts.v: VERB_S_T(<vc-call>);
 called.v-d shouted.v-d:
   VERB_SPPP_T(<vc-call>)
-  or (<verb-pv-b> & {O+ or <b-minus> or K+ or Pa+ or [[@MV+ & O*n+]]} & <mv-coord>)
-  or ({O+ or K+ or Pa+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+  or (<verb-pv-b> & {O+ or <b-minus> or K+ or Pa+ or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>)
+  or ({O+ or K+ or Pa+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>);
 
 calling.g shouting.g: (<vc-call> & <verb-ge>) or <verb-ge-d>;
 calling.v shouting.v: <verb-pg> & <vc-call>;
@@ -6135,8 +6141,8 @@ coloring.g colouring.g painting.g:
   ({(<b-minus> & {O+ or K+})
     or (<vc-opt-ditrans> & {TH+})
     or (O+ & K+)
-    or (K+ & {{[[@MV+]]} & O*n+})
-    or ([[@MV+ & O*n+]])
+    or (K+ & {{[[@MV+]]} & <obj2-non-pronoun>})
+    or ([[@MV+ & <obj2-non-pronoun>]])
   } & <mv-coord>)
   or ({@MV+} & (TH+ or <embed-verb>));
 
@@ -6147,16 +6153,16 @@ wrote.v-d drew.v-d: VERB_SP_T(<vc-write>);
 read.v-d:
   VERB_SPPP_T(<vc-write>) or
   (<verb-ico> & <vc-write>) or
-  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & <mv-coord>) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
+  ({O+ or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>);
 charged.v-d:
   VERB_SPPP_T(<vc-write>) or
-  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & <mv-coord>) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>);
+  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
+  ({O+ or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>);
 written.v-d drawn.v-d w/o.v-d:
   VERB_PP(<vc-write>) or
-  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & O*n+]]} & <mv-coord>) or
-  ({O+ or K+ or [[@MV+ & O*n+]]} & <verb-phrase-opener>) or
+  (<verb-pv-b> & {O+ or <b-minus> or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
+  ({O+ or K+ or [[@MV+ & <obj2-non-pronoun>]]} & <verb-phrase-opener>) or
   <verb-adj>;
 
 writing.v reading.v charging.v drawing.v:
@@ -6173,8 +6179,8 @@ writing.g reading.g charging.g drawing.g:
     <vc-opt-ditrans> or
     (O+ & K+) or
     <of-coord> or
-    (K+ & {{[[@MV+]]} & O*n+}) or
-    ([[@MV+ & O*n+]])} & <mv-coord>);
+    (K+ & {{[[@MV+]]} & <obj2-non-pronoun>}) or
+    ([[@MV+ & <obj2-non-pronoun>]])} & <mv-coord>);
 sing.v dance.v cry.v: VERB_PLI(<vc-sing>);
 sings.v dances.v cries.v: VERB_S_T(<vc-sing>);
 sang.v-d danced.v-d cried.v-d: VERB_SP_T(<vc-sing>);
@@ -6192,14 +6198,14 @@ singing.v dancing.v crying.v: <verb-pg> & <vc-sing>;
 % ditransitive
 <vc-allow>:
   ((<vc-ditrans> or
-    ([[@MV+]] & O*n+)) & <mv-coord>) or
+    ([[@MV+]] & <obj2-non-pronoun>)) & <mv-coord>) or
   ((O+ or <b-minus>) & <mv-coord> & {B- or <too-verb>});
 
 allow.v: VERB_PLI(<vc-allow>);
 allows.v: VERB_S_T(<vc-allow>);
 allowed.v-d: VERB_SPPP_T(<vc-allow>) or
-  (<verb-pv-b> & (({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>) or ({@MV+} & <to-verb>)))
-  or ({O+ or [[@MV+ & O*n+]] or ({@MV+} & <to-verb>)} & <verb-phrase-opener>);
+  (<verb-pv-b> & (({O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or ({@MV+} & <to-verb>)))
+  or ({O+ or [[@MV+ & <obj2-non-pronoun>]] or ({@MV+} & <to-verb>)} & <verb-phrase-opener>);
 allowing.g: (<vc-allow> & <verb-ge>) or <verb-ge-d>;
 allowing.v: <verb-pg> & <vc-allow>;
 
@@ -6207,15 +6213,15 @@ allowing.v: <verb-pg> & <vc-allow>;
 <vc-promise>:
   ({O+ or <b-minus>} & <mv-coord> & {B- or <to-verb> or <embed-verb> or TH+ or RSe+ or Zs-}) or
   ((<vc-ditrans> or
-    ([[@MV+ & O*n+]])) & <mv-coord>);
+    ([[@MV+ & <obj2-non-pronoun>]])) & <mv-coord>);
 
 promise.v: VERB_PLI(<vc-promise>);
 promises.v: VERB_S_T(<vc-promise>);
 promised.v-d:
   VERB_SPPP_T(<vc-promise>)
-  or (<verb-pv-b> & (({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>) or ({@MV+} & (<to-verb> or <embed-verb> or TH+ or RSe+ or Zs-))))
+  or (<verb-pv-b> & (({O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or ({@MV+} & (<to-verb> or <embed-verb> or TH+ or RSe+ or Zs-))))
   or <verb-adj>
-  or ({O+ or [[@MV+ & O*n+]] or ({{@MV+} & (<to-verb> or <embed-verb> or TH+)})} & <verb-phrase-opener>);
+  or ({O+ or [[@MV+ & <obj2-non-pronoun>]] or ({{@MV+} & (<to-verb> or <embed-verb> or TH+)})} & <verb-phrase-opener>);
 promising.g: (<vc-promise> & <verb-ge>) or <verb-ge-d>;
 promising.v: <verb-pg> & <vc-promise>;
 
@@ -6225,8 +6231,8 @@ promising.v: <verb-pg> & <vc-promise>;
   ((
     <vc-opt-ditrans> or
     (O+ & K+) or
-    (K+ & (B- or ({[[@MV+]]} & O*n+))) or
-    ([[@MV+ & O*n+]]) or
+    (K+ & (B- or ({[[@MV+]]} & <obj2-non-pronoun>))) or
+    ([[@MV+ & <obj2-non-pronoun>]]) or
     [[()]]) & <mv-coord>);
 
 show.v: VERB_PLI(<vc-show>) or <verb-manner>;
@@ -6236,9 +6242,9 @@ shown.v:
   VERB_PP(<vc-show>) or
   <verb-manner> or
   (<verb-s-pv-b> &
-    (({O+ or K+ or B- or [[@MV+ & O*n+]]} & <mv-coord>) or
+    (({O+ or K+ or B- or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
     ({@MV+} & (QN+ or <embed-verb> or TH+ or RSe+ or Zs-)))) or
-  ({O+ or K+ or [[@MV+ & O*n+]] or ({@MV+} & (QN+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
+  ({O+ or K+ or [[@MV+ & <obj2-non-pronoun>]] or ({@MV+} & (QN+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
 showing.g: (<vc-show> & <verb-ge>) or <verb-ge-d>;
 showing.v: <verb-pg> & <vc-show>;
 
@@ -6247,8 +6253,8 @@ showing.v: <verb-pg> & <vc-show>;
   ((O+ or <b-minus>) & ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs- or B- or <too-verb>)))
   or ({
     <vc-opt-ditrans>
-    or (B- & {[[@MV+]]} & O*n+)
-    or ([[@MV+ & O*n+]])} & <mv-coord>);
+    or (B- & {[[@MV+]]} & <obj2-non-pronoun>)
+    or ([[@MV+ & <obj2-non-pronoun>]])} & <mv-coord>);
 
 teach.v: VERB_PLI(<vc-teach>);
 teaches.v: VERB_S_T(<vc-teach>);
@@ -6256,10 +6262,10 @@ teaches.v: VERB_S_T(<vc-teach>);
 taught.v-d:
   VERB_SPPP_T(<vc-teach>) or
   (<verb-pv-b> &
-    (({O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>) or
+    (({O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
     ({@MV+} & (QI+ or <embed-verb> or TH+ or RSe+ or Zs- or <to-verb>)))) or
   (<verb-sp,pp> & @MV+ & QN+) or
-  ({O+ or [[@MV+ & O*n+]] or ({@MV+} & (QI+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
+  ({O+ or [[@MV+ & <obj2-non-pronoun>]] or ({@MV+} & (QI+ or <embed-verb> or TH+))} & <verb-phrase-opener>);
 teaching.g: (<vc-teach> & <verb-ge>) or <verb-ge-d>;
 teaching.v: <verb-pg> & <vc-teach>;
 
@@ -6275,8 +6281,8 @@ compelling.g: (<vc-compel> & <verb-ge>) or <verb-ge-d>;
 
 <vc-force>:
   (((O+ or <b-minus>) & (({@MV+} & <too-verb>) or K+ or [()])) or
-    (K+ & O*n+) or
-    ([[{K+} & @MV+ & O*n+]])) & <mv-coord>;
+    (K+ & <obj2-non-pronoun>) or
+    ([[{K+} & @MV+ & <obj2-non-pronoun>]])) & <mv-coord>;
 
 force.v: VERB_PLI(<vc-force>);
 forces.v: VERB_S_T(<vc-force>);
@@ -6294,7 +6300,7 @@ forcing.v: <verb-pg> & <vc-force>;
 <vc-design>:
   (B- & <mv-coord> & {<too-verb>}) or
   (O+ & <mv-coord> & {<too-verb>}) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 design.v permit.v authorize.v use.v cause.v enable.v
 pressure.v train.v sentence.v prompt.v spur.v disincline.v
@@ -6372,15 +6378,15 @@ using.g: (<vc-design> & (<verb-ge> or MVs-)) or <verb-ge-d>;
 
 <vc-elect>:
   ((O+ or <b-minus>) & ((<mv-coord> & {<too-verb>}) or
-    ({[[@MV+]]} & (O*n+ or TI+)))) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+    ({[[@MV+]]} & (<obj2-non-pronoun> or TI+)))) or
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 elect.v appoint.v: VERB_PLI(<vc-elect>);
 elects.v appoints.v: VERB_S_T(<vc-elect>);
 elected.v-d appointed.v-d:
   VERB_SPPP_T(<vc-elect>)
-  or (<verb-pv-b> & (({O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <mv-coord>) or ({@MV+} & <to-verb>)))
-  or (({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} or ({@MV+} & <to-verb>)) & <verb-phrase-opener>)
+  or (<verb-pv-b> & (({O+ or <b-minus> or TI+ or [[@MV+ & (<obj2-non-pronoun> or TI+)]]} & <mv-coord>) or ({@MV+} & <to-verb>)))
+  or (({O+ or TI+ or [[@MV+ & (<obj2-non-pronoun> or TI+)]]} or ({@MV+} & <to-verb>)) & <verb-phrase-opener>)
   or <verb-adj>;
 
 electing.g appointing.g: (<vc-elect> & <verb-ge>) or <verb-ge-d>;
@@ -6392,15 +6398,15 @@ electing.v appointing.v: <verb-pg> & <vc-elect>;
   ((<vc-opt-ditrans>
     or (O+ & {[[@MV+]]} & TI+)
     or (B- & {O+ or TI+})
-    or ([[@MV+ & O*n+]])) & <mv-coord>)
+    or ([[@MV+ & <obj2-non-pronoun>]])) & <mv-coord>)
   or <vc-para-naming>;
 
 name.v designate.v label.v: VERB_PLI(<vc-name>);
 names.v designates.v labels.v: VERB_S_T(<vc-elect>);
 named.v-d designated.v-d labelled.v-d labeled.v-d:
   VERB_SPPP_T(<vc-name>) or
-  (<verb-pv-b> & ({O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]]}) & <mv-coord>) or
-  ({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-phrase-opener>) or
+  (<verb-pv-b> & ({O+ or <b-minus> or TI+ or [[@MV+ & (<obj2-non-pronoun> or TI+)]]}) & <mv-coord>) or
+  ({O+ or TI+ or [[@MV+ & (<obj2-non-pronoun> or TI+)]]} & <verb-phrase-opener>) or
   <verb-adj>;
 naming.g designating.g labelling.g labeling.g: (<vc-name> & <verb-ge>) or <verb-ge-d>;
 naming.v designating.v labelling.v labeling.v: <verb-pg> & <vc-name>;
@@ -6411,8 +6417,8 @@ tag.v: VERB_PLI(<vc-tag>);
 tags.v: VERB_S_T(<vc-tag>);
 tagged.v-d:
   VERB_SPPP_T(<vc-tag>) or
-  ((<verb-pv-b> & ({O+ or <b-minus> or TI+ or [[@MV+ & (O*n+ or TI+)]]}) & <mv-coord>) or <verb-pv>) or
-  ({O+ or TI+ or [[@MV+ & (O*n+ or TI+)]]} & <verb-phrase-opener>) or
+  ((<verb-pv-b> & ({O+ or <b-minus> or TI+ or [[@MV+ & (<obj2-non-pronoun> or TI+)]]}) & <mv-coord>) or <verb-pv>) or
+  ({O+ or TI+ or [[@MV+ & (<obj2-non-pronoun> or TI+)]]} & <verb-phrase-opener>) or
   <verb-adj>;
 tagging.g:
   (<vc-tag> & <verb-ge>) or
@@ -6423,7 +6429,7 @@ tagging.v: <verb-pg> & <vc-tag>;
 <vc-program>:
   {((O+ or <b-minus>) & <mv-coord> & {<too-verb>}) or
   @MV+ or
-  ([[@MV+ & O*n+ & <mv-coord>]])};
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]])};
 
 program.v oblige.v: VERB_PLI(<vc-program>);
 programs.v obliges.v: VERB_S_T(<vc-program>);
@@ -6437,7 +6443,7 @@ programing.v programming.v obliging.v: <verb-pg> & <vc-program>;
 
 <vc-convince>:
   ((O+ or <b-minus>) & <mv-coord> & {<too-verb> or TH+ or <embed-verb>}) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 convince.v persuade.v: VERB_PLI(<vc-convince>);
 convinces.v persuades.v: VERB_S_T(<vc-convince>);
 convinced.v-d persuaded.v-d:
@@ -6458,14 +6464,14 @@ convincing.v persuading.v: <verb-pg> & <vc-convince>;
 % [()]: "only he can tell"
 %
 <vc-tell>:
-  (((O+ & {O*n+ or K+}) or <b-minus>)
+  (((O+ & {<obj2-non-pronoun> or K+}) or <b-minus>)
      & <mv-coord> & {TH+ or RSe+ or Zs- or <too-verb> or QI+ or BW-})
   or ({O+ & <mv-coord>} & <embed-verb>)
   or ({O+ & <mv-coord>} & OF+ & {Xc+ & SI*i+})
   or (Ox+ & {<mv-coord>} & Xc+ & SI*i+ & {Xc+ & OF+})
   or [()]0.3
   or (QI+ & {MV+})
-  or ([[@MV+ & {O*n+} & <mv-coord>]]);
+  or ([[@MV+ & {<obj2-non-pronoun>} & <mv-coord>]]);
 
 tell.v: VERB_PLI(<vc-tell>);
 tell.w: {@E-} & I- & {@MV+} & (QI+ or TH+ or <embed-verb> or RSe+ or Zs-) & <verb-wall>;
@@ -6486,10 +6492,10 @@ tellin': <verb-pg> & <vc-tell>;
 % (QI+ & {MV+}): "I did not ask why until recently"
 % OF+ & <mv-coord>: "Joseph asked of her : Who is this ?"
 <vc-ask>:
-  ({(O+ & {O*n+}) or <b-minus>} & <mv-coord>
+  ({(O+ & {<obj2-non-pronoun>}) or <b-minus>} & <mv-coord>
     & {TS+ or <too-verb> or (QI+ & {MV+}) or BW-})
   or <of-coord>
-  or ([[@MV+ & O*n+ & <mv-coord>]]);
+  or ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 ask.v: VERB_PLI(<vc-ask>);
 asks.v: VERB_S_T(<vc-ask>);
@@ -6505,7 +6511,7 @@ asking.v: <verb-pg> & <vc-ask>;
 % TH+: "it helps that you know already"
 <vc-help>:
   ({O+ or <b-minus>} & {@MV+} & {<to-verb> or I+ or QI+})
-  or [[@MV+ & O*n+ & <mv-coord>]];
+  or [[@MV+ & <obj2-non-pronoun> & <mv-coord>]];
 
 help.v: VERB_PLI(<vc-help>);
 helps.v: VERB_S_T(<vc-help> or TH+);
@@ -6519,7 +6525,7 @@ helping.v: <verb-pg> & <vc-help>;
 <vc-remind>:
   ((O+ or <b-minus>) & {@MV+} &
     (<too-verb> or TH+ or <embed-verb> or <of-coord>)) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 remind.v: VERB_PLI(<vc-remind>);
 reminds.v: VERB_S_T(<vc-remind>);
@@ -6536,7 +6542,7 @@ reminding.v: <verb-pg> & <vc-remind>;
 
 <vc-inform>:
   ((O+ or <b-minus>) & <mv-coord> & {<of-coord> or TH+ or Zs- or <embed-verb>}) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 inform.v reassure.v alert.v guarantee.v notify.v forewarn.v:
   VERB_PLI(<vc-inform>);
@@ -6559,7 +6565,7 @@ informing.v reassuring.v alerting.v guaranteeing.v notifying.v forewarning.v:
 
 <vc-assure>:
   ((O+ or <b-minus>) & <mv-coord> & {<of-coord> or TH+ or Zs- or <embed-verb>}) or
-  ([[@MV+ & O*n+ & <mv-coord>]]) or
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]) or
   ({@MV+} & (TH+ or <embed-verb>));
 
 assure.v: VERB_PLI(<vc-assure>);
@@ -6574,7 +6580,7 @@ assuring.v: <verb-pg> & <vc-assure>;
 
 <vc-let>:
   ((O+ or <b-minus>) & <mv-coord> & {I+ or ((K+ or Pp+) & <mv-coord>)}) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 let.v-d:
   VERB_SPPP_T(<vc-let>) or
@@ -6596,7 +6602,7 @@ let's let’s: <verb-co> & {N+} & {I+};
 % XXX But this is too loose, as "out" should be the only allowed particle.
 <vc-watch>:
   ((O+ or <b-minus>) & <mv-coord> & {I*j+ or Pg+}) or
-  ([[@MV+ & O*n+ & <mv-coord>]]) or
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]) or
   (K+ & <mv-coord>) or
   <mv-coord>;
 
@@ -6612,7 +6618,7 @@ watching.v: <verb-pg> & <vc-watch>;
 
 <vc-appreciate>:
   ((O+ or <b-minus>) & <mv-coord> & {Pg+}) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 appreciate.v spend.v: VERB_PLI(<vc-appreciate>);
 appreciates.v spends.v: VERB_S_T(<vc-appreciate>);
@@ -6631,10 +6637,10 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
     or ((K+ or AF-) & <mv-coord>)})
   or ((
     <vc-ditrans>
-    or (K+ & {[[@MV+]]} & O*n+)
+    or (K+ & {[[@MV+]]} & <obj2-non-pronoun>)
     or K+
     or Vm+
-    or ([[{K+} & @MV+ & O*n+]])
+    or ([[{K+} & @MV+ & <obj2-non-pronoun>]])
   ) & <mv-coord>)
   or [[()]];
 
@@ -6656,7 +6662,7 @@ making.v: <verb-pg> & <vc-make>;
 
 <vc-render>:
   (((O+ or <b-minus>) & {({@MV+} & Pa+) or AF-}) or
-    ([[@MV+ & O*n+]])) & <mv-coord>;
+    ([[@MV+ & <obj2-non-pronoun>]])) & <mv-coord>;
 
 render.v deem.v: VERB_PLI(<vc-render>);
 renders.v deems.v: VERB_S_T(<vc-render>);
@@ -6667,7 +6673,7 @@ rendering.v deeming.v: <verb-pg> & <vc-render>;
 
 <vc-deprive>:
   (((O+ or <b-minus>) & {{@MV+} & OF+}) or
-    ([[@MV+ & O*n+]])) & <mv-coord>;
+    ([[@MV+ & <obj2-non-pronoun>]])) & <mv-coord>;
 
 deprive.v accuse.v acquit.v purge.v disabuse.v exonerate.v absolve.v rob.v
 convict.v: VERB_PLI(<vc-deprive>);
@@ -6687,9 +6693,9 @@ exonerating.v absolving.v robbing.v convicting.v: <verb-pg> & <vc-deprive>;
 
 <vc-clear>:
   (((O+ or <b-minus>) & {({@MV+} & OF+) or K+}) or
-    ({K+} & O*n+) or
+    ({K+} & <obj2-non-pronoun>) or
     K+ or
-    ([[{K+} & @MV+ & O*n+]])) & <mv-coord>;
+    ([[{K+} & @MV+ & <obj2-non-pronoun>]])) & <mv-coord>;
 
 clear.v: VERB_PLI(<vc-clear>);
 clears.v: VERB_S_T(<vc-clear>);
@@ -6701,8 +6707,8 @@ clearing.g: (<vc-clear> & <verb-ge>) or <verb-ge-d>;
 clearing.v: <verb-pg> & <vc-clear>;
 
 <vc-bet>:
-  ({(O+ & {O*n+}) or (<b-minus> & {O+})} & <mv-coord> & {TH+ or <embed-verb> or RSe+}) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+  ({(O+ & {<obj2-non-pronoun>}) or (<b-minus> & {O+})} & <mv-coord> & {TH+ or <embed-verb> or RSe+}) or
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 bet.v-d:
   VERB_SPPP_T(<vc-bet>) or
@@ -6713,14 +6719,14 @@ bets.v: VERB_S_T(<vc-bet>);
 betted.v-d:
   VERB_SPPP_T(<vc-bet>) or
   (<verb-pv-b> & {O+ or <b-minus>} & <mv-coord> & {TH+ or <embed-verb> or RSe+ or @MV+}) or
-  ({O- or [[@MV+ & O*n+]] or TH+ or <embed-verb>} & <verb-phrase-opener>);
+  ({O- or [[@MV+ & <obj2-non-pronoun>]] or TH+ or <embed-verb>} & <verb-phrase-opener>);
 betting.g: (<vc-bet> & <verb-ge>) or <verb-ge-d>;
 betting.v: <verb-pg> & <vc-bet>;
 
 <vc-bother>:
   ({@MV+} & <to-verb>) or
   ((O+ or <b-minus>) & <mv-coord> & {THi+}) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 bother.v: VERB_S_PLI(<vc-bother>) or <verb-why>;
 bothers.v: VERB_S_S(<vc-bother>);
@@ -6730,7 +6736,7 @@ bothering.g: (<vc-bother> & <verb-ge>) or <verb-ge-d>;
 
 <vc-surprise>:
   ((O+ or <b-minus>) & <mv-coord> & {THi+}) or
-  ([[@MV+ & O*n+]]);
+  ([[@MV+ & <obj2-non-pronoun>]]);
 
 surprise.v alarm.v amaze.v amuse.v annoy.v
 astonish.v astound.v depress.v disgust.v distress.v
@@ -6758,7 +6764,7 @@ dismaying.g embarrassing.g engaging.g exciting.g irritating.g:
   (<vc-surprise> & <verb-ge>) or <verb-ge-d>;
 
 <vc-prove>:
-  ((O+ or <b-minus> or [[@MV+ & O*n+]]) & <mv-coord>) or
+  ((O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>) or
   ((O+ or <b-minus> or OX+) & {@MV+} & (<too-verb> or [[{Xc+} & Pa+]])) or
   ({@MV+} & (<tof-verb> or TH+ or <embed-verb> or RSe+ or Zs- or (Pa+ & <verb-wall>)));
 
@@ -6779,7 +6785,7 @@ proving.v: <verb-x-pg> &  <vc-prove>;
 
 % TO+ & Xc+: allows null-infinitive: "Yes, I would strongly suggest to!"
 <vc-suggest>:
-  ((O+ or <b-minus> or [[@MV+ & O*n+]]) & <mv-coord>)
+  ((O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>)
   or (<mv-coord> & <null-verb>)
   or ({@MV+} & (Pg+ or TH+ or <embed-verb> or RSe+ or Zs- or TS+ or ((SI*j+ or SFI**j+) & I*j+)));
 
@@ -6797,22 +6803,22 @@ suggesting.v anticipating.v recommending.v: <verb-pg> & <vc-suggest>;
 <vc-deny>:
   ((<vc-opt-ditrans> or
     (B- & {O+}) or
-    [[@MV+ & O*n+]]) & <mv-coord>) or
+    [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>) or
   ({@MV+} & (Pg+ or TH+ or <embed-verb> or RSe+));
 
 deny.v: VERB_PLI(<vc-deny>);
 denies.v: VERB_S_T(<vc-deny>);
 denied.v-d:
   VERB_SPPP_T(<vc-deny>) or
-  (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & O*n+]]} & <mv-coord>) or
-  ({O+ or ([[@MV+ & O*n+]])} & <verb-phrase-opener>);
+  (<verb-pv-b> & {O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]} & <mv-coord>) or
+  ({O+ or ([[@MV+ & <obj2-non-pronoun>]])} & <verb-phrase-opener>);
 denying.g: (<vc-deny> & <verb-ge>) or <verb-ge-d>;
 denying.v: <verb-pg> & <vc-deny>;
 
 <vc-describe>:
   ((O+ or <b-minus>) & <mv-coord> & {AZ+}) or
   ({@MV+} & (QI+ or Z-)) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 describe.v: VERB_PLI(<vc-describe>);
 describes.v: VERB_S_T(<vc-describe>);
@@ -6826,7 +6832,7 @@ describing.v: <verb-pg> & <vc-describe>;
 
 <vc-portray>:
   ((O+ or <b-minus>) & <mv-coord> & {AZ+}) or
-  ([[@MV+ & O*n+ & <mv-coord>]]);
+  ([[@MV+ & <obj2-non-pronoun> & <mv-coord>]]);
 
 portray.v depict.v regard.v view.v characterize.v: VERB_PLI(<vc-portray>);
 portrays.v depicts.v regards.v views.v characterizes.v: VERB_S_T(<vc-portray>);
@@ -6888,7 +6894,7 @@ filing_suit picking_up taking_off breaking_free taking_over jumping_ship
 seeing_fit letting_go taking_note coming_true coming_clean coming_of_age:
   (<vc-intrans> & <verb-pg,ge>) or <verb-ge-d>;
 
-<vc-put-up-with>: (O+ or <b-minus> or [[@MV+ & O*n+]]) & <mv-coord>;
+<vc-put-up-with>: (O+ or <b-minus> or [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>;
 allow_for bring_about get_rid_of let_go_of take_note_of:
   VERB_PLI(<vc-trans>);
 puts_up_with allows_for brings_about gets_rid_of lets_go_of
@@ -7328,7 +7334,7 @@ with w/:
   or (Jw+ & (dRJrj- or dRJlj+))
   or [MVp- & B-]
   or <locative>
-  or (J+ & {EBm+} & ([P+] or [[O*n+]]) & (
+  or (J+ & {EBm+} & ([P+] or [[<obj2-non-pronoun>]]) & (
     MVp-
     or [({Xc+ & {Xd-}} & dCO+)]
     or (Xd- & Xc+ & (MX*x- or MVx-))));
@@ -8982,7 +8988,7 @@ then.j-v: <verb-conjunction>;
 % "I taught these mice to jump, and those mice to freeze"
 % "I taught these mice to jump, and those to freeze"
 <ditransitive-conjunction>:
-  {Xd-} & VJd- & O+ & {O*n+};
+  {Xd-} & VJd- & O+ & {<obj2-non-pronoun>};
 
 and.j-o or.j-o: <ditransitive-conjunction>;
 then.j-o: <ditransitive-conjunction>;
