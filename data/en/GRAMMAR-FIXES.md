@@ -28,6 +28,22 @@ Entries use precise maintainer-facing technical prose. Claims are stated in
 terms of observed linkages, dictionary expressions, PP rules, and test
 evidence. Limitations and inferred analyses are identified as such.
 
+## Deferred PP Migration Candidates
+
+The following PP rules were tested for simple removal or identified as likely
+future dictionary-migration work. They remain active because the current
+dictionary does not yet encode the rejected condition narrowly enough.
+
+| Rule(s) | Area | Current status |
+| --- | --- | --- |
+| 14 | Preposition companion licensing | Likely related to the rule 10/11/12/13 preposition work, but previous diagnostics suggested that simple removal changes `corpus-basic.batch`. |
+| 20-31, 37-39 | Expletive `it` complement licensing | Likely a regular family, but the dictionary still needs a shared expletive-`it` complement split before these checks can be removed. |
+| 32s, 32p, 32u, 34-36 | Existential `there` agreement | Simple removal accepts bad agreement such as singular `there is` with plural complements. These need agreement-aware dictionary splits. |
+| 42 | Predicate/question `BIq` | Simple removal changes `corpus-basic.batch`; the predicate/question path needs a real dictionary split. |
+| 43, 44, 47, 48 | Comparative paths | Simple removal produced `corpus-basic.batch` regressions. Rule 44 also recovered a positive `corpus-fixes.batch` example, so it needs a narrower replacement rather than deletion. |
+| 56, 58, 59 | Comparative agreement and complement checks | Tested while removing neighboring rules 55 and 57; each caused a `corpus-basic.batch` regression and remains active. |
+| 78 | `EAy` with `MVs` | Simple removal regressed `corpus-basic.batch` and `corpus-fixes.batch`; it protects an `as ... as John does`-type bad parse. |
+
 ## Library-Assisted Dictionary Helper Tokens
 
 **Status:** implemented as dictionary support; used by the preposition
