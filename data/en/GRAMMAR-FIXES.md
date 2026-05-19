@@ -734,6 +734,73 @@ corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
 
+## Rules 45 And 46: Remove Redundant `MV#a` / `MV#i` Comparative Checks
+
+**Status:** implemented; both PP rules have been removed from
+`4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rules were:
+
+```text
+MV#a , Pam Pafm EAm Ds*m EAy AFm Mam Am , "Bad comparative45"
+MV#i , Pam Pafm EAm Ds*m EAy AFm Mam Am , "Bad comparative46"
+```
+
+The grammatical area is comparative modifier licensing for adjective and
+adverb comparative paths.
+
+### Problem
+
+The current dictionary no longer appears to need these two PP checks for the
+tracked behavior. Removing them does not change the agreed corpus counts or
+the focused comparative examples tested with this change.
+
+### Old Mechanism
+
+Each rule rejected a completed linkage if `MV#a` or `MV#i` occurred with one
+of the listed comparative, predicative, or adjective-modifier links in the
+same PP domain. This was a broad negative co-occurrence check.
+
+### Overgeneration Cause
+
+The rules are not tied to an observable malformed construction in the current
+tests. The dictionary already constrains the tested adjective and adverb
+comparative paths sufficiently for the agreed corpora.
+
+### Implementation
+
+Rules 45 and 46 are removed from `4.0.knowledge`. No replacement connector
+structure is added.
+
+### Implications
+
+This removes two complete comparative PP checks from the blocker set without
+changing ordinary corpus behavior. If a future malformed construction is
+found, it should be handled by a narrower dictionary analysis instead of
+restoring the broad `MV#a`/`MV#i` domain exclusions.
+
+### Verification
+
+The removal should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 362 errors
+corpus-fix-long.batch: 9 errors
+```
+
 ## Rules 15 And 16: Tie `Jr` To Postnominal `B#j`
 
 **Status:** implemented; both PP rules have been removed from
