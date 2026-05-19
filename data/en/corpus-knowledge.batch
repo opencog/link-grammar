@@ -154,3 +154,14 @@ A man taller and wider than Bill arrived.
 *The man taller arrived.
 *A man bigger quickly arrived.
 *A man taller and wider arrived.
+
+% CONTAINS_NONE rule 78: comparative EAy must not pair with ordinary
+% subordinate-as MVs. Temporal "as" now uses a verb-side MVSWH link instead,
+% so comparative adjectives cannot accidentally license it.
+
+I am as intelligent as John.
+You are as sweet as sugar.
+Any program as good as ours should be useful.
+The coffee tastes the same as it did last year.
+I slipped on the ice as I ran home.
+*I am as intelligent as John does.
