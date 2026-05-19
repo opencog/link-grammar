@@ -79,3 +79,13 @@ The book of which I spoke was old.
 The doctors, many of whom are surgeons, were angry.
 The box contained many books, some of which were badly damaged.
 The male of which bears a tail ran.
+
+% CONTAINS_ONE rule 41: BIh no longer needs a separate PP check.
+% The current BIh dictionary paths are already constrained enough for these
+% embedded-clause examples; related predicate rules remain active.
+
+It was as if he knew.
+*It was as if knew.
+I left because I was tired.
+*I left because was tired.
+I know when he left.

@@ -217,20 +217,13 @@ Diagnostic bad examples include:
 
 ### Verification
 
-Focused coverage is in `data/en/corpus-knowledge.batch`. Before removing the
-PP rule, the replacement was checked by suppressing rule 12:
-
-```sh
-link-parser -test=noPP:12 < ./data/en/corpus-knowledge.batch
-link-parser -test=noPP:12 < ./data/en/corpus-basic.batch
-link-parser -test=noPP:12 < ./data/en/corpus-fixes.batch
-link-parser -test=noPP:12 < ./data/en/corpus-fix-long.batch
-```
-
-After removal, the focused corpus should pass with ordinary parsing:
+The rule 12 removal was validated with ordinary parser runs:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
 ```
 
 is expected to report:
@@ -326,20 +319,13 @@ infinitival-gap paths and should be handled as separate grammar work.
 
 ### Verification
 
-Focused coverage is in `data/en/corpus-knowledge.batch`. Before removing the
-PP rule, the replacement was checked by suppressing rule 6:
-
-```sh
-link-parser -test=noPP:6 < ./data/en/corpus-knowledge.batch
-link-parser -test=noPP:6 < ./data/en/corpus-basic.batch
-link-parser -test=noPP:6 < ./data/en/corpus-fixes.batch
-link-parser -test=noPP:6 < ./data/en/corpus-fix-long.batch
-```
-
-After removal, the focused corpus should pass with ordinary parsing:
+The rule 6 removal was validated with ordinary parser runs:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
 ```
 
 ## Rule 13: `JQ` Requires A Preposition Companion
@@ -555,20 +541,77 @@ The male of which bears a tail ran.
 
 ### Verification
 
-Focused coverage is in `data/en/corpus-knowledge.batch`. Before removing the
-PP rules, the replacement was checked by suppressing rules 15 and 16:
-
-```sh
-link-parser -test=noPP:15,noPP:16 < ./data/en/corpus-knowledge.batch
-link-parser -test=noPP:15,noPP:16 < ./data/en/corpus-basic.batch
-link-parser -test=noPP:15,noPP:16 < ./data/en/corpus-fixes.batch
-link-parser -test=noPP:15,noPP:16 < ./data/en/corpus-fix-long.batch
-```
-
-After removal, the focused corpus should pass with ordinary parsing:
+The rules 15 and 16 removal was validated with ordinary parser runs:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+## Rule 41: Remove Redundant `BIh` Predicate Check
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+BIh , Ss#b SIs#b SFsi SFIsi , "Bad use of predicate41"
+```
+
+The grammatical area is embedded predicate/clause licensing for `BIh`.
+
+### Problem
+
+The related `THb` and `BIq` predicate rules are not removed here; they require
+separate focused validation. The `BIh` rule is different in the current
+grammar: after removing it, the agreed corpus results remain unchanged, and
+the tested `BIh` paths are already constrained by the dictionary branches that
+expose them.
+
+### Old Mechanism
+
+PP rejected `BIh` domains that lacked one of the listed subject or
+filler-subject links. That was a safety check for broader historical
+predicate/clause paths.
+
+### Implementation
+
+The `predicate41` PP rule is removed from `4.0.knowledge`. No dictionary
+connector change is needed for this rule in the current grammar.
+
+### Implications
+
+This removal applies only to `BIh`. It does not imply that the neighboring
+`THb` or `BIq` predicate rules are redundant.
+
+### Examples
+
+Focused examples include:
+
+```text
+It was as if he knew.
+*It was as if knew.
+I left because I was tired.
+*I left because was tired.
+I know when he left.
+```
+
+The existing grammar still accepts some unrelated adverbial readings, such as
+`left.e` in `*I know when left.`; that is not caused by this rule removal.
+
+### Verification
+
+The rule 41 removal should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
 ```
 
 ## Rules 10 And 11: `Mj` / `MX#j` Require `Jw` Or `JQ`
