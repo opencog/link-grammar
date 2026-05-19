@@ -116,7 +116,7 @@ Expected results for the current documented state are:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 363 errors
+corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
 
@@ -425,7 +425,7 @@ Expected results:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 363 errors
+corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
 
@@ -497,7 +497,7 @@ Expected results:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 363 errors
+corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
 
@@ -580,7 +580,89 @@ Expected results:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 363 errors
+corpus-fixes.batch: 362 errors
+corpus-fix-long.batch: 9 errors
+```
+
+## Rules 51-54: Remove Overbroad `MVat` / `MVpt` Comparative Checks
+
+**Status:** implemented; all four PP rules have been removed from
+`4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rules were:
+
+```text
+MVat , MVm     , "Bad comparative51"
+MVpt , MVm     , "Bad comparative52"
+MVat , MVa MVp , "Bad comparative53"
+MVpt , MVa MVp , "Bad comparative54"
+```
+
+The grammatical area is `than`-headed comparative adjuncts, especially
+comparative clauses or reduced comparative adjuncts following adjectival or
+nominal material.
+
+### Problem
+
+The rules rejected a valid reduced comparative adjunct in the current
+dictionary:
+
+```text
+they report less robust earnings than previously
+```
+
+Here `than previously` is a grammatical reduced comparative adjunct. It does
+not need a full verbal comparative clause, and rejecting it because it lacks
+the older companion links is too broad.
+
+### Old Mechanism
+
+The older checks required `MVat` and `MVpt` domains to contain one of several
+other comparative modifier links (`MVm`, `MVa`, or `MVp`). Those companion
+links are useful in many ordinary comparative clauses, but they are not a
+necessary property of every valid `than` adjunct.
+
+### Overgeneration Cause
+
+The checks encoded a broad domain-level co-occurrence expectation rather than
+the grammar of a specific malformed construction. Reduced comparative
+adjuncts can be locally complete without the companion links named by the PP
+rules, so the PP check rejected legitimate parses.
+
+### Implementation
+
+Rules 51, 52, 53, and 54 are removed from `4.0.knowledge`. No new connector
+structure is added in this change: the existing dictionary already provides
+PP-clean linkages for the recovered reduced-comparative examples once the
+overbroad negative checks are removed.
+
+### Implications
+
+This removes another complete comparative PP rule family and recovers one
+positive `corpus-fixes.batch` example. If a future malformed `than` adjunct
+requires rejection, the preferred replacement is a narrower dictionary
+analysis of that construction rather than a global prohibition on `MVat` or
+`MVpt` without particular companion links.
+
+### Verification
+
+The removal should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
 
@@ -1174,6 +1256,6 @@ Expected results:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 363 errors
+corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
