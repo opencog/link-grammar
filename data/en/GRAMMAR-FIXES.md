@@ -36,7 +36,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 
 | Rule(s) | Area | Current status |
 | --- | --- | --- |
-| 14 | Preposition companion licensing | Simple removal is unsafe. It accepts generic preposition-object `J+` paths matching wh `Jw-` through ordinary conjoined modifier structure, for example a `for whom and with Janet`-type path without `Mj`, `Wj`, or `MX#j`. Removing bare wh-word `Jw-` is also unsafe because valid postnominal preposition-object relatives such as `for whom` need that connector. A replacement needs a preposition-object path split, not a wh-word-only tightening. |
 | 20-31, 37-39 | Expletive `it` complement licensing | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include bad ordinary-subject uses of `THi`/`TOi`-style complements, such as `Joe is likely that ...` and `It tried to have been ...`. A replacement needs a shared expletive-`it` subject/complement split across copular, adjectival, and verbal complement paths. |
 | 32s, 32p, 32u, 34-36 | Existential `there` agreement | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 92 errors. It accepts bad agreement such as `There is chasing dogs`, `There are a dog`, and coordinated singular complements with plural `are`. These need agreement-aware `there.r`/`be` object-path splits. |
 | 42 | Predicate/question `BIq` | Simple removal raises the fast prefix from 1 to 3 errors and `corpus-basic.batch` from 88 to 90 errors. A prototype that moved `BI+` to a copula branch with `Ss*q-` still accepted a bad `big mind on everybody's question is who ...` parse, because a generic noun subject can match a subscripted verb-side connector and inherit the `Ss*q` link name. A replacement therefore needs a new connector family on the licensing nouns/clauses, not only a subscripted copula-side split. |
@@ -47,8 +46,8 @@ dictionary does not yet encode the rejected condition narrowly enough.
 ## Library-Assisted Dictionary Helper Tokens
 
 **Status:** implemented as dictionary support; used by the preposition
-continuation changes for rules 12, 13, and 10/11 when the `Wj` companion path
-is needed.
+continuation changes for rules 12, 13, 14, and 10/11 when the `Wj` companion
+path is needed.
 
 ### Rule / Area
 
@@ -97,9 +96,9 @@ wjqprep: WJIb- & WJIa- & Qp+
 
 The helper token allows the preposition to keep its `Wj` relation to the wh
 object while the helper carries the `Qp` relation to the question verb. The wh
-word supplies `Jw- & WJIb+`, and the preposition supplies `Wj- & WJIa+`.
-Rules 13 and 10/11 do not require every valid linkage to use the helper:
-their replacements also use direct `MVp`, `Mj`, `MX#j`, `Jw`, and `JQ`
+word supplies `JW- & WJIb+`, and the preposition supplies `Wj- & WJIa+`.
+Rules 13, 14, and 10/11 do not require every valid linkage to use the helper:
+their replacements also use direct `MVp`, `Mj`, `MX#j`, `JW`, and `JQ`
 continuations. The helper is nevertheless part of their replacement grammar
 because their shared preposition continuations include the `Wj` companion
 alternative.
@@ -154,10 +153,11 @@ object relatives.
 ### Problem
 
 A `Wj` link marks a fronted preposition path. Such a preposition must be
-licensed by the corresponding wh object (`Jw`) or by the question-preposition
-path (`JQ`). Without this witness, the dictionary can generate raw linkages in
-which a fronted preposition is syntactically detached from the wh construction
-that makes it grammatical.
+licensed by the corresponding wh object or by the question-preposition path
+(`JQ`). The removed PP rule used the historical wh-object name `Jw`; the
+dictionary replacement uses `JW` for that relation. Without this witness, the
+dictionary can generate raw linkages in which a fronted preposition is
+syntactically detached from the wh construction that makes it grammatical.
 
 ### Old Mechanism
 
@@ -187,12 +187,14 @@ Wj- & WJIa+
 ```
 
 The first path keeps direct question-preposition cases where `JQ` is present.
-The second path uses the `wjqprep` helper token:
+The second path uses the `wjqprep` helper token.  The wh-object connector is
+spelled `JW` in the dictionary, rather than subscripted `Jw`, so ordinary
+preposition `J+` object branches cannot accidentally match it:
 
 ```text
 preposition --WJIa-- wjqprep --WJIb-- wh-word
 wjqprep --Qp-- question-verb
-preposition --Wj-- wh-word
+preposition --JW-- wh-word
 ```
 
 This makes the wh-object witness part of the dictionary construction instead
@@ -428,6 +430,126 @@ Up to what mark did it reach?
 ### Verification
 
 The rule 13 migration was validated with:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 362 errors
+corpus-fix-long.batch: 9 errors
+```
+
+## Rule 14: Wh Preposition Objects Require A Companion
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Jw , Mj Wj MX#j , "Misuse of preposition14"
+```
+
+The grammatical area is wh objects of prepositions. A wh-object preposition
+link must be part of a relative, question, or conjoined relative construction
+that also supplies `Mj`, `Wj`, or `MX#j`.
+
+### Problem
+
+Generic preposition object branches used `J+`. Since `J+` can match a
+subscripted `Jw-` connector, ordinary preposition-object paths could attach to
+a wh word without selecting the relative or question continuation that makes
+the construction grammatical. PP rule 14 rejected those completed raw linkages
+after extraction.
+
+### Old Mechanism
+
+The broad shape was:
+
+```text
+preposition: (J+ & ordinary-continuation) or (Jw+ & relative-continuation)
+wh-word:     Jw-
+```
+
+The explicit `Jw+` branch was valid, but the ordinary `J+` branch could also
+match the wh word because `Jw` was encoded as a subscripted `J` connector.
+
+### Overgeneration Cause
+
+The dictionary used connector subscripting to distinguish wh preposition
+objects, but connector matching treats a bare connector such as `J+` as broad
+enough to match subscripted variants. That made the wh-object distinction
+visible to PP but not strong enough to block an ordinary dictionary path.
+
+### Implementation
+
+The wh preposition object connector is now a distinct uppercase connector
+family in the dictionary:
+
+```text
+preposition: (J+ & ordinary-continuation)
+           or (JW+ & (relative-continuation or wh-question-continuation))
+wh-word:     JW-
+```
+
+Because `JW` is not a subscripted form of `J`, ordinary `J+` object branches no
+longer match wh preposition objects. The explicit `JW+` branch is then the only
+way to form the wh-object link, and that branch requires either:
+
+```text
+<prep-main-rel>
+```
+
+for relative uses, or:
+
+```text
+<prep-main-whq>:
+  (Wj- & WJIa+)
+  or <marker-wjqprep-left>;
+```
+
+for wh-question uses through the `wjqprep` helper-token path.
+
+This rejected the first attempted implementation, which replaced ordinary
+`J+` with a macro containing subscripted positive variants such as `Jj+`,
+`Js+`, and `Jv+`. Those variants also matched bare `J-` objects and multiplied
+ordinary preposition linkages, for example changing `I spoke with him.` from
+10 linkages to 60. The `JW` split preserves ordinary `J` behavior and changes
+only the wh-object connector family.
+
+### Examples
+
+Focused good examples include:
+
+```text
+With whom did you play tennis?
+For whom were you mistaken?
+The friend for whom Joe works is kind.
+That is the man for whom and with whom Joe works.
+He replied with a yes.
+He greeted me with a loud hallo!
+He wanted to look at and listen to everything.
+```
+
+Diagnostic bad examples include:
+
+```text
+*That is the man for whom and with Janet Joe works.
+*The man with whom I play tennis with is here.
+```
+
+### Verification
+
+The rule 14 migration was validated with:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
@@ -1471,7 +1593,9 @@ MX#j , Jw JQ , "Incorrect relative11"
 
 The grammatical area is preposition-object relatives. A relative preposition
 continuation using `Mj` or `MX#j` should be licensed by a wh-object relation
-(`Jw`) or by the JQ question/relative path.
+or by the JQ question/relative path. The removed PP rules used the historical
+subscripted name `Jw`; the dictionary replacement uses the distinct uppercase
+connector family `JW` for the wh-object relation.
 
 ### Problem
 
@@ -1512,17 +1636,15 @@ The generic continuation was split:
 <prep-main-no-rel>:
   <prep-main-b>
   or (JQ+ & Wj- & Qp+)
-  or (Wj- & WJIa+)
-  or <marker-wjqprep-left>
   or <fronted>;
 ```
 
 Preposition entries now use `<prep-main-no-rel>` for ordinary continuations
-and add an explicit `Jw+ & <prep-main-rel>` alternative when the relative
+and add an explicit `JW+ & <prep-main-rel>` alternative when the relative
 continuation is allowed. JQ-bearing alternatives use `<prep-main-jq-a>`, which
 also includes `<prep-main-rel>` as a companion path.
 
-The `of` entry is deliberately narrower: it continues to exclude broad `Jw+`
+The `of` entry is deliberately narrower: it continues to exclude broad `JW+`
 relative use and keeps only its existing JQ relative continuation.
 
 ### Implications

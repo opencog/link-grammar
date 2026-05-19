@@ -213,7 +213,6 @@ CONTAINS_ONE_RULES:
  Wb    ,  SI    SFI   SXI                   , "S-V inversion required7a" ,
  Qd    ,  SI    SFI   SXI                   , "S-V inversion required8" ,
  PFc   ,  SI    SFI   SXI                   , "S-V inversion required9" ,
- Jw    ,  Mj    Wj    MX#j                  , "Misuse of preposition14" ,
 ; The two below prevent "How big?" and "How quickly?"
 ; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'17"   ,
 ; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'18"   ,
