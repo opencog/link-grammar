@@ -288,14 +288,6 @@ CONTAINS_ONE_RULES:
 ; allowing Pa**j to be used with other kinds of objects.
 ;
  Pa##j ,  Osm  Op  Ox Os*e OXi ,              "Bad predicative adj 62" ,
-;
-; The rule below sounds nice, in principle, in preventing some
-; nasty constructions ... however, it also prevents some good
-; ones, too. e.g. "The dog, unsatisfied, barked loudly"
-;
-MX#a  ,  TO  TOf  TH  MVp  TOt  QI  OF  MVt  MVz  MVh  Ytm Ya  MJ E EA
-			                    , "Bad use of adjective65"    ,
-
 ; There's no JUNK connector, which means that Oxn is
 ; prohibited from ever occurring. 4.0.batch covers this.
  Oxn   ,  JUNK                              , "Bad use of pronoun66" ,

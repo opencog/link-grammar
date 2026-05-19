@@ -614,6 +614,82 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
+## Rule 65: Remove Overbroad Postnominal `MX#a` Check
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+MX#a , TO TOf TH MVp TOt QI OF MVt MVz MVh Ytm Ya MJ E EA ,
+       "Bad use of adjective65"
+```
+
+The grammatical area is postnominal and parenthetical adjective modification.
+
+### Problem
+
+The old rule rejected any PP domain containing `MX#a` unless the same domain
+also contained one of the listed complement or modifier links. The source
+comment already noted that this blocked good cases such as:
+
+```text
+The dog, unsatisfied, barked loudly.
+```
+
+The fixes corpus has the same concern for:
+
+```text
+The lady, unpleased, spoke sharply.
+The lady, displeased, spoke sharply.
+```
+
+### Old Mechanism
+
+The dictionary built the `MX#a` relation and PP later required a separate
+licensing link in the same domain. That was too strict for comma-delimited
+parenthetical adjective uses, where the adjective itself is the intended
+modifier.
+
+### Implementation
+
+The `adjective65` PP rule is removed from `4.0.knowledge`. No dictionary
+connector change is applied for this rule.
+
+This differs from a connector-level migration: the rule was removed because it
+was already documented as overbroad and the tracked fixes corpus contains good
+sentences that should not be rejected by it.
+
+### Implications
+
+This removal does not prove that every possible `MX#a` analysis is correct. It
+removes a PP check that rejected documented good grammar. Any remaining bad
+postnominal-adjective analyses should be handled by more precise dictionary
+work, not by restoring this broad rule.
+
+### Examples
+
+Focused examples include:
+
+```text
+The lady, unpleased, spoke sharply.
+The lady, displeased, spoke sharply.
+The dog, unsatisfied, barked loudly.
+```
+
+### Verification
+
+The rule 65 removal should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
 ## Rules 10 And 11: `Mj` / `MX#j` Require `Jw` Or `JQ`
 
 **Status:** implemented; both PP rules have been removed from
