@@ -666,6 +666,74 @@ corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
 
+## Rules 60 And 61: Remove Redundant `THc` / `TOc` Comparative Checks
+
+**Status:** implemented; both PP rules have been removed from
+`4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rules were:
+
+```text
+THc , TH             , "Bad comparative60"
+TOc , TO** TOf* TOi* , "Bad comparative61"
+```
+
+The grammatical area is comparative complement licensing for `than`/`as`
+constructions that take finite or infinitival clause material.
+
+### Problem
+
+The current dictionary no longer appears to need these two PP checks for the
+tracked behavior. Removing them does not change the ordinary corpus counts or
+the focused comparative examples tested with this change.
+
+### Old Mechanism
+
+Each rule rejected a completed linkage if a comparative selector link and a
+specified clause-complement link appeared in the same PP domain. This was a
+negative safety check over link names rather than a positive dictionary
+description of the bad construction.
+
+### Overgeneration Cause
+
+The rules are broader than a current observable malformed construction. The
+dictionary already constrains the tested comparative complement paths enough
+that these PP checks do not protect the agreed corpora.
+
+### Implementation
+
+Rules 60 and 61 are removed from `4.0.knowledge`. No replacement connector
+structure is added.
+
+### Implications
+
+This removes two complete comparative PP checks from the blocker set. If a
+future focused test shows a real malformed `THc` or `TOc` construction, the
+preferred repair is a narrower dictionary rule for that construction rather
+than reinstating the broad domain-level prohibition.
+
+### Verification
+
+The removal should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 362 errors
+corpus-fix-long.batch: 9 errors
+```
+
 ## Rules 15 And 16: Tie `Jr` To Postnominal `B#j`
 
 **Status:** implemented; both PP rules have been removed from
