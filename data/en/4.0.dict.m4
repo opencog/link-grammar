@@ -120,16 +120,16 @@ changecom(`%')
 % complements (i.e. so that "blah blah blah, he said" doesn't
 % get the MX link at lower cost than the CP link...)
 <post-nominal-x>:
-  [{[B*j+]} & Xd- & Xc+ & MX-]0.1;
+  [{[OFJ+ & B*j+]} & Xd- & Xc+ & MX-]0.1;
 
 <post-nominal-s>:
-  [{[Bsj+]} & Xd- & Xc+ & MX-]0.1;
+  [{[OFJ+ & Bsj+]} & Xd- & Xc+ & MX-]0.1;
 
 <post-nominal-p>:
-  [{[Bpj+]} & Xd- & Xc+ & MX-]0.1;
+  [{[OFJ+ & Bpj+]} & Xd- & Xc+ & MX-]0.1;
 
 <post-nominal-u>:
-  [{[Buj+]} & Xd- & Xc+ & MX-]0.1;
+  [{[OFJ+ & Buj+]} & Xd- & Xc+ & MX-]0.1;
 
 % noun-main-x -- singular or plural or mass.
 <noun-main-x>:
@@ -225,7 +225,7 @@ changecom(`%')
 % without requiring comma after "idea"
 <noun-main2-s-no-punc>:
   Js- or Os-
-  or ({[Bsj+]} & (Xd- or [[()]]) & Xc+ & MX-);
+  or ((Xd- or [[()]]) & Xc+ & MX-);
 
 <noun-main2-p>:
   Jp- or Op-
@@ -7561,8 +7561,11 @@ unlike:
 %      XXX The Mp- below should be removed, and all occurrences of
 %      Mp+ elsewhere should be replaced by (Mp+ or Mf+)
 % Mf- & MVp+: "She was a girl of about John's age"
+% OFJ- & Jr+: "The doctors, many of whom are surgeons, were angry."
+%             Keep Jr+ out of the broad object list below; otherwise ordinary
+%             nouns can create bad links such as "of --Jr-- half".
 of:
-  ((Js+ or Jp+ or Ju+ or Jr+ or Mgp+ or (QI+ & {CV+}))
+  ((Js+ or Jp+ or Ju+ or Mgp+ or (QI+ & {CV+}))
     & (Mp-
       or Mf-
       or OFj-
@@ -7570,8 +7573,9 @@ of:
       or (Xd- & Xc+ & MX*x-)
       or [[({Xc+ & {Xd-}} & dCO+)]]))
   or (JQ+
-      & (Js+ or Jp+ or Ju+ or Jr+ or Mgp+ or (QI+ & {CV+}))
+      & (Js+ or Jp+ or Ju+ or Mgp+ or (QI+ & {CV+}))
       & (<subcl-verb> & (Mj- or (Xd- & Xc+ & MX*j-))))
+  or ({JQ+} & OFJ- & Jr+)
   or (Mf- & MVp+)
   or (Wj- & JQ+ & J+ & Qd+)
   or (OFd- & Jd+)

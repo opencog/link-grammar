@@ -445,6 +445,135 @@ corpus-fixes.batch: 367 errors
 corpus-fix-long.batch: 9 errors
 ```
 
+## Rules 15 And 16: Tie `Jr` To Postnominal `B#j`
+
+**Status:** implemented; both PP rules have been removed from
+`4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rules were:
+
+```text
+B#j , Jr  , "Incorrect relative15"
+Jr  , B#j , "Incorrect relative16"
+```
+
+The grammatical area is relative `of whom` and related postnominal
+preposition-object relative constructions.
+
+### Problem
+
+The dictionary allowed `of` to use `Jr+` in a broad object branch. Ordinary
+nouns and noun-like words can expose generic `J-` object connectors, and
+ordinary heads can expose generic `M+` modifiers. This allowed raw linkages
+such as:
+
+```text
+end.n --M-- of --Jr-- half
+```
+
+in phrases like:
+
+```text
+at the end of half an hour
+```
+
+That is not a postnominal relative construction and cannot legitimately supply
+the required `B#j` relation.
+
+### Old Mechanism
+
+The old dictionary relied on PP to reject accidental `Jr` or `B#j` links after
+extraction. The valid construction to preserve is:
+
+```text
+The doctors, many of whom are surgeons, were angry.
+```
+
+with the useful relation:
+
+```text
+many --Bpj-- are
+many --OFJ-- of --Jr-- whom
+```
+
+### Overgeneration Cause
+
+The old `of` branch treated relative `Jr+` as another broad object option
+beside `Js+`, `Jp+`, and `Ju+`. That let ordinary noun and modifier connectors
+satisfy a relative-clause connector pattern accidentally. Conversely,
+postnominal macros could expose `B#j+` without forcing the corresponding
+relative `of` path.
+
+### Implementation
+
+The dictionary now uses a dedicated `OFJ` connector for the relative
+`of whom` path:
+
+```text
+many --OFJ-- of --Jr-- whom
+```
+
+The postnominal head supplies both `OFJ+` and `B#j+`. The `of` entry takes
+`OFJ- & Jr+` for the relative path, and `Jr+` is removed from the broad object
+list.
+
+The postnominal macros expose optional `B#j+` links only together with `OFJ+`:
+
+```text
+[OFJ+ & B*j+]
+[OFJ+ & Bsj+]
+[OFJ+ & Bpj+]
+[OFJ+ & Buj+]
+```
+
+The no-punctuation `noun-main2-s` postnominal branch also no longer exposes a
+bare `Bsj+` path. This makes the dictionary enforce both directions:
+
+```text
+Jr  -> OFJ -> B#j
+B#j -> OFJ -> Jr
+```
+
+### Implications
+
+This is a complete dictionary replacement for rules 15 and 16. Ordinary `of`
+object paths still use `Js+`, `Jp+`, `Ju+`, `Mgp+`, or the `QI`/`CV` path;
+they cannot accidentally invent `of --Jr-- noun` paths.
+
+Other `of which` cases often use the `QI`/`CV` path and are not forced through
+`Jr`.
+
+### Examples
+
+Focused examples include:
+
+```text
+The doctors, many of whom are surgeons, were angry.
+The box contained many books, some of which were badly damaged.
+The male of which bears a tail ran.
+```
+
+### Verification
+
+Focused coverage is in `data/en/corpus-knowledge.batch`. Before removing the
+PP rules, the replacement was checked by suppressing rules 15 and 16 while
+disabling metric extraction:
+
+```sh
+link-parser -test=noPP:15,noPP:16,no-metric-extraction < ./data/en/corpus-knowledge.batch
+link-parser -test=noPP:15,noPP:16,no-metric-extraction < ./data/en/corpus-basic.batch
+link-parser -test=noPP:15,noPP:16,no-metric-extraction < ./data/en/corpus-fixes.batch
+link-parser -test=noPP:15,noPP:16,no-metric-extraction < ./data/en/corpus-fix-long.batch
+```
+
+After removal, the focused corpus should pass with ordinary parsing:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+```
+
 ## Rules 10 And 11: `Mj` / `MX#j` Require `Jw` Or `JQ`
 
 **Status:** implemented; both PP rules have been removed from

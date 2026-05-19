@@ -71,3 +71,11 @@ The subject about which Mary spoke was difficult.
 The subject, about which Mary spoke, was difficult.
 That is the man for whom and with whom Joe works.
 The book of which I spoke was old.
+
+% CONTAINS_ONE rules 15 and 16: B#j and Jr must license each other.
+% The relative "of whom" path uses OFJ so Jr cannot attach to an ordinary
+% object and B#j cannot appear without the matching relative "of" relation.
+
+The doctors, many of whom are surgeons, were angry.
+The box contained many books, some of which were badly damaged.
+The male of which bears a tail ran.
