@@ -116,7 +116,7 @@ Expected results for the current documented state are:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 365 errors
+corpus-fixes.batch: 363 errors
 corpus-fix-long.batch: 9 errors
 ```
 
@@ -425,7 +425,7 @@ Expected results:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 365 errors
+corpus-fixes.batch: 363 errors
 corpus-fix-long.batch: 9 errors
 ```
 
@@ -497,7 +497,90 @@ Expected results:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 365 errors
+corpus-fixes.batch: 363 errors
+corpus-fix-long.batch: 9 errors
+```
+
+## Rules 49 And 50: Remove Overbroad `Pafc` Comparative Checks
+
+**Status:** implemented; both PP rules have been removed from
+`4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rules were:
+
+```text
+Pafc , EB#m EB#y , "Bad comparative49"
+Pafc , Pa* Paf*  , "Bad comparative50"
+```
+
+The grammatical area is predicative adjectival complements in comparative
+constructions headed by `than`.
+
+### Problem
+
+The rules rejected valid idiomatic comparative predications in the current
+dictionary. In the tracked corpus they blocked examples such as:
+
+```text
+He is nothing less than inspired!
+He is more than capable!
+```
+
+These sentences are grammatical: `less than` and `more than` function as
+degree modifiers of the following predicative adjective rather than as ordinary
+comparative clauses needing the older PP rejection.
+
+### Old Mechanism
+
+The older PP checks treated `Pafc` as incompatible with nearby comparative
+degree evidence (`EB#m`, `EB#y`) and with predicative-adjective links
+(`Pa*`, `Paf*`) in the same relevant domain. This was intended as a safety
+check for malformed comparative structures, but it also rejected legitimate
+degree-comparative predications.
+
+### Overgeneration Cause
+
+The rules were negative domain checks over link names rather than a positive
+description of the grammatical comparative construction. They could not
+distinguish a bad comparative-clause parse from an idiomatic
+`more/less than ADJ` degree construction that uses the same surface
+preposition and adjective-complement links.
+
+### Implementation
+
+Rules 49 and 50 are removed from `4.0.knowledge`. No replacement connector
+structure is added in this change because the current dictionary already
+produces valid PP-clean linkages for the recovered examples once the overbroad
+negative checks are gone.
+
+### Implications
+
+This is a whole-rule removal, not a sentence-specific lexical tightening. It
+reduces the PP blocker set and also recovers two positive examples in
+`corpus-fixes.batch`. If future examples expose a genuine malformed
+comparative that these checks used to reject, the preferred fix should encode
+the narrower grammatical distinction in dictionary connectors rather than
+reinstating broad `Pafc` domain exclusions.
+
+### Verification
+
+The removal should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 363 errors
 corpus-fix-long.batch: 9 errors
 ```
 
@@ -1091,6 +1174,6 @@ Expected results:
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
-corpus-fixes.batch: 365 errors
+corpus-fixes.batch: 363 errors
 corpus-fix-long.batch: 9 errors
 ```
