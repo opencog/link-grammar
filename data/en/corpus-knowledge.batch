@@ -111,3 +111,19 @@ You should hear him sing.
 *I gave Mary him.
 *I gave my brother it.
 *I gave him for his birthday it.
+
+% CONTAINS_ONE rule 63: postposed Ma adjectives need local complement
+% licensing. The neighboring Mam comparative rule remains active.
+
+I need something useful.
+The apartment available is small.
+A man proud of his work arrived.
+Voters angry about the economy will probably vote for Clinton.
+Many Democrats unhappy about the economy but doubtful that Clinton can be elected probably won't vote at all.
+We need a programmer knowledgeable about Lisp.
+It is believed that even the troops loyal to Hussein will soon be forced to surrender.
+He cried, his heart heavy with sadness.
+*A gift inexpensive arrived.
+*A child little arrived.
+*A man proud arrived.
+*Many Democrats unhappy but doubtful probably won't vote at all.

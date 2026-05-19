@@ -8741,7 +8741,10 @@ and.j-s:
   (hAJld- & hAJrd+ & (D+ or DD+));
 
 % conjoined post-nominal modifiers, to be used with conjunctions below.
-<post-nom-a>: [Ma-] or (Xd- & Xc+ & MX*a-);
+%
+% Ma- is allowed only through the MJXl/MJXr variants below, where at
+% least one adjective has a complement that licenses postnominal use.
+<post-nom-a>: (Xd- & Xc+ & MX*a-);
 <post-nom-p>: Mp- or MVp- or (Xc+ & dCO+);
 <post-nom-j>: J+ & ([Mp-] or Pp- or MVp-);
 <post-nom-v>: Xd- & Mv-;
@@ -8751,6 +8754,8 @@ and.j-s:
 % vs.: "We examined the setting (urban vs rural)"
 % cost on MJ*j: allow but.misc-ex take the first shot.
 but.j-m and.j-m vs.j-m vs..j-m versus.j-m v.j-m v..j-m:
+  ({Xd-} & ((hMJXl- & {EBb+} & hMJra+) or
+            (hMJla- & {EBb+} & hMJXr+)) & Ma-) or
   ({Xd-} & hMJla- & {EBb+} & hMJra+ & <post-nom-a>) or
   ({Xd-} & hMJlp- & {EBb+} & hMJrp+ & <post-nom-p>) or
   [{Xd-} & hMJlj- & {EBb+} & hMJrj+ & {Xc+} & <post-nom-j>]0.5 or
@@ -8761,6 +8766,8 @@ but.j-m and.j-m vs.j-m vs..j-m versus.j-m v.j-m v..j-m:
 %    "by chemicals or by hammering" because the second "by" is a zero.
 %    "either by hammering or chemicals"
 or.j-m:
+  ({Xd-} & ((hMJXl- & {XJo-} & {EBb+} & hMJra+) or
+            (hMJla- & {XJo-} & {EBb+} & hMJXr+)) & Ma-) or
   ({Xd-} & hMJla- & {XJo-} & {EBb+} & hMJra+ & <post-nom-a>) or
   ({Xd-} & hMJlp- & {XJo-} & {EBb+} & (hMJrp+ or hSJr+) & <post-nom-p>) or
   ({Xd-} & hMJlj- & {XJo-} & {EBb+} & hMJrj+ & {Xc+} & <post-nom-j>) or
@@ -8768,6 +8775,8 @@ or.j-m:
 
 % XJn-: Neither .. nor ...
 nor.j-m:
+  ({Xd-} & ((hMJXl- & {XJn-} & {EBb+} & hMJra+) or
+            (hMJla- & {XJn-} & {EBb+} & hMJXr+)) & Ma-) or
   ({Xd-} & hMJla- & {XJn-} & {EBb+} & hMJra+ & <post-nom-a>) or
   ({Xd-} & hMJlp- & {XJn-} & {EBb+} & hMJrp+ & <post-nom-p>) or
   ({Xd-} & hMJlj- & {XJn-} & {EBb+} & hMJrj+ & {Xc+} & <post-nom-j>) or
@@ -9141,9 +9150,18 @@ just_not: <COMP-OPENER>;
 %     and if it was not blocked, the EAh would create bad parses for stuff
 %     like "He is a decidedly jolly good player"
 % EAh- & Qe+: "How big is it?"  "How tall is it?"
+define(`POST_ADJ_LIC',`((($1) & {@MV+} & {$2}) or (Ma- & {@MV+} & ($2)) or (dMJXr- & {@MV+} & ($2)))')
+
+<post-adj-mv>: Ma- & (MVp+ or MVt+ or MVz+ or MVh+);
+<post-adj-mv-left>: dMJXl+ & (MVp+ or MVt+ or MVz+ or MVh+);
+<post-adj-mv-right>: dMJXr- & (MVp+ or MVt+ or MVz+ or MVh+);
+
 <ordinary-adj>:
   ({EA- or EF+} & (
-    ({Xd-} & (Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {<tot-verb>})
+    ({Xd-} & POST_ADJ_LIC(Pa- or AF+ or dMJra-, <tot-verb>))
+    or <post-adj-mv>
+    or <post-adj-mv-left>
+    or <post-adj-mv-right>
     or ({@MV+} & dMJla+)
     or AA+
     or <adj-opener>))
@@ -9199,7 +9217,10 @@ frank.a:
 <color-adj>:
   ({EA- or EF+} & {(AN- or [A-]0.2) & {Ds-}} &
     (({[[@Ec-]]} & {{Xdp-} & Xc+} & A+)
-    or ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {<tot-verb>})
+    or POST_ADJ_LIC(Pa- or AF+ or dMJra-, <tot-verb>)
+    or <post-adj-mv>
+    or <post-adj-mv-left>
+    or <post-adj-mv-right>
     or ({@MV+} & dMJla+)
     or AA+
     or [[DD- & <noun-main-p>]]
@@ -9221,7 +9242,10 @@ tawny.a ultramarine.a umber.a yellow.a:
   <marker-common-entity> or
   <how-q> or
   ({EA- or EF+} & (
-    ((AF+ or Ma- or dMJra-) & {@MV+}) or
+    ((AF+ or dMJra-) & {@MV+}) or
+    <post-adj-mv> or
+    <post-adj-mv-left> or
+    <post-adj-mv-right> or
     ({@MV+} & dMJla+) or
     AA+ or
     Wx- or
@@ -9281,7 +9305,7 @@ ages.i: [<aged>];
 % simplify the expressions ...
 easy.a expensive.a:
   ({EA- or EF+} &
-    (((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    (POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<tot-verb> or <toi-verb>) & {LE+})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & dMJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
@@ -9290,7 +9314,7 @@ easy.a expensive.a:
 
 hard.a simple.a difficult.a fun.a:
   ({EA- or EF+} &
-    (((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    (POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<tot-verb> or <toi-verb>) & {LE+})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & dMJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
@@ -9301,7 +9325,7 @@ hard.a simple.a difficult.a fun.a:
 % Although we'd like to use Ma- for the above, post-processing prevents this.
 ready.a:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {(<tot-verb> or <to-verb>) & {LE+}})
+    POST_ADJ_LIC(Pa- or AF+ or dMJra-, (<tot-verb> or <to-verb>) & {LE+})
     or ({@MV+} & {(<tot-verb> or <to-verb>) & {LE+}} & dMJla+)
     or M-
     or ({<to-verb> or <tot-verb>} & <adj-opener>)))
@@ -9311,7 +9335,7 @@ ready.a:
 
 silly.a nasty.a pleasant.a dangerous.a cruel.a standard.a safe.a legal.a:
   ({EA- or EF+} &
-    (((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    (POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<tot-verb> or <toi-verb>) & {LE+})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & dMJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
@@ -9321,7 +9345,7 @@ silly.a nasty.a pleasant.a dangerous.a cruel.a standard.a safe.a legal.a:
 % Identical to above, but starts with vowel
 unpleasant.a illegal.a:
   ({EA- or EF+} &
-    (((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}})
+    (POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<tot-verb> or <toi-verb>) & {LE+})
     or ({@MV+} & {(<tot-verb> or <toi-verb>) & {LE+}} & dMJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
@@ -9330,7 +9354,7 @@ unpleasant.a illegal.a:
 
 <adj-good>:
   ({EA- or EF+} &
-    (((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}})
+    (POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<tot-verb> or THi+ or <toi-verb>) & {LE+})
     or ({@MV+} & {(<tot-verb> or THi+ or <toi-verb>) & {LE+}} & dMJla+)
     or ({<tot-verb>} & <adj-opener>)
     or dAJr-))
@@ -9355,7 +9379,7 @@ one_and_only in_situ:
 % Identical to below, but starts with vowel.
 important.a essential.a imperative.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, ((THi+ or <toi-verb> or TSi+) & {LE+}) or <tot-verb>)
     or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & dMJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
@@ -9365,7 +9389,7 @@ important.a essential.a imperative.a:
 % Identical to above, but starts with consonant
 crucial.a necessary.a vital.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & (({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>))
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, ((THi+ or <toi-verb> or TSi+) & {LE+}) or <tot-verb>)
     or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & dMJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
@@ -9377,7 +9401,7 @@ confusing.a frustrating.a disturbing.a logical.a just.a
 natural.a deplorable.a detestable.a scary.a shocking.a
 poetical.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(THi+ or <toi-verb> or <tot-verb>) & {LE+}})
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (THi+ or <toi-verb> or <tot-verb>) & {LE+})
     or ({@MV+} & {(THi+ or <toi-verb>) & {LE+}} & dMJla+)
     or <adj-opener>))
   or ({EF+} & <adj-conjoined>)
@@ -9387,7 +9411,7 @@ poetical.a:
 original.a illogical.a elegant.a efficient.a awful.a unjust.a
 absurd.a alarming.a acceptable.a unacceptable.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(THi+ or <toi-verb> or <tot-verb>) & {LE+}})
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (THi+ or <toi-verb> or <tot-verb>) & {LE+})
     or ({@MV+} & {(THi+ or <toi-verb>) & {LE+}} & dMJla+)
     or <adj-opener>))
   or ({EF+} & <adj-conjoined>)
@@ -9399,7 +9423,7 @@ absurd.a alarming.a acceptable.a unacceptable.a:
 surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a
 rare.a embarrassing.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <toi-verb> or <tot-verb>) & {LE+}}) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (THi+ or <fitcl-verb> or <toi-verb> or <tot-verb>) & {LE+}) or
     ({@MV+} & {(THi+ or <fitcl-verb> or <toi-verb>) & {LE+}} & dMJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
@@ -9408,7 +9432,7 @@ rare.a embarrassing.a:
 
 crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+}})
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<to-verb> or <toi-verb> or THi+ or <tot-verb>) & {LE+})
     or ({@MV+} & {(<to-verb> or <toi-verb> or THi+) & {LE+}} & dMJla+)
     or ({<to-verb>} & <adj-opener>)))
   or ({EF+} & {<to-verb>} & <adj-conjoined>)
@@ -9417,7 +9441,7 @@ crazy.a sane.a insane.a stupid.a ridiculous.a wrong.a curious.a:
 
 wise.a unwise.a smart.a intelligent.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<to-verb> or <toi-verb> or <tot-verb>) & {LE+}}) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<to-verb> or <toi-verb> or <tot-verb>) & {LE+}) or
     ({@MV+} & {(<to-verb> or <toi-verb>) & {LE+}} & dMJla+) or
     ({<to-verb>} & <adj-opener>)))
   or ({EF+} & {<to-verb>} & <adj-conjoined>)
@@ -9426,7 +9450,7 @@ wise.a unwise.a smart.a intelligent.a:
 
 unlikely.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}}) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<tof-verb> or THi+ or <fitcl-verb>) & {LE+}) or
     ({@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}} & dMJla+) or
     ({<to-verb>} & <adj-opener>)))
   or ({EF+} & {<to-verb>} & <adj-conjoined>)
@@ -9435,7 +9459,7 @@ unlikely.a:
 
 likely.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}}) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<tof-verb> or THi+ or <fitcl-verb>) & {LE+}) or
     ({@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}} & dMJla+) or
     ({<to-verb>} & <adj-opener>) or
     [E+]))
@@ -9450,7 +9474,7 @@ insignificant.a undeniable.a understandable.a
 improbable.a inexcusable.a outrageous.a
 inconceivable.a unbelievable.a astonishing.a arguable.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <tot-verb>) & {LE+}}) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (THi+ or <fitcl-verb> or <tot-verb>) & {LE+}) or
     ({@MV+} & {(THi+ or <fitcl-verb>) & {LE+}} & dMJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
@@ -9465,7 +9489,7 @@ plausible.a demonstrable.a hilarious.a paradoxical.a shameful.a
 disgraceful.a debatable.a lamentable.a regrettable.a well-known.a
 a_drag a_bummer:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <tot-verb>) & {LE+}}) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (THi+ or <fitcl-verb> or <tot-verb>) & {LE+}) or
     ({@MV+} & {(THi+ or <fitcl-verb>) & {LE+}} & dMJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
@@ -9474,7 +9498,7 @@ a_drag a_bummer:
 
 clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(THi+ or QIi+ or <tot-verb>) & {LE+}}) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (THi+ or QIi+ or <tot-verb>) & {LE+}) or
     ({@MV+} & {(THi+ or QIi+) & {LE+}} & dMJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
@@ -9503,7 +9527,7 @@ wrongheaded.a premature.a risky.a dishonest.a
 hypocritical.a pointless.a
 a_mistake:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}})
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<toi-verb> or <tot-verb>) & {LE+})
     or ({@MV+} & {<toi-verb> & {LE+}} & dMJla+)
     or (dAJrc- & {@MV+})
     or <adj-opener>))
@@ -9520,7 +9544,7 @@ okay.a OK.a ok.a advantageous.a
 inappropriate.a insufficient.a irrational.a irresponsible.a
 enjoyable.a idiotic.a inconvenient.a unkind.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<toi-verb> or <tot-verb>) & {LE+}})
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<toi-verb> or <tot-verb>) & {LE+})
     or ({@MV+} & {<toi-verb> & {LE+}} & dMJla+)
     or (dAJrc- & {@MV+})
     or <adj-opener>))
@@ -9530,7 +9554,7 @@ enjoyable.a idiotic.a inconvenient.a unkind.a:
 
 unknown.a questionable.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {QIi+}) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, QIi+) or
     ({@MV+} & {QIi+} & dMJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
@@ -9539,7 +9563,7 @@ unknown.a questionable.a:
 
 certain.a:
   ({EA- or EF+} & (
-    ((Paf- or AF+ or Ma- or dMJra-) & {@MV+} & {(<embed-verb> or <tof-verb> or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (<embed-verb> or <tof-verb> or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}) or
     ({@MV+} & {(<embed-verb> or <tof-verb> or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & dMJla+) or
     ({<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-opener>)))
   or ({EF+} & {<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-conjoined>)
@@ -9548,7 +9572,7 @@ certain.a:
 
 sure.a unsure.a uncertain.a careful.a:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {(<embed-verb> or <to-verb> or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}}) or
+    POST_ADJ_LIC(Pa- or AF+ or dMJra-, (<embed-verb> or <to-verb> or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}) or
     ({@MV+} & {(<embed-verb> or <to-verb> or TH+ or QI+ or (OF+ & {@MV+})) & {LE+}} & dMJla+) or
     ({<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-opener>)))
   or ({EF+} & {<embed-verb> or <to-verb> or TH+ or QI+ or OF+} & <adj-conjoined>)
@@ -9563,7 +9587,7 @@ disappointed.a upset.a sorry.a content.a determined.a
 amused.a amazed.a astonished.a astounded.a pleased.a
 disgusted.a distressed.a dismayed.a irritated.a embarrassed.a alarmed.a:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {(<to-verb> or TH+) & {LE+}}) or
+    POST_ADJ_LIC(Pa- or AF+ or dMJra-, (<to-verb> or TH+) & {LE+}) or
     ({@MV+} & {(<to-verb> or TH+) & {LE+}} & dMJla+) or
     ({<to-verb> or TH+} & <adj-opener>)))
   or ({EF+} & {<to-verb> or TH+} & <adj-conjoined>)
@@ -9573,7 +9597,7 @@ disgusted.a distressed.a dismayed.a irritated.a embarrassed.a alarmed.a:
 glad.a fortunate.a unfortunate.a lucky.a unlucky.a happy.a sad.a
 surprised.a delighted.a overjoyed.a:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {(<embed-verb> or <to-verb> or TH+) & {LE+}}) or
+    POST_ADJ_LIC(Pa- or AF+ or dMJra-, (<embed-verb> or <to-verb> or TH+) & {LE+}) or
     ({@MV+} & {(<embed-verb> or <to-verb> or TH+) & {LE+}} & dMJla+) or
     ({<embed-verb> or <to-verb> or TH+} & <adj-opener>)))
   or ({EF+} & {<embed-verb> or <to-verb> or TH+} & <adj-conjoined>)
@@ -9583,7 +9607,7 @@ surprised.a delighted.a overjoyed.a:
 % common adjectives, taking "to", "of", "that" e.g. "proud that"
 proud.a scared.a:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {(<to-verb> or TH+ or (OF+ & {@MV+})) & {LE+}}) or
+    POST_ADJ_LIC(Pa- or AF+ or dMJra-, (<to-verb> or TH+ or (OF+ & {@MV+})) & {LE+}) or
     ({@MV+} & {(<to-verb> or TH+ or (OF+ & {@MV+})) & {LE+}} & dMJla+) or
     ({<to-verb> or TH+ or OF+} & <adj-opener>)))
   or ({EF+} & {<to-verb> or TH+ or OF+} & <adj-conjoined>)
@@ -9597,7 +9621,7 @@ capable.a contemptuous.a incapable.a reminiscent.a scornful.a mindful.a short.a
 appreciative.a complimentary.a born.a worthy.a free.a terrified.a unworthy.a
 prognostic.a dead.a:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {OF+ & {@MV+}}) or
+    POST_ADJ_LIC(Pa- or AF+ or dMJra-, OF+ & {@MV+}) or
     ({@MV+} & {OF+ & {@MV+}} & dMJla+) or
     ({OF+ & {@MV+}} & <adj-opener>)))
   or ({EF+} & {OF+ & {@MV+}} & <adj-conjoined>)
@@ -9606,7 +9630,7 @@ prognostic.a dead.a:
 
 fond.a:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or dMJra-) & OF+ & {@MV+}) or
+    POST_ADJ_LIC(Pa- or AF+ or dMJra-, OF+ & {@MV+}) or
     (OF+ & {@MV+} & dMJla+) or
     (OF+ & <adj-opener>)))
   or ({EF+} & OF+ & <adj-conjoined>)
@@ -9615,7 +9639,7 @@ fond.a:
 
 afraid.a ashamed.a unafraid.a unashamed.a:
   ({EA- or EF+} &
-    (((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {((OF+ & {@MV+}) or <embed-verb> or TH+ or <to-verb>) & {LE+}}) or
+    (POST_ADJ_LIC(Pa- or AF+ or dMJra-, ((OF+ & {@MV+}) or <embed-verb> or TH+ or <to-verb>) & {LE+}) or
     ({@MV+} & {((OF+ & {@MV+}) or <embed-verb> or TH+ or <to-verb>) & {LE+}} & dMJla+) or
     ({OF+ or <embed-verb> or TH+ or <to-verb>} & <adj-opener>)))
   or ({EF+} & {OF+ or <embed-verb> or TH+ or <to-verb>} & <adj-conjoined>)
@@ -9626,7 +9650,7 @@ insulted.a unhappy.a
 secure.a pessimistic.a confused.a concerned.a depressed.a
 doubtful.a grateful.a mad.a mistaken.a hopeful.a:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {TH+ & {LE+}}) or
+    POST_ADJ_LIC(Pa- or AF+ or dMJra-, TH+ & {LE+}) or
     ({@MV+} & {TH+ & {LE+}} & dMJla+) or
     ({TH+} & <adj-opener>)))
   or ({EF+} & {TH+} & <adj-conjoined>)
@@ -9635,7 +9659,7 @@ doubtful.a grateful.a mad.a mistaken.a hopeful.a:
 
 aware.a unaware.a:
   ({EA- or EF+} &
-    (((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
+    (POST_ADJ_LIC(Pa- or AF+ or dMJra-, (TH+ or (OF+ & {@MV+})) & {LE+}) or
     ({@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}} & dMJla+) or
     ({TH+ or OF+} & <adj-opener>)))
   or ({EF+} & {TH+ or OF+} & <adj-conjoined>)
@@ -9645,7 +9669,7 @@ true.a conscious.a confident.a skeptical.a jealous.a
 suspicious.a envious.a desirous.a
 convinced.a unconvinced.a:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}}) or
+    POST_ADJ_LIC(Pa- or AF+ or dMJra-, (TH+ or (OF+ & {@MV+})) & {LE+}) or
     ({@MV+} & {(TH+ or (OF+ & {@MV+})) & {LE+}} & dMJla+) or
     ({TH+ or OF+} & <adj-opener>)))
   or ({EF+} & {TH+ or OF+} & <adj-conjoined>)
@@ -9656,7 +9680,7 @@ eager.a reluctant.a able.a unable.a impatient.a
 eligible.a brave.a anxious.a apt.a desperate
 keen.a prepared.a willing.a hesitant.a:
   ({EA- or EF+} & (
-    ((Pa- or AF+ or Ma- or dMJra-) & {@MV+} & {<to-verb> & {LE+}}) or
+    POST_ADJ_LIC(Pa- or AF+ or dMJra-, <to-verb> & {LE+}) or
     ({@MV+} & {<to-verb> & {LE+}} & dMJla+) or
     ({<to-verb>} & <adj-opener>)))
   or ({EF+} & {<to-verb>} & <adj-conjoined>)
@@ -9678,12 +9702,12 @@ a_priori a_posteriori apriori aposteriori:
 asleep.a awake.a alike.a alive.a ablaze.a adrift.a afire.a aflame.a
 afloat.a afoot.a aghast.a aglow.a agog.a ajar.a amiss.a askew.a
 astir.a awash.a awry.a de_rigeur rife.a fraught.a lacking.a:
-  ((Ma- or Pa- or dMJra-) & {@MV+}) or
+  ((Pa- or dMJra-) & {@MV+}) or
   ({@MV+} & dMJla+) or
   <adj-op>;
 
 alone.a:
-  ((Ma- or Pa- or dMJra-) & {@MV+}) or
+  ((Pa- or dMJra-) & {@MV+}) or
   ({@MV+} & dMJla+) or
   <adj-op> or
   MVp- or
@@ -9692,7 +9716,7 @@ alone.a:
 % Like the above, but without the 'and' MJ links
 % {Xd-}: "Y'all ain't gonna leave me here, all alone?"
 all_alone:
-  ({Xd-} & (Ma- or Pa-) & {@MV+}) or
+  ({Xd-} & Pa- & {@MV+}) or
   <adj-op> or
   MVp- or
   E+;
@@ -9729,7 +9753,7 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
  dead_of_other_causes right_sacrotransverse above_board
  K/O.a SGA.a TBA.a DOA.a asialo.a syntonic.a loco.a
  haywire.a:
-  ((Ma- or Pa- or dMJra-) & {@MV+}) or
+  ((Pa- or dMJra-) & {@MV+}) or
   ({@MV+} & dMJla+) or
    <adj-op>;
 
