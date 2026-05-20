@@ -51,6 +51,8 @@ Added uppercase connector families:
 | `DTHAT` | Certifies `such` / `such a` / `such an` noun phrases that license a following result-clause `that`. |
 | `RTHAT` | Carries a result-clause certificate from an adverbial or noun head to `that.j-c` while `MVh` keeps the clause attached to the modified predicate. |
 | `MVH` | Connects an adjective result-clause head directly to `that.j-c`, replacing the old `MVh` path for certified adjective result clauses. |
+| `SJI` | Connects the logical subject of a controlled bare infinitive to the infinitival verb, paired with `I*j`. |
+| `SGP` | Connects the logical subject of a controlled present participle to the participial verb, paired with `Pg`. |
 | `THR{S,P,U}` | Certifies singular, plural, and uncountable existential-`there` agreement. The brace notation summarizes the concrete link types `THRS`, `THRP`, and `THRU`. |
 | `TTHR{S,P,U}` | Carries the same existential-`there` agreement state from a raising predicate to the following infinitival `to`. |
 | `ITHR{S,P,U}` | Carries the same agreement state from infinitival `to`, modal, or auxiliary paths to the next predicate. |
@@ -76,6 +78,7 @@ Changed or retired connector forms:
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
 | result-clause `that.j-c` with `MVh` | Bare `MVh-` on `that.j-c` was replaced by certified paths. Adverbial and noun result clauses use `RTHAT- & MVh-`; adjective result clauses use `MVH-`. |
 | result-clause `EExk` / `EAxk` / `D##k` witnesses | Replaced for `that` result clauses by uppercase certificate families `EEXK`, `EAXK`, and `DTHAT`. The older `EExk`, `EAxk`, and `D...k` forms remain available for ordinary non-result-clause degree and determiner uses. |
+| controlled-subject `Sj` / `Sg` | Replaced by uppercase `SJI` and `SGP` in controlled bare-infinitive and present-participle constructions. Ordinary finite `S` connectors must not match these controlled-subject witnesses. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
 | `there.r OXt-` | Removed. Locative `there` uses ordinary modifier paths such as `MVp`; existential and presentational `there` use agreement-specific `THR*` links. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
@@ -435,6 +438,42 @@ The older lowercase witness forms `EExk`, `EAxk`, and `D...k` remain available
 for ordinary degree and determiner uses, for example `so quickly`, `so big`,
 and `such eloquence` without a result clause. The uppercase families are used
 only when the target also carries the local `that` certificate.
+
+### `SJI` And `SGP`: Controlled Subjects
+
+`SJI` and `SGP` encode controlled-subject relations in small-clause-like
+complements:
+
+```text
+SJI  logical subject of a bare infinitive, paired with I*j
+SGP  logical subject of a present participle, paired with Pg
+```
+
+Focused bare-infinitive example:
+
+```text
+    +-----------------Xp-----------------+
+    +--------->WV-------->+----I*j---+   |
+    +->Wd--+--Sp--+---I---+-Ox-+-SJI-+   |
+    |      |      |       |    |     |   |
+LEFT-WALL you should.v hear.v him sing.v .
+```
+
+Focused present-participle example:
+
+```text
+    +-------------------------Xp------------------------+
+    +---->WV---->+-----Pg-----+---------Osn---------+   |
+    +->Wd--+-Sp*i+-Ox-+--SGP--+----K----+     +Ds**c+   |
+    |      |     |    |       |         |     |     |   |
+LEFT-WALL I.p feel.v him breathing.v down.r my.p back.n .
+```
+
+These are dedicated uppercase families rather than subscripted `S` forms. A
+broad finite-subject connector such as `S-` can match subscripted variants, so
+the old `Sj`/`Sg` spellings allowed ordinary finite-subject paths to satisfy
+the PP backstop accidentally. The uppercase families keep controlled subjects
+separate from ordinary finite subjects.
 
 ## PP Migration From `4.0.knowledge` To `4.0.dict`
 
@@ -893,6 +932,97 @@ corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
+```
+
+## Controlled-Subject Rules: `Sj` Requires `I#j`, `Sg` Requires `Pg`
+
+**Status:** implemented; both PP rules have been removed from
+`4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rules were:
+
+```text
+Sj , I#j , "Bad use of bare infinitive"
+Sg , Pg  , "Bad use of present participle"
+```
+
+The grammatical area is controlled-subject complements, where an object or
+object-like phrase supplies the logical subject of a following bare infinitive
+or present participle.
+
+### Problem
+
+The old dictionary used `Sj` and `Sg` as controlled-subject links:
+
+```text
+him --Sj-- sing      paired with I*j
+him --Sg-- breathing paired with Pg
+```
+
+PP then checked whether a linkage containing `Sj` also contained `I#j`, and
+whether a linkage containing `Sg` also contained `Pg`.
+
+### Overgeneration Cause
+
+`Sj` and `Sg` are subscripted forms of ordinary subject `S`. Broad subject
+connectors such as `S-` can match subscripted `S` forms, so a finite-subject
+path could accidentally produce a PP-allowed-looking controlled-subject link.
+This made simple PP-rule removal unsafe: raw linkages could contain `Sj` or
+`Sg` without being part of the intended controlled complement.
+
+### Implementation
+
+The controlled-subject links now use dedicated uppercase connector families:
+
+```text
+SJI  controlled subject of a bare infinitive, paired with I*j
+SGP  controlled subject of a present participle, paired with Pg
+```
+
+The subject-side object paths that used to offer `Sg+` or `Sj+` now offer
+`SGP+` or `SJI+`. The embedded verb paths use `SJI- & I*j-` for bare
+infinitives and `SGP- & Pg-` for present participles. This keeps the old
+semantic relation but removes the broad-match interaction with finite `S`.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+You should hear John sing.
+You should hear him sing.
+I feel him breathing down my back.
+John imagines himself singing from a mountaintop.
+```
+
+Focused rejected examples include:
+
+```text
+*You should hear him sings.
+*I feel him breathes down my back.
+*John imagines himself sings from a mountaintop.
+```
+
+### Verification
+
+The controlled-subject migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results for the current documented state:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
 ```
 
 ## Rule 67: Result-Clause `that` Requires A Degree Or `such` Witness

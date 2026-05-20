@@ -250,9 +250,7 @@ CONTAINS_ONE_RULES:
 ; The Rw link necessitated commenting out 68, because we had to make B#m
 ; a restricted link(see above) xxx reverted .. this is needed ...
 ;
-B#m  ,   D##w   H   HA                     , "Bad use of gerund68",
-Sj   ,   I#j                               , "Bad use of bare infinitive",
-Sg   ,   Pg                                , "Bad use of present participle"
+B#m  ,   D##w   H   HA                     , "Bad use of gerund68"
 
 ; Qd    ,  MX blocks "Joe doesn't matter what Ted does"
 CONTAINS_NONE_RULES:

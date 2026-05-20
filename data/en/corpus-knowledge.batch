@@ -232,3 +232,15 @@ She presented her case with such eloquence that we could only admire her.
 *He ran quickly that he fell.
 *The shuttle is big that it fell.
 *She presented her case with eloquence that we could only admire her.
+
+% CONTAINS_ONE rules for controlled subjects: bare infinitive and present
+% participle controlled-subject links use dictionary connector families
+% instead of PP backstop checks.
+
+You should hear John sing.
+You should hear him sing.
+I feel him breathing down my back.
+John imagines himself singing from a mountaintop.
+*You should hear him sings.
+*I feel him breathes down my back.
+*John imagines himself sings from a mountaintop.
