@@ -106,6 +106,17 @@ I left because I was tired.
 *I left because was tired.
 I know when he left.
 
+% CONTAINS_ONE rule 42: BIq predicate complements require a question-like
+% subject or auxiliary-chain certificate.
+
+The question is who we should invite.
+The question may be who we should invite.
+The issue has been whether we should leave.
+This is who we should invite.
+*The answer is who we should invite.
+*The problem is who we should invite.
+*The big mind on everybody's question is who killed OJ.
+
 % CONTAINS_ONE rule 65: the MX#a postnominal-adjective rule was overbroad.
 % Parenthetical adjective uses should not require the old complement-style
 % criterion links.
