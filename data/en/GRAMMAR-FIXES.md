@@ -918,6 +918,19 @@ corpus-fixes.batch: 361 errors
 corpus-fix-long.batch: 8 errors
 ```
 
+Accepted-linkage comparison against the pre-migration baseline used
+`-test=auto-next-linkage:3` with `!links`, `!limit=10000`, `!short=254`, and
+`!null=0` to display the first three accepted linkages. The first three
+accepted displayed linkages for `How tall is he?` and `How often does it
+happen?` match the baseline public link rows exactly.
+
+For `How quickly did Joe run?`, the first two accepted displayed linkages
+match the baseline public link rows exactly. The third displayed linkage now
+uses `quickly --Em-- run` instead of the baseline's duplicate low-cost
+`quickly --Qe-- did` analysis. This is the expected consequence of removing
+the loose ordinary-adverb `Qe+` path while preserving the direct
+`EEh- & Qe+` how-question path.
+
 ## Redundant `CONTAINS_NONE` PP Checks
 
 **Status:** implemented for rules 69, 70, 74, 75, 76, 77, and 79.
