@@ -8129,7 +8129,6 @@ there.r thither:
   or [dTHRS-].15
   or [dTHRP-].15
   or <fronted>
-  or OXt-
   or (EN- & (Pp- or J-))
   or dWl-;
 
