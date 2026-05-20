@@ -191,3 +191,25 @@ Any program as good as ours should be useful.
 The coffee tastes the same as it did last year.
 I slipped on the ice as I ran home.
 *I am as intelligent as John does.
+
+% CONTAINS_ONE rules 32s, 32p, 32u, 34, and 35: existential "there"
+% agreement is carried by dictionary connectors instead of PP checks.
+
+There is a dog in the park.
+There are dogs in the park.
+There is water on the table.
+Is there a dog in the park?
+Are there dogs in the park?
+There is going to be an important meeting in January.
+There has been a problem.
+There have been problems.
+There will be a dog.
+Will there be a dog?
+Does there seem to be a dog in the park?
+There seems to appear to have been likely to be a problem.
+*There is chasing dogs.
+*There are a dog in the park.
+*Are there a dog in the park?
+*There has been problems.
+*There seems to appear to have been likely to be problems.
+*There seems to appear to have been likely to be stupid.

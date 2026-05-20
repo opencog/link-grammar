@@ -211,7 +211,7 @@ CONTAINS_ONE_RULES:
  Ws    ,  D##w  S##w   H                    , "S-V inversion required5" ,
  Wq    ,  SI    SFI   SXI                   , "S-V inversion required7" ,
  Wb    ,  SI    SFI   SXI                   , "S-V inversion required7a" ,
- Qd    ,  SI    SFI   SXI                   , "S-V inversion required8" ,
+ Qd    ,  SI    SFI   SXI   THRS THRP THRU  , "S-V inversion required8" ,
  PFc   ,  SI    SFI   SXI                   , "S-V inversion required9" ,
 ; The two below prevent "How big?" and "How quickly?"
 ; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'17"   ,
@@ -228,14 +228,6 @@ CONTAINS_ONE_RULES:
  MVti  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'29"     ,
  AFdi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'30"     ,
  O#i   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'31"     ,
-; SFs, SFp SFu: force subject-object agreement for
-; singular/plural/uncountable noun objects
- SFst  ,  O*t   Ost   Omt   Omm   Bs#t    B*#t    Bc#t    , "Bad use of 'there'32s"           ,
- SFp   ,  O*t   Opt   Omt   Omm   Bp#t    B*#t    Bc#t    , "Bad use of 'there'32p"           ,
- SFu   ,  O*t   Out   Omt   Omm   Bp#t    B*#t    Bc#t    , "Bad use of 'there'32u"           ,
-;
- SFIst ,  O*t   Ost   Omt    Bs#t    B*#t    Bc#t    , "Bad use of 'there'34"           ,
- SFIp  ,  O*t   Opt   Omt    Bp#t    B*#t    Bc#t    , "Bad use of 'there'35"           ,
  OXt   ,  O#t   B##t                     ,   "Bad use of 'there'36"           ,
  SFsi* ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi CPu
           COqi    CPi    Eqi    AFdi    BIh , "Bad use of 'it'37"           ,

@@ -19,6 +19,13 @@ of these specific dictionary changes.
 In the examples below, `h` and `d` prefixes are direction/dependency prefixes
 on a connector occurrence and are not part of the uppercase connector family.
 
+Several added families below are certificate or carrier links. They are
+public-visible grammatical links, but their primary role is to encode a
+licensing or agreement state in the dictionary so that a completed-linkage PP
+scan is no longer needed. They should therefore be read as grammar-engineering
+support for a real syntactic constraint, not as ordinary relation names like
+`S`, `O`, or `MV`.
+
 ### Short Summary
 
 Added uppercase connector families:
@@ -38,6 +45,12 @@ Added uppercase connector families:
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
 | `BIQS` / `BIQI` | Certify direct and inverted subject links for `BIq` predicate wh-complements. |
 | `IBIQ` / `PPBIQ` | Carry the `BIq` predicate license across modal and perfect auxiliary chains. |
+| `THR{S,P,U}` | Certifies singular, plural, and uncountable existential-`there` agreement. The brace notation summarizes the concrete link types `THRS`, `THRP`, and `THRU`. |
+| `TTHR{S,P,U}` | Carries the same existential-`there` agreement state from a raising predicate to the following infinitival `to`. |
+| `ITHR{S,P,U}` | Carries the same agreement state from infinitival `to`, modal, or auxiliary paths to the next predicate. |
+| `PGTHR{S,P,U}` | Carries the same agreement state through `going to be` paths. |
+| `PPTHR{S,P,U}` | Carries the same agreement state through perfect `have been` paths. |
+| `PATHR{S,P,U}` | Carries the same agreement state through predicative adjective paths such as `likely to be`. |
 | `INSERTL` / `INSERTR` | Tokenizer-only marker connector families. Paired `INSERTL<token>+` and `INSERTR<token>+` request an optional internal helper token named `<token>`. They are dictionary support markers, not ordinary grammar links. |
 
 Changed or retired connector forms:
@@ -54,6 +67,7 @@ Changed or retired connector forms:
 | comparative-clause `Cc` / `CV` on `than.e` / `as.e-c` | Tightened so clausal comparative continuations require a `CMPC` certificate from a local comparative modifier path. |
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
+| existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
@@ -375,7 +389,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | Rule(s) | Area | Current status |
 | --- | --- | --- |
 | 20-31, 37-39 | Expletive `it` complement licensing | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include bad ordinary-subject uses of `THi`/`TOi`-style complements, such as `Joe is likely that ...` and `It tried to have been ...`. A replacement needs a shared expletive-`it` subject/complement split across copular, adjectival, and verbal complement paths. |
-| 32s, 32p, 32u, 34-36 | Existential `there` agreement | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 92 errors. It accepts bad agreement such as `There is chasing dogs`, `There are a dog`, and coordinated singular complements with plural `are`. These need agreement-aware `there.r`/`be` object-path splits. |
+| 36 | Existential `there` object-form backstop | Rules 32s, 32p, 32u, 34, and 35 are migrated below. Rule 36 remains active because its `OXt` condition is related but not identical to the agreement split. It needs a separate analysis of the `OXt` object-form path. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | `Pa##j` predicative adjective | Object licensing for predicative-adjective complements | A simple verb-side object macro for the PP-allowed objects is unsafe. Connector matching lets a subscripted positive connector such as `Os*e+` match an ordinary `Os-` noun and produce an allowed-looking `Os*e` link, so the macro admits the same bad singular-object paths that the PP rule was intended to reject. A replacement needs a true object-class certificate, a new exact connector family on the noun/pronoun side, or equivalent library-assisted dictionary support. |
 
@@ -2343,6 +2357,194 @@ Focused bad examples now have no accepted zero-null linkage:
 ```
 
 The rule 42 migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
+```
+
+## Rules 32s, 32p, 32u, 34, 35: Encode Existential `there` Agreement
+
+**Status:** implemented; these PP rules have been removed from
+`4.0.knowledge`. Rule 36 remains active.
+
+### Rule / Area
+
+The removed PP rules required existential `there` subject links to have a
+compatible object or complement link somewhere in the same linkage:
+
+```text
+SFst  , O*t Ost Omt Omm Bs#t B*#t Bc#t , "Bad use of 'there'32s"
+SFp   , O*t Opt Omt Omm Bp#t B*#t Bc#t , "Bad use of 'there'32p"
+SFu   , O*t Out Omt Omm Bp#t B*#t Bc#t , "Bad use of 'there'32u"
+SFIst , O*t Ost Omt Bs#t B*#t Bc#t     , "Bad use of 'there'34"
+SFIp  , O*t Opt Omt Bp#t B*#t Bc#t     , "Bad use of 'there'35"
+```
+
+The grammatical area is agreement between existential `there` and the eventual
+nominal complement. The complement can be separated from `there` by inversion,
+modals, perfect auxiliaries, `going to be`, and raising predicates, so this is
+a long-distance agreement constraint rather than a local relation between
+adjacent words:
+
+```text
+There is a dog in the park.
+There are dogs in the park.
+There seems to appear to have been likely to be a problem.
+```
+
+### Problem
+
+The old dictionary used broad `SFst`, `SFp`, `SFu`, `SFIst`, and `SFIp`
+starter links from `there.r` to the first predicate. The object evidence could
+appear much later, for example after modal, perfect, `going to be`, or
+raising-predicate chains. PP therefore had to inspect the completed linkage
+and reject locally well-formed but agreement-incompatible paths such as:
+
+```text
+*There is chasing dogs.
+*There are a dog in the park.
+*There seems to appear to have been likely to be problems.
+```
+
+### Implementation
+
+Existential `there.r` now uses agreement-specific uppercase starter links:
+
+```text
+there --THRS-- singular predicate path
+there --THRP-- plural predicate path
+there --THRU-- uncountable predicate path
+```
+
+These links are certificate links: they still appear in public linkages, but
+their role is to make the agreement state explicit in the LG connector graph.
+Ordinary LG connector matching is local, so the singular/plural/uncountable
+state must be carried through the intervening predicate chain until the final
+object or complement branch can consume it.
+
+The same families are used in the opposite direction for inverted questions,
+so `Is there a dog?` and `Are there dogs?` do not need the old `SFIst` and
+`SFIp` PP checks.
+
+The agreement requirement is carried through common predicate chains by
+dedicated connector families:
+
+```text
+there --THRS-- will --ITHRS-- be --Ost-- dog
+there --THRS-- has --PPTHRS-- been --Ost-- problem
+there --THRS-- is --PGTHRS-- going --TTHRS-- to --ITHRS-- be --Ost-- meeting
+```
+
+For raising and predicative-adjective paths, the certificate is propagated
+through the intervening predicates instead of relying on a completed-linkage PP
+scan:
+
+```text
+there --THRS-- seems --TTHRS-- to --ITHRS-- appear
+appear --TTHRS-- to --ITHRS-- have --PPTHRS-- been
+been --PATHRS-- likely --TTHRS-- to --ITHRS-- be --Ost-- problem
+```
+
+The final `be` object branches are split by agreement. Singular paths accept
+singular-compatible object evidence, plural paths accept plural-compatible
+object evidence, and uncountable paths accept uncountable-compatible evidence.
+The broad `SF*` connector families remain in the dictionary for unrelated
+grammar paths, but existential `there.r` and the related deictic `here` path no
+longer use them for this construction.
+
+The agreement states are encoded as distinct uppercase families, for example
+`THRS`, `THRP`, and `THRU`, rather than as subscripted forms such as `THRs`,
+`THRp`, and `THRu`. The states are intended to be mutually exclusive. Using
+uppercase-distinct names avoids accidental broad matching if a future bare
+`THR` connector is introduced, since a bare connector would match subscripted
+variants under ordinary LG connector matching.
+
+The remaining PP rule 8 was extended to recognize `THRS`, `THRP`, and `THRU`
+as valid subject-inversion evidence for `Qd` questions. This is a compatibility
+update for the still-active S-V inversion checks, not a migration of those
+checks.
+
+### Implications
+
+Accepted existential-`there` linkages now show explicit agreement-certificate
+links instead of the old broad `SF*` links. This is intentional: subscripted
+`SF` links did not carry enough information to prevent bad raw linkages before
+postprocessing.
+
+Some accepted linkages differ internally from older master-style output. For
+example, `going to be` and `likely to be` existential paths now use `PGTHR*`,
+`TTHR*`, `ITHR*`, and `PATHR*` certificate links. These links make the
+agreement path explicit and allow the bad zero-null raw linkages to be removed
+from the dictionary search space.
+
+The THR carrier families are therefore a technical LG solution for enforcing a
+real far-agreement condition before postprocessing. They are not hidden
+implementation artifacts, because they are visible in linkages, but their
+names encode agreement state and propagation stage rather than a single
+ordinary syntactic relation.
+
+### Verification
+
+Focused accepted examples include:
+
+```text
+There is a dog in the park.
+There are dogs in the park.
+There is water on the table.
+Is there a dog in the park?
+Are there dogs in the park?
+There is going to be an important meeting in January.
+There has been a problem.
+There have been problems.
+There will be a dog.
+Will there be a dog?
+Does there seem to be a dog in the park?
+There seems to appear to have been likely to be a problem.
+```
+
+Focused bad examples no longer have accepted zero-null linkages:
+
+```text
+*There is chasing dogs.
+*There are a dog in the park.
+*Are there a dog in the park?
+*There has been problems.
+*There seems to appear to have been likely to be problems.
+*There seems to appear to have been likely to be stupid.
+```
+
+Focused accepted-linkage comparison against the pre-change dictionary inspected
+the first three displayed accepted linkages for:
+
+```text
+There is a dog in the park.
+There has been a problem.
+There seems to appear to have been likely to be a problem.
+```
+
+The same constructions remain accepted. The expected differences are the new
+certificate links:
+
+```text
+SFst  -> THRS
+PP    -> PPTHRS
+TOf/I -> TTHRS/ITHRS
+Paf   -> PATHRS
+```
+
+The migration was validated with ordinary parser runs:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
