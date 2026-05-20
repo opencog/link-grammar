@@ -246,11 +246,8 @@ CONTAINS_ONE_RULES:
 ; The below blocks the singular "I want a gift inexpensive", while
 ; allowing Pa**j to be used with other kinds of objects.
 ;
- Pa##j ,  Osm  Op  Ox Os*e OXi ,              "Bad predicative adj 62" ,
-; The Rw link necessitated commenting out 68, because we had to make B#m
-; a restricted link(see above) xxx reverted .. this is needed ...
-;
-B#m  ,   D##w   H   HA                     , "Bad use of gerund68"
+ Pa##j ,  Osm  Op  Ox Os*e OXi ,              "Bad predicative adj 62"
+; The former B#m companion rule is encoded in dictionary paths such as NDH.
 
 ; Qd    ,  MX blocks "Joe doesn't matter what Ted does"
 CONTAINS_NONE_RULES:
