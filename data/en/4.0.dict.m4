@@ -1328,7 +1328,7 @@ way.n:
   (<noun-modifiers> &
     ((Ds- & {@M+} & {<ton-verb> or TH+ or <embed-verb> or (R+ & Bs+)} & {@MXs+} &
       (MVa- or
-      <noun-main-s> or
+      (<noun-main-s> & {WTHAN+}) or
       <rel-clause-s>)) or
     ({Ds-} & <noun-and-s>) or
     Us- or
@@ -1373,7 +1373,7 @@ ways.n:
   (<noun-modifiers> &
     (({{Jd-} & Dmc-} & {@M+} & {<ton-verb> or TH+ or <embed-verb> or (R+ & Bp+)} & {@MXp+} &
       (MVa- or
-      <noun-main-p> or
+      (<noun-main-p> & {WTHAN+}) or
       <rel-clause-p>)) or
     ({Dmc-} & <noun-and-p>) or
     Up- or
@@ -10209,6 +10209,7 @@ so_that such_that:
 %            links to the head verb. Must form a cycle.
 %            Example: "I run more often than Ben climbs"
 % MVp- & J+: "... other traditions than my own"
+% WTHAN- & TO+ & IV+: "There is no better way than to leave"
 than.e:
   (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+})
            or Mpc+ or MVat+ or MVpt+ or Pafc+))
@@ -10223,6 +10224,7 @@ than.e:
   or (((LE- & {AFd+}) or (LEi- & {AFdi+}))
     & (THc+ or (TOic+ & <inf-verb>) or (TOfc+ & <inf-verb>) or (TOtc+ & B+)))
   or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+})
+  or (WTHAN- & TO+ & IV+)
   or (MVp- & J+);
 
 % cost on MVa-: "we will arrive much sooner", want "much" to modify "sooner".
