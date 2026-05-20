@@ -220,3 +220,15 @@ Oh great, there went my ride.
 *There has been problems.
 *There seems to appear to have been likely to be problems.
 *There seems to appear to have been likely to be stupid.
+
+% CONTAINS_ONE rule 67: result-clause "that" needs a degree or such-noun
+% certificate supplied by the modified word.
+
+He ran so quickly that he fell.
+It went almost so well that we thought we won!
+I love her so much that I can't let her go.
+The shuttle is so big that it has to be carried.
+She presented her case with such eloquence that we could only admire her.
+*He ran quickly that he fell.
+*The shuttle is big that it fell.
+*She presented her case with eloquence that we could only admire her.

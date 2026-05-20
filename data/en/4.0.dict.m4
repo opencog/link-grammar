@@ -298,6 +298,18 @@ changecom(`%')
 <rel-clause-p>: {Rw+} & Bpm+;
 <rel-clause-t>: {Rw+} & Btm+;
 
+% Result-clause "that" certificates for rule 67.  The uppercase connector
+% families avoid broad matches against ordinary D/EA/EE forms.
+<that-result-noun-s>:
+  DTHAT- &
+    (((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>)) or <noun-and-s>) &
+     RTHAT+);
+
+<that-result-noun-u>:
+  DTHAT- &
+    (((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>) &
+     RTHAT+);
+
 % TOf+ & IV+:  "there is going to be a meeting", "there appears to be a bug"
 % TOn+ & IV+:  "there are plots to hatch", "there is a bill to sign"
 % TOt+ & B+: this is one where B makes the link
@@ -648,6 +660,7 @@ USMC.y USN.y:
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or <noun-and-s>
+    or <that-result-noun-s>
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
     or Us-
@@ -661,6 +674,7 @@ USMC.y USN.y:
     (<noun-and-s>
     or (GN+ & (DD- or [()]))
     or Us-
+    or <that-result-noun-s>
     or ({Ds-} & [Wa-]0.05 & ({Mf+} or {NM+}))))
   or (<nn-modifiers> &
     (({NMa+} & AN+)
@@ -745,6 +759,7 @@ USMC.y USN.y:
     or ({Dmu-} & Wa-)
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
+    or <that-result-noun-u>
     or (YS+ & {Dmu-})
     );
 
@@ -759,6 +774,7 @@ USMC.y USN.y:
     or [<noun-assert>]0.02
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
+    or <that-result-noun-u>
     or (YS+ & {Dmu-})
     );
 
@@ -1202,12 +1218,19 @@ propension.n:
 <noun-rel-uto>:
   {{Jd-} & D*u-} & {@M+} & {(<ton-verb> or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+};
 
+% Same rule-67 certificate path for nouns that also have "to" complements.
+<that-result-noun-to>:
+  DTHAT- &
+    (((<noun-rel-uto> & (<noun-main-m> or <rel-clause-s>)) or <noun-and-p,u>) &
+     RTHAT+);
+
 % Like other generic noun types, but can take "to"
 % "He took the effort to make amends"
 <noun-to>:
   <noun-modifiers> &
     (AN+
     or ((<noun-rel-uto> & (<noun-main-m> or <rel-clause-s>)) or <noun-and-p,u>)
+    or <that-result-noun-to>
     or ({D*u-} & <noun-and-u>)
     or (YS+ & {D*u-})
     or (GN+ & (DD- or [()]))
@@ -1770,9 +1793,9 @@ a:  ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**c+ or (<PHc> & Ds**x+)))
 an: ({(AA- & HA-) or ALa- or [[Lf+]]} & (Ds**v+ or (<PHv> & Ds**x+)))
   or NN+ or NSa+ or NIm+;
 
-such: (ND- & Dmc+) or Dm*k+;
-such_a:  Ds*kc+ or (<PHc> & Ds*kx+);
-such_an: Ds*kv+ or (<PHv> & Ds*kx+);
+such: (ND- & Dmc+) or Dm*k+ or DTHAT+;
+such_a:  Ds*kc+ or (<PHc> & Ds*kx+) or DTHAT+;
+such_an: Ds*kv+ or (<PHv> & Ds*kx+) or DTHAT+;
 
 
 % "all of the time". These are all temporal modifiers: use MVw ("when")
@@ -8806,9 +8829,12 @@ how:
 % "that" as subjunctive or paraphrasing
 % EBx+: He told me that even his mother likes me
 % (perhaps this should be changed to a different EB ??)
+% Result-clause MVh requires an RTHAT certificate; adjective result clauses
+% use MVH because the adjective itself is the result-clause head.
 that.j-c:
   ({EBx+} & <that-verb> &
-    ([SFsx+ & <S-CLAUSE>] or TH- or [[MVh-]] or RJ*t+ or RJ*t-))
+    ([SFsx+ & <S-CLAUSE>] or TH- or [[RTHAT- & MVh-]] or [[MVH-]] or
+     RJ*t+ or RJ*t-))
   or (TS- & (SI*j+ or SFI**j+) & I*j+);
 
 % "that" as determiner.
@@ -9455,6 +9481,8 @@ define(`COMP_ADJ_POST_LIC',`((($1) & {@MV+} & {$2}) or (dMJXr- & {@MV+} & ($2)) 
 <post-adj-mv-right>: dMJXr- & (MVp+ or MVt+ or MVz+ or MVh+);
 
 <ordinary-adj>:
+  (EAXK- & ((Pa- or AF+ or dMJra-) & MVH+))
+  or
   ({EA- or EF+} & (
     ({Xd-} & POST_ADJ_LIC(Pa- or AF+ or dMJra-, <tot-verb>))
     or <post-adj-mv>
@@ -10183,8 +10211,8 @@ like.e as.z:
 % MVs-: "she insisted, so we will do it"
 % Cz+ & CV+: "the accused, so it shall be shown, is innocent"
 so.e:
-  ({EBb-} & EAxk+ & {HA+})
-  or ({EZ-} & EExk+)
+  ({EBb-} & (EAxk+ or EAXK+) & {HA+})
+  or ({EZ-} & (EExk+ or EEXK+))
   or Em+
   or <fronted>
   or (Wq- & CQ+)
@@ -10233,6 +10261,7 @@ than.e:
 % H-: "How much?"
 much:
   ({EE-} & ([[MVa-]] or (<wantPHc> & ECa+) or <advcl-verb> or Qe+))
+  or (EEXK- & MVa- & RTHAT+)
   or ({EEx- or H-} & (
     ECn+
     or ({OFd+} & Dmu+)
@@ -10769,6 +10798,7 @@ well.e:
     or <advcl-verb>
     or dAJr-
     or [E+]))
+  or (EEXK- & ({Xd- & Xc+} & <adv-as>) & RTHAT+)
   or [{EA- or EF+} & (Pa- or AF+)]
   or Yd+;
 
@@ -10865,16 +10895,19 @@ occasionally.e often.e originally.e:
 % <fronted>: "Onward came the cavalry"
 % ECa+: "It is vastly cheaper"
 % XXX TODO the PH- should be split into PHc- and PHv- versions.
+<ordinary-adv-core>:
+  ({Xd- & {Xc+}} & <adv-as>)
+  or Em+
+  or ({PH-} & ECa+)
+  or ({Xc+ & {Xd-}} & dCOa+)
+  or <advcl-verb>
+  or <adverb-join>
+  or <fronted>
+  or [[{PH-} & EA+]];
+
 <ordinary-adv>:
-  ({EE- or EF+} &
-    (({Xd- & {Xc+}} & <adv-as>)
-    or Em+
-    or ({PH-} & ECa+)
-    or ({Xc+ & {Xd-}} & dCOa+)
-    or <advcl-verb>
-    or <adverb-join>
-    or <fronted>
-    or [[{PH-} & EA+]]))
+  ({EE- or EF+} & <ordinary-adv-core>)
+  or (EEXK- & <ordinary-adv-core> & RTHAT+)
   or (EEh- & {Qe+});
 
 % XXX FIXME: there are things in there, like "tall.e" that seem not to
@@ -11250,7 +11283,9 @@ too:
 % original
 % sufficiently: {EE-} & (EAxk+ or EExk+ or MVak-);
 % modified
-sufficiently: {EE-} & (EAxk+ or EExk+ or ({Xd- & Xc+} & <adv-as>) or E+);
+sufficiently:
+  {EE-} & (EAxk+ or EAXK+ or EExk+ or EEXK+ or
+    ({Xd- & Xc+} & <adv-as>) or E+);
 
 % much like an ordinary adverb, except even more commas allowed
 % please.e: <ordinary-adv>;
