@@ -46,6 +46,11 @@ Added uppercase connector families:
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
 | `BIQS` / `BIQI` | Certify direct and inverted subject links for `BIq` predicate wh-complements. |
 | `IBIQ` / `PPBIQ` | Carry the `BIq` predicate license across modal and perfect auxiliary chains. |
+| `EEXK` | Certifies degree-modified adverbial result-clause targets, such as `so quickly that ...` and `so much that ...`. |
+| `EAXK` | Certifies degree-modified adjective result-clause targets, such as `so big that ...`. |
+| `DTHAT` | Certifies `such` / `such a` / `such an` noun phrases that license a following result-clause `that`. |
+| `RTHAT` | Carries a result-clause certificate from an adverbial or noun head to `that.j-c` while `MVh` keeps the clause attached to the modified predicate. |
+| `MVH` | Connects an adjective result-clause head directly to `that.j-c`, replacing the old `MVh` path for certified adjective result clauses. |
 | `THR{S,P,U}` | Certifies singular, plural, and uncountable existential-`there` agreement. The brace notation summarizes the concrete link types `THRS`, `THRP`, and `THRU`. |
 | `TTHR{S,P,U}` | Carries the same existential-`there` agreement state from a raising predicate to the following infinitival `to`. |
 | `ITHR{S,P,U}` | Carries the same agreement state from infinitival `to`, modal, or auxiliary paths to the next predicate. |
@@ -69,6 +74,8 @@ Changed or retired connector forms:
 | `than to ...` infinitival comparative after `way` / `ways` | Added `WTHAN` so valid `way ... than to ...` comparatives do not depend on the retired naked `to.r I*a+` fallback. |
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
+| result-clause `that.j-c` with `MVh` | Bare `MVh-` on `that.j-c` was replaced by certified paths. Adverbial and noun result clauses use `RTHAT- & MVh-`; adjective result clauses use `MVH-`. |
+| result-clause `EExk` / `EAxk` / `D##k` witnesses | Replaced for `that` result clauses by uppercase certificate families `EEXK`, `EAXK`, and `DTHAT`. The older `EExk`, `EAxk`, and `D...k` forms remain available for ordinary non-result-clause degree and determiner uses. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
 | `there.r OXt-` | Removed. Locative `there` uses ordinary modifier paths such as `MVp`; existential and presentational `there` use agreement-specific `THR*` links. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
@@ -379,6 +386,55 @@ connectors rather than subscripted `S`, `I`, or `PP` forms. The earlier
 prototype using only `Ss*q`/`SIs*q` was unsafe because an ordinary subject path
 could still match a subscripted verb-side connector and inherit an apparently
 licensed `S##q` link name.
+
+### Result-Clause Certificates: `EEXK`, `EAXK`, `DTHAT`, `RTHAT`, And `MVH`
+
+These connector families encode the degree or determiner witness needed for
+result-clause `that` constructions:
+
+```text
+EEXK   degree link from so/sufficiently to an adverbial result target
+EAXK   degree link from so/sufficiently to an adjective result target
+DTHAT  determiner link from such/such a/such an to a noun result target
+RTHAT  result-clause certificate from an adverbial or noun target to that.j-c
+MVH    adjective-headed result-clause link to that.j-c
+```
+
+Focused adverb example:
+
+```text
+    |           +---------MVh---------+                |
+    +---->WV--->+-----MVa----+        +-----CV--->+    |
+    +->Wd--+-Ss-+      +-EEXK+--RTHAT-+-Cet-+--Ss-+    |
+    |      |    |      |     |        |     |     |    |
+LEFT-WALL he ran.v-d so.e quickly that.j-c he fell.v-d .
+```
+
+Focused adjective example:
+
+```text
+    +--------->WV-------->+                                  |
+    +----->Wd-----+       +----Pa---+       +-----CV--->+    |
+    |      +-Ds**c+--Ss*s-+    +EAXK+--MVH--+-Cet-+--Ss-+    |
+    |      |      |       |    |    |       |     |     |    |
+LEFT-WALL the shuttle.n is.v so.e big.a that.j-c it fell.v-d .
+```
+
+Focused noun example:
+
+```text
+    |               +----------------------MVh---------------------+      |
+    |               +---------MVp--------+                         |      |
+    +------>WV----->+------Os------+     +------Jp-----+           |      |
+    +->Wd--+---Ss---+        +Ds**c+--Mp-+    +--DTHAT-+---RTHAT---+      |
+    |      |        |        |     |     |    |        |           |      |
+LEFT-WALL she presented.v-d her case.n with such eloquence.n-u that.j-c ...
+```
+
+The older lowercase witness forms `EExk`, `EAxk`, and `D...k` remain available
+for ordinary degree and determiner uses, for example `so quickly`, `so big`,
+and `such eloquence` without a result clause. The uppercase families are used
+only when the target also carries the local `that` certificate.
 
 ## PP Migration From `4.0.knowledge` To `4.0.dict`
 
@@ -837,6 +893,112 @@ corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
+```
+
+## Rule 67: Result-Clause `that` Requires A Degree Or `such` Witness
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+MVh , EExk EAxk D##k , "Incorrect use of that67"
+```
+
+The grammatical area is result-clause `that`, as in `so quickly that ...`,
+`so big that ...`, and `such eloquence that ...`.
+
+### Problem
+
+The old `that.j-c` entry allowed a bare `MVh-` result-clause attachment. PP
+then checked whether the linkage also contained a degree or determiner witness
+with one of the historical names `EExk`, `EAxk`, or `D##k`. That witness test
+was global within the PP domain rather than encoded in the local connector
+geometry of the result-clause construction.
+
+Without the PP rule, the bare `MVh-` branch accepted result-clause-shaped
+linkages such as `likely that ...`, `quickly that ...`, or `big that ...`
+without the degree expression that makes the construction grammatical.
+
+### Overgeneration Cause
+
+The old connector path separated the clause attachment from the licensing
+degree phrase. The result-clause `that` could link through `MVh` even when the
+modified adverb, adjective, or noun did not carry the required `so`,
+`sufficiently`, or `such` relation.
+
+### Implementation
+
+The dictionary now replaces the bare `that.j-c [[MVh-]]` path with certified
+alternatives:
+
+```text
+RTHAT- & MVh-
+MVH-
+```
+
+Adverbial and noun result clauses keep the predicate-to-`that` `MVh` link and
+add an `RTHAT` certificate from the modified adverbial or noun to `that.j-c`.
+The degree or determiner relation to that modified word uses an uppercase
+certificate family:
+
+```text
+so.e / sufficiently --EEXK-- adverb-or-degree-target --RTHAT-- that.j-c
+such / such a / such an --DTHAT-- noun --RTHAT-- that.j-c
+```
+
+Adjective-headed result clauses cannot use a separate `RTHAT` link without
+duplicating the same adjective-to-`that` endpoint pair, so they use the
+combined `MVH` connector:
+
+```text
+so.e / sufficiently --EAXK-- adjective --MVH-- that.j-c
+```
+
+The older lowercase `EExk`, `EAxk`, and `D...k` links remain available for
+ordinary non-result-clause uses such as `so quickly`, `so big`, and `such
+eloquence`.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+He ran so quickly that he fell.
+It went almost so well that we thought we won!
+I love her so much that I can't let her go.
+The shuttle is so big that it has to be carried.
+She presented her case with such eloquence that we could only admire her.
+```
+
+Focused rejected examples include:
+
+```text
+*He ran quickly that he fell.
+*The shuttle is big that it fell.
+*She presented her case with eloquence that we could only admire her.
+```
+
+### Verification
+
+The rule 67 migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results for the current documented state:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
 ```
 
 ## Rule 14: Wh Preposition Objects Require A Companion
