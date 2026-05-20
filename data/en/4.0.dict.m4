@@ -10586,7 +10586,6 @@ occasionally.e often.e originally.e:
     or Em+
     or ({PH-} & ECa+)
     or ({Xc+ & {Xd-}} & dCOa+)
-    or Qe+
     or <advcl-verb>
     or <adverb-join>
     or <fronted>

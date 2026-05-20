@@ -806,6 +806,118 @@ corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
 
+## Rule 19: License `Qe` How-Adverb Questions In The Dictionary
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Qe , EEh EAh , "Incorrect use of adverb19"
+```
+
+The grammatical area is `how`-licensed adjective and adverb questions, such as
+`How quickly did Joe run?` and `How tall is he?`.
+
+### Problem
+
+The historical rule required any PP domain containing `Qe` to also contain an
+`EEh` or `EAh` link. That is the right shape for direct `how` questions:
+
+```text
+how --EEh-- quickly --Qe-- did
+how --EAh-- tall    --Qe-- is
+```
+
+Some current dictionary paths already carried that witness. However, the broad
+ordinary-adverb expression also allowed a raw `Qe+` continuation from an
+ordinary `EE-`/`EF-` modifier disjunct. After rule 19 was removed by itself,
+that branch admitted lower-ranked parses such as:
+
+```text
+how --AF-- is
+tall.e --Qe-- is
+```
+
+Those parses have a `Qe` question link but no `EEh` or `EAh` witness in the
+same PP domain.
+
+### Old Mechanism
+
+PP checked the completed domain after extraction and rejected a `Qe` link if
+no `EEh` or `EAh` link appeared in that domain. This made the rule a late
+global safety check rather than part of the dictionary path that created the
+question relation.
+
+### Overgeneration Cause
+
+The ordinary adverb macro mixed two uses in one expression. The direct
+`EEh- & Qe+` branch correctly represents `how`-licensed adverb questions, but
+the generic `EE-/EF-` branch also contained `Qe+`. That generic branch could
+attach to a `Qe-` question verb while the apparent `how` word was connected
+elsewhere, leaving PP to reject the completed linkage.
+
+Some surface inversions that look related use `Qd`, not `Qe`; they are outside
+the scope of this rule.
+
+### Implementation
+
+Rule 19 is removed from `4.0.knowledge`. The ordinary-adverb macro keeps its
+existing direct `EEh- & {Qe+}` branch and removes the loose `Qe+` alternative
+from the generic `EE-/EF-` branch. Thus an ordinary adverb can still form a
+`Qe` question path when the same disjunct carries the `EEh` witness, but it no
+longer creates a `Qe` path from an unrelated modifier relation.
+
+This is not a general cleanup of `how` grammar. For example, a sentence such
+as `*How slickly did you say it was?` already contains the `EEh` witness, so
+rule 19 is not the mechanism that distinguishes it from accepted `how`
+questions.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+How quickly did Joe run
+How tall is he?
+How tall did you say he was?
+I know how quickly you ran
+How much more quickly did you run
+How often does it happen?
+```
+
+Focused rejected examples include:
+
+```text
+*How quickly Joe ran
+*I know how quickly did you run
+*Quickly did Joe run
+*Very quickly did Joe run
+*I know quickly did John run
+```
+
+### Verification
+
+The rule 19 removal was validated with:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
+```
+
 ## Redundant `CONTAINS_NONE` PP Checks
 
 **Status:** implemented for rules 69, 70, 74, 75, 76, 77, and 79.
