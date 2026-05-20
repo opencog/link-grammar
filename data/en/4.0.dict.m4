@@ -9925,7 +9925,9 @@ so_that such_that:
 % MVp- & J+: "... other traditions than my own"
 than.e:
   (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+})
-           or Mpc+ or MVat+ or MVpt+ or (Cc+ & CV+) or Pafc+))
+           or Mpc+ or MVat+ or MVpt+ or Pafc+))
+  or ((CMPS- or CMPP- or CMPX-) & MVt- & Cc+ & CV+)
+  or (MVt- & (CMPS- or CMPP- or CMPX-) & Cc+ & CV+)
   or ((CMPS- or CMPX-) & MVt- & Ss*c+)
   or ((CMPP- or CMPX-) & MVt- & Sp*c+)
   or (MVt- & (CMPS- or CMPX-) & Ss*c+)

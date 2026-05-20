@@ -155,8 +155,8 @@ A man taller and wider than Bill arrived.
 *A man bigger quickly arrived.
 *A man taller and wider arrived.
 
-% CONTAINS_ONE rule 58: singular comparative-clause subjects need a
-% singular/mass or agreement-neutral comparative antecedent.
+% CONTAINS_ONE rules 58 and 59: comparative-clause subjects need a
+% compatible comparative antecedent.
 
 She interviewed more programmers than were hired.
 *She interviewed more programmers than was hired.

@@ -249,7 +249,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 32s, 32p, 32u, 34-36 | Existential `there` agreement | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 92 errors. It accepts bad agreement such as `There is chasing dogs`, `There are a dog`, and coordinated singular complements with plural `are`. These need agreement-aware `there.r`/`be` object-path splits. |
 | 42 | Predicate/question `BIq` | Simple removal raises the fast prefix from 1 to 3 errors and `corpus-basic.batch` from 88 to 90 errors. A prototype that moved `BI+` to a copula branch with `Ss*q-` still accepted a bad `big mind on everybody's question is who ...` parse, because a generic noun subject can match a subscripted verb-side connector and inherit the `Ss*q` link name. A replacement therefore needs a new connector family on the licensing nouns/clauses, not only a subscripted copula-side split. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
-| 56, 59 | Comparative agreement and complement checks | Bulk removal together with the now-migrated rule 58 left `corpus-knowledge.batch` clean but raised `corpus-basic.batch` from 88 to 91 errors and `corpus-fixes.batch` from 362 to 363 errors. The remaining protected bad paths include `Ours is more elegant than yours works` and `I am as intelligent as John does`. |
+| 56 | Comparative complement checks | Simple removal leaves `corpus-knowledge.batch` clean but exposes bad `Cc` comparative complement paths such as `I am as intelligent as John does`. A replacement needs a narrower split of comparative complement continuations rather than deletion. |
 
 ## Library-Assisted Dictionary Helper Tokens
 
@@ -857,23 +857,26 @@ corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
 
-## Rule 58: Singular Comparative Clauses Require A Compatible Antecedent
+## Rules 58 And 59: Comparative Clauses Require A Compatible Antecedent
 
-**Status:** implemented; PP rule 58 has been removed from `4.0.knowledge`.
+**Status:** implemented; PP rules 58 and 59 have been removed from
+`4.0.knowledge`.
 
 ### Rule / Area
 
-The removed PP rule was:
+The removed PP rules were:
 
 ```text
 Ss#c , Dmum Dmuy Om Oy Jm Jy Ds*y MX#m , "Bad comparative58"
+S##c , Dm#m D##y Om Oy Jm Jy MX#m , "Bad comparative59"
 ```
 
 The grammatical area is comparative clauses introduced by `than.e` and
-`as.e-c`. A singular comparative-clause subject link such as `Ss*c` should be
-licensed by a singular, mass, or agreement-neutral comparative antecedent in
-the same comparative construction. It should not be licensed by a plural
-antecedent such as `more programmers`.
+`as.e-c`. A comparative-clause subject link such as `Ss*c` or `Sp*c` should be
+licensed by a compatible comparative antecedent in the same construction. A
+singular comparative-clause subject should be licensed by a singular, mass, or
+agreement-neutral antecedent; a plural comparative-clause subject should be
+licensed by a plural or agreement-neutral antecedent.
 
 ### Problem
 
@@ -891,13 +894,18 @@ She interviewed more programmers than was hired.
 
 The antecedent side used plural `Dmcm`/`Op`, while the comparative clause used
 singular `Ss*c`. PP rule 58 rejected the completed linkage after extraction.
+Rule 59 was the corresponding general check: any `S##c` comparative-clause
+subject needed evidence of a comparative antecedent or related comparative
+path in the same domain.
 
 ### Overgeneration Cause
 
-The comparative marker was not connected to the antecedent agreement evidence.
-The `Dmum`/`Dmuy` and plural `Dmcm`/`Dmcy` links were already present on the
-antecedent noun phrase, but the `S**c+` branch on `than.e`/`as.e-c` did not
-distinguish singular-compatible from plural-compatible continuations.
+The comparative marker was not connected to the antecedent evidence. The
+`Dmum`/`Dmuy` and plural `Dmcm`/`Dmcy` links were already present on the
+antecedent noun phrase, and object/preposition paths such as `Om` and `Jm`
+were already visible elsewhere in the linkage, but the `S**c+` branch on
+`than.e`/`as.e-c` did not require a local dictionary-side certificate for that
+evidence.
 
 ### Implementation
 
@@ -926,12 +934,25 @@ Both left-connector orders are present. In object comparatives, the antecedent
 noun is closer to `than.e`/`as.e-c` than the modified verb; in subject
 comparatives, the antecedent noun is farther away than the modified verb.
 
+The clausal `than.e` continuation using `Cc+ & CV+` is also tied to the same
+certificate family:
+
+```text
+CMPS-/CMPP-/CMPX- ... MVt- ... Cc+ ... CV+
+MVt- ... CMPS-/CMPP-/CMPX- ... Cc+ ... CV+
+```
+
+This blocks raw paths such as `more elegant than yours works`, where the
+comparative adjective had `MVt` but the `than.e` clause lacked a compatible
+comparative antecedent certificate.
+
 ### Implications
 
-This is a dictionary replacement for rule 58. The new `CMPS`/`CMPP`/`CMPX`
-links are visible internal certificate links, so affected top linkages differ
-from older master-style linkages by one additional comparative certificate.
-The public grammar result is unchanged on the ordinary English corpora tested.
+This is a dictionary replacement for rules 58 and 59. The new
+`CMPS`/`CMPP`/`CMPX` links are visible internal certificate links, so affected
+top linkages differ from older master-style linkages by one additional
+comparative certificate. The public grammar result is unchanged on the
+ordinary English corpora tested.
 
 ### Examples
 
@@ -946,6 +967,7 @@ She spoke to more than was expected.
 She interviewed as many programmers as were hired.
 More people came to the party than were expected.
 More people came to the party than was expected.
+Our program was better than was expected.
 ```
 
 Focused rejected examples include:
@@ -953,11 +975,12 @@ Focused rejected examples include:
 ```text
 *She interviewed more programmers than was hired.
 *She interviewed as many programmers as was hired.
+*Our program was better than were expected.
 ```
 
 ### Verification
 
-The rule 58 migration was validated with:
+The rule 58 and 59 migration was validated with:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
