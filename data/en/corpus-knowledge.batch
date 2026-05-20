@@ -194,8 +194,9 @@ The coffee tastes the same as it did last year.
 I slipped on the ice as I ran home.
 *I am as intelligent as John does.
 
-% CONTAINS_ONE rules 32s, 32p, 32u, 34, and 35: existential "there"
-% agreement is carried by dictionary connectors instead of PP checks.
+% CONTAINS_ONE rules 32s, 32p, 32u, 34, 35, and 36: existential "there"
+% agreement is carried by dictionary connectors instead of PP checks; the old
+% broad object-like OXt branch on there.r is removed.
 
 There is a dog in the park.
 There are dogs in the park.
@@ -209,6 +210,10 @@ There will be a dog.
 Will there be a dog?
 Does there seem to be a dog in the park?
 There seems to appear to have been likely to be a problem.
+I want there to be a problem.
+I want there to be more.
+There goes the cutest guy ever.
+Oh great, there went my ride.
 *There is chasing dogs.
 *There are a dog in the park.
 *Are there a dog in the park?

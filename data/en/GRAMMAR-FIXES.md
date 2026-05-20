@@ -70,6 +70,7 @@ Changed or retired connector forms:
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
+| `there.r OXt-` | Removed. Locative `there` uses ordinary modifier paths such as `MVp`; existential and presentational `there` use agreement-specific `THR*` links. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
@@ -407,7 +408,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | Rule(s) | Area | Current status |
 | --- | --- | --- |
 | 20-31, 37-39 | Expletive `it` complement licensing | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include bad ordinary-subject uses of `THi`/`TOi`-style complements, such as `Joe is likely that ...` and `It tried to have been ...`. A replacement needs a shared expletive-`it` subject/complement split across copular, adjectival, and verbal complement paths. |
-| 36 | Existential `there` object-form backstop | Rules 32s, 32p, 32u, 34, and 35 are migrated below. Rule 36 remains active because its `OXt` condition is related but not identical to the agreement split. It needs a separate analysis of the `OXt` object-form path. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | `Pa##j` predicative adjective | Object licensing for predicative-adjective complements | A simple verb-side object macro for the PP-allowed objects is unsafe. Connector matching lets a subscripted positive connector such as `Os*e+` match an ordinary `Os-` noun and produce an allowed-looking `Os*e` link, so the macro admits the same bad singular-object paths that the PP rule was intended to reject. A replacement needs a true object-class certificate, a new exact connector family on the noun/pronoun side, or equivalent library-assisted dictionary support. |
 
@@ -2406,10 +2406,10 @@ corpus-fixes.batch: 361 errors
 corpus-fix-long.batch: 8 errors
 ```
 
-## Rules 32s, 32p, 32u, 34, 35: Encode Existential `there` Agreement
+## Rules 32s, 32p, 32u, 34, 35, 36: Encode Existential `there`
 
 **Status:** implemented; these PP rules have been removed from
-`4.0.knowledge`. Rule 36 remains active.
+`4.0.knowledge`.
 
 ### Rule / Area
 
@@ -2422,6 +2422,7 @@ SFp   , O*t Opt Omt Omm Bp#t B*#t Bc#t , "Bad use of 'there'32p"
 SFu   , O*t Out Omt Omm Bp#t B*#t Bc#t , "Bad use of 'there'32u"
 SFIst , O*t Ost Omt Bs#t B*#t Bc#t     , "Bad use of 'there'34"
 SFIp  , O*t Opt Omt Bp#t B*#t Bc#t     , "Bad use of 'there'35"
+OXt   , O#t B##t                        , "Bad use of 'there'36"
 ```
 
 The grammatical area is agreement between existential `there` and the eventual
@@ -2449,6 +2450,15 @@ and reject locally well-formed but agreement-incompatible paths such as:
 *There are a dog in the park.
 *There seems to appear to have been likely to be problems.
 ```
+
+Rule 36 was a related object-form backstop. The old dictionary also exposed a
+standalone `OXt-` branch on `there.r`. That allowed ordinary transitive object
+slots to treat locative or existential `there` as an object-like argument. PP
+then rejected completed raw linkages where this `OXt` use did not carry an
+existential object or filler-gap witness, for example the rejected raw path
+inside `I want there quickly`. That sentence can still parse with ordinary
+locative `MVp`; the migrated rule only removes the old object-like `OXt`
+candidate.
 
 ### Implementation
 
@@ -2495,6 +2505,13 @@ object evidence, and uncountable paths accept uncountable-compatible evidence.
 The broad `SF*` connector families remain in the dictionary for unrelated
 grammar paths, but existential `there.r` and the related deictic `here` path no
 longer use them for this construction.
+
+Rule 36 is handled by deleting the standalone `there.r OXt-` alternative. The
+valid tested uses that formerly appeared near this rule do not need `OXt`:
+locative `there` continues to attach through ordinary modifier paths such as
+`MVp`, and existential or presentational `there` uses the agreement-specific
+`THR*` families above. Removing `OXt-` prevents raw object-like `there` paths
+from being generated at all, so no replacement connector family is needed.
 
 The agreement states are encoded as distinct uppercase families, for example
 `THRS`, `THRP`, and `THRU`, rather than as subscripted forms such as `THRs`,
@@ -2564,10 +2581,11 @@ the first three displayed accepted linkages for:
 There is a dog in the park.
 There has been a problem.
 There seems to appear to have been likely to be a problem.
+I want there to be a problem.
 ```
 
-The same constructions remain accepted. The expected differences are the new
-certificate links:
+The same constructions remain accepted. For the ordinary existential examples,
+the expected differences are the new certificate links:
 
 ```text
 SFst  -> THRS
@@ -2575,6 +2593,12 @@ PP    -> PPTHRS
 TOf/I -> TTHRS/ITHRS
 Paf   -> PATHRS
 ```
+
+For `I want there to be a problem`, the preferred accepted linkages use `MVp`
+for `there`. The pre-change dictionary also displayed an accepted `OXt`
+alternative when the domain contained the infinitival object witness. That
+object-like `there` analysis is intentionally removed; the ordinary locative
+and infinitival analyses remain accepted.
 
 The migration was validated with ordinary parser runs:
 
