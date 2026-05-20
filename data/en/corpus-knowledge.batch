@@ -155,6 +155,20 @@ A man taller and wider than Bill arrived.
 *A man bigger quickly arrived.
 *A man taller and wider arrived.
 
+% CONTAINS_ONE rule 58: singular comparative-clause subjects need a
+% singular/mass or agreement-neutral comparative antecedent.
+
+She interviewed more programmers than were hired.
+*She interviewed more programmers than was hired.
+She spent more money than was budgeted.
+She spent less money than was budgeted.
+She spent more than was budgeted.
+She spoke to more than was expected.
+She interviewed as many programmers as were hired.
+*She interviewed as many programmers as was hired.
+More people came to the party than were expected.
+More people came to the party than was expected.
+
 % CONTAINS_NONE rule 78: comparative EAy must not pair with ordinary
 % subordinate-as MVs. Temporal "as" now uses a verb-side MVSWH link instead,
 % so comparative adjectives cannot accidentally license it.

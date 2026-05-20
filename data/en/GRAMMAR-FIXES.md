@@ -30,6 +30,9 @@ Added uppercase connector families:
 | `OFJ` | Certifies that an `of`-relative `Jr` path is tied to a corresponding postnominal `B#j` anchor. |
 | `MJX` | Licensed conjoined postnominal-adjective helper family. `MJXl` and `MJXr` are used when one conjoined adjective supplies the complement license for the postnominal `Ma` or comparative `Mam` relation. |
 | `MVSWH` | Connects a verb to subordinate temporal `as` in the `as.#while` path. This keeps temporal `as` distinct from ordinary broad `MVs` modifiers. |
+| `CMPS` | Certifies a singular or mass comparative antecedent for a following singular comparative clause. |
+| `CMPP` | Certifies a plural comparative antecedent for a following plural comparative clause. |
+| `CMPX` | Certifies an agreement-neutral comparative head, such as bare `more` or a comparative preposition object. |
 | `INSERTL` / `INSERTR` | Tokenizer-only marker connector families. Paired `INSERTL<token>+` and `INSERTR<token>+` request an optional internal helper token named `<token>`. They are dictionary support markers, not ordinary grammar links. |
 
 Changed or retired connector forms:
@@ -42,6 +45,7 @@ Changed or retired connector forms:
 | `O*n` in second-object positions | Replaced by the explicit non-pronoun set `On`, `Omn`, `Opn`, `Osn`, `Otn`, `Oun`, and `Oyn`. This preserves noun-like second objects while excluding pronoun `Ox` from those positions. |
 | broad postposed `Ma` / `Mam` paths | Tightened so postposed adjective and comparative-adjective uses require a local complement license or a licensed `MJX` conjunction path. `Ma` and `Mam` remain ordinary connectors elsewhere. |
 | subordinate temporal `as` with `MVs` | The `as.#while` temporal path now uses `MVSWH` instead of `MVs`. Other `MVs` uses remain ordinary modifiers. |
+| comparative-clause `S**c` on `than.e` / `as.e-c` | Split into singular `Ss*c` and plural `Sp*c` branches that require `CMPS`, `CMPP`, or `CMPX` antecedent certificates. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
@@ -176,6 +180,44 @@ also carrying a comparative `EAy` link. The dedicated `MVSWH` family keeps the
 temporal subordinate use available to verbs without allowing comparative
 adjectives to satisfy it accidentally.
 
+### `CMPS`, `CMPP`, And `CMPX`: Comparative Clause Antecedents
+
+`CMPS`, `CMPP`, and `CMPX` connect a comparative antecedent to the comparative
+clause marker `than.e` or `as.e-c`. They are dictionary-side certificates for
+the agreement condition formerly checked by PP rule 58.
+
+Focused singular/mass example:
+
+```text
+    +----------MVt----------+
+    +------Ou------+        |
+    |       +-Dmum-+--CMPS--+-Ss*c-+
+    |       |      |        |      |
+spent.v-d more money.n-u than.e was.v-d
+```
+
+Focused plural example:
+
+```text
+    +--------------MVt-------------+
+    +---------Op--------+          |
+    |          +--Dmcm--+---CMPP---+--Spxc-+
+    |          |        |          |       |
+interviewed.v more programmers.n than.e were.v-d
+```
+
+`CMPX` is used when the antecedent is agreement-neutral, for example bare
+comparative `more` as an object:
+
+```text
+spent.v-d --Omm-- more --CMPX-- than.e --Ss*c-- was.v-d
+```
+
+The connector families are intentionally distinct uppercase names rather than
+subscripted variants of one `CMP` family. Broad connector matching would allow
+subscripted variants such as `CMPs` and `CMPx` to match each other, which would
+lose the agreement distinction.
+
 ## PP Migration From `4.0.knowledge` To `4.0.dict`
 
 This section documents selected postprocessing (PP) rules being moved into
@@ -207,7 +249,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 32s, 32p, 32u, 34-36 | Existential `there` agreement | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 92 errors. It accepts bad agreement such as `There is chasing dogs`, `There are a dog`, and coordinated singular complements with plural `are`. These need agreement-aware `there.r`/`be` object-path splits. |
 | 42 | Predicate/question `BIq` | Simple removal raises the fast prefix from 1 to 3 errors and `corpus-basic.batch` from 88 to 90 errors. A prototype that moved `BI+` to a copula branch with `Ss*q-` still accepted a bad `big mind on everybody's question is who ...` parse, because a generic noun subject can match a subscripted verb-side connector and inherit the `Ss*q` link name. A replacement therefore needs a new connector family on the licensing nouns/clauses, not only a subscripted copula-side split. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
-| 56, 58, 59 | Comparative agreement and complement checks | Bulk removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 91 errors and `corpus-fixes.batch` from 362 to 363 errors. The protected bad paths include `Ours is more elegant than yours works`, `She interviewed more programmers than was hired`, and `I am as intelligent as John does`. |
+| 56, 59 | Comparative agreement and complement checks | Bulk removal together with the now-migrated rule 58 left `corpus-knowledge.batch` clean but raised `corpus-basic.batch` from 88 to 91 errors and `corpus-fixes.batch` from 362 to 363 errors. The remaining protected bad paths include `Ours is more elegant than yours works` and `I am as intelligent as John does`. |
 
 ## Library-Assisted Dictionary Helper Tokens
 
@@ -813,6 +855,124 @@ corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
+```
+
+## Rule 58: Singular Comparative Clauses Require A Compatible Antecedent
+
+**Status:** implemented; PP rule 58 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Ss#c , Dmum Dmuy Om Oy Jm Jy Ds*y MX#m , "Bad comparative58"
+```
+
+The grammatical area is comparative clauses introduced by `than.e` and
+`as.e-c`. A singular comparative-clause subject link such as `Ss*c` should be
+licensed by a singular, mass, or agreement-neutral comparative antecedent in
+the same comparative construction. It should not be licensed by a plural
+antecedent such as `more programmers`.
+
+### Problem
+
+The old dictionary let `than.e` and `as.e-c` use a broad `S**c+` connector for
+comparative clause subjects. That connector could match both singular and
+plural verb-side subject connectors without any dictionary-side proof that the
+antecedent had compatible number or mass behavior.
+
+For example, the raw linkage for the rejected sentence below looked locally
+well-formed:
+
+```text
+She interviewed more programmers than was hired.
+```
+
+The antecedent side used plural `Dmcm`/`Op`, while the comparative clause used
+singular `Ss*c`. PP rule 58 rejected the completed linkage after extraction.
+
+### Overgeneration Cause
+
+The comparative marker was not connected to the antecedent agreement evidence.
+The `Dmum`/`Dmuy` and plural `Dmcm`/`Dmcy` links were already present on the
+antecedent noun phrase, but the `S**c+` branch on `than.e`/`as.e-c` did not
+distinguish singular-compatible from plural-compatible continuations.
+
+### Implementation
+
+The dictionary now adds explicit comparative antecedent certificates:
+
+```text
+CMPS  singular or mass antecedent
+CMPP  plural antecedent
+CMPX  agreement-neutral comparative head
+```
+
+Singular and mass noun-main paths can optionally carry `CMPS+`; plural
+noun-main paths can optionally carry `CMPP+`. Bare comparative object and
+preposition-object paths such as `more` with `Omm-` or `Jm-` can carry
+`CMPX+`, because those paths were agreement-neutral under the PP rule.
+
+The `S**c+` comparative-clause branch is split in both `than.e` and `as.e-c`:
+
+```text
+CMPS- ... Ss*c+
+CMPP- ... Sp*c+
+CMPX- ... Ss*c+ / Sp*c+
+```
+
+Both left-connector orders are present. In object comparatives, the antecedent
+noun is closer to `than.e`/`as.e-c` than the modified verb; in subject
+comparatives, the antecedent noun is farther away than the modified verb.
+
+### Implications
+
+This is a dictionary replacement for rule 58. The new `CMPS`/`CMPP`/`CMPX`
+links are visible internal certificate links, so affected top linkages differ
+from older master-style linkages by one additional comparative certificate.
+The public grammar result is unchanged on the ordinary English corpora tested.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+She interviewed more programmers than were hired.
+She spent more money than was budgeted.
+She spent less money than was budgeted.
+She spent more than was budgeted.
+She spoke to more than was expected.
+She interviewed as many programmers as were hired.
+More people came to the party than were expected.
+More people came to the party than was expected.
+```
+
+Focused rejected examples include:
+
+```text
+*She interviewed more programmers than was hired.
+*She interviewed as many programmers as was hired.
+```
+
+### Verification
+
+The rule 58 migration was validated with:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
 ```
 
 ## Rule 78: Separate Temporal `as` From Comparative `EAy`

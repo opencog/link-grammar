@@ -166,8 +166,8 @@ changecom(`%')
 %        requires plural object.  See "are.v" for examples.
 %
 <noun-main-s>:
-  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & ({Jk-} or {Mf+})) or Os-
-  or <post-nominal-s>;
+  ((Ss*s+ & <CLAUSE>) or SIs- or (Js- & ({Jk-} or {Mf+})) or Os-
+  or <post-nominal-s>) & {CMPS+};
 
 % noun-main-e: used for proper names (named entities)
 % Os*e- is used to allow certain adjectival uses.
@@ -178,16 +178,16 @@ changecom(`%')
 
 % noun-main-p -- plural
 <noun-main-p>:
-  (Sp+ & <CLAUSE>) or SIp- or Jp-
+  ((Sp+ & <CLAUSE>) or SIp- or Jp-
   or Op-
-  or <post-nominal-p>;
+  or <post-nominal-p>) & {CMPP+};
 
 % noun-main-u -- u == uncountable
 % TODO: alter this to use Su+, SIu- someday. likewise Buj+
 % Doing this requires adding Su- links to many entries
 <noun-main-u>:
-  (Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
-  or <post-nominal-s>;
+  ((Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
+  or <post-nominal-s>) & {CMPS+};
 
 % noun-main-m -- m == mass
 % TODO: get rid of this someday.
@@ -195,8 +195,8 @@ changecom(`%')
 % two: the countable form, which will used <noun-main-s> and the
 % uncountable form, which will use <noun-main-u>
 <noun-main-m>:
-  (Ss+ & <CLAUSE>) or SIs- or Jp- or Os-
-  or <post-nominal-s>;
+  ((Ss+ & <CLAUSE>) or SIs- or Jp- or Os-
+  or <post-nominal-s>) & {CMPS+};
 
 % Used only for this.p, that.j-p
 % (Jd- & Dmu- & Os-): they have plenty of this
@@ -1667,7 +1667,7 @@ half:
 % H- & EC+: "How many more?"
 many:
   (H- & (Dmc+ or ND+ or NIn+ or EC+ or [()]))
-  or (AM- & (Dmcy+ or Oy- or Jy-))
+  or (AM- & (Dmcy+ or ((Oy- or Jy-) & {CMPX+})))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
   or (OFd+ & Dmc+)
@@ -1830,7 +1830,7 @@ little.i:
     & (Dmu+
       or [<noun-rel-s> & (<noun-main-s> or <rel-clause-s>)]
       or <noun-and-s>))
-  or (AM- & (Dmuy+ or MVy- or Oy- or Jy-))
+  or (AM- & (Dmuy+ or MVy- or ((Oy- or Jy-) & {CMPX+})))
   or [[{Ds-} & <adv-of>]];
 
 % "he likes you most" has no determiner, just uses MVa-.
@@ -9790,7 +9790,8 @@ more:
   or ({OF+} & (
     ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
     or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+))
-    or ({ECn- or ECx- or ND-} & ([Omm-]1.1 or Jm- or (Xd- & MVt+ & Xc+ & MX*m-)))))
+    or ({ECn- or ECx- or ND-} &
+      ((([Omm-]1.1 or Jm-) & {CMPX+}) or (Xd- & MVt+ & Xc+ & MX*m-)))))
   or EC-
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
@@ -9802,12 +9803,12 @@ more_of_an: Ds*mv+ or (<PHv> & Ds*mx+);
 less:
   ({ECa-} & (EAm+ or EEm+ or [MVm-] or [EB*m-] or dAJrc- or dAJlc+))
   or ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
-  or ({ECn-} & ([Om-]1.1 or Jm-))
+  or ({ECn-} & (([Om-]1.1 or Jm-) & {CMPX+}))
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 % ND- & Dmcm+ "I ran 10 fewer miles than Ben."
 fewer:
-  ({ECn- or ND-} & (Dmcm+ or Om- or Jm- or (Sp+ & <CLAUSE>) or dAJrc- or dAJlc+)) or
+  ({ECn- or ND-} & (Dmcm+ or ((Om- or Jm-) & {CMPX+}) or (Sp+ & <CLAUSE>) or dAJrc- or dAJlc+)) or
   (DG- & Dm*w+ & (ER- or (Wd- & Xc+ & ER+)));
 
 farther:
@@ -9830,7 +9831,11 @@ as.e-y: {EZ-} & ((EAy+ & {HA+}) or EEy+ or AM+);
 % uses comparative links
 % Cc+: "The coffee tastes the same as it did last year."
 as.e-c:
-  (MVz- & (((O*c+ or S**c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or <thncl-verb>))
+  (MVz- & (((O*c+ or ({SFsic+} & Zc+)) & {Mp+}) or Mpc+ or <thncl-verb>))
+  or ((CMPS- or CMPX-) & MVz- & Ss*c+ & {Mp+})
+  or ((CMPP- or CMPX-) & MVz- & Sp*c+ & {Mp+})
+  or (MVz- & (CMPS- or CMPX-) & Ss*c+ & {Mp+})
+  or (MVz- & (CMPP- or CMPX-) & Sp*c+ & {Mp+})
   or (MVzo- & Ct+ & Bc+ & {U+})
   or (MVzc- & (CX+ or CQ+))
   or (MVzp- & Pa+)
@@ -9920,7 +9925,11 @@ so_that such_that:
 % MVp- & J+: "... other traditions than my own"
 than.e:
   (MVt- & (((O*c+ or ({SFsic+} & Zc+) or U*c+) & {Mp+})
-           or Mpc+ or S**c+ or MVat+ or MVpt+ or (Cc+ & CV+) or Pafc+))
+           or Mpc+ or MVat+ or MVpt+ or (Cc+ & CV+) or Pafc+))
+  or ((CMPS- or CMPX-) & MVt- & Ss*c+)
+  or ((CMPP- or CMPX-) & MVt- & Sp*c+)
+  or (MVt- & (CMPS- or CMPX-) & Ss*c+)
+  or (MVt- & (CMPP- or CMPX-) & Sp*c+)
   or ((MVta- or LE-) & Cta+ & ((AFd+ & {Pa+}) or PFc+))
   or ((MVti- or LEi-) & AFdi+ & {Pa+})
   or (((LE- & {AFd+}) or (LEi- & {AFdi+}))
@@ -9941,7 +9950,7 @@ much:
     or (<noun-rel-s> & ([[<noun-main-s>]] or Bsm+))
     or [()]
   ))
-  or (AM- & (Dmuy+ or MVy- or Oy- or Jy- or EB*y-))
+  or (AM- & (Dmuy+ or MVy- or ((Oy- or Jy-) & {CMPX+}) or EB*y-))
   or EZ+;
 
 mucho: Dm+;
