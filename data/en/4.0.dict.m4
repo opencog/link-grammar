@@ -1022,8 +1022,8 @@ v/v vol/vol volume/volume w/v weight/vol weight/volume:
 <Dsc>: Ds**c- or Ds**x-;
 
 % Nouns that can be used with that-clauses; most prominently, with
-% THb links: "The problem was that ...". Post-processing allows THb's
-% but blocks plain TH's.
+% THb links: "The problem was that ...". THBS/THBI provide dictionary-side
+% predicate licenses for THb, replacing the old PP predicate40 check.
 % These are singular; the plural mass-count versions are further below.
 % Vowel-only form of the expressions further below.
 argument.n impression.n allegation.n announcement.n assertion.n
@@ -1033,8 +1033,8 @@ indication.n inkling.n amount.n answer.n:
     AN+
     or (<Dsv> & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-s> or
-      (Ss*t+ & <CLAUSE>) or
-      SIs*t- or
+      (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or
+      SIs*t- or THBI- or
       <rel-clause-s>))
     or ({<Dsv>} & <noun-and-s>)
     or (YS+ & <Dsv>)
@@ -1044,7 +1044,7 @@ indication.n inkling.n amount.n answer.n:
     or <noun-assert>);
 
 attestation.n:
-  (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
+  (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or SIs*t- or THBI- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
 % Consonant-only form of the above.
 % SIs-: "How fast is the program"
@@ -1053,8 +1053,8 @@ attestation.n:
     AN+
     or (<Dsc> & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-s> or
-      (Ss*t+ & <CLAUSE>) or
-      SIs*t- or
+      (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or
+      SIs*t- or THBI- or
       <rel-clause-s>))
     or (<Dsc> & SIs- & <noun-rel-s>)
     or ({<Dsc>} & <noun-and-s>)
@@ -1071,8 +1071,8 @@ awareness.n opinion.n explanation.n expectation.n insistence.n:
     AN+
     or ({(D*u*v- or D*u*x-)} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (
       <noun-main2-m>
-      or (Ss*t+ & <CLAUSE>)
-      or SIs*t-
+      or (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>)
+      or SIs*t- or THBI-
       or <rel-clause-s>))
     or ({(D*u*v- or D*u*x-)} & <noun-and-u>)
     or (YS+ & {D*u-})
@@ -1091,8 +1091,8 @@ rule.n danger.n warning.n suggestion.n:
     AN+
     or ({(D*u*c- or D*u*x-)} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (
       <noun-main2-m>
-      or (Ss*t+ & <CLAUSE>)
-      or SIs*t-
+      or (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>)
+      or SIs*t- or THBI-
       or <rel-clause-s>))
     or ({(D*u*c- or D*u*x-)} & <noun-and-u>)
     or (YS+ & {D*u-})
@@ -1105,8 +1105,8 @@ evidence.n reasoning.n likelihood:
     AN+
     or ({Dmu-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-m> or
-      (Ss*t+ & <CLAUSE>) or
-      SIs*t- or
+      (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or
+      SIs*t- or THBI- or
       <rel-clause-s>))
     or ({Dmu-} & <noun-and-u>)
     or (YS+ & {Dmu-})
@@ -1136,8 +1136,8 @@ answers.n suggestions.n:
     [[AN+]]
     or ({{Jd-} & Dmc-} & {@M+} & {(TH+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main2-p> or
-      (Sp*t+ & <CLAUSE>) or
-      SIp*t- or
+      (Sp*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or
+      SIp*t- or THBI- or
       <rel-clause-p>))
     or ({Dmc-} & <noun-and-p>)
     or (YP+ & {Dmc-})
@@ -1150,8 +1150,8 @@ request.n requirement.n condition.n recommendation.n provision.n stipulation.n:
     AN+
     or ({D*u-} & {@M+} & {(TH+ or TS+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-m> or
-      (Ss*t+ & <CLAUSE>) or
-      SIs*t- or
+      (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or
+      SIs*t- or THBI- or
       <rel-clause-s>))
     or ({D*u-} & <noun-and-u>)
     or (YS+ & {D*u-})
@@ -1166,8 +1166,8 @@ stipulations.n:
     [[AN+]]
     or ({{Jd-} & Dmc-} & {@M+} & {(TH+ or TS+ or (R+ & Bp+)) & {[[@M+]]}} & {@MXp+} &
       (<noun-main2-p> or
-      (Sp*t+ & <CLAUSE>) or
-      SIp*t- or
+      (Sp*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or
+      SIp*t- or THBI- or
       <rel-clause-p>))
     or ({Dmc-} & <noun-and-p>)
     or Up-
@@ -1296,8 +1296,8 @@ reason.n:
   (<noun-modifiers> &
     (({D*u-} & {@M+} & {TH+ or <embed-verb> or <ton-verb> or WY+ or (R+ & Bs+)} & {@MXs+} &
       (<noun-main2-s> or
-      (Ss*t+ & <CLAUSE>) or
-      SIs*t- or
+      (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or
+      SIs*t- or THBI- or
       <rel-clause-s>)) or
     ({D*u-} & <noun-and-s>) or
     Us- or
@@ -1509,8 +1509,8 @@ it:
    or (Osm- & ({@M+} or {Sg+ or Sj+}))
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
-   or ({MX+} & (Ss+ or SFsi+) & <CLAUSE>)
-   or SIs- or SFIsi- or OXi- or Vp-
+   or ({MX+} & (Ss+ or SFsi+ or THBS+) & <CLAUSE>)
+   or SIs- or SFIsi- or THBI- or OXi- or Vp-
    or dSJls+ or dSJrs-;
 
 % O*c: "we will go faster than they"
@@ -1693,8 +1693,8 @@ all.a:
       {@M+ or (ALx+ & (Jp+ or Ju+)) or (R+ & B+) or EL+}
       & (
         [[<noun-main2-x>]]
-        or (S**t+ & <CLAUSE>)
-        or SI**t-))
+        or (S**t+ & <CLAUSE>) or (THBS+ & <CLAUSE>)
+        or SI**t- or THBI-))
     or <noun-and-x>))
   or ({MVa-} & ALx+)
   or DTa+;
@@ -3015,6 +3015,9 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
   or ({N+} & PP+);
 
 have.v:
+  ({@E-} & THBS- & PPTHB+)
+  or (THBI+ & (<verb-rq> & PPTHB+))
+  or
   VERB_X_PLI(<vc-have>)
   or ((SIp+ or SFIp+) & ((<verb-rq> & PP+) or CQ-));
 
@@ -3031,12 +3034,18 @@ have.v:
   [S- & (PP+ or O+)]0.3;
 
 has.v:
+  ({@E-} & THBS- & PPTHB+)
+  or (THBI+ & (<verb-rq> & PPTHB+))
+  or
   VERB_X_S(<vc-have>)
   or ((SIs+ or SFIs+) & ((<verb-rq> & {PP+ or <verb-wall>}) or CQ-));
 
 % <verb-x-sp> & <verb-wall>: "I sure wish I had"
 % Sa*a- & PPf+: "as had been agreed, the work began on Monday"
 had.v-d:
+  ({@E-} & THBS- & PPTHB+)
+  or (THBI+ & (<verb-rq> & PPTHB+))
+  or
   ((SI+ or SFI+) & ((<verb-rq> & PP+) or CQ-)) or
   (Sa*a- & PPf+) or
   (<verb-x-sp> & <vc-have>) or
@@ -3129,7 +3138,6 @@ rest.w: Ix- & Pv+;
       or (Opi+ & R+ & Bp+ & <verb-wall>)
       or ([()]0.666 & <verb-wall>)) & <mv-coord>)
     or (<verb-wall> & Pp+ & {THi+ or @MV+})
-    or THb+
     or <to-verb>
     or (PFb- & <verb-wall> & {Pa+})
     or ({MV+} & [Pa+]0.05 & {<verb-wall>})))
@@ -3145,29 +3153,54 @@ rest.w: Ix- & Pv+;
       (Opi+ & R+ & Bp+) or
       [[()]]) & <mv-coord>) or
     (Pp+ & {THi+ or @MV+}) or
-    THb+ or
     <to-verb> or
     Pa+)) or
   ({N+} & (AF- or [Pv+].1 or I*v+)) or
   (({N+} or {Pp+}) & [Pg*b+]-0.05);
 
 % O*m+ allows "If only there were more!"
-% THb+ allows "It is your fault that you're a failure."
+% The THb-specific vc-be variants below allow predicate that-clauses such as
+% "It is your fault that you're a failure."
 % The @MV+ allows modifiers (e.g. prep modifiers) to attach both to
 % the object and to the copula. Example:
 % "There is neither pine nor apple in the pineapple."
 % "There is no ham in the hamburger, and neither pine nor apple in the pineapple."
 <vc-be-obj>:
-  {hHM+} & {@EBm+} & (O*t+ or O*m+) & {@MV+} & {THb+};
+  {hHM+} & {@EBm+} & (O*t+ or O*m+) & {@MV+};
 
 <vc-be-obj-p>:
-  {hHM+} & {@EBm+} & (Opt+ or Omm+) & {@MV+} & {THb+};
+  {hHM+} & {@EBm+} & (Opt+ or Omm+) & {@MV+};
 
 <vc-be-obj-sp>:
-  {hHM+} & {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+} & {THb+};
+  {hHM+} & {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+};
 
 <vc-be-obj-u>:
-  {hHM+} & {@EBm+} & Out+ & {@MV+} & {THb+};
+  {hHM+} & {@EBm+} & Out+ & {@MV+};
+
+% THb that-clause complements need a predicate licensed by a that-clause
+% subject/inversion or by filler "it".  Dedicated THB* connector families
+% carry that license on the subject and auxiliary path without allowing
+% ordinary S/I/PP/Pv links to manufacture it by subscript matching.
+<vc-be-thb-no-obj>:
+  {@EBm+} & THb+;
+
+<vc-be-thb-obj>:
+  {hHM+} & {@EBm+} & (O*t+ or O*m+) & {@MV+} & THb+;
+
+<vc-be-thb-obj-p>:
+  {hHM+} & {@EBm+} & (Opt+ or Omm+) & {@MV+} & THb+;
+
+<vc-be-thb-obj-sp>:
+  {hHM+} & {@EBm+} & (Ost+ or Opt+ or Omm+) & {@MV+} & THb+;
+
+<vc-be-thb-obj-u>:
+  {hHM+} & {@EBm+} & Out+ & {@MV+} & THb+;
+
+<vc-be-thb>:         <vc-be-thb-no-obj> or (<vc-be-thb-obj> & <verb-wall>);
+<vc-be-thb-sp>:      <vc-be-thb-no-obj> or (<vc-be-thb-obj-sp> & <verb-wall>);
+<vc-be-thb-no-wall>: <vc-be-thb-no-obj> or <vc-be-thb-obj>;
+<vc-be-thb-opt-wall>: <vc-be-thb> or [<vc-be-thb-no-wall>]0.03;
+<vc-be-thb-passive>: {@EBm+} & {MV+} & PVTHB+;
 
 <vc-be>:         <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
 <vc-be-sp>:      <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
@@ -3190,6 +3223,9 @@ rest.w: Ix- & Pv+;
 % SIs*x blocks SIs*g: "*There is chasing dogs"
 % Sa*a- & Pv+: "..., as is agreed."
 is.v:
+  ({@E-} & THBS- & <vc-be-thb>)
+  or ({<verb-rq>} & THBI+ & {<vc-be-thb>})
+  or
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
@@ -3207,7 +3243,8 @@ is.v:
 % SIs+ & PFb-: "Where's the ball?"
 % hHM+: "I think it's uh from Mars"
 's.v ’s.v:
-  [(<verb-z-s,u> & {hHM+} &
+  [(({@E-} & THBS- & <verb-wall> & {hHM+} & <vc-be-thb-no-wall>)
+  or (<verb-z-s,u> & {hHM+} &
     (({@EBm+} & (((
         (O*t+ & <verb-wall>)
         or [K+ & <verb-wall>]
@@ -3215,14 +3252,13 @@ is.v:
         or OF+
         or (Osi+ & R+ & Bs+)
         or (Opi+ & R+ & Bp+))
-      & {@MV+} & {THb+})
+      & {@MV+})
       or (Pp+ & {THi+ or @MV+})
-      or THb+
       or (<to-verb> & <verb-wall>)
       or (Pa+ & <verb-wall>)))
     or ({Pp+} & Pg+)
     or Pv+
-    or PP+))
+    or PP+)))
   or (SIs+ & (Qw- or Qp-) & <verb-wall> & {Pa+})
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)];
@@ -3239,6 +3275,9 @@ is.v:
 % for questions: "Are you insane?" "Are you the one?"
 % Spx- & <vc-be-no-obj-no-wall>: "They are getting hot"
 are.v:
+  ({@E-} & THBS- & (<vc-be-thb-sp> or <vc-be-thb-no-wall>))
+  or ({<verb-rq>} & THBI+ & {<vc-be-thb>})
+  or
   ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & (<vc-be-sp> or <vc-be-no-obj-no-wall>))
   or ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>)
   or ({<verb-rq>} & SIpx+ & {<vc-be>})
@@ -3266,6 +3305,9 @@ yisser.v: (Pa+ & Wd-);
 % Sa*a- & Pv+: "..., as was promised."
 % SX & no wall: "I was getting hot"
 was.v-d:
+  ({@E-} & THBS- & (<vc-be-thb> or <vc-be-thb-passive>))
+  or (<verb-rq> & THBI+ & {<vc-be-thb> or <vc-be-thb-passive>})
+  or
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
@@ -3279,6 +3321,9 @@ was.v-d:
 %                                    tried, before VJ kicks in.
 %       Example: I would have done that were he with me.
 were.v-d:
+  (({@E-} & THBS-) & (<vc-be-thb-opt-wall> or <vc-be-thb-passive>))
+  or (<verb-rq> & THBI+ & (<vc-be-thb-opt-wall> or <vc-be-thb-passive>))
+  or
   (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & <vc-be-opt-wall>)
   or (<verb-rq> & (SIpx+ or SFIp+) & (<vc-be-opt-wall> or <verb-wall>))
   or [<verb-and-sp-> & <vc-be-and>]0.6
@@ -3309,6 +3354,8 @@ am.v:
 % Ix- & <vc-be>: "I'm sure he'll still be popular."
 % Ix- & no-wall: "They will be getting hot"
 be.v:
+  ({@E-} & ITHB- & <vc-be-thb-opt-wall>)
+  or
   ({@E-} & ((<verb-co> & <verb-wall>) or <verb-why> or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
   or ({@E-} & Ix- & <vc-be-opt-wall>)
@@ -3317,13 +3364,13 @@ be.v:
   or ({@E-} & I- & B- & O+ & <verb-wall>);
 
 % no-wall: "They have been getting hot"
-been.v: {@E-} & PPf- & <vc-be-opt-wall>;
+been.v: {@E-} & ((PPf- & <vc-be-opt-wall>) or (PPTHB- & <vc-be-thb-opt-wall>));
 
 % S- & Pa+ & Xc+ & <embed-verb>: "The knife being dull, he ..."
 % (S- & Xd- & MVg- & Pa+) "..., the knife being dull."
 being.v:
   ((({@EBm+} &
-      (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+ or <to-verb> or THb+)
+      (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+ or <to-verb>)
          & <mv-coord>)
        or Pa+))
      or AF- or Pv+)
@@ -3365,6 +3412,9 @@ weren't.v-d weren’t.v-d:
 % Sa*a- & Ix+: "..., as shall be proven"
 % SI+ & N+ & I+: "how long will you not have mercy?"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
+  ({N+} & {@E-} & THBS- & ITHB+)
+  or (THBI+ & (<verb-rq-aux> & {N+} & ITHB+))
+  or
   ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & (I+ or <verb-wall>)) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]]))
   or (Sa*a- & Ix+)
@@ -3380,6 +3430,9 @@ could.v-d:
 
 % <verb-wall>: "You know you should."
 should.v:
+  ({@E-} & THBS- & ITHB+)
+  or (THBI+ & (<verb-rq-aux> & ITHB+))
+  or
   ((SI+ or SFI+) & ((<verb-rq-aux> & (I+ or <verb-wall>)) or CQ-)) or
   ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
@@ -3390,6 +3443,9 @@ had_better: S- & I+;
 
 % <verb-wall>: "I sure wish he would."
 would.v:
+  ({N+} & {@E-} & THBS- & ITHB+)
+  or (THBI+ & (<verb-rq-aux> & {N+ or Vw+} & ITHB+))
+  or
   ((SI+ or SFI+) & ((<verb-rq-aux> & {N+ or Vw+} & I+) or CQ-)) or
   ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
@@ -3404,6 +3460,9 @@ ought.v:
 % SI+ & <verb-wall>: "why couldn't he?"
 won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
+  (<verb-rq-aux> & THBI+ & ITHB+)
+  or ({@E-} & THBS- & ITHB+)
+  or
   (<verb-rq-aux> & (SI+ or SFI+) & (I+ or <verb-wall>)) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
@@ -3413,6 +3472,9 @@ won’t can’t mustn’t couldn’t shouldn’t needn’t:
 % <verb-wall>: "I know I wouldn't."
 % SI+ & <verb-wall>: "why wouldn't he?"
 wouldn't wouldn’t:
+  (<verb-rq-aux> & THBI+ & {RT+} & ITHB+)
+  or ({@E-} & THBS- & ({RT+} & ITHB+))
+  or
   (<verb-rq-aux> & (SI+ or SFI+) & {RT+} & (I+ or <verb-wall>)) or
   (<verb-x-sp> & (({RT+} & I+) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
@@ -6650,7 +6712,8 @@ makes.v: VERB_S_T(<vc-make>);
 % THb+: "An allegation was made that he did it."
 made.v-d:
   VERB_SPPP_T(<vc-make>)
-  or (<verb-s-pv-b> & (THb+ or (<mv-coord> & Pa+) or ({O+ or K+} & <mv-coord>)))
+  or ({@E-} & PVTHB- & <verb-wall> & THb+)
+  or (<verb-s-pv-b> & ((<mv-coord> & Pa+) or ({O+ or K+} & <mv-coord>)))
   or ({({@MV+} & Pa+) or K+} & <verb-phrase-opener>);
 
 built_of built_up_of composed_of constructed_of formed_of made_of
@@ -8334,7 +8397,7 @@ what:
   or ({EL+} & Ww-)
   or (Wn- & O+)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
-    & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or SIs*t-))
+    & (<noun-main2-s-no-punc> or (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or SIs*t- or THBI-))
   or (D+ & JQ-)
   or (JW- & WJIb+)
   or JW-
