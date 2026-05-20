@@ -169,7 +169,8 @@ She interviewed as many programmers as were hired.
 More people came to the party than were expected.
 More people came to the party than was expected.
 
-% CONTAINS_NONE rule 78: comparative EAy must not pair with ordinary
+% CONTAINS_ONE rule 56: comparative Cc clauses need a local comparative
+% license. CONTAINS_NONE rule 78: comparative EAy must not pair with ordinary
 % subordinate-as MVs. Temporal "as" now uses a verb-side MVSWH link instead,
 % so comparative adjectives cannot accidentally license it.
 
