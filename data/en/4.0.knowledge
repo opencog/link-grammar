@@ -243,7 +243,6 @@ CONTAINS_ONE_RULES:
           COqi    CPi    Eqi    AFdi    BIh , "Bad use of 'it'38"           ,
  OXi   ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi
           COqi    CPi    Eqi    AFdi    BIh , "Bad use of 'it'39"           ,
- THb   ,  S##t    SI##t  SFsi  SFIsi        , "Bad use of predicate40"      ,
  BIq   ,  S##q    SI##q  SFsi  Ss#b    SFIsi SIs#b
                                             , "Bad use of predicate42"      ,
  MVt   ,  Dm#m   EAm   EEm   MVm  Pam   Pafm   AFm   EB#m   MVb AJrc

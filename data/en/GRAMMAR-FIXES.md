@@ -34,6 +34,8 @@ Added uppercase connector families:
 | `CMPP` | Certifies a plural comparative antecedent for a following plural comparative clause. |
 | `CMPX` | Certifies an agreement-neutral comparative head, such as bare `more` or a comparative preposition object. |
 | `CMPC` | Certifies that a comparative modifier path licenses a following `Cc` / `CV` comparative clause. |
+| `THBS` / `THBI` | Certify direct and inverted subject links for `THb` predicate that-clause complements. |
+| `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
 | `INSERTL` / `INSERTR` | Tokenizer-only marker connector families. Paired `INSERTL<token>+` and `INSERTR<token>+` request an optional internal helper token named `<token>`. They are dictionary support markers, not ordinary grammar links. |
 
 Changed or retired connector forms:
@@ -48,6 +50,7 @@ Changed or retired connector forms:
 | subordinate temporal `as` with `MVs` | The `as.#while` temporal path now uses `MVSWH` instead of `MVs`. Other `MVs` uses remain ordinary modifiers. |
 | comparative-clause `S**c` on `than.e` / `as.e-c` | Split into singular `Ss*c` and plural `Sp*c` branches that require `CMPS`, `CMPP`, or `CMPX` antecedent certificates. |
 | comparative-clause `Cc` / `CV` on `than.e` / `as.e-c` | Tightened so clausal comparative continuations require a `CMPC` certificate from a local comparative modifier path. |
+| `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
@@ -239,6 +242,55 @@ tastes.v the same as.e-c it did.v-d
 
 `EAy` does not provide `CMPC`, so a plain adjective comparative such as
 `as intelligent as John does` cannot use the `as.e-c --Cc/CV--` clause path.
+
+### `THBS`, `THBI`, `ITHB`, `PPTHB`, And `PVTHB`: `THb` Predicate Licenses
+
+These connector families encode the subject or auxiliary evidence required for
+predicate that-clause complements:
+
+```text
+THBS   direct subject license for a THb predicate
+THBI   inverted subject license for a THb predicate
+ITHB   modal/infinitive auxiliary license carried to be
+PPTHB  perfect auxiliary license carried to been
+PVTHB  passive auxiliary license carried to made
+```
+
+Focused direct example:
+
+```text
+    +------------------>CPa------------------+
+    |                            +-----CV--->+
+    |      +-Ds**c+--THBS-+--THb-+-Cet-+--Ss-+-Xp-+
+    |      |      |       |      |     |     |    |
+LEFT-WALL the problem.n is.v that.j-c he lied.q-d .
+```
+
+Focused modal example:
+
+```text
+    +--------------------->CPa---------------------+
+    |                                  +-----CV--->+
+    |      +-Ds**c+--THBS-+-ITHB+--THb-+-Cet-+--Ss-+-Xp-+
+    |      |      |       |     |      |     |     |    |
+LEFT-WALL the problem.n may.v be.v that.j-c he lied.q-d .
+```
+
+Focused passive example:
+
+```text
+    +------------------------------Xp-----------------------------+
+    +--------------->WV-------------->+                           |
+    +----->Wd------+                  |        +----CV--->+       |
+    |      +-Ds**v-+---THBS--+--PVTHB-+---THb--+-Cet-+-Ss-+-Osm-+ |
+    |      |       |         |        |        |     |    |     | |
+LEFT-WALL an allegation.n was.v-d made.v-d that.j-c he did.v-d it .
+```
+
+The dedicated families are uppercase connector families rather than
+subscripted `S`, `I`, `PP`, or `Pv` forms. This is intentional: broad connector
+matching would let an ordinary connector match a subscripted certificate and
+make an unlicensed predicate appear licensed.
 
 ## PP Migration From `4.0.knowledge` To `4.0.dict`
 
@@ -1933,6 +1985,135 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
+## Rule 40: License `THb` Predicate Complements In The Dictionary
+
+**Status:** implemented; PP rule 40 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+THb , S##t SI##t SFsi SFIsi , "Bad use of predicate40"
+```
+
+The grammatical area is predicate that-clause complements, as in:
+
+```text
+The problem is that he lied.
+The problem may be that he lied.
+An allegation was made that he did it.
+```
+
+A `THb` predicate complement should be licensed by the subject or inverted
+subject construction that carries the relevant that-clause predicate relation,
+or by the corresponding auxiliary chain.
+
+### Problem
+
+The old dictionary exposed `THb+` through broad copular and passive paths. PP
+then checked the completed domain for a subject or filler-subject link whose
+name matched `S##t`, `SI##t`, `SFsi`, or `SFIsi`. This allowed many locally
+well-formed raw linkages to be constructed before PP could reject them.
+
+Simple PP-rule removal accepted bad predicate uses such as:
+
+```text
+*How likely is John that he will come.
+*How tired are you that John is coming.
+*It is more likely that Joe died than John is that Fred died.
+```
+
+An initial dictionary attempt used an optional companion certificate link on
+the subject disjunct. That was unsafe: a filler `it` in one clause could send
+the companion link to an unrelated later copula, thereby licensing a bad
+comparative-clause `THb` path. The final replacement makes the certificate the
+actual subject or auxiliary link, not a separate optional companion.
+
+### Implementation
+
+That-clause nouns, `what`, `all`, and filler `it` now expose dedicated
+predicate-license subject connectors:
+
+```text
+THBS+   direct licensed subject
+THBI-   licensed inverted subject
+```
+
+The corresponding copular and auxiliary branches consume:
+
+```text
+THBS-   direct licensed subject on the predicate verb
+THBI+   licensed inverted subject on the predicate verb
+```
+
+The broad `THb+` alternatives were removed from ordinary `be` and passive
+branches and moved into `vc-be-thb` variants that require these licensed
+subject paths. Auxiliary chains use dedicated uppercase certificate links:
+
+```text
+subject --THBS-- modal --ITHB-- be --THb-- that-clause
+subject --THBS-- have --PPTHB-- been --THb-- that-clause
+subject --THBS-- was --PVTHB-- made --THb-- that-clause
+```
+
+These are distinct uppercase connector families rather than subscripted
+variants such as `S*t`, `I*t`, or `PP*t`. Link Grammar connector matching would
+allow broad ordinary connectors to match subscripted variants, so subscripted
+certificates cannot safely encode this condition.
+
+### Implications
+
+This is a dictionary replacement for rule 40. The accepted linkages are not
+byte-for-byte identical to older master-style output: valid `THb` predicates
+now show `THBS`, `THBI`, `ITHB`, `PPTHB`, or `PVTHB` certificate links where
+master used ordinary `Ss*t`, `I`, `PP`, or `Pvf` links. The change is
+intentional because those ordinary families could not safely enforce the
+predicate license before postprocessing.
+
+### Verification
+
+Focused accepted-linkage comparison against `master` inspected the first three
+displayed accepted linkages for:
+
+```text
+The problem is that he lied.
+The problem may be that he lied.
+An allegation was made that he did it.
+```
+
+The same `THb` constructions remain accepted. The expected differences are the
+new explicit certificate links:
+
+```text
+Ss*t  -> THBS
+I     -> ITHB
+PP    -> PPTHB
+Pvf   -> PVTHB
+```
+
+The focused bad examples above still have no accepted zero-null linkage in the
+examined set; their remaining raw parses are rejected by other active PP
+checks such as the S-V inversion and cycle rules.
+
+The rule 40 migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
+```
+
 ## Rule 41: Remove Redundant `BIh` Predicate Check
 
 **Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
@@ -1949,11 +2130,10 @@ The grammatical area is embedded predicate/clause licensing for `BIh`.
 
 ### Problem
 
-The related `THb` and `BIq` predicate rules are not removed here; they require
-separate focused validation. The `BIh` rule is different in the current
-grammar: after removing it, the agreed corpus results remain unchanged, and
-the tested `BIh` paths are already constrained by the dictionary branches that
-expose them.
+The related `BIq` predicate rule is not removed here; it requires separate
+focused validation. The `BIh` rule is different in the current grammar: after
+removing it, the agreed corpus results remain unchanged, and the tested `BIh`
+paths are already constrained by the dictionary branches that expose them.
 
 ### Old Mechanism
 
@@ -1969,7 +2149,7 @@ connector change is needed for this rule in the current grammar.
 ### Implications
 
 This removal applies only to `BIh`. It does not imply that the neighboring
-`THb` or `BIq` predicate rules are redundant.
+`BIq` predicate rule is redundant.
 
 ### Examples
 
