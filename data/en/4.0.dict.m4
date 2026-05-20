@@ -207,7 +207,9 @@ changecom(`%')
   (Jd- & Dmu- & Os-)
   or (Jd- & Dmu- & {Wd-} & Ss*b+)
   or (Ss*b+ & <CLAUSE>)
+  or (BIQS+ & <CLAUSE>)
   or SIs*b-
+  or BIQI-
   or Js-
   or [Os-]0.5
   or (ALx- & Os-)
@@ -1264,12 +1266,16 @@ chance.n:
 
 % ({NM+} & Ss+): "Question 2: Was he present at the meeting?"
 % Wd-: "Question: How do you convince your customer that you are on the right path?"
+% BIQS/BIQI license predicate wh-complements such as
+% "The question is who we should invite" without relying on subscripted S links.
 question.n issue.n:
   (<noun-modifiers> &
     ((Ds- & {@M+} & {R+ & Bs+ & {[[@M+]]}} & {@MXs+} &
       (<noun-main2-s> or
       (Ss*q+ & <CLAUSE>) or
+      (BIQS+ & <CLAUSE>) or
       SIs*q- or
+      BIQI- or
       <rel-clause-s>)) or
     ({Ds-} & <noun-and-s>) or
     Us- or
@@ -1284,7 +1290,9 @@ questions.n issues.n:
     (({{Jd-} & Dmc-} & {@M+} & {R+ & Bp+ & {[[@M+]]}} & {@MXp+} &
       (<noun-main2-p> or
       (Sp*q+ & <CLAUSE>) or
+      (BIQS+ & <CLAUSE>) or
       SIp*q- or
+      BIQI- or
       <rel-clause-p>)) or
     ({Dmc-} & <noun-and-p>) or
     Up- or
@@ -3016,7 +3024,9 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 
 have.v:
   ({@E-} & THBS- & PPTHB+)
+  or ({@E-} & BIQS- & PPBIQ+)
   or (THBI+ & (<verb-rq> & PPTHB+))
+  or (BIQI+ & (<verb-rq> & PPBIQ+))
   or
   VERB_X_PLI(<vc-have>)
   or ((SIp+ or SFIp+) & ((<verb-rq> & PP+) or CQ-));
@@ -3035,7 +3045,9 @@ have.v:
 
 has.v:
   ({@E-} & THBS- & PPTHB+)
+  or ({@E-} & BIQS- & PPBIQ+)
   or (THBI+ & (<verb-rq> & PPTHB+))
+  or (BIQI+ & (<verb-rq> & PPBIQ+))
   or
   VERB_X_S(<vc-have>)
   or ((SIs+ or SFIs+) & ((<verb-rq> & {PP+ or <verb-wall>}) or CQ-));
@@ -3044,7 +3056,9 @@ has.v:
 % Sa*a- & PPf+: "as had been agreed, the work began on Monday"
 had.v-d:
   ({@E-} & THBS- & PPTHB+)
+  or ({@E-} & BIQS- & PPBIQ+)
   or (THBI+ & (<verb-rq> & PPTHB+))
+  or (BIQI+ & (<verb-rq> & PPBIQ+))
   or
   ((SI+ or SFI+) & ((<verb-rq> & PP+) or CQ-)) or
   (Sa*a- & PPf+) or
@@ -3132,7 +3146,6 @@ rest.w: Ix- & Pv+;
       ([{CV-} & B**t-]
       or (B**t- & <verb-wall>)
       or [<verb-wall> & K+]
-      or (<verb-wall> & BI+)
       or (<verb-wall> & OF+)
       or (Osi+ & R+ & Bs+ & <verb-wall>)
       or (Opi+ & R+ & Bp+ & <verb-wall>)
@@ -3148,7 +3161,7 @@ rest.w: Ix- & Pv+;
 % constructions, so that WV links to the "and.j-v" instead of "be".
 % [Pg*b+]-0.05: "I was getting hot", prefer Pg+ over O+
 <vc-be-no-obj-no-wall>:
-  ({@EBm+} & ((([B**t-] or [K+] or BI+ or OF+ or PFb- or
+  ({@EBm+} & ((([B**t-] or [K+] or OF+ or PFb- or
       (Osi+ & R+ & Bs+) or
       (Opi+ & R+ & Bp+) or
       [[()]]) & <mv-coord>) or
@@ -3176,6 +3189,21 @@ rest.w: Ix- & Pv+;
 
 <vc-be-obj-u>:
   {hHM+} & {@EBm+} & Out+ & {@MV+};
+
+% BIq wh-complements need a predicate licensed by a question-like subject
+% such as "question", "issue", "this", or "that", or by the corresponding
+% auxiliary chain.  The BIQ* certificate families are distinct from ordinary
+% S/I/PP links, because broad ordinary connectors can match subscripted
+% variants and cannot safely encode this condition.
+<vc-be-biq-no-obj>:
+  {@EBm+} & <verb-wall> & BI+ & <mv-coord>;
+
+<vc-be-biq-no-obj-no-wall>:
+  {@EBm+} & BI+ & <mv-coord>;
+
+<vc-be-biq>: <vc-be-biq-no-obj>;
+<vc-be-biq-no-wall>: <vc-be-biq-no-obj-no-wall>;
+<vc-be-biq-opt-wall>: <vc-be-biq> or [<vc-be-biq-no-wall>]0.03;
 
 % THb that-clause complements need a predicate licensed by a that-clause
 % subject/inversion or by filler "it".  Dedicated THB* connector families
@@ -3224,7 +3252,9 @@ rest.w: Ix- & Pv+;
 % Sa*a- & Pv+: "..., as is agreed."
 is.v:
   ({@E-} & THBS- & <vc-be-thb>)
+  or ({@E-} & BIQS- & <vc-be-biq>)
   or ({<verb-rq>} & THBI+ & {<vc-be-thb>})
+  or ({<verb-rq>} & BIQI+ & {<vc-be-biq>})
   or
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
@@ -3244,11 +3274,11 @@ is.v:
 % hHM+: "I think it's uh from Mars"
 's.v ’s.v:
   [(({@E-} & THBS- & <verb-wall> & {hHM+} & <vc-be-thb-no-wall>)
+  or ({@E-} & BIQS- & <verb-wall> & {hHM+} & <vc-be-biq-no-wall>)
   or (<verb-z-s,u> & {hHM+} &
     (({@EBm+} & (((
         (O*t+ & <verb-wall>)
         or [K+ & <verb-wall>]
-        or BI+
         or OF+
         or (Osi+ & R+ & Bs+)
         or (Opi+ & R+ & Bp+))
@@ -3276,7 +3306,9 @@ is.v:
 % Spx- & <vc-be-no-obj-no-wall>: "They are getting hot"
 are.v:
   ({@E-} & THBS- & (<vc-be-thb-sp> or <vc-be-thb-no-wall>))
+  or ({@E-} & BIQS- & (<vc-be-biq> or <vc-be-biq-no-wall>))
   or ({<verb-rq>} & THBI+ & {<vc-be-thb>})
+  or ({<verb-rq>} & BIQI+ & {<vc-be-biq>})
   or
   ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & (<vc-be-sp> or <vc-be-no-obj-no-wall>))
   or ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>)
@@ -3290,8 +3322,9 @@ are.v:
 % they're we're
 % [Pg+ or Pv+]-0.05: slight preference for P+ over O+ if possible.
 ’re 're:
-  Spx- & (({@EBm+} & ((((O*t+ & <verb-wall>) or K+ or BI+ or OF+ or Pp+) & <mv-coord>) or <to-verb> or (Pa+ & <verb-wall>) )) or
-    ({N+} & [Pg+ or Pv+]-0.05));
+  ({@E-} & BIQS- & <vc-be-biq-no-wall>)
+  or (Spx- & (({@EBm+} & ((((O*t+ & <verb-wall>) or K+ or OF+ or Pp+) & <mv-coord>) or <to-verb> or (Pa+ & <verb-wall>) )) or
+    ({N+} & [Pg+ or Pv+]-0.05)));
 
 % yisser: "you're" Irish English
 % Interesting -- no way to put a WV- link in here ...
@@ -3306,7 +3339,9 @@ yisser.v: (Pa+ & Wd-);
 % SX & no wall: "I was getting hot"
 was.v-d:
   ({@E-} & THBS- & (<vc-be-thb> or <vc-be-thb-passive>))
+  or ({@E-} & BIQS- & <vc-be-biq>)
   or (<verb-rq> & THBI+ & {<vc-be-thb> or <vc-be-thb-passive>})
+  or (<verb-rq> & BIQI+ & {<vc-be-biq>})
   or
   (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
@@ -3322,7 +3357,9 @@ was.v-d:
 %       Example: I would have done that were he with me.
 were.v-d:
   (({@E-} & THBS-) & (<vc-be-thb-opt-wall> or <vc-be-thb-passive>))
+  or ({@E-} & BIQS- & <vc-be-biq-opt-wall>)
   or (<verb-rq> & THBI+ & (<vc-be-thb-opt-wall> or <vc-be-thb-passive>))
+  or (<verb-rq> & BIQI+ & <vc-be-biq-opt-wall>)
   or
   (({@E-} & (Spx- or SFp- or [[Ss-]] or [[SX- & <verb-wall>]] or (RS- & Bp-))) & <vc-be-opt-wall>)
   or (<verb-rq> & (SIpx+ or SFIp+) & (<vc-be-opt-wall> or <verb-wall>))
@@ -3341,7 +3378,7 @@ am.v:
 
 % I'm == I am
 ’m 'm:
-  SX- & (({@EBm+} & (((O*t+ or K+ or BI+ or OF+ or Pp+) & <mv-coord>) or <to-verb> or Pa+)) or
+  SX- & (({@EBm+} & (((O*t+ or K+ or OF+ or Pp+) & <mv-coord>) or <to-verb> or Pa+)) or
     ({N+} & (Pg+ or Pv+))) & <verb-wall>;
 
 % S*x- used for passive participles: "this action be taken".
@@ -3355,6 +3392,7 @@ am.v:
 % Ix- & no-wall: "They will be getting hot"
 be.v:
   ({@E-} & ITHB- & <vc-be-thb-opt-wall>)
+  or ({@E-} & IBIQ- & <vc-be-biq-opt-wall>)
   or
   ({@E-} & ((<verb-co> & <verb-wall>) or <verb-why> or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
@@ -3364,13 +3402,13 @@ be.v:
   or ({@E-} & I- & B- & O+ & <verb-wall>);
 
 % no-wall: "They have been getting hot"
-been.v: {@E-} & ((PPf- & <vc-be-opt-wall>) or (PPTHB- & <vc-be-thb-opt-wall>));
+been.v: {@E-} & ((PPf- & <vc-be-opt-wall>) or (PPTHB- & <vc-be-thb-opt-wall>) or (PPBIQ- & <vc-be-biq-opt-wall>));
 
 % S- & Pa+ & Xc+ & <embed-verb>: "The knife being dull, he ..."
 % (S- & Xd- & MVg- & Pa+) "..., the knife being dull."
 being.v:
   ((({@EBm+} &
-      (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or BI+ or <to-verb>)
+      (((O*t+ or [B**t-] or Pp+ or K+ or OF+ or <to-verb>)
          & <mv-coord>)
        or Pa+))
      or AF- or Pv+)
@@ -3380,30 +3418,40 @@ being.v:
    or (S- & Xd- & MVg- & Pa+ & <verb-wall>);
 
 isn't isn’t:
-  (<verb-x-s> & <vc-be>)
+  ({@E-} & BIQS- & <vc-be-biq>)
+  or (<verb-rq> & BIQI+ & {<vc-be-biq>})
+  or (<verb-x-s> & <vc-be>)
   or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be>});
 
 % merge of isn't, aren't
 % "ain't you gonna go?"
 % no-wall: "They ain't gettin hot"
 ain't ain’t:
-  (<verb-x-sp> & <vc-be-opt-wall>)
+  ({@E-} & BIQS- & <vc-be-biq-opt-wall>)
+  or (<verb-rq> & BIQI+ & {<vc-be-biq>})
+  or (<verb-x-sp> & <vc-be-opt-wall>)
   or (<verb-rq> & (SI+ or SFI+) & {<vc-be>});
 
 % no-wall: "It wasn't getting hot"
 wasn't.v-d wasn’t.v-d:
-  ({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)) & <vc-be-opt-wall>)
+  ({@E-} & BIQS- & <vc-be-biq-opt-wall>)
+  or (<verb-rq> & BIQI+ & {<vc-be-biq>})
+  or ({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)) & <vc-be-opt-wall>)
   or (<verb-rq> & (SI*+ or SXI+ or SFIs+) & {<vc-be>});
 
 % no-wall: "They aren't getting hot"
 aren't aren’t:
-  (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be-opt-wall>)
+  ({@E-} & BIQS- & <vc-be-biq-opt-wall>)
+  or (<verb-rq> & BIQI+ & {<vc-be-biq>})
+  or (({@E-} & (Spx- or SFp- or (RS- & Bp-))) & <vc-be-opt-wall>)
   or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>});
 
 % [[Ss-]]: "If it weren't for Joe, ..."
 % no-wall: "They weren't getting hot"
 weren't.v-d weren’t.v-d:
-  (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & <vc-be-opt-wall>)
+  ({@E-} & BIQS- & <vc-be-biq-opt-wall>)
+  or (<verb-rq> & BIQI+ & {<vc-be-biq>})
+  or (({@E-} & (Spx- or SFp- or [[Ss-]] or (RS- & Bp-))) & <vc-be-opt-wall>)
   or (<verb-rq> & (SIpx+ or SFIp+) & {<vc-be>});
 
 % XXX probably should be verb-and-sp-i- etc !?
@@ -3413,7 +3461,9 @@ weren't.v-d weren’t.v-d:
 % SI+ & N+ & I+: "how long will you not have mercy?"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   ({N+} & {@E-} & THBS- & ITHB+)
+  or ({N+} & {@E-} & BIQS- & IBIQ+)
   or (THBI+ & (<verb-rq-aux> & {N+} & ITHB+))
+  or (BIQI+ & (<verb-rq-aux> & {N+} & IBIQ+))
   or
   ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & (I+ or <verb-wall>)) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]]))
@@ -3431,7 +3481,9 @@ could.v-d:
 % <verb-wall>: "You know you should."
 should.v:
   ({@E-} & THBS- & ITHB+)
+  or ({@E-} & BIQS- & IBIQ+)
   or (THBI+ & (<verb-rq-aux> & ITHB+))
+  or (BIQI+ & (<verb-rq-aux> & IBIQ+))
   or
   ((SI+ or SFI+) & ((<verb-rq-aux> & (I+ or <verb-wall>)) or CQ-)) or
   ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
@@ -3444,7 +3496,9 @@ had_better: S- & I+;
 % <verb-wall>: "I sure wish he would."
 would.v:
   ({N+} & {@E-} & THBS- & ITHB+)
+  or ({N+} & {@E-} & BIQS- & IBIQ+)
   or (THBI+ & (<verb-rq-aux> & {N+ or Vw+} & ITHB+))
+  or (BIQI+ & (<verb-rq-aux> & {N+ or Vw+} & IBIQ+))
   or
   ((SI+ or SFI+) & ((<verb-rq-aux> & {N+ or Vw+} & I+) or CQ-)) or
   ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
@@ -3462,6 +3516,8 @@ won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
   (<verb-rq-aux> & THBI+ & ITHB+)
   or ({@E-} & THBS- & ITHB+)
+  or (<verb-rq-aux> & BIQI+ & IBIQ+)
+  or ({@E-} & BIQS- & IBIQ+)
   or
   (<verb-rq-aux> & (SI+ or SFI+) & (I+ or <verb-wall>)) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]])) or
@@ -3474,6 +3530,8 @@ won’t can’t mustn’t couldn’t shouldn’t needn’t:
 wouldn't wouldn’t:
   (<verb-rq-aux> & THBI+ & {RT+} & ITHB+)
   or ({@E-} & THBS- & ({RT+} & ITHB+))
+  or (<verb-rq-aux> & BIQI+ & {RT+} & IBIQ+)
+  or ({@E-} & BIQS- & ({RT+} & IBIQ+))
   or
   (<verb-rq-aux> & (SI+ or SFI+) & {RT+} & (I+ or <verb-wall>)) or
   (<verb-x-sp> & (({RT+} & I+) or <verb-wall> or [[()]])) or

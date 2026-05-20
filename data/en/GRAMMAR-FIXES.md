@@ -36,6 +36,8 @@ Added uppercase connector families:
 | `CMPC` | Certifies that a comparative modifier path licenses a following `Cc` / `CV` comparative clause. |
 | `THBS` / `THBI` | Certify direct and inverted subject links for `THb` predicate that-clause complements. |
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
+| `BIQS` / `BIQI` | Certify direct and inverted subject links for `BIq` predicate wh-complements. |
+| `IBIQ` / `PPBIQ` | Carry the `BIq` predicate license across modal and perfect auxiliary chains. |
 | `INSERTL` / `INSERTR` | Tokenizer-only marker connector families. Paired `INSERTL<token>+` and `INSERTR<token>+` request an optional internal helper token named `<token>`. They are dictionary support markers, not ordinary grammar links. |
 
 Changed or retired connector forms:
@@ -51,6 +53,7 @@ Changed or retired connector forms:
 | comparative-clause `S**c` on `than.e` / `as.e-c` | Split into singular `Ss*c` and plural `Sp*c` branches that require `CMPS`, `CMPP`, or `CMPX` antecedent certificates. |
 | comparative-clause `Cc` / `CV` on `than.e` / `as.e-c` | Tightened so clausal comparative continuations require a `CMPC` certificate from a local comparative modifier path. |
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
+| `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
@@ -293,6 +296,57 @@ subscripted `S`, `I`, `PP`, or `Pv` forms. This is intentional: broad connector
 matching would let an ordinary connector match a subscripted certificate and
 make an unlicensed predicate appear licensed.
 
+### `BIQS`, `BIQI`, `IBIQ`, And `PPBIQ`: `BIq` Predicate Licenses
+
+These connector families encode the subject or auxiliary evidence required for
+predicate wh-complements:
+
+```text
+BIQS   direct subject license for a BIq predicate
+BIQI   inverted subject license for a BIq predicate
+IBIQ   modal/infinitive auxiliary license carried to be
+PPBIQ  perfect auxiliary license carried to been
+```
+
+Focused direct example:
+
+```text
+    +-------------------------Xp------------------------+
+    +--------->WV--------->+                            |
+    +----->Wd------+       |    +--------B*w-------+    |
+    |      +---Ds--+--BIQS-+BIqd+-Rn+--Sp-+----I---+    |
+    |      |       |       |    |   |     |        |    |
+LEFT-WALL the question.n is.v  who we should.v invite.v .
+```
+
+Focused modal example:
+
+```text
+    +----------------------------Xp---------------------------+
+    +------------>WV------------>+                            |
+    +----->Wd------+             |    +--------B*w-------+    |
+    |      +---Ds--+--BIQS-+-IBIQ+BIqd+-Rn+--Sp-+----I---+    |
+    |      |       |       |     |    |   |     |        |    |
+LEFT-WALL the question.n may.v be.v  who we should.v invite.v .
+```
+
+Focused perfect example:
+
+```text
+    +----------------------------Xp----------------------------+
+    +----------->WV----------->+                               |
+    +---->Wd-----+             |      +---------CV------->+    |
+    |      +--Ds-+-BIQS-+-PPBIQ+--BIq-+--Cs-+--Sp-+---I---+    |
+    |      |     |      |      |      |     |     |       |    |
+LEFT-WALL the issue.n has.v been.v whether we should.v leave.v .
+```
+
+As with the `THb` certificate families, these are dedicated uppercase
+connectors rather than subscripted `S`, `I`, or `PP` forms. The earlier
+prototype using only `Ss*q`/`SIs*q` was unsafe because an ordinary subject path
+could still match a subscripted verb-side connector and inherit an apparently
+licensed `S##q` link name.
+
 ## PP Migration From `4.0.knowledge` To `4.0.dict`
 
 This section documents selected postprocessing (PP) rules being moved into
@@ -322,7 +376,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | --- | --- | --- |
 | 20-31, 37-39 | Expletive `it` complement licensing | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include bad ordinary-subject uses of `THi`/`TOi`-style complements, such as `Joe is likely that ...` and `It tried to have been ...`. A replacement needs a shared expletive-`it` subject/complement split across copular, adjectival, and verbal complement paths. |
 | 32s, 32p, 32u, 34-36 | Existential `there` agreement | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 92 errors. It accepts bad agreement such as `There is chasing dogs`, `There are a dog`, and coordinated singular complements with plural `are`. These need agreement-aware `there.r`/`be` object-path splits. |
-| 42 | Predicate/question `BIq` | Simple removal raises the fast prefix from 1 to 3 errors and `corpus-basic.batch` from 88 to 90 errors. A prototype that moved `BI+` to a copula branch with `Ss*q-` still accepted a bad `big mind on everybody's question is who ...` parse, because a generic noun subject can match a subscripted verb-side connector and inherit the `Ss*q` link name. A replacement therefore needs a new connector family on the licensing nouns/clauses, not only a subscripted copula-side split. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | `Pa##j` predicative adjective | Object licensing for predicative-adjective complements | A simple verb-side object macro for the PP-allowed objects is unsafe. Connector matching lets a subscripted positive connector such as `Os*e+` match an ordinary `Os-` noun and produce an allowed-looking `Os*e` link, so the macro admits the same bad singular-object paths that the PP rule was intended to reject. A replacement needs a true object-class certificate, a new exact connector family on the noun/pronoun side, or equivalent library-assisted dictionary support. |
 
@@ -2131,8 +2184,7 @@ The grammatical area is embedded predicate/clause licensing for `BIh`.
 
 ### Problem
 
-The related `BIq` predicate rule is not removed here; it requires separate
-focused validation. The `BIh` rule is different in the current grammar: after
+The `BIh` rule is different from the neighboring `BIq` predicate rule: after
 removing it, the agreed corpus results remain unchanged, and the tested `BIh`
 paths are already constrained by the dictionary branches that expose them.
 
@@ -2149,8 +2201,8 @@ connector change is needed for this rule in the current grammar.
 
 ### Implications
 
-This removal applies only to `BIh`. It does not imply that the neighboring
-`BIq` predicate rule is redundant.
+This removal applies only to `BIh`. The neighboring `BIq` predicate rule is
+handled separately by the dedicated certificate connectors documented below.
 
 ### Examples
 
@@ -2176,6 +2228,136 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
+```
+
+## Rule 42: License `BIq` Predicate Complements In The Dictionary
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+BIq , S##q SI##q SFsi Ss#b SFIsi SIs#b ,
+      "Bad use of predicate42"
+```
+
+The grammatical area is predicate wh-complements, as in:
+
+```text
+The question is who we should invite.
+The issue has been whether we should leave.
+This is who we should invite.
+```
+
+### Problem
+
+The old dictionary exposed `BI+` through broad copular paths. PP then checked
+the completed domain for a question-like subject or inverted subject link such
+as `S##q`, `SI##q`, `Ss#b`, or `SIs#b`. This allowed locally well-formed raw
+linkages to be built for ordinary nouns that do not license a predicate
+wh-complement.
+
+Simple PP-rule removal accepted bad paths such as:
+
+```text
+*The answer is who we should invite.
+*The problem is who we should invite.
+*The big mind on everybody's question is who killed OJ.
+```
+
+An initial dictionary prototype that moved `BI+` to a copular branch with
+verb-side `Ss*q-` was unsafe. A generic noun subject can match a subscripted
+verb-side connector and inherit the `Ss*q` link name, so subscripted `S`
+connectors do not prove that the subject selected the question-license path.
+
+### Implementation
+
+Question-like nouns and pronouns now expose dedicated predicate-license
+subject connectors:
+
+```text
+BIQS+   direct licensed subject
+BIQI-   licensed inverted subject
+```
+
+The corresponding copular and auxiliary branches consume:
+
+```text
+BIQS-   direct licensed subject on the predicate verb
+BIQI+   licensed inverted subject on the predicate verb
+```
+
+The broad `BI+` alternatives were removed from ordinary `be` paths and moved
+into `vc-be-biq` variants that require the licensed subject path. Auxiliary
+chains use dedicated uppercase certificate links:
+
+```text
+subject --BIQS-- modal --IBIQ-- be --BIq-- wh-complement
+subject --BIQS-- have --PPBIQ-- been --BIq-- wh-complement
+```
+
+These are distinct uppercase connector families rather than subscripted
+variants such as `S*q`, `I*q`, or `PP*q`. Link Grammar connector matching
+would allow broad ordinary connectors to match subscripted variants, so
+subscripted certificates cannot safely encode this condition.
+
+### Implications
+
+This is a dictionary replacement for rule 42. The accepted linkages are not
+byte-for-byte identical to older master-style output: valid `BIq` predicates
+now show `BIQS`, `BIQI`, `IBIQ`, or `PPBIQ` certificate links where master
+used ordinary `Ss*q`, `Ss*b`, `I`, or `PP` links. The change is intentional
+because those ordinary families could not safely enforce the predicate license
+before postprocessing.
+
+### Verification
+
+Focused accepted-linkage comparison against `master` inspected the first three
+displayed accepted linkages for:
+
+```text
+The question is who we should invite.
+The question may be who we should invite.
+The issue has been whether we should leave.
+This is who we should invite.
+```
+
+The same `BIq` constructions remain accepted. The expected differences are the
+new explicit certificate links:
+
+```text
+Ss*q  -> BIQS
+Ss*b  -> BIQS
+I     -> IBIQ
+PP    -> PPBIQ
+```
+
+Focused bad examples now have no accepted zero-null linkage:
+
+```text
+*The answer is who we should invite.
+*The problem is who we should invite.
+*The big mind on everybody's question is who killed OJ.
+```
+
+The rule 42 migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
 ```
 
 ## Rule 63: License Postposed `Ma` Adjectives In The Dictionary
