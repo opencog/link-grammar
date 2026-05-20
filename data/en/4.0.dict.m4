@@ -171,9 +171,9 @@ changecom(`%')
 
 % noun-main-e: used for proper names (named entities)
 % Os*e- is used to allow certain adjectival uses.
-% Os*e- & Sj+: subject of bare infinitive. "You should hear John sing"
+% SJI/SGP: controlled subjects of bare infinitive and present participle
 <noun-main-e>:
-  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or (Os*e- & {Sg+ or Sj+})
+  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or (Os*e- & {SGP+ or SJI+})
   or <post-nominal-s>;
 
 % noun-main-p -- plural
@@ -1441,7 +1441,7 @@ she he:
 % subject of bare infinitive:
 % "You should hear him sing" -- sing is the bare infinitive,
 % and "him" is the "subject" of that infinitive...
-<bare-inf>: (J- or Ox-) & {Sg+ or Sj+};
+<bare-inf>: (J- or Ox-) & {SGP+ or SJI+};
 
 % The E- is for "It's either us or them" ... not ideal, but OK
 % See also me.p below.
@@ -1468,7 +1468,7 @@ myself yourself himself herself itself themselves
 ourselves yourselves thyself oneself one's one’s:
   <bare-inf> or E+ or MVa-;
 
-each_other: ((J- or O-) & {Sg+ or Sj+}) or YS+;
+each_other: ((J- or O-) & {SGP+ or SJI+}) or YS+;
 
 his:
   DP+
@@ -1537,7 +1537,7 @@ youse yous yis ye ya yo:
 % XXX FIXME: why does [J-] have a cost???
 it:
    [J-]0.5
-   or (Osm- & ({@M+} or {Sg+ or Sj+}))
+   or (Osm- & ({@M+} or {SGP+ or SJI+}))
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
    or ({MX+} & (Ss+ or SFsi+ or THBS+) & <CLAUSE>)
@@ -2561,7 +2561,7 @@ per "/.per": Us+ & Mp-;
 %
 % <verb-pp>: PP- & WV-: "I have seen it".
 % <verb-pg>: Pg- is naked, no verb-wall: "I like eating bass."
-% <verb-pg>: Sg- & Pg-: "I feel him breathing down my back"
+% <verb-pg>: SGP- & Pg-: "I feel him breathing down my back"
 % Wg-: "Rode a bike today"
 %
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
@@ -2571,7 +2571,7 @@ per "/.per": Us+ & Mp-;
 <verb-pl>:   {@E-} & ((Sp- & {hPFt-} & <verb-wall>) or (RS- & Bp-) or Wg-);
 <verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-) or Wg-);
 <verb-pp>:   {@E-} & PP- & (<verb-wall> or [()]);
-<verb-pg>:   {@E-} & (({[Sg-]-0.2} & Pg-) or Mg- or Wg-);
+<verb-pg>:   {@E-} & (({[SGP-]-0.2} & Pg-) or Mg- or Wg-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % Pv- & OFj+: "knowledge was gained of the activities"
@@ -2627,12 +2627,12 @@ per "/.per": Us+ & Mp-;
 <verb-sic>:  {@E-} & Wi- & Xc+ & SI*i+ & {Xc+};
 <verb-why>:  Qa- & <verb-wall>;
 
-% Sj- & I*j-: subject of bare infinitive: "you should hear him talk!"
+% SJI- & I*j-: subject of bare infinitive: "you should hear him talk!"
 % <verb-wall> or [()]0.5: This is used with <b-minus> which already
 %                         has a <verb-wall> in it (maybe) so we don't
 %                         need a second one. So don't be harsh.
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()]0.5)) or
-                      (Sj- & I*j-) or
+                      (SJI- & I*j-) or
                       <verb-why> or
                       ({(Xd- & (EI- or S**i-)) or [{Xd-} & hCO-]} & Wi- & {NM+}) or
                       (Wi- & Xc+ & SI*i+ & {Xc+})
