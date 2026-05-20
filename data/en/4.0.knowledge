@@ -257,8 +257,6 @@ CONTAINS_ONE_RULES:
 					    , "Bad comparative48"    ,
  Cc    ,  EEm    EEy    MVm    MVb    MVy
 	                                    , "Bad comparative56"    ,
- S##c  ,  Dm#m    D##y    Om    Oy    Jm    Jy   MX#m
-					    , "Bad comparative59"    ,
 ;
 ; The below blocks the singular "I want a gift inexpensive", while
 ; allowing Pa**j to be used with other kinds of objects.
