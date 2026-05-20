@@ -41,6 +41,7 @@ Added uppercase connector families:
 | `CMPP` | Certifies a plural comparative antecedent for a following plural comparative clause. |
 | `CMPX` | Certifies an agreement-neutral comparative head, such as bare `more` or a comparative preposition object. |
 | `CMPC` | Certifies that a comparative modifier path licenses a following `Cc` / `CV` comparative clause. |
+| `WTHAN` | Connects `way` / `ways` nouns to a following `than to ...` infinitival comparative. |
 | `THBS` / `THBI` | Certify direct and inverted subject links for `THb` predicate that-clause complements. |
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
 | `BIQS` / `BIQI` | Certify direct and inverted subject links for `BIq` predicate wh-complements. |
@@ -65,6 +66,7 @@ Changed or retired connector forms:
 | subordinate temporal `as` with `MVs` | The `as.#while` temporal path now uses `MVSWH` instead of `MVs`. Other `MVs` uses remain ordinary modifiers. |
 | comparative-clause `S**c` on `than.e` / `as.e-c` | Split into singular `Ss*c` and plural `Sp*c` branches that require `CMPS`, `CMPP`, or `CMPX` antecedent certificates. |
 | comparative-clause `Cc` / `CV` on `than.e` / `as.e-c` | Tightened so clausal comparative continuations require a `CMPC` certificate from a local comparative modifier path. |
+| `than to ...` infinitival comparative after `way` / `ways` | Added `WTHAN` so valid `way ... than to ...` comparatives do not depend on the retired naked `to.r I*a+` fallback. |
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
@@ -260,6 +262,22 @@ tastes.v the same as.e-c it did.v-d
 
 `EAy` does not provide `CMPC`, so a plain adjective comparative such as
 `as intelligent as John does` cannot use the `as.e-c --Cc/CV--` clause path.
+
+### `WTHAN`: `way ... than to ...` Infinitival Comparatives
+
+`WTHAN` connects a `way` or `ways` noun to a following `than.e` when the
+comparative continuation is an infinitival `to` clause:
+
+```text
+way.n --WTHAN-- than.e --TO-- to.r
+than.e --IV--> leave.v
+```
+
+This is a narrow replacement for one valid use that previously depended on the
+retired naked `to.r I*a+` fallback. It is deliberately tied to `way` nouns
+rather than to a broad `MVp` modifier path, because broad `MVp` licensing would
+accept malformed adjective comparatives such as `*He is more likely than to
+stay`.
 
 ### `THBS`, `THBI`, `ITHB`, `PPTHB`, And `PVTHB`: `THb` Predicate Licenses
 
@@ -660,9 +678,21 @@ create `I#a` without a local proof of the intended filler/gap relation.
 
 ### Implementation
 
-The dictionary removes the naked `I*a+` fallback from `to.r`. No replacement
-connector is added in this step. Existing licensed infinitival constructions
-continue to use their narrower dictionary paths.
+The dictionary removes the naked `I*a+` fallback from `to.r`. Existing licensed
+infinitival constructions continue to use their narrower dictionary paths.
+When a valid construction used the old fallback, it must receive a local
+license rather than restoring the broad `to.r` branch.
+
+Comparative infinitives headed by `than.e` are one such valid case. They now
+use an explicit local license on `than.e`:
+
+```text
+WTHAN- & TO+ & IV+
+```
+
+The `WTHAN` link is supplied by `way` / `ways` nouns. This lets `than.e`
+connect to both `to.r` and the infinitival verb directly without accepting
+arbitrary adjective comparatives with a broad `MVp` modifier link.
 
 This is stricter and more local than the old PP rule: the dictionary should not
 generate an infinitival path whose correctness depends on finding an unrelated
@@ -683,6 +713,8 @@ Tell me which book to read.
 The book to read is here.
 What are you going to do?
 What is there to do?
+There is no nicer way than to leave now.
+There is no nicer way to round off the evening than to have a quiet nightcap.
 ```
 
 The broader bad examples:
