@@ -53,6 +53,7 @@ Added uppercase connector families:
 | `MVH` | Connects an adjective result-clause head directly to `that.j-c`, replacing the old `MVh` path for certified adjective result clauses. |
 | `SJI` | Connects the logical subject of a controlled bare infinitive to the infinitival verb, paired with `I*j`. |
 | `SGP` | Connects the logical subject of a controlled present participle to the participial verb, paired with `Pg`. |
+| `NDH` | Connects an `H`-licensed quantity word to a unit noun in wh/degree `B#m` extraction, preventing ordinary `ND` quantity paths from licensing the extraction. |
 | `THR{S,P,U}` | Certifies singular, plural, and uncountable existential-`there` agreement. The brace notation summarizes the concrete link types `THRS`, `THRP`, and `THRU`. |
 | `TTHR{S,P,U}` | Carries the same existential-`there` agreement state from a raising predicate to the following infinitival `to`. |
 | `ITHR{S,P,U}` | Carries the same agreement state from infinitival `to`, modal, or auxiliary paths to the next predicate. |
@@ -79,6 +80,7 @@ Changed or retired connector forms:
 | result-clause `that.j-c` with `MVh` | Bare `MVh-` on `that.j-c` was replaced by certified paths. Adverbial and noun result clauses use `RTHAT- & MVh-`; adjective result clauses use `MVH-`. |
 | result-clause `EExk` / `EAxk` / `D##k` witnesses | Replaced for `that` result clauses by uppercase certificate families `EEXK`, `EAXK`, and `DTHAT`. The older `EExk`, `EAxk`, and `D...k` forms remain available for ordinary non-result-clause degree and determiner uses. |
 | controlled-subject `Sj` / `Sg` | Replaced by uppercase `SJI` and `SGP` in controlled bare-infinitive and present-participle constructions. Ordinary finite `S` connectors must not match these controlled-subject witnesses. |
+| unit wh-extraction `ND` | The `how many <unit> ...` `B#m` extraction branch now uses `NDH` instead of ordinary `ND`. Ordinary quantity uses of `ND` remain unchanged. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
 | `there.r OXt-` | Removed. Locative `there` uses ordinary modifier paths such as `MVp`; existential and presentational `there` use agreement-specific `THR*` links. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
@@ -138,6 +140,21 @@ The displayed/API linkage suppresses the helper word and the incident `WJI`
 links after postprocessing. Thus `WJI` is a dictionary-internal certificate
 used to express the wh-preposition question relation; it is not intended to be
 visible in ordinary output.
+
+### `NDH`: H-Licensed Unit Quantities For `B#m` Extraction
+
+`NDH` connects an `H`-licensed quantity word such as `many` to a unit noun in
+wh/degree extraction:
+
+```text
+   +--H--+-NDH-+---Bpm---+
+   |     |     |         |
+how many miles.i ... bike.v
+```
+
+The unit noun can then expose the `Rw+ & Bpm+` extraction branch. Ordinary
+quantity paths such as `many people` and postposed `you biked how many miles`
+continue to use `ND`; only the extracted unit branch requires `NDH`.
 
 ### `OFJ`: `of`-Relative Certification
 
@@ -1128,6 +1145,113 @@ Expected results for the current documented state:
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
+```
+
+## Rule 68: License Unit `B#m` Through `NDH`
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+B#m , D##w H HA , "Bad use of gerund68"
+```
+
+The active grammatical area is wh/degree extraction with `B#m`; the old
+message is a stale description of this rule. Representative accepted examples
+include:
+
+```text
+Which dog did you chase?
+How many miles did you bike?
+How big a department is it?
+```
+
+### Background And Problem
+
+The nearby `4.0.knowledge` comments record an older attempt to make `B#m`
+restricted after `Rw` was introduced, followed by a reversion because the
+restriction broke wh/degree questions such as `how many people you saw` and
+`how efficient a program is it`.
+
+Removing the PP rule without a dictionary replacement exposed a concrete bad
+path in `How many miles did you bike?`: `how` could attach to `many` with
+`EEh`, `many` could attach to `miles` with ordinary `ND`, and `miles` could
+still expose the `Rw+ & Bpm+` extraction branch. That raw linkage had `B#m`
+but no `H`, `HA`, or `D##w` witness in the relevant domain, so the old PP
+rule rejected it.
+
+### Old Mechanism
+
+The PP rule rejected a completed domain if it contained a `B#m` link but did
+not also contain a wh/degree witness link matching `D##w`, `H`, or `HA`.
+
+### Overgeneration Cause
+
+The old dictionary used ordinary `ND` both for non-extracted quantity phrases
+and for the unit-noun extraction branch:
+
+```text
+many --ND-- miles --Bpm-- bike
+```
+
+Since `ND` was also available in branches that were not licensed by `H`, the
+unit noun could select the extracted `Bpm` path without proving that the
+quantity phrase was a wh/degree phrase.
+
+The migration is deliberately not implemented as a global `B*m` connector
+rewrite. `B*m` is used outside the old domain-scoped PP condition. A global
+certificate on all `B*m` links would reject valid sentences that the old PP
+rule did not reject.
+
+### Implementation
+
+The dictionary now uses the uppercase `NDH` connector for the unit-noun
+extraction branch. `many` exposes `NDH+` only inside its `H-` branch, and
+unit nouns use `NDH- & Rw+ & Bpm+` for questions such as:
+
+```text
+How many miles did you bike?
+```
+
+Ordinary quantity paths continue to use `ND`, including:
+
+```text
+Many people came.
+You biked how many miles?
+```
+
+This makes the extraction branch carry its own `H` witness and removes the
+need for the PP companion check.
+
+### Examples
+
+Focused examples are recorded in `corpus-knowledge.batch`:
+
+```text
+Which dog did you chase?
+How many miles did you bike?
+How big a department is it?
+*The telling John to leave was stupid.
+```
+
+### Verification
+
+Verification used the exported pre-removal `HEAD` dictionary as a reference
+and compared accepted/rejected outcomes with `lgerror`. Focused
+accepted-linkage comparison showed that `Which dog did you chase?` and `How
+big a department is it?` keep their public link names. `How many miles did you
+bike?` intentionally changes the unit quantity link from `ND` to `NDH`; the
+accepted zero-null analyses remain present, while the bad `EEh`/ordinary-`ND`
+candidate is no longer accepted without PP.
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 93 errors
+corpus-fixes.batch: 360 errors
 corpus-fix-long.batch: 8 errors
 ```
 
