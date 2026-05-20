@@ -145,15 +145,15 @@ MJXl  left-side licensed postnominal-adjective conjunction path
 MJXr  right-side licensed postnominal-adjective conjunction path
 ```
 
-Focused example:
+Focused linkage fragment, in `link-parser` graph style:
 
 ```text
-                                           +--TH--+
-                                           |      |
-Democrats.n unhappy.a about ... but.j-m doubtful.a that ...
-       +----------------Ma----------------+
-                     +--MJla--+--MJXr--+
-                     |        |        |
+    |               +-------------------Ma------------------+
+    |               |          +<-----------MJla<-----------+
+    +------>Wd------+          |       +-----Js----+        |
+    |       +--Dmc--+          +--MVp--+    +-Ds**v+        +-->MJXr->+----TH---+
+    |       |       |          |       |    |      |        |         |         |
+LEFT-WALL many Democrats.n unhappy.a about the economy.n but.j-m doubtful.a that.j-c ...
 ```
 
 In this example, `doubtful` has the `TH` complement that licenses the
