@@ -118,14 +118,15 @@ anchor that licenses it. It is used in cases such as:
 The doctors, many of whom are surgeons, were angry.
 ```
 
-Focused linkage fragment:
+Focused linkage fragment, in `link-parser` graph style:
 
 ```text
-            +-----Bpj----+
-            |            |
-doctors.n , many of whom are.v surgeons.n
-       +----MXp---+OFJ+-Jr+
-       |          |   |   |
+    |             +--------------------Spx--------------------+
+    |             |         +-------------Xc------------+     |
+    +----->Wd-----+---MXp---+-----Bpj----+              |     |
+    |      +--Dmc-+     +-Xd+OFJ+-Jr+-RS-+---Opt--+     |     +---Pa--+
+    |      |      |     |   |   |   |    |        |     |     |       |
+LEFT-WALL the doctors.n , many of whom are.v surgeons.n , were.v-d angry.a .
 ```
 
 Here `many` carries the postnominal relative anchor (`Bpj`) and also links to
