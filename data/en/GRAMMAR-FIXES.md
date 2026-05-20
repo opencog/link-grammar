@@ -33,6 +33,7 @@ Added uppercase connector families:
 | `CMPS` | Certifies a singular or mass comparative antecedent for a following singular comparative clause. |
 | `CMPP` | Certifies a plural comparative antecedent for a following plural comparative clause. |
 | `CMPX` | Certifies an agreement-neutral comparative head, such as bare `more` or a comparative preposition object. |
+| `CMPC` | Certifies that a comparative modifier path licenses a following `Cc` / `CV` comparative clause. |
 | `INSERTL` / `INSERTR` | Tokenizer-only marker connector families. Paired `INSERTL<token>+` and `INSERTR<token>+` request an optional internal helper token named `<token>`. They are dictionary support markers, not ordinary grammar links. |
 
 Changed or retired connector forms:
@@ -46,6 +47,7 @@ Changed or retired connector forms:
 | broad postposed `Ma` / `Mam` paths | Tightened so postposed adjective and comparative-adjective uses require a local complement license or a licensed `MJX` conjunction path. `Ma` and `Mam` remain ordinary connectors elsewhere. |
 | subordinate temporal `as` with `MVs` | The `as.#while` temporal path now uses `MVSWH` instead of `MVs`. Other `MVs` uses remain ordinary modifiers. |
 | comparative-clause `S**c` on `than.e` / `as.e-c` | Split into singular `Ss*c` and plural `Sp*c` branches that require `CMPS`, `CMPP`, or `CMPX` antecedent certificates. |
+| comparative-clause `Cc` / `CV` on `than.e` / `as.e-c` | Tightened so clausal comparative continuations require a `CMPC` certificate from a local comparative modifier path. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
@@ -218,6 +220,26 @@ subscripted variants of one `CMP` family. Broad connector matching would allow
 subscripted variants such as `CMPs` and `CMPx` to match each other, which would
 lose the agreement distinction.
 
+### `CMPC`: Comparative Clause Modifier Certificate
+
+`CMPC` connects a comparative modifier witness to a later `than.e` or `as.e-c`
+clausal comparative continuation. It replaces the PP rule 56 requirement that a
+domain containing `Cc` also contain one of the comparative modifier links
+`EEm`, `EEy`, `MVm`, `MVb`, or `MVy`.
+
+Focused `MVy` example:
+
+```text
+    +-------MVz-------+
+    +----MVy----+     +----CV-->+
+    |           +-CMPC+-Cc-+-Ss-+
+    |           |     |    |    |
+tastes.v the same as.e-c it did.v-d
+```
+
+`EAy` does not provide `CMPC`, so a plain adjective comparative such as
+`as intelligent as John does` cannot use the `as.e-c --Cc/CV--` clause path.
+
 ## PP Migration From `4.0.knowledge` To `4.0.dict`
 
 This section documents selected postprocessing (PP) rules being moved into
@@ -249,7 +271,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 32s, 32p, 32u, 34-36 | Existential `there` agreement | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 92 errors. It accepts bad agreement such as `There is chasing dogs`, `There are a dog`, and coordinated singular complements with plural `are`. These need agreement-aware `there.r`/`be` object-path splits. |
 | 42 | Predicate/question `BIq` | Simple removal raises the fast prefix from 1 to 3 errors and `corpus-basic.batch` from 88 to 90 errors. A prototype that moved `BI+` to a copula branch with `Ss*q-` still accepted a bad `big mind on everybody's question is who ...` parse, because a generic noun subject can match a subscripted verb-side connector and inherit the `Ss*q` link name. A replacement therefore needs a new connector family on the licensing nouns/clauses, not only a subscripted copula-side split. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
-| 56 | Comparative complement checks | Simple removal leaves `corpus-knowledge.batch` clean but exposes bad `Cc` comparative complement paths such as `I am as intelligent as John does`. A replacement needs a narrower split of comparative complement continuations rather than deletion. |
 
 ## Library-Assisted Dictionary Helper Tokens
 
@@ -981,6 +1002,101 @@ Focused rejected examples include:
 ### Verification
 
 The rule 58 and 59 migration was validated with:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
+```
+
+## Rule 56: Comparative `Cc` Clauses Require A Modifier License
+
+**Status:** implemented; PP rule 56 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Cc , EEm EEy MVm MVb MVy , "Bad comparative56"
+```
+
+The grammatical area is clausal comparative continuations introduced by
+`as.e-c` and `than.e`, where `Cc` links the comparative marker to the subject
+of the following clause and `CV` links it to the clause verb.
+
+### Problem
+
+The old dictionary allowed `as.e-c` to take a raw `MVz- & Cc+ & CV+` branch
+without proving that the preceding phrase had a comparative modifier license.
+For example:
+
+```text
+*I am as intelligent as John does.
+```
+
+could use `as.e-y --EAy-- intelligent.a` and
+`intelligent.a --MVz-- as.e-c --Cc/CV-- John does`. The linkage was locally
+well-formed, but `EAy` was not one of the links that licensed a `Cc` comparative
+clause under rule 56.
+
+### Implementation
+
+The dictionary now uses the internal certificate connector `CMPC`. The
+dictionary-side counterparts of the old PP criteria can optionally supply
+`CMPC+`:
+
+```text
+EEm
+EEy
+MVm
+MVb
+MVy
+```
+
+The `as.e-c` `Cc+ & CV+` branch requires `CMPC-` in either left-connector order
+with `MVz-`. The `than.e` `Cc+ & CV+` branch also requires `CMPC-`, in addition
+to the `CMPS` / `CMPP` / `CMPX` antecedent certificates introduced for rules 58
+and 59.
+
+### Implications
+
+This is a dictionary replacement for rule 56. Valid clausal comparatives such
+as `the same as it did` acquire an internal `CMPC` link. Plain adjective
+comparatives with `EAy`, such as `as intelligent as John does`, do not acquire
+that certificate and therefore cannot use the `as.e-c --Cc/CV--` path.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+The coffee tastes the same as it did last year.
+He runs as quickly as John does.
+I earn as much money in a month as John earns in a year.
+Ours works more elegantly than yours does.
+You are as authoritative as he is.
+```
+
+Focused rejected examples include:
+
+```text
+*I am as intelligent as John does.
+```
+
+### Verification
+
+The rule 56 migration was validated with:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
