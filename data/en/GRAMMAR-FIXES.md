@@ -54,6 +54,7 @@ Added uppercase connector families:
 | `SJI` | Connects the logical subject of a controlled bare infinitive to the infinitival verb, paired with `I*j`. |
 | `SGP` | Connects the logical subject of a controlled present participle to the participial verb, paired with `Pg`. |
 | `NDH` | Connects an `H`-licensed quantity word to a unit noun in wh/degree `B#m` extraction, preventing ordinary `ND` quantity paths from licensing the extraction. |
+| `OAJ` | Connects a verb to a non-expletive object that is allowed to license a `Pa**j` predicative-adjective complement. |
 | `THR{S,P,U}` | Certifies singular, plural, and uncountable existential-`there` agreement. The brace notation summarizes the concrete link types `THRS`, `THRP`, and `THRU`. |
 | `TTHR{S,P,U}` | Carries the same existential-`there` agreement state from a raising predicate to the following infinitival `to`. |
 | `ITHR{S,P,U}` | Carries the same agreement state from infinitival `to`, modal, or auxiliary paths to the next predicate. |
@@ -81,6 +82,7 @@ Changed or retired connector forms:
 | result-clause `EExk` / `EAxk` / `D##k` witnesses | Replaced for `that` result clauses by uppercase certificate families `EEXK`, `EAXK`, and `DTHAT`. The older `EExk`, `EAxk`, and `D...k` forms remain available for ordinary non-result-clause degree and determiner uses. |
 | controlled-subject `Sj` / `Sg` | Replaced by uppercase `SJI` and `SGP` in controlled bare-infinitive and present-participle constructions. Ordinary finite `S` connectors must not match these controlled-subject witnesses. |
 | unit wh-extraction `ND` | The `how many <unit> ...` `B#m` extraction branch now uses `NDH` instead of ordinary `ND`. Ordinary quantity uses of `ND` remain unchanged. |
+| predicative-adjective object `O` forms | `Pa**j` complement paths now use `OAJ` instead of ordinary `Osm`, `Op`, `Ox`, or `Os*e` object links. `OXi` remains available for complement-bearing `it` cases that are still governed by the expletive-`it` PP rules. Ordinary object links remain available for non-`Pa**j` constructions. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
 | `there.r OXt-` | Removed. Locative `there` uses ordinary modifier paths such as `MVp`; existential and presentational `there` use agreement-specific `THR*` links. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
@@ -155,6 +157,27 @@ how many miles.i ... bike.v
 The unit noun can then expose the `Rw+ & Bpm+` extraction branch. Ordinary
 quantity paths such as `many people` and postposed `you biked how many miles`
 continue to use `ND`; only the extracted unit branch requires `NDH`.
+
+### `OAJ`: Predicative-Adjective Object Licensing
+
+`OAJ` connects a verb to a non-expletive object class that may license a
+`Pa**j` predicative-adjective complement:
+
+```text
+    +->Wd--+-Sp*i+-OAJ+--Pa**j--+
+    |      |     |    |         |
+LEFT-WALL I.p want.v it green.a .
+```
+
+The link replaces the older use of ordinary object links such as `Osm`, `Op`,
+`Ox`, and `Os*e` in `Pa**j` frames. Keeping a distinct uppercase family
+prevents broad `O+` branches from matching singular common-noun object links
+and accidentally licensing examples such as `*I want a gift inexpensive`.
+
+The special `OXi` link remains available in `Pa**j` frames for `it` when the
+adjective also takes a complement, as in `I made it clear that I was angry`.
+That preserves the still-active expletive-`it` checks until those rules are
+migrated separately.
 
 ### `OFJ`: `of`-Relative Certification
 
@@ -521,7 +544,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | --- | --- | --- |
 | 20-31, 37-39 | Expletive `it` complement licensing | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include bad ordinary-subject uses of `THi`/`TOi`-style complements, such as `Joe is likely that ...` and `It tried to have been ...`. A replacement needs a shared expletive-`it` subject/complement split across copular, adjectival, and verbal complement paths. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
-| `Pa##j` predicative adjective | Object licensing for predicative-adjective complements | A simple verb-side object macro for the PP-allowed objects is unsafe. Connector matching lets a subscripted positive connector such as `Os*e+` match an ordinary `Os-` noun and produce an allowed-looking `Os*e` link, so the macro admits the same bad singular-object paths that the PP rule was intended to reject. A replacement needs a true object-class certificate, a new exact connector family on the noun/pronoun side, or equivalent library-assisted dictionary support. |
 
 ## Library-Assisted Dictionary Helper Tokens
 
@@ -1247,6 +1269,96 @@ big a department is it?` keep their public link names. `How many miles did you
 bike?` intentionally changes the unit quantity link from `ND` to `NDH`; the
 accepted zero-null analyses remain present, while the bad `EEh`/ordinary-`ND`
 candidate is no longer accepted without PP.
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 93 errors
+corpus-fixes.batch: 360 errors
+corpus-fix-long.batch: 8 errors
+```
+
+## Rule 62 (`Pa##j`): License Predicative-Adjective Objects With `OAJ`
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Pa##j , Osm Op Ox Os*e OXi , "Bad predicative adj 62"
+```
+
+The grammatical area is object-oriented predicative-adjective complements:
+
+```text
+I want it green.
+I want John sober.
+The doctor declared him insane.
+```
+
+### Problem
+
+The old dictionary let several verb classes expose `Pa**j+` together with a
+broad object connector such as `O+` or an extracted-object fallback. That was
+too broad for singular common-noun objects:
+
+```text
+*I want a gift inexpensive.
+```
+
+The raw linkage could locally connect the verb to `gift` with ordinary `Os`
+and to the adjective with `Pa**j`. The PP rule then rejected it because the
+same domain did not contain one of the allowed object-class links.
+
+### Old Mechanism
+
+PP accepted a `Pa##j` domain only if it also contained one of `Osm`, `Op`,
+`Ox`, `Os*e`, or `OXi`. This allowed pronouns, plural objects, and named
+entities while rejecting the singular common-noun object path.
+
+### Overgeneration Cause
+
+A verb-side macro listing the old allowed `O` subscripts is not safe in Link
+Grammar. A positive connector such as `Os*e+` can still match an ordinary
+`Os-` noun connector and produce an allowed-looking link name. That recreates
+the same bad singular-object path that the PP rule was rejecting.
+
+### Implementation
+
+The dictionary now uses the uppercase `OAJ` connector for ordinary
+predicative-adjective object licensing. The allowed object classes expose
+`OAJ-`, and verb `Pa**j+` branches require `OAJ+` instead of broad `O+`,
+`Ox+`, or extracted-object fallbacks.
+
+The `it` entry also keeps its existing `OXi-` path. Verb `Pa**j+` branches
+accept either `OAJ+` or `OXi+`: ordinary `I want it green` uses `OAJ`, while
+complement-bearing expletive cases such as `I made it clear that I was angry`
+use `OXi` so the still-active expletive-`it` PP rules continue to see their
+expected witness.
+
+### Examples
+
+Focused examples are recorded in `corpus-knowledge.batch`:
+
+```text
+I want it green.
+I want John sober.
+I want them ready.
+I want these green.
+The doctor declared him insane.
+*I want a gift inexpensive.
+```
+
+### Verification
+
+Accepted-linkage comparison against the pre-migration baseline used
+`-test=auto-next-linkage:3` with `!links`, `!limit=10000`, `!short=254`, and
+`!null=0`. The first accepted linkages keep the same predicate-adjective
+structure; the intended public-link change is that ordinary `Osm`, `Os*e`,
+and `Ox` object rows become `OAJ`.
+
+The migration was also validated with ordinary parser runs:
 
 ```text
 corpus-knowledge.batch: 0 errors
