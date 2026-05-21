@@ -57,6 +57,21 @@ How big a department is it?
 *The telling John to leave was stupid.
 *How much more efficient programs are available.
 
+% CONTAINS_NONE rule 71: Ws must not license extracted B#m or Ca paths.
+% Subject and temporal-fragment how questions use dedicated dictionary
+% certificate links, while extracted-object and non-inverted clause paths stay
+% under the ordinary Wq/QI checks.
+
+How many people died?
+How much sugar is needed?
+How long before you got home?
+Approximately how long before you got home?
+How much money did you earn?
+How many times did you do it?
+*How much money you earn
+*How many times you did it
+*How much of the book you read
+
 % CONTAINS_ONE rule 12: Wj requires Jw or JQ.
 % Fronted prepositions in wh questions and relatives must be licensed by the
 % matching wh object, including when the object is a multiword phrase.
