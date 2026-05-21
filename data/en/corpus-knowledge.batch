@@ -150,6 +150,16 @@ You should hear him sing.
 *I gave my brother it.
 *I gave him for his birthday it.
 
+% CONTAINS_ONE rule 62: Pa##j predicative adjectives require an object
+% class licensed by the dictionary OAJ link.
+
+I want it green.
+I want John sober.
+I want them ready.
+I want these green.
+The doctor declared him insane.
+*I want a gift inexpensive.
+
 % CONTAINS_ONE rule 63: postposed Ma adjectives need local complement
 % licensing.
 % CONTAINS_ONE rule 64: postposed Mam comparative adjectives need local

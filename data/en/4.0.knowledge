@@ -241,12 +241,8 @@ CONTAINS_ONE_RULES:
 					    , "Bad comparative47"    ,
  MV#c  ,  EEm   MVb   Dm#m   EEy   D##y  MVm   Om   Oy
                             Jm   Jy   Am   MX#m
-					    , "Bad comparative48"    ,
-;
-; The below blocks the singular "I want a gift inexpensive", while
-; allowing Pa**j to be used with other kinds of objects.
-;
- Pa##j ,  Osm  Op  Ox Os*e OXi ,              "Bad predicative adj 62"
+					    , "Bad comparative48"
+; Former Pa##j object-class checks are encoded in dictionary OAJ paths.
 ; The former B#m companion rule is encoded in dictionary paths such as NDH.
 
 ; Qd    ,  MX blocks "Joe doesn't matter what Ted does"

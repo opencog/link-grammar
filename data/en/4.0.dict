@@ -162,15 +162,17 @@
 
 % noun-main-e: used for proper names (named entities)
 % Os*e- is used to allow certain adjectival uses.
+% OAJ- licenses predicative-adjective objects.
 % SJI/SGP: controlled subjects of bare infinitive and present participle
 <noun-main-e>:
   (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or (Os*e- & {SGP+ or SJI+})
+  or OAJ-
   or <post-nominal-s>;
 
 % noun-main-p -- plural
 <noun-main-p>:
   ((Sp+ & <CLAUSE>) or SIp- or Jp-
-  or Op-
+  or Op- or OAJ-
   or <post-nominal-p>) & {CMPP+};
 
 % noun-main-u -- u == uncountable
@@ -1437,17 +1439,18 @@ she he:
 % The E- is for "It's either us or them" ... not ideal, but OK
 % See also me.p below.
 me him:
-  <bare-inf> or ({[[E-]]} & dSJl+) or dSJr- or Wa-;
+  <bare-inf> or OAJ- or ({[[E-]]} & dSJl+) or dSJr- or Wa-;
 
 % DD+: "... how us two should work together"
 us:
-  <bare-inf> or ({[[E-]]} & dSJl+) or dSJr- or DD+;
+  <bare-inf> or OAJ- or ({[[E-]]} & dSJl+) or dSJr- or DD+;
 
 % Jd- & Dmc-: "I have a lot of them" and J- is cost so that this comes first.
 % (Jd- & Dmc- & Sp+):  "Many of them could be saved"
 % Why is there a cost on <bare-inf> ???
 them:
   [<bare-inf>]0.5
+  or OAJ-
   or ({Jd- & Dmc-} & Ox-)
   or (Jd- & Dmc- & {Wd-} & Sp+)
   or ({[[E-]]} & dSJl+)
@@ -1457,7 +1460,7 @@ them:
 %    The Ox is needed for post-processing
 myself yourself himself herself itself themselves
 ourselves yourselves thyself oneself one's one’s:
-  <bare-inf> or E+ or MVa-;
+  <bare-inf> or OAJ- or E+ or MVa-;
 
 each_other: ((J- or O-) & {SGP+ or SJI+}) or YS+;
 
@@ -1470,6 +1473,7 @@ his:
 % J-: "... with her"
 her:
   <bare-inf>
+  or OAJ-
   or DP+
   or ({AL-} & {@L+} & (D+ or DD+))
   or Wa-;
@@ -1500,6 +1504,7 @@ me.p:
 % Ds+: "you asshole!"
 you:
   Wa- or <bare-inf>
+  or OAJ-
   or (Sp+ & <CLAUSE>)
   or SIp-
   or dSJlp+
@@ -1515,7 +1520,7 @@ y'all y’all yall you_all: (Sp+ & <CLAUSE>) or SIp-;
 % youse yous yis ye: second-person plural -- Irish English --
 % https://en.wikipedia.org/wiki/Irish_English
 youse yous yis ye ya yo:
-  <bare-inf> or (Sp+ & <CLAUSE>) or SIp-
+  <bare-inf> or OAJ- or (Sp+ & <CLAUSE>) or SIp-
   or (<CLAUSE> & Pg+);
 
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
@@ -1529,6 +1534,7 @@ youse yous yis ye ya yo:
 it:
    [J-]0.5
    or (Osm- & ({@M+} or {SGP+ or SJI+}))
+   or OAJ-
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
    or ({MX+} & (Ss+ or SFsi+ or THBS+) & <CLAUSE>)
@@ -1539,6 +1545,7 @@ it:
 % MXp+: "they, the twins, did it"
 they:
   ({[[R+ & Bp+]]} & (({MXp+} & Sp+ & <CLAUSE>) or SIp-)) or
+  OAJ- or
   Ox- or
   dSJlp+ or dSJrp-;
 
@@ -1546,6 +1553,7 @@ they:
 % MXp+: "We, the undersigned, ..."
 we:
   ({MXp+} & Sp+ & <CLAUSE>)
+  or OAJ-
   or Ox-
   or DD+
   or SIp- or dSJlp+ or dSJrp-;
@@ -1640,7 +1648,7 @@ just.d only.d:
 % ALx- & Op-: "I want only these"
 these:
   ({ALx-} & (Dmc+ or DD+))
-  or ({ALx-} & Op-)
+  or ({ALx-} & (Op- or OAJ-))
   or (Jd- & Dmu- & Op-)
   or (Jd- & Dmu- & {Wd-} & Sp+)
   or [[<noun-main-p>]]
@@ -1652,7 +1660,7 @@ these:
 % See also "these"
 those:
   ({AL-} & (Dmc+ or DD+))
-  or ({ALx-} & Op-)
+  or ({ALx-} & (Op- or OAJ-))
   or (Jd- & Dmu- & Op-)
   or (Jd- & Dmu- & {Wd-} & Sp+)
   or (<noun-rel-p> & ([[<noun-main-p>]] or dRJlr+ or dRJrr-))
@@ -4047,7 +4055,7 @@ bid.v-d bade.v-d:
 
 % vc-judge: a lot like vc-delcare, except optionally transitive.
 <vc-judge>: <vc-tr,intr> or
-  ((O+ or <b-minus>) & ({@MV+} & Pa**j+));
+  ((OAJ+ or OXi+) & {@MV+} & Pa**j+);
 
 judge.v: 
   ((<verb-pl,i> & (<vc-judge>)) or
@@ -4268,8 +4276,8 @@ and.v-fill:
   ((K+ & {[[@MV+]]} & <obj2-non-pronoun>)
     or Pa+
     or ({O+ or <b-minus>} & {K+})
-    or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
-    or ({@E-} & <b-minus> & O+ & {Pa**j+ or K+})
+    or ((OAJ+ or OXi+) & {@MV+} & Pa**j+)
+    or ({@E-} & <b-minus> & (((OAJ+ or OXi+) & Pa**j+) or (O+ & {K+})))
     or ({O+} & {K+} & {@MV+} & {Xc+} & QN+)
     or [[@MV+ & <obj2-non-pronoun>]]
   ) & <mv-coord>;
@@ -5162,12 +5170,13 @@ dreaming.v: <verb-pg> & <vc-dream>;
 % target for objects like "so" or "it" would be better...
 % "hope.v" has the same problem.
 % O+ & O*n: "She will think it an act of kindness."
-% O+ & Pa**j: "She will think it true."
+% OAJ+/OXi+ & Pa**j: "She will think it true."
 % TO+ & Xc+: allows null-infinitive: "No, I did not think to"
 <vc-think>:
   ({@MV+} & {<embed-verb> or TH+ or RSe+ or Z- or <of-coord> or BW-})
   or (<mv-coord> & <null-verb>)
-  or (O+ & {@MV+} & {<obj2-non-pronoun> or Pa**j+});
+  or (O+ & {@MV+} & {<obj2-non-pronoun>})
+  or ((OAJ+ or OXi+) & {@MV+} & Pa**j+);
 
 think.v: 
   ((<verb-pl,i> & (<vc-think>)) or
@@ -6344,7 +6353,7 @@ imagining.v: <verb-pg> & <vc-imagine>;
 <vc-declare>:
   <vc-trans>
   or ({@MV+} & (<embed-verb> or TH+ or RSe+ or Pg+ or Z-))
-  or ((O+ or <b-minus>) & ({@MV+} & Pa**j+))
+  or ((OAJ+ or OXi+) & {@MV+} & Pa**j+)
   or MVa+;
 
 declare.v conclude.v suspect.v concede.v foresee.v
@@ -6437,10 +6446,11 @@ fearing.v presuming.v assuming.v wavering.v:
 
 % ---------------------------------------------------------------
 
-% O+ & Pa**j+: "I believed it possible."
+% (OAJ+ or OXi+) & Pa**j+: "I believed it possible."
 <vc-believe>:
   {<vc-trans>}
-  or (O+ & {@MV+} & (<obj2-non-pronoun> or Pa**j+))
+  or (O+ & {@MV+} & <obj2-non-pronoun>)
+  or ((OAJ+ or OXi+) & {@MV+} & Pa**j+)
   or (<mv-coord> & (<embed-verb> or TH+ or RSe+));
 
 believe.v answer.v worry.v: 
@@ -6902,7 +6912,7 @@ over_with: <verb-pv-b>;
   ((O+
     or (K+ & {[[@MV+]]} & <obj2-non-pronoun>)
     or ({O+ or <b-minus>} & {K+})
-    or ((O+ or <b-minus>) & Pa**j+)
+    or ((OAJ+ or OXi+) & Pa**j+)
     or [[@MV+ & <obj2-non-pronoun>]]) & <mv-coord>)
   or ({@MV+} & (Pa+ or AF-));
 
@@ -7605,7 +7615,8 @@ refusing.v: <verb-pg> & <vc-refuse>;
 % O+ & QN+: "you want it when?"
 <vc-want>:
   (<mv-coord> & ({<to-verb>} or <null-verb>))
-  or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+ or Pa**j+})
+  or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+})
+  or ((OAJ+ or OXi+) & <mv-coord> & Pa**j+)
   or ({O+} & QN+)
   or [[@MV+ & <obj2-non-pronoun>]]
   or [[CX- & <mv-coord>]];
@@ -9061,8 +9072,9 @@ appreciating.v spending.v: <verb-pg> & <vc-appreciate>;
 % ditransitive
 <vc-make>:
   ((O+ or <b-minus> or OX+) & {
-    (<mv-coord> & {I*j+ or Pa**j+ or B-})
+    (<mv-coord> & {I*j+ or B-})
     or ((K+ or AF-) & <mv-coord>)})
+  or ((OAJ+ or OXi+) & <mv-coord> & Pa**j+)
   or ((
     <vc-ditrans>
     or (K+ & {[[@MV+]]} & <obj2-non-pronoun>)
