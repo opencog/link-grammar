@@ -242,13 +242,11 @@ CONTAINS_ONE_RULES:
 ; Former Pa##j object-class checks are encoded in dictionary OAJ paths.
 ; The former B#m companion rule is encoded in dictionary paths such as NDH.
 
-; Qd    ,  MX blocks "Joe doesn't matter what Ted does"
 CONTAINS_NONE_RULES:
  SF    ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta
                                            , "Bad use of 'filler' subject72" ,
  SFI   ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta
                                            , "Bad use of 'filler' subject73" ,
- Qd    ,  MX                               , "Bad subject inversion",
 
 ; H, O blocks "How many people you (noun)"
 ; But it wrecks "how much money did you give her?"
