@@ -22,6 +22,14 @@ What is there to do?
 There is no nicer way than to leave now.
 There is no nicer way to round off the evening than to have a quiet nightcap.
 
+% CONTAINS_ONE rule 8: Qd direct question inversion is now constrained by the
+% dictionary question paths and existential-there THR paths.
+
+Does he drink?
+Are you insane?
+Is there a dog in the park?
+Are there dogs in the park?
+
 % CONTAINS_ONE rule 68: B#m extraction is licensed in dictionary paths.
 % Wh/degree witnesses are carried by dedicated dictionary paths so ordinary
 % determiner and quantity paths do not depend on the old "Bad use of

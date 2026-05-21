@@ -622,6 +622,10 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 20-31, 37-39 | Expletive `it` complement licensing | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include bad ordinary-subject uses of `THi`/`TOi`-style complements, such as `Joe is likely that ...` and `It tried to have been ...`. A replacement needs a shared expletive-`it` subject/complement split across copular, adjectival, and verbal complement paths. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 
+`FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
+candidate. For metric-ordered extraction, this class is handled by
+extractor-side cycle state, not by English dictionary connector replacement.
+
 ## Library-Assisted Dictionary Helper Tokens
 
 **Status:** implemented as dictionary support; used by the preposition
@@ -1789,6 +1793,58 @@ corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
+```
+
+## Redundant `CONTAINS_ONE` Question-Inversion Checks
+
+**Status:** implemented for rule 8.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Qd , SI SFI SXI THRS THRP THRU , "S-V inversion required8"
+```
+
+The grammatical area is direct subject-verb inversion with `Qd`, including
+ordinary yes/no questions and the existential-`there` paths migrated earlier.
+
+### Problem
+
+After the existential-`there` migration, the current dictionary already
+exposes `Qd` only through ordinary question/inversion paths or through the
+agreement-specific `THRS` / `THRP` / `THRU` paths. The postprocessing rule
+therefore no longer carries observable behavior in the tracked corpora.
+
+### Implementation
+
+Rule 8 is removed from `4.0.knowledge`; no replacement connector family is
+needed.
+
+### Examples
+
+Focused examples are recorded in `corpus-knowledge.batch`:
+
+```text
+Does he drink?
+Are you insane?
+Is there a dog in the park?
+Are there dogs in the park?
+```
+
+### Verification
+
+The removal was validated with ordinary parser runs and `lgerror` comparison
+against the pre-removal outputs for `corpus-knowledge.batch`,
+`corpus-basic.batch`, and `corpus-fixes.batch`; all three had zero error
+differences.
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
 ```
 
 ## Rules 58 And 59: Comparative Clauses Require A Compatible Antecedent
