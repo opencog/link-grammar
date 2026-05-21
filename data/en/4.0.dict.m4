@@ -332,6 +332,7 @@ changecom(`%')
 <to-verb>:  TO+ & IV+;
 <tof-verb>: TOf+ & IV+;
 <toi-verb>: TOi+ & IV+;
+<tsi-verb>: TSIC- & TSi+;
 <ton-verb>: TOn+ & IV+;
 <too-verb>: TOo+ & IV+;
 <tot-verb>: TOt+ & B+;
@@ -1589,8 +1590,8 @@ it:
    or OAJ-
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
-   or ({MX+} & (Ss+ or SFsi+ or THBS+) & <CLAUSE>)
-   or SIs- or SFIsi- or THBI- or OXi- or Vp-
+   or ({MX+} & (Ss+ or (SFsi+ & {TSIC+}) or THBS+) & <CLAUSE>)
+   or SIs- or (SFIsi- & {TSIC+}) or THBI- or (OXi- & {TSIC+}) or Vp-
    or dSJls+ or dSJrs-;
 
 % O*c: "we will go faster than they"
@@ -5150,7 +5151,7 @@ proposes.v: VERB_S_T(<vc-propose>);
 % <vc-propose> & QN+: "You proposed this to her when?"
 proposed.v-d:
   VERB_SPPP_T(<vc-propose> & {{Xc+} & QN+})
-  or (<verb-s-pv> & {THi+ or TSi+ or Z-})
+  or (<verb-s-pv> & {THi+ or <tsi-verb> or Z-})
   or <verb-adj>
   or <verb-phrase-opener>;
 proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
@@ -5624,7 +5625,7 @@ request.v: VERB_PLI(<vc-request>);
 requests.v: VERB_S_T(<vc-request>);
 requested.v-d:
   VERB_SPPP_T(<vc-request>) or
-  (<verb-s-pv> & {THi+ or TSi+}) or
+  (<verb-s-pv> & {THi+ or <tsi-verb>}) or
   <verb-adj> or
   <verb-phrase-opener>;
 requesting.g: (<vc-request> & <verb-ge>) or <verb-ge-d>;
@@ -6198,7 +6199,7 @@ require.v: VERB_PLI(<vc-require>);
 requires.v: VERB_S_T(<vc-require>);
 required.v-d:
   VERB_SPPP_T(<vc-require>)
-  or (<verb-pv> & {<to-verb> or TSi+})
+  or (<verb-pv> & {<to-verb> or <tsi-verb>})
   or <verb-adj>
   or (<mv-coord> & {<to-verb>} & <verb-phrase-opener>);
 requiring.g: (<vc-require> & <verb-ge>) or <verb-ge-d>;
@@ -7161,7 +7162,7 @@ suggest.v anticipate.v recommend.v: VERB_PLI(<vc-suggest>);
 suggests.v anticipates.v recommends.v: VERB_S_T(<vc-suggest>);
 suggested.v-d anticipated.v-d recommended.v-d:
   VERB_SPPP_T(<vc-suggest>)
-  or (<verb-s-pv> & {THi+ or TSi+ or Z-})
+  or (<verb-s-pv> & {THi+ or <tsi-verb> or Z-})
   or <verb-adj>
   or <verb-phrase-opener>;
 suggesting.g anticipating.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>;
@@ -9784,8 +9785,8 @@ one_and_only in_situ:
 % Identical to below, but starts with vowel.
 important.a essential.a imperative.a:
   ({EA- or EF+} & (
-    POST_ADJ_LIC(Paf- or AF+ or dMJra-, ((THi+ or <toi-verb> or TSi+) & {LE+}) or <tot-verb>)
-    or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & dMJla+)
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, ((THi+ or <toi-verb> or <tsi-verb>) & {LE+}) or <tot-verb>)
+    or ((({@MV+} & {(THi+ or <toi-verb> or <tsi-verb>) & {LE+}}) or <tot-verb>) & dMJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
   or <adj-stuff>
@@ -9794,8 +9795,8 @@ important.a essential.a imperative.a:
 % Identical to above, but starts with consonant
 crucial.a necessary.a vital.a:
   ({EA- or EF+} & (
-    POST_ADJ_LIC(Paf- or AF+ or dMJra-, ((THi+ or <toi-verb> or TSi+) & {LE+}) or <tot-verb>)
-    or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & dMJla+)
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, ((THi+ or <toi-verb> or <tsi-verb>) & {LE+}) or <tot-verb>)
+    or ((({@MV+} & {(THi+ or <toi-verb> or <tsi-verb>) & {LE+}}) or <tot-verb>) & dMJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
   or <adj-stuff>
