@@ -321,3 +321,10 @@ What did you think?
 What were you thinking?
 What the hell were you thinking?
 *What the outcome is, I'm sure he'll still be popular.
+
+% BOUNDED r-domain cleanup: possessive relative clauses should not need the
+% old PP-level r-domain boundedness backstop.
+
+The syndicates whose activities add to the cost left.
+The syndicates whose activities add to the cost of business left.
+The syndicates whose activities add to the cost of doing business left.

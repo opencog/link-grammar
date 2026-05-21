@@ -265,5 +265,4 @@ CONTAINS_NONE_RULES:
 ; rather than a set of links.
 
 BOUNDED_RULES:
- s                               , "Unbounded s domain78" ,
- r                               , "Unbounded r domain79"
+ s                               , "Unbounded s domain78"
