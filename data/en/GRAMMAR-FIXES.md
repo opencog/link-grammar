@@ -681,6 +681,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
 | 20-31, 37-39 | Expletive `it` complement licensing | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include bad ordinary-subject uses of `THi`/`TOi`-style complements, such as `Joe is likely that ...` and `It tried to have been ...`. A replacement needs a shared expletive-`it` subject/complement split across copular, adjectival, and verbal complement paths. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. A later single-rule rule-44 removal improved `corpus-fixes.batch` by three and `corpus-failures.batch` by four, but accepted the knowledge/basic negative `*I am as intelligent as John does`. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
+| BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and five `corpus-basic.batch` negatives, including `*He ran I know how quickly` and `*I wonder how important is it to turn off the computer`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
 
 `FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
 candidate. For metric-ordered extraction, this class is handled by
@@ -2040,6 +2041,81 @@ corpus-basic.batch: 88 errors
 corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
 ```
+
+## Redundant Bounded `r`-Domain PP Check
+
+**Status:** implemented; the bounded `r` rule has been removed from
+`4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+r , "Unbounded r domain79"
+```
+
+The grammatical area is relative-domain boundedness. The active `r` domain
+starters include relative links such as `R*`, `Mr`, and `MX#r`.
+
+### Problem
+
+The old PP rule rejected any `r` domain whose participating words fell to the
+left of the domain root. In the current dictionary, this check did not carry
+observable protection in the tracked corpora or in focused `!bad` probes, while
+keeping it in the postprocessor would leave another rule in the metric
+extraction blocker set.
+
+The corresponding `s` bounded-domain rule is not redundant. Its removal accepts
+known bad wh/inversion examples, so that rule remains active and is listed in
+the deferred migration table above.
+
+### Old Mechanism
+
+`BOUNDED_RULES` is a PP-level domain-graph check rather than a link-pair
+contains-one/contains-none check. It runs after a linkage has already been
+extracted and its domains have been built. The `r` rule therefore could only
+reject completed raw linkages after extraction.
+
+### Implementation
+
+The `r` entry is removed from `BOUNDED_RULES`. No new connector family is
+introduced and no generated dictionary change is required.
+
+### Examples
+
+Focused relative-clause coverage is recorded in `corpus-knowledge.batch`:
+
+```text
+The syndicates whose activities add to the cost left.
+The syndicates whose activities add to the cost of business left.
+The syndicates whose activities add to the cost of doing business left.
+```
+
+### Verification
+
+The removal was validated with ordinary parser runs. `lgerror` comparison
+against the pre-removal outputs for `corpus-knowledge.batch`,
+`corpus-basic.batch`, and `corpus-fixes.batch` showed no sentence-level
+differences. `corpus-fix-long.batch` kept the same error count. The focused
+relative-clause examples above were also compared against the reference branch
+with `!links`, `!limit=10000`, `!short=254`, `!null=0`, and graph output
+disabled; the first three accepted public link rows match. The total linkage
+and no-PP-violation counts differ because the PP rule itself has been removed.
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1497 errors
+```
+
+`corpus-failures.batch` improves by one; the changed sentence is a long
+relative-clause example headed by `whose nefarious activities add so much to
+the cost of doing business in New York`.
 
 ## Redundant `CONTAINS_ONE` Question-Inversion Checks
 
