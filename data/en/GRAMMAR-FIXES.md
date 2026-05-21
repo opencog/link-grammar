@@ -1858,6 +1858,71 @@ corpus-fix-long.batch: 8 errors
 corpus-failures.batch: 1499 errors
 ```
 
+## Rule 4: `SXI` Also Licenses Fronted Locative Inversion
+
+**Status:** implemented; PP rule 4 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+SXI , Wq Qd CQ PFc , "Bad use of s-v inversion4"
+```
+
+The grammatical area is inverted first-person singular `be` forms. The
+historical PP rule treated `SXI` as if it always needed an overt question or
+comparative marker in the same domain.
+
+### Problem
+
+The current dictionary also uses `SXI` in fronted locative and adverbial
+inversion paths. For example, `here am I` links the fronted word to the verb
+with `PFb`, and the verb links to `I` with `SXI`. That linkage is locally
+well-formed and expresses the intended inversion, but it does not contain
+`Wq`, `Qd`, `CQ`, or the stale `PFc` selector. PP rule 4 therefore rejected a
+valid construction.
+
+The failure-corpus sentence below became accepted after the rule was removed:
+
+```text
+I mean, here am I, chattering away to you about the outcome of the war
+and you actually know, Cassie.
+```
+
+### Implementation
+
+Rule 4 is removed from `4.0.knowledge`. No new connector is needed: the
+dictionary already distinguishes the valid fronted-inversion path with `PFb`.
+The removal lets that path stand without an after-the-fact PP requirement that
+was too narrow for current dictionary usage.
+
+### Examples
+
+Focused examples are recorded in `corpus-knowledge.batch`:
+
+```text
+Here am I.
+Here was I.
+There was I.
+```
+
+### Verification
+
+The removal was validated with ordinary parser runs and `lgerror` comparison
+against the pre-removal outputs for `corpus-knowledge.batch`,
+`corpus-basic.batch`, `corpus-fixes.batch`, and `corpus-failures.batch`.
+`corpus-failures.batch` improved by one accepted sentence, the `here am I`
+example above. The other comparisons had zero error differences.
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1498 errors
+```
+
 ## Rules 58 And 59: Comparative Clauses Require A Compatible Antecedent
 
 **Status:** implemented; PP rules 58 and 59 have been removed from
