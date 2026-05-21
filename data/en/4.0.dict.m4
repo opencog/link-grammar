@@ -779,6 +779,7 @@ USMC.y USN.y:
     or ({Dmu-} & Wa-)
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
+    or (DWSu- & <noun-rel-s> & <noun-main-u>)
     or ((DWHu- or Dmuw-) & <noun-rel-s> & <b-raw-s>)
     or <that-result-noun-u>
     or (YS+ & {Dmu-})
@@ -795,6 +796,7 @@ USMC.y USN.y:
     or [<noun-assert>]0.02
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
+    or (DWSu- & <noun-rel-s> & <noun-main-u>)
     or ((DWHu- or Dmuw-) & <noun-rel-s> & <b-raw-s>)
     or <that-result-noun-u>
     or (YS+ & {Dmu-})
@@ -1254,6 +1256,7 @@ propension.n:
   <noun-modifiers> &
     (AN+
     or ((<noun-rel-uto> & (<noun-main-m> or <rel-clause-s>)) or <noun-and-p,u>)
+    or (DWSu- & <noun-rel-uto> & <noun-main-m>)
     or (DWHu- & <noun-rel-uto> & <b-raw-s>)
     or <that-result-noun-to>
     or ({D*u-} & <noun-and-u>)
@@ -1730,11 +1733,13 @@ half:
 % H- & EC+: "How many more?"
 many:
   (H- & (Dmc+ or DWHp+ or ND+ or NDH+ or NIn+ or EC+ or ECWH+ or <b-raw-p> or [()]))
+  or (HWS- & (Dmc+ or NIn+ or EC+ or [()]))
   or (AM- & (Dmcy+ or ((Oy- or Jy-) & {CMPX+})))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
   or (OFd+ & Dmc+)
-  or ((({EAx-} & {DD-}) or H-) & <noun-rel-p> & ([<noun-main-p>] or <rel-clause-p>));
+  or ((({EAx-} & {DD-}) or H-) & <noun-rel-p> & ([<noun-main-p>] or <rel-clause-p>))
+  or (HWS- & <noun-rel-p> & [<noun-main-p>]);
 
 % A naked <noun-main2-x> costs more than one with other links,
 % so that ditransitive verbs don't get spurious links to all.a
@@ -8855,8 +8860,11 @@ whether_or_not:
 %    Unfortunately, this is blocked by "S-V inversion required7"
 % Wh- & H+: "How much money?"
 how:
-  ((((EAh+ or EEh+) & {HA+ & {BWH+}}) or H+ or AFh+) &
+  ((((EAh+ or EEh+) & {HA+ & {BWH+}}) or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
+  or (H+ & {EW-} & (BIqd- or QI*d- or Wq-))
+  or (HWS+ & {EW-} & Ws-)
+  or (EEHWS+ & {EW-} & Ws-)
   or [[{EW-} & Ww-]]
   or ({EW-} & Wh- & H+)
   or ({EW-} & <clause-q> & (({EL+} & Qw+) or AF+))
@@ -10313,6 +10321,12 @@ much:
     or (<noun-rel-s> & ([[<noun-main-s>]] or <b-wh-s>))
     or [()]
   ))
+  or (HWS- & (
+    ECn+
+    or ({OFd+} & DWSu+)
+    or (<noun-rel-s> & [[<noun-main-s>]])
+    or [()]
+  ))
   or (H- & {@M+} & <b-raw-s>)
   or (H- & {OFd+} & DWHu+)
   or (AM- & (Dmuy+ or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+}) or EB*y-))
@@ -10833,7 +10847,10 @@ voluntarily flatly purposely jointly universally thickly widely:
     or [[EA+]]);
 
 respectively: ({Xd- & Xc+} & <adv-as>) or ({Xd- & Xc+} & E+) or ({Xd- & Xc+} & EB-);
-long.e: E+ or ({EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or Ot- or FL- or Yt+));
+long.e:
+  E+
+  or (EEHWS- & Yt+)
+  or ({EE- or EF+} & (({Xd- & Xc+} & <adv-as>) or Ot- or FL- or Yt+));
 daily.e nightly.e weekly.e monthly.e yearly.e hourly.e
 partially: ({Xd- & Xc+} & <adv-as>) or E+ or EB-;
 

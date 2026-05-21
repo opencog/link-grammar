@@ -57,6 +57,9 @@ Added uppercase connector families:
 | `DWH` | Wh/degree determiner-certificate family. `DWHs`, `DWHp`, and `DWHu` carry singular, plural, and uncountable `D##w` / `H` evidence to `B#m` extraction nouns. |
 | `ECWH` | Carries an `H` wh-quantity certificate through `more` to a following `DWH` or `BWH` extraction target. |
 | `BWH` | Carries an `HA` wh/degree certificate from a degree word or comparative `more` to a following `B#m` extraction noun. |
+| `HWS` | Certifies `how` quantity phrases that start a `Ws` subject question and therefore must not use extracted `B#m` or non-inverted `Ca` continuations. |
+| `DWS` | Determiner certificate used by `HWS` uncountable subject questions, such as `How much sugar is needed?`; currently represented by `DWSu`. |
+| `EEHWS` | Certifies the narrow `how long before ...` temporal-fragment path as a `Ws` question without allowing the broader `EEh + Ca` overgeneration. |
 | `OAJ` | Connects a verb to a non-expletive object that is allowed to license a `Pa**j` predicative-adjective complement. |
 | `THR{S,P,U}` | Certifies singular, plural, and uncountable existential-`there` agreement. The brace notation summarizes the concrete link types `THRS`, `THRP`, and `THRU`. |
 | `TTHR{S,P,U}` | Carries the same existential-`there` agreement state from a raising predicate to the following infinitival `to`. |
@@ -87,6 +90,7 @@ Changed or retired connector forms:
 | unit wh-extraction `ND` | The `how many <unit> ...` `B#m` extraction branch now uses `NDH` instead of ordinary `ND`. Ordinary quantity uses of `ND` remain unchanged. |
 | wh/degree `D##w` paths for `B#m` extraction | Some extracted wh/degree noun phrases now use `DWHs`, `DWHp`, or `DWHu` instead of ordinary `D**w`, `Dmc`, or `Dmu` on the certified branch. Ordinary determiner paths remain available outside the extraction branch. |
 | `more` in wh/degree `B#m` extraction | `ECWH` carries the wh-quantity certificate through `more`; the following noun phrase must expose either a `DWH` determiner certificate or a `BWH` degree certificate. Ordinary comparative `EC` / `ECa` paths remain available outside this extraction branch. |
+| `Ws` quantity and temporal `how` paths | Subject-question quantity paths now use `HWS`, with `DWSu` on uncountable subject nouns. The focused temporal fragment `how long before ...` uses `EEHWS`. Ordinary `H` and `EEh` remain available for non-`Ws` questions and embedded clauses. |
 | predicative-adjective object `O` forms | `Pa**j` complement paths now use `OAJ` instead of ordinary `Osm`, `Op`, `Ox`, or `Os*e` object links. `OXi` remains available for complement-bearing `it` cases that are still governed by the expletive-`it` PP rules. Ordinary object links remain available for non-`Pa**j` constructions. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
 | `there.r OXt-` | Removed. Locative `there` uses ordinary modifier paths such as `MVp`; existential and presentational `there` use agreement-specific `THR*` links. |
@@ -234,6 +238,42 @@ The `HA` relation itself remains ordinary and does not require `BWH`; examples
 such as `It was so big a dog that it filled the cage` still use normal `HA`.
 `BWH` is added only on the extraction-certified branch where the old PP rule
 would have accepted `B#m` because the same domain also contained `HA`.
+
+### `HWS`, `DWS`, And `EEHWS`: Safe `Ws` How-Question Certificates
+
+`HWS` connects sentence-opening `how` to a quantity word when the question is
+a `Ws` subject question. The certified branch intentionally exposes only
+non-extraction continuations:
+
+```text
+    +->Ws--+-HWS+-Dmc-+---Sp---+
+    |      |    |     |        |
+LEFT-WALL how many dogs.n ran.v-d
+```
+
+For uncountable subject nouns, `DWSu` keeps the `Ws` quantity branch distinct
+from wh-extraction `DWHu` and from ordinary `Dmu`, which can also match
+subscripted wh determiner forms:
+
+```text
+    +->Ws--+-HWS+-DWSu-+---Ss--+
+    |      |    |      |       |
+LEFT-WALL how much sugar.n-u is.v ...
+```
+
+`EEHWS` is a narrow certificate for temporal fragments headed by `how long
+before ...`:
+
+```text
+    +->Ws--+EEHWS+--Yt--+
+    |      |     |      |
+LEFT-WALL how long.e before ...
+```
+
+Ordinary `H` and `EEh` remain available for non-`Ws` questions and embedded
+clauses, such as `How much money did you earn?` and `I wonder how many times
+you did it.` This split replaces the old rule-71 check without making broad
+`Ws + B#m` or `Ws + Ca` paths accepted.
 
 ### `OAJ`: Predicative-Adjective Object Licensing
 
@@ -1389,6 +1429,110 @@ phrases, and `EC -> ECWH` when `more` carries an `H` certificate.
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
+```
+
+## Rule 71 (`Ws`): Keep Subject How-Questions Out Of Extraction Paths
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Ws , B#m Ca BT , "Question inversion violated71"
+```
+
+The grammatical area is sentence-opening `how` questions. A `Ws` question can
+be a subject question:
+
+```text
+How many dogs ran?
+How much sugar is needed?
+```
+
+but extracted-object and non-inverted clause continuations must use the
+ordinary question or embedded-clause paths:
+
+```text
+How much money did you earn?
+I wonder how many times you did it.
+```
+
+### Problem
+
+Removing the PP rule without a dictionary replacement allowed `Ws` to combine
+with extraction and non-inverted-clause continuations:
+
+```text
+*How much money you earn
+*How many times you did it
+*How much of the book you read
+```
+
+The historical `BT` criterion is stale in the current dictionary: no active
+English dictionary endpoint uses a `BT` connector. The live rule-71 work is
+therefore the distinction between safe `Ws` quantity/temporal paths and the
+bad `B#m` / `Ca` continuations.
+
+### Old Mechanism
+
+PP rejected a completed domain when a `Ws` link co-occurred with `B#m`, `Ca`,
+or `BT`. That caught the bad examples after extraction, but it also forced the
+postprocessor to inspect a distinction that can be represented directly in
+the dictionary.
+
+### Overgeneration Cause
+
+The old `how` entry used the same `H` or `EEh` relation for both `Wq` and
+`Ws` starts. Once `how` selected `Ws`, downstream ordinary quantity and
+temporal branches could still choose paths that belonged to extracted-object
+or non-inverted-clause analyses. The local links were all dictionary-legal, so
+the error was visible only to the PP domain scan.
+
+### Implementation
+
+The dictionary now splits the relevant `how` starts:
+
+- `HWS` certifies `Ws` quantity subject questions and exposes only
+  non-extraction continuations.
+- `DWSu` carries the `HWS` branch to uncountable subject nouns without using
+  broad `Dmu`, which can match wh-extraction variants.
+- `EEHWS` certifies the focused temporal-fragment path `how long before ...`.
+
+The ordinary `H` and `EEh` paths remain available for `Wq`, embedded `QI`, and
+other non-`Ws` starts. The still-active rule-5 PP check treats `HWS` and
+`EEHWS` as valid `Ws` companions, while rule 71 itself is no longer needed.
+
+### Examples
+
+Focused examples are recorded in `corpus-knowledge.batch`:
+
+```text
+How many people died?
+How much sugar is needed?
+How long before you got home?
+Approximately how long before you got home?
+How much money did you earn?
+How many times did you do it?
+*How much money you earn
+*How many times you did it
+*How much of the book you read
+```
+
+### Verification
+
+Verification used focused accepted/rejected probes, `lgerror` corpus
+comparison, and top-linkage inspection of representative accepted sentences.
+The expected visible difference is that subject `Ws` how-quantity linkages use
+`HWS`/`DWSu`, and `how long before ...` uses `EEHWS`, instead of ordinary
+`H`/`Dmu`/`EEh` on those specific migrated paths.
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
 corpus-fix-long.batch: 8 errors
 ```
 
