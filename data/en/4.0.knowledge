@@ -211,7 +211,6 @@ CONTAINS_ONE_RULES:
  Ws    ,  D##w  S##w   H                    , "S-V inversion required5" ,
  Wq    ,  SI    SFI   SXI                   , "S-V inversion required7" ,
  Wb    ,  SI    SFI   SXI                   , "S-V inversion required7a" ,
- Qd    ,  SI    SFI   SXI   THRS THRP THRU  , "S-V inversion required8" ,
  PFc   ,  SI    SFI   SXI                   , "S-V inversion required9" ,
 ; The two below prevent "How big?" and "How quickly?"
 ; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'17"   ,
