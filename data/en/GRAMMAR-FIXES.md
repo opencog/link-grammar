@@ -705,13 +705,13 @@ dictionary does not yet encode the rejected condition narrowly enough.
 
 | Rule(s) | Area | Current status |
 | --- | --- | --- |
-| 1-3 | `SI#*` / `SI#x` / `SFI##*` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`; rule 3 removal accepts `*I wonder how important is it to turn off the computer`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI`/`SFI` forms. |
+| 1-2 | `SI#*` / `SI#x` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI` forms. |
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
 | 20-31, 37-39 | Expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. A later single-rule rule-20 removal raised `corpus-knowledge.batch` by accepting `*Does it act likely that Joe came?` and `*Did it act likely that Joe came?`, and raised `corpus-basic.batch` from 88 to 102 errors. The new accepts include ordinary-subject and wrong-object `THi` complements such as `*Joe is likely that Rod died`, `*How likely is John that he will come`, and `*I made Anne clear that I was angry`. A replacement needs a shared expletive-`it` subject/object certificate carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. Single-rule removals of rules 44, 47, and 48 each accept the knowledge/basic negative `*I am as intelligent as John does`; rules 47 and 48 each also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | 72 | Non-inverted `SF` filler-subject backstop | Simple removal after rule 73 is unsafe. It raises `corpus-basic.batch` from 88 to 90 errors by accepting `*Absence to comply may result in dismissal` and `*It is more likely that Joe died than John is that Fred died`. The first bad path uses `to.r --SFsx-- may` with ordinary `I` links; the second uses `it --SFsi-- is` with comparative `LE`/`AFd`/`THc` structure. A replacement needs real dictionary splits for the affected `SF` subject and comparative/infinitival continuations, not deletion. |
-| BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and five `corpus-basic.batch` negatives, including `*He ran I know how quickly` and `*I wonder how important is it to turn off the computer`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
+| BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
 
 `FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
 candidate. For metric-ordered extraction, this class is handled by
@@ -2438,6 +2438,85 @@ think?`, `What were you thinking?`, and `What the hell were you thinking?`
 showed the expected replacement in the first displayed linkage: the old `Rw`
 edge from `what` to the inverted verb becomes `RWB`. The next `Wq` and `Ws`
 displayed linkages keep their old public link structure.
+
+## Rule 3: Filler-It Inversion Needs Question Evidence
+
+**Status:** implemented; PP rule 3 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+SFI##* , Wq Qd CQ PFc , "Bad use of s-v inversion3"
+```
+
+The grammatical area is subject-verb inversion with filler `it`, as in
+matrix questions such as `Is it likely that Joe came?`.
+
+### Problem
+
+The ordinary dictionary path for `is.v` allowed the filler-it inversion
+connector `SFIs+` through an optional question expression. That expression
+also had an empty fallback, which was useful for non-inverted `SIs` paths but
+too permissive for `SFIs`. After PP rule 3 was removed, the embedded question
+below acquired a zero-null raw linkage:
+
+```text
+*I wonder how important is it to turn off the computer.
+```
+
+In that bad linkage, `wonder.v` takes `QI*d` to `how`, `how` links by `EAh`
+to `important.a`, `important.a` links by `AF` to `is.v`, and `is.v` links by
+`SFIsi` to `it`. No actual matrix-question root link appears in the same
+domain, so the inversion is embedded where English requires ordinary order:
+
+```text
+I wonder how important it is to turn off the computer.
+```
+
+### Implementation
+
+The dictionary now distinguishes optional question context from required
+question-root context. `<verb-rq-required>` is the non-empty counterpart of
+`<verb-rq>`: it keeps the real `Rw`, `RWB`, `Qd`, `Qp`, `Qw`, and `Qe`
+question links but omits the empty fallback. The `is.v` filler-it inversion
+branch uses this required expression for `SFIs+`, while ordinary `SIs`
+branches keep the optional expression.
+
+This preserves valid matrix filler-it questions such as `Is it likely that
+Joe came?` and `Is it important to turn off the computer?`, but blocks the
+embedded inversion path before PP.
+
+### Examples
+
+Focused examples are recorded in `corpus-knowledge.batch`:
+
+```text
+Is it important to turn off the computer?
+Is it likely that Joe came?
+I wonder how important it is to turn off the computer.
+*I wonder how important is it to turn off the computer.
+```
+
+### Verification
+
+The change was validated with focused positive and negative examples, plus
+ordinary parser runs:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1497 errors
+```
+
+Focused accepted-linkage comparison against `master` for `Is it important to
+turn off the computer?`, `Is it likely that Joe came?`, and `I wonder how
+important it is to turn off the computer.` showed the same top accepted link
+structure, apart from previously migrated connector-name changes unrelated to
+rule 3.
 
 ## Rule 4: `SXI` Also Licenses Fronted Locative Inversion
 

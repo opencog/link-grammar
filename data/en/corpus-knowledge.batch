@@ -33,6 +33,15 @@ Are you insane?
 Is there a dog in the park?
 Are there dogs in the park?
 
+% CONTAINS_ONE rule 3: filler-it SFI inversion must have real question-root
+% evidence.  Direct matrix questions keep SFIsi, while embedded how clauses
+% use ordinary non-inverted order.
+
+Is it important to turn off the computer?
+Is it likely that Joe came?
+I wonder how important it is to turn off the computer.
+*I wonder how important is it to turn off the computer.
+
 % CONTAINS_ONE rule 4: SXI also occurs in fronted locative/adverbial
 % inversion licensed by PFb, not only in question or comparative paths.
 
