@@ -2812,7 +2812,7 @@ per "/.per": Us+ & Mp-;
 % wall. We cannot use verb-s for this, since the SFsi prevents the parse
 % of sentences like  "there appears to be a problem".
 % If- blocks the Ix+ on would, be
-<verb-y-pl,i>: {@E-} & (((Sp- or SFp- or If-) & <verb-wall>) or (RS- & Bp-) or <verb-co>);
+<verb-y-pl,i>: {@E-} & (((Sp- or SFp- or If- or IFI-) & <verb-wall>) or (RS- & Bp-) or <verb-co>);
 <verb-y-s>: {@E-} & (((Ss- or SFs-) & <verb-wall>) or (RS- & Bs-));
 <verb-y-s,u>: {@E-} & (((Ss- or SFs- or SFu-) & <verb-wall>) or (RS- & Bs-));
 <verb-y-sp,pp>: {@E-} & (((S- or SF- or PPf-) & <verb-wall>) or (RS- & B-));
@@ -2985,8 +2985,10 @@ do.v:
   or ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co> or <verb-why>) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
-  or ((SIp+ or SFIp+) & {N+} &
+  or (SIp+ & {N+} &
      ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-))
+  or (SFIp+ & {N+} &
+     ((<verb-rq-aux> & {N+} & {IFI+ or <verb-wall>}) or CQ-))
   or (<verb-co> & {I*d+} & Xc+ & SI*i+ & {Xc+})
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
@@ -3008,7 +3010,8 @@ does.v:
   (<verb-and-s-> & ([<vc-do>] or ())) or
   ((<vc-do>) & <verb-and-s+>)))
   or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
-  or ((SIs+ or SFIs+) & ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-));
+  or (SIs+ & ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-))
+  or (SFIs+ & ((<verb-rq-aux> & {N+} & {IFI+ or <verb-wall>}) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
 % <verb-x-sp> & <verb-wall>: "I sure wish I did"
@@ -3023,7 +3026,8 @@ did.v-d:
   or (<verb-x-sp> & <verb-wall>)
   or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
-  or ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-));
+  or (SI+ & ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-))
+  or (SFI+ & ((<verb-rq-aux> & {N+} & {IFI+ or <verb-wall>}) or CQ-));
 %
 % XXX why not <vc-do> here ?
 % <verb-pv-b>: "I want it done." "I want the job done"
