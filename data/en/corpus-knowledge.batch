@@ -23,13 +23,21 @@ There is no nicer way than to leave now.
 There is no nicer way to round off the evening than to have a quiet nightcap.
 
 % CONTAINS_ONE rule 68: B#m extraction is licensed in dictionary paths.
-% Unit wh/degree extraction uses NDH so ordinary ND quantity paths do not
-% depend on the old "Bad use of gerund68" postprocessing rule.
+% Wh/degree witnesses are carried by dedicated dictionary paths so ordinary
+% determiner and quantity paths do not depend on the old "Bad use of
+% gerund68" postprocessing rule.
 
 Which dog did you chase?
+How many do you want?
+How many more times did you do it?
 How many miles did you bike?
+How much of a man is he?
+How much effort did you give it?
+What degree of trust do you put in him?
+He won't divulge what type it is.
 How big a department is it?
 *The telling John to leave was stupid.
+*How much more efficient programs are available.
 
 % CONTAINS_ONE rule 12: Wj requires Jw or JQ.
 % Fronted prepositions in wh questions and relatives must be licensed by the

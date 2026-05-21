@@ -54,6 +54,9 @@ Added uppercase connector families:
 | `SJI` | Connects the logical subject of a controlled bare infinitive to the infinitival verb, paired with `I*j`. |
 | `SGP` | Connects the logical subject of a controlled present participle to the participial verb, paired with `Pg`. |
 | `NDH` | Connects an `H`-licensed quantity word to a unit noun in wh/degree `B#m` extraction, preventing ordinary `ND` quantity paths from licensing the extraction. |
+| `DWH` | Wh/degree determiner-certificate family. `DWHs`, `DWHp`, and `DWHu` carry singular, plural, and uncountable `D##w` / `H` evidence to `B#m` extraction nouns. |
+| `ECWH` | Carries an `H` wh-quantity certificate through `more` to a following `DWH` or `BWH` extraction target. |
+| `BWH` | Carries an `HA` wh/degree certificate from a degree word or comparative `more` to a following `B#m` extraction noun. |
 | `OAJ` | Connects a verb to a non-expletive object that is allowed to license a `Pa**j` predicative-adjective complement. |
 | `THR{S,P,U}` | Certifies singular, plural, and uncountable existential-`there` agreement. The brace notation summarizes the concrete link types `THRS`, `THRP`, and `THRU`. |
 | `TTHR{S,P,U}` | Carries the same existential-`there` agreement state from a raising predicate to the following infinitival `to`. |
@@ -82,6 +85,8 @@ Changed or retired connector forms:
 | result-clause `EExk` / `EAxk` / `D##k` witnesses | Replaced for `that` result clauses by uppercase certificate families `EEXK`, `EAXK`, and `DTHAT`. The older `EExk`, `EAxk`, and `D...k` forms remain available for ordinary non-result-clause degree and determiner uses. |
 | controlled-subject `Sj` / `Sg` | Replaced by uppercase `SJI` and `SGP` in controlled bare-infinitive and present-participle constructions. Ordinary finite `S` connectors must not match these controlled-subject witnesses. |
 | unit wh-extraction `ND` | The `how many <unit> ...` `B#m` extraction branch now uses `NDH` instead of ordinary `ND`. Ordinary quantity uses of `ND` remain unchanged. |
+| wh/degree `D##w` paths for `B#m` extraction | Some extracted wh/degree noun phrases now use `DWHs`, `DWHp`, or `DWHu` instead of ordinary `D**w`, `Dmc`, or `Dmu` on the certified branch. Ordinary determiner paths remain available outside the extraction branch. |
+| `more` in wh/degree `B#m` extraction | `ECWH` carries the wh-quantity certificate through `more`; the following noun phrase must expose either a `DWH` determiner certificate or a `BWH` degree certificate. Ordinary comparative `EC` / `ECa` paths remain available outside this extraction branch. |
 | predicative-adjective object `O` forms | `Pa**j` complement paths now use `OAJ` instead of ordinary `Osm`, `Op`, `Ox`, or `Os*e` object links. `OXi` remains available for complement-bearing `it` cases that are still governed by the expletive-`it` PP rules. Ordinary object links remain available for non-`Pa**j` constructions. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
 | `there.r OXt-` | Removed. Locative `there` uses ordinary modifier paths such as `MVp`; existential and presentational `there` use agreement-specific `THR*` links. |
@@ -157,6 +162,78 @@ how many miles.i ... bike.v
 The unit noun can then expose the `Rw+ & Bpm+` extraction branch. Ordinary
 quantity paths such as `many people` and postposed `you biked how many miles`
 continue to use `ND`; only the extracted unit branch requires `NDH`.
+
+### `DWH`: Wh/Degree Determiner Certificates For `B#m` Extraction
+
+`DWH` is a certificate determiner family used when the wh/degree witness must
+be carried by the noun phrase that supplies the `B#m` extraction link. Its
+subtypes are:
+
+```text
+DWHs  singular or singular-like extraction noun
+DWHp  plural extraction noun
+DWHu  uncountable or mass extraction noun
+```
+
+Focused examples:
+
+```text
+    +->Wq--+--H-+-DWHp+---Rw--+---Bpm---+
+    |      |    |     |       |         |
+LEFT-WALL how many times.n did.v-d ... do.v
+
+    +->Wq--+--H-+-DWHu+---Rw--+---Bsm---+
+    |      |    |      |       |         |
+LEFT-WALL how much effort.n did.v-d ... give.v
+```
+
+Ordinary determiner links such as `D**w`, `Dmc`, and `Dmu` remain available
+for non-extracted noun phrases. The certified extraction branch uses `DWH`
+only where the old PP rule would have required a `D##w` or `H` witness in the
+same domain as `B#m`.
+
+### `ECWH`: H-Certificate Propagation Through `more`
+
+`ECWH` connects an `H`-licensed quantity word to `more` when the following noun
+phrase will supply a `B#m` extraction link:
+
+```text
+    +--H--+ECWH+-DWHp+---Bpm---+
+    |     |    |     |         |
+how many more times.n ... do.v
+```
+
+For adjective-modified extraction nouns, `more` can instead pass the
+certificate with `BWH`:
+
+```text
+    +--H--+ECWH+--EAm--+---A---+
+    |     |    |       |       |
+how many more stupid.a times.n
+              +--BWH---+
+```
+
+The adjective branch requires the `BWH` link. This prevents the
+sentence-initial degree-question path from licensing forms such as
+`*How much more efficient programs are available.`
+
+### `BWH`: HA-Certificate Propagation To `B#m` Extraction Nouns
+
+`BWH` carries an `HA` wh/degree witness to the noun that exposes the `B#m`
+extraction branch:
+
+```text
+    +--EAh--+---HA---+
+    |       |        |
+how efficient.a a program.n ... is.v
+    |                 |
+    +------BWH--------+
+```
+
+The `HA` relation itself remains ordinary and does not require `BWH`; examples
+such as `It was so big a dog that it filled the cage` still use normal `HA`.
+`BWH` is added only on the extraction-certified branch where the old PP rule
+would have accepted `B#m` because the same domain also contained `HA`.
 
 ### `OAJ`: Predicative-Adjective Object Licensing
 
@@ -1170,7 +1247,7 @@ corpus-fixes.batch: 361 errors
 corpus-fix-long.batch: 8 errors
 ```
 
-## Rule 68: License Unit `B#m` Through `NDH`
+## Rule 68: License `B#m` Through Wh/Degree Dictionary Certificates
 
 **Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
 
@@ -1188,7 +1265,11 @@ include:
 
 ```text
 Which dog did you chase?
+How many do you want?
+How many more times did you do it?
 How many miles did you bike?
+How much effort did you give it?
+What degree of trust do you put in him?
 How big a department is it?
 ```
 
@@ -1199,12 +1280,20 @@ restricted after `Rw` was introduced, followed by a reversion because the
 restriction broke wh/degree questions such as `how many people you saw` and
 `how efficient a program is it`.
 
-Removing the PP rule without a dictionary replacement exposed a concrete bad
-path in `How many miles did you bike?`: `how` could attach to `many` with
-`EEh`, `many` could attach to `miles` with ordinary `ND`, and `miles` could
-still expose the `Rw+ & Bpm+` extraction branch. That raw linkage had `B#m`
-but no `H`, `HA`, or `D##w` witness in the relevant domain, so the old PP
-rule rejected it.
+Removing the PP rule without a dictionary replacement exposed two classes of
+bad paths. First, ordinary quantity or determiner links could feed extracted
+nouns without proving that the quantity phrase was wh/degree licensed. Second,
+ordinary `B#m` relative/extraction branches could be selected after local noun
+modifiers that did not carry any `D##w`, `H`, or `HA` evidence into the
+extraction domain.
+
+Observed bad examples included:
+
+```text
+*How fast programs are they.
+*How much bigger dogs are they.
+*How much more efficient programs are available.
+```
 
 ### Old Mechanism
 
@@ -1213,16 +1302,18 @@ not also contain a wh/degree witness link matching `D##w`, `H`, or `HA`.
 
 ### Overgeneration Cause
 
-The old dictionary used ordinary `ND` both for non-extracted quantity phrases
-and for the unit-noun extraction branch:
+The old dictionary used ordinary links both for non-extracted noun phrases and
+for branches that later selected `B#m`. For example, the unit-noun path used
+ordinary `ND`:
 
 ```text
 many --ND-- miles --Bpm-- bike
 ```
 
-Since `ND` was also available in branches that were not licensed by `H`, the
-unit noun could select the extracted `Bpm` path without proving that the
-quantity phrase was a wh/degree phrase.
+Likewise, ordinary `D**w`, `Dmc`, `Dmu`, and `EC` paths could appear in
+branches that did not necessarily carry the domain witness needed by the old
+PP rule. Locally each link was a valid dictionary link, so the overgeneration
+was visible only after the completed-linkage domain scan.
 
 The migration is deliberately not implemented as a global `B*m` connector
 rewrite. `B*m` is used outside the old domain-scoped PP condition. A global
@@ -1231,23 +1322,33 @@ rule did not reject.
 
 ### Implementation
 
-The dictionary now uses the uppercase `NDH` connector for the unit-noun
-extraction branch. `many` exposes `NDH+` only inside its `H-` branch, and
-unit nouns use `NDH- & Rw+ & Bpm+` for questions such as:
+The dictionary now uses a small family of wh/degree certificates for the
+`B#m` extraction branches:
 
-```text
-How many miles did you bike?
-```
+- `NDH` licenses unit-noun extraction from `H`, as in `How many miles did you
+  bike?`.
+- Bare `many` and `much` can expose the raw `Rw+ & B#m+` extraction branch
+  only inside their `H-` disjuncts.
+- `DWHs`, `DWHp`, and `DWHu` are wh/degree determiner certificates for
+  singular, plural, and uncountable extraction nouns. They replace ordinary
+  `D**w`, `Dmc`, or `Dmu` only on the certified extraction branch.
+- `ECWH` carries an `H` certificate through `more` to a following `DWH` or
+  `BWH` extraction target.
+- `BWH` carries an `HA` certificate to the noun that selects the `B#m`
+  extraction branch. Ordinary `HA` paths remain available without `BWH` for
+  non-extraction degree phrases.
 
-Ordinary quantity paths continue to use `ND`, including:
+Ordinary quantity and determiner paths continue to use their established
+links, including:
 
 ```text
 Many people came.
 You biked how many miles?
+It was so big a dog that it filled the cage.
 ```
 
-This makes the extraction branch carry its own `H` witness and removes the
-need for the PP companion check.
+This makes the extraction branch carry the required wh/degree witness and
+removes the need for the PP companion check.
 
 ### Examples
 
@@ -1255,25 +1356,31 @@ Focused examples are recorded in `corpus-knowledge.batch`:
 
 ```text
 Which dog did you chase?
+How many do you want?
+How many more times did you do it?
 How many miles did you bike?
+How much of a man is he?
+How much effort did you give it?
+What degree of trust do you put in him?
+He won't divulge what type it is.
 How big a department is it?
 *The telling John to leave was stupid.
+*How much more efficient programs are available.
 ```
 
 ### Verification
 
-Verification used the exported pre-removal `HEAD` dictionary as a reference
-and compared accepted/rejected outcomes with `lgerror`. Focused
-accepted-linkage comparison showed that `Which dog did you chase?` and `How
-big a department is it?` keep their public link names. `How many miles did you
-bike?` intentionally changes the unit quantity link from `ND` to `NDH`; the
-accepted zero-null analyses remain present, while the bad `EEh`/ordinary-`ND`
-candidate is no longer accepted without PP.
+Verification compared accepted/rejected outcomes with `lgerror` and used
+focused accepted-linkage inspection against `master`. The migration preserves
+the accepted zero-null analyses while intentionally changing the certificate
+links on the migrated extraction branch. Examples include `ND -> NDH` for
+unit quantities, `D**w`/`Dmc`/`Dmu -> DWH*` on certified extraction noun
+phrases, and `EC -> ECWH` when `more` carries an `H` certificate.
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 93 errors
-corpus-fixes.batch: 360 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
 corpus-fix-long.batch: 8 errors
 ```
 
@@ -1362,8 +1469,8 @@ The migration was also validated with ordinary parser runs:
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 93 errors
-corpus-fixes.batch: 360 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 361 errors
 corpus-fix-long.batch: 8 errors
 ```
 

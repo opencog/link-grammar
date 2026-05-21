@@ -295,10 +295,22 @@ changecom(`%')
 %
 % Btm is used for time expressions.  It is used to constrain the verb
 % "last.v" which only makes sense for time.
-<rel-clause-x>: {Rw+} & B*m+;
-<rel-clause-s>: {Rw+} & Bsm+;
-<rel-clause-p>: {Rw+} & Bpm+;
-<rel-clause-t>: {Rw+} & Btm+;
+% BWH carries an HA witness to B#m extraction branches.  D##w and H
+% witnesses use wh/degree-specific D connectors on the noun itself.
+<b-raw-x>: {Rw+} & B*m+;
+<b-raw-s>: {Rw+} & Bsm+;
+<b-raw-p>: {Rw+} & Bpm+;
+<b-raw-t>: {Rw+} & Btm+;
+
+<b-wh-x>: BWH- & <b-raw-x>;
+<b-wh-s>: BWH- & <b-raw-s>;
+<b-wh-p>: BWH- & <b-raw-p>;
+<b-wh-t>: BWH- & <b-raw-t>;
+
+<rel-clause-x>: <b-wh-x>;
+<rel-clause-s>: <b-wh-s>;
+<rel-clause-p>: <b-wh-p>;
+<rel-clause-t>: <b-wh-t>;
 
 % Result-clause "that" certificates for rule 67.  The uppercase connector
 % families avoid broad matches against ordinary D/EA/EE forms.
@@ -534,6 +546,7 @@ Hallowe'en:
     ([[AN+]]
     or ({NM+ or ({{Dmc-} & Jd-} & Dmc-)} &
       <noun-rel-p> & (<noun-main-p> or <rel-clause-p>))
+    or (DWHp- & <noun-rel-p> & <b-raw-p>)
     or ND-
     or ({NM+ or Dmc-} & <noun-and-p>)
     or dSJrp-
@@ -661,6 +674,7 @@ USMC.y USN.y:
     or ((NM+ or ({[NM+]1.5} & (Ds- or <no-det-null>)))
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
+    or (DWHs- & <noun-rel-s> & <b-raw-s>)
     or <noun-and-s>
     or <that-result-noun-s>
     or (YS+ & Ds-)
@@ -683,6 +697,7 @@ USMC.y USN.y:
     or ((NM+ or ({[NM+]1.5} & (Ds**x- or <no-det-null>)))
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
+    or (DWHs- & <noun-rel-s> & <b-raw-s>)
     or (YS+ & Ds**x-)
     ));
 
@@ -692,6 +707,7 @@ USMC.y USN.y:
     or ((NM+ or ({[NM+]1.5} & (Ds**v- or <no-det-null>)))
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
+    or (DWHs- & <noun-rel-s> & <b-raw-s>)
     or (YS+ & Ds**v-));
 
 <common-const-noun>:
@@ -700,6 +716,7 @@ USMC.y USN.y:
     or ((NM+ or ({[NM+]1.5} & (Ds**c- or <no-det-null>)))
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
+    or (DWHs- & <noun-rel-s> & <b-raw-s>)
     or (YS+ & Ds**c-));
 
 /en/words/words.n.1-vowel
@@ -743,6 +760,7 @@ USMC.y USN.y:
     or ({Dmc-} & Wa-)
     or ({NM+ or ({Jd-} & Dmc-)} &
       ((<noun-rel-p> & (<noun-main-p> or <rel-clause-p>)) or <noun-and-s>))
+    or (DWHp- & <noun-rel-p> & <b-raw-p>)
     or (YS+ & {Dmc-})
     ));
 
@@ -761,6 +779,7 @@ USMC.y USN.y:
     or ({Dmu-} & Wa-)
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
+    or ((DWHu- or Dmuw-) & <noun-rel-s> & <b-raw-s>)
     or <that-result-noun-u>
     or (YS+ & {Dmu-})
     );
@@ -776,6 +795,7 @@ USMC.y USN.y:
     or [<noun-assert>]0.02
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
+    or ((DWHu- or Dmuw-) & <noun-rel-s> & <b-raw-s>)
     or <that-result-noun-u>
     or (YS+ & {Dmu-})
     );
@@ -945,6 +965,7 @@ number.i batch.i group.i type.i:
     or ((NM+ or [[{[NM+]1.5} & (Ds- or <no-det-null>) ]] )
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
+    or (DWHs- & <noun-rel-s> & <b-raw-s>)
     or dSJrs-
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))
@@ -961,6 +982,7 @@ number.i batch.i group.i type.i:
 % we want to give these a cost, so that they don't get the first choice.
 /en/words/measures.1:
   (OFd+ & Dm+ & {A-} & D-)
+  or (DWHs- & OFd+ & DWHu+ & {A-})
   or <marker-common-entity>
   or <costly-common-noun>;
 
@@ -1064,7 +1086,7 @@ indication.n inkling.n amount.n answer.n:
     or <noun-assert>);
 
 attestation.n:
-  (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or SIs*t- or THBI- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
+  (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or SIs*t- or THBI- or <b-wh-s>)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
 
 % Consonant-only form of the above.
 % SIs-: "How fast is the program"
@@ -1213,7 +1235,7 @@ vote.n bill.n:
     or <noun-assert>);
 
 propension.n:
-  (<noun-modifiers> & ((Ds- & {@M+} & {(<ton-verb> or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
+  (<noun-modifiers> & ((Ds- & {@M+} & {(<ton-verb> or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or <b-wh-s>)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 % <noun-rel-uto>: somewhat like <noun-rel-s> but with more stuff.
 % {Jd-}: "a large amount of effort"
@@ -1232,6 +1254,7 @@ propension.n:
   <noun-modifiers> &
     (AN+
     or ((<noun-rel-uto> & (<noun-main-m> or <rel-clause-s>)) or <noun-and-p,u>)
+    or (DWHu- & <noun-rel-uto> & <b-raw-s>)
     or <that-result-noun-to>
     or ({D*u-} & <noun-and-u>)
     or (YS+ & {D*u-})
@@ -1425,6 +1448,7 @@ times.n:
       ([[MVa-]] or
       <noun-main-p> or
       <rel-clause-p>)) or
+    (DWHp- & {@MXp+} & (<b-raw-p> or <b-raw-t>)) or
     ({Dmc-} & <noun-and-p>) or
     Up- or
     (YP+ & {Dmc-}) or
@@ -1705,7 +1729,7 @@ half:
 % Naked H-: "How many?"
 % H- & EC+: "How many more?"
 many:
-  (H- & (Dmc+ or ND+ or NDH+ or NIn+ or EC+ or [()]))
+  (H- & (Dmc+ or DWHp+ or ND+ or NDH+ or NIn+ or EC+ or ECWH+ or <b-raw-p> or [()]))
   or (AM- & (Dmcy+ or ((Oy- or Jy-) & {CMPX+})))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
@@ -1755,6 +1779,7 @@ one:
     (<noun-rel-s> & (<noun-main-s> or <rel-clause-s>)) or
     <noun-and-s>))))
   or Ds*w-
+  or (DWHs- & <noun-rel-s> & <b-raw-s>)
   or NIm+
   or NSn+
   or (NA- & ND+)
@@ -1869,6 +1894,7 @@ little.i:
     & (Dmu+
       or [<noun-rel-s> & (<noun-main-s> or <rel-clause-s>)]
       or <noun-and-s>))
+  or (H- & DWHu+)
   or (AM- & (Dmuy+ or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+})))
   or [[{Ds-} & <adv-of>]];
 
@@ -2056,7 +2082,7 @@ not_enough:
       or ({{@L+} & DD-} & (Dmcn+
         or (<noun-rel-p> & [<noun-main-p>])))))))
   or (NIfu- & {NIr-} & NItu+ & (
-    ((<noun-rel-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+}))
+    ((<noun-rel-x> & (<noun-main-x> or <b-wh-s>)) or (Us- & {Mp+}))
     or AN+ or Yd+ or Ya+))
   or (NIfp- & {NIr-} & NItp+ & (
     NM- or AN+ or ({Xc+ & Xd-} & Ma-)
@@ -2071,7 +2097,7 @@ and.j-ru vs.j-ru vs..j-ru versus.j-ru v.j-ru v..j-ru:
       ({{@L+} & DD-} & (Dmcn+ or (<noun-rel-p> & [<noun-main-p>])))))))
   & {{Xca+} & MVa+}) or
   (NIfu- & {NIr-} & NItu+ &
-    (((<noun-rel-x> & (<noun-main-x> or Bsm+)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+));
+    (((<noun-rel-x> & (<noun-main-x> or <b-wh-s>)) or (Us- & {Mp+})) or AN+ or Yd+ or Ya+));
 
 % and.j-sum is used in numerical sums: "It's a hundred and two in the shade."
 % It's a hundred 'n two in the shade."
@@ -8488,6 +8514,8 @@ periods.n months.n nights.n seconds.n decades.n centuries.n:
         % <rel-clause-p> or
         <rel-clause-t> or
         <noun-and-p>)) or
+      (DWHp- & {@MXp+} &
+        (<b-raw-p> or <b-raw-t>)) or
       Up- or
       (YP+ & {Dmc-}) or
       (GN+ & (DD- or [()])))) or
@@ -8639,6 +8667,9 @@ what:
   or
   ({EL+} &
       (D**w+
+      or DWHs+
+      or DWHp+
+      or DWHu+
       or Ss*w+
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
@@ -8661,7 +8692,7 @@ which:
   <marker-wjqprep-right>
   or
   ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
-  or ((D**w+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
+  or ((D**w+ or DWHs+ or DWHp+ or DWHu+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
   or (JQ- & D+)
   or ({MVp+ or MVx+} & (S**w+ or B*w+) & (Xc+ & Xd- & MX*r-))
   or [QI-]
@@ -8685,7 +8716,7 @@ whom:
   or JW-;
 
 whose:
-  (D**w+ & (
+  ((D**w+ or DWHs+ or DWHp+ or DWHu+) & (
     Mr-
     or ({EW-} & Wq-)
     or Ws-
@@ -8824,7 +8855,7 @@ whether_or_not:
 %    Unfortunately, this is blocked by "S-V inversion required7"
 % Wh- & H+: "How much money?"
 how:
-  ((((EAh+ or EEh+) & {HA+}) or H+ or AFh+) &
+  ((((EAh+ or EEh+) & {HA+ & {BWH+}}) or H+ or AFh+) &
     {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
   or [[{EW-} & Ww-]]
   or ({EW-} & Wh- & H+)
@@ -8858,7 +8889,7 @@ that.j-d: [{AL-} & D*u+];
 that.j-r:
   ({[Xd-]} & R- & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
   or EE+
-  or (EA+ & {HA+})
+  or (EA+ & {HA+ & {BWH+}})
   or DTn+;
 
 % "that" as noun. naked Osn-: "give me that"
@@ -10110,9 +10141,10 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 % naked EC-: "How much more?"
 more:
   ({ECa-} & (EAm+ or (EEm+ & {CMPC+}) or [(MVm- & {CMPC+})] or [EB*m-] or Qe+ or <advcl-verb> or dAJrc- or dAJlc+))
+  or (ECWH- & (DWHp+ or DWHu+ or (EAm+ & BWH+)))
   or ({OF+} & (
-    ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
-    or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or Bpm+))
+    ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or <b-wh-s>))
+    or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or <b-wh-p>))
     or ({ECn- or ECx- or ND-} &
       ((([Omm-]1.1 or Jm-) & {CMPX+}) or (Xd- & MVt+ & Xc+ & MX*m-)))))
   or EC-
@@ -10125,7 +10157,7 @@ more_of_an: Ds*mv+ or (<PHv> & Ds*mx+);
 % Cost of >1.0 on Om- so that MVm- is preferred for "He runs less".
 less:
   ({ECa-} & (EAm+ or (EEm+ & {CMPC+}) or [(MVm- & {CMPC+})] or [EB*m-] or dAJrc- or dAJlc+))
-  or ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or Bsm+))
+  or ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or <b-wh-s>))
   or ({ECn-} & (([Om-]1.1 or Jm-) & {CMPX+}))
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
@@ -10149,7 +10181,7 @@ further.r:
 % EAy+: "He is as smart"
 % Hmm, probably want to give EAy a cost, to avoid its use in
 % "William is described as smooth, yet thoughtful"
-as.e-y: {EZ-} & ((EAy+ & {HA+}) or (EEy+ & {CMPC+}) or AM+);
+as.e-y: {EZ-} & ((EAy+ & {HA+ & {BWH+}}) or (EEy+ & {CMPC+}) or AM+);
 
 % uses comparative links
 % Cc+: "The coffee tastes the same as it did last year."
@@ -10223,7 +10255,7 @@ like.e as.z:
 % MVs-: "she insisted, so we will do it"
 % Cz+ & CV+: "the accused, so it shall be shown, is innocent"
 so.e:
-  ({EBb-} & (EAxk+ or EAXK+) & {HA+})
+  ({EBb-} & (EAxk+ or EAXK+) & {HA+ & {BWH+}})
   or ({EZ-} & (EExk+ or EEXK+))
   or Em+
   or <fronted>
@@ -10276,10 +10308,13 @@ much:
   or (EEXK- & MVa- & RTHAT+)
   or ({EEx- or H-} & (
     ECn+
+    or ECWH+
     or ({OFd+} & Dmu+)
-    or (<noun-rel-s> & ([[<noun-main-s>]] or Bsm+))
+    or (<noun-rel-s> & ([[<noun-main-s>]] or <b-wh-s>))
     or [()]
   ))
+  or (H- & {@M+} & <b-raw-s>)
+  or (H- & {OFd+} & DWHu+)
   or (AM- & (Dmuy+ or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+}) or EB*y-))
   or EZ+;
 
@@ -11838,7 +11873,7 @@ ample.#amply: [[amply]0.5]colloquial;
   [({@E- or EA-}  & A+)] or
   [<verb-ge>] or
   ((<noun-modifiers> &
-    (({D*u-} & <noun-rel-s> & (<noun-main-m> or Bsm+)) or
+    (({D*u-} & <noun-rel-s> & (<noun-main-m> or <b-wh-s>)) or
     <noun-and-p,u> or
     (YS+ & {D*u-}) or
     (GN+ & (DD- or [()])) or
@@ -11854,7 +11889,8 @@ ample.#amply: [[amply]0.5]colloquial;
 
 <S-WORDS>.n:
   [(<noun-modifiers> &
-    (({NM+ or Dmc-} & <noun-rel-p> & (<noun-main-p> or Bpm+)) or
+    (({NM+ or Dmc-} & <noun-rel-p> & (<noun-main-p> or <b-wh-p>)) or
+    (DWHp- & <noun-rel-p> & <b-raw-p>) or
     ({NM+ or Dmc-} & <noun-and-p>) or
     (YP+ & {Dmc-}) or
     (GN+ & (DD- or [()])) or
