@@ -50,6 +50,10 @@ Added uppercase connector families:
 | `TQII` | Carries object-raising `QIi` evidence from an object-raising predicate to infinitival `to`. |
 | `IQII` | Carries the same object-raising `QIi` evidence from infinitival `to` to the lower predicate. |
 | `PQII` | Connects the lower predicate to a `QIi` adjective in object-raising `it to be ...` paths. |
+| `CIIC` | Certifies that a `Ci` finite-clause predicate is licensed by filler/expletive `it` on direct subject, inverted subject, and object-complement paths. |
+| `TCII` | Carries object-raising `Ci` evidence from an object-raising predicate to infinitival `to`. |
+| `ICII` | Carries the same object-raising `Ci` evidence from infinitival `to` to the lower predicate. |
+| `PCII` | Connects the lower predicate to a `Ci` adjective in object-raising `it to be ...` paths. |
 | `BIQS` / `BIQI` | Certify direct and inverted subject links for `BIq` predicate wh-complements. |
 | `IBIQ` / `PPBIQ` | Carry the `BIq` predicate license across modal and perfect auxiliary chains. |
 | `EEXK` | Certifies degree-modified adverbial result-clause targets, such as `so quickly that ...` and `so much that ...`. |
@@ -94,6 +98,7 @@ Changed or retired connector forms:
 | `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require a `TSIC` certificate from filler/expletive `it` when they select a subjunctive that-clause complement. Ordinary `THi` and `TOi` paths remain separate. |
 | `TOi` infinitive-complement predicate licensing | `TOi+` predicate branches now require a `TOIC` certificate from filler/expletive `it`. Tough-subject infinitives continue to use separate paths such as `TOt`. |
 | `QIi` question-clause predicate licensing | `QIi+` predicate branches now require direct `QIIC` evidence from filler/expletive `it`, or an object-raising carrier path through `TQII`, `IQII`, and `PQII`. |
+| `Ci` finite-clause predicate licensing | `Ci+` predicate branches now require direct `CIIC` evidence from filler/expletive `it`, or an object-raising carrier path through `TCII`, `ICII`, and `PCII`. The `Ci` certificate intentionally excludes comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
 | result-clause `that.j-c` with `MVh` | Bare `MVh-` on `that.j-c` was replaced by certified paths. Adverbial and noun result clauses use `RTHAT- & MVh-`; adjective result clauses use `MVH-`. |
 | result-clause `EExk` / `EAxk` / `D##k` witnesses | Replaced for `that` result clauses by uppercase certificate families `EEXK`, `EAXK`, and `DTHAT`. The older `EExk`, `EAxk`, and `D...k` forms remain available for ordinary non-result-clause degree and determiner uses. |
@@ -613,6 +618,40 @@ condition as the old PP rule: a `QIi` predicate in these branches is licensed
 only when the selected linkage also contains the appropriate filler/expletive
 `it` evidence.
 
+### `CIIC`, `TCII`, `ICII`, And `PCII`: Expletive-`It` License For `Ci` Clauses
+
+These connector families encode the filler/expletive-`it` evidence required
+by `Ci` finite-clause predicates:
+
+```text
+CIIC  direct filler/expletive-it certificate for Ci predicates
+TCII  object-raising carrier from the higher predicate to infinitival to
+ICII  object-raising carrier from infinitival to to the lower predicate
+PCII  lower-predicate link to the Ci adjective
+```
+
+Direct subject and direct object-complement cases use `CIIC`:
+
+```text
+it --SFsi-- is --Paf-- likely --Ci-- he --CV-- came
+it ----------------CIIC---------------- likely
+
+considered --OXi-- it
+considered --Paf-- likely --Ci-- he --CV-- came
+it ----------CIIC---------- likely
+```
+
+Object-raising `it to be ...` paths use a carrier chain:
+
+```text
+want --OXi-- it
+want --TCII-- to --ICII-- be --PCII-- likely --Ci-- he
+```
+
+These are technical certificate links. They encode in the dictionary the same
+condition previously checked after extraction: a `Ci` predicate in these
+branches is licensed only by the appropriate filler/expletive `it` relation.
+
 ### `BIQS`, `BIQI`, `IBIQ`, And `PPBIQ`: `BIq` Predicate Licenses
 
 These connector families encode the subject or auxiliary evidence required for
@@ -806,7 +845,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 1-2 | `SI#*` / `SI#x` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI` forms. |
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
-| 20, 24, 30-31, 37-39 | Expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. A later single-rule rule-20 removal raised `corpus-knowledge.batch` by accepting `*Does it act likely that Joe came?` and `*Did it act likely that Joe came?`, and raised `corpus-basic.batch` from 88 to 102 errors. The new accepts include ordinary-subject and wrong-object `THi` complements such as `*Joe is likely that Rod died`, `*How likely is John that he will come`, and `*I made Anne clear that I was angry`. A replacement needs a shared expletive-`it` subject/object certificate carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rule 21 is migrated separately with `TSIC`; rule 22 is migrated separately with `QIIC` and the `TQII` / `IQII` / `PQII` object-raising carrier; rule 23 is migrated separately with `TOIC`; rules 25-29 were audited separately and removed as unreachable stale selectors. |
+| 20, 30-31, 37-39 | Expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. A later single-rule rule-20 removal raised `corpus-knowledge.batch` by accepting `*Does it act likely that Joe came?` and `*Did it act likely that Joe came?`, and raised `corpus-basic.batch` from 88 to 102 errors. The new accepts include ordinary-subject and wrong-object `THi` complements such as `*Joe is likely that Rod died`, `*How likely is John that he will come`, and `*I made Anne clear that I was angry`. A replacement needs a shared expletive-`it` subject/object certificate carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rule 21 is migrated separately with `TSIC`; rule 22 is migrated separately with `QIIC` and the `TQII` / `IQII` / `PQII` object-raising carrier; rule 23 is migrated separately with `TOIC`; rule 24 is migrated separately with `CIIC` and the `TCII` / `ICII` / `PCII` object-raising carrier; rules 25-29 were audited separately and removed as unreachable stale selectors. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. Single-rule removals of rules 44, 47, and 48 each accept the knowledge/basic negative `*I am as intelligent as John does`; rules 47 and 48 each also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | 72 | Non-inverted `SF` filler-subject backstop | Simple removal after rule 73 is unsafe. It raises `corpus-basic.batch` from 88 to 90 errors by accepting `*Absence to comply may result in dismissal` and `*It is more likely that Joe died than John is that Fred died`. The first bad path uses `to.r --SFsx-- may` with ordinary `I` links; the second uses `it --SFsi-- is` with comparative `LE`/`AFd`/`THc` structure. A replacement needs real dictionary splits for the affected `SF` subject and comparative/infinitival continuations, not deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
@@ -1224,6 +1263,160 @@ accepted through `OXi` and `QIi`, with the old ordinary infinitival carrier
 replaced by `TQII` / `IQII` / `PQII`.
 
 The rule 22 migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+Observed results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1496 errors
+```
+
+## Rule 24: License `Ci` Complements With Filler `It`
+
+**Status:** implemented; PP rule 24 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Ci , SFsi SFIsi OXi , "Complement requires 'it'24"
+```
+
+The grammatical area is filler/expletive-`it` licensing of finite-clause
+predicate complements:
+
+```text
+It is likely he came.
+It is surprising he came.
+I considered it likely he came.
+I want it to be likely he came.
+```
+
+These constructions differ from ordinary subject predicates. A sentence such as
+`*Joe is likely he came` has a locally possible predicate and finite-clause
+relation, but it lacks the filler/expletive `it` relation that licenses the
+`Ci` complement.
+
+### Problem
+
+The old dictionary exposed `Ci+ & CV+` directly on adjectives such as `likely`,
+`surprising`, and related finite-clause predicates. PP then checked whether the
+completed `Ci` domain also contained one of the filler/expletive-`it` relations
+`SFsi`, `SFIsi`, or `OXi`.
+
+Without that check, raw linkages could attach an ordinary subject or a
+non-`it` object while still selecting the finite-clause predicate branch:
+
+```text
+*Joe is likely he came.
+*I considered Anne likely he came.
+```
+
+The local `is --Paf-- likely --Ci-- he --CV-- came` shape is not sufficient by
+itself; the predicate branch needs evidence that the clause uses
+filler/expletive `it`.
+
+### Implementation
+
+The direct subject, inverted subject, and direct object-complement cases use a
+dedicated certificate:
+
+```text
+<cii-verb>: CIIC- & {hHM+} & Ci+ & CV+;
+```
+
+The filler/expletive `it` entry can supply `CIIC+` on the same three witness
+branches used by the old PP rule:
+
+```text
+SFsi  -> CIIC
+SFIsi -> CIIC
+OXi   -> CIIC
+```
+
+Direct object-complement adjectives need the opposite left-connector order from
+direct subject predicates. In `It is likely he came`, the adjective sees the
+closer `Paf-` link before the farther `CIIC-` link. In `I considered it likely
+he came`, the adjective sees the closer `CIIC-` link from `it` before the
+farther `Paf-` link from the higher verb. The dictionary therefore includes a
+separate object-complement order:
+
+```text
+<cii-obj-verb>: CIIC- & (Paf- or dMJra-) & {hHM+} & Ci+ & CV+;
+```
+
+The `Ci` certificate deliberately excludes the `AF` predicate path. A focused
+regression probe showed that allowing `AF` under the direct `Ci` certificate
+accepted:
+
+```text
+*It is more likely that Joe died than John is that Fred died.
+```
+
+In that bad linkage, the initial filler `it` licensed `likely`, while `likely`
+used a distant comparative `AF` link and took a separate `Ci` complement from
+the later clause. Keeping `AF` out of the `Ci` certificate prevents an outer
+filler `it` from licensing that comparative path.
+
+Object-raising `it to be ...` cases need a carrier rather than a direct `CIIC`
+link, because a direct link from `it` to the lower adjective would cross the
+infinitival predicate structure. The replacement uses a carrier chain analogous
+to the rule-22 `QIi` carrier:
+
+```text
+<cii-too-verb>: TCII+;
+to.r: ... TCII- & ICII+ ...
+be.v: ... ICII- & PCII+ ...
+adjective: PCII- & Ci+ & CV+
+```
+
+Thus `I want it to be likely he came` carries the `OXi` evidence through
+`want --TCII-- to --ICII-- be --PCII-- likely`.
+
+### Implications
+
+This is a dictionary replacement for rule 24. Valid `Ci` linkages now show one
+of the explicit certificate paths where the old grammar used PP to infer the
+same condition after extraction. The direct `CIIC` path and the object-raising
+`TCII` / `ICII` / `PCII` path are technical links whose purpose is to encode
+filler/expletive-`it` licensing in the dictionary.
+
+The object-raising path intentionally changes the visible carrier links in that
+construction. Before this migration, accepted linkages used the ordinary `TOo`
+/ `IV` / `Ixt` / `Paf` shape and then relied on PP to verify the `OXi` witness.
+The migrated path uses `TCII` / `ICII` / `PCII` to make the witness explicit
+before PP.
+
+### Verification
+
+Focused accepted-linkage comparison inspected the first three displayed
+accepted linkages for:
+
+```text
+It is likely he came.
+I considered it likely he came.
+I want it to be likely he came.
+```
+
+The same grammatical constructions remain accepted. Direct subject and direct
+object-complement examples preserve the public `Ci`, `CV`, `SFsi`/`OXi`, and
+predicate links while adding `CIIC`. The object-raising example remains
+accepted through `OXi` and `Ci`, with the old ordinary infinitival carrier
+replaced by `TCII` / `ICII` / `PCII`.
+
+The rule 24 migration was validated with ordinary parser runs:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
