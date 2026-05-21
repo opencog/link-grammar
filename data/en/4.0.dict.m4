@@ -2769,6 +2769,7 @@ per "/.per": Us+ & Mp-;
 % Xd- & Iq-: "The big question is, did he do it?"
 <verb-rq>:
   Rw-
+  or RWB-
   or ({{Xd-} & Iq-}
       & (Qd- or Qp- or ((Qw- or Qe-) & ([<verb-wall>]-0.1 or ()))))
   or [()];
@@ -2776,7 +2777,7 @@ per "/.per": Us+ & Mp-;
 % The idea here is that the verb on the other end of the I+ will
 % connect to the wall.
 <verb-rq-aux>:
-  Rw- or (({{Xd-} & Iq-} or {hCOw-}) & (Qd- or Qw- or Qp- or Qe-)) or [()];
+  Rw- or RWB- or (({{Xd-} & Iq-} or {hCOw-}) & (Qd- or Qw- or Qp- or Qe-)) or [()];
 
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
@@ -8694,7 +8695,8 @@ what:
       or Ss*w+
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
-    & {hCO-} & {EW-} & (Wb- or Wq- or Ws- or QI*d- or QN- or BIqd- or QJ+ or QJ-))
+    & {hCO-} & {EW-} & (Wq- or Ws- or QI*d- or QN- or BIqd- or QJ+ or QJ-))
+  or ({EL+} & RWB+ & (Bsw+ or BW+) & {hCO-} & {EW-} & Wb-)
   or ({EL+} & Ww-)
   or (Wn- & O+)
   or ((Ss*d+ or (R+ & (Bsd+ or BW+)))
