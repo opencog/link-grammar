@@ -244,8 +244,6 @@ CONTAINS_ONE_RULES:
 CONTAINS_NONE_RULES:
  SF    ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta
                                            , "Bad use of 'filler' subject72" ,
- SFI   ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta
-                                           , "Bad use of 'filler' subject73" ,
 
 ; H, O blocks "How many people you (noun)"
 ; But it wrecks "how much money did you give her?"

@@ -68,6 +68,7 @@ Added uppercase connector families:
 | `PGTHR{S,P,U}` | Carries the same agreement state through `going to be` paths. |
 | `PPTHR{S,P,U}` | Carries the same agreement state through perfect `have been` paths. |
 | `PATHR{S,P,U}` | Carries the same agreement state through predicative adjective paths such as `likely to be`. |
+| `IFI` | Certifies filler-`it` inverted auxiliary paths to a lower raising predicate. This separates expletive/filler inversion from ordinary `I` infinitival continuation. |
 | `INSERTL` / `INSERTR` | Tokenizer-only marker connector families. Paired `INSERTL<token>+` and `INSERTR<token>+` request an optional internal helper token named `<token>`. They are dictionary support markers, not ordinary grammar links. |
 
 Changed or retired connector forms:
@@ -96,6 +97,7 @@ Changed or retired connector forms:
 | predicative-adjective object `O` forms | `Pa**j` complement paths now use `OAJ` instead of ordinary `Osm`, `Op`, `Ox`, or `Os*e` object links. `OXi` remains available for complement-bearing `it` cases that are still governed by the expletive-`it` PP rules. Ordinary object links remain available for non-`Pa**j` constructions. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
 | `there.r OXt-` | Removed. Locative `there` uses ordinary modifier paths such as `MVp`; existential and presentational `there` use agreement-specific `THR*` links. |
+| filler-`it` inverted auxiliary paths | `SFI` question auxiliaries now use `IFI` to reach lower raising predicates instead of broad ordinary `I` continuations. Ordinary-subject question auxiliaries keep the existing `I` paths. |
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
@@ -612,6 +614,33 @@ The older lowercase witness forms `EExk`, `EAxk`, and `D...k` remain available
 for ordinary degree and determiner uses, for example `so quickly`, `so big`,
 and `such eloquence` without a result clause. The uppercase families are used
 only when the target also carries the local `that` certificate.
+
+### `IFI`: Filler-It Inverted Auxiliary Continuation
+
+`IFI` connects an inverted question auxiliary with a lower raising predicate
+when the subject relation is filler `it`:
+
+```text
+    +----Qd----+         |
+    |    +SFIsi+--IFI--+ |
+    |    |     |       | |
+LEFT-WALL does it seem likely ...
+```
+
+The relation is narrow: it is used for filler-`it` auxiliary paths such as
+`Does it seem likely that Joe came?`, while ordinary-subject raising questions
+keep the existing `I` relation:
+
+```text
+does --IFI-- seem
+does --I*d-- seem
+```
+
+The uppercase family is required because a subscripted spelling such as `Ifi`
+would still match broad ordinary `I` connectors. Rule 73 needs the filler
+inversion path to reach only lower predicates that explicitly accept this
+expletive/filler relation, not every verb with an ordinary infinitival
+continuation.
 
 ### `SJI` And `SGP`: Controlled Subjects
 
@@ -2011,9 +2040,10 @@ them for the tracked behavior.
 
 The seven rules are removed from `4.0.knowledge`.
 
-Rules 72 and 73 remain active because they were not part of this redundancy
-removal. Rule 71 and the ID-less `Bad subject inversion` rule were migrated
-later by dedicated dictionary changes.
+Rule 72 remains active because it was not part of this redundancy removal.
+Rule 73 was migrated later by the dedicated `IFI` filler-inversion path
+documented below. Rule 71 and the ID-less `Bad subject inversion` rule were
+migrated later by dedicated dictionary changes.
 
 ### Implications
 
@@ -2040,6 +2070,141 @@ corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
+```
+
+## Rule 73: Separate Filler-It Inversion From Ordinary `I`
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+SFI , I* PP* TO* Pa* Pam Pg* Pv* LE* AFd* MVta,
+      "Bad use of 'filler' subject73"
+```
+
+The grammatical area is inverted auxiliary questions with filler `it`, as in:
+
+```text
+Does it seem likely that Joe came?
+Did it appear likely that Joe came?
+```
+
+### Problem
+
+The old dictionary allowed the same auxiliary branch to combine `SFI` with
+the ordinary lower-verb continuation `I*d+`. That was too broad: a raw linkage
+could connect an inverted filler-`it` auxiliary to a lower predicate that did
+not license expletive/filler `it`, and PP then had to reject the completed
+domain if ordinary complement or modifier links appeared with `SFI`.
+
+The bad local path looked syntactically plausible to the connector matcher:
+
+```text
+does --SFI-- it
+does --I*d-- generic lower verb
+```
+
+But `I*d` is also needed for ordinary subject questions such as:
+
+```text
+Does Joe seem likely to come?
+```
+
+So the dictionary replacement must split the filler-`it` auxiliary path
+without narrowing the ordinary-subject `I` path.
+
+### Old Mechanism
+
+PP rejected an `SFI` domain that also contained one of the broad ordinary
+continuation or complement links:
+
+```text
+I* PP* TO* Pa* Pam Pg* Pv* LE* AFd* MVta
+```
+
+This was a completed-linkage backstop. It did not prevent the parser from
+building and ranking raw candidates with the bad `SFI + I*` shape.
+
+### Implementation
+
+The `do`/`does`/`did` inverted auxiliary entries now split ordinary-subject
+and filler-`it` continuations:
+
+```text
+ordinary subject question:  SI*  ... I*d+
+filler-it question:         SFI* ... IFI+
+```
+
+Lower predicates that can participate in this filler-`it` raising path expose
+`IFI-` through the same area that already accepts `If-`-style lower-verb
+relations, for example the `seem` / `appear` class. Generic lower verbs keep
+ordinary `I` continuations and therefore cannot be reached from an `SFI`
+auxiliary branch.
+
+`IFI` is an uppercase connector family rather than a subscripted variant of
+`I`. A subscripted spelling such as `Ifi` would still match broad ordinary
+`I` connectors, recreating the same leak that rule 73 had to catch.
+
+### Implications
+
+Valid filler-`it` raising questions remain accepted, but their accepted
+linkages now show `IFI` where the older linkage used an ordinary `I*d`/`If`
+continuation. Ordinary-subject raising questions keep the ordinary `I`
+relation. Rule 72 remains active for the non-inverted `SF` filler-subject
+case; this migration covers only rule 73's inverted `SFI` selector.
+
+### Examples
+
+Focused examples include:
+
+```text
+Does it seem likely that Joe came?
+Does it appear likely that Joe came?
+Did it seem likely that Joe came?
+Does Joe seem likely to come?
+*Does it act likely that Joe came?
+*Did it act likely that Joe came?
+```
+
+### Verification
+
+The rule 73 migration should be validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+Expected results at the time of this migration:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1497 errors
+```
+
+Focused accepted-linkage comparison against the pre-migration baseline
+inspected the first three displayed accepted linkages for:
+
+```text
+Does it seem likely that Joe came?
+Does it appear likely that Joe came?
+Did it seem likely that Joe came?
+```
+
+The same filler-`it` raising constructions remain accepted. The intentional
+public-link difference is the new certificate link:
+
+```text
+I*d / If  -> IFI
 ```
 
 ## Redundant Bounded `r`-Domain PP Check

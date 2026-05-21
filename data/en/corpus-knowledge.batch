@@ -72,6 +72,17 @@ How many times did you do it?
 *How many times you did it
 *How much of the book you read
 
+% CONTAINS_NONE rule 73: filler-it inverted auxiliary paths must not license
+% ordinary lower verbs.  Valid filler-it raising questions use IFI to reach
+% the lower predicate; ordinary-subject raising keeps the existing I path.
+
+Does it seem likely that Joe came?
+Does it appear likely that Joe came?
+Did it seem likely that Joe came?
+Does Joe seem likely to come?
+*Does it act likely that Joe came?
+*Did it act likely that Joe came?
+
 % CONTAINS_ONE rule 12: Wj requires Jw or JQ.
 % Fronted prepositions in wh questions and relatives must be licensed by the
 % matching wh object, including when the object is a multiword phrase.
