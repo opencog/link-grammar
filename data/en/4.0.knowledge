@@ -209,7 +209,6 @@ CONTAINS_ONE_RULES:
  SFI##* , Wq    Qd     CQ  PFc              , "Bad use of s-v inversion3" ,
  Ws    ,  D##w  S##w   H   HWS   EEHWS      , "S-V inversion required5" ,
  Wq    ,  SI    SFI   SXI                   , "S-V inversion required7" ,
- Wb    ,  SI    SFI   SXI                   , "S-V inversion required7a" ,
 ; The two below prevent "How big?" and "How quickly?"
 ; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'17"   ,
 ; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'18"   ,

@@ -60,6 +60,7 @@ Added uppercase connector families:
 | `HWS` | Certifies `how` quantity phrases that start a `Ws` subject question and therefore must not use extracted `B#m` or non-inverted `Ca` continuations. |
 | `DWS` | Determiner certificate used by `HWS` uncountable subject questions, such as `How much sugar is needed?`; currently represented by `DWSu`. |
 | `EEHWS` | Certifies the narrow `how long before ...` temporal-fragment path as a `Ws` question without allowing the broader `EEh + Ca` overgeneration. |
+| `RWB` | Certifies that a bare-`what` `Wb` opener is tied to an inverted verb question path. |
 | `OAJ` | Connects a verb to a non-expletive object that is allowed to license a `Pa**j` predicative-adjective complement. |
 | `THR{S,P,U}` | Certifies singular, plural, and uncountable existential-`there` agreement. The brace notation summarizes the concrete link types `THRS`, `THRP`, and `THRU`. |
 | `TTHR{S,P,U}` | Carries the same existential-`there` agreement state from a raising predicate to the following infinitival `to`. |
@@ -91,6 +92,7 @@ Changed or retired connector forms:
 | wh/degree `D##w` paths for `B#m` extraction | Some extracted wh/degree noun phrases now use `DWHs`, `DWHp`, or `DWHu` instead of ordinary `D**w`, `Dmc`, or `Dmu` on the certified branch. Ordinary determiner paths remain available outside the extraction branch. |
 | `more` in wh/degree `B#m` extraction | `ECWH` carries the wh-quantity certificate through `more`; the following noun phrase must expose either a `DWH` determiner certificate or a `BWH` degree certificate. Ordinary comparative `EC` / `ECa` paths remain available outside this extraction branch. |
 | `Ws` quantity and temporal `how` paths | Subject-question quantity paths now use `HWS`, with `DWSu` on uncountable subject nouns. The focused temporal fragment `how long before ...` uses `EEHWS`. Ordinary `H` and `EEh` remain available for non-`Ws` questions and embedded clauses. |
+| bare-`what` `Wb` openers | `Wb` paths through `what` now require `RWB`, which is exposed only by the inverted verb question path. Ordinary `R` remains available for non-`Wb` wh/opening paths. |
 | predicative-adjective object `O` forms | `Pa**j` complement paths now use `OAJ` instead of ordinary `Osm`, `Op`, `Ox`, or `Os*e` object links. `OXi` remains available for complement-bearing `it` cases that are still governed by the expletive-`it` PP rules. Ordinary object links remain available for non-`Pa**j` constructions. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
 | `there.r OXt-` | Removed. Locative `there` uses ordinary modifier paths such as `MVp`; existential and presentational `there` use agreement-specific `THR*` links. |
@@ -274,6 +276,21 @@ Ordinary `H` and `EEh` remain available for non-`Ws` questions and embedded
 clauses, such as `How much money did you earn?` and `I wonder how many times
 you did it.` This split replaces the old rule-71 check without making broad
 `Ws + B#m` or `Ws + Ca` paths accepted.
+
+### `RWB`: Bare-`what` Topic-Question Certification
+
+`RWB` connects bare `what` to an inverted verb in `Wb` topic questions:
+
+```text
+    +->Wb--+--RWB--+--SI--+
+    |      |       |      |
+LEFT-WALL what did.v-d you ...
+```
+
+The same `what` disjunct also carries `BW` or `Bsw` to the extracted
+predicate. `RWB` is not used by ordinary `Wq` or `Ws` questions; those paths
+still use the older `R` relation and remain governed by their own grammar
+rules.
 
 ### `OAJ`: Predicative-Adjective Object Licensing
 
@@ -662,7 +679,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 1-3 | `SI#*` / `SI#x` / `SFI##*` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`; rule 3 removal accepts `*I wonder how important is it to turn off the computer`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI`/`SFI` forms. |
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
-| 7a | `Wb` exclamative/opening link | Simple removal improves `corpus-fixes.batch` by two but accepts the `corpus-basic.batch` negative `*What the outcome is, I'm sure he'll still be popular`; `corpus-failures.batch` stays unchanged. A replacement needs to separate `what a ...` exclamatives from ordinary `what` clauses used as sentence-openers. |
 | 20-31, 37-39 | Expletive `it` complement licensing | Simple removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include bad ordinary-subject uses of `THi`/`TOi`-style complements, such as `Joe is likely that ...` and `It tried to have been ...`. A replacement needs a shared expletive-`it` subject/complement split across copular, adjectival, and verbal complement paths. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. A later single-rule rule-44 removal improved `corpus-fixes.batch` by three and `corpus-failures.batch` by four, but accepted the knowledge/basic negative `*I am as intelligent as John does`. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 
@@ -2087,6 +2103,99 @@ corpus-fixes.batch: 361 errors
 corpus-fix-long.batch: 8 errors
 corpus-failures.batch: 1499 errors
 ```
+
+## Rule 7a: Bare-`what` `Wb` Requires An Inverted Verb
+
+**Status:** implemented; PP rule 7a has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Wb , SI SFI SXI , "S-V inversion required7a"
+```
+
+The grammatical area is bare-`what` topic questions such as `What did you
+think?` and idiomatic variants such as `What the hell were you thinking?`.
+
+### Problem
+
+The old `what` entry exposed `Wb-` through the same broad branch that also
+exposed ordinary wh/opening links. That branch could attach `what` to a
+following non-inverted clause with ordinary `R`, leaving PP to reject the
+completed linkage later because no `SI`, `SFI`, or `SXI` inversion evidence
+appeared in the same domain.
+
+The bad sentence below demonstrates the rejected raw path:
+
+```text
+*What the outcome is, I'm sure he'll still be popular.
+```
+
+The invalid `Wb` analysis attached `what` to `is` through the same ordinary
+`R` / `Bsw` path used by valid wh extractions, but the clause was not an
+inverted question.
+
+### Implementation
+
+The dictionary now splits the `Wb` branch from the ordinary `what` branch.
+Bare-`what` `Wb` requires a dedicated `RWB` link to the verb question path:
+
+```text
+LEFT-WALL --Wb-- what --RWB-- did --SI-- you
+                 what --------BW-------- think
+```
+
+`RWB-` is exposed only through the same verb-question macros that expose the
+ordinary `Rw-` relation. Non-`Wb` wh/opening paths keep ordinary `R`, so this
+change does not attempt to solve the still-deferred `Wq` and `Ws` rules.
+
+### Examples
+
+Focused examples are recorded in `corpus-knowledge.batch`:
+
+```text
+What did you think?
+What were you thinking?
+What the hell were you thinking?
+*What the outcome is, I'm sure he'll still be popular.
+```
+
+### Implications
+
+This is a narrow replacement for rule 7a only. It turns the old after-the-fact
+domain requirement into a local dictionary certificate on the `what`-to-verb
+question path. Related `Wq` and `Ws` checks remain active and still need their
+own dictionary treatment.
+
+### Verification
+
+The migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+Results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1498 errors
+```
+
+Focused accepted-linkage comparison against `master` for `What did you
+think?`, `What were you thinking?`, and `What the hell were you thinking?`
+showed the expected replacement in the first displayed linkage: the old `Rw`
+edge from `what` to the inverted verb becomes `RWB`. The next `Wq` and `Ws`
+displayed linkages keep their old public link structure.
 
 ## Rule 4: `SXI` Also Licenses Fronted Locative Inversion
 
