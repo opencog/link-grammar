@@ -60,6 +60,18 @@ It is necessary to use the program.
 Our program is easy to use.
 *Our program is easier to use it than to understand.
 
+% CONTAINS_ONE rule 22: QIi question-clause complements require
+% filler/expletive it evidence.  QIIC carries that evidence to the predicate
+% that owns the QIi link; object-raising "it to be" uses TQII/IQII/PQII.
+
+It is unknown whether he came.
+It is unclear whether he came.
+It is unknown why he came.
+I made it clear how to use the program.
+I want it to be obvious how to use the program.
+*Joe is unknown how he came.
+*The answer is unknown why he came.
+
 % CONTAINS_ONE rule 4: SXI also occurs in fronted locative/adverbial
 % inversion licensed by PFb, not only in question or comparative paths.
 

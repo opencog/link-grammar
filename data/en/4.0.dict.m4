@@ -333,6 +333,8 @@ changecom(`%')
 <tof-verb>: TOf+ & IV+;
 <toi-verb>: TOIC- & TOi+ & IV+;
 <tsi-verb>: TSIC- & TSi+;
+<qii-verb>: QIIC- & QIi+;
+<qii-too-verb>: TQII+;
 <ton-verb>: TOn+ & IV+;
 <too-verb>: TOo+ & IV+;
 <tot-verb>: TOt+ & B+;
@@ -1584,9 +1586,9 @@ youse yous yis ye ya yo:
 %   (the m prevents links as indirect object)
 % MX+ & Ss+: "it -- fried rice -- is very popular"
 % XXX FIXME: why does [J-] have a cost???
-<it-sfsi-complement>: SFsi+ or (SFsi+ & TSIC+) or (SFsi+ & TOIC+);
-<it-sfisi-complement>: SFIsi- or (SFIsi- & TSIC+) or (SFIsi- & TOIC+);
-<it-oxi-complement>: OXi- or (OXi- & TSIC+) or (OXi- & TOIC+);
+<it-sfsi-complement>: SFsi+ or (SFsi+ & TSIC+) or (SFsi+ & TOIC+) or (SFsi+ & QIIC+);
+<it-sfisi-complement>: SFIsi- or (SFIsi- & TSIC+) or (SFIsi- & TOIC+) or (SFIsi- & QIIC+);
+<it-oxi-complement>: OXi- or (OXi- & TSIC+) or (OXi- & TOIC+) or (OXi- & QIIC+);
 
 it:
    [J-]0.5
@@ -3376,6 +3378,12 @@ rest.w: Ix- & Pv+;
 <vc-be-thb-opt-wall>: <vc-be-thb> or [<vc-be-thb-no-wall>]0.03;
 <vc-be-thb-passive>: {@EBm+} & {MV+} & PVTHB+;
 
+% QIi question-clause complements can be licensed by filler/expletive "it".
+% In object-raising "it to be" paths, IQII carries the OXi evidence to this
+% infinitival copula, which then certifies the QIi predicate with PQII.
+<vc-be-qii>:
+  {@EBm+} & PQII+;
+
 <vc-be>:         <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
 <vc-be-sp>:      <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
 <vc-be-no-wall>: <vc-be-no-obj-no-wall> or <vc-be-obj>;
@@ -3558,6 +3566,7 @@ be.v:
   or ({@E-} & ITHRS- & <vc-be-thrs-opt-wall>)
   or ({@E-} & ITHRP- & <vc-be-thrp-opt-wall>)
   or ({@E-} & ITHRU- & <vc-be-thru-opt-wall>)
+  or ({@E-} & IQII- & <vc-be-qii>)
   or ({@E-} & ((<verb-co> & <verb-wall>) or <verb-why> or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
   or ({@E-} & Ix- & <vc-be-opt-wall>)
@@ -4762,7 +4771,7 @@ thinking.v: <verb-pg> & <vc-think>;
 
 % B-: "what does it matter?"
 <vc-matter>:
-  ({@MV+} & {THi+ or QIi+})
+  ({@MV+} & {THi+ or <qii-verb>})
   or <b-minus>;
 matter.v: VERB_S_PLI(<vc-matter>);
 matters.v: VERB_S_S(<vc-matter>);
@@ -5616,7 +5625,7 @@ knew.v-d: VERB_SP_T(<vc-know>);
 % dCPu-: "... as is well known"
 known.v well-known.v:
   VERB_PP(<vc-know>) or
-  (<verb-s-pv> & {THi+ or <tof-verb> or QIi+} & {dCPu-}) or
+  (<verb-s-pv> & {THi+ or <tof-verb> or <qii-verb>} & {dCPu-}) or
   <verb-phrase-opener> or
   <verb-adj>;
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
@@ -6134,6 +6143,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
 <vc-want>:
   (<mv-coord> & ({<to-verb>} or <null-verb>))
   or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+})
+  or (OXi+ & <mv-coord> & <qii-too-verb>)
   or ((OAJ+ or OXi+) & <mv-coord> & Pa**j+)
   or ({O+} & QN+)
   or [[@MV+ & <obj2-non-pronoun>]]
@@ -7980,6 +7990,7 @@ to.r:
   ({@E-} & TTHRS- & ITHRS+)
   or ({@E-} & TTHRP- & ITHRP+)
   or ({@E-} & TTHRU- & ITHRU+)
+  or ({@E-} & TQII- & IQII+)
   or ({@E-} & {N+} & I*t+ & (TO- or Wo-))
   or ({@E-} & {NT-} & I+ &
     (<MX-PHRASE>
@@ -9532,7 +9543,7 @@ just_not: <COMP-OPENER>;
 <comp-post-adj-license>:
   MVp+ or MVt+ or MVz+ or MVh+
   or <to-verb> or <tof-verb> or <toi-verb> or <tot-verb>
-  or TH+ or THi+ or QI+ or QIi+
+  or TH+ or THi+ or QI+ or <qii-verb>
   or (OF+ & {@MV+})
   or Ytm- or Ya-;
 
@@ -9914,8 +9925,10 @@ a_drag a_bummer:
 
 clear.a unclear.a relevant.a irrelevant.a obvious.a immaterial.a:
   ({EA- or EF+} & (
-    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (THi+ or QIi+ or <tot-verb>) & {LE+}) or
-    ({@MV+} & {(THi+ or QIi+) & {LE+}} & dMJla+) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, (THi+ or <qii-verb> or <tot-verb>) & {LE+}) or
+    (QIIC- & (Paf- or AF+ or dMJra-) & QIi+ & {LE+}) or
+    (PQII- & QIi+ & {LE+}) or
+    ({@MV+} & {(THi+ or <qii-verb>) & {LE+}} & dMJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
   or <adj-stuff>
@@ -9970,8 +9983,10 @@ enjoyable.a idiotic.a inconvenient.a unkind.a:
 
 unknown.a questionable.a:
   ({EA- or EF+} & (
-    POST_ADJ_LIC(Paf- or AF+ or dMJra-, QIi+) or
-    ({@MV+} & {QIi+} & dMJla+) or
+    POST_ADJ_LIC(Paf- or AF+ or dMJra-, <qii-verb>) or
+    (QIIC- & (Paf- or AF+ or dMJra-) & QIi+) or
+    (PQII- & QIi+) or
+    ({@MV+} & {<qii-verb>} & dMJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
   or <adj-stuff>
