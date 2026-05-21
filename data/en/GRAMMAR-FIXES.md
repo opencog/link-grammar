@@ -44,6 +44,7 @@ Added uppercase connector families:
 | `WTHAN` | Connects `way` / `ways` nouns to a following `than to ...` infinitival comparative. |
 | `THBS` / `THBI` | Certify direct and inverted subject links for `THb` predicate that-clause complements. |
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
+| `TSIC` | Certifies that a `TSi` subjunctive that-clause predicate is licensed by filler/expletive `it`. |
 | `BIQS` / `BIQI` | Certify direct and inverted subject links for `BIq` predicate wh-complements. |
 | `IBIQ` / `PPBIQ` | Carry the `BIq` predicate license across modal and perfect auxiliary chains. |
 | `EEXK` | Certifies degree-modified adverbial result-clause targets, such as `so quickly that ...` and `so much that ...`. |
@@ -85,6 +86,7 @@ Changed or retired connector forms:
 | comparative-clause `Cc` / `CV` on `than.e` / `as.e-c` | Tightened so clausal comparative continuations require a `CMPC` certificate from a local comparative modifier path. |
 | `than to ...` infinitival comparative after `way` / `ways` | Added `WTHAN` so valid `way ... than to ...` comparatives do not depend on the retired naked `to.r I*a+` fallback. |
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
+| `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require a `TSIC` certificate from filler/expletive `it` when they select a subjunctive that-clause complement. Ordinary `THi` and `TOi` paths remain separate. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
 | result-clause `that.j-c` with `MVh` | Bare `MVh-` on `that.j-c` was replaced by certified paths. Adverbial and noun result clauses use `RTHAT- & MVh-`; adjective result clauses use `MVH-`. |
 | result-clause `EExk` / `EAxk` / `D##k` witnesses | Replaced for `that` result clauses by uppercase certificate families `EEXK`, `EAXK`, and `DTHAT`. The older `EExk`, `EAxk`, and `D...k` forms remain available for ordinary non-result-clause degree and determiner uses. |
@@ -515,6 +517,29 @@ subscripted `S`, `I`, `PP`, or `Pv` forms. This is intentional: broad connector
 matching would let an ordinary connector match a subscripted certificate and
 make an unlicensed predicate appear licensed.
 
+### `TSIC`: Expletive-`It` License For `TSi` That-Clauses
+
+`TSIC` connects filler/expletive `it` to a predicate that selects a
+subjunctive `TSi` that-clause complement:
+
+```text
+TSIC  filler/expletive-it certificate for TSi predicates
+```
+
+Focused linkage fragment, in schematic edge-list notation:
+
+```text
+it --SFsi-- is --Paf-- important --TSi-- that
+it ----------------TSIC------------------ important
+```
+
+The direct subject path, inverted subject path, and object-complement filler
+path for `it` can supply `TSIC`. Predicate entries that still expose `TSi+`
+through the migrated branch consume `TSIC-` in the same predicate disjunct.
+This keeps grammatical examples such as `It is important that women be ready`
+available while preventing an ordinary subject from licensing `TSi`, as in
+`*Joe is important that women be ready`.
+
 ### `BIQS`, `BIQI`, `IBIQ`, And `PPBIQ`: `BIq` Predicate Licenses
 
 These connector families encode the subject or auxiliary evidence required for
@@ -708,7 +733,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 1-2 | `SI#*` / `SI#x` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI` forms. |
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
-| 20-24, 30-31, 37-39 | Expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. A later single-rule rule-20 removal raised `corpus-knowledge.batch` by accepting `*Does it act likely that Joe came?` and `*Did it act likely that Joe came?`, and raised `corpus-basic.batch` from 88 to 102 errors. The new accepts include ordinary-subject and wrong-object `THi` complements such as `*Joe is likely that Rod died`, `*How likely is John that he will come`, and `*I made Anne clear that I was angry`. A replacement needs a shared expletive-`it` subject/object certificate carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rules 25-29 were audited separately and removed as unreachable stale selectors. |
+| 20, 22-24, 30-31, 37-39 | Expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. A later single-rule rule-20 removal raised `corpus-knowledge.batch` by accepting `*Does it act likely that Joe came?` and `*Did it act likely that Joe came?`, and raised `corpus-basic.batch` from 88 to 102 errors. The new accepts include ordinary-subject and wrong-object `THi` complements such as `*Joe is likely that Rod died`, `*How likely is John that he will come`, and `*I made Anne clear that I was angry`. A replacement needs a shared expletive-`it` subject/object certificate carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rule 21 is migrated separately with `TSIC`; rules 25-29 were audited separately and removed as unreachable stale selectors. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. Single-rule removals of rules 44, 47, and 48 each accept the knowledge/basic negative `*I am as intelligent as John does`; rules 47 and 48 each also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | 72 | Non-inverted `SF` filler-subject backstop | Simple removal after rule 73 is unsafe. It raises `corpus-basic.batch` from 88 to 90 errors by accepting `*Absence to comply may result in dismissal` and `*It is more likely that Joe died than John is that Fred died`. The first bad path uses `to.r --SFsx-- may` with ordinary `I` links; the second uses `it --SFsi-- is` with comparative `LE`/`AFd`/`THc` structure. A replacement needs real dictionary splits for the affected `SF` subject and comparative/infinitival continuations, not deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
@@ -765,6 +790,117 @@ link-parser < ./data/en/corpus-failures.batch
 ```
 
 The observed counts were:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1497 errors
+```
+
+## Rule 21: License `TSi` Complements With Filler `It`
+
+**Status:** implemented; PP rule 21 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+TSi , SFsi SFIsi OXi , "Complement requires 'it'21"
+```
+
+The grammatical area is the filler/expletive-`it` licensing of subjunctive
+that-clause predicate complements:
+
+```text
+It is important that women be ready.
+Is it important that women be ready?
+I considered it important that women be ready.
+```
+
+In these constructions, the that-clause predicate relation is not licensed by
+an ordinary lexical subject such as `Joe`; it requires the filler/expletive
+`it` path.
+
+### Problem
+
+The old dictionary allowed predicates such as `important.a` and participial
+verbs such as `proposed.v-d`, `requested.v-d`, `required.v-d`, and
+`recommended.v-d` to expose `TSi+` directly. PP then checked whether the
+completed `TSi` domain also contained one of the filler/expletive-`it`
+relations `SFsi`, `SFIsi`, or `OXi`.
+
+Without that PP check, locally well-formed raw linkages could attach an
+ordinary subject to a `TSi` predicate and accept examples such as:
+
+```text
+*Joe is important that women be ready when they make these choices.
+```
+
+### Implementation
+
+The dictionary now uses a dedicated uppercase certificate family:
+
+```text
+<tsi-verb>: TSIC- & TSi+;
+```
+
+The filler/expletive `it` entry can supply `TSIC+` on the direct subject,
+inverted subject, and object-complement branches that correspond to the old
+PP witnesses:
+
+```text
+SFsi  -> TSIC
+SFIsi -> TSIC
+OXi   -> TSIC
+```
+
+Predicate entries that still expose `TSi+` through the migrated branch now
+consume `<tsi-verb>` instead of bare `TSi+`. The resulting constraint is local
+to the selected predicate disjunct: if the predicate uses `TSi`, the same
+linkage must also connect it to a filler/expletive `it` certificate.
+
+### Implications
+
+This is a dictionary replacement for rule 21. Valid `TSi` linkages may show an
+additional `TSIC` link where the old grammar used PP to infer the same
+condition after extraction. Ordinary `THi` that-clause complements and `TOi`
+infinitival complements remain separate paths and are not licensed by this
+rule.
+
+Some accepted linkages for examples in this area can prefer an existing `THi`
+analysis over a `TSi` analysis after sorting. That does not weaken the rule-21
+migration: the dictionary constraint applies precisely when the selected
+predicate branch creates a `TSi` link.
+
+### Verification
+
+Focused accepted-linkage comparison inspected the first three displayed
+accepted linkages for:
+
+```text
+It is important that women be ready when they make these choices.
+Is it important that women be ready?
+I considered it important that women be ready.
+```
+
+The same grammatical constructions remain accepted. When a displayed linkage
+uses `TSi`, it also carries `TSIC`; when a preferred displayed linkage uses
+`THi`, it follows the pre-existing non-`TSi` complement path.
+
+The rule 21 migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+Observed results:
 
 ```text
 corpus-knowledge.batch: 0 errors

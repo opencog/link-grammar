@@ -323,6 +323,7 @@
 <to-verb>:  TO+ & IV+;
 <tof-verb>: TOf+ & IV+;
 <toi-verb>: TOi+ & IV+;
+<tsi-verb>: TSIC- & TSi+;
 <ton-verb>: TOn+ & IV+;
 <too-verb>: TOo+ & IV+;
 <tot-verb>: TOt+ & B+;
@@ -1580,8 +1581,8 @@ it:
    or OAJ-
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
-   or ({MX+} & (Ss+ or SFsi+ or THBS+) & <CLAUSE>)
-   or SIs- or SFIsi- or THBI- or OXi- or Vp-
+   or ({MX+} & (Ss+ or (SFsi+ & {TSIC+}) or THBS+) & <CLAUSE>)
+   or SIs- or (SFIsi- & {TSIC+}) or THBI- or (OXi- & {TSIC+}) or Vp-
    or dSJls+ or dSJrs-;
 
 % O*c: "we will go faster than they"
@@ -6005,7 +6006,7 @@ proposed.v-d:
   (<verb-and-sp-i-> & ([<vc-propose> & {{Xc+} & QN+}]0.2 or ())) or
   ((<vc-propose> & {{Xc+} & QN+}) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
-  or (<verb-s-pv> & {THi+ or TSi+ or Z-})
+  or (<verb-s-pv> & {THi+ or <tsi-verb> or Z-})
   or <verb-adj>
   or <verb-phrase-opener>;
 proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
@@ -6770,7 +6771,7 @@ requested.v-d:
   (<verb-and-sp-i-> & ([<vc-request>]0.2 or ())) or
   ((<vc-request>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>) or
-  (<verb-s-pv> & {THi+ or TSi+}) or
+  (<verb-s-pv> & {THi+ or <tsi-verb>}) or
   <verb-adj> or
   <verb-phrase-opener>;
 requesting.g: (<vc-request> & <verb-ge>) or <verb-ge-d>;
@@ -7808,7 +7809,7 @@ required.v-d:
   (<verb-and-sp-i-> & ([<vc-require>]0.2 or ())) or
   ((<vc-require>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
-  or (<verb-pv> & {<to-verb> or TSi+})
+  or (<verb-pv> & {<to-verb> or <tsi-verb>})
   or <verb-adj>
   or (<mv-coord> & {<to-verb>} & <verb-phrase-opener>);
 requiring.g: (<vc-require> & <verb-ge>) or <verb-ge-d>;
@@ -9402,7 +9403,7 @@ suggested.v-d anticipated.v-d recommended.v-d:
   (<verb-and-sp-i-> & ([<vc-suggest>]0.2 or ())) or
   ((<vc-suggest>) & <verb-and-sp-i+>) or
   <verb-and-sp-t>)
-  or (<verb-s-pv> & {THi+ or TSi+ or Z-})
+  or (<verb-s-pv> & {THi+ or <tsi-verb> or Z-})
   or <verb-adj>
   or <verb-phrase-opener>;
 suggesting.g anticipating.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>;
@@ -12208,8 +12209,8 @@ one_and_only in_situ:
 % Identical to below, but starts with vowel.
 important.a essential.a imperative.a:
   ({EA- or EF+} & (
-    (((Paf- or AF+ or dMJra-) & {@MV+} & {((THi+ or <toi-verb> or TSi+) & {LE+}) or <tot-verb>}) or (Ma- & {@MV+} & (((THi+ or <toi-verb> or TSi+) & {LE+}) or <tot-verb>)) or (dMJXr- & {@MV+} & (((THi+ or <toi-verb> or TSi+) & {LE+}) or <tot-verb>)))
-    or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & dMJla+)
+    (((Paf- or AF+ or dMJra-) & {@MV+} & {((THi+ or <toi-verb> or <tsi-verb>) & {LE+}) or <tot-verb>}) or (Ma- & {@MV+} & (((THi+ or <toi-verb> or <tsi-verb>) & {LE+}) or <tot-verb>)) or (dMJXr- & {@MV+} & (((THi+ or <toi-verb> or <tsi-verb>) & {LE+}) or <tot-verb>)))
+    or ((({@MV+} & {(THi+ or <toi-verb> or <tsi-verb>) & {LE+}}) or <tot-verb>) & dMJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
   or <adj-stuff>
@@ -12218,8 +12219,8 @@ important.a essential.a imperative.a:
 % Identical to above, but starts with consonant
 crucial.a necessary.a vital.a:
   ({EA- or EF+} & (
-    (((Paf- or AF+ or dMJra-) & {@MV+} & {((THi+ or <toi-verb> or TSi+) & {LE+}) or <tot-verb>}) or (Ma- & {@MV+} & (((THi+ or <toi-verb> or TSi+) & {LE+}) or <tot-verb>)) or (dMJXr- & {@MV+} & (((THi+ or <toi-verb> or TSi+) & {LE+}) or <tot-verb>)))
-    or ((({@MV+} & {(THi+ or <toi-verb> or TSi+) & {LE+}}) or <tot-verb>) & dMJla+)
+    (((Paf- or AF+ or dMJra-) & {@MV+} & {((THi+ or <toi-verb> or <tsi-verb>) & {LE+}) or <tot-verb>}) or (Ma- & {@MV+} & (((THi+ or <toi-verb> or <tsi-verb>) & {LE+}) or <tot-verb>)) or (dMJXr- & {@MV+} & (((THi+ or <toi-verb> or <tsi-verb>) & {LE+}) or <tot-verb>)))
+    or ((({@MV+} & {(THi+ or <toi-verb> or <tsi-verb>) & {LE+}}) or <tot-verb>) & dMJla+)
     or ({<tot-verb>} & <adj-opener>)))
   or ({EF+} & {<tot-verb>} & <adj-conjoined>)
   or <adj-stuff>
