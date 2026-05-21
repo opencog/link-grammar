@@ -326,6 +326,10 @@
 <tsi-verb>: TSIC- & TSi+;
 <qii-verb>: QIIC- & QIi+;
 <qii-too-verb>: TQII+;
+<cii-verb>: CIIC- & {hHM+} & Ci+ & CV+;
+<cii-obj-verb>: CIIC- & (Paf- or dMJra-) & {hHM+} & Ci+ & CV+;
+<cii-too-verb>: TCII+;
+<cii-raise-verb>: PCII- & {hHM+} & Ci+ & CV+;
 <ton-verb>: TOn+ & IV+;
 <too-verb>: TOo+ & IV+;
 <tot-verb>: TOt+ & B+;
@@ -336,7 +340,7 @@
 <that-verb>: {hHM+} & Cet+ & CV+;
 <subcl-verb>: {hHM+} & Cs+ & CV+;
 <advcl-verb>: {hHM+} & Ca+ & CV+;
-<fitcl-verb>: {hHM+} & Ci+ & CV+;
+<fitcl-verb>: <cii-verb>;
 <porcl-verb>: {hHM+} & Cr+ & CV+;
 <thncl-verb>: {hHM+} & Cc+ & CV+;
 % We don't handle Ct,Cta in the above, because the AF and B link plays
@@ -1577,9 +1581,9 @@ youse yous yis ye ya yo:
 %   (the m prevents links as indirect object)
 % MX+ & Ss+: "it -- fried rice -- is very popular"
 % XXX FIXME: why does [J-] have a cost???
-<it-sfsi-complement>: SFsi+ or (SFsi+ & TSIC+) or (SFsi+ & TOIC+) or (SFsi+ & QIIC+);
-<it-sfisi-complement>: SFIsi- or (SFIsi- & TSIC+) or (SFIsi- & TOIC+) or (SFIsi- & QIIC+);
-<it-oxi-complement>: OXi- or (OXi- & TSIC+) or (OXi- & TOIC+) or (OXi- & QIIC+);
+<it-sfsi-complement>: SFsi+ or (SFsi+ & TSIC+) or (SFsi+ & TOIC+) or (SFsi+ & QIIC+) or (SFsi+ & CIIC+);
+<it-sfisi-complement>: SFIsi- or (SFIsi- & TSIC+) or (SFIsi- & TOIC+) or (SFIsi- & QIIC+) or (SFIsi- & CIIC+);
+<it-oxi-complement>: OXi- or (OXi- & TSIC+) or (OXi- & TOIC+) or (OXi- & QIIC+) or (OXi- & CIIC+);
 
 it:
    [J-]0.5
@@ -3363,11 +3367,14 @@ rest.w: Ix- & Pv+;
 <vc-be-thb-opt-wall>: <vc-be-thb> or [<vc-be-thb-no-wall>]0.03;
 <vc-be-thb-passive>: {@EBm+} & {MV+} & PVTHB+;
 
-% QIi question-clause complements can be licensed by filler/expletive "it".
-% In object-raising "it to be" paths, IQII carries the OXi evidence to this
-% infinitival copula, which then certifies the QIi predicate with PQII.
+% QIi and Ci complements can be licensed by filler/expletive "it".
+% In object-raising "it to be" paths, IQII/ICII carry the OXi evidence to this
+% infinitival copula, which then certifies the lower predicate with PQII/PCII.
 <vc-be-qii>:
   {@EBm+} & PQII+;
+
+<vc-be-cii>:
+  {@EBm+} & PCII+;
 
 <vc-be>:         <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
 <vc-be-sp>:      <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
@@ -3552,6 +3559,7 @@ be.v:
   or ({@E-} & ITHRP- & <vc-be-thrp-opt-wall>)
   or ({@E-} & ITHRU- & <vc-be-thru-opt-wall>)
   or ({@E-} & IQII- & <vc-be-qii>)
+  or ({@E-} & ICII- & <vc-be-cii>)
   or ({@E-} & ((<verb-co> & <verb-wall>) or <verb-why> or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
   or ({@E-} & Ix- & <vc-be-opt-wall>)
@@ -7688,7 +7696,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
 <vc-want>:
   (<mv-coord> & ({<to-verb>} or <null-verb>))
   or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+})
-  or (OXi+ & <mv-coord> & <qii-too-verb>)
+  or (OXi+ & <mv-coord> & (<qii-too-verb> or <cii-too-verb>))
   or ((OAJ+ or OXi+) & <mv-coord> & Pa**j+)
   or ({O+} & QN+)
   or [[@MV+ & <obj2-non-pronoun>]]
@@ -10415,6 +10423,7 @@ to.r:
   or ({@E-} & TTHRP- & ITHRP+)
   or ({@E-} & TTHRU- & ITHRU+)
   or ({@E-} & TQII- & IQII+)
+  or ({@E-} & TCII- & ICII+)
   or ({@E-} & {N+} & I*t+ & (TO- or Wo-))
   or ({@E-} & {NT-} & I+ &
     (<MX-PHRASE>
@@ -12268,8 +12277,11 @@ absurd.a alarming.a acceptable.a unacceptable.a:
 surprising.a interesting.a odd.a remarkable.a amazing.a exciting.a depressing.a
 rare.a embarrassing.a:
   ({EA- or EF+} & (
-    (((Paf- or AF+ or dMJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <toi-verb> or <tot-verb>) & {LE+}}) or (Ma- & {@MV+} & ((THi+ or <fitcl-verb> or <toi-verb> or <tot-verb>) & {LE+})) or (dMJXr- & {@MV+} & ((THi+ or <fitcl-verb> or <toi-verb> or <tot-verb>) & {LE+}))) or
-    ({@MV+} & {(THi+ or <fitcl-verb> or <toi-verb>) & {LE+}} & dMJla+) or
+    (((Paf- or AF+ or dMJra-) & {@MV+} & {(THi+ or <toi-verb> or <tot-verb>) & {LE+}}) or (Ma- & {@MV+} & ((THi+ or <toi-verb> or <tot-verb>) & {LE+})) or (dMJXr- & {@MV+} & ((THi+ or <toi-verb> or <tot-verb>) & {LE+}))) or
+    (((Paf- or dMJra-) & {@MV+} & {<cii-verb> & {LE+}}) or (Ma- & {@MV+} & (<cii-verb> & {LE+})) or (dMJXr- & {@MV+} & (<cii-verb> & {LE+}))) or
+    (<cii-obj-verb> & {LE+}) or
+    (<cii-raise-verb> & {LE+}) or
+    ({@MV+} & {(THi+ or <cii-verb> or <toi-verb>) & {LE+}} & dMJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
   or <adj-stuff>
@@ -12298,8 +12310,11 @@ unlikely.a:
     (PATHRS- & <thr-tof-s>) or
     (PATHRP- & <thr-tof-p>) or
     (PATHRU- & <thr-tof-u>) or
-    (((Paf- or AF+ or dMJra-) & {@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}}) or (Ma- & {@MV+} & ((<tof-verb> or THi+ or <fitcl-verb>) & {LE+})) or (dMJXr- & {@MV+} & ((<tof-verb> or THi+ or <fitcl-verb>) & {LE+}))) or
-    ({@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}} & dMJla+) or
+    (((Paf- or AF+ or dMJra-) & {@MV+} & {(<tof-verb> or THi+) & {LE+}}) or (Ma- & {@MV+} & ((<tof-verb> or THi+) & {LE+})) or (dMJXr- & {@MV+} & ((<tof-verb> or THi+) & {LE+}))) or
+    (((Paf- or dMJra-) & {@MV+} & {<cii-verb> & {LE+}}) or (Ma- & {@MV+} & (<cii-verb> & {LE+})) or (dMJXr- & {@MV+} & (<cii-verb> & {LE+}))) or
+    (<cii-obj-verb> & {LE+}) or
+    (<cii-raise-verb> & {LE+}) or
+    ({@MV+} & {(<tof-verb> or THi+ or <cii-verb>) & {LE+}} & dMJla+) or
     ({<to-verb>} & <adj-opener>)))
   or ({EF+} & {<to-verb>} & <adj-conjoined>)
   or <adj-stuff>
@@ -12310,8 +12325,11 @@ likely.a:
     (PATHRS- & <thr-tof-s>) or
     (PATHRP- & <thr-tof-p>) or
     (PATHRU- & <thr-tof-u>) or
-    (((Paf- or AF+ or dMJra-) & {@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}}) or (Ma- & {@MV+} & ((<tof-verb> or THi+ or <fitcl-verb>) & {LE+})) or (dMJXr- & {@MV+} & ((<tof-verb> or THi+ or <fitcl-verb>) & {LE+}))) or
-    ({@MV+} & {(<tof-verb> or THi+ or <fitcl-verb>) & {LE+}} & dMJla+) or
+    (((Paf- or AF+ or dMJra-) & {@MV+} & {(<tof-verb> or THi+) & {LE+}}) or (Ma- & {@MV+} & ((<tof-verb> or THi+) & {LE+})) or (dMJXr- & {@MV+} & ((<tof-verb> or THi+) & {LE+}))) or
+    (((Paf- or dMJra-) & {@MV+} & {<cii-verb> & {LE+}}) or (Ma- & {@MV+} & (<cii-verb> & {LE+})) or (dMJXr- & {@MV+} & (<cii-verb> & {LE+}))) or
+    (<cii-obj-verb> & {LE+}) or
+    (<cii-raise-verb> & {LE+}) or
+    ({@MV+} & {(<tof-verb> or THi+ or <cii-verb>) & {LE+}} & dMJla+) or
     ({<to-verb>} & <adj-opener>) or
     [E+]))
   or ({EF+} & {<to-verb>} & <adj-conjoined>)
@@ -12325,8 +12343,11 @@ insignificant.a undeniable.a understandable.a
 improbable.a inexcusable.a outrageous.a
 inconceivable.a unbelievable.a astonishing.a arguable.a:
   ({EA- or EF+} & (
-    (((Paf- or AF+ or dMJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <tot-verb>) & {LE+}}) or (Ma- & {@MV+} & ((THi+ or <fitcl-verb> or <tot-verb>) & {LE+})) or (dMJXr- & {@MV+} & ((THi+ or <fitcl-verb> or <tot-verb>) & {LE+}))) or
-    ({@MV+} & {(THi+ or <fitcl-verb>) & {LE+}} & dMJla+) or
+    (((Paf- or AF+ or dMJra-) & {@MV+} & {(THi+ or <tot-verb>) & {LE+}}) or (Ma- & {@MV+} & ((THi+ or <tot-verb>) & {LE+})) or (dMJXr- & {@MV+} & ((THi+ or <tot-verb>) & {LE+}))) or
+    (((Paf- or dMJra-) & {@MV+} & {<cii-verb> & {LE+}}) or (Ma- & {@MV+} & (<cii-verb> & {LE+})) or (dMJXr- & {@MV+} & (<cii-verb> & {LE+}))) or
+    (<cii-obj-verb> & {LE+}) or
+    (<cii-raise-verb> & {LE+}) or
+    ({@MV+} & {(THi+ or <cii-verb>) & {LE+}} & dMJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
   or <adj-stuff>
@@ -12340,8 +12361,11 @@ plausible.a demonstrable.a hilarious.a paradoxical.a shameful.a
 disgraceful.a debatable.a lamentable.a regrettable.a well-known.a
 a_drag a_bummer:
   ({EA- or EF+} & (
-    (((Paf- or AF+ or dMJra-) & {@MV+} & {(THi+ or <fitcl-verb> or <tot-verb>) & {LE+}}) or (Ma- & {@MV+} & ((THi+ or <fitcl-verb> or <tot-verb>) & {LE+})) or (dMJXr- & {@MV+} & ((THi+ or <fitcl-verb> or <tot-verb>) & {LE+}))) or
-    ({@MV+} & {(THi+ or <fitcl-verb>) & {LE+}} & dMJla+) or
+    (((Paf- or AF+ or dMJra-) & {@MV+} & {(THi+ or <tot-verb>) & {LE+}}) or (Ma- & {@MV+} & ((THi+ or <tot-verb>) & {LE+})) or (dMJXr- & {@MV+} & ((THi+ or <tot-verb>) & {LE+}))) or
+    (((Paf- or dMJra-) & {@MV+} & {<cii-verb> & {LE+}}) or (Ma- & {@MV+} & (<cii-verb> & {LE+})) or (dMJXr- & {@MV+} & (<cii-verb> & {LE+}))) or
+    (<cii-obj-verb> & {LE+}) or
+    (<cii-raise-verb> & {LE+}) or
+    ({@MV+} & {(THi+ or <cii-verb>) & {LE+}} & dMJla+) or
     <adj-opener>))
   or ({EF+} & <adj-conjoined>)
   or <adj-stuff>

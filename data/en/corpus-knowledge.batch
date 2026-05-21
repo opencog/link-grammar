@@ -72,6 +72,20 @@ I want it to be obvious how to use the program.
 *Joe is unknown how he came.
 *The answer is unknown why he came.
 
+% CONTAINS_ONE rule 24: Ci finite-clause complements require filler/expletive
+% it evidence.  CIIC carries direct it evidence to the predicate that owns the
+% Ci link; object-raising "it to be" uses TCII/ICII/PCII.
+
+It is likely he came.
+Is it likely he came?
+It is surprising he came.
+I considered it likely he came.
+I want it to be likely he came.
+*Joe is likely he came.
+*I considered Anne likely he came.
+*Does it act likely that Joe came?
+*Did it act likely that Joe came?
+
 % CONTAINS_ONE rule 4: SXI also occurs in fronted locative/adverbial
 % inversion licensed by PFb, not only in question or comparative paths.
 
