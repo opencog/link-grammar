@@ -708,7 +708,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 1-2 | `SI#*` / `SI#x` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI` forms. |
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
-| 20-31, 37-39 | Expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. A later single-rule rule-20 removal raised `corpus-knowledge.batch` by accepting `*Does it act likely that Joe came?` and `*Did it act likely that Joe came?`, and raised `corpus-basic.batch` from 88 to 102 errors. The new accepts include ordinary-subject and wrong-object `THi` complements such as `*Joe is likely that Rod died`, `*How likely is John that he will come`, and `*I made Anne clear that I was angry`. A replacement needs a shared expletive-`it` subject/object certificate carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. |
+| 20-24, 30-31, 37-39 | Expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. A later single-rule rule-20 removal raised `corpus-knowledge.batch` by accepting `*Does it act likely that Joe came?` and `*Did it act likely that Joe came?`, and raised `corpus-basic.batch` from 88 to 102 errors. The new accepts include ordinary-subject and wrong-object `THi` complements such as `*Joe is likely that Rod died`, `*How likely is John that he will come`, and `*I made Anne clear that I was angry`. A replacement needs a shared expletive-`it` subject/object certificate carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rules 25-29 were audited separately and removed as unreachable stale selectors. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. Single-rule removals of rules 44, 47, and 48 each accept the knowledge/basic negative `*I am as intelligent as John does`; rules 47 and 48 each also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | 72 | Non-inverted `SF` filler-subject backstop | Simple removal after rule 73 is unsafe. It raises `corpus-basic.batch` from 88 to 90 errors by accepting `*Absence to comply may result in dismissal` and `*It is more likely that Joe died than John is that Fred died`. The first bad path uses `to.r --SFsx-- may` with ordinary `I` links; the second uses `it --SFsi-- is` with comparative `LE`/`AFd`/`THc` structure. A replacement needs real dictionary splits for the affected `SF` subject and comparative/infinitival continuations, not deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
@@ -716,6 +716,63 @@ dictionary does not yet encode the rejected condition narrowly enough.
 `FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
 candidate. For metric-ordered extraction, this class is handled by
 extractor-side cycle state, not by English dictionary connector replacement.
+
+## Stale Expletive-It Companion Selectors
+
+**Status:** implemented for rules 25-29.
+
+### Rule / Area
+
+The removed PP rules were:
+
+```text
+COqi , SFsi SFIsi OXi , "Complement requires 'it'25"
+CPi  , SFsi SFIsi OXi , "Complement requires 'it'26"
+Eqi  , SFsi SFIsi OXi , "Complement requires 'it'27"
+LEi  , SFsi SFIsi OXi , "Complement requires 'it'28"
+MVti , SFsi SFIsi OXi , "Complement requires 'it'29"
+```
+
+These rules were part of the broader expletive-`it` complement-licensing
+family. In the current dictionary, however, these five selector links cannot
+be formed as completed links: `CPi` and `MVti` occur only on negative
+connectors, `Eqi` occurs only on a positive connector, `LEi` has no positive
+counterpart, and `dCOqi` has no matching negative endpoint.
+
+### Implementation
+
+No new connector family is needed. The stale rules are removed from
+`4.0.knowledge`; the remaining expletive-`it` rules stay active because they
+still reject real overgeneration.
+
+### Examples
+
+There are no focused accepted or rejected sentences for these stale selectors,
+because the relevant completed links are unreachable in the current
+dictionary. The focused evidence is the connector endpoint audit above, plus
+the unchanged corpus behavior after removing the rules as a family.
+
+### Verification
+
+The removal was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+The observed counts were:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1497 errors
+```
 
 ## Library-Assisted Dictionary Helper Tokens
 

@@ -216,11 +216,6 @@ CONTAINS_ONE_RULES:
  QIi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'22" ,
  TOi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'23" ,
  Ci    ,  SFsi   SFIsi   OXi                , "Complement requires 'it'24" ,
- COqi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'25" ,
- CPi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'26" ,
- Eqi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'27" ,
- LEi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'28" ,
- MVti  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'29"     ,
  AFdi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'30"     ,
  O#i   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'31"     ,
  SFsi* ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi CPu
