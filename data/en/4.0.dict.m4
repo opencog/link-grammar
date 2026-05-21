@@ -331,7 +331,7 @@ changecom(`%')
 <inf-verb>: IV+;
 <to-verb>:  TO+ & IV+;
 <tof-verb>: TOf+ & IV+;
-<toi-verb>: TOi+ & IV+;
+<toi-verb>: TOIC- & TOi+ & IV+;
 <tsi-verb>: TSIC- & TSi+;
 <ton-verb>: TOn+ & IV+;
 <too-verb>: TOo+ & IV+;
@@ -1584,14 +1584,18 @@ youse yous yis ye ya yo:
 %   (the m prevents links as indirect object)
 % MX+ & Ss+: "it -- fried rice -- is very popular"
 % XXX FIXME: why does [J-] have a cost???
+<it-sfsi-complement>: SFsi+ or (SFsi+ & TSIC+) or (SFsi+ & TOIC+);
+<it-sfisi-complement>: SFIsi- or (SFIsi- & TSIC+) or (SFIsi- & TOIC+);
+<it-oxi-complement>: OXi- or (OXi- & TSIC+) or (OXi- & TOIC+);
+
 it:
    [J-]0.5
    or (Osm- & ({@M+} or {SGP+ or SJI+}))
    or OAJ-
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
-   or ({MX+} & (Ss+ or (SFsi+ & {TSIC+}) or THBS+) & <CLAUSE>)
-   or SIs- or (SFIsi- & {TSIC+}) or THBI- or (OXi- & {TSIC+}) or Vp-
+   or ({MX+} & (Ss+ or <it-sfsi-complement> or THBS+) & <CLAUSE>)
+   or SIs- or <it-sfisi-complement> or THBI- or <it-oxi-complement> or Vp-
    or dSJls+ or dSJrs-;
 
 % O*c: "we will go faster than they"

@@ -45,6 +45,7 @@ Added uppercase connector families:
 | `THBS` / `THBI` | Certify direct and inverted subject links for `THb` predicate that-clause complements. |
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
 | `TSIC` | Certifies that a `TSi` subjunctive that-clause predicate is licensed by filler/expletive `it`. |
+| `TOIC` | Certifies that a `TOi` infinitive-complement predicate is licensed by filler/expletive `it`. |
 | `BIQS` / `BIQI` | Certify direct and inverted subject links for `BIq` predicate wh-complements. |
 | `IBIQ` / `PPBIQ` | Carry the `BIq` predicate license across modal and perfect auxiliary chains. |
 | `EEXK` | Certifies degree-modified adverbial result-clause targets, such as `so quickly that ...` and `so much that ...`. |
@@ -87,6 +88,7 @@ Changed or retired connector forms:
 | `than to ...` infinitival comparative after `way` / `ways` | Added `WTHAN` so valid `way ... than to ...` comparatives do not depend on the retired naked `to.r I*a+` fallback. |
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
 | `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require a `TSIC` certificate from filler/expletive `it` when they select a subjunctive that-clause complement. Ordinary `THi` and `TOi` paths remain separate. |
+| `TOi` infinitive-complement predicate licensing | `TOi+` predicate branches now require a `TOIC` certificate from filler/expletive `it`. Tough-subject infinitives continue to use separate paths such as `TOt`. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
 | result-clause `that.j-c` with `MVh` | Bare `MVh-` on `that.j-c` was replaced by certified paths. Adverbial and noun result clauses use `RTHAT- & MVh-`; adjective result clauses use `MVH-`. |
 | result-clause `EExk` / `EAxk` / `D##k` witnesses | Replaced for `that` result clauses by uppercase certificate families `EEXK`, `EAXK`, and `DTHAT`. The older `EExk`, `EAxk`, and `D...k` forms remain available for ordinary non-result-clause degree and determiner uses. |
@@ -540,6 +542,34 @@ This keeps grammatical examples such as `It is important that women be ready`
 available while preventing an ordinary subject from licensing `TSi`, as in
 `*Joe is important that women be ready`.
 
+### `TOIC`: Expletive-`It` License For `TOi` Infinitives
+
+`TOIC` connects filler/expletive `it` to a predicate that selects a `TOi`
+infinitive complement:
+
+```text
+TOIC  filler/expletive-it certificate for TOi predicates
+```
+
+Focused linkage fragment, in schematic edge-list notation:
+
+```text
+it --SFsi-- is --Paf-- easy --TOi-- to --I-- use
+it ---------------TOIC--------------- easy
+easy ----------------IV------------------ use
+```
+
+The same direct subject, inverted subject, and object-complement filler paths
+for `it` that can license `TSIC` can also supply `TOIC`. Predicate entries
+that expose `TOi+ & IV+` through the migrated branch consume `TOIC-` in the
+same predicate disjunct.
+
+This family is deliberately separate from tough-subject infinitives. A
+sentence such as `Our program is easy to use` uses `TOt`, not `TOi`, because
+the matrix subject is interpreted as the object of the infinitive. By
+contrast, `It is easy to use the program` uses filler/expletive `it` and can
+therefore supply the `TOIC` certificate for `TOi`.
+
 ### `BIQS`, `BIQI`, `IBIQ`, And `PPBIQ`: `BIq` Predicate Licenses
 
 These connector families encode the subject or auxiliary evidence required for
@@ -733,7 +763,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 1-2 | `SI#*` / `SI#x` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI` forms. |
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
-| 20, 22-24, 30-31, 37-39 | Expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. A later single-rule rule-20 removal raised `corpus-knowledge.batch` by accepting `*Does it act likely that Joe came?` and `*Did it act likely that Joe came?`, and raised `corpus-basic.batch` from 88 to 102 errors. The new accepts include ordinary-subject and wrong-object `THi` complements such as `*Joe is likely that Rod died`, `*How likely is John that he will come`, and `*I made Anne clear that I was angry`. A replacement needs a shared expletive-`it` subject/object certificate carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rule 21 is migrated separately with `TSIC`; rules 25-29 were audited separately and removed as unreachable stale selectors. |
+| 20, 22, 24, 30-31, 37-39 | Expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. A later single-rule rule-20 removal raised `corpus-knowledge.batch` by accepting `*Does it act likely that Joe came?` and `*Did it act likely that Joe came?`, and raised `corpus-basic.batch` from 88 to 102 errors. The new accepts include ordinary-subject and wrong-object `THi` complements such as `*Joe is likely that Rod died`, `*How likely is John that he will come`, and `*I made Anne clear that I was angry`. A replacement needs a shared expletive-`it` subject/object certificate carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rule 21 is migrated separately with `TSIC`; rule 23 is migrated separately with `TOIC`; rules 25-29 were audited separately and removed as unreachable stale selectors. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. Single-rule removals of rules 44, 47, and 48 each accept the knowledge/basic negative `*I am as intelligent as John does`; rules 47 and 48 each also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | 72 | Non-inverted `SF` filler-subject backstop | Simple removal after rule 73 is unsafe. It raises `corpus-basic.batch` from 88 to 90 errors by accepting `*Absence to comply may result in dismissal` and `*It is more likely that Joe died than John is that Fred died`. The first bad path uses `to.r --SFsx-- may` with ordinary `I` links; the second uses `it --SFsi-- is` with comparative `LE`/`AFd`/`THc` structure. A replacement needs real dictionary splits for the affected `SF` subject and comparative/infinitival continuations, not deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
@@ -908,6 +938,129 @@ corpus-basic.batch: 88 errors
 corpus-fixes.batch: 359 errors
 corpus-fix-long.batch: 8 errors
 corpus-failures.batch: 1497 errors
+```
+
+## Rule 23: License `TOi` Complements With Filler `It`
+
+**Status:** implemented; PP rule 23 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+TOi , SFsi SFIsi OXi , "Complement requires 'it'23"
+```
+
+The grammatical area is the filler/expletive-`it` licensing of infinitive
+complements:
+
+```text
+It is easy to use the program.
+It is necessary to use the program.
+```
+
+This is distinct from tough-subject infinitives such as:
+
+```text
+Our program is easy to use.
+```
+
+The latter construction is licensed by the subject being interpreted as the
+object of the infinitive and uses a separate `TOt` path.
+
+### Problem
+
+The old dictionary exposed `<toi-verb>` as:
+
+```text
+TOi+ & IV+
+```
+
+PP then checked whether the completed `TOi` domain also contained one of the
+filler/expletive-`it` relations `SFsi`, `SFIsi`, or `OXi`. Without that PP
+check, raw linkages could use the `TOi` expletive-infinitive branch in places
+where the sentence should instead use a gap-bearing tough-subject branch, or
+be rejected. A representative bad path is:
+
+```text
+*Our program is easier to use it than to understand.
+```
+
+The bad linkage uses `easier.a-c --TOi-- to.r` and `easier.a-c --IV-- use.v`
+while the infinitive still has an overt object `it`. There is no
+filler/expletive `it` relation in the `TOi` domain, so the old PP rule
+rejected it.
+
+### Implementation
+
+The dictionary now uses a dedicated uppercase certificate family:
+
+```text
+<toi-verb>: TOIC- & TOi+ & IV+;
+```
+
+The filler/expletive `it` entry can supply `TOIC+` on the direct subject,
+inverted subject, and object-complement branches that correspond to the old
+PP witnesses:
+
+```text
+SFsi  -> TOIC
+SFIsi -> TOIC
+OXi   -> TOIC
+```
+
+Predicate entries that select `<toi-verb>` now require this certificate in
+the same predicate disjunct. Ordinary tough-subject uses remain on `TOt`, and
+the comparative `TOic` / `TOfc` paths are not changed by this rule.
+
+### Implications
+
+This is a dictionary replacement for rule 23. Valid `TOi` linkages now show an
+additional `TOIC` link where the old grammar used PP to infer the same
+condition after extraction. The replacement also keeps `TOi` separate from
+gap-bearing `TOt`, so retained-object examples are blocked before PP.
+
+The explicit certificate link can change the preferred displayed linkage when
+an older non-`TOi` analysis is also available. For examples such as `It is
+easy to use the program`, the certified `TOi` analysis remains accepted and
+contains `TOIC`, but cheaper `MVi` analyses can sort before it. This is a
+ranking consequence of making the formerly implicit PP witness explicit in
+the linkage, not a loss of the grammatical `TOi` path.
+
+### Verification
+
+Focused accepted-linkage comparison inspected the first three displayed
+accepted linkages for:
+
+```text
+It is easy to use the program.
+It is necessary to use the program.
+Our program is easy to use.
+```
+
+The same grammatical constructions remain accepted. The `TOi` analyses for
+the filler/expletive examples carry `TOIC`, though they may sort after cheaper
+`MVi` alternatives. The tough-subject example continues through `TOt`.
+
+The rule 23 migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+Observed results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1496 errors
 ```
 
 ## Library-Assisted Dictionary Helper Tokens
