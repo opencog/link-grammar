@@ -1536,6 +1536,88 @@ corpus-fixes.batch: 359 errors
 corpus-fix-long.batch: 8 errors
 ```
 
+## `Qd , MX`: Require Punctuation For Name-Based Direct Question Openers
+
+**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was the ID-less subject-inversion check:
+
+```text
+Qd , MX , "Bad subject inversion"
+```
+
+The grammatical area is direct subject-auxiliary inversion after an opener.
+Some valid direct questions use a left opener plus `Qd`, for example:
+
+```text
+Joe, are you ready?
+Anyhow, am I right?
+Which way did they go?
+```
+
+### Problem
+
+The dictionary also allowed a capitalized name to act as a no-comma
+directive opener. If such a name opened a `Qd` path, a following noun could
+simultaneously use an `MX` relation, producing accepted raw linkages such as:
+
+```text
+*Joe doesn't matter what Ted does.
+```
+
+### Old Mechanism
+
+PP rejected completed domains that contained both `Qd` and `MX`. That blocked
+the bad capitalized-name path, but it also kept a rule for a distinction that
+is local to the dictionary's opener analysis.
+
+### Overgeneration Cause
+
+`<directive-opener>` supplied a no-punctuation fallback for both `Qd` and `Wq`
+openers. Given-name entries reused that ordinary opener expression, so `Joe`
+could take the same no-comma `Wc- & Qd+` opener disjunct as legitimate
+non-name opener heads. The resulting raw linkage was locally legal until PP
+noticed that the same domain also contained an `MX` link.
+
+### Implementation
+
+The dictionary now uses a separate `<directive-opener-entity>` expression for
+capitalized entities and given names. In that entity-specific expression,
+`Qd` openers require punctuation (`Xc+ & Qd+`). The ordinary
+`<directive-opener>` still permits its previous no-comma `Qd` behavior for
+non-entity opener heads, preserving idiomatic wh-adverbial questions such as
+`Which way did they go?`. The `Wq` opener fallback is unchanged.
+
+### Examples
+
+Focused examples are recorded in `corpus-knowledge.batch`:
+
+```text
+Joe, are you ready?
+Anyhow, am I right?
+It doesn't matter what Ted does.
+*Joe doesn't matter what Ted does.
+*Mary doesn't matter what Ted does.
+```
+
+### Verification
+
+Accepted-linkage comparison against `master` for `Joe, are you ready?`,
+`Anyhow, am I right?`, and `It doesn't matter what Ted does.` showed matching
+public link rows for the first three accepted displayed linkages. The focused
+regression checks also preserved `Which way did they go?` and
+`Which way did you come?`.
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1498 errors
+```
+
 ## Rule 62 (`Pa##j`): License Predicative-Adjective Objects With `OAJ`
 
 **Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
@@ -1912,9 +1994,9 @@ them for the tracked behavior.
 
 The seven rules are removed from `4.0.knowledge`.
 
-Rules 71, 72, and 73 remain active because they were not part of this
-redundancy removal. The ID-less `Bad subject inversion` rule also remains
-active.
+Rules 72 and 73 remain active because they were not part of this redundancy
+removal. Rule 71 and the ID-less `Bad subject inversion` rule were migrated
+later by dedicated dictionary changes.
 
 ### Implications
 

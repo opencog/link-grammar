@@ -304,3 +304,12 @@ John imagines himself singing from a mountaintop.
 *You should hear him sings.
 *I feel him breathes down my back.
 *John imagines himself sings from a mountaintop.
+
+% CONTAINS_NONE subject-inversion rule: directive-opener Qd questions require
+% punctuation, so capitalized nouns cannot create the old Qd+MX path.
+
+Joe, are you ready?
+Anyhow, am I right?
+It doesn't matter what Ted does.
+*Joe doesn't matter what Ted does.
+*Mary doesn't matter what Ted does.

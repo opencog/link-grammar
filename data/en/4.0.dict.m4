@@ -366,6 +366,15 @@ changecom(`%')
     (({OH-} & Wc- & {MG+} & (Xc+ or [()]1.2) & (Qd+ or Wq+)) or
     ({Xd-} & {OH-} & (Xc+ or [[()]]) & [dCOa+]));
 
+% Like <directive-opener>, but capitalized-entity Qd openers require
+% punctuation so entities cannot create the old Qd+MX path:
+% "*Joe doesn't matter what Ted does".  Wq keeps the no-comma fallback for
+% vocative/opening wh questions.
+<directive-opener-entity>:
+  {[[Wa-]]} &
+    (({OH-} & Wc- & {MG+} & ((Xc+ & Qd+) or ((Xc+ or [()]1.2) & Wq+))) or
+    ({Xd-} & {OH-} & (Xc+ or [[()]]) & [dCOa+]));
+
 % Xc+ & EI+: connect to imperatives (infinitive verbs): "Anyhow, don't"
 <directive-adverb>: (Xc+ & EI+);
 
@@ -399,7 +408,7 @@ changecom(`%')
 %
 % MX+ & <noun-main-s>: country names: "...went to Paris, France"
 %
-<INITIALS> <ALL-UPPER> <entity-singular>:
+<capitalized-entity-singular-main>:
   ({NM+} & ({G-} & {[MG+]} &
     (({DG- or [GN-]0.5 or [@A- & @AN-]0.5 or [{@A-} & {D-}] or ({@A-} & Jd- & Dmc-)} &
         ((<noun-rel-s> & (JG- or <noun-main-s>))
@@ -408,8 +417,15 @@ changecom(`%')
         ))
       or ({[[@MX+]]} & [AN+]) or G+)))
   or (MXs+ & (<noun-main-s> or <noun-and-s>))
-  or ({@A- or G-} & {D-} & Wa- & {NM+})
+  or ({@A- or G-} & {D-} & Wa- & {NM+});
+
+<INITIALS> <ALL-UPPER>:
+  <capitalized-entity-singular-main>
   or [<directive-opener> or <directive-subject>]0.2;
+
+<entity-singular>:
+  <capitalized-entity-singular-main>
+  or [<directive-opener-entity> or <directive-subject>]0.2;
 
 % As above, but with a tiny extra cost, so that a dictionary word is
 % preferred to the regex match (i.e. for a common noun starting a
@@ -433,7 +449,7 @@ changecom(`%')
       or AN+
       or G+))
   or ({@A- or G-} & {D-} & Wa- & {NM+})
-  or <directive-opener>
+  or <directive-opener-entity>
   or <directive-subject>;
 
 % capitalized words ending in s
@@ -486,7 +502,7 @@ changecom(`%')
 /en/words/entities.given-male.sing
 /en/words/entities.goddesses
 /en/words/entities.gods:
-  <marker-entity> or <given-names> or <directive-opener> or <directive-subject>;
+  <marker-entity> or <given-names> or <directive-opener-entity> or <directive-subject>;
 
 % Given names An In So interfere with misc words -- give them a cost.
 An.f In.f So.f: [[<given-names>]];
