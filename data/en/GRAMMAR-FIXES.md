@@ -1797,34 +1797,41 @@ corpus-fix-long.batch: 9 errors
 
 ## Redundant `CONTAINS_ONE` Question-Inversion Checks
 
-**Status:** implemented for rule 8.
+**Status:** implemented for rules 8 and 9.
 
 ### Rule / Area
 
-The removed PP rule was:
+The removed PP rules were:
 
 ```text
-Qd , SI SFI SXI THRS THRP THRU , "S-V inversion required8"
+Qd  , SI SFI SXI THRS THRP THRU , "S-V inversion required8"
+PFc , SI SFI SXI                , "S-V inversion required9"
 ```
 
-The grammatical area is direct subject-verb inversion with `Qd`, including
-ordinary yes/no questions and the existential-`there` paths migrated earlier.
+The grammatical area is direct subject-verb inversion. Rule 8 handled `Qd`,
+including ordinary yes/no questions and the existential-`there` paths migrated
+earlier. Rule 9 handled the historical `PFc` selector.
 
 ### Problem
 
 After the existential-`there` migration, the current dictionary already
 exposes `Qd` only through ordinary question/inversion paths or through the
-agreement-specific `THRS` / `THRP` / `THRU` paths. The postprocessing rule
-therefore no longer carries observable behavior in the tracked corpora.
+agreement-specific `THRS` / `THRP` / `THRU` paths. Rule 8 therefore no longer
+carries observable behavior in the tracked corpora.
+
+Rule 9 is stale under the current dictionary. The only `PFc` connector
+occurrences are positive occurrences on `as.e`, `as.e-c`, and `than.e`; there
+is no matching negative `PFc` occurrence, so no completed linkage can contain a
+`PFc` link. The PP rule therefore cannot reject any current linkage.
 
 ### Implementation
 
-Rule 8 is removed from `4.0.knowledge`; no replacement connector family is
-needed.
+Rules 8 and 9 are removed from `4.0.knowledge`; no replacement connector
+family is needed.
 
 ### Examples
 
-Focused examples are recorded in `corpus-knowledge.batch`:
+Focused rule-8 examples are recorded in `corpus-knowledge.batch`:
 
 ```text
 Does he drink?
@@ -1833,18 +1840,22 @@ Is there a dog in the park?
 Are there dogs in the park?
 ```
 
+There is no focused rule-9 sentence because `PFc` is unreachable in the
+current dictionary.
+
 ### Verification
 
-The removal was validated with ordinary parser runs and `lgerror` comparison
-against the pre-removal outputs for `corpus-knowledge.batch`,
-`corpus-basic.batch`, and `corpus-fixes.batch`; all three had zero error
-differences.
+The removals were validated with ordinary parser runs and `lgerror`
+comparison against the pre-removal outputs for `corpus-knowledge.batch`,
+`corpus-basic.batch`, `corpus-fixes.batch`, and `corpus-failures.batch`; all
+comparisons had zero error differences.
 
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 361 errors
 corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1499 errors
 ```
 
 ## Rules 58 And 59: Comparative Clauses Require A Compatible Antecedent
