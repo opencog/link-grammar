@@ -23,7 +23,10 @@ There is no nicer way than to leave now.
 There is no nicer way to round off the evening than to have a quiet nightcap.
 
 % CONTAINS_ONE rule 8: Qd direct question inversion is now constrained by the
-% dictionary question paths and existential-there THR paths.
+% dictionary question paths and existential-there THR paths. Rule 9's PFc
+% selector is unreachable in the current dictionary because PFc has no matching
+% negative connector occurrence; no active sentence can exercise that stale
+% PP check.
 
 Does he drink?
 Are you insane?
