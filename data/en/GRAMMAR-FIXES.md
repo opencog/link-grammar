@@ -42,6 +42,7 @@ Added uppercase connector families:
 | `CMPX` | Certifies an agreement-neutral comparative head, such as bare `more` or a comparative preposition object. |
 | `CMPC` | Certifies that a comparative modifier path licenses a following `Cc` / `CV` comparative clause. |
 | `CMPO` | Certifies that a comparative object or measure path licenses a following `MV#o` object-clause comparative continuation. |
+| `CMPCX` | Certifies that a comparative modifier, object, or measure path licenses a following `MV#c` auxiliary-clause comparative continuation. |
 | `WTHAN` | Connects `way` / `ways` nouns to a following `than to ...` infinitival comparative. |
 | `THBS` / `THBI` | Certify direct and inverted subject links for `THb` predicate that-clause complements. |
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
@@ -105,6 +106,7 @@ Changed or retired connector forms:
 | comparative-clause `S**c` on `than.e` / `as.e-c` | Split into singular `Ss*c` and plural `Sp*c` branches that require `CMPS`, `CMPP`, or `CMPX` antecedent certificates. |
 | comparative-clause `Cc` / `CV` on `than.e` / `as.e-c` | Tightened so clausal comparative continuations require a `CMPC` certificate from a local comparative modifier path. |
 | comparative object-clause `MV#o` on `than.e` / `as.e-c` | Tightened so object-control comparative continuations require a `CMPO` certificate from a local comparative object or measure path. |
+| comparative auxiliary-clause `MV#c` on `as.e-c` | Tightened so `CX` / `CQ` continuations require `CMPCX` or an existing comparative antecedent certificate from a local witness. |
 | `than to ...` infinitival comparative after `way` / `ways` | Added `WTHAN` so valid `way ... than to ...` comparatives do not depend on the retired naked `to.r I*a+` fallback. |
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
 | `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require a `TSIC` certificate from filler/expletive `it` when they select a subjunctive that-clause complement. Ordinary `THi` and `TOi` paths remain separate. |
@@ -504,6 +506,30 @@ not by a plain adjective. Thus `as much as he did` and `the same as it did`
 can still use `MVzo`, while `as intelligent as John does` cannot use that
 object-clause branch merely because the adjective has broad modifier
 connectors.
+
+### `CMPCX`: Comparative Auxiliary-Clause Certificate
+
+`CMPCX` certifies the local comparative evidence needed by the `as.e-c`
+`MV#c` auxiliary-clause continuation:
+
+```text
+as.e-c: CMPCX- & MVzc- & CX+
+```
+
+It replaces the PP rule 48 requirement that a domain containing `MV#c` also
+contain a local witness such as `EEm`, `EEy`, `MVb`, `MVm`, `D##y`, `Dm#m`,
+`Om`, `Oy`, `Jm`, `Jy`, `Am`, or `MX#m`.
+
+When the witness can connect to `as.e-c` without crossing another link, the
+dictionary exposes `CMPCX+` directly. This covers adverbial and bare-object
+comparative paths such as `as quickly as ...` and `as much as ...`.
+
+Object-noun-phrase examples such as `as much money as John does` need a
+different route: a direct degree-word certificate would cross the verb-object
+link. Those cases use the existing noun-side comparative antecedent
+certificates `CMPS`, `CMPP`, or `CMPX`, which connect from the noun endpoint
+to `as.e-c` without crossing. The `MV#c` branch accepts those certificates
+alongside `CMPCX`.
 
 ### `WTHAN`: `way ... than to ...` Infinitival Comparatives
 
@@ -972,7 +998,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
 | 38 | Remaining inverted expletive `it` complement licensing | Rules 37 and 39 were removed as redundant after the dedicated predicate-certificate migrations. Rule 38 remains active: simple removal accepts `*I wonder how important is it to turn off the computer`. A replacement needs to separate valid inverted filler/expletive `it` paths from embedded ordinary inversion paths that should not license the lower complement. |
-| 43, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch`, but raises `corpus-basic.batch` by accepting comparative negatives. Rules 44 and 47 were migrated separately with the `MVZP` and `CMPO` splits. Rule 48 still accepts the knowledge/basic negative `*I am as intelligent as John does` when removed by itself, so it needs a narrower comparative connector split rather than deletion. |
+| 43 | Comparative `than.e` modifier path | Bulk removal of the remaining comparative checks leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch`, but rule 43 removal raises `corpus-basic.batch` by accepting `*I earn as much money in a month than John earns in a year`. Rules 44, 47, and 48 were migrated separately with the `MVZP`, `CMPO`, and `CMPCX` splits. Rule 43 needs a narrower `MVt` / `than.e` connector split rather than deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
 
 `FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
@@ -4393,6 +4419,95 @@ Focused rejected examples include:
 ### Verification
 
 The rule 47 migration was validated with:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 355 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1496 errors
+```
+
+## Rule 48: Certify Comparative `MV#c` Auxiliary-Clause Paths
+
+**Status:** implemented; PP rule 48 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+MV#c , EEm MVb Dm#m EEy D##y MVm Om Oy Jm Jy Am MX#m , "Bad comparative48"
+```
+
+The grammatical area is comparative auxiliary-clause continuation, especially
+`as.e-c` paths such as `as much money as John does` and `as quickly as John
+does`, where `as.e-c` links to the auxiliary by `CX` or `CQ`.
+
+### Problem
+
+Simple deletion of rule 48 left the raw `as.e-c` `MVzc- & (CX+ or CQ+)`
+branch available to ordinary adjective comparative paths. That accepted:
+
+```text
+*I am as intelligent as John does.
+```
+
+The adjective-side `EAy` path is a valid witness for some comparative
+constructions, but it is not a valid license for this auxiliary-clause
+continuation. The old PP rule caught that after extraction by requiring a
+different local witness inside the `MV#c` domain.
+
+### Implementation
+
+The `MVzc` branch now requires a local dictionary-side certificate. It accepts
+the new `CMPCX` certificate and the existing noun-side comparative antecedent
+certificates:
+
+```text
+as.e-c: (CMPCX- or CMPS- or CMPP- or CMPX-) & MVzc- & (CX+ or CQ+)
+```
+
+`CMPCX` is exposed by non-crossing modifier and object/measure witnesses such
+as `EEy`, `EEm`, `MVb`, `MVm`, `Oy`, `Jy`, `Om`, `Jm`, `Am`, and `MX#m` paths.
+For object noun phrases, a direct certificate from the degree word can cross
+the verb-object link, so the branch also accepts `CMPS`, `CMPP`, or `CMPX`
+from the noun endpoint.
+
+Plain adjective comparatives with only `EAy`, such as `as intelligent as John
+does`, do not expose any of these certificates and cannot use the `MV#c`
+branch.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+I earn as much money as John does.
+I earn as many dollars as John does.
+I run as much as John does.
+He runs as quickly as John does.
+```
+
+Focused rejected examples include:
+
+```text
+*I am as intelligent as John does.
+```
+
+### Verification
+
+The rule 48 migration was validated with:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch

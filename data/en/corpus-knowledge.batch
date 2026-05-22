@@ -407,6 +407,16 @@ I did as much as he did.
 I earned as much as John earned.
 *I am as intelligent as John does.
 
+% CONTAINS_ONE rule 48: MV#c comparative auxiliary-clause paths need local
+% comparative modifier, object, or measure evidence.  The MV#c branch now
+% requires CMPCX or an existing comparative antecedent certificate.
+
+I earn as much money as John does.
+I earn as many dollars as John does.
+I run as much as John does.
+He runs as quickly as John does.
+*I am as intelligent as John does.
+
 % CONTAINS_ONE rules 32s, 32p, 32u, 34, 35, and 36: existential "there"
 % agreement is carried by dictionary connectors instead of PP checks; the old
 % broad object-like OXt branch on there.r is removed.
