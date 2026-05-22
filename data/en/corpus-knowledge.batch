@@ -86,6 +86,30 @@ I want it to be likely he came.
 *Does it act likely that Joe came?
 *Did it act likely that Joe came?
 
+% CONTAINS_ONE rule 20: THi that-clause complements require filler/expletive
+% it evidence.  THIC carries direct it evidence to the predicate that owns the
+% THi link; object-raising and auxiliary paths use TTHI, ITHI, PPTHI, and
+% PTHI carriers.  Clefts use a same-copula SFsi/SFIsi and THi branch.
+
+It is likely that he came.
+Is it likely that he came?
+Does it seem likely that Joe came?
+Can it be likely that Joe came?
+Has it seemed likely that Joe came?
+It happened that he came.
+It seems that he came.
+It was hoped that he came.
+I made it clear that he came.
+I want it to be likely that he came.
+It was in Paris that Debussy first heard Balinese music.
+Wasn't it in 1955 that Sally first met Joe?
+*Joe is likely that he came.
+*I made Anne clear that he came.
+*Does it act likely that Joe came?
+*Did it act likely that Joe came?
+*Can it act likely that Joe came?
+*It is more likely that Joe died than John is that Fred died.
+
 % CONTAINS_ONE rule 4: SXI also occurs in fronted locative/adverbial
 % inversion licensed by PFb, not only in question or comparative paths.
 

@@ -211,7 +211,6 @@ CONTAINS_ONE_RULES:
 ; The two below prevent "How big?" and "How quickly?"
 ; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'17"   ,
 ; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'18"   ,
- THi   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'20" ,
  AFdi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'30"     ,
  O#i   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'31"     ,
  SFsi* ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi CPu
