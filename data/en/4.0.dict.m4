@@ -1768,7 +1768,7 @@ half:
 many:
   (H- & (Dmc+ or DWHp+ or ND+ or NDH+ or NIn+ or EC+ or ECWH+ or <b-raw-p> or [()]))
   or (HWS- & (Dmc+ or NIn+ or EC+ or [()]))
-  or (AM- & ((Dmcy+ & {CMPO+}) or ((Oy- or Jy-) & {CMPX+} & {CMPO+})))
+  or (AM- & ((Dmcy+ & {CMPO+} & {CMPCX+}) or ((Oy- or Jy-) & {CMPX+} & {CMPO+} & {CMPCX+})))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
   or (OFd+ & Dmc+)
@@ -1934,7 +1934,7 @@ little.i:
       or [<noun-rel-s> & (<noun-main-s> or <rel-clause-s>)]
       or <noun-and-s>))
   or (H- & DWHu+)
-  or (AM- & ((Dmuy+ & {CMPO+}) or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+} & {CMPO+})))
+  or (AM- & ((Dmuy+ & {CMPO+} & {CMPCX+}) or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+} & {CMPO+} & {CMPCX+})))
   or [[{Ds-} & <adv-of>]];
 
 % "he likes you most" has no determiner, just uses MVa-.
@@ -8220,7 +8220,7 @@ later earlier:
     (E+ or
     [Mp-]0.4 or
     Pp- or
-    ({[Mp-]-0.09} & MVb- & {CMPC+}) or
+    ({[Mp-]-0.09} & MVb- & {CMPC+} & {CMPCX+}) or
     (Wt- & {Xc+}) or
     [({Xc+ & {Xd-}} & dCO+)] or
     (Xd- & Xc+ & (MX*x- or MVx-)) or
@@ -9209,7 +9209,7 @@ and.j-c or.j-c but.j-c yet.j-c:
     (Xd- & hAJlc- & hAJrc+ & Xc+) or
     ({Xd-} & hSJl- & {EB+} & hAJrc+)) &
     (((Pam- or AFm+) & {@MV+}) or
-    ({[ECa-]} & MVb- & {CMPC+}) or
+    ({[ECa-]} & MVb- & {CMPC+} & {CMPCX+}) or
     ({Xc+} & Am+ & {CMPO+})))
   or (((hAJlc- & hMJXr+) or
     (hMJXl- & hAJrc+) or
@@ -10317,13 +10317,13 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 % Cost of >1.0 on Omm- so that MVm- is preferred for "He runs more".
 % naked EC-: "How much more?"
 more:
-  ({ECa-} & (EAm+ or (EEm+ & {CMPC+}) or [(MVm- & {CMPC+})] or [EB*m-] or Qe+ or <advcl-verb> or dAJrc- or dAJlc+))
+  ({ECa-} & (EAm+ or (EEm+ & {CMPC+} & {CMPCX+}) or [(MVm- & {CMPC+} & {CMPCX+})] or [EB*m-] or Qe+ or <advcl-verb> or dAJrc- or dAJlc+))
   or (ECWH- & (DWHp+ or DWHu+ or (EAm+ & BWH+)))
   or ({OF+} & (
-    ({ECn-} & ((Dmum+ & {CMPO+}) or (Ss+ & <CLAUSE>) or <b-wh-s>))
-    or ({ECx- or ND-} & ((Dmcm+ & {CMPO+}) or (Sp+ & <CLAUSE>) or <b-wh-p>))
+    ({ECn-} & ((Dmum+ & {CMPO+} & {CMPCX+}) or (Ss+ & <CLAUSE>) or <b-wh-s>))
+    or ({ECx- or ND-} & ((Dmcm+ & {CMPO+} & {CMPCX+}) or (Sp+ & <CLAUSE>) or <b-wh-p>))
     or ({ECn- or ECx- or ND-} &
-      ((([Omm-]1.1 or Jm-) & {CMPX+} & {CMPO+}) or (Xd- & MVt+ & Xc+ & MX*m- & {CMPO+})))))
+      ((([Omm-]1.1 or Jm-) & {CMPX+} & {CMPO+} & {CMPCX+}) or (Xd- & MVt+ & Xc+ & MX*m- & {CMPO+} & {CMPCX+})))))
   or EC-
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
@@ -10333,22 +10333,22 @@ more_of_an: Ds*mv+ or (<PHv> & Ds*mx+);
 % XXX TODO: shouldn't less be a lot more like 'more', above?
 % Cost of >1.0 on Om- so that MVm- is preferred for "He runs less".
 less:
-  ({ECa-} & (EAm+ or (EEm+ & {CMPC+}) or [(MVm- & {CMPC+})] or [EB*m-] or dAJrc- or dAJlc+))
-  or ({ECn-} & ((Dmum+ & {CMPO+}) or (Ss+ & <CLAUSE>) or <b-wh-s>))
-  or ({ECn-} & (([Om-]1.1 or Jm-) & {CMPX+} & {CMPO+}))
+  ({ECa-} & (EAm+ or (EEm+ & {CMPC+} & {CMPCX+}) or [(MVm- & {CMPC+} & {CMPCX+})] or [EB*m-] or dAJrc- or dAJlc+))
+  or ({ECn-} & ((Dmum+ & {CMPO+} & {CMPCX+}) or (Ss+ & <CLAUSE>) or <b-wh-s>))
+  or ({ECn-} & (([Om-]1.1 or Jm-) & {CMPX+} & {CMPO+} & {CMPCX+}))
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 % ND- & Dmcm+ "I ran 10 fewer miles than Ben."
 fewer:
-  ({ECn- or ND-} & ((Dmcm+ & {CMPO+}) or ((Om- or Jm-) & {CMPX+} & {CMPO+}) or (Sp+ & <CLAUSE>) or dAJrc- or dAJlc+)) or
+  ({ECn- or ND-} & ((Dmcm+ & {CMPO+} & {CMPCX+}) or ((Om- or Jm-) & {CMPX+} & {CMPO+} & {CMPCX+}) or (Sp+ & <CLAUSE>) or dAJrc- or dAJlc+)) or
   (DG- & Dm*w+ & (ER- or (Wd- & Xc+ & ER+)));
 
 farther:
-  ({ECa-} & {K+} & ((MVb- & {CMPC+}) or Qe+ or <advcl-verb> or dAJrc- or dAJlc+)) or
+  ({ECa-} & {K+} & ((MVb- & {CMPC+} & {CMPCX+}) or Qe+ or <advcl-verb> or dAJrc- or dAJlc+)) or
   A+;
 
 further.r:
-  ({ECa-} & {K+} & ((MVb- & {CMPC+}) or Qe+ or <advcl-verb> or dAJrc- or dAJlc+)) or
+  ({ECa-} & {K+} & ((MVb- & {CMPC+} & {CMPCX+}) or Qe+ or <advcl-verb> or dAJrc- or dAJlc+)) or
   A+ or
   E+ or
   ({Xd-} & Xc+ & dCO+);
@@ -10358,7 +10358,7 @@ further.r:
 % EAy+: "He is as smart"
 % Hmm, probably want to give EAy a cost, to avoid its use in
 % "William is described as smooth, yet thoughtful"
-as.e-y: {EZ-} & ((EAy+ & {HA+ & {BWH+}}) or (EEy+ & {CMPC+}) or AM+);
+as.e-y: {EZ-} & ((EAy+ & {HA+ & {BWH+}}) or (EEy+ & {CMPC+} & {CMPCX+}) or AM+);
 
 % uses comparative links
 % Cc+: "The coffee tastes the same as it did last year."
@@ -10371,7 +10371,8 @@ as.e-c:
   or (MVz- & (CMPS- or CMPX-) & Ss*c+ & {Mp+})
   or (MVz- & (CMPP- or CMPX-) & Sp*c+ & {Mp+})
   or ((CMPO- & MVzo- & Ct+ & Bc+ & {U+}) or (MVzo- & CMPO- & Ct+ & Bc+ & {U+}))
-  or (MVzc- & (CX+ or CQ+))
+  or (((CMPCX- or CMPS- or CMPP- or CMPX-) & MVzc- & (CX+ or CQ+))
+      or (MVzc- & (CMPCX- or CMPS- or CMPP- or CMPX-) & (CX+ or CQ+)))
   or (MVZP- & Pa+)
   or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
 
@@ -10499,7 +10500,7 @@ much:
   ))
   or (H- & {@M+} & <b-raw-s>)
   or (H- & {OFd+} & DWHu+)
-  or (AM- & ((Dmuy+ & {CMPO+}) or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+} & {CMPO+}) or EB*y-))
+  or (AM- & ((Dmuy+ & {CMPO+} & {CMPCX+}) or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+} & {CMPO+} & {CMPCX+}) or EB*y-))
   or EZ+;
 
 mucho: Dm+;
@@ -10520,7 +10521,7 @@ significantly substantially:
 %       "cheaper than dirt, slime is better"
 
 <comp-adj-misc>:
-  ({[[@Ec-]]} & {Xc+} & Am+ & {CMPO+})
+  ({[[@Ec-]]} & {Xc+} & Am+ & {CMPO+} & {CMPCX+})
   or (DD- & O- & Mp+)
   or ({EA-} & dAJlc+)
   or (Wr- & {@MV+} & MVt+ & Xc+ & PFb+);
@@ -10548,7 +10549,7 @@ harder.a-c:
     COMP_ADJ_POST_LIC(Pafm- or AFm+ or ({EA-} & dAJrc-),
       (<tot-verb> or <toi-verb>) & {LE+})
     or <comp-adj-misc>
-    or (MVb- & {CMPC+})
+    or (MVb- & {CMPC+} & {CMPCX+})
   ))
   or (DG- & (TR+ or AF+) & {@MV+}
     & {<tot-verb> or <toi-verb>} & (ER- or (Wd- & Xc+ & ER+)));
@@ -10557,7 +10558,7 @@ higher.a-c deeper.a-c lower.a-c faster.a-c quicker.a-c slower.a-c:
   ({ECa-} & (
     COMP_ADJ_POST(Pam- or AFm+ or ({EA-} & dAJrc-))
     or <comp-adj-misc>
-    or (MVb- & {CMPC+})
+    or (MVb- & {CMPC+} & {CMPCX+})
     or Qe+
     or <advcl-verb>
   ))
@@ -10567,7 +10568,7 @@ sooner.a-c:
   ({ECa- or Yt-} & (
     COMP_ADJ_POST(Pam- or AFm+ or ({EA-} & dAJrc-))
     or <comp-adj-misc>
-    or (MVb- & {CMPC+})
+    or (MVb- & {CMPC+} & {CMPCX+})
     or Qe+
     or <advcl-verb>
   ))
@@ -10577,7 +10578,7 @@ longer.a-c:
   ({ECa- or Yt-} & (
     COMP_ADJ_POST(Pam- or AFm+ or ({EA-} & dAJrc-))
     or <comp-adj-misc>
-    or (MVb- & {CMPC+})
+    or (MVb- & {CMPC+} & {CMPCX+})
     or Qe+
     or <advcl-verb>
     or Ot-
@@ -10586,7 +10587,7 @@ longer.a-c:
   or (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 longer-term.a:
-  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+ & {CMPO+})
+  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+ & {CMPO+} & {CMPCX+})
      or COMP_ADJ_POST_LIC(Pafm-, <thi-verb> & {LE+})
      or COMP_ADJ_POST_LIC(Pafm- or AFm+, <toi-verb> & {LE+})))
    or (DG- & TR+ & {@MV+} & {<toi-verb> or <thi-verb>} & (ER- or (Wd- & Xc+ & ER+)))
@@ -10606,7 +10607,7 @@ better.a-c:
     COMP_ADJ_POST_LIC(Pafm- or ({EA-} & dAJrc-), <thi-verb> & {LE+})
     or COMP_ADJ_POST_LIC(Pafm- or AFm+ or ({EA-} & dAJrc-), <toi-verb> & {LE+})
     or <comp-adj-misc>
-    or (MVb- & {CMPC+})
+    or (MVb- & {CMPC+} & {CMPCX+})
     or Qe+
     or <advcl-verb>
     or E+
@@ -10677,7 +10678,7 @@ same.a own.a:
 
 % [Oy-]0.1: see immediately above.
 the_same:
-  {EZ-} & ((D**y+ & {CMPO+}) or ([Oy-]0.1 & {CMPO+}) or (Jy- & {CMPO+}) or (MVy- & {CMPC+}));
+  {EZ-} & ((D**y+ & {CMPO+} & {CMPCX+}) or ([Oy-]0.1 & {CMPO+} & {CMPCX+}) or (Jy- & {CMPO+} & {CMPCX+}) or (MVy- & {CMPC+}));
 
 next.a:
   ({Xc+ & {Xd-}} & dCO+)
