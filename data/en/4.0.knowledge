@@ -211,8 +211,6 @@ CONTAINS_ONE_RULES:
 ; The two below prevent "How big?" and "How quickly?"
 ; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'17"   ,
 ; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'18"   ,
- SFIsi ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi
-          COqi    CPi    Eqi    BIh         , "Bad use of 'it'38"           ,
 ; Former Pa##j object-class checks are encoded in dictionary OAJ paths.
 ; The former B#m companion rule is encoded in dictionary paths such as NDH.
 

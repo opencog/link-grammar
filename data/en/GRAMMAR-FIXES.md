@@ -997,7 +997,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 1-2 | `SI#*` / `SI#x` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI` forms. |
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
-| 38 | Remaining inverted expletive `it` complement licensing | Rules 37 and 39 were removed as redundant after the dedicated predicate-certificate migrations. Rule 38 remains active: simple removal accepts `*I wonder how important is it to turn off the computer`. A replacement needs to separate valid inverted filler/expletive `it` paths from embedded ordinary inversion paths that should not license the lower complement. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
 
 `FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
@@ -1310,9 +1309,9 @@ corpus-fix-long.batch: 8 errors
 corpus-failures.batch: 1496 errors
 ```
 
-## Rules 37 And 39: Remove Redundant Non-Inverted Expletive-It Backstops
+## Rules 37, 38, And 39: Remove Expletive-It Backstops
 
-**Status:** implemented; PP rules 37 and 39 have been removed from
+**Status:** implemented; PP rules 37, 38, and 39 have been removed from
 `4.0.knowledge`.
 
 ### Rule / Area
@@ -1322,12 +1321,14 @@ The removed PP rules were:
 ```text
 SFsi* , TOi THi QIi TSi O#i Ci THb CPi CPu COqi CPi Eqi BIh,
         "Bad use of 'it'37"
+SFIsi , TOi THi QIi TSi O#i Ci THb CPi COqi CPi Eqi BIh,
+        "Bad use of 'it'38"
 OXi   , TOi THi QIi TSi O#i Ci THb CPi COqi CPi Eqi BIh,
         "Bad use of 'it'39"
 ```
 
-The grammatical area is non-inverted filler/expletive `it` licensing for
-predicate complements. Earlier migrations split the individual complement
+The grammatical area is filler/expletive `it` licensing for predicate
+complements. Earlier migrations split the individual complement
 families into direct certificates and carrier paths, for example `THIC`,
 `TSIC`, `QIIC`, `TOIC`, `CIIC`, `THBS` / `THBI`, `BIQS` / `BIQI`, and
 cleft-object `TOCL` / `IOCL` / `PPOCL` / `ROCL`.
@@ -1335,22 +1336,32 @@ cleft-object `TOCL` / `IOCL` / `PPOCL` / `ROCL`.
 ### Problem
 
 After those dedicated migrations, the broad non-inverted `SFsi*` and `OXi`
-backstops no longer reject any additional agreed corpus example. Keeping them
-would leave two stale PP rules that duplicate more local dictionary
-constraints.
-
-Rule 38 is different and remains active. Its selector `SFIsi` covers inverted
-paths, and simple removal still accepts:
+backstops no longer reject any additional agreed corpus example. Rule 38 was
+different because its selector `SFIsi` covers inverted filler-`it` paths. A
+simple removal still accepted the embedded inversion:
 
 ```text
 *I wonder how important is it to turn off the computer.
 ```
 
+That raw linkage used `important.a --Qe-- is.v` and `is.v --SFIsi-- it`
+inside an embedded `wonder` question, with no root-attached question link to
+license the inversion.
+
 ### Implementation
 
 Rules 37 and 39 are removed from `4.0.knowledge` without adding new
-connectors. This is a redundancy removal, not a new grammar path. The
-remaining rule 38 continues to protect the unresolved inverted case.
+connectors. This is a redundancy removal, not a new grammar path.
+
+Rule 38 is removed after tightening the same dictionary question split used
+for rule 3. The `SFIs+` inverted filler-`it` branch uses
+`<verb-rq-required>`. For `Qw` and `Qe`, that expression now requires the verb
+to also connect to the wall through non-empty `<verb-root-wall>`. Matrix wh
+filler-`it` questions such as `How likely is it that Joe came?` keep the
+`Wq`/`WV` root links and remain accepted. Embedded clauses such as `I wonder
+how important is it...` can still form `Qe`, but cannot supply the
+root-attached wall evidence, so the bad `SFIsi` linkage is no longer
+generated.
 
 ### Examples
 
@@ -1359,22 +1370,41 @@ Focused examples include:
 ```text
 It is likely that he came.
 I made it clear that he came.
+Is it likely that Joe came?
+How likely is it that Joe came?
+I wonder how important it is to turn off the computer.
 *Joe is likely that he came.
 *I made Anne clear that he came.
+*I wonder how important is it to turn off the computer.
 ```
 
 ### Verification
 
 Rules 37 and 39 were tested individually before removal. In both cases,
 ordinary parser runs produced no error-set differences against the pre-removal
-baseline for:
+baseline. Rule 38 was tested after the `Qw`/`Qe` root-wall tightening. The
+validation used:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
 ```
+
+Observed results after the rule 38 migration:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 355 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1495 errors
+```
+
+Compared with the previous rule-43 baseline, the ordinary corpus error sets
+are unchanged.
 
 ## Rule 30: Retire The `AFdi` Comparative Filler-`It` Arm
 
@@ -3904,9 +3934,12 @@ I wonder how important it is to turn off the computer.
 The dictionary now distinguishes optional question context from required
 question-root context. `<verb-rq-required>` is the non-empty counterpart of
 `<verb-rq>`: it keeps the real `Rw`, `RWB`, `Qd`, `Qp`, `Qw`, and `Qe`
-question links but omits the empty fallback. The `is.v` filler-it inversion
-branch uses this required expression for `SFIs+`, while ordinary `SIs`
-branches keep the optional expression.
+question links but omits the empty fallback. For `Qw` and `Qe`, the required
+form also requires the verb to connect to the wall through non-empty
+`<verb-root-wall>`, because these wh links can otherwise occur inside embedded
+questions. The `is.v` filler-it inversion branch uses this required
+expression for `SFIs+`, while ordinary `SIs` branches keep the optional
+expression.
 
 This preserves valid matrix filler-it questions such as `Is it likely that
 Joe came?` and `Is it important to turn off the computer?`, but blocks the

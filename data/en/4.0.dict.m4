@@ -2614,6 +2614,7 @@ per "/.per": Us+ & Mp-;
 % with <verb-wall>
 %
 <verb-wall>: ((dWV- or dCV- or dIV-) & {VC+}) or [()];
+<verb-root-wall>: (dWV- or dCV- or dIV-) & {VC+};
 % <verb-wall>: (dWV- or dCV- or dIV-) & {VC+};
 
 <mv-coord>: {@MV+} & {MVSWH+} & {VC+};
@@ -2795,7 +2796,7 @@ per "/.per": Us+ & Mp-;
   Rw-
   or RWB-
   or ({{Xd-} & Iq-}
-      & (Qd- or Qp- or ((Qw- or Qe-) & ([<verb-wall>]-0.1 or ()))));
+      & (Qd- or Qp- or ((Qw- or Qe-) & <verb-root-wall>)));
 % Just like above, but no aux, should always be anded with I+.
 % The idea here is that the verb on the other end of the I+ will
 % connect to the wall.
