@@ -8074,7 +8074,6 @@ to.r:
   or ({@E-} & {N+} & I*t+ & (TO- or Wo-))
   or ({@E-} & {NT-} & I+ &
     (<MX-PHRASE>
-    or (SFsx+ & <S-CLAUSE>)
     or [{Xd- & Xc+} & MVi-]0.9
     or [<OPENER>]
     or [[R-]] ))
@@ -10469,8 +10468,9 @@ than.e:
   or (MVt- & (CMPS- or CMPX-) & Ss*c+)
   or (MVt- & (CMPP- or CMPX-) & Sp*c+)
   or ((MVta- or LE-) & Cta+ & ((AFd+ & {Pa+}) or PFc+))
+  or ((LE- or LEi-) & THc+)
   or (((LE- & {AFd+}) or LEi-)
-    & (THc+ or (TOic+ & <inf-verb>) or (TOfc+ & <inf-verb>) or (TOtc+ & B+)))
+    & ((TOic+ & <inf-verb>) or (TOfc+ & <inf-verb>) or (TOtc+ & B+)))
   or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+})
   or (WTHAN- & TO+ & IV+)
   or (MVp- & J+);

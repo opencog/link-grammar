@@ -119,6 +119,16 @@ It is more likely that Joe died than it is that Fred died.
 It is easier to ignore the problem than it is to solve it.
 *It is more likely that Joe died than John is that Fred died.
 
+% CONTAINS_NONE rule 72: filler-subject SF domains must not license ordinary
+% infinitival and comparative continuations.  The former PP backstop is moved
+% into local dictionary splits on to.r and than.e.
+
+Failure to comply may result in dismissal.
+It is easier to ignore the problem than it is to solve it.
+It is more likely that Joe died than that Fred died.
+*Absence to comply may result in dismissal.
+*It is more likely that Joe died than John is that Fred died.
+
 % CONTAINS_ONE rule 31: cleft-like O#i object paths require
 % filler/expletive it evidence.  Direct copulas use SFsi/SFIsi with the Osi
 % or Opi branch; auxiliary and object-raising paths carry this evidence with
