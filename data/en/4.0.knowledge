@@ -229,8 +229,6 @@ CONTAINS_ONE_RULES:
 ; The former B#m companion rule is encoded in dictionary paths such as NDH.
 
 CONTAINS_NONE_RULES:
- SF    ,  I*   PP*   TO*   Pa*   Pam  Pg*   Pv*   LE*   AFd*  MVta
-                                           , "Bad use of 'filler' subject72" ,
 
 ; H, O blocks "How many people you (noun)"
 ; But it wrecks "how much money did you give her?"

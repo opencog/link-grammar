@@ -127,6 +127,8 @@ Changed or retired connector forms:
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
 | `AFdi` | Retired from `than.e` comparative paths. Valid expletive-`it` comparative clauses use other certified complement or comparative analyses; the old `AFdi` arm allowed a lower ordinary subject clause to satisfy the local shape before PP rejected it. |
+| `to.r` with `SFsx` | The infinitival `to.r` branch no longer exposes a direct `SFsx+ & <S-CLAUSE>` subject path. Valid infinitival nominal subjects use local `TOn` / `IV` evidence instead. |
+| `than.e` with `AFd` and `THc` | The finite that-clause comparative arm no longer combines `AFd+` with `THc+`. `AFd+` remains available on infinitival comparative continuations such as `TOic` and `TOfc`. |
 
 ### `JW`: Wh Preposition Objects
 
@@ -944,7 +946,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
 | 37-39 | Remaining expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include ordinary-subject and wrong-object expletive-`it` complement paths such as `*How likely is John that he will come` and `*I made Anne clear that I was angry`. A replacement needs shared expletive-`it` subject/object certificates carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rule 20 is migrated separately with `THIC` and the `TTHI` / `ITHI` / `PPTHI` / `PTHI` carrier family; rule 21 is migrated separately with `TSIC`; rule 22 is migrated separately with `QIIC` and the `TQII` / `IQII` / `PQII` object-raising carrier; rule 23 is migrated separately with `TOIC`; rule 24 is migrated separately with `CIIC` and the `TCII` / `ICII` / `PCII` object-raising carrier; rules 25-29 were audited separately and removed as unreachable stale selectors; rule 30 is migrated separately by retiring `AFdi`; rule 31 is migrated separately with direct cleft-object splits and `TOCL` / `IOCL` / `PPOCL` / `ROCL` carriers. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. Single-rule removals of rules 44, 47, and 48 each accept the knowledge/basic negative `*I am as intelligent as John does`; rules 47 and 48 each also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
-| 72 | Non-inverted `SF` filler-subject backstop | Simple removal after rule 73 is unsafe. It raises `corpus-basic.batch` from 88 to 90 errors by accepting `*Absence to comply may result in dismissal` and `*It is more likely that Joe died than John is that Fred died`. The first bad path uses `to.r --SFsx-- may` with ordinary `I` links; the second uses `it --SFsi-- is` with comparative `LE`/`AFd`/`THc` structure. A replacement needs real dictionary splits for the affected `SF` subject and comparative/infinitival continuations, not deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
 
 `FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
@@ -3213,10 +3214,8 @@ them for the tracked behavior.
 
 The seven rules are removed from `4.0.knowledge`.
 
-Rule 72 remains active because it was not part of this redundancy removal.
-Rule 73 was migrated later by the dedicated `IFI` filler-inversion path
-documented below. Rule 71 and the ID-less `Bad subject inversion` rule were
-migrated later by dedicated dictionary changes.
+Rules 71, 72, 73, and the ID-less `Bad subject inversion` rule were migrated
+later by dedicated dictionary changes.
 
 ### Implications
 
@@ -3243,6 +3242,141 @@ corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 362 errors
 corpus-fix-long.batch: 9 errors
+```
+
+## Rule 72: Split Filler-Subject `SF` From Ordinary Continuations
+
+**Status:** implemented; PP rule 72 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+SF , I* PP* TO* Pa* Pam Pg* Pv* LE* AFd* MVta,
+     "Bad use of 'filler' subject72"
+```
+
+The grammatical area is non-inverted filler-subject `SF` domains. A filler
+subject path should not also license ordinary infinitival, predicative,
+comparative, or modifier continuations in the same local domain. Those
+continuations belong either to ordinary subjects or to explicitly certified
+filler/expletive constructions.
+
+### Problem
+
+After the surrounding expletive-`it` migrations, simple deletion of rule 72
+left two observable bad zero-null paths.
+
+The first was an infinitival `to.r` path:
+
+```text
+*Absence to comply may result in dismissal.
+```
+
+The raw linkage treated `to.r` as the sentence subject with an `SFsx` link to
+`may` and an ordinary `I` link to `comply`:
+
+```text
+Absence --COa--> to
+to ------SFsx-- may
+to ------I----- comply
+may -----I----- result
+```
+
+The grammatical positive uses a local nominal infinitive relation instead:
+
+```text
+Failure --TOn-- to
+Failure --IV--> comply
+Failure --Ss--- may
+```
+
+The second bad path was a finite comparative that-clause:
+
+```text
+*It is more likely that Joe died than John is that Fred died.
+```
+
+After rule 30 retired `AFdi`, the remaining raw overgeneration used ordinary
+`AFd`:
+
+```text
+likely --LE-- than
+than ---AFd-- is
+than ---THc-- that Fred died
+John ---Ss--- is
+```
+
+The `AFd` link made the local connector structure look plausible before PP,
+but the lower finite clause did not have a filler/expletive subject relation.
+
+### Implementation
+
+The dictionary replacement removes the overbroad direct `SFsx` continuation
+from the affected infinitival `to.r` branch:
+
+```text
+to.r: ... {NT-} & I+ & (... no SFsx+ & <S-CLAUSE> ...)
+```
+
+Valid nominal infinitive subjects such as `Failure to comply may result...`
+remain available through the local noun-side `TOn` / `IV` path.
+
+The finite comparative branch on `than.e` is also split. The finite
+that-clause arm no longer carries optional `AFd+`:
+
+```text
+(LE- or LEi-) & THc+
+```
+
+The ordinary `AFd+` comparative evidence remains available for infinitival
+comparative continuations:
+
+```text
+((LE- & {AFd+}) or LEi-) &
+  ((TOic+ & <inf-verb>) or (TOfc+ & <inf-verb>) or (TOtc+ & B+))
+```
+
+This keeps examples such as `It is easier to ignore the problem than it is to
+solve it` while preventing the finite `AFd + THc` leak.
+
+### Verification
+
+Focused accepted-linkage comparison inspected the first three displayed
+accepted linkages for:
+
+```text
+Failure to comply may result in dismissal.
+It is easier to ignore the problem than it is to solve it.
+It is more likely that Joe died than that Fred died.
+```
+
+The accepted parses remain available. `Failure to comply...` uses the
+noun-side `TOn` / `IV` subject relation; the comparative infinitival example
+keeps the ordinary `AFd` plus `TOic` / `TOfc` analyses; and the finite
+that-clause comparative keeps the direct `LE` / `THc` path without `AFd`.
+The two starred examples above have no accepted zero-null linkage after the
+migration.
+
+The rule 72 migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+Observed results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1496 errors
 ```
 
 ## Rule 73: Separate Filler-It Inversion From Ordinary `I`
