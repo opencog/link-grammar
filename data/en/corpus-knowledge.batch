@@ -129,6 +129,15 @@ It is more likely that Joe died than that Fred died.
 *Absence to comply may result in dismissal.
 *It is more likely that Joe died than John is that Fred died.
 
+% CONTAINS_ONE rules 37 and 39: broad non-inverted SFsi/OXi
+% expletive-it backstops are now redundant after the dedicated predicate
+% certificate migrations.  The inverted SFIsi backstop remains active.
+
+It is likely that he came.
+I made it clear that he came.
+*Joe is likely that he came.
+*I made Anne clear that he came.
+
 % CONTAINS_ONE rule 31: cleft-like O#i object paths require
 % filler/expletive it evidence.  Direct copulas use SFsi/SFIsi with the Osi
 % or Opi branch; auxiliary and object-raising paths carry this evidence with
