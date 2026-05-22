@@ -33,9 +33,9 @@ Are you insane?
 Is there a dog in the park?
 Are there dogs in the park?
 
-% CONTAINS_ONE rule 3: filler-it SFI inversion must have real question-root
-% evidence.  Direct matrix questions keep SFIsi, while embedded how clauses
-% use ordinary non-inverted order.
+% CONTAINS_ONE rules 3 and 38: filler-it SFI inversion must have real
+% question-root evidence.  Direct matrix questions keep SFIsi, while embedded
+% how clauses use ordinary non-inverted order.
 
 Is it important to turn off the computer?
 Is it likely that Joe came?
@@ -129,9 +129,9 @@ It is more likely that Joe died than that Fred died.
 *Absence to comply may result in dismissal.
 *It is more likely that Joe died than John is that Fred died.
 
-% CONTAINS_ONE rules 37 and 39: broad non-inverted SFsi/OXi
-% expletive-it backstops are now redundant after the dedicated predicate
-% certificate migrations.  The inverted SFIsi backstop remains active.
+% CONTAINS_ONE rules 37, 38, and 39: broad expletive-it backstops are now
+% redundant after the dedicated predicate certificates and the root-attached
+% SFIsi question evidence split.
 
 It is likely that he came.
 I made it clear that he came.
