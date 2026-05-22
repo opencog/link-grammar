@@ -110,6 +110,26 @@ Wasn't it in 1955 that Sally first met Joe?
 *Can it act likely that Joe came?
 *It is more likely that Joe died than John is that Fred died.
 
+% CONTAINS_ONE rule 31: cleft-like O#i object paths require
+% filler/expletive it evidence.  Direct copulas use SFsi/SFIsi with the Osi
+% or Opi branch; auxiliary and object-raising paths carry this evidence with
+% TOCL, IOCL, and PPOCL.  ROCL licenses the special case where the needed
+% filler it appears inside the following clause.
+
+It was John who stole the priceless documents.
+It's John who stole the priceless documents.
+Was it John who stole the priceless documents?
+Isn't it John who stole the priceless documents?
+It might be John who stole the priceless documents.
+Could it be John who stole the priceless documents?
+I want it to be John who stole the priceless documents.
+It has been John who stole the priceless documents.
+It may have been John who stole the priceless documents.
+The shame of it is, is that it was a good idea.
+*How likely is John that he will come?
+*I believe Fred was John who stole the priceless documents.
+*That is the man, in Joe's opinion, we should hire.
+
 % CONTAINS_ONE rule 4: SXI also occurs in fronted locative/adverbial
 % inversion licensed by PFb, not only in question or comparative paths.
 

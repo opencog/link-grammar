@@ -340,6 +340,7 @@ changecom(`%')
 <thi-too-verb>: TTHI+;
 <thi-raise-verb>: PTHI- & THi+;
 <thi-adj-extra>: (<thi-obj-verb> & {LE+}) or (<thi-raise-verb> & {LE+});
+<ocleft-too-verb>: TOCL+;
 <cii-verb>: CIIC- & {hHM+} & Ci+ & CV+;
 <cii-obj-verb>: CIIC- & (Paf- or dMJra-) & {hHM+} & Ci+ & CV+;
 <cii-too-verb>: TCII+;
@@ -1605,6 +1606,7 @@ it:
    or OAJ-
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
+   or (ROCL- & {MX+} & <it-sfsi-complement> & <CLAUSE>)
    or ({MX+} & (Ss+ or <it-sfsi-complement> or THBS+) & <CLAUSE>)
    or SIs- or <it-sfisi-complement> or THBI- or <it-oxi-complement> or Vp-
    or dSJls+ or dSJrs-;
@@ -3141,6 +3143,8 @@ daren’t mayn’t shan’t oughtn’t mightn’t:
 have.v:
   ({@E-} & THBS- & PPTHB+)
   or ({@E-} & BIQS- & PPBIQ+)
+  or ({@E-} & IOCL- & PPOCL+)
+  or ({@E-} & SFsi- & PPOCL+)
   or ({@E-} & THRP- & PPTHRP+)
   or ({@E-} & ITHRS- & PPTHRS+)
   or ({@E-} & ITHRP- & PPTHRP+)
@@ -3150,7 +3154,7 @@ have.v:
   or (THRP+ & (<verb-rq> & PPTHRP+))
   or (VERB_X_PLI(<vc-have>))
   or (SIp+ & ((<verb-rq> & PP+) or CQ-))
-  or (SFIp+ & ((<verb-rq> & (PP+ or PPTHI+)) or CQ-));
+  or (SFIp+ & ((<verb-rq> & (PP+ or PPTHI+ or PPOCL+)) or CQ-));
 
 % I've they've you've we've: PP+ & <CLAUSE>;
 % I- & PP+: "she would've said so".
@@ -3167,6 +3171,8 @@ have.v:
 has.v:
   ({@E-} & THBS- & PPTHB+)
   or ({@E-} & BIQS- & PPBIQ+)
+  or ({@E-} & IOCL- & PPOCL+)
+  or ({@E-} & SFsi- & PPOCL+)
   or ({@E-} & THRS- & PPTHRS+)
   or ({@E-} & THRU- & PPTHRU+)
   or (THBI+ & (<verb-rq> & PPTHB+))
@@ -3175,13 +3181,15 @@ has.v:
   or (THRU+ & (<verb-rq> & PPTHRU+))
   or (VERB_X_S(<vc-have>))
   or (SIs+ & ((<verb-rq> & {PP+ or <verb-wall>}) or CQ-))
-  or (SFIs+ & ((<verb-rq> & {PP+ or PPTHI+ or <verb-wall>}) or CQ-));
+  or (SFIs+ & ((<verb-rq> & {PP+ or PPTHI+ or PPOCL+ or <verb-wall>}) or CQ-));
 
 % <verb-x-sp> & <verb-wall>: "I sure wish I had"
 % Sa*a- & PPf+: "as had been agreed, the work began on Monday"
 had.v-d:
   ({@E-} & THBS- & PPTHB+)
   or ({@E-} & BIQS- & PPBIQ+)
+  or ({@E-} & IOCL- & PPOCL+)
+  or ({@E-} & SFsi- & PPOCL+)
   or ({@E-} & THRS- & PPTHRS+)
   or ({@E-} & THRP- & PPTHRP+)
   or ({@E-} & THRU- & PPTHRU+)
@@ -3191,7 +3199,7 @@ had.v-d:
   or (THRP+ & (<verb-rq> & PPTHRP+))
   or (THRU+ & (<verb-rq> & PPTHRU+))
   or (SI+ & ((<verb-rq> & PP+) or CQ-))
-  or (SFI+ & ((<verb-rq> & (PP+ or PPTHI+)) or CQ-)) or
+  or (SFI+ & ((<verb-rq> & (PP+ or PPTHI+ or PPOCL+)) or CQ-)) or
   (Sa*a- & PPf+) or
   (<verb-x-sp> & <vc-have>) or
   (<verb-x-sp> & <verb-wall>) or
@@ -3278,8 +3286,6 @@ rest.w: Ix- & Pv+;
       or (B**t- & <verb-wall>)
       or [<verb-wall> & K+]
       or (<verb-wall> & OF+)
-      or (Osi+ & R+ & Bs+ & <verb-wall>)
-      or (Opi+ & R+ & Bp+ & <verb-wall>)
       or ([()]0.666 & <verb-wall>)) & <mv-coord>)
     or (<verb-wall> & Pp+ & {<thi-verb> or @MV+})
     or <to-verb>
@@ -3293,8 +3299,6 @@ rest.w: Ix- & Pv+;
 % [Pg*b+]-0.05: "I was getting hot", prefer Pg+ over O+
 <vc-be-no-obj-no-wall>:
   ({@EBm+} & ((([B**t-] or [K+] or OF+ or PFb- or
-      (Osi+ & R+ & Bs+) or
-      (Opi+ & R+ & Bp+) or
       [[()]]) & <mv-coord>) or
     (Pp+ & {<thi-verb> or @MV+}) or
     <to-verb> or
@@ -3405,9 +3409,25 @@ rest.w: Ix- & Pv+;
 <vc-be-thi-cleft>:
   {@EBm+} & <verb-wall> & Pp+ & THi+;
 
-<vc-be>:         <vc-be-no-obj> or (<vc-be-obj> & <verb-wall>);
+<vc-be-ocleft-core>:
+  (Osi+ & R+ & Bs+) or (Opi+ & R+ & Bp+);
+<vc-be-ocleft>:
+  {@EBm+} & <vc-be-ocleft-core> & <verb-wall> & <mv-coord>;
+<vc-be-ocleft-no-wall>:
+  {@EBm+} & <vc-be-ocleft-core> & <mv-coord>;
+<vc-be-ocleft-opt-wall>:
+  <vc-be-ocleft> or [<vc-be-ocleft-no-wall>]0.03;
+
+<vc-be-ocleft-indirect-core>:
+  (Osi+ & ROCL+ & Bs+) or (Opi+ & ROCL+ & Bp+);
+<vc-be-ocleft-indirect>:
+  {@EBm+} & <vc-be-ocleft-indirect-core> & <verb-wall> & <mv-coord>;
+<vc-be-ocleft-indirect-no-wall>:
+  {@EBm+} & <vc-be-ocleft-indirect-core> & <mv-coord>;
+
+<vc-be>:         <vc-be-no-obj> or <vc-be-ocleft-indirect> or (<vc-be-obj> & <verb-wall>);
 <vc-be-sp>:      <vc-be-no-obj> or (<vc-be-obj-sp> & <verb-wall>);
-<vc-be-no-wall>: <vc-be-no-obj-no-wall> or <vc-be-obj>;
+<vc-be-no-wall>: <vc-be-no-obj-no-wall> or <vc-be-ocleft-indirect-no-wall> or <vc-be-obj>;
 <vc-be-and>:     <vc-be-no-wall>;
 
 
@@ -3429,6 +3449,7 @@ is.v:
   ({@E-} & THBS- & <vc-be-thb>)
   or ({@E-} & BIQS- & <vc-be-biq>)
   or ({@E-} & SFsi- & <vc-be-thi-cleft>)
+  or ({@E-} & SFsi- & <vc-be-ocleft>)
   or ({@E-} & THRS- & <vc-be-thrs>)
   or ({@E-} & THRU- & <vc-be-thru>)
   or ({@E-} & THRS- & <verb-wall> & PGTHRS+)
@@ -3443,6 +3464,7 @@ is.v:
   or ({<verb-rq>} & (SIs*x+ or SIs*b+) & {<vc-be>})
   or (<verb-rq-required> & SFIs+ & {<vc-be>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-thi-cleft>})
+  or (<verb-rq-required> & SFIs+ & {<vc-be-ocleft>})
   or (Sa*a- & Pv+)
   or (Ss*w- & <verb-wall> & Pp+ & TO+ & IV+)
   or (EQ*r- & S- & <verb-wall> & EQ*r+);
@@ -3458,6 +3480,7 @@ is.v:
 's.v ’s.v:
   [(({@E-} & THBS- & <verb-wall> & {hHM+} & <vc-be-thb-no-wall>)
   or ({@E-} & BIQS- & <verb-wall> & {hHM+} & <vc-be-biq-no-wall>)
+  or ({@E-} & SFsi- & <verb-wall> & {hHM+} & <vc-be-ocleft-no-wall>)
   or ({@E-} & THRS- & <verb-wall> & {hHM+} & <vc-be-thrs-obj>)
   or ({@E-} & THRU- & <verb-wall> & {hHM+} & <vc-be-thru-obj>)
   or ({@E-} & THRS- & <verb-wall> & PGTHRS+)
@@ -3466,9 +3489,7 @@ is.v:
     (({@EBm+} & (((
         (O*t+ & <verb-wall>)
         or [K+ & <verb-wall>]
-        or OF+
-        or (Osi+ & R+ & Bs+)
-        or (Opi+ & R+ & Bp+))
+        or OF+)
       & {@MV+})
       or (Pp+ & {<thi-verb> or @MV+})
       or (<to-verb> & <verb-wall>)
@@ -3530,11 +3551,13 @@ was.v-d:
   ({@E-} & THBS- & (<vc-be-thb> or <vc-be-thb-passive>))
   or ({@E-} & BIQS- & <vc-be-biq>)
   or ({@E-} & SFsi- & <vc-be-thi-cleft>)
+  or ({@E-} & SFsi- & <vc-be-ocleft>)
   or ({@E-} & THRS- & <vc-be-thrs>)
   or ({@E-} & THRU- & <vc-be-thru>)
   or (<verb-rq> & THBI+ & {<vc-be-thb> or <vc-be-thb-passive>})
   or (<verb-rq> & BIQI+ & {<vc-be-biq>})
   or (<verb-rq> & SFIs+ & {<vc-be-thi-cleft>})
+  or (<verb-rq> & SFIs+ & {<vc-be-ocleft>})
   or (<verb-rq> & THRS+ & {<vc-be-thrs>})
   or (<verb-rq> & THRU+ & {<vc-be-thru>})
   or (<verb-x-s,u> & <vc-be>)
@@ -3588,6 +3611,7 @@ am.v:
 be.v:
   ({@E-} & ITHB- & <vc-be-thb-opt-wall>)
   or ({@E-} & IBIQ- & <vc-be-biq-opt-wall>)
+  or ({@E-} & IOCL- & <vc-be-ocleft>)
   or ({@E-} & ITHRS- & <vc-be-thrs-opt-wall>)
   or ({@E-} & ITHRP- & <vc-be-thrp-opt-wall>)
   or ({@E-} & ITHRU- & <vc-be-thru-opt-wall>)
@@ -3606,6 +3630,7 @@ been.v: {@E-} & (
   (PPf- & <vc-be-opt-wall>)
   or (PPTHB- & <vc-be-thb-opt-wall>)
   or (PPBIQ- & <vc-be-biq-opt-wall>)
+  or (PPOCL- & <vc-be-ocleft-opt-wall>)
   or (PPTHI- & <vc-be-thi>)
   or (PPTHRS- & (<vc-be-thrs-opt-wall> or PATHRS+))
   or (PPTHRP- & (<vc-be-thrp-opt-wall> or PATHRP+))
@@ -3626,9 +3651,11 @@ being.v:
 
 isn't isn’t:
   ({@E-} & BIQS- & <vc-be-biq>)
+  or ({@E-} & SFsi- & <vc-be-ocleft>)
   or (<verb-rq> & BIQI+ & {<vc-be-biq>})
   or (<verb-x-s> & <vc-be>)
   or (<verb-rq> & SFIs+ & {<vc-be-thi-cleft>})
+  or (<verb-rq> & SFIs+ & {<vc-be-ocleft>})
   or (<verb-rq> & (SIs+ or SFIs+) & {<vc-be>});
 
 % merge of isn't, aren't
@@ -3636,16 +3663,20 @@ isn't isn’t:
 % no-wall: "They ain't gettin hot"
 ain't ain’t:
   ({@E-} & BIQS- & <vc-be-biq-opt-wall>)
+  or ({@E-} & SFsi- & <vc-be-ocleft-opt-wall>)
   or (<verb-rq> & BIQI+ & {<vc-be-biq>})
   or (<verb-x-sp> & <vc-be-opt-wall>)
+  or (<verb-rq> & SFI+ & {<vc-be-ocleft>})
   or (<verb-rq> & (SI+ or SFI+) & {<vc-be>});
 
 % no-wall: "It wasn't getting hot"
 wasn't.v-d wasn’t.v-d:
   ({@E-} & BIQS- & <vc-be-biq-opt-wall>)
+  or ({@E-} & SFsi- & <vc-be-ocleft-opt-wall>)
   or (<verb-rq> & BIQI+ & {<vc-be-biq>})
   or ({@E-} & (Ss- or (SX- & <verb-wall>) or SFs- or (RS- & Bs-)) & <vc-be-opt-wall>)
   or (<verb-rq> & SFIs+ & {<vc-be-thi-cleft>})
+  or (<verb-rq> & SFIs+ & {<vc-be-ocleft>})
   or (<verb-rq> & (SI*+ or SXI+ or SFIs+) & {<vc-be>});
 
 % no-wall: "They aren't getting hot"
@@ -3671,6 +3702,7 @@ weren't.v-d weren’t.v-d:
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   ({N+} & {@E-} & THBS- & ITHB+)
   or ({N+} & {@E-} & BIQS- & IBIQ+)
+  or ({@E-} & SFsi- & IOCL+)
   or ({@E-} & THRS- & ITHRS+)
   or ({@E-} & THRP- & ITHRP+)
   or ({@E-} & THRU- & ITHRU+)
@@ -3680,7 +3712,7 @@ will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   or (THRP+ & (<verb-rq-aux> & {N+} & ITHRP+))
   or (THRU+ & (<verb-rq-aux> & {N+} & ITHRU+))
   or (SI+ & ((<verb-rq-aux> & {N+} & (I+ or <verb-wall>)) or CQ-))
-  or (SFI+ & ((<verb-rq-aux> & {N+} & (I+ or ITHI+ or <verb-wall>)) or CQ-))
+  or (SFI+ & ((<verb-rq-aux> & {N+} & (I+ or ITHI+ or IOCL+ or <verb-wall>)) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]]))
   or (Sa*a- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
@@ -3697,6 +3729,7 @@ could.v-d:
 should.v:
   ({@E-} & THBS- & ITHB+)
   or ({@E-} & BIQS- & IBIQ+)
+  or ({@E-} & SFsi- & IOCL+)
   or ({@E-} & THRS- & ITHRS+)
   or ({@E-} & THRP- & ITHRP+)
   or ({@E-} & THRU- & ITHRU+)
@@ -3706,7 +3739,7 @@ should.v:
   or (THRP+ & (<verb-rq-aux> & ITHRP+))
   or (THRU+ & (<verb-rq-aux> & ITHRU+))
   or (SI+ & ((<verb-rq-aux> & (I+ or <verb-wall>)) or CQ-)) or
-  (SFI+ & ((<verb-rq-aux> & (I+ or ITHI+ or <verb-wall>)) or CQ-)) or
+  (SFI+ & ((<verb-rq-aux> & (I+ or ITHI+ or IOCL+ or <verb-wall>)) or CQ-)) or
   ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & dCOp+))]];
@@ -3718,6 +3751,7 @@ had_better: S- & I+;
 would.v:
   ({N+} & {@E-} & THBS- & ITHB+)
   or ({N+} & {@E-} & BIQS- & IBIQ+)
+  or ({@E-} & SFsi- & IOCL+)
   or ({@E-} & THRS- & ITHRS+)
   or ({@E-} & THRP- & ITHRP+)
   or ({@E-} & THRU- & ITHRU+)
@@ -3727,7 +3761,7 @@ would.v:
   or (THRP+ & (<verb-rq-aux> & {N+ or Vw+} & ITHRP+))
   or (THRU+ & (<verb-rq-aux> & {N+ or Vw+} & ITHRU+))
   or (SI+ & ((<verb-rq-aux> & {N+ or Vw+} & I+) or CQ-)) or
-  (SFI+ & ((<verb-rq-aux> & {N+ or Vw+} & (I+ or ITHI+)) or CQ-)) or
+  (SFI+ & ((<verb-rq-aux> & {N+ or Vw+} & (I+ or ITHI+ or IOCL+)) or CQ-)) or
   ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
@@ -3743,6 +3777,7 @@ won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
   (<verb-rq-aux> & THBI+ & ITHB+)
   or ({@E-} & THBS- & ITHB+)
+  or ({@E-} & SFsi- & IOCL+)
   or (<verb-rq-aux> & THRS+ & ITHRS+)
   or (<verb-rq-aux> & THRP+ & ITHRP+)
   or (<verb-rq-aux> & THRU+ & ITHRU+)
@@ -3752,7 +3787,7 @@ won’t can’t mustn’t couldn’t shouldn’t needn’t:
   or (<verb-rq-aux> & BIQI+ & IBIQ+)
   or ({@E-} & BIQS- & IBIQ+)
   or (<verb-rq-aux> & SI+ & (I+ or <verb-wall>))
-  or (<verb-rq-aux> & SFI+ & (I+ or ITHI+ or <verb-wall>)) or
+  or (<verb-rq-aux> & SFI+ & (I+ or ITHI+ or IOCL+ or <verb-wall>)) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
   ({@E-} & I+ & <verb-and-sp+>) or
@@ -3763,6 +3798,7 @@ won’t can’t mustn’t couldn’t shouldn’t needn’t:
 wouldn't wouldn’t:
   (<verb-rq-aux> & THBI+ & {RT+} & ITHB+)
   or ({@E-} & THBS- & ({RT+} & ITHB+))
+  or ({@E-} & SFsi- & ({RT+} & IOCL+))
   or (<verb-rq-aux> & THRS+ & {RT+} & ITHRS+)
   or (<verb-rq-aux> & THRP+ & {RT+} & ITHRP+)
   or (<verb-rq-aux> & THRU+ & {RT+} & ITHRU+)
@@ -3772,7 +3808,7 @@ wouldn't wouldn’t:
   or (<verb-rq-aux> & BIQI+ & {RT+} & IBIQ+)
   or ({@E-} & BIQS- & ({RT+} & IBIQ+))
   or (<verb-rq-aux> & SI+ & {RT+} & (I+ or <verb-wall>))
-  or (<verb-rq-aux> & SFI+ & {RT+} & (I+ or ITHI+ or <verb-wall>)) or
+  or (<verb-rq-aux> & SFI+ & {RT+} & (I+ or ITHI+ or IOCL+ or <verb-wall>)) or
   (<verb-x-sp> & (({RT+} & I+) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
@@ -6184,7 +6220,7 @@ refusing.v: <verb-pg> & <vc-refuse>;
 <vc-want>:
   (<mv-coord> & ({<to-verb>} or <null-verb>))
   or ((O+ or <b-minus> or OX+) & <mv-coord> & {<too-verb> or Pv+})
-  or (OXi+ & <mv-coord> & (<qii-too-verb> or <thi-too-verb> or <cii-too-verb>))
+  or (OXi+ & <mv-coord> & (<qii-too-verb> or <thi-too-verb> or <cii-too-verb> or <ocleft-too-verb>))
   or ((OAJ+ or OXi+) & <mv-coord> & Pa**j+)
   or ({O+} & QN+)
   or [[@MV+ & <obj2-non-pronoun>]]
@@ -8034,6 +8070,7 @@ to.r:
   or ({@E-} & TQII- & IQII+)
   or ({@E-} & TTHI- & ITHI+)
   or ({@E-} & TCII- & ICII+)
+  or ({@E-} & TOCL- & IOCL+)
   or ({@E-} & {N+} & I*t+ & (TO- or Wo-))
   or ({@E-} & {NT-} & I+ &
     (<MX-PHRASE>

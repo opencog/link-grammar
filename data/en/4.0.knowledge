@@ -212,7 +212,6 @@ CONTAINS_ONE_RULES:
 ; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'17"   ,
 ; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'18"   ,
  AFdi  ,  SFsi   SFIsi   OXi                , "Complement requires 'it'30"     ,
- O#i   ,  SFsi   SFIsi   OXi                , "Complement requires 'it'31"     ,
  SFsi* ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi CPu
           COqi    CPi    Eqi    AFdi    BIh , "Bad use of 'it'37"           ,
  SFIsi ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi
