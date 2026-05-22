@@ -946,7 +946,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 1-2 | `SI#*` / `SI#x` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI` forms. |
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
-| 37-39 | Remaining expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include ordinary-subject and wrong-object expletive-`it` complement paths such as `*How likely is John that he will come` and `*I made Anne clear that I was angry`. A replacement needs shared expletive-`it` subject/object certificates carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rule 20 is migrated separately with `THIC` and the `TTHI` / `ITHI` / `PPTHI` / `PTHI` carrier family; rule 21 is migrated separately with `TSIC`; rule 22 is migrated separately with `QIIC` and the `TQII` / `IQII` / `PQII` object-raising carrier; rule 23 is migrated separately with `TOIC`; rule 24 is migrated separately with `CIIC` and the `TCII` / `ICII` / `PCII` object-raising carrier; rules 25-29 were audited separately and removed as unreachable stale selectors; rule 30 is migrated separately by retiring `AFdi`; rule 31 is migrated separately with direct cleft-object splits and `TOCL` / `IOCL` / `PPOCL` / `ROCL` carriers. |
+| 38 | Remaining inverted expletive `it` complement licensing | Rules 37 and 39 were removed as redundant after the dedicated predicate-certificate migrations. Rule 38 remains active: simple removal accepts `*I wonder how important is it to turn off the computer`. A replacement needs to separate valid inverted filler/expletive `it` paths from embedded ordinary inversion paths that should not license the lower complement. |
 | 43, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch`, but raises `corpus-basic.batch` by accepting comparative negatives. Rule 44 was migrated separately with the `MVZP` split. Single-rule removals of rules 47 and 48 each still accept the knowledge/basic negative `*I am as intelligent as John does`; they also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
 
@@ -1258,6 +1258,72 @@ corpus-basic.batch: 88 errors
 corpus-fixes.batch: 359 errors
 corpus-fix-long.batch: 8 errors
 corpus-failures.batch: 1496 errors
+```
+
+## Rules 37 And 39: Remove Redundant Non-Inverted Expletive-It Backstops
+
+**Status:** implemented; PP rules 37 and 39 have been removed from
+`4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rules were:
+
+```text
+SFsi* , TOi THi QIi TSi O#i Ci THb CPi CPu COqi CPi Eqi BIh,
+        "Bad use of 'it'37"
+OXi   , TOi THi QIi TSi O#i Ci THb CPi COqi CPi Eqi BIh,
+        "Bad use of 'it'39"
+```
+
+The grammatical area is non-inverted filler/expletive `it` licensing for
+predicate complements. Earlier migrations split the individual complement
+families into direct certificates and carrier paths, for example `THIC`,
+`TSIC`, `QIIC`, `TOIC`, `CIIC`, `THBS` / `THBI`, `BIQS` / `BIQI`, and
+cleft-object `TOCL` / `IOCL` / `PPOCL` / `ROCL`.
+
+### Problem
+
+After those dedicated migrations, the broad non-inverted `SFsi*` and `OXi`
+backstops no longer reject any additional agreed corpus example. Keeping them
+would leave two stale PP rules that duplicate more local dictionary
+constraints.
+
+Rule 38 is different and remains active. Its selector `SFIsi` covers inverted
+paths, and simple removal still accepts:
+
+```text
+*I wonder how important is it to turn off the computer.
+```
+
+### Implementation
+
+Rules 37 and 39 are removed from `4.0.knowledge` without adding new
+connectors. This is a redundancy removal, not a new grammar path. The
+remaining rule 38 continues to protect the unresolved inverted case.
+
+### Examples
+
+Focused examples include:
+
+```text
+It is likely that he came.
+I made it clear that he came.
+*Joe is likely that he came.
+*I made Anne clear that he came.
+```
+
+### Verification
+
+Rules 37 and 39 were tested individually before removal. In both cases,
+ordinary parser runs produced no error-set differences against the pre-removal
+baseline for:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
 ```
 
 ## Rule 30: Retire The `AFdi` Comparative Filler-`It` Arm

@@ -211,12 +211,8 @@ CONTAINS_ONE_RULES:
 ; The two below prevent "How big?" and "How quickly?"
 ; EAh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'17"   ,
 ; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'18"   ,
- SFsi* ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi CPu
-          COqi    CPi    Eqi    BIh         , "Bad use of 'it'37"           ,
  SFIsi ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi
           COqi    CPi    Eqi    BIh         , "Bad use of 'it'38"           ,
- OXi   ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi
-          COqi    CPi    Eqi    BIh         , "Bad use of 'it'39"           ,
  MVt   ,  Dm#m   EAm   EEm   MVm  Pam   Pafm   AFm   EB#m   MVb AJrc
           Om   Mam  Am  Jm  Ds*m   MX#m     , "Bad comparative43"    ,
  MV#o  ,  D##m    D##y    Om    Oy    Jm    Jy   Am   MX#m
