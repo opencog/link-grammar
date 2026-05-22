@@ -998,7 +998,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
 | 38 | Remaining inverted expletive `it` complement licensing | Rules 37 and 39 were removed as redundant after the dedicated predicate-certificate migrations. Rule 38 remains active: simple removal accepts `*I wonder how important is it to turn off the computer`. A replacement needs to separate valid inverted filler/expletive `it` paths from embedded ordinary inversion paths that should not license the lower complement. |
-| 43 | Comparative `than.e` modifier path | Bulk removal of the remaining comparative checks leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch`, but rule 43 removal raises `corpus-basic.batch` by accepting `*I earn as much money in a month than John earns in a year`. Rules 44, 47, and 48 were migrated separately with the `MVZP`, `CMPO`, and `CMPCX` splits. Rule 43 needs a narrower `MVt` / `than.e` connector split rather than deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
 
 `FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
@@ -4526,6 +4525,89 @@ corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
 corpus-failures.batch: 1496 errors
 ```
+
+## Rule 43: Remove Redundant `MVt` Comparative Check
+
+**Status:** implemented; PP rule 43 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+MVt , Dm#m EAm EEm MVm Pam Pafm AFm EB#m MVb AJrc Om Mam Am Jm Ds*m MX#m , "Bad comparative43"
+```
+
+The grammatical area is comparative `than.e` continuation. The rule was the
+remaining broad PP check over `MVt` domains after the neighboring comparative
+checks had been migrated.
+
+### Problem
+
+Before the surrounding comparative migrations, simple deletion of rule 43 was
+unsafe: it could allow mixed `as ... than ...` analyses such as:
+
+```text
+*I earn as much money in a month than John earns in a year.
+```
+
+The raw path used `as.e-y` to provide a `y`-side witness such as `Dmuy`, while
+`than.e` used an `MVt` continuation that needed `m`-side comparative evidence.
+
+### Implementation
+
+No new connector is needed for this rule. After rules 44, 47, and 48 were
+migrated into dictionary certificates, removing rule 43 no longer introduces
+new accepted/rejected sentence-set differences on the ordinary agreed corpora.
+The dictionary-side comparative certificates now constrain the relevant
+`as.e-c` and `than.e` paths before PP sees a completed linkage.
+
+The focused `as ... than ...` negative remains rejected with rule 43 removed,
+and valid `than.e` comparative paths continue to parse through the existing
+`CMPS`, `CMPP`, `CMPX`, `CMPC`, `CMPO`, and `CMPCX` certificate families or
+through already-specialized `MVta`, `MVto`, and `MVtp` branches.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+I am more happy now than I was in college.
+She spent more money than was budgeted.
+```
+
+Focused rejected examples include:
+
+```text
+*I earn as much money in a month than John earns in a year.
+```
+
+### Verification
+
+The rule 43 removal was validated with:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 355 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1495 errors
+```
+
+Compared with the previous rule-48 baseline, `corpus-basic.batch`,
+`corpus-fixes.batch`, and `corpus-fix-long.batch` have no error-set
+differences. `corpus-failures.batch` improves by one sentence, recovering the
+valid `And what nicer way ... than to have ...` comparative continuation.
 
 ## Rule 78: Separate Temporal `as` From Comparative `EAy`
 
