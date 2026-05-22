@@ -1011,6 +1011,33 @@ dictionary does not yet encode the rejected condition narrowly enough.
 candidate. For metric-ordered extraction, this class is handled by
 extractor-side cycle state, not by English dictionary connector replacement.
 
+### Approval-Gated Domain-Summary Support Proposal
+
+The remaining `CONTAINS_ONE` inversion rules and bounded `s` rule are
+domain-local constraints. The relevant fact is not just that a selector link
+and a witness link exist in the same linkage, but that they occur in the same
+computed PP domain child set. Earlier dictionary-certificate attempts failed
+because local evidence such as `Rw`, direct-question certificates, or
+wh-word-specific branches cannot reliably distinguish matrix/fronted question
+domains from embedded domains that reuse the same local link shape.
+
+The proposed library-assisted dictionary support is therefore a
+domain-summary mechanism. The first implementation stage should be attached to
+parse-set construction, where actual retained `Parse_choice` children are
+available. A `do_count()` / `Table_tracon` implementation may be considered
+later as an optimization, after the parse-set summary model is shown to be
+equivalent; doing it first would require carrying additional state in the
+counting table before the exact domain boundary model is proven.
+
+For `CONTAINS_ONE`, the summary needs selector and witness bits for each
+active rule. For bounded `s`, it needs the domain root word and the minimum
+left word touched by the domain. During validation, the existing PP rules
+should remain authoritative: if PP still rejects a linkage for a rule that the
+summary mechanism claims to handle, that is a support bug, not an accepted
+migration. Only after focused examples and ordinary corpus runs show
+equivalence should the corresponding PP rule be removed and documented as a
+completed migration.
+
 ## Stale Expletive-It Companion Selectors
 
 **Status:** implemented for rules 25-29.
