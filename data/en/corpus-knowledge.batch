@@ -197,6 +197,19 @@ How many times did you do it?
 *How many times you did it
 *How much of the book you read
 
+% CONTAINS_ONE rule 5: Ws now appears only on subject-wh paths that are
+% certified by the wh word or wh determiner expression itself.  Object-gap
+% and non-subject paths use Wq or embedded-question connectors instead.
+
+Who died?
+Who bought your flat from?
+Which dog chased you?
+How many dogs ran?
+How much oil spilled?
+*Who to invite to the party.
+*Which dog you chased.
+*How quickly Joe ran.
+
 % CONTAINS_NONE rule 73: filler-it inverted auxiliary paths must not license
 % ordinary lower verbs.  Valid filler-it raising questions use IFI to reach
 % the lower predicate; ordinary-subject raising keeps the existing I path.

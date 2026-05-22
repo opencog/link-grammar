@@ -79,7 +79,7 @@ Added uppercase connector families:
 | `ECWH` | Carries an `H` wh-quantity certificate through `more` to a following `DWH` or `BWH` extraction target. |
 | `BWH` | Carries an `HA` wh/degree certificate from a degree word or comparative `more` to a following `B#m` extraction noun. |
 | `HWS` | Certifies `how` quantity phrases that start a `Ws` subject question and therefore must not use extracted `B#m` or non-inverted `Ca` continuations. |
-| `DWS` | Determiner certificate used by `HWS` uncountable subject questions, such as `How much sugar is needed?`; currently represented by `DWSu`. |
+| `DWS` | Determiner certificate used by `Ws` subject questions. `DWSs`, `DWSp`, and `DWSu` distinguish singular, plural, and uncountable wh-subject noun phrases from extracted-object `DWH` paths. |
 | `EEHWS` | Certifies the narrow `how long before ...` temporal-fragment path as a `Ws` question without allowing the broader `EEh + Ca` overgeneration. |
 | `MVZP` | Adjective-only certificate for predicative/participial parenthetical `as` clauses such as `unclear as worded`. It keeps the `as.e-c` `Pa` branch away from ordinary verb-side `MVzp` paths. |
 | `RWB` | Certifies that a bare-`what` `Wb` opener is tied to an inverted verb question path. |
@@ -122,7 +122,7 @@ Changed or retired connector forms:
 | unit wh-extraction `ND` | The `how many <unit> ...` `B#m` extraction branch now uses `NDH` instead of ordinary `ND`. Ordinary quantity uses of `ND` remain unchanged. |
 | wh/degree `D##w` paths for `B#m` extraction | Some extracted wh/degree noun phrases now use `DWHs`, `DWHp`, or `DWHu` instead of ordinary `D**w`, `Dmc`, or `Dmu` on the certified branch. Ordinary determiner paths remain available outside the extraction branch. |
 | `more` in wh/degree `B#m` extraction | `ECWH` carries the wh-quantity certificate through `more`; the following noun phrase must expose either a `DWH` determiner certificate or a `BWH` degree certificate. Ordinary comparative `EC` / `ECa` paths remain available outside this extraction branch. |
-| `Ws` quantity and temporal `how` paths | Subject-question quantity paths now use `HWS`, with `DWSu` on uncountable subject nouns. The focused temporal fragment `how long before ...` uses `EEHWS`. Ordinary `H` and `EEh` remain available for non-`Ws` questions and embedded clauses. |
+| `Ws` subject-question paths | Subject `Ws` paths now require local subject-wh evidence. Quantity paths use `HWS`; wh-determiner subject noun phrases use `DWSs`, `DWSp`, or `DWSu`; and the focused temporal fragment `how long before ...` uses `EEHWS`. Ordinary `DWH`, `H`, and `EEh` remain available for non-`Ws` questions, object extraction, and embedded clauses. |
 | `as.e-c` `MVzp` predicative branch | Replaced by adjective-only `MVZP`. This preserves adjectival parentheticals such as `unclear as worded` while preventing ordinary verbs from using the `as.e-c --Pa--` branch in bad comparative paths. |
 | bare-`what` `Wb` openers | `Wb` paths through `what` now require `RWB`, which is exposed only by the inverted verb question path. Ordinary `R` remains available for non-`Wb` wh/opening paths. |
 | predicative-adjective object `O` forms | `Pa**j` complement paths now use `OAJ` instead of ordinary `Osm`, `Op`, `Ox`, or `Os*e` object links. `OXi` remains available for complement-bearing `it` cases that are still governed by the expletive-`it` PP rules. Ordinary object links remain available for non-`Pa**j` constructions. |
@@ -277,7 +277,7 @@ such as `It was so big a dog that it filled the cage` still use normal `HA`.
 `BWH` is added only on the extraction-certified branch where the old PP rule
 would have accepted `B#m` because the same domain also contained `HA`.
 
-### `HWS`, `DWS`, And `EEHWS`: Safe `Ws` How-Question Certificates
+### `HWS`, `DWS`, And `EEHWS`: Safe `Ws` Question Certificates
 
 `HWS` connects sentence-opening `how` to a quantity word when the question is
 a `Ws` subject question. The certified branch intentionally exposes only
@@ -297,6 +297,15 @@ subscripted wh determiner forms:
     +->Ws--+-HWS+-DWSu-+---Ss--+
     |      |    |      |       |
 LEFT-WALL how much sugar.n-u is.v ...
+```
+
+For ordinary wh-determiner subject noun phrases, `DWSs` and `DWSp` make the
+same distinction from extracted-object `DWHs` / `DWHp` paths:
+
+```text
+    +->Ws--+-DWSs-+---Ss---+
+    |      |      |        |
+LEFT-WALL which dog.n chased.v-d
 ```
 
 `EEHWS` is a narrow certificate for temporal fragments headed by `how long
@@ -995,7 +1004,6 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | Rule(s) | Area | Current status |
 | --- | --- | --- |
 | 1-2 | `SI#*` / `SI#x` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI` forms. |
-| 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
 
@@ -2870,8 +2878,8 @@ The dictionary now splits the relevant `how` starts:
 - `EEHWS` certifies the focused temporal-fragment path `how long before ...`.
 
 The ordinary `H` and `EEh` paths remain available for `Wq`, embedded `QI`, and
-other non-`Ws` starts. The still-active rule-5 PP check treats `HWS` and
-`EEHWS` as valid `Ws` companions, while rule 71 itself is no longer needed.
+other non-`Ws` starts. Rule 71 itself is no longer needed; rule 5 was later
+removed by the broader `Ws` subject-wh split documented below.
 
 ### Examples
 
@@ -2903,6 +2911,95 @@ corpus-basic.batch: 88 errors
 corpus-fixes.batch: 359 errors
 corpus-fix-long.batch: 8 errors
 ```
+
+## Rule 5: `Ws` Requires Subject-Wh Evidence
+
+**Status:** implemented; PP rule 5 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+Ws , D##w S##w H HWS EEHWS , "S-V inversion required5"
+```
+
+The grammatical area is sentence-opening subject wh questions. A `Ws` opener
+is valid when the wh phrase is itself the subject, as in `Who died?`, `Which
+dog chased you?`, or `How many dogs ran?`. It should not license object-gap
+or embedded-continuation analyses such as `*Who to invite to the party`.
+
+### Problem
+
+The older dictionary exposed `Ws` on broad wh branches that could also choose
+object-gap, infinitival, or embedded continuations. PP rule 5 then inspected
+the completed domain and required some wh-subject evidence to appear with the
+`Ws` link. This left a locally legal raw linkage for bad examples such as:
+
+```text
+*Who to invite to the party.
+```
+
+In that raw path, `who` used `Ws` while also taking `R` and `B*w` through the
+infinitival `to invite` continuation. The wh word was not the subject of the
+clause, so the `Ws` opener was the wrong analysis.
+
+### Implementation
+
+The dictionary now restricts `Ws` to branches that carry local subject-wh
+evidence:
+
+- `who` keeps `Ws` only on the branch with `S**w`; the object-gap `R + B*w`
+  branch keeps `Wq`, `QI*d`, and `BIqd` but no longer exposes `Ws`.
+- `how` no longer exposes `Ws` through broad `EAh` / `EEh` degree branches.
+  Subject quantity and temporal paths use the existing `HWS` / `EEHWS`
+  certificates.
+- wh-determiner subject noun phrases use `DWSs`, `DWSp`, or `DWSu` instead
+  of object-extraction `DWHs`, `DWHp`, or `DWHu`.
+
+Special noun entries that do not inherit the common noun determiner table,
+such as `way.n` and `reason.n`, also expose the appropriate `DWS` subject
+branch. This preserves subject-wh noun phrases such as `what nicer way ...`
+without restoring the old broad `what D**w + Ws` path that accepted
+`*What John said he thought you should do`.
+
+### Examples
+
+Focused examples are recorded in `corpus-knowledge.batch`:
+
+```text
+Who died?
+Who bought your flat from?
+Which dog chased you?
+How many dogs ran?
+How much oil spilled?
+*Who to invite to the party.
+*Which dog you chased.
+*How quickly Joe ran.
+```
+
+### Verification
+
+Accepted-linkage comparison against the pre-migration dictionary used
+`!links`, `!graphics=0`, `!limit=10000`, `!short=254`, and `!null=0` on
+`Who died?`, `Which dog chased you?`, and `How many dogs ran?`. The public
+link structure is unchanged for `Who died?` and `How many dogs ran?`. For
+`Which dog chased you?`, the new first displayed linkage uses `DWSs` where the
+old linkage used `D**w`; this is the intended subject-wh certificate split.
+
+Corpus results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 87 errors
+corpus-fixes.batch: 355 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1495 errors
+```
+
+The only `corpus-basic.batch` error-count difference against the pre-migration
+dictionary is positive: `*What John said he thought you should do` is no
+longer accepted. `corpus-failures.batch` has zero `lgerror` differences.
 
 ## `Qd , MX`: Require Punctuation For Name-Based Direct Question Openers
 
