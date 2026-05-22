@@ -51,6 +51,10 @@ Added uppercase connector families:
 | `ITHI` | Carries `THi` evidence across infinitival and inverted auxiliary paths. |
 | `PPTHI` | Carries `THi` evidence across perfect auxiliary paths. |
 | `PTHI` | Connects an auxiliary carrier to a lower predicate that owns the `THi` complement. |
+| `TOCL` | Carries object-raising cleft-object evidence from an object-raising predicate to infinitival `to`. |
+| `IOCL` | Carries cleft-object evidence across infinitival `to` and inverted auxiliary paths. |
+| `PPOCL` | Carries cleft-object evidence across perfect auxiliary paths. |
+| `ROCL` | Certifies the special cleft-object path where the licensing filler `it` appears inside the following clause. |
 | `QIIC` | Certifies that a `QIi` question-clause predicate is licensed by filler/expletive `it` on direct subject, inverted subject, and object-complement paths. |
 | `TQII` | Carries object-raising `QIi` evidence from an object-raising predicate to infinitival `to`. |
 | `IQII` | Carries the same object-raising `QIi` evidence from infinitival `to` to the lower predicate. |
@@ -103,6 +107,7 @@ Changed or retired connector forms:
 | `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require a `TSIC` certificate from filler/expletive `it` when they select a subjunctive that-clause complement. Ordinary `THi` and `TOi` paths remain separate. |
 | `TOi` infinitive-complement predicate licensing | `TOi+` predicate branches now require a `TOIC` certificate from filler/expletive `it`. Tough-subject infinitives continue to use separate paths such as `TOt`. |
 | `THi` that-clause predicate licensing | `THi+` predicate branches now require direct `THIC` evidence from filler/expletive `it`, direct same-copula `SFsi`/`SFIsi` evidence for clefts, or a carrier path through `TTHI`/`ITHI`/`PPTHI` and `PTHI`. `THi` certificates deliberately exclude comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
+| cleft-object `O#i` paths | `Osi` / `Opi` cleft-object branches on `be` are no longer exposed through generic copular complement paths. They require direct `SFsi` / `SFIsi` evidence, an object-raising or auxiliary carrier through `TOCL`, `IOCL`, or `PPOCL`, or an `ROCL` path to a filler `it` inside the following clause. |
 | `QIi` question-clause predicate licensing | `QIi+` predicate branches now require direct `QIIC` evidence from filler/expletive `it`, or an object-raising carrier path through `TQII`, `IQII`, and `PQII`. |
 | `Ci` finite-clause predicate licensing | `Ci+` predicate branches now require direct `CIIC` evidence from filler/expletive `it`, or an object-raising carrier path through `TCII`, `ICII`, and `PCII`. The `Ci` certificate intentionally excludes comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
@@ -630,6 +635,47 @@ Otherwise an outer filler `it` could license a distant comparative clause, as
 in the rejected path for `*It is more likely that Joe died than John is that
 Fred died`.
 
+### `TOCL`, `IOCL`, `PPOCL`, And `ROCL`: Filler-`It` License For Cleft Objects
+
+These connector families encode the filler/expletive-`it` evidence required
+by cleft-like `Osi` / `Opi` object paths on `be`:
+
+```text
+TOCL   object-raising carrier from the higher predicate to infinitival to
+IOCL   carrier from infinitival to or an inverted auxiliary to lower be
+PPOCL  carrier from a perfect auxiliary to lower been
+ROCL   direct link from the cleft-object predicate to a following filler it
+```
+
+Direct finite clefts use the same copula to carry both the filler-`it` subject
+and the `Osi` / `Opi` branch:
+
+```text
+it --SFsi-- was --Osi-- John
+              \--R/B-- who stole ...
+```
+
+Auxiliary and object-raising paths use carrier links:
+
+```text
+it --SFsi-- might --IOCL-- be --Osi-- John
+want --OXi-- it --TOCL-- to --IOCL-- be --Osi-- John
+it --SFsi-- has --PPOCL-- been --Osi-- John
+```
+
+Some accepted cleft-object paths have the filler `it` inside the following
+clause rather than as the subject of the same `be`. These use `ROCL`:
+
+```text
+is --Osi-- that
+is --ROCL-- it --SFsi-- was
+is --Bs--- was
+```
+
+The `ROCL` path is deliberately narrower than the old ordinary `R` path: the
+target must be the `it` disjunct that also carries the filler-`it` subject
+relation into the following clause.
+
 ### `QIIC`, `TQII`, `IQII`, And `PQII`: Expletive-`It` License For `QIi` Questions
 
 These connector families encode the filler/expletive-`it` evidence required
@@ -895,7 +941,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 1-2 | `SI#*` / `SI#x` embedded and fronted inversion | Simple removal raises `corpus-basic.batch` errors by accepting embedded and fronted inversion negatives. Rule 1 removal accepts eleven starred examples, including `*I know how quickly did you run` and `*I wonder how much money have you earned`; it also improves `corpus-fixes.batch` by one and `corpus-failures.batch` by three, so the rule is mixed rather than purely obsolete. Rule 2 removal accepts starred examples such as `*After the movie did he realize his mistake` and `*I wonder which dog did he say you chased`. A replacement needs to distinguish valid matrix question/comparative/fronted inversion paths from embedded complement paths that should not license these `SI` forms. |
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
-| 30-31, 37-39 | Remaining expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include ordinary-subject and wrong-object expletive-`it` complement paths such as `*How likely is John that he will come` and `*I made Anne clear that I was angry`. A replacement needs shared expletive-`it` subject/object certificates carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rule 20 is migrated separately with `THIC` and the `TTHI` / `ITHI` / `PPTHI` / `PTHI` carrier family; rule 21 is migrated separately with `TSIC`; rule 22 is migrated separately with `QIIC` and the `TQII` / `IQII` / `PQII` object-raising carrier; rule 23 is migrated separately with `TOIC`; rule 24 is migrated separately with `CIIC` and the `TCII` / `ICII` / `PCII` object-raising carrier; rules 25-29 were audited separately and removed as unreachable stale selectors. |
+| 30, 37-39 | Remaining expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include ordinary-subject and wrong-object expletive-`it` complement paths such as `*How likely is John that he will come` and `*I made Anne clear that I was angry`. A replacement needs shared expletive-`it` subject/object certificates carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rule 20 is migrated separately with `THIC` and the `TTHI` / `ITHI` / `PPTHI` / `PTHI` carrier family; rule 21 is migrated separately with `TSIC`; rule 22 is migrated separately with `QIIC` and the `TQII` / `IQII` / `PQII` object-raising carrier; rule 23 is migrated separately with `TOIC`; rule 24 is migrated separately with `CIIC` and the `TCII` / `ICII` / `PCII` object-raising carrier; rules 25-29 were audited separately and removed as unreachable stale selectors; rule 31 is migrated separately with direct cleft-object splits and `TOCL` / `IOCL` / `PPOCL` / `ROCL` carriers. |
 | 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. Single-rule removals of rules 44, 47, and 48 each accept the knowledge/basic negative `*I am as intelligent as John does`; rules 47 and 48 each also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | 72 | Non-inverted `SF` filler-subject backstop | Simple removal after rule 73 is unsafe. It raises `corpus-basic.batch` from 88 to 90 errors by accepting `*Absence to comply may result in dismissal` and `*It is more likely that Joe died than John is that Fred died`. The first bad path uses `to.r --SFsx-- may` with ordinary `I` links; the second uses `it --SFsi-- is` with comparative `LE`/`AFd`/`THc` structure. A replacement needs real dictionary splits for the affected `SF` subject and comparative/infinitival continuations, not deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
@@ -1053,6 +1099,144 @@ examples keep the public `SFsi`/`THi`/`Pp` shape, with the `THi` link now
 coming from the filler-`it` copular branch.
 
 The rule 20 migration was validated with ordinary parser runs:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+Observed results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 359 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1496 errors
+```
+
+## Rule 31: License Cleft-Object `O#i` Paths With Filler `It`
+
+**Status:** implemented; PP rule 31 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+O#i , SFsi SFIsi OXi , "Complement requires 'it'31"
+```
+
+The grammatical area is cleft-like object complements of `be`, including
+ordinary, inverted, auxiliary, perfect, and object-raising forms:
+
+```text
+It was John who stole the documents.
+Was it John who stole the documents?
+It might be John who stole the documents.
+I want it to be John who stole the documents.
+```
+
+The same `Osi` / `Opi` connector shape was also used by accepted constructions
+where the filler `it` appears inside the following clause:
+
+```text
+The shame of it is, is that it was a good idea.
+```
+
+### Problem
+
+The old dictionary exposed `Osi+` and `Opi+` cleft-object branches through
+generic copular `be` complements:
+
+```text
+Osi+ & R+ & Bs+
+Opi+ & R+ & Bp+
+```
+
+After extraction, PP rejected a completed domain containing an `O#i` link
+unless the same domain also contained a filler/expletive `it` relation:
+`SFsi`, `SFIsi`, or `OXi`.
+
+Simple removal of the PP rule accepted ordinary-subject raw linkages such as:
+
+```text
+*How likely is John that he will come?
+*I believe Fred was John who stole the priceless documents.
+*That is the man, in Joe's opinion, we should hire.
+```
+
+Those raw linkages used the local `Osi+ & R+ & Bs+` shape without the
+filler/expletive `it` relation that makes the cleft-object construction
+grammatical.
+
+### Implementation
+
+The generic `be` complement no longer exposes ordinary `Osi+` / `Opi+`
+cleft-object branches. Direct finite clefts are instead exposed only on
+branches that also own the same-copula filler-`it` subject relation:
+
+```text
+SFsi- & Osi+ & R+ & Bs+
+SFIs+ & Osi+ & R+ & Bs+
+```
+
+The same direct branch is available on common contracted and negative copular
+forms, such as `It's John who...`, `Isn't it John who...`, and `It wasn't
+John who...`.
+
+Auxiliary, perfect, and object-raising paths carry the filler-`it` evidence to
+the lower `be`:
+
+```text
+TOCL  -> IOCL
+SFsi  -> IOCL
+SFIsi -> IOCL
+SFsi  -> PPOCL
+IOCL  -> PPOCL
+```
+
+Thus `It might be John who...` uses `it --SFsi-- might --IOCL-- be`, and
+`I want it to be John who...` uses `want --OXi-- it --TOCL-- to --IOCL-- be`.
+Perfect paths such as `It has been John who...` use `PPOCL`.
+
+The accepted "shame of it" pattern cannot be handled by same-copula or
+ordinary auxiliary carrying, because the licensing `it` appears inside the
+following clause. For this case the old broad `R+` leg is replaced by an
+`ROCL+` leg:
+
+```text
+is --Osi-- that
+is --ROCL-- it --SFsi-- was
+is --Bs--- was
+```
+
+This keeps the relevant filler-`it` evidence local to the dictionary path
+while preventing ordinary `R` targets such as `who`, `he`, or `we` from
+licensing the `O#i` branch.
+
+### Verification
+
+Focused accepted-linkage comparison inspected the first three displayed
+accepted linkages for:
+
+```text
+It was John who stole the priceless documents.
+It might be John who stole the priceless documents.
+The shame of it is, is that it was a good idea.
+```
+
+The direct finite example keeps the same public `SFsi`, `Osi`, `R`, and `Bs`
+shape as the reference parse. The modal example keeps the same public
+cleft-object shape while replacing the ordinary modal `I` carrier with
+`IOCL`. The "shame of it" example remains accepted; the migrated dictionary
+uses the narrower `ROCL` link where the reference parse used the broad `R`
+path.
+
+The rule 31 migration was validated with ordinary parser runs:
 
 ```sh
 link-parser < ./data/en/corpus-knowledge.batch
