@@ -381,6 +381,15 @@ The coffee tastes the same as it did last year.
 I slipped on the ice as I ran home.
 *I am as intelligent as John does.
 
+% CONTAINS_ONE rule 44: MVz comparative-as paths need local comparative
+% evidence, but the old PP check was too broad for predicative/adjectival
+% parenthetical "as" clauses.  The Pa branch now uses adjective-only MVZP.
+
+Ridiculous as it seems, the tale is true.
+He earns as much as was expected.
+The claim, unclear as worded, deserves attention.
+*I am as intelligent as John does.
+
 % CONTAINS_ONE rules 32s, 32p, 32u, 34, 35, and 36: existential "there"
 % agreement is carried by dictionary connectors instead of PP checks; the old
 % broad object-like OXt branch on there.r is removed.
