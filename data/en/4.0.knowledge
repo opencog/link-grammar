@@ -213,8 +213,6 @@ CONTAINS_ONE_RULES:
 ; EEh   ,  AF    Bsm    B*m  Qe  Ca  AFm    , "Incorrect use of 'how'18"   ,
  SFIsi ,  TOi    THi   QIi    TSi    O#i    Ci    THb   CPi
           COqi    CPi    Eqi    BIh         , "Bad use of 'it'38"           ,
- MVt   ,  Dm#m   EAm   EEm   MVm  Pam   Pafm   AFm   EB#m   MVb AJrc
-          Om   Mam  Am  Jm  Ds*m   MX#m     , "Bad comparative43"    ,
 ; Former Pa##j object-class checks are encoded in dictionary OAJ paths.
 ; The former B#m companion rule is encoded in dictionary paths such as NDH.
 

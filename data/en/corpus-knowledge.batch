@@ -417,6 +417,13 @@ I run as much as John does.
 He runs as quickly as John does.
 *I am as intelligent as John does.
 
+% CONTAINS_ONE rule 43: the remaining MVt comparative check is redundant
+% after the surrounding comparative certificate migrations.
+
+I am more happy now than I was in college.
+She spent more money than was budgeted.
+*I earn as much money in a month than John earns in a year.
+
 % CONTAINS_ONE rules 32s, 32p, 32u, 34, 35, and 36: existential "there"
 % agreement is carried by dictionary connectors instead of PP checks; the old
 % broad object-like OXt branch on there.r is removed.
