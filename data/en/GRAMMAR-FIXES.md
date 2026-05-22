@@ -79,6 +79,7 @@ Added uppercase connector families:
 | `HWS` | Certifies `how` quantity phrases that start a `Ws` subject question and therefore must not use extracted `B#m` or non-inverted `Ca` continuations. |
 | `DWS` | Determiner certificate used by `HWS` uncountable subject questions, such as `How much sugar is needed?`; currently represented by `DWSu`. |
 | `EEHWS` | Certifies the narrow `how long before ...` temporal-fragment path as a `Ws` question without allowing the broader `EEh + Ca` overgeneration. |
+| `MVZP` | Adjective-only certificate for predicative/participial parenthetical `as` clauses such as `unclear as worded`. It keeps the `as.e-c` `Pa` branch away from ordinary verb-side `MVzp` paths. |
 | `RWB` | Certifies that a bare-`what` `Wb` opener is tied to an inverted verb question path. |
 | `OAJ` | Connects a verb to a non-expletive object that is allowed to license a `Pa**j` predicative-adjective complement. |
 | `THR{S,P,U}` | Certifies singular, plural, and uncountable existential-`there` agreement. The brace notation summarizes the concrete link types `THRS`, `THRP`, and `THRU`. |
@@ -118,6 +119,7 @@ Changed or retired connector forms:
 | wh/degree `D##w` paths for `B#m` extraction | Some extracted wh/degree noun phrases now use `DWHs`, `DWHp`, or `DWHu` instead of ordinary `D**w`, `Dmc`, or `Dmu` on the certified branch. Ordinary determiner paths remain available outside the extraction branch. |
 | `more` in wh/degree `B#m` extraction | `ECWH` carries the wh-quantity certificate through `more`; the following noun phrase must expose either a `DWH` determiner certificate or a `BWH` degree certificate. Ordinary comparative `EC` / `ECa` paths remain available outside this extraction branch. |
 | `Ws` quantity and temporal `how` paths | Subject-question quantity paths now use `HWS`, with `DWSu` on uncountable subject nouns. The focused temporal fragment `how long before ...` uses `EEHWS`. Ordinary `H` and `EEh` remain available for non-`Ws` questions and embedded clauses. |
+| `as.e-c` `MVzp` predicative branch | Replaced by adjective-only `MVZP`. This preserves adjectival parentheticals such as `unclear as worded` while preventing ordinary verbs from using the `as.e-c --Pa--` branch in bad comparative paths. |
 | bare-`what` `Wb` openers | `Wb` paths through `what` now require `RWB`, which is exposed only by the inverted verb question path. Ordinary `R` remains available for non-`Wb` wh/opening paths. |
 | predicative-adjective object `O` forms | `Pa**j` complement paths now use `OAJ` instead of ordinary `Osm`, `Op`, `Ox`, or `Os*e` object links. `OXi` remains available for complement-bearing `it` cases that are still governed by the expletive-`it` PP rules. Ordinary object links remain available for non-`Pa**j` constructions. |
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
@@ -945,7 +947,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
 | 37-39 | Remaining expletive `it` complement licensing | Simple family removal leaves `corpus-knowledge.batch` clean but raises `corpus-basic.batch` from 88 to 109 errors. The new accepts include ordinary-subject and wrong-object expletive-`it` complement paths such as `*How likely is John that he will come` and `*I made Anne clear that I was angry`. A replacement needs shared expletive-`it` subject/object certificates carried across copular, adjectival, object-complement, and auxiliary paths; deleting individual checks is not enough. Rule 20 is migrated separately with `THIC` and the `TTHI` / `ITHI` / `PPTHI` / `PTHI` carrier family; rule 21 is migrated separately with `TSIC`; rule 22 is migrated separately with `QIIC` and the `TQII` / `IQII` / `PQII` object-raising carrier; rule 23 is migrated separately with `TOIC`; rule 24 is migrated separately with `CIIC` and the `TCII` / `ICII` / `PCII` object-raising carrier; rules 25-29 were audited separately and removed as unreachable stale selectors; rule 30 is migrated separately by retiring `AFdi`; rule 31 is migrated separately with direct cleft-object splits and `TOCL` / `IOCL` / `PPOCL` / `ROCL` carriers. |
-| 43, 44, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch` from 362 to 358 errors, but raises `corpus-basic.batch` from 88 to 90 errors. Single-rule removals of rules 44, 47, and 48 each accept the knowledge/basic negative `*I am as intelligent as John does`; rules 47 and 48 each also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
+| 43, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch`, but raises `corpus-basic.batch` by accepting comparative negatives. Rule 44 was migrated separately with the `MVZP` split. Single-rule removals of rules 47 and 48 each still accept the knowledge/basic negative `*I am as intelligent as John does`; they also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
 
 `FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
@@ -4122,6 +4124,110 @@ Expected results:
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 361 errors
+corpus-fix-long.batch: 8 errors
+```
+
+## Rule 44: Split Predicative `as.e-c` From Verb-Side `MVz`
+
+**Status:** implemented; PP rule 44 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+MVz , D##y EAy EEy MVy EB#y , "Bad comparative44"
+```
+
+The grammatical area is comparative and parenthetical `as` clauses. The
+selector `MVz` is used by comparative `as.e-c`, but the old PP rule was too
+broad: it rejected valid parenthetical `as` clauses that do not contain the
+listed degree witnesses.
+
+### Problem
+
+Simple deletion of rule 44 recovered useful valid examples:
+
+```text
+Ridiculous as it seems, the tale is true.
+he earns as much as was expected
+the claim, unclear as worded, deserves attention
+```
+
+but it also accepted the known bad comparative path:
+
+```text
+*I am as intelligent as John does.
+```
+
+The bad raw path used two unrelated `as` entries. The first attached
+`as.e-c` to the verb with the ordinary `MVzp` modifier branch and then used
+`Pa` to connect the adjective:
+
+```text
+am ----MVzp---- as.e-c ----Pa---- intelligent
+```
+
+The second `as` was the temporal-subordinate `as.#while` path:
+
+```text
+am ----MVSWH---- as.#while ----Cs/CV---- John does
+```
+
+That local shape was enough to look like a completed raw linkage after rule
+44 was removed, but it is not a valid comparative `as ... as` construction.
+
+### Implementation
+
+The `as.e-c` predicative-adjective branch now uses a new uppercase
+adjective-only connector:
+
+```text
+as.e-c: MVZP- & Pa+
+```
+
+`MVZP+` is exposed from the adjective opener path, where parenthetical
+adjectival `as` clauses such as `unclear as worded` attach. Ordinary verbs
+keep broad `@MV+` modifier paths, but they do not expose `MVZP+`; therefore
+the bad `am --MVzp-- as.e-c --Pa-- intelligent` path is no longer built.
+
+Other `as.e-c` comparative paths remain on their existing connectors. In
+particular, `as much as was expected` still uses `MVz` with `CMPX`, and
+`Ridiculous as it seems` still uses the `MVza` / `AFd` / `Cta` path.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+Ridiculous as it seems, the tale is true.
+He earns as much as was expected.
+The claim, unclear as worded, deserves attention.
+```
+
+Focused rejected examples include:
+
+```text
+*I am as intelligent as John does.
+```
+
+### Verification
+
+The rule 44 migration was validated with:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
 ```
 

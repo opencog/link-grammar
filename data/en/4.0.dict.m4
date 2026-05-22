@@ -9612,8 +9612,8 @@ just_not: <COMP-OPENER>;
 %
 % This one is used for openers and post-nominal modifiers.
 <adj-opener>:
-  [{@E-} & {@MV+} & <fronted> & {@MV+}]
-  or ({@E-} & {@MV+} & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
+  [{@E-} & ({@MV+} or MVZP+) & <fronted> & ({@MV+} or MVZP+)]
+  or ({@E-} & ({@MV+} or MVZP+) & ([[<OPENER>]] or (Xd- & Xc+ & MX*a-)));
 
 % Conjoined adjectives
 % Conjoined comparative adjectives, if EAm- is present.
@@ -10372,7 +10372,7 @@ as.e-c:
   or (MVz- & (CMPP- or CMPX-) & Sp*c+ & {Mp+})
   or (MVzo- & Ct+ & Bc+ & {U+})
   or (MVzc- & (CX+ or CQ+))
-  or (MVzp- & Pa+)
+  or (MVZP- & Pa+)
   or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
 
 % prepositional, mostly
