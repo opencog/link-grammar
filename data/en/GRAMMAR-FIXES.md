@@ -41,6 +41,7 @@ Added uppercase connector families:
 | `CMPP` | Certifies a plural comparative antecedent for a following plural comparative clause. |
 | `CMPX` | Certifies an agreement-neutral comparative head, such as bare `more` or a comparative preposition object. |
 | `CMPC` | Certifies that a comparative modifier path licenses a following `Cc` / `CV` comparative clause. |
+| `CMPO` | Certifies that a comparative object or measure path licenses a following `MV#o` object-clause comparative continuation. |
 | `WTHAN` | Connects `way` / `ways` nouns to a following `than to ...` infinitival comparative. |
 | `THBS` / `THBI` | Certify direct and inverted subject links for `THb` predicate that-clause complements. |
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
@@ -103,6 +104,7 @@ Changed or retired connector forms:
 | subordinate temporal `as` with `MVs` | The `as.#while` temporal path now uses `MVSWH` instead of `MVs`. Other `MVs` uses remain ordinary modifiers. |
 | comparative-clause `S**c` on `than.e` / `as.e-c` | Split into singular `Ss*c` and plural `Sp*c` branches that require `CMPS`, `CMPP`, or `CMPX` antecedent certificates. |
 | comparative-clause `Cc` / `CV` on `than.e` / `as.e-c` | Tightened so clausal comparative continuations require a `CMPC` certificate from a local comparative modifier path. |
+| comparative object-clause `MV#o` on `than.e` / `as.e-c` | Tightened so object-control comparative continuations require a `CMPO` certificate from a local comparative object or measure path. |
 | `than to ...` infinitival comparative after `way` / `ways` | Added `WTHAN` so valid `way ... than to ...` comparatives do not depend on the retired naked `to.r I*a+` fallback. |
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
 | `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require a `TSIC` certificate from filler/expletive `it` when they select a subjunctive that-clause complement. Ordinary `THi` and `TOi` paths remain separate. |
@@ -479,6 +481,29 @@ tastes.v the same as.e-c it did.v-d
 
 `EAy` does not provide `CMPC`, so a plain adjective comparative such as
 `as intelligent as John does` cannot use the `as.e-c --Cc/CV--` clause path.
+
+### `CMPO`: Comparative Object-Clause Certificate
+
+`CMPO` connects a comparative object or measure witness to a following
+`than.e` or `as.e-c` object-clause continuation. It replaces the PP rule 47
+requirement that a domain containing `MV#o` also contain one of the local
+comparative witnesses such as `D##m`, `D##y`, `Om`, `Oy`, `Jm`, `Jy`, `Am`,
+or `MX#m`.
+
+Focused `Oy` example:
+
+```text
+    +-------MVzo------+
+    +----Oy----+      +--Bc--+
+    |          +-CMPO-+-Ct+  |
+I did.v as.e-y much as.e-c he did.v
+```
+
+The certificate is carried by the comparative object or measure expression,
+not by a plain adjective. Thus `as much as he did` and `the same as it did`
+can still use `MVzo`, while `as intelligent as John does` cannot use that
+object-clause branch merely because the adjective has broad modifier
+connectors.
 
 ### `WTHAN`: `way ... than to ...` Infinitival Comparatives
 
@@ -947,7 +972,7 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 5 | `Ws` wh-subject/opening link | Simple removal improves `corpus-fixes.batch` by four and `corpus-failures.batch` by four, but accepts one `corpus-knowledge.batch` negative and eight `corpus-basic.batch` negatives, including `*How big dogs run` and `*Who to invite to the party`. A replacement needs to preserve valid wh fragments and exclamatives while requiring the appropriate `D##w`, `S##w`, or `H` evidence for ordinary wh-subject/opening paths. |
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence. |
 | 38 | Remaining inverted expletive `it` complement licensing | Rules 37 and 39 were removed as redundant after the dedicated predicate-certificate migrations. Rule 38 remains active: simple removal accepts `*I wonder how important is it to turn off the computer`. A replacement needs to separate valid inverted filler/expletive `it` paths from embedded ordinary inversion paths that should not license the lower complement. |
-| 43, 47, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch`, but raises `corpus-basic.batch` by accepting comparative negatives. Rule 44 was migrated separately with the `MVZP` split. Single-rule removals of rules 47 and 48 each still accept the knowledge/basic negative `*I am as intelligent as John does`; they also raise `corpus-basic.batch` from 88 to 89 and `corpus-fixes.batch` from 359 to 360 in the current branch. These rules contain overbroad positives mixed with real protections, so they need narrower comparative connector splits rather than deletion. |
+| 43, 48 | Comparative paths | Bulk removal leaves `corpus-knowledge.batch` clean and improves `corpus-fixes.batch`, but raises `corpus-basic.batch` by accepting comparative negatives. Rules 44 and 47 were migrated separately with the `MVZP` and `CMPO` splits. Rule 48 still accepts the knowledge/basic negative `*I am as intelligent as John does` when removed by itself, so it needs a narrower comparative connector split rather than deletion. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. A replacement needs to preserve the grammatical distinction between valid fronted/inverted `s` domains and embedded or otherwise unbounded `s`-domain paths. |
 
 `FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
@@ -4295,6 +4320,96 @@ corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
 corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
+```
+
+## Rule 47: Certify Comparative `MV#o` Object-Clause Paths
+
+**Status:** implemented; PP rule 47 has been removed from `4.0.knowledge`.
+
+### Rule / Area
+
+The removed PP rule was:
+
+```text
+MV#o , D##m D##y Om Oy Jm Jy Am MX#m , "Bad comparative47"
+```
+
+The grammatical area is comparative object-clause continuation, including
+`as.e-c` paths such as `as much as he did` and `the same as it did`, and the
+corresponding `than.e` branch.
+
+### Problem
+
+Simple deletion of rule 47 left the `as.e-c` `MVzo- & Ct+ & Bc+` branch
+available to ordinary broad modifier paths. That accepted the bad adjective
+comparative:
+
+```text
+*I am as intelligent as John does.
+```
+
+In that raw path, the adjective supplied ordinary comparative `EAy` evidence,
+but no object or measure witness such as `Oy`, `D##y`, or `D##m` was present
+to license an `MV#o` object-clause continuation. The old PP rule rejected the
+completed linkage after extraction.
+
+### Implementation
+
+The dictionary now uses the internal certificate connector `CMPO`. Comparative
+object and measure paths that correspond to the old PP witnesses can expose
+`CMPO+`, for example `Oy` / `Jy` paths on `much`, `many`, and `the_same`,
+determiner-measure paths such as `Dmuy`, `Dmcy`, `Dmum`, and `Dmcm`, and
+selected comparative adjective `Am` paths.
+
+The `as.e-c` and `than.e` `MV#o` continuations require `CMPO-` next to their
+ordinary `MVzo-` or `MVto-` connector:
+
+```text
+as.e-c: CMPO- & MVzo- & Ct+ & Bc+
+than.e: CMPO- & MVto- & Ct+ & Bc+
+```
+
+The alternate connector order is also present for cases where the comparative
+witness and modified predicate appear in the opposite left-connector order.
+Plain adjective comparatives such as `as intelligent as John does` do not
+expose `CMPO`, so they cannot use the `MV#o` branch.
+
+### Examples
+
+Focused accepted examples include:
+
+```text
+The coffee tastes the same as it did last year.
+I did as much as he did.
+I earned as much as John earned.
+```
+
+Focused rejected examples include:
+
+```text
+*I am as intelligent as John does.
+```
+
+### Verification
+
+The rule 47 migration was validated with:
+
+```sh
+link-parser < ./data/en/corpus-knowledge.batch
+link-parser < ./data/en/corpus-basic.batch
+link-parser < ./data/en/corpus-fixes.batch
+link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
+```
+
+Expected results:
+
+```text
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 88 errors
+corpus-fixes.batch: 355 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1496 errors
 ```
 
 ## Rule 78: Separate Temporal `as` From Comparative `EAy`

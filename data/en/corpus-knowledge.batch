@@ -399,6 +399,14 @@ He earns as much as was expected.
 The claim, unclear as worded, deserves attention.
 *I am as intelligent as John does.
 
+% CONTAINS_ONE rule 47: MV#o comparative object-clause paths need local
+% comparative object or measure evidence.  The MV#o branches now require CMPO.
+
+The coffee tastes the same as it did last year.
+I did as much as he did.
+I earned as much as John earned.
+*I am as intelligent as John does.
+
 % CONTAINS_ONE rules 32s, 32p, 32u, 34, 35, and 36: existential "there"
 % agreement is carried by dictionary connectors instead of PP checks; the old
 % broad object-like OXt branch on there.r is removed.

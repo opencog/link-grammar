@@ -215,8 +215,6 @@ CONTAINS_ONE_RULES:
           COqi    CPi    Eqi    BIh         , "Bad use of 'it'38"           ,
  MVt   ,  Dm#m   EAm   EEm   MVm  Pam   Pafm   AFm   EB#m   MVb AJrc
           Om   Mam  Am  Jm  Ds*m   MX#m     , "Bad comparative43"    ,
- MV#o  ,  D##m    D##y    Om    Oy    Jm    Jy   Am   MX#m
-					    , "Bad comparative47"    ,
  MV#c  ,  EEm   MVb   Dm#m   EEy   D##y  MVm   Om   Oy
                             Jm   Jy   Am   MX#m
 					    , "Bad comparative48"

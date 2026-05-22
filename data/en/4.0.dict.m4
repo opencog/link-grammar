@@ -1768,7 +1768,7 @@ half:
 many:
   (H- & (Dmc+ or DWHp+ or ND+ or NDH+ or NIn+ or EC+ or ECWH+ or <b-raw-p> or [()]))
   or (HWS- & (Dmc+ or NIn+ or EC+ or [()]))
-  or (AM- & (Dmcy+ or ((Oy- or Jy-) & {CMPX+})))
+  or (AM- & ((Dmcy+ & {CMPO+}) or ((Oy- or Jy-) & {CMPX+} & {CMPO+})))
   or ({EE-} & (ND+ or NIn+))
   or ({DD-} & {EAx-} & Dmc+)
   or (OFd+ & Dmc+)
@@ -1934,7 +1934,7 @@ little.i:
       or [<noun-rel-s> & (<noun-main-s> or <rel-clause-s>)]
       or <noun-and-s>))
   or (H- & DWHu+)
-  or (AM- & (Dmuy+ or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+})))
+  or (AM- & ((Dmuy+ & {CMPO+}) or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+} & {CMPO+})))
   or [[{Ds-} & <adv-of>]];
 
 % "he likes you most" has no determiner, just uses MVa-.
@@ -9210,7 +9210,7 @@ and.j-c or.j-c but.j-c yet.j-c:
     ({Xd-} & hSJl- & {EB+} & hAJrc+)) &
     (((Pam- or AFm+) & {@MV+}) or
     ({[ECa-]} & MVb- & {CMPC+}) or
-    ({Xc+} & Am+)))
+    ({Xc+} & Am+ & {CMPO+})))
   or (((hAJlc- & hMJXr+) or
     (hMJXl- & hAJrc+) or
     (hMJXl- & hMJXr+) or
@@ -10320,10 +10320,10 @@ more:
   ({ECa-} & (EAm+ or (EEm+ & {CMPC+}) or [(MVm- & {CMPC+})] or [EB*m-] or Qe+ or <advcl-verb> or dAJrc- or dAJlc+))
   or (ECWH- & (DWHp+ or DWHu+ or (EAm+ & BWH+)))
   or ({OF+} & (
-    ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or <b-wh-s>))
-    or ({ECx- or ND-} & (Dmcm+ or (Sp+ & <CLAUSE>) or <b-wh-p>))
+    ({ECn-} & ((Dmum+ & {CMPO+}) or (Ss+ & <CLAUSE>) or <b-wh-s>))
+    or ({ECx- or ND-} & ((Dmcm+ & {CMPO+}) or (Sp+ & <CLAUSE>) or <b-wh-p>))
     or ({ECn- or ECx- or ND-} &
-      ((([Omm-]1.1 or Jm-) & {CMPX+}) or (Xd- & MVt+ & Xc+ & MX*m-)))))
+      ((([Omm-]1.1 or Jm-) & {CMPX+} & {CMPO+}) or (Xd- & MVt+ & Xc+ & MX*m- & {CMPO+})))))
   or EC-
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
@@ -10334,13 +10334,13 @@ more_of_an: Ds*mv+ or (<PHv> & Ds*mx+);
 % Cost of >1.0 on Om- so that MVm- is preferred for "He runs less".
 less:
   ({ECa-} & (EAm+ or (EEm+ & {CMPC+}) or [(MVm- & {CMPC+})] or [EB*m-] or dAJrc- or dAJlc+))
-  or ({ECn-} & (Dmum+ or (Ss+ & <CLAUSE>) or <b-wh-s>))
-  or ({ECn-} & (([Om-]1.1 or Jm-) & {CMPX+}))
+  or ({ECn-} & ((Dmum+ & {CMPO+}) or (Ss+ & <CLAUSE>) or <b-wh-s>))
+  or ({ECn-} & (([Om-]1.1 or Jm-) & {CMPX+} & {CMPO+}))
   or (DG- & (({MVa+} & <subcl-verb>) or B+ or Dm*w+ or EA+) & (ER- or (Wd- & Xc+ & ER+)));
 
 % ND- & Dmcm+ "I ran 10 fewer miles than Ben."
 fewer:
-  ({ECn- or ND-} & (Dmcm+ or ((Om- or Jm-) & {CMPX+}) or (Sp+ & <CLAUSE>) or dAJrc- or dAJlc+)) or
+  ({ECn- or ND-} & ((Dmcm+ & {CMPO+}) or ((Om- or Jm-) & {CMPX+} & {CMPO+}) or (Sp+ & <CLAUSE>) or dAJrc- or dAJlc+)) or
   (DG- & Dm*w+ & (ER- or (Wd- & Xc+ & ER+)));
 
 farther:
@@ -10370,7 +10370,7 @@ as.e-c:
   or ((CMPP- or CMPX-) & MVz- & Sp*c+ & {Mp+})
   or (MVz- & (CMPS- or CMPX-) & Ss*c+ & {Mp+})
   or (MVz- & (CMPP- or CMPX-) & Sp*c+ & {Mp+})
-  or (MVzo- & Ct+ & Bc+ & {U+})
+  or ((CMPO- & MVzo- & Ct+ & Bc+ & {U+}) or (MVzo- & CMPO- & Ct+ & Bc+ & {U+}))
   or (MVzc- & (CX+ or CQ+))
   or (MVZP- & Pa+)
   or (MVza- & Cta+ & ((AFd+ & {Pa+}) or PFc+));
@@ -10471,7 +10471,8 @@ than.e:
   or ((LE- or LEi-) & THc+)
   or (((LE- & {AFd+}) or LEi-)
     & ((TOic+ & <inf-verb>) or (TOfc+ & <inf-verb>) or (TOtc+ & B+)))
-  or (((MVto- & Ct+ & Bc+ & {U+}) or (MVtp- & (CX+ or CQ+))) & {Mp+})
+  or (((CMPO- & MVto- & Ct+ & Bc+ & {U+}) or (MVto- & CMPO- & Ct+ & Bc+ & {U+})
+       or (MVtp- & (CX+ or CQ+))) & {Mp+})
   or (WTHAN- & TO+ & IV+)
   or (MVp- & J+);
 
@@ -10498,7 +10499,7 @@ much:
   ))
   or (H- & {@M+} & <b-raw-s>)
   or (H- & {OFd+} & DWHu+)
-  or (AM- & (Dmuy+ or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+}) or EB*y-))
+  or (AM- & ((Dmuy+ & {CMPO+}) or (MVy- & {CMPC+}) or ((Oy- or Jy-) & {CMPX+} & {CMPO+}) or EB*y-))
   or EZ+;
 
 mucho: Dm+;
@@ -10519,7 +10520,7 @@ significantly substantially:
 %       "cheaper than dirt, slime is better"
 
 <comp-adj-misc>:
-  ({[[@Ec-]]} & {Xc+} & Am+)
+  ({[[@Ec-]]} & {Xc+} & Am+ & {CMPO+})
   or (DD- & O- & Mp+)
   or ({EA-} & dAJlc+)
   or (Wr- & {@MV+} & MVt+ & Xc+ & PFb+);
@@ -10585,7 +10586,7 @@ longer.a-c:
   or (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
 longer-term.a:
-  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+)
+  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+ & {CMPO+})
      or COMP_ADJ_POST_LIC(Pafm-, <thi-verb> & {LE+})
      or COMP_ADJ_POST_LIC(Pafm- or AFm+, <toi-verb> & {LE+})))
    or (DG- & TR+ & {@MV+} & {<toi-verb> or <thi-verb>} & (ER- or (Wd- & Xc+ & ER+)))
@@ -10676,7 +10677,7 @@ same.a own.a:
 
 % [Oy-]0.1: see immediately above.
 the_same:
-  {EZ-} & (D**y+ or [Oy-]0.1 or Jy- or (MVy- & {CMPC+}));
+  {EZ-} & ((D**y+ & {CMPO+}) or ([Oy-]0.1 & {CMPO+}) or (Jy- & {CMPO+}) or (MVy- & {CMPC+}));
 
 next.a:
   ({Xc+ & {Xd-}} & dCO+)
