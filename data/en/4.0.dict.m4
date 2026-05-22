@@ -575,6 +575,7 @@ Hallowe'en:
     ([[AN+]]
     or ({NM+ or ({{Dmc-} & Jd-} & Dmc-)} &
       <noun-rel-p> & (<noun-main-p> or <rel-clause-p>))
+    or (DWSp- & <noun-rel-p> & <noun-main-p>)
     or (DWHp- & <noun-rel-p> & <b-raw-p>)
     or ND-
     or ({NM+ or Dmc-} & <noun-and-p>)
@@ -703,6 +704,7 @@ USMC.y USN.y:
     or ((NM+ or ({[NM+]1.5} & (Ds- or <no-det-null>)))
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
+    or (DWSs- & <noun-rel-s> & <noun-main-s>)
     or (DWHs- & <noun-rel-s> & <b-raw-s>)
     or <noun-and-s>
     or <that-result-noun-s>
@@ -726,6 +728,7 @@ USMC.y USN.y:
     or ((NM+ or ({[NM+]1.5} & (Ds**x- or <no-det-null>)))
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
+    or (DWSs- & <noun-rel-s> & <noun-main-s>)
     or (DWHs- & <noun-rel-s> & <b-raw-s>)
     or (YS+ & Ds**x-)
     ));
@@ -736,6 +739,7 @@ USMC.y USN.y:
     or ((NM+ or ({[NM+]1.5} & (Ds**v- or <no-det-null>)))
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
+    or (DWSs- & <noun-rel-s> & <noun-main-s>)
     or (DWHs- & <noun-rel-s> & <b-raw-s>)
     or (YS+ & Ds**v-));
 
@@ -745,6 +749,7 @@ USMC.y USN.y:
     or ((NM+ or ({[NM+]1.5} & (Ds**c- or <no-det-null>)))
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
+    or (DWSs- & <noun-rel-s> & <noun-main-s>)
     or (DWHs- & <noun-rel-s> & <b-raw-s>)
     or (YS+ & Ds**c-));
 
@@ -789,6 +794,7 @@ USMC.y USN.y:
     or ({Dmc-} & Wa-)
     or ({NM+ or ({Jd-} & Dmc-)} &
       ((<noun-rel-p> & (<noun-main-p> or <rel-clause-p>)) or <noun-and-s>))
+    or (DWSp- & <noun-rel-p> & <noun-main-p>)
     or (DWHp- & <noun-rel-p> & <b-raw-p>)
     or (YS+ & {Dmc-})
     ));
@@ -996,6 +1002,7 @@ number.i batch.i group.i type.i:
     or ((NM+ or [[{[NM+]1.5} & (Ds- or <no-det-null>) ]] )
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
+    or (DWSs- & <noun-rel-s> & <noun-main-s>)
     or (DWHs- & <noun-rel-s> & <b-raw-s>)
     or dSJrs-
     or (YS+ & Ds-)
@@ -1387,6 +1394,7 @@ reason.n:
       (Ss*t+ & <CLAUSE>) or (THBS+ & <CLAUSE>) or
       SIs*t- or THBI- or
       <rel-clause-s>)) or
+    (DWSs- & <noun-rel-s> & <noun-main-s>) or
     ({D*u-} & <noun-and-s>) or
     Us- or
     (YS+ & {D*u-}) or
@@ -1398,6 +1406,7 @@ reasons.n:
     (({{Jd-} & Dmc-} & {@M+} & {TH+ or <embed-verb> or <ton-verb> or WY+ or (R+ & Bp+)} & {@MXp+} &
       (<noun-main-p> or
        <rel-clause-p>)) or
+    (DWSp- & <noun-rel-p> & <noun-main-p>) or
     ({Dmc-} & <noun-and-p>) or
     Up- or
     (YP+ & {Dmc-}) or
@@ -1410,6 +1419,7 @@ way.n:
       (MVa- or
       (<noun-main-s> & {WTHAN+}) or
       <rel-clause-s>)) or
+    (DWSs- & <noun-rel-s> & <noun-main-s>) or
     ({Ds-} & <noun-and-s>) or
     Us- or
     (YS+ & {D*u-}) or
@@ -1818,6 +1828,7 @@ one:
     (<noun-rel-s> & (<noun-main-s> or <rel-clause-s>)) or
     <noun-and-s>))))
   or Ds*w-
+  or (DWSs- & <noun-rel-s> & <noun-main-s>)
   or (DWHs- & <noun-rel-s> & <b-raw-s>)
   or NIm+
   or NSn+
@@ -8778,7 +8789,8 @@ who:
   or dSJl+ or dSJr-
   or (JW- & WJIb+)
   or JW-
-  or ({EL+} & ((S**w+ & {Bsw+}) or (R+ & B*w+)) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
+  or ({EL+} & (S**w+ & {Bsw+}) & {EW-} & (Ws- or Wq- or QI*d- or BIqd-))
+  or ({EL+} & (R+ & B*w+) & {EW-} & (Wq- or QI*d- or BIqd-))
   or ({EL+ & {N+}} & Wd-)
   or (<clause-q> & Qw+)
   or ({MVp+ or MVx+} & (S**w+ or (R+ & B*w+))
@@ -8794,6 +8806,14 @@ what:
   <marker-wjqprep-right>
   or
   ({EL+} &
+      (DWSs+
+      or DWSp+
+      or DWSu+
+      or Ss*w+
+      or Sp*w+)
+    & {hCO-} & {EW-} & Ws-)
+  or
+  ({EL+} &
       (D**w+
       or DWHs+
       or DWHp+
@@ -8801,7 +8821,7 @@ what:
       or Ss*w+
       or Sp*w+
       or (R+ & (Bsw+ or BW+)))
-    & {hCO-} & {EW-} & (Wq- or Ws- or QI*d- or QN- or BIqd- or QJ+ or QJ-))
+    & {hCO-} & {EW-} & (Wq- or QI*d- or QN- or BIqd- or QJ+ or QJ-))
   or ({EL+} & RWB+ & (Bsw+ or BW+) & {hCO-} & {EW-} & Wb-)
   or ({EL+} & Ww-)
   or (Wn- & O+)
@@ -8821,7 +8841,8 @@ which:
   <marker-wjqprep-right>
   or
   ((Jr- or R-) & (({MVp+ or MVx+} & RS+) or <porcl-verb>))
-  or ((D**w+ or DWHs+ or DWHp+ or DWHu+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or Ws- or QI*d- or BIqd-))
+  or ((D**w+ or DWSs+ or DWSp+ or DWSu+ or ({OF+} & S**w+)) & {EW-} & Ws-)
+  or ((D**w+ or DWHs+ or DWHp+ or DWHu+ or ({OF+} & (S**w+ or (R+ & B*w+)))) & {EW-} & (Wq- or QI*d- or BIqd-))
   or (JQ- & D+)
   or ({MVp+ or MVx+} & (S**w+ or B*w+) & (Xc+ & Xd- & MX*r-))
   or [QI-]
@@ -8845,10 +8866,10 @@ whom:
   or JW-;
 
 whose:
-  ((D**w+ or DWHs+ or DWHp+ or DWHu+) & (
+  ((DWSs+ or DWSp+ or DWSu+) & Mr- & Ws-)
+  or ((D**w+ or DWHs+ or DWHp+ or DWHu+) & (
     Mr-
     or ({EW-} & Wq-)
-    or Ws-
     or QI*d-
     or BIqd-
     or (Xc+ & Xd- & MX*d-)))
@@ -8985,7 +9006,7 @@ whether_or_not:
 % Wh- & H+: "How much money?"
 how:
   ((((EAh+ or EEh+) & {HA+ & {BWH+}}) or AFh+) &
-    {EW-} & (BIqd- or QI*d- or Wq- or Ws-))
+    {EW-} & (BIqd- or QI*d- or Wq-))
   or (H+ & {EW-} & (BIqd- or QI*d- or Wq-))
   or (HWS+ & {EW-} & Ws-)
   or (EEHWS+ & {EW-} & Ws-)
@@ -12085,6 +12106,7 @@ ample.#amply: [[amply]0.5]colloquial;
 <S-WORDS>.n:
   [(<noun-modifiers> &
     (({NM+ or Dmc-} & <noun-rel-p> & (<noun-main-p> or <b-wh-p>)) or
+    (DWSp- & <noun-rel-p> & <noun-main-p>) or
     (DWHp- & <noun-rel-p> & <b-raw-p>) or
     ({NM+ or Dmc-} & <noun-and-p>) or
     (YP+ & {Dmc-}) or
