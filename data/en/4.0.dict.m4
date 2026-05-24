@@ -1003,7 +1003,7 @@ number.i batch.i group.i type.i:
       & ((<noun-rel-s> & (<noun-main-s> or <rel-clause-s>))
         or <noun-and-s>))
     or (DWSs- & <noun-rel-s> & <noun-main-s>)
-    or (DWHs- & <noun-rel-s> & <b-raw-s>)
+    or [[DWHs- & <noun-rel-s> & <b-raw-s>]]
     or dSJrs-
     or (YS+ & Ds-)
     or (GN+ & (DD- or [()]))

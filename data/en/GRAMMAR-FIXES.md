@@ -2822,18 +2822,39 @@ How big a department is it?
 ### Verification
 
 Verification compared accepted/rejected outcomes with `lgerror` and used
-focused accepted-linkage inspection against `master`. The migration preserves
-the accepted zero-null analyses while intentionally changing the certificate
-links on the migrated extraction branch. Examples include `ND -> NDH` for
-unit quantities, `D**w`/`Dmc`/`Dmu -> DWH*` on certified extraction noun
-phrases, and `EC -> ECWH` when `more` carries an `H` certificate.
+focused accepted-linkage inspection against `master`. The migration keeps the
+representative zero-null examples accepted and the focused bad examples
+rejected, while intentionally changing the certificate links on the migrated
+extraction branch. Examples include `ND -> NDH` for unit quantities,
+`D**w`/`Dmc`/`Dmu -> DWH*` on certified extraction noun phrases, and
+`EC -> ECWH` when `more` carries an `H` certificate.
 
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
-corpus-fix-long.batch: 8 errors
-```
+#### Cost Preservation
+
+The wh/degree certificate connectors are licensing substitutes, not intended
+cost resets. This is separate from accepted/rejected parity: when a certificate
+branch replaces an old dictionary path that carried a disjunct cost, the
+replacement must remain under the same cost wrapper unless a ranking change is
+intentional.
+
+Focused regression check:
+
+| Sentence | Reference path | Migrated path | Required cost |
+| --- | --- | --- | --- |
+| `He won't divulge what type it is.` | `what --D**w-- type.n`, `type.n Ds- Bsm+` | `what --DWHs-- type.n`, `type.n DWHs- Bsm+` | `type.n` disjunct cost `2.000`; displayed first cost `DIS=2.50` |
+
+This catches accidental bypasses such as moving a replacement `DWHs` branch
+outside `<costly-common-noun>`'s cost wrapper.
+
+Do not use the `What degree of trust do you put in him?` preferred linkage as
+the cost-preservation reference: the rule-68 migration changes that phrase's
+preferred internal analysis from the old determiner-like `degree --Dmu-- trust`
+path to a `degree --Bsm-- put` extraction head with `of trust` as a modifier.
+
+Focused validation covers `corpus-knowledge.batch`, `corpus-basic.batch`,
+`corpus-fixes.batch`, and `corpus-fix-long.batch`. Exact corpus error totals
+are omitted here because they drift as unrelated grammar fixes land; rerun
+sentence-level comparison when revisiting this rule.
 
 ## Rule 71 (`Ws`): Keep Subject How-Questions Out Of Extraction Paths
 
