@@ -71,10 +71,11 @@ Added uppercase connector families:
 | `IQII` | Carries `QIi` evidence across infinitival and inverted auxiliary paths. |
 | `PPQII` | Carries `QIi` evidence across perfect auxiliary paths. |
 | `PQII` | Connects an auxiliary carrier to a lower predicate that owns the `QIi` complement. |
-| `CIIC` | Certifies that a `Ci` finite-clause predicate is licensed by filler/expletive `it` on direct subject, inverted subject, and object-complement paths. |
+| `CIIC` | Certifies that a `Ci` finite-clause predicate is licensed by filler/expletive `it` on local subject, inverted-subject, and object-complement paths. |
 | `TCII` | Carries object-raising `Ci` evidence from an object-raising predicate to infinitival `to`. |
-| `ICII` | Carries the same object-raising `Ci` evidence from infinitival `to` to the lower predicate. |
-| `PCII` | Connects the lower predicate to a `Ci` adjective in object-raising `it to be ...` paths. |
+| `ICII` | Carries `Ci` evidence across infinitival and inverted auxiliary paths. |
+| `PPCII` | Carries `Ci` evidence across perfect auxiliary paths. |
+| `PCII` | Connects an auxiliary carrier to a lower predicate that owns the `Ci` complement. |
 | `BIQS` / `BIQI` | Certify direct and inverted subject links for `BIq` predicate wh-complements. |
 | `IBIQ` / `PPBIQ` | Carry the `BIq` predicate license across modal and perfect auxiliary chains. |
 | `EEXK` | Certifies degree-modified adverbial result-clause targets, such as `so quickly that ...` and `so much that ...`. |
@@ -124,7 +125,7 @@ Changed or retired connector forms:
 | `THi` that-clause predicate licensing | `THi+` predicate branches now require direct `THIC` evidence from filler/expletive `it`, direct same-copula `SFsi`/`SFIsi` evidence for clefts, or a carrier path through `TTHI`/`ITHI`/`PPTHI` and `PTHI`. `THi` certificates deliberately exclude comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
 | cleft-object `O#i` paths | `Osi` / `Opi` cleft-object branches on `be` are no longer exposed through generic copular complement paths. They require direct `SFsi` / `SFIsi` evidence, an object-raising or auxiliary carrier through `TOCL` / `IOCT`, `IOCL`, or `PPOCL`, or an `ROCL` path to a filler `it` inside the following clause. |
 | `QIi` question-clause predicate licensing | `QIi+` predicate branches now require direct `QIIC` evidence from filler/expletive `it`, or a carrier path through `TQII`/`IQII`/`PPQII` and `PQII`. |
-| `Ci` finite-clause predicate licensing | `Ci+` predicate branches now require direct `CIIC` evidence from filler/expletive `it`, or an object-raising carrier path through `TCII`, `ICII`, and `PCII`. The `Ci` certificate intentionally excludes comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
+| `Ci` finite-clause predicate licensing | `Ci+` predicate branches now require direct `CIIC` evidence from filler/expletive `it`, or a carrier path through `TCII`/`ICII`/`PPCII` and `PCII`. The `Ci` certificate intentionally excludes comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
 | result-clause `that.j-c` with `MVh` | Bare `MVh-` on `that.j-c` was replaced by certified paths. Adverbial and noun result clauses use `RTHAT- & MVh-`; adjective result clauses use `MVH-`. |
 | result-clause `EExk` / `EAxk` / `D##k` witnesses | Replaced for `that` result clauses by uppercase certificate families `EEXK`, `EAXK`, and `DTHAT`. The older `EExk`, `EAxk`, and `D...k` forms remain available for ordinary non-result-clause degree and determiner uses. |
@@ -807,7 +808,7 @@ condition as the old PP rule: a `QIi` predicate in these branches is licensed
 only when the selected linkage also contains the appropriate filler/expletive
 `it` evidence.
 
-### `CIIC`, `TCII`, `ICII`, And `PCII`: Expletive-`It` License For `Ci` Clauses
+### `CIIC`, `TCII`, `ICII`, `PPCII`, And `PCII`: Expletive-`It` License For `Ci` Clauses
 
 These connector families encode the filler/expletive-`it` evidence required
 by `Ci` finite-clause predicates:
@@ -815,15 +816,17 @@ by `Ci` finite-clause predicates:
 ```text
 CIIC  direct filler/expletive-it certificate for Ci predicates
 TCII  object-raising carrier from the higher predicate to infinitival to
-ICII  object-raising carrier from infinitival to to the lower predicate
+ICII  Ci evidence carried across infinitival or inverted auxiliary paths
+PPCII Ci evidence carried across perfect auxiliary paths
 PCII  lower-predicate link to the Ci adjective
 ```
 
-Direct subject and direct object-complement cases use `CIIC`:
+Direct copular and auxiliary cases use carrier paths so the replacement keeps
+the old predicative-link cost, while direct object-complement cases can still
+use local `CIIC`:
 
 ```text
-it --SFsi-- is --Paf-- likely --Ci-- he --CV-- came
-it ----------------CIIC---------------- likely
+it --SFsi-- is --PCII-- likely --Ci-- he --CV-- came
 
 considered --OXi-- it
 considered --Paf-- likely --Ci-- he --CV-- came
@@ -2136,11 +2139,12 @@ filler/expletive `it`.
 
 ### Implementation
 
-The direct subject, inverted subject, and direct object-complement cases use a
+Local subject, inverted subject, and direct object-complement cases can use a
 dedicated certificate:
 
 ```text
 <cii-verb>: CIIC- & {hHM+} & Ci+ & CV+;
+<cii-obj-verb>: CIIC- & (Paf- or dMJra-) & {hHM+} & Ci+ & CV+;
 ```
 
 The filler/expletive `it` entry can supply `CIIC+` on the same three witness
@@ -2153,14 +2157,23 @@ OXi   -> CIIC
 ```
 
 Direct object-complement adjectives need the opposite left-connector order from
-direct subject predicates. In `It is likely he came`, the adjective sees the
-closer `Paf-` link before the farther `CIIC-` link. In `I considered it likely
-he came`, the adjective sees the closer `CIIC-` link from `it` before the
-farther `Paf-` link from the higher verb. The dictionary therefore includes a
-separate object-complement order:
+direct subject predicates. In `I considered it likely he came`, the adjective
+sees the closer `CIIC-` link from `it` before the farther `Paf-` link from the
+higher verb, so the dictionary keeps the separate object-complement order shown
+above.
+
+Direct copular, modal, and perfect auxiliary cases use carrier forms to
+preserve the old predicative-link cost. A direct `CIIC` link from the filler
+`it` to the adjective can cross the ordinary copular predicate path, causing
+the certified `Ci` linkage to sort after unrelated analyses. The carrier
+links replace the old predicative link rather than adding a parallel
+certificate:
 
 ```text
-<cii-obj-verb>: CIIC- & (Paf- or dMJra-) & {hHM+} & Ci+ & CV+;
+is.v / be.v: ... [PCII+]0.05 ...
+modal:       ... ICII+ ...
+perfect:     ... PPCII+ ...
+adjective:   PCII- & {hHM+} & Ci+ & CV+
 ```
 
 The `Ci` certificate deliberately excludes the `AF` predicate path. A focused
@@ -2184,7 +2197,7 @@ to the rule-22 `QIi` carrier:
 ```text
 <cii-too-verb>: TCII+;
 to.r: ... TCII- & ICII+ ...
-be.v: ... ICII- & PCII+ ...
+be.v: ... ICII- & [PCII+]0.05 ...
 adjective: PCII- & Ci+ & CV+
 ```
 
@@ -2195,15 +2208,14 @@ Thus `I want it to be likely he came` carries the `OXi` evidence through
 
 This is a dictionary replacement for rule 24. Valid `Ci` linkages now show one
 of the explicit certificate paths where the old grammar used PP to infer the
-same condition after extraction. The direct `CIIC` path and the object-raising
-`TCII` / `ICII` / `PCII` path are technical links whose purpose is to encode
-filler/expletive-`it` licensing in the dictionary.
+same condition after extraction. The direct `CIIC` path and the carrier
+`TCII` / `ICII` / `PPCII` / `PCII` paths are technical links whose purpose is
+to encode filler/expletive-`it` licensing in the dictionary.
 
-The object-raising path intentionally changes the visible carrier links in that
-construction. Before this migration, accepted linkages used the ordinary `TOo`
-/ `IV` / `Ixt` / `Paf` shape and then relied on PP to verify the `OXi` witness.
-The migrated path uses `TCII` / `ICII` / `PCII` to make the witness explicit
-before PP.
+The carrier links are cost-preserving replacements, not intended ranking
+changes. Direct copular, modal, perfect, and object-raising examples use
+`PCII` in place of the old predicative link while keeping the inherited
+displayed cost. Direct object-complement examples can still use local `CIIC`.
 
 ### Verification
 
@@ -2212,15 +2224,37 @@ accepted linkages for:
 
 ```text
 It is likely he came.
+Is it likely he came?
+It is surprising he came.
+It may be likely he came.
+It has been likely he came.
 I considered it likely he came.
 I want it to be likely he came.
 ```
 
-The same grammatical constructions remain accepted. Direct subject and direct
-object-complement examples preserve the public `Ci`, `CV`, `SFsi`/`OXi`, and
-predicate links while adding `CIIC`. The object-raising example remains
+The same grammatical constructions remain accepted. Direct copular and
+auxiliary examples preserve the public `Ci`, `CV`, `SFsi`/`SFIsi`, and
+predicate relation while using a `PCII`-based carrier. The direct
+object-complement example preserves the public `Ci`, `CV`, `OXi`, and
+predicate links while adding local `CIIC`. The object-raising example remains
 accepted through `OXi` and `Ci`, with the old ordinary infinitival carrier
 replaced by `TCII` / `ICII` / `PCII`.
+
+#### Cost Preservation
+
+The `Ci` replacement paths preserve the old preferred costs for representative
+direct, inverted, auxiliary, object-complement, and object-raising
+finite-clause examples:
+
+| Sentence | Migrated path | Required displayed cost |
+| --- | --- | --- |
+| `It is likely he came.` | `is --PCII-- likely --Ci-- he --CV-- came` | first linkage `DIS=0.05` |
+| `Is it likely he came?` | `it --CIIC-- likely --Ci-- he --CV-- came` or `is --PCII-- likely --Ci-- he --CV-- came` | first linkage `DIS=0.05` |
+| `It is surprising he came.` | `is --PCII-- surprising --Ci-- he --CV-- came` | first linkage `DIS=0.05` |
+| `It may be likely he came.` | `may --ICII-- be --PCII-- likely --Ci-- he --CV-- came` | first linkage `DIS=0.05` |
+| `It has been likely he came.` | `has --PPCII-- been --PCII-- likely --Ci-- he --CV-- came` | first linkage `DIS=0.05` |
+| `I considered it likely he came.` | `it --CIIC-- likely --Ci-- he --CV-- came` | first linkage `DIS=0.00` |
+| `I want it to be likely he came.` | `want --TCII-- to --ICII-- be --PCII-- likely --Ci-- he --CV-- came` | first linkage `DIS=0.05` |
 
 The rule 24 migration was validated with ordinary parser runs:
 
@@ -2236,10 +2270,10 @@ Observed results:
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
+corpus-basic.batch: 87 errors
+corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1496 errors
+corpus-failures.batch: 1495 errors
 ```
 
 ## Library-Assisted Dictionary Helper Tokens

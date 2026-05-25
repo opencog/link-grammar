@@ -87,12 +87,15 @@ I want it to be obvious how to use the program.
 *The answer is unknown why he came.
 
 % CONTAINS_ONE rule 24: Ci finite-clause complements require filler/expletive
-% it evidence.  CIIC carries direct it evidence to the predicate that owns the
-% Ci link; object-raising "it to be" uses TCII/ICII/PCII.
+% it evidence.  CIIC carries local direct it evidence to the predicate that
+% owns the Ci link; copular, auxiliary, and object-raising paths use
+% TCII/ICII/PPCII/PCII carriers.
 
 It is likely he came.
 Is it likely he came?
 It is surprising he came.
+It may be likely he came.
+It has been likely he came.
 I considered it likely he came.
 I want it to be likely he came.
 *Joe is likely he came.
