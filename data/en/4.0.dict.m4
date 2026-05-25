@@ -3600,7 +3600,7 @@ are.v:
   or ({@E-} & THRP- & <verb-wall> & PGTHRP+)
   or ({<verb-rq>} & THBI+ & {<vc-be-thb>})
   or ({<verb-rq>} & BIQI+ & {<vc-be-biq>})
-  or ({<verb-rq>} & THRP+ & {<vc-be-thrp>})
+  or [({<verb-rq>} & THRP+ & {<vc-be-thrp>})]-1.0
   or ({@E-} & (Spx- or SFp- or (RS- & Bp-)) & (<vc-be-sp> or <vc-be-no-obj-no-wall>))
   or ({@E-} & Ss*t- & <vc-be-obj-p> & <verb-wall>)
   or ({<verb-rq>} & SIpx+ & {<vc-be>})
