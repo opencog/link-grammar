@@ -8860,7 +8860,7 @@ tenfold a_hundredfold a_thousandfold:
 % Dmc- & Wa-: "How many dollars?"
 /en/words/currency.p:
   ((NIn- or NIe-) & AN+)
-  or ({NIn- or NIe-} & (Op- or Jp-) & {Mp+})
+  or ({NIn- or NIe-} & (Op- or Jp-) & {Mp+} & {CMPP+})
   or ((NIn-) & {NJ-} & (EC+ or Yd+ or OD-))
   or <noun-assert>
   or Up-;
