@@ -10628,7 +10628,7 @@ than.e:
 % H-: "How much?"
 much:
   ({EE-} & ([[MVa-]] or (<wantPHc> & ECa+) or <advcl-verb> or Qe+))
-  or (EEXK- & MVa- & RTHAT+)
+  or [EEXK- & MVa- & RTHAT+]2.0
   or ({EEx- or H-} & (
     ECn+
     or ECWH+
