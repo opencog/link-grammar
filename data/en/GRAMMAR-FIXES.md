@@ -2053,6 +2053,11 @@ changes. Direct copular examples use `PQII` in place of the old predicative
 `Pa`/`Paf` link, while object-complement examples can still use direct
 `QIIC`.
 
+The idiomatic filler-`it` `matter` predicate uses narrow verb-specific paths.
+Direct `matters` uses `SFsi` plus `QIi`, and auxiliary/modal forms use
+`IQII` to carry filler-`it` evidence to lower `matter` without restoring bare
+ordinary-subject `QIi+` on the predicate.
+
 ### Verification
 
 Focused accepted-linkage comparison inspected the first three displayed
@@ -2088,6 +2093,10 @@ object-raising question-clause examples:
 | `It has been unknown whether he came.` | `has --PPQII-- been --PQII-- unknown --QIi-- whether` | first linkage `DIS=0.05` |
 | `I made it clear how to use the program.` | `it --QIIC-- clear --QIi-- how` | first linkage `DIS=0.00` |
 | `I want it to be obvious how to use the program.` | `want --TQII-- to --IQII-- be --PQII-- obvious --QIi-- how` | first linkage `DIS=0.05` |
+| `It matters what Ted does.` | `matters --QIi-- what` with `it --SFsi-- matters` | first linkage `DIS=1.50` |
+| `It doesn't matter what Ted does.` | `doesn't --IQII-- matter --QIi-- what` | first linkage `DIS=1.50` |
+| `It may matter what Ted does.` | `may --IQII-- matter --QIi-- what` | first linkage `DIS=1.50` |
+| `Does it matter what Ted does?` | `does --IQII-- matter --QIi-- what` | first linkage `DIS=1.50` |
 
 The rule 22 migration was validated with ordinary parser runs:
 
@@ -3417,11 +3426,14 @@ It doesn't matter what Ted does.
 
 ### Verification
 
-Accepted-linkage comparison against `master` for `Joe, are you ready?`,
-`Anyhow, am I right?`, and `It doesn't matter what Ted does.` showed matching
-public link rows for the first three accepted displayed linkages. The focused
-regression checks also preserved `Which way did they go?` and
-`Which way did you come?`.
+Accepted-linkage comparison against `master` for `Joe, are you ready?` and
+`Anyhow, am I right?` showed matching public link rows for the first three
+accepted displayed linkages. Later cost-preservation audit found that
+`It doesn't matter what Ted does.` had fallen from the old `DIS=1.50`
+filler-`it` `matter --QIi-- what` path to a higher-cost direct `QIIC` path;
+the rule-22 `matter` repair restores the old first cost with an `IQII`
+carrier. The focused regression checks also preserved `Which way did they
+go?` and `Which way did you come?`.
 
 ```text
 corpus-knowledge.batch: 0 errors
