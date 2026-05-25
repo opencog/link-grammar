@@ -1434,6 +1434,7 @@ way.n:
       (<noun-main-s> & {WTHAN+}) or
       <rel-clause-s>)) or
     (DWSs- & <noun-rel-s> & <noun-main-s>) or
+    (DWHs- & <noun-rel-s> & <b-raw-s>) or
     ({Ds-} & <noun-and-s>) or
     Us- or
     (YS+ & {D*u-}) or

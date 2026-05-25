@@ -3064,6 +3064,11 @@ The dictionary now uses a small family of wh/degree certificates for the
   extraction branch. Ordinary `HA` paths remain available without `BWH` for
   non-extraction degree phrases.
 
+Special noun entries that do not inherit the common noun determiner table must
+also expose the certified extraction branch when they keep the old wh-extraction
+analysis. For example, `way.n` uses `DWHs` for `which way ...` questions that
+select `Bsm`.
+
 Ordinary quantity and determiner paths continue to use their established
 links, including:
 
@@ -3117,6 +3122,8 @@ Focused regression check:
 | Sentence | Reference path | Migrated path | Required cost |
 | --- | --- | --- | --- |
 | `He won't divulge what type it is.` | `what --D**w-- type.n`, `type.n Ds- Bsm+` | `what --DWHs-- type.n`, `type.n DWHs- Bsm+` | `type.n` disjunct cost `2.000`; displayed first cost `DIS=2.50` |
+| `Which way did they go?` | `which --D**w-- way.n`, `way.n Ds- Rw+ Bsm+` | `which --DWHs-- way.n`, `way.n DWHs- Rw+ Bsm+` | displayed first cost `DIS=0.50` |
+| `Which way did you come?` | `which --D**w-- way.n`, `way.n Ds- Rw+ Bsm+` | `which --DWHs-- way.n`, `way.n DWHs- Rw+ Bsm+` | displayed first cost `DIS=0.50` |
 
 This catches accidental bypasses such as moving a replacement `DWHs` branch
 outside `<costly-common-noun>`'s cost wrapper.
