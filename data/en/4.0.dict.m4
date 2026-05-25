@@ -3191,6 +3191,7 @@ has.v:
   or (BIQI+ & (<verb-rq> & PPBIQ+))
   or (THRS+ & (<verb-rq> & PPTHRS+))
   or (THRU+ & (<verb-rq> & PPTHRU+))
+  or ({@E-} & SFs- & PPTHI+)
   or (VERB_X_S(<vc-have>))
   or (SIs+ & ((<verb-rq> & {PP+ or <verb-wall>}) or CQ-))
   or (SFIs+ & ((<verb-rq> & {PP+ or PPTHI+ or PPOCL+ or <verb-wall>}) or CQ-));
@@ -3413,7 +3414,10 @@ rest.w: Ix- & Pv+;
   {@EBm+} & PQII+;
 
 <vc-be-thi>:
-  {@EBm+} & PTHI+;
+  {@EBm+} & ([PTHI+]0.05 or (dWV- & [PTHI+]0.05));
+
+<vc-be-thi-pred>:
+  {@EBm+} & dWV- & [PTHI+]0.05;
 
 <vc-be-cii>:
   {@EBm+} & PCII+;
@@ -3460,6 +3464,7 @@ rest.w: Ix- & Pv+;
 is.v:
   ({@E-} & THBS- & <vc-be-thb>)
   or ({@E-} & BIQS- & <vc-be-biq>)
+  or ({@E-} & SFsi- & <vc-be-thi-pred>)
   or ({@E-} & SFsi- & <vc-be-thi-cleft>)
   or ({@E-} & SFsi- & <vc-be-ocleft>)
   or ({@E-} & THRS- & <vc-be-thrs>)
@@ -3475,6 +3480,7 @@ is.v:
   or (<vc-be-and> & <verb-and-s+>)
   or ({<verb-rq>} & (SIs*x+ or SIs*b+) & {<vc-be>})
   or (<verb-rq-required> & SFIs+ & {<vc-be>})
+  or (<verb-rq-required> & SFIs+ & {<vc-be-thi-pred>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-thi-cleft>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-ocleft>})
   or (Sa*a- & Pv+)
@@ -3562,6 +3568,7 @@ yisser.v: (Pa+ & Wd-);
 was.v-d:
   ({@E-} & THBS- & (<vc-be-thb> or <vc-be-thb-passive>))
   or ({@E-} & BIQS- & <vc-be-biq>)
+  or ({@E-} & SFsi- & <vc-be-thi-pred>)
   or ({@E-} & SFsi- & <vc-be-thi-cleft>)
   or ({@E-} & SFsi- & <vc-be-ocleft>)
   or ({@E-} & THRS- & <vc-be-thrs>)
@@ -3725,6 +3732,7 @@ will.v can.v may.v must.v could.v might.v shall.v shalt.v:
   or (THRU+ & (<verb-rq-aux> & {N+} & ITHRU+))
   or (SI+ & ((<verb-rq-aux> & {N+} & (I+ or <verb-wall>)) or CQ-))
   or (SFI+ & ((<verb-rq-aux> & {N+} & (I+ or ITHI+ or IOCL+ or <verb-wall>)) or CQ-))
+  or ({N+} & {@E-} & SF- & ITHI+)
   or ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]]))
   or (Sa*a- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
@@ -3752,6 +3760,7 @@ should.v:
   or (THRU+ & (<verb-rq-aux> & ITHRU+))
   or (SI+ & ((<verb-rq-aux> & (I+ or <verb-wall>)) or CQ-)) or
   (SFI+ & ((<verb-rq-aux> & (I+ or ITHI+ or IOCL+ or <verb-wall>)) or CQ-)) or
+  ({N+} & {@E-} & SF- & ITHI+) or
   ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & dCOp+))]];
@@ -3774,6 +3783,7 @@ would.v:
   or (THRU+ & (<verb-rq-aux> & {N+ or Vw+} & ITHRU+))
   or (SI+ & ((<verb-rq-aux> & {N+ or Vw+} & I+) or CQ-)) or
   (SFI+ & ((<verb-rq-aux> & {N+ or Vw+} & (I+ or ITHI+ or IOCL+)) or CQ-)) or
+  ({N+} & {@E-} & SF- & ITHI+) or
   ({N+} & <verb-x-sp> & (({RT+} & I+) or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>);
 
@@ -3800,6 +3810,7 @@ won’t can’t mustn’t couldn’t shouldn’t needn’t:
   or ({@E-} & BIQS- & IBIQ+)
   or (<verb-rq-aux> & SI+ & (I+ or <verb-wall>))
   or (<verb-rq-aux> & SFI+ & (I+ or ITHI+ or IOCL+ or <verb-wall>)) or
+  ({@E-} & SF- & ITHI+) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
   ({@E-} & I+ & <verb-and-sp+>) or
@@ -3821,6 +3832,7 @@ wouldn't wouldn’t:
   or ({@E-} & BIQS- & ({RT+} & IBIQ+))
   or (<verb-rq-aux> & SI+ & {RT+} & (I+ or <verb-wall>))
   or (<verb-rq-aux> & SFI+ & {RT+} & (I+ or ITHI+ or IOCL+ or <verb-wall>)) or
+  ({@E-} & SF- & {RT+} & ITHI+) or
   (<verb-x-sp> & (({RT+} & I+) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
@@ -4682,7 +4694,8 @@ appear.v:
   or ({@E-} & ITHRS- & <thr-tof-s>)
   or ({@E-} & ITHRP- & <thr-tof-p>)
   or ({@E-} & ITHRU- & <thr-tof-u>)
-  or ({@E-} & ITHI- & PTHI+)
+  or ({@E-} & ITHI- & dWV- & [PTHI+]1.0)
+  or ({@E-} & ITHI- & [PTHI+]2.0)
   or (VERB_Y_PLI(<vc-appear>)) or (Ix- & PF- & <verb-wall>);
 appears.v:
   ({@E-} & THRS- & <verb-wall> & <thr-tof-s>)
@@ -4697,7 +4710,8 @@ appeared.v-d:
   or ({@E-} & ITHRS- & <thr-tof-s>)
   or ({@E-} & ITHRP- & <thr-tof-p>)
   or ({@E-} & ITHRU- & <thr-tof-u>)
-  or ({@E-} & PPTHI- & PTHI+)
+  or ({@E-} & PPTHI- & dWV- & [PTHI+]1.0)
+  or ({@E-} & PPTHI- & [PTHI+]2.0)
   or (VERB_Y_SPPP(<vc-appear>)) or <verb-thi-direct> or <verb-fronted>;
 appearing.v: (<vc-appear> & <verb-x-pg,ge>) or <verb-ge-d>;
 
@@ -4722,7 +4736,8 @@ seem.v:
   or ({@E-} & ITHRS- & <thr-tof-s>)
   or ({@E-} & ITHRP- & <thr-tof-p>)
   or ({@E-} & ITHRU- & <thr-tof-u>)
-  or ({@E-} & ITHI- & PTHI+)
+  or ({@E-} & ITHI- & dWV- & [PTHI+]1.0)
+  or ({@E-} & ITHI- & [PTHI+]2.0)
   or (VERB_Y_PLI(<vc-seem>)) or (Ix- & PF- & <verb-wall>);
 seems.v:
   ({@E-} & THRS- & <verb-wall> & <thr-tof-s>)
@@ -4737,7 +4752,8 @@ seemed.v-d:
   or ({@E-} & ITHRS- & <thr-tof-s>)
   or ({@E-} & ITHRP- & <thr-tof-p>)
   or ({@E-} & ITHRU- & <thr-tof-u>)
-  or ({@E-} & PPTHI- & PTHI+)
+  or ({@E-} & PPTHI- & dWV- & [PTHI+]1.0)
+  or ({@E-} & PPTHI- & [PTHI+]2.0)
   or (VERB_Y_SPPP(<vc-seem>)) or <verb-thi-direct> or <verb-fronted> or <verb-si>;
 seeming.v: (<vc-seem> & <verb-x-pg,ge>) or <verb-ge-d>;
 
