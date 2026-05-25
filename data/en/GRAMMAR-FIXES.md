@@ -46,6 +46,7 @@ Added uppercase connector families:
 | `WTHAN` | Connects `way` / `ways` nouns to a following `than to ...` infinitival comparative. |
 | `THBS` / `THBI` | Certify direct and inverted subject links for `THb` predicate that-clause complements. |
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
+| `IBIH` / `PPBIH` | Carry filler-`it` `BIh` predicate evidence across modal and perfect auxiliary chains. |
 | `TSIC` | Certifies that a `TSi` subjunctive that-clause predicate is licensed by filler/expletive `it`. |
 | `TTSI` | Carries object-raising `TSi` evidence from an object-raising predicate to infinitival `to`. |
 | `ITSI` | Carries `TSi` evidence across infinitival and inverted auxiliary paths. |
@@ -5978,13 +5979,29 @@ predicate/clause paths.
 
 ### Implementation
 
-The `predicate41` PP rule is removed from `4.0.knowledge`. No dictionary
-connector change is needed for this rule in the current grammar.
+The `predicate41` PP rule is removed from `4.0.knowledge`. Filler-`it`
+`BIh` predicates keep narrow dictionary-side support rather than restoring the
+old broad `BI+` copular branch to ordinary subjects:
+
+```text
+it --SFsi-- was --BIh-- if
+it --SFsi-- may --IBIH-- be --BIh-- if
+it --SFsi-- has --PPBIH-- been --BIh-- if
+```
+
+The inverted filler-`it` path keeps the old question/inversion ranking cost:
+
+```text
+Was it as if he knew?  first linkage DIS=1.00
+```
 
 ### Implications
 
 This removal applies only to `BIh`. The neighboring `BIq` predicate rule is
 handled separately by the dedicated certificate connectors documented below.
+Ordinary-subject `as if` predicates still use their previous adverbial
+modifier analysis and cost; the zero-cost `BIh` repair is limited to
+filler-`it` paths.
 
 ### Examples
 
