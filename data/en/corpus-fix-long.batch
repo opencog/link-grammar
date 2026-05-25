@@ -1,6 +1,6 @@
 !batch
 !echo
-!limit=10000
+!limit=1
 !short=20
 !constituents=1
 !spell=0
