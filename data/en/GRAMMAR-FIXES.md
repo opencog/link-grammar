@@ -1455,6 +1455,20 @@ I wonder how important it is to turn off the computer.
 *I wonder how important is it to turn off the computer.
 ```
 
+#### Cost Preservation
+
+Rules 37 and 39 remove redundant backstops and do not introduce new accepted
+connector paths. Rule 38's dictionary replacement is a real path change for
+inverted filler-`it` questions, so it preserves the old question-wall ranking:
+
+| Sentence | Migrated path | Required displayed cost |
+| --- | --- | --- |
+| `How likely is it that Joe came?` | `likely --Qe-- is --SFIs-- it` with root-wall evidence | first linkage `DIS=-0.10` |
+
+The root-wall requirement is still mandatory for `Qw`/`Qe` inverted
+filler-`it` branches, so embedded bad cases such as `*I wonder how important
+is it to turn off the computer` remain rejected.
+
 ### Verification
 
 Rules 37 and 39 were tested individually before removal. In both cases,
