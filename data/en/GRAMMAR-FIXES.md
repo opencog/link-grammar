@@ -92,6 +92,7 @@ Added uppercase connector families:
 | `HWS` | Certifies `how` quantity phrases that start a `Ws` subject question and therefore must not use extracted `B#m` or non-inverted `Ca` continuations. |
 | `DWS` | Determiner certificate used by `Ws` subject questions. `DWSs`, `DWSp`, and `DWSu` distinguish singular, plural, and uncountable wh-subject noun phrases from extracted-object `DWH` paths. |
 | `EEHWS` | Certifies the narrow `how long before ...` temporal-fragment path as a `Ws` question without allowing the broader `EEh + Ca` overgeneration. |
+| `ECQ` / `EEQ` | Carry the `how`-licensed `EEh` certificate through `much more` to a following adverb in direct `Qe` questions, as in `How much more quickly did you run?`. |
 | `MVZP` | Adjective-only certificate for predicative/participial parenthetical `as` clauses such as `unclear as worded`. It keeps the `as.e-c` `Pa` branch away from ordinary verb-side `MVzp` paths. |
 | `RWB` | Certifies that a bare-`what` `Wb` opener is tied to an inverted verb question path. |
 | `OAJ` | Connects a verb to a non-expletive object that is allowed to license a `Pa**j` predicative-adjective complement. |
@@ -333,6 +334,22 @@ Ordinary `H` and `EEh` remain available for non-`Ws` questions and embedded
 clauses, such as `How much money did you earn?` and `I wonder how many times
 you did it.` This split replaces the old rule-71 check without making broad
 `Ws + B#m` or `Ws + Ca` paths accepted.
+
+### `ECQ` And `EEQ`: Certified `How Much More` Adverb Questions
+
+`ECQ` and `EEQ` carry a direct-question `how` certificate through
+`much more` to a following adverb:
+
+```text
+    +->Wq--+-EEh+-ECQ+-EEQ-+---Qe--+
+    |      |    |    |     |       |
+LEFT-WALL how much more quickly did.v-d ...
+```
+
+The ordinary `ECa` / `EEm` comparative-degree links remain available for
+non-question uses. The `Qe`-licensing branch requires the certified
+`EEh`/`ECQ`/`EEQ` chain, so removing PP rule 19 does not restore the old broad
+ordinary-adverb `EE- ... Qe+` path.
 
 ### `RWB`: Bare-`what` Topic-Question Certification
 
@@ -3687,6 +3704,13 @@ from the generic `EE-/EF-` branch. Thus an ordinary adverb can still form a
 `Qe` question path when the same disjunct carries the `EEh` witness, but it no
 longer creates a `Qe` path from an unrelated modifier relation.
 
+The comparative-degree path `how much more quickly ...` also needs a certified
+question chain. The replacement uses `much --ECQ-- more` and
+`more --EEQ-- adverb` only when `much` is directly licensed by
+`how --EEh-- much`. The adverb then exposes `Qe+` through `EEQ-`, preserving
+the old zero-cost preferred direct-question linkage without restoring the
+removed broad `EE- ... Qe+` alternative.
+
 This is not a general cleanup of `how` grammar. For example, a sentence such
 as `*How slickly did you say it was?` already contains the `EEh` witness, so
 rule 19 is not the mechanism that distinguishes it from accepted `how`
@@ -3747,6 +3771,23 @@ uses `quickly --Em-- run` instead of the baseline's duplicate low-cost
 `quickly --Qe-- did` analysis. This is the expected consequence of removing
 the loose ordinary-adverb `Qe+` path while preserving the direct
 `EEh- & Qe+` how-question path.
+
+After the cost audit, `How much more quickly did you run?` was also checked as
+a preferred-linkage preservation case. The pre-migration baseline sorted it
+first at `DIS=0.00` with:
+
+```text
+how --EEh-- much --ECa-- more --EEm-- quickly --Qe-- did
+```
+
+The certified replacement sorts first at the same cost with:
+
+```text
+how --EEh-- much --ECQ-- more --EEQ-- quickly --Qe-- did
+```
+
+The link names differ because `ECQ` and `EEQ` are the dictionary-side
+certificates that keep the `Qe` license tied to the original `how` witness.
 
 ## Redundant `CONTAINS_NONE` PP Checks
 
