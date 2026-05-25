@@ -10461,6 +10461,7 @@ benumbed.a bespattered.a non_compos_mentis dead_on_arrival
 % naked EC-: "How much more?"
 more:
   ({ECa-} & (EAm+ or (EEm+ & {CMPC+} & {CMPCX+}) or [(MVm- & {CMPC+} & {CMPCX+})] or [EB*m-] or Qe+ or <advcl-verb> or dAJrc- or dAJlc+))
+  or (ECQ- & EEQ+)
   or (ECWH- & (DWHp+ or DWHu+ or (EAm+ & BWH+)))
   or ({OF+} & (
     ({ECn-} & ((Dmum+ & {CMPO+} & {CMPCX+}) or (Ss+ & <CLAUSE>) or <b-wh-s>))
@@ -10628,6 +10629,8 @@ than.e:
 % EZ+: "Much as I expected!"
 % H-: "How much?"
 much:
+  (EEh- & ECQ+)
+  or
   ({EE-} & ([[MVa-]] or (<wantPHc> & ECa+) or <advcl-verb> or Qe+))
   or [EEXK- & MVa- & RTHAT+]2.0
   or ({EEx- or H-} & (
@@ -11299,7 +11302,7 @@ occasionally.e often.e originally.e:
 <ordinary-adv>:
   ({EE- or EF+} & <ordinary-adv-core>)
   or (EEXK- & <ordinary-adv-core> & RTHAT+)
-  or (EEh- & {Qe+});
+  or ((EEh- or EEQ-) & {Qe+});
 
 % XXX FIXME: there are things in there, like "tall.e" that seem not to
 % belong??
