@@ -54,7 +54,8 @@ Added uppercase connector families:
 | `PPTHI` | Carries `THi` evidence across perfect auxiliary paths. |
 | `PTHI` | Connects an auxiliary carrier to a lower predicate that owns the `THi` complement. |
 | `TOCL` | Carries object-raising cleft-object evidence from an object-raising predicate to infinitival `to`. |
-| `IOCL` | Carries cleft-object evidence across infinitival `to` and inverted auxiliary paths. |
+| `IOCT` | Carries object-raising cleft-object evidence from infinitival `to` into the lower predicate. |
+| `IOCL` | Carries cleft-object evidence across inverted auxiliary paths. |
 | `PPOCL` | Carries cleft-object evidence across perfect auxiliary paths. |
 | `ROCL` | Certifies the special cleft-object path where the licensing filler `it` appears inside the following clause. |
 | `QIIC` | Certifies that a `QIi` question-clause predicate is licensed by filler/expletive `it` on direct subject, inverted subject, and object-complement paths. |
@@ -112,7 +113,7 @@ Changed or retired connector forms:
 | `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require a `TSIC` certificate from filler/expletive `it` when they select a subjunctive that-clause complement. Ordinary `THi` and `TOi` paths remain separate. |
 | `TOi` infinitive-complement predicate licensing | `TOi+` predicate branches now require a `TOIC` certificate from filler/expletive `it`. Tough-subject infinitives continue to use separate paths such as `TOt`. |
 | `THi` that-clause predicate licensing | `THi+` predicate branches now require direct `THIC` evidence from filler/expletive `it`, direct same-copula `SFsi`/`SFIsi` evidence for clefts, or a carrier path through `TTHI`/`ITHI`/`PPTHI` and `PTHI`. `THi` certificates deliberately exclude comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
-| cleft-object `O#i` paths | `Osi` / `Opi` cleft-object branches on `be` are no longer exposed through generic copular complement paths. They require direct `SFsi` / `SFIsi` evidence, an object-raising or auxiliary carrier through `TOCL`, `IOCL`, or `PPOCL`, or an `ROCL` path to a filler `it` inside the following clause. |
+| cleft-object `O#i` paths | `Osi` / `Opi` cleft-object branches on `be` are no longer exposed through generic copular complement paths. They require direct `SFsi` / `SFIsi` evidence, an object-raising or auxiliary carrier through `TOCL` / `IOCT`, `IOCL`, or `PPOCL`, or an `ROCL` path to a filler `it` inside the following clause. |
 | `QIi` question-clause predicate licensing | `QIi+` predicate branches now require direct `QIIC` evidence from filler/expletive `it`, or an object-raising carrier path through `TQII`, `IQII`, and `PQII`. |
 | `Ci` finite-clause predicate licensing | `Ci+` predicate branches now require direct `CIIC` evidence from filler/expletive `it`, or an object-raising carrier path through `TCII`, `ICII`, and `PCII`. The `Ci` certificate intentionally excludes comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
@@ -700,14 +701,15 @@ Otherwise an outer filler `it` could license a distant comparative clause, as
 in the rejected path for `*It is more likely that Joe died than John is that
 Fred died`.
 
-### `TOCL`, `IOCL`, `PPOCL`, And `ROCL`: Filler-`It` License For Cleft Objects
+### `TOCL`, `IOCT`, `IOCL`, `PPOCL`, And `ROCL`: Filler-`It` License For Cleft Objects
 
 These connector families encode the filler/expletive-`it` evidence required
 by cleft-like `Osi` / `Opi` object paths on `be`:
 
 ```text
 TOCL   object-raising carrier from the higher predicate to infinitival to
-IOCL   carrier from infinitival to or an inverted auxiliary to lower be
+IOCT   object-raising carrier from infinitival to into lower be
+IOCL   carrier from an inverted auxiliary to lower be
 PPOCL  carrier from a perfect auxiliary to lower been
 ROCL   direct link from the cleft-object predicate to a following filler it
 ```
@@ -724,7 +726,7 @@ Auxiliary and object-raising paths use carrier links:
 
 ```text
 it --SFsi-- might --IOCL-- be --Osi-- John
-want --OXi-- it --TOCL-- to --IOCL-- be --Osi-- John
+want --OXi-- it --TOCL-- to --IOCT-- be --Osi-- John
 it --SFsi-- has --PPOCL-- been --Osi-- John
 ```
 
@@ -1301,7 +1303,7 @@ Auxiliary, perfect, and object-raising paths carry the filler-`it` evidence to
 the lower `be`:
 
 ```text
-TOCL  -> IOCL
+TOCL  -> IOCT
 SFsi  -> IOCL
 SFIsi -> IOCL
 SFsi  -> PPOCL
@@ -1309,7 +1311,7 @@ IOCL  -> PPOCL
 ```
 
 Thus `It might be John who...` uses `it --SFsi-- might --IOCL-- be`, and
-`I want it to be John who...` uses `want --OXi-- it --TOCL-- to --IOCL-- be`.
+`I want it to be John who...` uses `want --OXi-- it --TOCL-- to --IOCT-- be`.
 Perfect paths such as `It has been John who...` use `PPOCL`.
 
 The accepted "shame of it" pattern cannot be handled by same-copula or
@@ -1344,6 +1346,25 @@ cleft-object shape while replacing the ordinary modal `I` carrier with
 `IOCL`. The "shame of it" example remains accepted; the migrated dictionary
 uses the narrower `ROCL` link where the reference parse used the broad `R`
 path.
+
+#### Cost Preservation
+
+The carrier links are licensing substitutes, not intended cost resets. The
+modal, object-raising, and perfect carrier paths preserve the old displayed
+cost ladder:
+
+| Sentence | Migrated path | Required displayed cost |
+| --- | --- | --- |
+| `It might be John who stole the priceless documents.` | `might --IOCL-- be --Osi-- John` | first linkage `DIS=0.00`; no-wall variant `DIS=2.03` |
+| `I want it to be John who stole the priceless documents.` | `want --TOCL-- to --IOCT-- be --Osi-- John` | first linkage `DIS=0.00`; no-wall higher-verb variant `DIS=3.00` |
+| `It has been John who stole the priceless documents.` | `has --PPOCL-- been --Osi-- John` | first linkage `DIS=0.00`; no-wall variant `DIS=2.03` |
+
+The `ROCL` "shame of it" case is an intentional analysis change rather than
+an exact preferred-linkage preservation target. In the reference grammar, the
+first accepted `Osi` / `R` linkage for this sentence was not the preferred
+parse; it appeared after lower-cost `THb` analyses. The migrated grammar uses
+the narrower `ROCL` cleft-object analysis as the displayed accepted path for
+this construction.
 
 The rule 31 migration was validated with ordinary parser runs:
 
@@ -1387,7 +1408,7 @@ The grammatical area is filler/expletive `it` licensing for predicate
 complements. Earlier migrations split the individual complement
 families into direct certificates and carrier paths, for example `THIC`,
 `TSIC`, `QIIC`, `TOIC`, `CIIC`, `THBS` / `THBI`, `BIQS` / `BIQI`, and
-cleft-object `TOCL` / `IOCL` / `PPOCL` / `ROCL`.
+cleft-object `TOCL` / `IOCT` / `IOCL` / `PPOCL` / `ROCL`.
 
 ### Problem
 

@@ -3630,7 +3630,8 @@ am.v:
 be.v:
   ({@E-} & ITHB- & <vc-be-thb-opt-wall>)
   or ({@E-} & IBIQ- & <vc-be-biq-opt-wall>)
-  or ({@E-} & IOCL- & <vc-be-ocleft>)
+  or ({@E-} & IOCL- & <vc-be-ocleft-opt-wall>)
+  or ({@E-} & IOCT- & <vc-be-ocleft-no-wall>)
   or ({@E-} & ITHRS- & <vc-be-thrs-opt-wall>)
   or ({@E-} & ITHRP- & <vc-be-thrp-opt-wall>)
   or ({@E-} & ITHRU- & <vc-be-thru-opt-wall>)
@@ -8098,7 +8099,7 @@ to.r:
   or ({@E-} & TQII- & IQII+)
   or ({@E-} & TTHI- & ITHI+)
   or ({@E-} & TCII- & ICII+)
-  or ({@E-} & TOCL- & IOCL+)
+  or ({@E-} & TOCL- & IOCT+)
   or ({@E-} & {N+} & I*t+ & (TO- or Wo-))
   or ({@E-} & {NT-} & I+ &
     (<MX-PHRASE>
