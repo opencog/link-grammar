@@ -1186,6 +1186,27 @@ show `THIC`; inverted auxiliary examples show `ITHI` and `PTHI`; cleft
 examples keep the public `SFsi`/`THi`/`Pp` shape, with the `THi` link now
 coming from the filler-`it` copular branch.
 
+#### Cost Preservation
+
+The certificate links are licensing substitutes, not intended cost resets.
+When a `PTHI`, `ITHI`, `PPTHI`, or `TTHI` path replaces a former predicative
+or auxiliary path, the replacement must preserve the old branch's inherited
+ranking cost unless a different ranking is explicitly intended.
+
+Focused regression checks include:
+
+| Sentence | Migrated path | Required displayed cost |
+| --- | --- | --- |
+| `It is likely that he came.` | `is --PTHI-- likely --THi-- that` | first linkage `DIS=0.05`; fallback direct `THIC` path `DIS=2.05` |
+| `Does it seem likely that Joe came?` | `does --ITHI-- seem --PTHI-- likely --THi-- that` | first linkage `DIS=1.00`; no-wall variant `DIS=2.00` |
+| `I want it to be likely that he came.` | `want --TTHI-- to --ITHI-- be --PTHI-- likely --THi-- that` | first linkage `DIS=0.05` |
+| `It has seemed likely that Joe came.` | `has --PPTHI-- seemed --PTHI-- likely --THi-- that` | first linkage `DIS=1.00`; no-wall variant `DIS=4.00` |
+| `It may be likely that he came.` | `may --ITHI-- be --PTHI-- likely --THi-- that` | first linkage `DIS=0.05` |
+
+The object-complement path remains a direct `THIC` case: `I made it clear
+that he came` keeps the zero-cost preferred linkage, with `it --THIC-- clear`
+certifying the lower `THi` predicate.
+
 The rule 20 migration was validated with ordinary parser runs:
 
 ```sh
