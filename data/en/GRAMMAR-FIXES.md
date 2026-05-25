@@ -3774,15 +3774,17 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
 ```
 
 Expected results:
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
+corpus-basic.batch: 87 errors
+corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1495 errors
 ```
 
 Accepted-linkage comparison against the pre-migration baseline used
@@ -6283,6 +6285,15 @@ appear --TTHRS-- to --ITHRS-- have --PPTHRS-- been
 been --PATHRS-- likely --TTHRS-- to --ITHRS-- be --Ost-- problem
 ```
 
+The carrier branches preserve the old preferred disjunct costs. The
+`PGTHR*` branch used by `going to be` offsets the no-wall cost paid by the
+final certified `be` object path, so `There is going to be an important
+meeting in January.` keeps the pre-migration first cost. The `PATHR*` branch
+used by `been likely/unlikely to be` carries the remaining cost difference
+between the old `been --Pa-- likely` path and the new certified final `be`
+path, so `There seems to appear to have been likely to be a problem.` also
+keeps the pre-migration first cost.
+
 The final `be` object branches are split by agreement. Singular paths accept
 singular-compatible object evidence, plural paths accept plural-compatible
 object evidence, and uncountable paths accept uncountable-compatible evidence.
@@ -6384,6 +6395,11 @@ audit:
 ```text
 Are there dogs in the park?  first linkage DIS=-0.46
 Is there a dog in the park?  first linkage DIS= 0.54
+There is going to be an important meeting in January.  first linkage DIS=-0.56
+There are going to be important meetings in January.  first linkage DIS=-0.46
+There is going to be water on the table.  first linkage DIS=-0.46
+There seems to appear to have been likely to be a problem.  first linkage DIS=0.20
+There seems to appear to have been unlikely to be a problem.  first linkage DIS=0.20
 ```
 
 For `I want there to be a problem`, the preferred accepted linkages use `MVp`
