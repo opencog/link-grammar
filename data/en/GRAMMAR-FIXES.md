@@ -48,6 +48,10 @@ Added uppercase connector families:
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
 | `TSIC` | Certifies that a `TSi` subjunctive that-clause predicate is licensed by filler/expletive `it`. |
 | `TOIC` | Certifies that a `TOi` infinitive-complement predicate is licensed by filler/expletive `it`. |
+| `TTOI` | Carries object-raising `TOi` evidence from an object-raising predicate to infinitival `to`. |
+| `ITOI` | Carries `TOi` evidence across infinitival and inverted auxiliary paths. |
+| `PPTOI` | Carries `TOi` evidence across perfect auxiliary paths. |
+| `PTOI` | Connects an auxiliary carrier to a lower predicate that owns the `TOi` complement. |
 | `THIC` | Certifies that a `THi` that-clause predicate is licensed by direct filler/expletive `it` evidence. |
 | `TTHI` | Carries object-raising `THi` evidence from an object-raising predicate to infinitival `to`. |
 | `ITHI` | Carries `THi` evidence across infinitival and inverted auxiliary paths. |
@@ -111,7 +115,7 @@ Changed or retired connector forms:
 | `than to ...` infinitival comparative after `way` / `ways` | Added `WTHAN` so valid `way ... than to ...` comparatives do not depend on the retired naked `to.r I*a+` fallback. |
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
 | `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require a `TSIC` certificate from filler/expletive `it` when they select a subjunctive that-clause complement. Ordinary `THi` and `TOi` paths remain separate. |
-| `TOi` infinitive-complement predicate licensing | `TOi+` predicate branches now require a `TOIC` certificate from filler/expletive `it`. Tough-subject infinitives continue to use separate paths such as `TOt`. |
+| `TOi` infinitive-complement predicate licensing | `TOi+` predicate branches now require direct `TOIC` evidence from filler/expletive `it`, or a carrier path through `TTOI`/`ITOI`/`PPTOI` and `PTOI`. Tough-subject infinitives continue to use separate paths such as `TOt`. |
 | `THi` that-clause predicate licensing | `THi+` predicate branches now require direct `THIC` evidence from filler/expletive `it`, direct same-copula `SFsi`/`SFIsi` evidence for clefts, or a carrier path through `TTHI`/`ITHI`/`PPTHI` and `PTHI`. `THi` certificates deliberately exclude comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
 | cleft-object `O#i` paths | `Osi` / `Opi` cleft-object branches on `be` are no longer exposed through generic copular complement paths. They require direct `SFsi` / `SFIsi` evidence, an object-raising or auxiliary carrier through `TOCL` / `IOCT`, `IOCL`, or `PPOCL`, or an `ROCL` path to a filler `it` inside the following clause. |
 | `QIi` question-clause predicate licensing | `QIi+` predicate branches now require direct `QIIC` evidence from filler/expletive `it`, or an object-raising carrier path through `TQII`, `IQII`, and `PQII`. |
@@ -630,33 +634,41 @@ This keeps grammatical examples such as `It is important that women be ready`
 available while preventing an ordinary subject from licensing `TSi`, as in
 `*Joe is important that women be ready`.
 
-### `TOIC`: Expletive-`It` License For `TOi` Infinitives
+### `TOIC`, `TTOI`, `ITOI`, `PPTOI`, And `PTOI`: Expletive-`It` License For `TOi` Infinitives
 
-`TOIC` connects filler/expletive `it` to a predicate that selects a `TOi`
-infinitive complement:
+`TOIC` connects filler/expletive `it` directly to a predicate that selects a
+`TOi` infinitive complement.  The carrier families carry the same evidence
+through copular and auxiliary chains when a direct `TOIC` link would cross the
+normal predicate path or would otherwise change the inherited cost:
 
 ```text
 TOIC  filler/expletive-it certificate for TOi predicates
+TTOI  object-raising TOi evidence carried to infinitival to
+ITOI  TOi evidence carried across infinitival or inverted auxiliary paths
+PPTOI TOi evidence carried across perfect auxiliary paths
+PTOI  TOi evidence carried from an auxiliary/copula to the lower predicate
 ```
 
 Focused linkage fragment, in schematic edge-list notation:
 
 ```text
-it --SFsi-- is --Paf-- easy --TOi-- to --I-- use
-it ---------------TOIC--------------- easy
-easy ----------------IV------------------ use
+it --SFsi-- is --PTOI-- easy --TOi-- to --I-- use
+easy -------------------IV------------------- use
 ```
 
 The same direct subject, inverted subject, and object-complement filler paths
-for `it` that can license `TSIC` can also supply `TOIC`. Predicate entries
-that expose `TOi+ & IV+` through the migrated branch consume `TOIC-` in the
-same predicate disjunct.
+for `it` that can license `TSIC` can also supply `TOIC` or start a carrier
+chain. Object-complement predicates can still use direct `TOIC` when the link
+is local. Direct copular, modal, perfect, and object-raising examples use
+carrier paths such as `PTOI`, `ITOI --PTOI`, `PPTOI --PTOI`, and
+`TTOI --ITOI --PTOI` so the replacement preserves the old predicative-link
+ranking cost.
 
 This family is deliberately separate from tough-subject infinitives. A
 sentence such as `Our program is easy to use` uses `TOt`, not `TOi`, because
 the matrix subject is interpreted as the object of the infinitive. By
 contrast, `It is easy to use the program` uses filler/expletive `it` and can
-therefore supply the `TOIC` certificate for `TOi`.
+therefore supply the carrier evidence for `TOi`.
 
 ### `THIC`, `TTHI`, `ITHI`, `PPTHI`, And `PTHI`: Expletive-`It` License For `THi` Clauses
 
@@ -1794,10 +1806,11 @@ rejected it.
 
 ### Implementation
 
-The dictionary now uses a dedicated uppercase certificate family:
+The dictionary now uses dedicated uppercase certificate and carrier families:
 
 ```text
 <toi-verb>: TOIC- & TOi+ & IV+;
+<toi-raise-verb>: PTOI- & TOi+ & IV+;
 ```
 
 The filler/expletive `it` entry can supply `TOIC+` on the direct subject,
@@ -1810,23 +1823,25 @@ SFIsi -> TOIC
 OXi   -> TOIC
 ```
 
-Predicate entries that select `<toi-verb>` now require this certificate in
-the same predicate disjunct. Ordinary tough-subject uses remain on `TOt`, and
-the comparative `TOic` / `TOfc` paths are not changed by this rule.
+Object-complement predicate entries can consume direct `TOIC` when the
+certificate is local to the object-complement shape. Copular and auxiliary
+chains use `TTOI`, `ITOI`, `PPTOI`, and `PTOI` to carry the same evidence to
+the lower `TOi` predicate without adding a crossing direct link from `it` to
+the adjective. Ordinary tough-subject uses remain on `TOt`, and the
+comparative `TOic` / `TOfc` paths are not changed by this rule.
 
 ### Implications
 
-This is a dictionary replacement for rule 23. Valid `TOi` linkages now show an
-additional `TOIC` link where the old grammar used PP to infer the same
-condition after extraction. The replacement also keeps `TOi` separate from
-gap-bearing `TOt`, so retained-object examples are blocked before PP.
+This is a dictionary replacement for rule 23. Valid `TOi` linkages now show
+either a direct `TOIC` link or a carrier path where the old grammar used PP to
+infer the same condition after extraction. The replacement also keeps `TOi`
+separate from gap-bearing `TOt`, so retained-object examples are blocked
+before PP.
 
-The explicit certificate link can change the preferred displayed linkage when
-an older non-`TOi` analysis is also available. For examples such as `It is
-easy to use the program`, the certified `TOi` analysis remains accepted and
-contains `TOIC`, but cheaper `MVi` analyses can sort before it. This is a
-ranking consequence of making the formerly implicit PP witness explicit in
-the linkage, not a loss of the grammatical `TOi` path.
+The carrier paths are cost-preserving replacements, not intended ranking
+changes. Direct copular examples use `PTOI` in place of the old predicative
+`Pa`/`Paf` link, while object-complement examples can still use direct
+`TOIC`.
 
 ### Verification
 
@@ -1835,13 +1850,35 @@ accepted linkages for:
 
 ```text
 It is easy to use the program.
+Is it easy to use the program?
+It may be easy to use the program.
+It has been easy to use the program.
+I want it to be easy to use the program.
+I considered it easy to use the program.
 It is necessary to use the program.
+It is easier to ignore the problem than it is to solve it.
 Our program is easy to use.
 ```
 
 The same grammatical constructions remain accepted. The `TOi` analyses for
-the filler/expletive examples carry `TOIC`, though they may sort after cheaper
-`MVi` alternatives. The tough-subject example continues through `TOt`.
+the filler/expletive examples carry `TOIC` or a `PTOI`-based carrier path. The
+tough-subject example continues through `TOt`.
+
+#### Cost Preservation
+
+The `TOi` replacement paths preserve the old preferred costs for representative
+direct, inverted, auxiliary, object-raising, object-complement, and comparative
+filler-it examples:
+
+| Sentence | Migrated path | Required displayed cost |
+| --- | --- | --- |
+| `It is easy to use the program.` | `is --PTOI-- easy --TOi-- to` | first linkage `DIS=0.05` |
+| `Is it easy to use the program?` | `is --TOIC-- easy --TOi-- to` or `is --PTOI-- easy --TOi-- to` | first linkage `DIS=0.05` |
+| `It may be easy to use the program.` | `may --ITOI-- be --PTOI-- easy --TOi-- to` | first linkage `DIS=0.05` |
+| `It has been easy to use the program.` | `has --PPTOI-- been --PTOI-- easy --TOi-- to` | first linkage `DIS=0.05` |
+| `I want it to be easy to use the program.` | `want --TTOI-- to --ITOI-- be --PTOI-- easy --TOi-- to` | first linkage `DIS=0.05` |
+| `I considered it easy to use the program.` | `it --TOIC-- easy --TOi-- to` | first linkage `DIS=0.00` |
+| `It is easier to ignore the problem than it is to solve it.` | `is --PTOI-- easier --TOi-- to` with the ordinary infinitival `AFd` comparative continuation | first linkage `DIS=1.05` |
 
 The rule 23 migration was validated with ordinary parser runs:
 
@@ -1857,10 +1894,10 @@ Observed results:
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
+corpus-basic.batch: 87 errors
+corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1496 errors
+corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 22: License `QIi` Complements With Filler `It`
