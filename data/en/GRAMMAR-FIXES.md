@@ -42,6 +42,8 @@ Added uppercase connector families:
 | `CMPX` | Certifies an agreement-neutral comparative head, such as bare `more` or a comparative preposition object. |
 | `CMPC` | Certifies that a comparative modifier path licenses a following `Cc` / `CV` comparative clause. |
 | `CMPO` | Certifies that a comparative object or measure path licenses a following `MV#o` object-clause comparative continuation. |
+| `CMPOA` | As-specific comparative object-clause certificate used when a comparative object noun or its following PP modifier licenses `as.e-c`. |
+| `CMPOPA` | Carries an as-specific comparative object certificate from a comparative object noun through an intervening PP modifier. |
 | `CMPCX` | Certifies that a comparative modifier, object, or measure path licenses a following `MV#c` auxiliary-clause comparative continuation. |
 | `WTHAN` | Connects `way` / `ways` nouns to a following `than to ...` infinitival comparative. |
 | `THBS` / `THBI` | Certify direct and inverted subject links for `THb` predicate that-clause complements. |
@@ -546,6 +548,24 @@ not by a plain adjective. Thus `as much as he did` and `the same as it did`
 can still use `MVzo`, while `as intelligent as John does` cannot use that
 object-clause branch merely because the adjective has broad modifier
 connectors.
+
+Some comparative object nouns license `as.e-c` through an as-specific
+certificate rather than through ordinary `CMPO`. This is needed when the
+comparative object has a following PP modifier that should still modify the
+main predicate:
+
+```text
+money --CMPOPA-- in --CMPOA-- as.e-c
+earn --MVp-- in
+earn --MVzo-- as.e-c
+```
+
+The PP-carried path preserves the old combined `Mp`/`MVp` disjunct cost on the
+preposition. The direct noun-to-`as.e-c` path has no extra cost, matching the
+old object-clause path when no intervening PP is present. `CMPOA` is consumed
+only by `as.e-c`; `than.e` continues to require ordinary `CMPO`, so mixed
+forms such as `as much money than John earns` do not become licensed through
+the as-specific repair.
 
 ### `CMPCX`: Comparative Auxiliary-Clause Certificate
 
@@ -4765,6 +4785,31 @@ as `the same as it did` acquire an internal `CMPC` link. Plain adjective
 comparatives with `EAy`, such as `as intelligent as John does`, do not acquire
 that certificate and therefore cannot use the `as.e-c --Cc/CV--` path.
 
+The documented object-noun example
+`I earn as much money in a month as John earns in a year` also needs the
+object-clause `MV#o` path described under rule 47. The comparative determiner
+`much --Dmuy-- money` supplies the old measure evidence, but a direct
+`money --CMPO-- as.e-c` certificate would cross the main
+`earn --O-- money` object link, and replacing the following PP with a
+certificate-only link would lose the old preferred `earn --MVp-- in` analysis.
+
+The repair therefore uses an as-specific object certificate:
+
+```text
+money --CMPOPA-- in --CMPOA-- as.e-c
+earn --MVp-- in
+earn --MVzo-- as.e-c
+```
+
+The `CMPOPA` carrier is available only on comparative object-noun paths and
+the preposition carries the same `-0.61` cost used by the old combined
+`Mp`/`MVp` preposition disjunct. This preserves the pre-migration first cost
+for `I earn as much money in a month as John earns in a year.`. When no PP
+intervenes, the direct `money --CMPOA-- as.e-c` path preserves the old first
+cost for `I earn as much money as John earns.`. Since `than.e` does not accept
+`CMPOA`, the as-specific object repair does not license mixed
+`as ... than ...` comparatives.
+
 ### Examples
 
 Focused accepted examples include:
@@ -4773,6 +4818,7 @@ Focused accepted examples include:
 The coffee tastes the same as it did last year.
 He runs as quickly as John does.
 I earn as much money in a month as John earns in a year.
+I earn as much money as John earns.
 Ours works more elegantly than yours does.
 You are as authoritative as he is.
 ```
@@ -4781,6 +4827,7 @@ Focused rejected examples include:
 
 ```text
 *I am as intelligent as John does.
+*I earn as much money than John earns.
 ```
 
 ### Verification
@@ -4792,15 +4839,17 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
 ```
 
 Expected results:
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
+corpus-basic.batch: 86 errors
+corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 44: Split Predicative `as.e-c` From Verb-Side `MVz`
@@ -4958,6 +5007,12 @@ The alternate connector order is also present for cases where the comparative
 witness and modified predicate appear in the opposite left-connector order.
 Plain adjective comparatives such as `as intelligent as John does` do not
 expose `CMPO`, so they cannot use the `MV#o` branch.
+
+Rule 56 later adds an as-specific `CMPOA` / `CMPOPA` path for comparative
+object nouns such as `as much money ... as John earns`, including cases where
+the object noun's following PP modifier must also remain attached to the main
+predicate. That path feeds only `as.e-c`; the `than.e` object-clause
+continuation still requires ordinary `CMPO`.
 
 ### Examples
 
