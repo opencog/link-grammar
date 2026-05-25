@@ -2798,7 +2798,7 @@ per "/.per": Us+ & Mp-;
   Rw-
   or RWB-
   or ({{Xd-} & Iq-}
-      & (Qd- or Qp- or ((Qw- or Qe-) & <verb-root-wall>)));
+      & (Qd- or Qp- or ((Qw- or Qe-) & [<verb-root-wall>]-0.1)));
 % Just like above, but no aux, should always be anded with I+.
 % The idea here is that the verb on the other end of the I+ will
 % connect to the wall.
@@ -3465,6 +3465,7 @@ is.v:
   or (<vc-be-and> & <verb-and-s+>)
   or ({<verb-rq>} & (SIs*x+ or SIs*b+) & {<vc-be>})
   or (<verb-rq-required> & SFIs+ & {<vc-be>})
+  or (<verb-rq-required> & SFIs+ & {<vc-be-thb>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-thi-pred>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-thi-cleft>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-ocleft>})
