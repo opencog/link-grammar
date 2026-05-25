@@ -2844,6 +2844,7 @@ per "/.per": Us+ & Mp-;
 <verb-s-pg>: {@E-} & (Pgf- or Mg-);
 <verb-s-pv>: {@E-} & ((Pvf- & <verb-wall>) or Mv-) & <mv-coord>;
 <verb-s-pv-b>: {@E-} & ((Pvf- & <verb-wall>) or Mv-);
+<thi-passive-verb>: {@E-} & PVTHI- & <verb-wall> & THi+;
 
 % These are the verb-form expressions for special verbs that can take
 % either filler-"it" or filler-"there" as a subject.
@@ -3486,6 +3487,9 @@ rest.w: Ix- & Pv+;
 <vc-be-thi-pred>:
   {@EBm+} & dWV- & [PTHI+]0.05;
 
+<vc-be-thi-passive>:
+  {@EBm+} & [PVTHI+]0.1;
+
 <vc-be-cii>:
   {@EBm+} & ([PCII+]0.05 or (dWV- & [PCII+]0.05));
 
@@ -3543,6 +3547,7 @@ is.v:
   or ({@E-} & SFsi- & <vc-be-tsi-pred>)
   or ({@E-} & SFsi- & <vc-be-toi-pred>)
   or ({@E-} & SFsi- & <vc-be-thi-pred>)
+  or ({@E-} & SFsi- & <vc-be-thi-passive>)
   or ({@E-} & SFsi- & <vc-be-thi-cleft>)
   or ({@E-} & SFsi- & <vc-be-ocleft>)
   or ({@E-} & THRS- & <vc-be-thrs>)
@@ -3567,6 +3572,7 @@ is.v:
   or (<verb-rq-required> & SFIs+ & {<vc-be-toi-inv>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-thb>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-thi-pred>})
+  or (<verb-rq-required> & SFIs+ & {<vc-be-thi-passive>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-thi-cleft>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-ocleft>})
   or (Sa*a- & Pv+)
@@ -3656,6 +3662,7 @@ was.v-d:
   or ({@E-} & BIQS- & <vc-be-biq>)
   or ({@E-} & SFsi- & <vc-be-bih-pred>)
   or ({@E-} & SFsi- & <vc-be-thi-pred>)
+  or ({@E-} & SFsi- & <vc-be-thi-passive>)
   or ({@E-} & SFsi- & <vc-be-thi-cleft>)
   or ({@E-} & SFsi- & <vc-be-ocleft>)
   or ({@E-} & THRS- & <vc-be-thrs>)
@@ -3664,6 +3671,7 @@ was.v-d:
   or (<verb-rq> & BIQI+ & {<vc-be-biq>})
   or (<verb-rq> & SFIs+ & {<vc-be-bih-inv>})
   or (<verb-rq> & SFIs+ & {<vc-be-thi-cleft>})
+  or (<verb-rq> & SFIs+ & {<vc-be-thi-passive>})
   or (<verb-rq> & SFIs+ & {<vc-be-ocleft>})
   or (<verb-rq> & THRS+ & {<vc-be-thrs>})
   or (<verb-rq> & THRU+ & {<vc-be-thru>})
@@ -3728,6 +3736,7 @@ be.v:
   or ({@E-} & ITHRU- & <vc-be-thru-opt-wall>)
   or ({@E-} & IQII- & <vc-be-qii>)
   or ({@E-} & ITHI- & <vc-be-thi>)
+  or ({@E-} & ITHI- & <vc-be-thi-passive>)
   or ({@E-} & ICII- & <vc-be-cii>)
   or ({@E-} & ((<verb-co> & <verb-wall>) or <verb-why> or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
@@ -3748,6 +3757,7 @@ been.v: {@E-} & (
   or (PPTSI- & <vc-be-tsi>)
   or (PPTOI- & <vc-be-toi>)
   or (PPTHI- & <vc-be-thi>)
+  or (PPTHI- & <vc-be-thi-passive>)
   or (PPTHRS- & (<vc-be-thrs-opt-wall> or PATHRS+))
   or (PPTHRP- & (<vc-be-thrp-opt-wall> or PATHRP+))
   or (PPTHRU- & (<vc-be-thru-opt-wall> or PATHRU+)));
@@ -4777,6 +4787,7 @@ pretended.v-d prayed.v-d:
 hoped.v-d protested.v-d voted.v-d vowed.v-d:
   VERB_SPPP_T(<vc-hope>)
   or (<verb-s-pv> & {<thi-verb>})
+  or <thi-passive-verb>
   or <vc-please>
   or <verb-manner>;
 
@@ -4906,16 +4917,19 @@ surmised.v-d opined.v-d insinuated.v-d: VERB_SPPP_I(<vc-assert>);
 asserted.v-d contended.v-d remarked.v-d:
   VERB_SPPP_T(<vc-assert>) or
   (<verb-pv> & <thi-verb>) or
+  <thi-passive-verb> or
   <verb-adj>;
 
 alleged.v-d:
   VERB_SPPP_T(<vc-assert>) or
   (<verb-pv> & <thi-verb>) or
+  <thi-passive-verb> or
   <verb-adj>;
 
 supposed.v-d:
   VERB_SPPP_T(<vc-assert>)
   or (<verb-s-pv> & {<tof-verb> or <thi-verb> or Z-})
+  or <thi-passive-verb>
   or <verb-adj>;
 
 asserting.v contending.v remarking.v retorting.v intimating.v
@@ -4930,7 +4944,7 @@ theorizes.v attests.v fantasizes.v muses.v speculates.v concurs.v:
   VERB_S_I(<vc-muse>);
 attested.v-d fantasized.v-d mused.v-d speculated.v-d concurred.v-d:
   VERB_SPPP_I(<vc-muse>);
-theorized.v-d:  VERB_SPPP_I(<vc-muse>) or (<verb-pv> & <thi-verb>);
+theorized.v-d:  VERB_SPPP_I(<vc-muse>) or (<verb-pv> & <thi-verb>) or <thi-passive-verb>;
 theorizing.v attesting.v fantasizing.v musing.v speculating.v concurring.v:
   (<vc-muse> & <verb-pg,ge>) or
   <verb-ge-d>;
@@ -4947,7 +4961,8 @@ replied.v-d sighed.v-d commented.v-d responded.v-d:
 % The (<verb-s-pv> & <thi-verb>) allows "it is reasoned that ..." to parse.
 argued.v-d reasoned.v-d testified.v-d:
   VERB_SPPP_T(<vc-reply>) or
-  (<verb-s-pv> & <thi-verb>);
+  (<verb-s-pv> & <thi-verb>) or
+  <thi-passive-verb>;
 
 replying.v arguing.v sighing.v testifying.v commenting.v responding.v
 reasoning.v:
@@ -4960,7 +4975,8 @@ boast.v brag.v complain.v hint.v mutter.v whisper.v:
 boasts.v brags.v complains.v hints.v mutters.v whispers.v:
   VERB_S_I(<vc-brag>);
 boasted.v-d bragged.v-d complained.v-d hinted.v-d muttered.v-d whispered.v-d:
-  VERB_SPPP_I(<vc-brag>) or (<verb-s-pv> & <thi-verb>);
+  VERB_SPPP_I(<vc-brag>) or (<verb-s-pv> & <thi-verb>) or
+  <thi-passive-verb>;
 boasting.g bragging.g complaining.g hinting.g muttering.g whispering.g:
   (<vc-brag> & <verb-ge>) or <verb-ge-d>;
 boasting.v bragging.v complaining.v hinting.v muttering.v whispering.v:
@@ -4991,7 +5007,8 @@ thinks.v: VERB_S_T(<vc-think>);
 % <verb-s-pv> & Cet+: (phantom that) "It was previously thought they were wrong."
 thought.v-d:
   VERB_SPPP_T(<vc-think>)
-  or (<verb-s-pv> & {<that-verb> or <thi-verb> or Z-});
+  or (<verb-s-pv> & {<that-verb> or <thi-verb> or Z-})
+  or <thi-passive-verb>;
 
 thinking.g: (<vc-think> & <verb-ge>) or <verb-ge-d>;
 thinking.v: <verb-pg> & <vc-think>;
@@ -5340,6 +5357,7 @@ decides.v resolves.v: VERB_S_T(<vc-decide>);
 decided.v-d resolved.v-d:
   VERB_SPPP_T(<vc-decide>) or
   (<verb-s-pv> & {<thi-verb>}) or
+  <thi-passive-verb> or
   <verb-phrase-opener>;
 
 deciding.v resolving.v: <verb-pg> & <vc-decide>;
@@ -5373,7 +5391,7 @@ remembering.v forgetting.v: <verb-pg> & <vc-forget>;
 
 learn.v: VERB_PLI(<vc-learn>);
 learns.v: VERB_S_T(<vc-learn>);
-learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {<thi-verb>}) or <verb-phrase-opener>;
+learned.v-d: VERB_SPPP_T(<vc-learn>) or (<verb-pv> & {<thi-verb>}) or <thi-passive-verb> or <verb-phrase-opener>;
 learning.g: (<vc-learn> & <verb-ge>) or <verb-ge-d>;
 learning.v: <verb-pg> & <vc-learn>;
 
@@ -5392,6 +5410,7 @@ proposes.v: VERB_S_T(<vc-propose>);
 proposed.v-d:
   VERB_SPPP_T(<vc-propose> & {{Xc+} & QN+})
   or (<verb-s-pv> & {<thi-verb> or <tsi-verb> or Z-})
+  or <thi-passive-verb>
   or <verb-adj>
   or <verb-phrase-opener>;
 proposing.g: (<vc-propose> & <verb-ge>) or <verb-ge-d>;
@@ -5527,6 +5546,7 @@ recollected.v-d adduced.v-d posited.v-d
 reiterated.v-d inferred.v-d presupposed.v-d:
   VERB_SPPP_T(<vc-dispute>)
   or (<verb-s-pv> & {<thi-verb>})
+  or <thi-passive-verb>
   or <verb-adj>
   or <verb-phrase-opener>;
 recognizing.g disputing.g accepting.g calculating.g deducing.g recording.g
@@ -5538,7 +5558,7 @@ envisioning.v recounting.v signifying.v clarifying.v disclosing.v
 recollecting.v adducing.v positing.v reiterating.v inferring.v presupposing.v:
 <verb-pg> & <vc-dispute>;
 
-undisputed.v: (<verb-s-pv> & {<thi-verb>});
+undisputed.v: (<verb-s-pv> & {<thi-verb>}) or <thi-passive-verb>;
 
 % MVp+: "it repeated for ..." "She provided for ..."
 <vc-repeat>: {<vc-trans>} or ({@MV+} & TH+) or MVp+;
@@ -5581,6 +5601,7 @@ ascertained.v-d discerned.v-d affirmed.v-d certified.v-d
 trusted.v-d postulated.v-d ensured.v-d implied.v-d verified.v-d:
   VERB_SPPP_T(<vc-sense>)
   or (<verb-s-pv> & {<thi-verb>})
+  or <thi-passive-verb>
   or <verb-adj>
   or <verb-phrase-opener>;
 
@@ -5610,6 +5631,7 @@ proclaims.v:
 proclaimed.v-d:
   VERB_SPPP_T(<vc-proclaim>)
   or (<verb-s-pv> & {<thi-verb>})
+  or <thi-passive-verb>
   or <verb-adj>
   or <verb-phrase-opener>;
 proclaiming.v:
@@ -5631,6 +5653,7 @@ imagines.v:  VERB_S_T(<vc-imagine>);
 imagined.v:
   VERB_SPPP_T(<vc-imagine>)
   or (<verb-s-pv> & {<thi-verb>})
+  or <thi-passive-verb>
   or <verb-adj>
   or <verb-phrase-opener>;
 imagining.g: (<vc-imagine> & <verb-ge>) or <verb-ge-d>;
@@ -5658,6 +5681,7 @@ emphasized.v maintained.v acknowledged.v noted.v
 confirmed.v-d stressed.v-d:
   VERB_SPPP_T(<vc-declare>)
   or (<verb-s-pv> & {<thi-verb> or ({@MV+} & Pa+) })
+  or <thi-passive-verb>
   or <verb-adj>
   or <verb-phrase-opener>;
 
@@ -5665,6 +5689,7 @@ foresaw.v-d: VERB_SP_T(<vc-declare>) or <verb-manner>;
 foreseen.v:
   VERB_PP(<vc-declare>) or
   (<verb-s-pv> & {@MV+ or <thi-verb>}) or
+  <thi-passive-verb> or
   <verb-adj> or
   <verb-phrase-opener>;
 
@@ -5691,6 +5716,7 @@ fears.v presumes.v assumes.v wavers.v:
 feared.v presumed.v assumed.v-d wavered.v-d:
   VERB_SPPP_T(<vc-assume>)
   or (<verb-s-pv> & {<thi-verb> or ({@MV+} & Pa+) })
+  or <thi-passive-verb>
   or <verb-adj>
   or <verb-phrase-opener>;
 
@@ -5713,6 +5739,7 @@ believes.v answers.v worries.v: VERB_S_T(<vc-believe>);
 believed.v-d answered.v-d worried.v-d:
   VERB_SPPP_T(<vc-believe>) or
   (<verb-s-pv> & {<thi-verb> or <tof-verb>}) or
+  <thi-passive-verb> or
   <verb-phrase-opener>;
 believing.g answering.g worrying.g:
   (<vc-believe> & <verb-ge>) or <verb-ge-d>;
@@ -5730,6 +5757,7 @@ rules.v adds.v: VERB_S_T(<vc-rule>);
 ruled.v-d added.v-d:
   VERB_SPPP_T(<vc-rule>) or
   (<verb-s-pv-b> & {({@MV+} & (<thi-verb> or <tof-verb>)) or ({K+} & <mv-coord>)}) or
+  <thi-passive-verb> or
   ({K+} & <verb-phrase-opener>) or
   <verb-adj>;
 ruling.g adding.g: (<vc-rule> & <verb-ge>) or <verb-ge-d>;
@@ -5789,6 +5817,7 @@ tested.v-d hypothesized.v-d hypothesised.v-d well-established.v-d
 envisaged.v-d documented.v-d:
   VERB_SPPP_T(<vc-predict>)
   or (<verb-s-pv> & ({<thi-verb>} or QI+))
+  or <thi-passive-verb>
   or <verb-adj>
   or <verb-phrase-opener>;
 
@@ -5796,6 +5825,7 @@ envisaged.v-d documented.v-d:
 said.v-d:
   VERB_SPPP_T(<vc-predict>) or
   ({@E-} & ((Pvf- & <verb-wall>) or [[Mv-]]) & {@MV+} & {<thi-verb>}) or
+  <thi-passive-verb> or
   <verb-adj> or
   [[<verb-phrase-opener>]];
 
@@ -5826,11 +5856,13 @@ guessed.v-d understood.v-d noticed.v-d explained.v-d esplained.v-d
 demonstrated.v-d:
   VERB_SPPP_T(<vc-guess>)
   or (<verb-s-pv> & {<thi-verb>})
+  or <thi-passive-verb>
   or <verb-adj>
   or <verb-phrase-opener>;
 estimated.v-d:
   VERB_SPPP_T(<vc-guess>) or
   (<verb-s-pv> & {<thi-verb>}) or
+  <thi-passive-verb> or
   <verb-adj> or
   <verb-phrase-opener>;
 guessing.g estimating.g understanding.g noticing.g explaining.g
@@ -5853,6 +5885,7 @@ knew.v-d: VERB_SP_T(<vc-know>);
 known.v well-known.v:
   VERB_PP(<vc-know>) or
   (<verb-s-pv> & {<thi-verb> or <tof-verb> or <qii-verb>} & {dCPu-}) or
+  <thi-passive-verb> or
   <verb-phrase-opener> or
   <verb-adj>;
 knowing.g: (<vc-know> & <verb-ge>) or <verb-ge-d>;
@@ -5866,6 +5899,7 @@ requests.v: VERB_S_T(<vc-request>);
 requested.v-d:
   VERB_SPPP_T(<vc-request>) or
   (<verb-s-pv> & {<thi-verb> or <tsi-verb>}) or
+  <thi-passive-verb> or
   <verb-adj> or
   <verb-phrase-opener>;
 requesting.g: (<vc-request> & <verb-ge>) or <verb-ge-d>;
@@ -5883,6 +5917,7 @@ feels.v: VERB_S_T(<vc-feel>);
 felt.v-d:
   VERB_SPPP_T(<vc-feel>)
   or (<verb-s-pv> & {<thi-verb>})
+  or <thi-passive-verb>
   or <verb-phrase-opener>;
 feeling.g: (<vc-feel> & <verb-ge>) or <verb-ge-d>;
 feeling.v: <verb-pg> & <vc-feel>;
@@ -6110,7 +6145,8 @@ taken.v:
   or (<verb-pv-b> & {K+} & <mv-coord>)
   or <verb-adj>
   or ({K+} & <verb-phrase-opener>)
-  or (Pvf- & <verb-wall> & Vtg+ & <thi-verb>);
+  or (Pvf- & <verb-wall> & Vtg+ & <thi-verb>)
+  or (PVTHI- & <verb-wall> & Vtg+ & THi+);
 
 taking.v: <verb-s-pg> & <vc-take>;
 taking.g: (<vc-take> & <verb-ge>) or <verb-ge-d>;
@@ -6280,6 +6316,7 @@ expects.v claims.v: VERB_S_T(<vc-expect>);
 expected.v-d claimed.v-d:
   VERB_SPPP_T(<vc-expect>)
   or (<verb-s-pv> & {<tof-verb> or <thi-verb> or Z-})
+  or <thi-passive-verb>
   or <verb-adj>
   or ({@MV+} & {<to-verb>} & <verb-phrase-opener>);
 expecting.g claiming.g: (<vc-expect> & <verb-ge>) or <verb-ge-d>;
@@ -7383,11 +7420,13 @@ proves.v: VERB_Y_S(<vc-prove>);
 proved.v-d:
   VERB_Y_SPPP(<vc-prove>)
   or (<verb-s-pv> & {<thi-verb> or <tof-verb>})
+  or <thi-passive-verb>
   or (<verb-adj> & {dCPu-} & {MV+})
   or ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proven.v:
   (<verb-x-pp> & <vc-prove>) or
   (<verb-s-pv> & {<thi-verb> or <tof-verb> or Pa+ or dCPu-}) or
+  <thi-passive-verb> or
   <verb-adj> or
   ({{@MV+} & Pa+} & <verb-phrase-opener>);
 proving.g: (<vc-prove> & <verb-ge>) or <verb-ge-d>;
@@ -7404,6 +7443,7 @@ suggests.v anticipates.v recommends.v: VERB_S_T(<vc-suggest>);
 suggested.v-d anticipated.v-d recommended.v-d:
   VERB_SPPP_T(<vc-suggest>)
   or (<verb-s-pv> & {<thi-verb> or <tsi-verb> or Z-})
+  or <thi-passive-verb>
   or <verb-adj>
   or <verb-phrase-opener>;
 suggesting.g anticipating.g recommending.g: (<vc-suggest> & <verb-ge>) or <verb-ge-d>;
