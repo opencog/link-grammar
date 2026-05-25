@@ -348,6 +348,8 @@ changecom(`%')
 <qii-too-verb>: TQII+;
 <qii-raise-verb>: PQII- & QIi+;
 <qii-adj-extra>: (<qii-obj-verb> & {LE+}) or (<qii-raise-verb> & {LE+});
+<qii-matter-aux-verb>: IQII- & dWV- & QIi+;
+<qii-matter-direct-verb>: {@E-} & SFsi- & dWV- & QIi+;
 <thi-verb>: THIC- & THi+;
 <thi-obj-verb>: THIC- & (Paf- or dMJra-) & THi+;
 <thi-too-verb>: TTHI+;
@@ -3141,12 +3143,14 @@ don't don’t:
   or (<verb-co> & {I*d+});
 
 doesn't doesn’t:
-  ((<verb-rq-aux> & (SIs+ or SFIs+) & (I*d+ or <verb-wall>)) or <verb-x-s>)
-     & (I*d+ or <verb-wall> or [[()]]);
+  (((<verb-rq-aux> & (SIs+ or SFIs+) & (I*d+ or <verb-wall>)) or <verb-x-s>)
+     & (I*d+ or <verb-wall> or [[()]]))
+  or ({@E-} & SFs- & IQII+);
 
 didn't.v-d didn’t.v-d:
-  ((<verb-rq-aux> & (SI+ or SFI+)) or <verb-x-sp>)
-     & (I*d+ or <verb-wall> or [[()]]);
+  (((<verb-rq-aux> & (SI+ or SFI+)) or <verb-x-sp>)
+     & (I*d+ or <verb-wall> or [[()]]))
+  or ({@E-} & SF- & IQII+);
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
@@ -4990,8 +4994,8 @@ thinking.v: <verb-pg> & <vc-think>;
 <vc-matter>:
   ({@MV+} & {<thi-verb> or <qii-verb>})
   or <b-minus>;
-matter.v: VERB_S_PLI(<vc-matter>);
-matters.v: VERB_S_S(<vc-matter>) or <verb-thi-direct>;
+matter.v: VERB_S_PLI(<vc-matter>) or <qii-matter-aux-verb>;
+matters.v: VERB_S_S(<vc-matter>) or <qii-matter-direct-verb> or <verb-thi-direct>;
 mattered.v-d: VERB_SPPP_I(<vc-matter>) or <verb-thi-direct>;
 mattering.v: (<vc-matter> & <verb-pg,ge>) or <verb-ge-d>;
 
