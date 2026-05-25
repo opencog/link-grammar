@@ -43,12 +43,16 @@ I wonder how important it is to turn off the computer.
 *I wonder how important is it to turn off the computer.
 
 % CONTAINS_ONE rule 21: TSi that-clause complements require filler/expletive
-% it evidence.  TSIC carries that evidence from subject, inverted subject, or
-% object filler-it to the predicate that owns the TSi link.
+% it evidence.  TSIC/PTSI carriers carry that evidence from subject, inverted
+% subject, or object filler-it to the predicate that owns the TSi link.
 
 It is important that women be ready when they make these choices.
 Is it important that women be ready?
+It may be important that women be ready.
+It has been important that women be ready.
+I want it to be important that women be ready.
 I considered it important that women be ready.
+It is imperative that assistance be provided through a variety of channels.
 *Joe is important that women be ready when they make these choices.
 
 % CONTAINS_ONE rule 23: TOi infinitive complements require filler/expletive
