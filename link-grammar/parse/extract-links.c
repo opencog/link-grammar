@@ -11,96 +11,27 @@
 /*                                                                       */
 /*************************************************************************/
 
-#include <limits.h>                     // INT_MAX
+#include <math.h>                       // log2
+#include <stdlib.h>                     // calloc(), free()
 #ifdef __APPLE__
 #include <malloc/malloc.h>
 #else
 #include <malloc.h>                     // malloc_trim
 #endif
-#include <math.h>                       // log2
 
-#include "connectors.h"
-#include "count.h"
-#include "disjunct-utils.h"             // Disjunct
-#include "extract-links.h"
-#include "fast-match.h"
-#include "memory-pool.h"
-#include "utilities.h"                  // Windows rand_r()
-#include "linkage/linkage.h"
-#include "tokenize/word-structures.h"   // Word_Struct
+#include "error.h"
+#include "extract-links-internal.h"
 
-#define D_EXTRACT 5 /* General debug level for this file. */
-
-//#define RECOUNT
-#ifdef DEBUG
-#define DEBUG_X_TABLE
-#endif
-
-typedef struct Parse_choice_struct Parse_choice;
-
-/* Parse_choice records a parse of the word range set[0]->lw to
- * set[1]->rw, when the middle disjunct md is of word set[0]->rw
- * (which is always equal to set[1]->lw).
- * See make_choice() below.
- * The number of linkages in this parse is the product of the
- * counts of the two Parse_set elements. */
-typedef struct Parse_set_struct Parse_set;
-struct Parse_choice_struct
+/* Temporary memo entry for -test=parse-set-count-check.  The recount walks
+ * the parse-set DAG from the root and uses this table to avoid charging shared
+ * Parse_set nodes more than once. */
+typedef struct
 {
-	Parse_choice * next;
-	Parse_set * set[2];
-	Disjunct    *md;           /* the chosen disjunct for the middle word */
-	int32_t     l_id, r_id;    /* the tracon IDs used in this disjunct */
-#ifdef PC_DISPLAY
-	bool done;
-	bool dolr;
-#endif
-};
-
-/* Parse_set serves as a header of Parse_choice chained elements, that
- * describe the possible parses with the specified null_count, using
- * tracons l_id and r_id on words lw and rw, correspondingly. */
-struct Parse_set_struct
-{
-	Connector      *le, *re;
-	Parse_choice   *first;
-	unsigned int   num_pc;     /* number of Parse_choice elements */
-	uint8_t        lw, rw;     /* left and right word index */
-	uint8_t        null_count; /* number of island words */
-
-	count_t count;             /* The number of ways to parse. */
-#ifdef RECOUNT
-	count_t recount;  /* Exactly the same as above, but counted at a later stage. */
-	count_t cut_count;  /* Count only low-cost parses, i.e. below the cost cutoff */
-	//float cost_cutoff;
-#undef RECOUNT
-#define RECOUNT(X) X
-#else
-#define RECOUNT(X)  /* Make it disappear... */
-#endif
-};
-
-typedef struct Pset_bucket_struct Pset_bucket;
-struct Pset_bucket_struct
-{
-	Parse_set set;
-	Pset_bucket *next;
-};
-
-struct extractor_s
-{
-	unsigned int   x_table_size;
-	unsigned int   log2_x_table_size; /* Not used */
-	Pset_bucket ** x_table;           /* Hash table */
-	Parse_set *    parse_set;
-	Word           *words;
-	Pool_desc *    Pset_bucket_pool;
-	Pool_desc *    Parse_choice_pool;
-	bool           islands_ok;
-
-	/* thread-safe random number state */
-	unsigned int rand_state;
-};
+	const Parse_set *set;                /* Parse_set node keyed by address. */
+	count_t count;                       /* Recomputed count, clamped. */
+	bool visiting;                       /* Cycle guard for diagnostic walk. */
+	bool done;                           /* TRUE once count is final. */
+} Parse_set_recount_entry;
 
 /**
  * The first thing we do is we build a data structure to represent the
@@ -124,6 +55,9 @@ make_choice(Parse_set *lset, Connector * lrc,
 	pc->l_id = (lrc == NULL) ? -1 : lrc->tracon_id;
 	pc->r_id = (rlc == NULL) ? -1 : rlc->tracon_id;
 	pc->md = md;
+	pc->metric_link_id[0] = METRIC_LINK_ID_NONE;
+	pc->metric_link_id[1] = METRIC_LINK_ID_NONE;
+	pc->metric_link_id_done = 0;
 #ifdef PC_DISPLAY
 	pc->done = false;
 	pc->dolr = false;
@@ -199,7 +133,6 @@ static size_t estimate_parse_choice_allocations(Sentence sent)
 	size_t pcsze = (expsz * expsz) / 100000;
 	if (pcsze < 1020) pcsze = 1020;
 
-	// At this time, sizeof(Parse_choice) is 48 bytes.
 	// Putting an upper limit of 16*1024*1024 elements corresponds to
 	// a limit of 800 MBytes RAM. No conventional hand-built dict ever
 	// comes close to this limit, but sizes well above this are seen
@@ -220,6 +153,9 @@ extractor_t * extractor_new(Sentence sent)
 	extractor_t * pex = (extractor_t *) xalloc(sizeof(extractor_t));
 	memset(pex, 0, sizeof(extractor_t));
 	pex->rand_state = sent->rand_state;
+	pex->string_set = sent->string_set;
+	pex->postprocessor = sent->postprocessor;
+	pex->metric.links.class_epoch = 1;
 
 	/* Alloc the x_table */
 	int log2_table_size = estimate_log2_table_size(sent);
@@ -240,6 +176,7 @@ extractor_t * extractor_new(Sentence sent)
 		         /*zero_out*/false, /*align*/false, /*exact*/false);
 
 	size_t pcsze = estimate_parse_choice_allocations(sent);
+	pex->metric.parse_choice_pool_size = pcsze;
 	pex->Parse_choice_pool =
 		pool_new(__func__, "Parse_choice",
 		         /*num_elements*/pcsze, sizeof(Parse_choice),
@@ -277,6 +214,7 @@ void free_extractor(extractor_t * pex)
 #endif /* DEBUG_X_TABLE */
 
 	pex->parse_set = NULL;
+	metric_extractor_free(pex);
 
 	xfree((void *) pex->x_table, pex->x_table_size * sizeof(Pset_bucket*));
 	pex->x_table_size = 0;
@@ -731,11 +669,11 @@ Parse_set * mk_parse_set(fast_matcher_t *mchxt,
 	return &xtp->set;
 }
 
-/**
- * Return TRUE if and only if an overflow in the number of parses
- * occurred. Use a 64-bit int for counting.
- */
-static bool set_node_overflowed(Parse_set *set)
+/* Return TRUE if this parse-set node has more local alternatives than the
+ * practical indexed-extraction limit.  This deliberately inspects one node
+ * only; it is useful as a diagnostic for old all-bucket overflow handling,
+ * not as the production root-overflow decision. */
+static bool set_node_overflowed(const Parse_set *set)
 {
 	Parse_choice *pc;
 	w_count_t n = 0;
@@ -749,11 +687,15 @@ static bool set_node_overflowed(Parse_set *set)
 	return false;
 }
 
-static bool set_overflowed(extractor_t * pex)
+/* Historical overflow checking scanned every memoized parse-set bucket.
+ * Some buckets may not affect the final root parse-set, so this is too broad
+ * for production but still useful when explicitly diagnosing count behavior. */
+static bool any_memoized_set_overflowed(extractor_t * pex)
 {
 	unsigned int i;
 
-	assert(pex->x_table != NULL, "called set_overflowed with x_table==NULL");
+	assert(pex->x_table != NULL,
+	       "called any_memoized_set_overflowed with x_table==NULL");
 	for (i=0; i<pex->x_table_size; i++)
 	{
 		Pset_bucket *t;
@@ -765,6 +707,191 @@ static bool set_overflowed(extractor_t * pex)
 	return false;
 }
 
+/* Size an open-addressed table for every memoized Parse_set.  The diagnostic
+ * walk only needs root-reachable nodes, but inserting all nodes lets a missing
+ * node mean real corruption rather than an incomplete pre-scan. */
+static size_t parse_set_recount_table_size(extractor_t *pex)
+{
+	size_t count = 0;
+
+	for (unsigned int i = 0; i < pex->x_table_size; i++)
+		for (Pset_bucket *t = pex->x_table[i]; t != NULL; t = t->next)
+			count++;
+
+	size_t size = 1;
+	while (size < 2 * count) size <<= 1;
+	return size;
+}
+
+/* Hash Parse_set addresses.  Pool allocations are aligned, so discard some
+ * low bits before mixing. */
+static size_t parse_set_pointer_hash(const Parse_set *set)
+{
+	uintptr_t p = (uintptr_t)set;
+	return (p >> 4) ^ (p >> 13) ^ (p >> 23);
+}
+
+static Parse_set_recount_entry *parse_set_recount_lookup(
+	Parse_set_recount_entry *table, size_t table_size, const Parse_set *set)
+{
+	size_t slot = parse_set_pointer_hash(set) & (table_size - 1);
+
+	while (table[slot].set != NULL)
+	{
+		if (table[slot].set == set) return &table[slot];
+		slot = (slot + 1) & (table_size - 1);
+	}
+	return NULL;
+}
+
+/* Insert each Parse_set once; duplicate insertion would mean the parse-set
+ * memo table itself has inconsistent ownership. */
+static void parse_set_recount_insert(
+	Parse_set_recount_entry *table, size_t table_size, const Parse_set *set)
+{
+	size_t slot = parse_set_pointer_hash(set) & (table_size - 1);
+
+	while (table[slot].set != NULL)
+	{
+		assert(table[slot].set != set, "Duplicate Parse_set in recount table");
+		slot = (slot + 1) & (table_size - 1);
+	}
+	table[slot].set = set;
+}
+
+/* Build the temporary diagnostic table used by recount_parse_set(). */
+static Parse_set_recount_entry *parse_set_recount_table(
+	extractor_t *pex, size_t *table_size)
+{
+	*table_size = parse_set_recount_table_size(pex);
+	Parse_set_recount_entry *table = calloc(*table_size, sizeof(*table));
+	if (table == NULL) return NULL;
+
+	for (unsigned int i = 0; i < pex->x_table_size; i++)
+		for (Pset_bucket *t = pex->x_table[i]; t != NULL; t = t->next)
+			parse_set_recount_insert(table, *table_size, &t->set);
+
+	return table;
+}
+
+/* Recount the root DAG when explicitly requested by -test.  The memo table
+ * keeps shared parse-set nodes from being recounted repeatedly, so the check
+ * is linear in the reachable parse-set DAG rather than in the number of
+ * linkages.  Counts are clamped like do_count() because exact values above
+ * INT_MAX cannot be represented in Parse_set::count. */
+static count_t recount_parse_set(const Parse_set *set,
+                                 Parse_set_recount_entry *table,
+                                 size_t table_size, bool *reliable)
+{
+	if (set == NULL)
+	{
+		*reliable = false;
+		return 0;
+	}
+
+	Parse_set_recount_entry *entry =
+		parse_set_recount_lookup(table, table_size, set);
+	if (entry == NULL)
+	{
+		*reliable = false;
+		return set->count;
+	}
+	if (entry->done) return entry->count;
+	if (entry->visiting)
+	{
+		*reliable = false;
+		return set->count;
+	}
+
+	entry->visiting = true;
+	w_count_t total = 0;
+
+	if (set->first == NULL)
+	{
+		total = set->count;
+	}
+	else
+	{
+		for (Parse_choice *pc = set->first; pc != NULL; pc = pc->next)
+		{
+			count_t left = recount_parse_set(pc->set[0], table, table_size,
+			                                 reliable);
+			count_t right = recount_parse_set(pc->set[1], table, table_size,
+			                                  reliable);
+			total += (w_count_t)left * right;
+			if (INT_MAX < total)
+			{
+				total = INT_MAX;
+				break;
+			}
+		}
+	}
+
+	entry->count = (count_t)total;
+	entry->visiting = false;
+	entry->done = true;
+	return entry->count;
+}
+
+/* Visible diagnostic for validating that the root parse-set count agrees with
+ * do_count(), and for comparing the root decision with the old all-bucket
+ * overflow scan. */
+static void check_root_parse_set_count(extractor_t *pex, Sentence sent,
+                                       bool root_overflowed)
+{
+	if (pex->parse_set == NULL)
+	{
+		prt_error("Warning: Parse-set root count check requested but "
+		          "the root parse set is NULL.\n");
+		return;
+	}
+
+	size_t table_size;
+	Parse_set_recount_entry *table = parse_set_recount_table(pex, &table_size);
+	if (table == NULL)
+	{
+		prt_error("Warning: Parse-set root count check requested but "
+		          "the recount table could not be allocated.\n");
+		return;
+	}
+
+	bool reliable = true;
+	count_t recount = recount_parse_set(pex->parse_set, table, table_size,
+	                                    &reliable);
+	free(table);
+
+	if (!reliable)
+	{
+		prt_error("Warning: Parse-set root count check was incomplete; "
+		          "the root count was not fully verified.\n");
+	}
+
+	if (reliable &&
+	    ((recount != pex->parse_set->count) ||
+	     (recount != sent->num_linkages_found)))
+	{
+		prt_error("Warning: Parse-set root count mismatch: "
+		          "do_count=%d parse_set=%d recount=%d\n",
+		          sent->num_linkages_found, pex->parse_set->count, recount);
+	}
+
+	bool memoized_overflowed = any_memoized_set_overflowed(pex);
+	if (memoized_overflowed != root_overflowed)
+	{
+		prt_error("Info: Ignoring non-root parse-set overflow evidence: "
+		          "root-overflow=%s all-memoized-overflow=%s\n",
+		          root_overflowed ? "true" : "false",
+		          memoized_overflowed ? "true" : "false");
+	}
+}
+
+/* The production overflow decision depends on the complete-root count from
+ * do_count(), not on unrelated memoized buckets created while searching. */
+static bool root_parse_set_overflowed(const Sentence sent)
+{
+	return PARSE_NUM_OVERFLOW < sent->num_linkages_found;
+}
+
 /**
  * This is the top level call that computes the whole parse-set.
  * It creates the necessary hash table (x_table) which will be freed at
@@ -774,9 +901,9 @@ static bool set_overflowed(extractor_t * pex)
  * is filled with the values thus computed.  This function is structured
  * much like do_parse(), which wraps the main workhorse do_count().
  *
- * If the number of linkages gets huge, then the counts can overflow.
- * We check if this has happened when verifying the parse-set.
- * This routine returns TRUE iff an overflow occurred.
+ * This routine returns TRUE iff the root parse count is above the practical
+ * indexed-extraction limit.  Memoized parse-set buckets that do not affect
+ * the root are deliberately ignored for the production overflow decision.
  */
 
 bool build_parse_set(extractor_t* pex, Sentence sent,
@@ -791,53 +918,12 @@ bool build_parse_set(extractor_t* pex, Sentence sent,
 		mk_parse_set(mchxt, ctxt, -1,
 		             -1, sent->length, NULL, NULL, null_count+1, pex);
 
-	return set_overflowed(pex);
-}
+	bool root_overflowed = root_parse_set_overflowed(sent);
 
-static Connector *get_tracon_by_id(const Disjunct *d, int32_t tracon_id,
-                                   int dir)
-{
-	if (tracon_id < 0) return NULL; /* See make_choice() */
-	for (Connector *c = dir ? d->right : d->left; c != NULL; c = c->next)
-		if (tracon_id == c->tracon_id) return c;
+	if (NULL != test_enabled("parse-set-count-check"))
+		check_root_parse_set_count(pex, sent, root_overflowed);
 
-	assert(0, "tracon_id %d not found on disjunct %p in direction %d\n",
-	       tracon_id, d, dir);
-}
-
-static bool is_zero_tracon(Connector *c)
-{
-	return (c == NULL) || (c->tracon_id < NULL_TRACON_BLOCK);
-}
-
-/**
- * Assemble the link array and the chosen_disjuncts of a linkage.
- */
-static void issue_link(Linkage lkg, int lr, Parse_choice *pc,
-                       const Parse_set *set)
-{
-	Connector *lc = lr ? get_tracon_by_id(pc->md, pc->r_id, 1) : set->le;
-	if (is_zero_tracon(lc)) return; /* No choice to record. */
-
-	lkg->chosen_disjuncts[lr ? pc->set[1]->lw : pc->set[0]->rw] = pc->md;
-
-	Connector *rc = lr ? set->re : get_tracon_by_id(pc->md, pc->l_id, 0);
-	if (is_zero_tracon(rc)) return; /* No choice to record. */
-
-	assert(lkg->num_links < lkg->lasz, "Linkage array too small!");
-	Link *link = &lkg->link_array[lkg->num_links];
-	link->lw = pc->set[lr]->lw;
-	link->rw = pc->set[lr]->rw;
-	link->lc = lc;
-	link->rc = rc;
-	lkg->num_links++;
-}
-
-static void issue_links_for_choice(Linkage lkg, Parse_choice *pc,
-                                   const Parse_set *set)
-{
-	issue_link(lkg, /*lr*/0, pc, set);
-	issue_link(lkg, /*lr*/1, pc, set);
+	return root_overflowed;
 }
 
 /**

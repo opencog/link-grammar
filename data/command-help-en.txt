@@ -90,9 +90,9 @@ The maximum number of linkages that are considered for post-processing.
 Up to this many linkages are generated; if there are fewer parses than
 this limit, then they will all be printed, in deterministic,
 cost-ranked order. If there are more parses than this limit, then a
-random subset will be printed. The !random option is used to control
-whether this sampling will use a repeatable (deterministic) random
-sequence, or not.
+lowest-metric subset will be considered for parsing. Generation mode
+still uses random sampling; the !random option controls whether this
+sampling uses a repeatable (deterministic) random sequence, or not.
 
 [cost-max]
 Determines the largest disjunct cost considered during parsing. That is,

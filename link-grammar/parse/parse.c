@@ -10,16 +10,19 @@
 /* forms, with or without modification, subject to certain conditions.   */
 /*                                                                       */
 /*************************************************************************/
+#include <ctype.h>
 #include <limits.h>
+#include <string.h>
 
 #include "api-structures.h"
 #include "count.h"
 #include "dict-common/dict-common.h"   // For Dictionary_s
 #include "disjunct-utils.h"
-#include "extract-links.h"
+#include "extract-links-internal.h"
 #include "fast-match.h"
 #include "linkage/analyze-linkage.h"
 #include "linkage/linkage.h"
+#include "linkage/score.h"
 #include "linkage/sane.h"
 #include "parse.h"
 #include "post-process/post-process.h"
@@ -29,6 +32,9 @@
 #include "tokenize/word-structures.h"  // For Word_struct
 
 #define D_PARSE 5 /* Debug level for this file. */
+#define D_PL 7
+#define PP_PARSE_SET_TRACE_LIMIT 20
+#define METRIC_MORPH_SORT_LOOKAHEAD_LIMIT 2000
 
 static Linkage linkage_array_new(int num_to_alloc)
 {
@@ -63,6 +69,57 @@ static void find_unused_disjuncts(Sentence sent, extractor_t *pex)
 	}
 }
 
+static bool metric_extraction_disabled(void)
+{
+	return NULL != test_enabled("no-metric-extraction");
+}
+
+static bool metric_mfc_terminal_state_enabled(void)
+{
+	return NULL == test_enabled("no-metric-mfc");
+}
+
+static bool metric_bounded_domain_state_enabled(void)
+{
+	return NULL == test_enabled("no-metric-bounded-domain");
+}
+
+static bool metric_global_contains_one_state_enabled(void)
+{
+	return NULL == test_enabled("no-metric-global-contains-one");
+}
+
+static bool metric_pp_validate_enabled(void)
+{
+	return NULL != test_enabled("metric-pp-validate");
+}
+
+static bool metric_classic_pp_enabled(void)
+{
+	return NULL != test_enabled("metric-classic-pp");
+}
+
+static bool metric_pp_constraints_enabled(Postprocessor *pp)
+{
+	return (NULL == test_enabled("no-metric-pp-constraints")) &&
+	       post_process_has_parse_constraints(pp);
+}
+
+static bool metric_extraction_forced_enabled(void)
+{
+	return NULL != test_enabled("metric-extraction");
+}
+
+static bool metric_extraction_requested(Sentence sent, Parse_Options opts)
+{
+	if (metric_extraction_disabled()) return false;
+	if (IS_GENERATION(sent->dict)) return false;
+
+	return metric_extraction_forced_enabled() ||
+	       sent->overflowed ||
+	       ((int) opts->linkage_limit < sent->num_linkages_found);
+}
+
 static void setup_linkages(Sentence sent, extractor_t* pex,
                           fast_matcher_t* mchxt,
                           count_context_t* ctxt,
@@ -71,11 +128,16 @@ static void setup_linkages(Sentence sent, extractor_t* pex,
 	sent->overflowed = build_parse_set(pex, sent, mchxt, ctxt, sent->null_count, opts);
 	print_time(opts, "Built parse set");
 
+	/* Overflow is known only after the parse-set build.  Keep this
+	 * predicate aligned with process_linkages() so metric extraction is
+	 * never selected without the corresponding extractor state. */
+	extractor_set_metric_enabled(pex, metric_extraction_requested(sent, opts));
+
 	if (sent->overflowed && (1 < opts->verbosity) && !IS_GENERATION(sent->dict))
 	{
 		err_ctxt ec = { sent };
 		err_msgc(&ec, lg_Warn, "Count overflow.\n"
-			"Considering a random subset of %zu of an unknown and large number of linkages\n",
+			"Considering up to %zu lowest-metric linkages of an unknown and large number of linkages\n",
 			opts->linkage_limit);
 	}
 
@@ -147,6 +209,43 @@ static void print_chosen_disjuncts_words(const Linkage lkg, bool prt_optword)
 }
 
 /**
+ * Print linkage signatures in raw extraction order, before final sorting.
+ * This is a test-only trace for checking limited extraction strategies.
+ */
+static void print_extract_order(Sentence sent, Parse_Options opts)
+{
+	if (!test_enabled("extract-order")) return;
+
+	for (size_t i = 0; i < sent->num_valid_linkages; i++)
+	{
+		Linkage lkg = &sent->lnkages[i];
+		dyn_str *buf = dyn_str_new();
+		char tmp[128];
+
+		linkage_score(lkg, opts);
+		snprintf(tmp, sizeof(tmp),
+		         "extract-order %zu: index=%d dis=%5.2f len=%d links=",
+		         i + 1, lkg->lifo.index, lkg->lifo.disjunct_cost,
+		         lkg->lifo.link_cost);
+		dyn_strcat(buf, tmp);
+
+		for (uint32_t j = 0; j < lkg->num_links; j++)
+		{
+			const Link *link = &lkg->link_array[j];
+			snprintf(tmp, sizeof(tmp), "%s%u-%s-%u",
+			         (0 == j) ? "" : " ",
+			         (unsigned int)link->lw,
+			         (NULL == link->link_name) ? "?" : link->link_name,
+			         (unsigned int)link->rw);
+			dyn_strcat(buf, tmp);
+		}
+
+		err_msg(lg_Debug, "%s\n", dyn_str_value(buf));
+		dyn_str_delete(buf);
+	}
+}
+
+/**
  * Return \c true iff \p sent has an optional word.
  */
 static bool optional_word_exists(Sentence sent)
@@ -157,26 +256,847 @@ static bool optional_word_exists(Sentence sent)
 	return false;
 }
 
-#define D_PL 7
+static bool metric_morph_sort_lookahead_enabled(Sentence sent)
+{
+	return optional_word_exists(sent) &&
+	       !sent->overflowed &&
+	       (0 < sent->num_linkages_found) &&
+	       (sent->num_linkages_found <= METRIC_MORPH_SORT_LOOKAHEAD_LIMIT);
+}
+
+typedef enum
+{
+	EXTRACT_INDEXED,
+	EXTRACT_METRIC,
+	EXTRACT_RANDOM
+} Extract_method;
+
+typedef struct
+{
+	bool post_processed;
+	bool reached_request_cap;
+	size_t metric_bounded_feedback_learned;
+	size_t raw_extracted;
+	size_t invalid_morphism;
+	size_t pp_violations;
+	size_t parse_constraint_rejections;
+} Extraction_stats;
+
+static void discard_linkage(Linkage lkg)
+{
+	free_linkage(lkg);
+	memset(lkg, 0, sizeof(*lkg));
+}
+
+typedef enum
+{
+	EXTRACT_DONE,
+	EXTRACT_SKIP,
+	EXTRACT_KEEP
+} Extract_result;
+
+static Extract_result extract_linkage(Sentence sent, extractor_t *pex,
+                                      Linkage lkg, Parse_Options opts,
+                                      Extract_method extract_method, int itry,
+                                      bool need_sane_morphism,
+                                      Extraction_stats *stats)
+{
+	Linkage_info * lifo = &lkg->lifo;
+
+	/* Negative values tell extract-links to pick randomly; for
+	 * reproducible-rand, the actual value is the rand seed. */
+	lifo->index = (EXTRACT_RANDOM == extract_method) ? -(itry+1) : itry;
+
+	partial_init_linkage(sent, lkg, sent->length);
+
+	if (EXTRACT_METRIC == extract_method)
+	{
+		if (!extract_metric_links(pex, lkg))
+		{
+			discard_linkage(lkg);
+			return EXTRACT_DONE;
+		}
+	}
+	else
+	{
+		extract_links(pex, lkg);
+	}
+	stats->raw_extracted++;
+
+	compute_link_names(lkg, sent->string_set);
+
+	if (verbosity_level(+D_PL))
+	{
+		err_msg(lg_Debug, "chosen_disjuncts before:\n\\");
+		print_chosen_disjuncts_words(lkg, /*prt_opt*/true);
+	}
+
+	if (need_sane_morphism)
+	{
+		if (sane_linkage_morphism(sent, lkg, opts))
+		{
+			remove_empty_words(lkg);
+
+			if (verbosity_level(+D_PL))
+			{
+				err_msg(lg_Debug, "chosen_disjuncts after:\n\\");
+				print_chosen_disjuncts_words(lkg, /*prt_opt*/false);
+			}
+		}
+		else
+		{
+			stats->invalid_morphism++;
+			discard_linkage(lkg);
+			return EXTRACT_SKIP;
+		}
+	}
+
+	if (IS_GENERATION(sent->dict))
+		compute_generated_words(sent, lkg);
+
+	return EXTRACT_KEEP;
+}
+
+static void post_process_batch(Sentence sent, Linkage batch,
+                               size_t batch_count, Parse_Options opts,
+                               PP_failure *failures)
+{
+	Linkage saved_lnkages = sent->lnkages;
+	size_t saved_alloced = sent->num_linkages_alloced;
+	size_t saved_post_processed = sent->num_linkages_post_processed;
+	size_t saved_valid = sent->num_valid_linkages;
+
+	post_process_reset(sent->postprocessor);
+	sent->lnkages = batch;
+	sent->num_linkages_alloced = batch_count;
+	sent->num_valid_linkages = batch_count;
+	sent->num_linkages_post_processed = 0;
+
+	if (NULL == failures)
+		post_process_lkgs(sent, opts);
+	else
+		post_process_lkgs_with_failures(sent, opts, failures,
+		                                batch_count);
+
+	sent->lnkages = saved_lnkages;
+	sent->num_linkages_alloced = saved_alloced;
+	sent->num_linkages_post_processed = saved_post_processed;
+	sent->num_valid_linkages = saved_valid;
+}
+
+static void trace_postprocessed_batch(Sentence sent, extractor_t *pex,
+                                      Linkage batch, size_t batch_count,
+                                      Metric_candidate **trace_roots,
+                                      size_t *num_traced,
+                                      Parse_Options opts)
+{
+	if (NULL == trace_roots) return;
+	if (*num_traced >= PP_PARSE_SET_TRACE_LIMIT) return;
+
+	for (size_t i = 0; i < batch_count; i++)
+	{
+		const PP_failure *failure;
+
+		if (0 == batch[i].lifo.N_violations) continue;
+		if (*num_traced >= PP_PARSE_SET_TRACE_LIMIT) break;
+
+		failure = post_process_find_failure(sent, &batch[i], opts);
+		(*num_traced)++;
+		extractor_trace_metric_candidate(pex, &batch[i], failure,
+		                                 trace_roots[i], *num_traced);
+	}
+}
+
+static void keep_postprocessed_batch(Linkage output, size_t *kept,
+                                     size_t output_limit, Linkage batch,
+                                     size_t batch_count,
+                                     Extraction_stats *stats,
+                                     size_t *batch_good,
+                                     size_t *batch_bad)
+{
+	for (size_t i = 0; i < batch_count; i++)
+	{
+		if (0 == batch[i].lifo.N_violations)
+		{
+			(*batch_good)++;
+			if (*kept < output_limit)
+			{
+				if (&output[*kept] != &batch[i])
+				{
+					output[*kept] = batch[i];
+					memset(&batch[i], 0, sizeof(batch[i]));
+				}
+				(*kept)++;
+			}
+			else
+			{
+				discard_linkage(&batch[i]);
+			}
+		}
+		else
+		{
+			(*batch_bad)++;
+			stats->pp_violations++;
+			discard_linkage(&batch[i]);
+		}
+	}
+}
+
+static void sort_postprocessed_metric_batch(Linkage batch, size_t batch_count,
+                                            Parse_Options opts)
+{
+	for (size_t i = 0; i < batch_count; i++)
+		batch[i].dupe = false;
+
+	qsort((void *)batch, batch_count, sizeof(struct Linkage_s),
+	      (int (*)(const void *, const void *))opts->cost_model.compare_fn);
+}
+
+static const char *metric_trace_failure_type_name(PP_failure_type type)
+{
+	switch (type)
+	{
+	case PP_FAILURE_NONE: return "none";
+	case PP_FAILURE_CONTAINS_ONE: return "contains_one";
+	case PP_FAILURE_CONTAINS_NONE: return "contains_none";
+	case PP_FAILURE_CONTAINS_ONE_GLOBAL: return "contains_one_global";
+	case PP_FAILURE_MUST_FORM_CYCLE: return "must_form_cycle";
+	case PP_FAILURE_BOUNDED: return "bounded";
+	}
+	return "unknown";
+}
+
+static bool metric_trace_enabled(void)
+{
+	/* Keep verbosity 5 usable for other parse.c debug messages; this
+	 * detailed extraction trace requires an explicit parse.c filter. */
+	return (D_PARSE <= verbosity) && ('\0' != debug[0]) &&
+	       (NULL != feature_enabled(debug, "parse.c",
+	                                "process_metric_linkages",
+	                                NULL));
+}
+
+/* The parse.c trace describes batch-level progress: extraction requests,
+ * PP failures, learned feedback, and final kept counts.  Lower-level
+ * candidate/ranker counters live in extract-links.c. */
+static void metric_trace_start(Sentence sent, Parse_Options opts,
+                               int maxtries, size_t output_limit)
+{
+	err_msg(lg_Debug, "metric-extraction: start null_count=%u found=%d "
+	        "overflowed=%s output_limit=%zu maxtries=%d verbosity=%d\n",
+	        sent->null_count, sent->num_linkages_found,
+	        sent->overflowed ? "true" : "false", output_limit, maxtries,
+	        opts->verbosity);
+	if (NULL != sent->orig_sentence)
+		err_msg(lg_Debug, "metric-extraction: sentence=\"%s\"\n",
+		        sent->orig_sentence);
+}
+
+static void metric_trace_link(const char *label, Linkage lkg,
+                              unsigned int idx)
+{
+	if ((NULL == lkg) || (lkg->num_links <= idx)) return;
+
+	const Link *link = &lkg->link_array[idx];
+	err_msg(lg_Debug, " %s=%u:%u-%s-%u", label, idx,
+	        (unsigned int)link->lw,
+	        (NULL == link->link_name) ? "?" : link->link_name,
+	        (unsigned int)link->rw);
+}
+
+static void metric_trace_link_list(const char *label, Linkage lkg,
+                                   const unsigned int *links,
+                                   size_t num_links)
+{
+	if (0 == num_links) return;
+
+	err_msg(lg_Debug, " %s=[", label);
+	for (size_t i = 0; i < num_links; i++)
+	{
+		if (0 < i) err_msg(lg_Debug, ",");
+		if ((NULL != lkg) && (links[i] < lkg->num_links))
+		{
+			const Link *link = &lkg->link_array[links[i]];
+			err_msg(lg_Debug, "%u:%u-%s-%u", links[i],
+			        (unsigned int)link->lw,
+			        (NULL == link->link_name) ? "?" : link->link_name,
+			        (unsigned int)link->rw);
+		}
+		else
+		{
+			err_msg(lg_Debug, "%u", links[i]);
+		}
+	}
+	err_msg(lg_Debug, "]");
+}
+
+static void metric_trace_pp_failure(bool trace, size_t extracted_idx,
+                                    const PP_failure *failure, Linkage lkg,
+                                    const char *source)
+{
+	if (!trace || (NULL == failure) ||
+	    (PP_FAILURE_NONE == failure->type))
+		return;
+
+	/* Include the PP failure's link roles so a short trace can explain
+	 * which extracted links taught the next feedback mark. */
+	err_msg(lg_Debug, "metric-extraction: detected PP-violation "
+	        "extracted=%zu source=%s type=%s message=%s "
+	        "selector=%s domain=%d truncated=%s",
+	        extracted_idx, source,
+	        metric_trace_failure_type_name(failure->type),
+	        (NULL == failure->message) ? "" : failure->message,
+	        (NULL == failure->selector) ? "" : failure->selector,
+	        failure->domain, failure->truncated ? "true" : "false");
+	if (failure->has_domain_start_link)
+		metric_trace_link("domain-start", lkg,
+		                  failure->domain_start_link);
+	metric_trace_link_list("domain-links", lkg, failure->domain_links,
+	                       failure->num_domain_links);
+	metric_trace_link_list("selector-links", lkg, failure->selector_links,
+	                       failure->num_selector_links);
+	metric_trace_link_list("criterion-links", lkg,
+	                       failure->criterion_links,
+	                       failure->num_criterion_links);
+	metric_trace_link_list("offending-links", lkg,
+	                       failure->offending_links,
+	                       failure->num_offending_links);
+	err_msg(lg_Debug, "\n");
+}
+
+static void metric_trace_batch(bool trace, Linkage batch,
+                               size_t batch_count,
+                               const PP_failure *failures,
+                               const Extraction_stats *stats,
+                               size_t kept)
+{
+	size_t batch_bad = 0;
+	size_t batch_good = 0;
+
+	if (!trace) return;
+
+	for (size_t i = 0; i < batch_count; i++)
+	{
+		if (0 == batch[i].lifo.N_violations)
+			batch_good++;
+		else
+			batch_bad++;
+	}
+
+	err_msg(lg_Debug, "metric-extraction: extracted %zu linkages, "
+	        "%zu with PP-violations, kept %zu; batch count=%zu "
+	        "good=%zu bad=%zu\n",
+	        stats->raw_extracted, stats->pp_violations + batch_bad,
+	        kept, batch_count, batch_good, batch_bad);
+	for (size_t i = 0; i < batch_count; i++)
+	{
+		if (0 == batch[i].lifo.N_violations) continue;
+		if (NULL != failures)
+			metric_trace_pp_failure(trace, stats->raw_extracted -
+			                        batch_count + i + 1,
+			                        &failures[i], &batch[i],
+			                        "batch-pp");
+		else
+			err_msg(lg_Debug, "metric-extraction: detected PP-violation "
+			        "extracted=%zu source=batch-pp message=%s\n",
+			        stats->raw_extracted - batch_count + i + 1,
+			        (NULL == batch[i].lifo.pp_violation_msg) ? "" :
+			        batch[i].lifo.pp_violation_msg);
+	}
+}
+
+static void metric_trace_feedback(bool trace, size_t learned_bounded,
+                                  size_t learned_global,
+                                  size_t learned_contains_one,
+                                  size_t learned_contains_none)
+{
+	if (!trace) return;
+	if ((0 == learned_bounded) && (0 == learned_global) &&
+	    (0 == learned_contains_one) && (0 == learned_contains_none))
+		return;
+
+	err_msg(lg_Debug, "metric-extraction: learned feedback bounded=%zu "
+	        "global-contains-one=%zu domain-contains-one=%zu "
+	        "domain-contains-none=%zu\n",
+	        learned_bounded, learned_global, learned_contains_one,
+	        learned_contains_none);
+}
+
+static void metric_trace_summary(bool trace, const Extraction_stats *stats,
+                                 size_t kept, int itry, int maxtries,
+                                 bool done, Parse_Options opts)
+{
+	if (!trace) return;
+
+	err_msg(lg_Debug, "metric-extraction: summary extracted=%zu kept=%zu "
+	        "PP-violations=%zu invalid-morphism=%zu itry=%d maxtries=%d "
+	        "done=%s timer-expired=%s memory-exhausted=%s\n",
+	        stats->raw_extracted, kept, stats->pp_violations,
+	        stats->invalid_morphism, itry, maxtries,
+	        done ? "true" : "false",
+	        opts->resources->timer_expired ? "true" : "false",
+	        opts->resources->memory_exhausted ? "true" : "false");
+}
+
+typedef struct
+{
+	size_t checked;
+	size_t true_accept;
+	size_t true_reject;
+	size_t false_positive;
+	size_t false_negative;
+	size_t mismatch;
+	size_t unrelated_reject;
+	size_t examples_reported;
+} Metric_pp_validate_stats;
+
+/* PP messages often differ between an active legacy row and a parser-side
+ * replacement row.  The numeric rule suffix is the stable identity used for
+ * validation comparison; fall back to text only when a suffix is unavailable. */
+static bool metric_pp_message_id(const char *message, unsigned int *id)
+{
+	const char *end;
+	const char *start;
+	unsigned int value = 0;
+
+	if ((NULL == message) || ('\0' == message[0])) return false;
+
+	end = message + strlen(message);
+	while ((message < end) && !isdigit((unsigned char)end[-1]))
+		end--;
+	if (message == end) return false;
+
+	start = end;
+	while ((message < start) && isdigit((unsigned char)start[-1]))
+		start--;
+
+	for (const char *p = start; p < end; p++)
+		value = 10 * value + (unsigned int)(*p - '0');
+
+	*id = value;
+	return true;
+}
+
+static bool metric_pp_same_rule_message(const char *left, const char *right)
+{
+	unsigned int left_id;
+	unsigned int right_id;
+
+	if (metric_pp_message_id(left, &left_id) &&
+	    metric_pp_message_id(right, &right_id))
+		return left_id == right_id;
+
+	if ((NULL == left) || (NULL == right)) return false;
+	return 0 == strcmp(left, right);
+}
+
+static bool metric_pp_message_in_parse_rules(Postprocessor *pp,
+                                             const char *message)
+{
+	size_t count = post_process_parse_contains_one_rule_count(pp);
+
+	for (size_t i = 0; i < count; i++)
+		if (metric_pp_same_rule_message(
+		    message, post_process_parse_contains_one_rule_message(pp, i)))
+			return true;
+
+	count = post_process_parse_contains_one_global_rule_count(pp);
+	for (size_t i = 0; i < count; i++)
+		if (metric_pp_same_rule_message(
+		    message,
+		    post_process_parse_contains_one_global_rule_message(pp, i)))
+			return true;
+
+	count = post_process_parse_contains_none_rule_count(pp);
+	for (size_t i = 0; i < count; i++)
+		if (metric_pp_same_rule_message(
+		    message, post_process_parse_contains_none_rule_message(pp, i)))
+			return true;
+
+	return false;
+}
+
+static bool metric_pp_validate_failure_handled(Postprocessor *pp,
+                                             const PP_failure *failure)
+{
+	if ((NULL == failure) || (PP_FAILURE_NONE == failure->type))
+		return false;
+	if ((PP_FAILURE_CONTAINS_ONE != failure->type) &&
+	    (PP_FAILURE_CONTAINS_ONE_GLOBAL != failure->type) &&
+	    (PP_FAILURE_CONTAINS_NONE != failure->type))
+		return false;
+
+	return metric_pp_message_in_parse_rules(pp, failure->message);
+}
+
+static bool metric_pp_validate_failure_same(const PP_failure *predicted,
+                                          const PP_failure *actual)
+{
+	if ((NULL == predicted) || (NULL == actual))
+		return false;
+	if (PP_FAILURE_NONE == predicted->type) return false;
+	if (PP_FAILURE_NONE == actual->type) return false;
+	if (metric_pp_same_rule_message(predicted->message, actual->message))
+		return true;
+
+	return (predicted->type == actual->type) &&
+	       (NULL != predicted->message) &&
+	       (NULL != actual->message) &&
+	       (0 == strcmp(predicted->message, actual->message));
+}
+
+static void metric_pp_validate_report_example(Sentence sent, size_t index,
+                                            const PP_failure *predicted,
+                                            const PP_failure *actual,
+                                            const char *kind,
+                                            Metric_pp_validate_stats *stats)
+{
+	if (5 <= stats->examples_reported) return;
+	stats->examples_reported++;
+
+	prt_error("Error: metric-pp-validate %s at candidate %zu: "
+	          "predicted=%s/%s actual=%s/%s\n",
+	          kind, index + 1,
+	          metric_trace_failure_type_name(predicted->type),
+	          (NULL == predicted->message) ? "" : predicted->message,
+	          metric_trace_failure_type_name(actual->type),
+	          (NULL == actual->message) ? "" : actual->message);
+	if (NULL != sent->orig_sentence)
+		prt_error("Error: metric-pp-validate sentence: %s\n",
+		          sent->orig_sentence);
+}
+
+/* PP validation leaves extractor candidates alive, then compares the
+ * extractor's would-reject prediction with batched PP.  This makes the old
+ * PP rows a tripwire instead of a silent duplicate filter. */
+static void metric_pp_validate_validate_batch(
+	Sentence sent, size_t batch_count, const PP_failure *predictions,
+	const PP_failure *failures, Metric_pp_validate_stats *stats)
+{
+	for (size_t i = 0; i < batch_count; i++)
+	{
+		PP_failure none = { .type = PP_FAILURE_NONE, .domain = -1 };
+		const PP_failure *predicted = &predictions[i];
+		const PP_failure *actual = &failures[i];
+		bool predicted_bad = PP_FAILURE_NONE != predicted->type;
+		bool actual_bad = PP_FAILURE_NONE != actual->type;
+		bool actual_handled =
+			metric_pp_validate_failure_handled(
+				sent->postprocessor, actual);
+
+		stats->checked++;
+		if (!predicted_bad && !actual_bad)
+		{
+			stats->true_accept++;
+			continue;
+		}
+		if (predicted_bad && actual_handled &&
+		    metric_pp_validate_failure_same(predicted, actual))
+		{
+			stats->true_reject++;
+			continue;
+		}
+		if (!predicted_bad && actual_handled)
+		{
+			stats->false_negative++;
+			metric_pp_validate_report_example(
+				sent, i, &none, actual, "false-negative", stats);
+			continue;
+		}
+		if (predicted_bad && !actual_bad)
+		{
+			stats->false_positive++;
+			metric_pp_validate_report_example(
+				sent, i, predicted, &none, "false-positive", stats);
+			continue;
+		}
+		if (!predicted_bad)
+		{
+			stats->unrelated_reject++;
+			continue;
+		}
+
+		stats->mismatch++;
+		metric_pp_validate_report_example(
+			sent, i, predicted, actual, "mismatch", stats);
+	}
+}
+
+static void metric_pp_validate_summary(const Metric_pp_validate_stats *stats)
+{
+	if ((0 == stats->checked) ||
+	    ((verbosity < D_USER_INFO) &&
+	     (0 == stats->false_positive) &&
+	     (0 == stats->false_negative) &&
+	     (0 == stats->mismatch)))
+		return;
+
+	prt_error("Info: metric-pp-validate: checked=%zu true-accept=%zu "
+	          "true-reject=%zu false-positive=%zu false-negative=%zu "
+	          "mismatch=%zu unrelated=%zu\n",
+	          stats->checked, stats->true_accept, stats->true_reject,
+	          stats->false_positive, stats->false_negative,
+	          stats->mismatch, stats->unrelated_reject);
+}
+
+static Extraction_stats process_metric_linkages(Sentence sent,
+                                                extractor_t *pex,
+                                                Parse_Options opts,
+                                                int maxtries,
+                                                bool need_sane_morphism)
+{
+	/* Metric extraction still postprocesses in batches.  A batch can
+	 * teach feedback marks, but those marks are applied only after every
+	 * learner has inspected the same PP result array. */
+	Extraction_stats stats = { .post_processed = true };
+	size_t output_limit = sent->num_linkages_alloced;
+	bool morph_sort_lookahead =
+		metric_morph_sort_lookahead_enabled(sent);
+	size_t batch_capacity = morph_sort_lookahead ?
+		(size_t)sent->num_linkages_found : output_limit;
+	Linkage output = sent->lnkages;
+	Linkage batch = linkage_array_new(batch_capacity);
+	bool global_contains_one_state =
+		metric_global_contains_one_state_enabled();
+	bool mfc_terminal_state = metric_mfc_terminal_state_enabled();
+	bool bounded_domain_state =
+		metric_bounded_domain_state_enabled();
+	bool metric_trace = metric_trace_enabled();
+	bool metric_pp_validate = metric_pp_validate_enabled();
+	bool metric_pp_constraints =
+		metric_pp_constraints_enabled(sent->postprocessor);
+	bool metric_classic_pp =
+		metric_classic_pp_enabled() || metric_pp_validate;
+	bool suppress_classic_mfc =
+		!metric_classic_pp && mfc_terminal_state;
+	bool suppress_classic_parse_constraints =
+		!metric_classic_pp && metric_pp_constraints;
+	bool any_feedback =
+		bounded_domain_state || metric_trace || metric_pp_validate;
+	bool trace_pp_parse_set =
+		(NULL != test_enabled("pp-parse-set-trace")) ||
+		(NULL != test_enabled("pp-parse-set-trace-all-links"));
+	bool need_metric_roots =
+		trace_pp_parse_set || bounded_domain_state;
+	PP_failure *failures = any_feedback ?
+		calloc(batch_capacity, sizeof(*failures)) : NULL;
+	PP_failure *validation_predictions = metric_pp_validate ?
+		calloc(batch_capacity, sizeof(*validation_predictions)) : NULL;
+	Metric_candidate **metric_roots = need_metric_roots ?
+		malloc(batch_capacity * sizeof(*metric_roots)) : NULL;
+	if (any_feedback)
+		assert(NULL != failures,
+		       "Out of memory allocating PP failure batch");
+	if (metric_pp_validate)
+		assert(NULL != validation_predictions,
+		       "Out of memory allocating metric PP validation predictions");
+	if (need_metric_roots)
+		assert(NULL != metric_roots,
+		       "Out of memory allocating metric trace roots");
+	Metric_pp_validate_stats validation_stats = { 0 };
+	size_t num_traced = 0;
+	size_t kept = 0;
+	bool done = false;
+	int itry = 0;
+
+	if (metric_trace)
+		metric_trace_start(sent, opts, maxtries, output_limit);
+
+	pex->metric.resources = opts->resources;
+	pex->metric.pp.mfc_enabled = mfc_terminal_state;
+	pex->metric.pp.bounded_enabled = bounded_domain_state;
+	pex->metric.pp.global_enabled = global_contains_one_state;
+	post_process_set_metric_rule_suppression(
+		sent->postprocessor, suppress_classic_mfc,
+		suppress_classic_parse_constraints,
+		suppress_classic_parse_constraints);
+
+	while ((itry < maxtries) && (kept < output_limit))
+	{
+		/* Request one output-sized block at a time, capped by the
+		 * remaining request budget.  This preserves batched PP while
+		 * allowing feedback to affect the next block. */
+		size_t block_limit = morph_sort_lookahead ?
+			MIN(batch_capacity, (size_t)(maxtries - itry)) :
+			MIN(output_limit, (size_t)(maxtries - itry));
+		size_t batch_count = 0;
+
+		for (size_t iblk = 0;
+		     (iblk < block_limit) && (itry < maxtries); iblk++)
+		{
+			size_t reject_before =
+				pex->metric.pp.parse_constraint_rejected;
+			size_t remaining = (size_t)(maxtries - itry);
+			pex->metric.pp.parse_constraint_reject_limit =
+				reject_before + remaining;
+			pex->metric.pp.parse_constraint_reject_limit_hit = false;
+
+			Extract_result er = extract_linkage(sent, pex,
+				&batch[batch_count], opts, EXTRACT_METRIC, itry,
+				need_sane_morphism, &stats);
+			size_t rejected =
+				pex->metric.pp.parse_constraint_rejected - reject_before;
+
+			stats.parse_constraint_rejections += rejected;
+			if (remaining <= rejected)
+				itry = maxtries;
+			else
+				itry += (int)rejected;
+
+			if (EXTRACT_DONE == er)
+			{
+				done = true;
+				break;
+			}
+			if (EXTRACT_KEEP == er)
+			{
+				if (need_metric_roots)
+					metric_roots[batch_count] =
+						pex->metric.trace_root;
+				if (metric_pp_validate)
+					validation_predictions[batch_count] =
+						pex->metric.pp.prediction;
+				batch_count++;
+			}
+			itry++;
+		}
+
+		if (0 < batch_count)
+		{
+			size_t batch_good = 0;
+			size_t batch_bad = 0;
+			size_t learned_bounded = 0;
+
+			if (any_feedback)
+				memset(failures, 0, batch_count * sizeof(*failures));
+			post_process_batch(sent, batch, batch_count, opts,
+			                    any_feedback ? failures : NULL);
+			if (metric_pp_validate)
+				metric_pp_validate_validate_batch(
+					sent, batch_count, validation_predictions,
+					failures, &validation_stats);
+			metric_trace_batch(metric_trace, batch, batch_count,
+			                   any_feedback ? failures : NULL,
+			                   &stats, kept);
+			if (trace_pp_parse_set)
+				trace_postprocessed_batch(sent, pex, batch,
+				                          batch_count, metric_roots,
+				                          &num_traced, opts);
+			if (bounded_domain_state)
+			{
+				/* Bounded-domain feedback is learned only from
+				 * normal batch PP failures.  This preserves the
+				 * important property that metric extraction does
+				 * not call PP one linkage at a time. */
+				for (size_t i = 0; i < batch_count; i++)
+					learned_bounded +=
+						extractor_finish_metric_bounded_domain_feedback_state(
+							pex, metric_roots[i], &batch[i],
+							&failures[i]);
+				stats.metric_bounded_feedback_learned +=
+					learned_bounded;
+			}
+			if (0 < learned_bounded)
+				extractor_apply_metric_bounded_domain_feedback(pex);
+			metric_trace_feedback(metric_trace, learned_bounded,
+			                      0, 0, 0);
+			if (morph_sort_lookahead)
+				sort_postprocessed_metric_batch(batch, batch_count, opts);
+
+			keep_postprocessed_batch(output, &kept, output_limit,
+			                         batch, batch_count, &stats,
+			                         &batch_good, &batch_bad);
+		}
+
+		if (done || resources_exhausted(opts->resources)) break;
+	}
+
+	free(failures);
+	free(validation_predictions);
+	free(metric_roots);
+	linkage_array_free(batch);
+	post_process_set_metric_rule_suppression(sent->postprocessor,
+	                                         false, false, false);
+
+	stats.reached_request_cap = (kept < output_limit) &&
+	                            (maxtries <= itry) &&
+	                            (maxtries < sent->num_linkages_found);
+	metric_trace_summary(metric_trace, &stats, kept, itry, maxtries,
+	                     done, opts);
+	if (metric_pp_validate)
+		metric_pp_validate_summary(&validation_stats);
+
+	sent->num_valid_linkages = kept;
+	sent->num_linkages_post_processed = kept;
+
+	/* The remainder of the array is garbage; we never filled it in.
+	 * So just pretend that it's shorter than it is */
+	sent->num_linkages_alloced = sent->num_valid_linkages;
+	print_extract_order(sent, opts);
+
+	if (verbosity >= D_USER_INFO)
+	{
+		lgdebug(0, "Info: sane_morphism(): %zu of %zu linkages had "
+		        "invalid morphology construction\n", stats.invalid_morphism,
+		        stats.raw_extracted);
+	}
+
+	if (verbosity_level(D_PARSE))
+	{
+		if (stats.post_processed)
+			lgdebug(0, "Info: metric extraction examined %zu "
+			        "linkages: %zu kept, %zu P.P. violations, "
+			        "%zu parse-constraint rejections\n",
+			        stats.raw_extracted +
+			        stats.parse_constraint_rejections,
+			        sent->num_valid_linkages,
+			        stats.pp_violations,
+			        stats.parse_constraint_rejections);
+		if (bounded_domain_state &&
+		    (0 < pex->metric.trace.state_assignments_considered))
+			lgdebug(0, "Info: metric state ranking considered %zu "
+			        "assignments, pushed %zu candidates\n",
+			        pex->metric.trace.state_assignments_considered,
+			        pex->metric.trace.state_assignments_pushed);
+		if (bounded_domain_state)
+			lgdebug(0, "Info: metric bounded-domain feedback learned "
+			        "%zu blockers (%zu encoded marks, %zu ignored), "
+			        "rejected %zu candidates, skipped %zu repeated "
+			        "candidates\n",
+			        stats.metric_bounded_feedback_learned,
+			        pex->metric.pp.bounded.num_feedbacks,
+			        pex->metric.pp.bounded.duplicates +
+			        pex->metric.pp.bounded.ignored,
+			        pex->metric.pp.bounded.rejected,
+			        pex->metric.seen.duplicate_skipped);
+
+	}
+
+	return stats;
+}
+
 /**
  * This fills the linkage array with morphologically-acceptable
  * linkages.
  */
-static void process_linkages(Sentence sent, extractor_t* pex,
-                             Parse_Options opts)
+static Extraction_stats process_linkages(Sentence sent, extractor_t* pex,
+                                         Parse_Options opts)
 {
-	if (0 == sent->num_linkages_found) return;
-	if (0 == sent->num_linkages_alloced) return; /* Avoid a later crash. */
+	Extraction_stats stats = { 0 };
 
-	/* Pick random linkages if we get more than what was asked for. */
-	bool pick_randomly = sent->overflowed ||
+	if (0 == sent->num_linkages_found) return stats;
+	if (0 == sent->num_linkages_alloced) return stats; /* Avoid a later crash. */
+
+	/* Use metric extraction when requested explicitly by a metric test, or
+	 * when we get more linkages than what was asked for. */
+	bool limited_extraction = sent->overflowed ||
 	    (sent->num_linkages_found > (int) opts->linkage_limit);
+	Extract_method extract_method = EXTRACT_INDEXED;
+	if (metric_extraction_requested(sent, opts))
+		extract_method = EXTRACT_METRIC;
+	else if (limited_extraction)
+		extract_method = EXTRACT_RANDOM;
 
-	sent->num_valid_linkages = 0;
-	size_t N_invalid_morphism = 0;
-
-	int itry = 0;
-	size_t in = 0;
 	int maxtries;
 
 	/* In the case of overflow, which will happen for some long
@@ -193,7 +1113,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	 */
 #define MAX_TRIES 250000
 
-	if (pick_randomly)
+	if (limited_extraction)
 	{
 		/* Try picking many more linkages, but not more than possible. */
 		maxtries = MIN((int) sent->num_linkages_alloced + MAX_TRIES,
@@ -206,6 +1126,17 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 
 	bool need_sane_morphism = !IS_GENERATION(sent->dict) ||
 	                          optional_word_exists(sent);
+
+	if (EXTRACT_METRIC == extract_method)
+		return process_metric_linkages(sent, pex, opts, maxtries,
+		                               need_sane_morphism);
+
+	sent->num_valid_linkages = 0;
+	size_t N_invalid_morphism = 0;
+
+	int itry = 0;
+	size_t in = 0;
+	size_t linkage_array_limit = sent->num_linkages_alloced;
 	bool need_init = true;
 	for (itry=0; itry<maxtries; itry++)
 	{
@@ -214,14 +1145,17 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 
 		/* Negative values tell extract-links to pick randomly; for
 		 * reproducible-rand, the actual value is the rand seed. */
-		lifo->index = pick_randomly ? -(itry+1) : itry;
+		lifo->index = (EXTRACT_RANDOM == extract_method) ? -(itry+1) : itry;
 
 		if (need_init)
 		{
 			partial_init_linkage(sent, lkg, sent->length);
 			need_init = false;
 		}
+
 		extract_links(pex, lkg);
+		stats.raw_extracted++;
+
 		compute_link_names(lkg, sent->string_set);
 
 		if (verbosity_level(+D_PL))
@@ -248,7 +1182,8 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 				lkg->num_links = 0;
 				lkg->num_words = sent->length;
 				// memset(lkg->link_array, 0, lkg->lasz * sizeof(Link));
-				memset(lkg->chosen_disjuncts, 0, sent->length * sizeof(Disjunct *));
+				memset(lkg->chosen_disjuncts, 0,
+				       sent->length * sizeof(Disjunct *));
 
 				continue;
 			}
@@ -259,7 +1194,7 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 
 		need_init = true;
 		in++;
-		if (in >= sent->num_linkages_alloced) break;
+		if (in >= linkage_array_limit) break;
 	}
 
 	/* The last one was alloced, but never actually used. Free it. */
@@ -270,13 +1205,17 @@ static void process_linkages(Sentence sent, extractor_t* pex,
 	/* The remainder of the array is garbage; we never filled it in.
 	 * So just pretend that it's shorter than it is */
 	sent->num_linkages_alloced = sent->num_valid_linkages;
+	print_extract_order(sent, opts);
 
 	if (verbosity >= D_USER_INFO)
 	{
-		lgdebug(0, "Info: sane_morphism(): %zu of %d linkages had "
-		        "invalid morphology construction\n", N_invalid_morphism,
-		        itry + (itry != maxtries));
+		stats.invalid_morphism = N_invalid_morphism;
+		lgdebug(0, "Info: sane_morphism(): %zu of %zu linkages had "
+		        "invalid morphology construction\n", stats.invalid_morphism,
+		        stats.raw_extracted);
 	}
+
+	return stats;
 }
 
 /**
@@ -432,11 +1371,10 @@ int VDAL_compare_linkages(Linkage l1, Linkage l2)
 /**
  * Remove duplicate linkages in the link array. Duplicates can appear
  * if the number of parses overflowed, or if the number of parses is
- * larger than the linkage array. In this case, random linkages will
- * be selected, and, by random chance, duplicate linkages can be
- * selected. When the alloc array is slightly less than the number of
- * linkages found, then as many as half(!) of the linkages can be
- * duplicates.
+ * larger than the linkage array. In this case, a limited subset of
+ * linkages will be selected, and duplicates can be present. When the
+ * alloc array is slightly less than the number of linkages found, then
+ * as many as half(!) of the linkages can be duplicates.
  *
  * This assumes that the duplicates have already been detected and
  * marked by setting `linkage->dupe=true` during linkage sorting.
@@ -455,7 +1393,7 @@ static void deduplicate_linkages(Sentence sent, int linkage_limit)
 			linkage_dedup = atoi(test_linkage_dedup + 1);
 	}
 
-	/* No need for deduplication, if random selection wasn't done. */
+	/* No need for deduplication, if limited extraction wasn't done. */
 	if ((linkage_dedup == 0) || ((linkage_dedup < 0) &&
 	    !sent->overflowed && (sent->num_linkages_found <= linkage_limit)))
 		return;
@@ -729,8 +1667,9 @@ void classic_parse(Sentence sent, Parse_Options opts)
 		if (sent->num_linkages_found > 0)
 		{
 			extractor_t * pex = extractor_new(sent);
+			Extraction_stats extraction_stats;
 			setup_linkages(sent, pex, mchxt, ctxt, opts);
-			process_linkages(sent, pex, opts);
+			extraction_stats = process_linkages(sent, pex, opts);
 			if (IS_GENERATION(sent->dict))
 			    find_unused_disjuncts(sent, pex);
 #ifdef PC_DISPLAY
@@ -738,7 +1677,8 @@ void classic_parse(Sentence sent, Parse_Options opts)
 #endif
 			free_extractor(pex);
 
-			post_process_lkgs(sent, opts);
+			if (!extraction_stats.post_processed)
+				post_process_lkgs(sent, opts);
 			if (resources_exhausted(opts->resources))
 			{
 				sent->num_linkages_found = 0;
@@ -754,7 +1694,23 @@ void classic_parse(Sentence sent, Parse_Options opts)
 				/* FIXME:
 				 * 1. Issue this message if verbosity != 0.
 				 * 2. Don't continue parsing with higher null counts. */
-				if ((sent->num_linkages_post_processed > 0) &&
+				size_t attempted =
+					extraction_stats.raw_extracted +
+					extraction_stats.parse_constraint_rejections;
+				if (extraction_stats.post_processed &&
+				    extraction_stats.reached_request_cap &&
+				    (0 < attempted))
+					prt_error("Info: All examined linkages (%zu) "
+					          "were rejected (%zu P.P. violations, "
+					          "%zu parse-constraint rejections, "
+					          "%zu invalid morphology).\n"
+					          "Consider increasing the linkage limit.\n"
+					          "At the command line, use !limit\n",
+					          attempted,
+					          extraction_stats.pp_violations,
+					          extraction_stats.parse_constraint_rejections,
+					          extraction_stats.invalid_morphism);
+				else if ((sent->num_linkages_post_processed > 0) &&
 				    (sent->num_linkages_post_processed == sent->num_linkages_alloced) &&
 				    ((int)opts->linkage_limit < sent->num_linkages_found) &&
 				    !IS_GENERATION(sent->dict))

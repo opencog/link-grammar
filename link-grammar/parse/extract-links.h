@@ -15,17 +15,30 @@
 
 #include "api-structures.h"
 #include "link-includes.h"
+#include "resources.h"
 
 typedef struct extractor_s extractor_t;
+typedef struct Metric_candidate_struct Metric_candidate;
+typedef struct PP_failure_s PP_failure;
 
 extractor_t* extractor_new(Sentence);
 void free_extractor(extractor_t*);
+void extractor_set_metric_enabled(extractor_t *, bool);
+size_t extractor_finish_metric_bounded_domain_feedback_state(extractor_t *,
+                                                            Metric_candidate *,
+                                                            Linkage,
+                                                            const PP_failure *);
+void extractor_apply_metric_bounded_domain_feedback(extractor_t *);
 
 bool build_parse_set(extractor_t*, Sentence,
                      fast_matcher_t*, count_context_t*,
                      unsigned int null_count, Parse_Options);
 
 void extract_links(extractor_t*, Linkage);
+bool extract_metric_links(extractor_t*, Linkage);
+void extractor_trace_metric_candidate(extractor_t *, Linkage,
+                                      const PP_failure *,
+                                      Metric_candidate *, size_t);
 
 void mark_used_disjuncts(extractor_t *, bool *);
 

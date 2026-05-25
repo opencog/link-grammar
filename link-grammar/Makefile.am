@@ -125,6 +125,7 @@ liblink_grammar_la_SOURCES =        \
 	options.c                        \
 	parse/count.c                    \
 	parse/extract-links.c            \
+	parse/metric-extractor.c         \
 	parse/fast-match.c               \
 	parse/histogram.c                \
 	parse/parse.c                    \
@@ -193,6 +194,7 @@ liblink_grammar_la_SOURCES =        \
 	memory-pool.h                    \
 	parse/count.h                    \
 	parse/extract-links.h            \
+	parse/extract-links-internal.h   \
 	parse/fast-match.h               \
 	parse/histogram.h                \
 	parse/parse.h                    \
