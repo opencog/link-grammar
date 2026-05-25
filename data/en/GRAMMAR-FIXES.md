@@ -61,6 +61,7 @@ Added uppercase connector families:
 | `TTHI` | Carries object-raising `THi` evidence from an object-raising predicate to infinitival `to`. |
 | `ITHI` | Carries `THi` evidence across infinitival and inverted auxiliary paths. |
 | `PPTHI` | Carries `THi` evidence across perfect auxiliary paths. |
+| `PVTHI` | Carries `THi` evidence from filler-`it` passive `be` auxiliaries to passive participles. |
 | `PTHI` | Connects an auxiliary carrier to a lower predicate that owns the `THi` complement. |
 | `TOCL` | Carries object-raising cleft-object evidence from an object-raising predicate to infinitival `to`. |
 | `IOCT` | Carries object-raising cleft-object evidence from infinitival `to` into the lower predicate. |
@@ -124,7 +125,7 @@ Changed or retired connector forms:
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
 | `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require direct `TSIC` evidence from filler/expletive `it`, or a carrier path through `TTSI`/`ITSI`/`PPTSI` and `PTSI`. Ordinary `THi` and `TOi` paths remain separate. |
 | `TOi` infinitive-complement predicate licensing | `TOi+` predicate branches now require direct `TOIC` evidence from filler/expletive `it`, or a carrier path through `TTOI`/`ITOI`/`PPTOI` and `PTOI`. Tough-subject infinitives continue to use separate paths such as `TOt`. |
-| `THi` that-clause predicate licensing | `THi+` predicate branches now require direct `THIC` evidence from filler/expletive `it`, direct same-copula `SFsi`/`SFIsi` evidence for clefts, or a carrier path through `TTHI`/`ITHI`/`PPTHI` and `PTHI`. `THi` certificates deliberately exclude comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
+| `THi` that-clause predicate licensing | `THi+` predicate branches now require direct `THIC` evidence from filler/expletive `it`, direct same-copula `SFsi`/`SFIsi` evidence for clefts, a passive carrier through `PVTHI`, or an auxiliary-chain carrier path through `TTHI`/`ITHI`/`PPTHI` and `PTHI`. `THi` certificates deliberately exclude comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
 | cleft-object `O#i` paths | `Osi` / `Opi` cleft-object branches on `be` are no longer exposed through generic copular complement paths. They require direct `SFsi` / `SFIsi` evidence, an object-raising or auxiliary carrier through `TOCL` / `IOCT`, `IOCL`, or `PPOCL`, or an `ROCL` path to a filler `it` inside the following clause. |
 | `QIi` question-clause predicate licensing | `QIi+` predicate branches now require direct `QIIC` evidence from filler/expletive `it`, or a carrier path through `TQII`/`IQII`/`PPQII` and `PQII`. |
 | `Ci` finite-clause predicate licensing | `Ci+` predicate branches now require direct `CIIC` evidence from filler/expletive `it`, or a carrier path through `TCII`/`ICII`/`PPCII` and `PCII`. The `Ci` certificate intentionally excludes comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
@@ -704,7 +705,7 @@ the matrix subject is interpreted as the object of the infinitive. By
 contrast, `It is easy to use the program` uses filler/expletive `it` and can
 therefore supply the carrier evidence for `TOi`.
 
-### `THIC`, `TTHI`, `ITHI`, `PPTHI`, And `PTHI`: Expletive-`It` License For `THi` Clauses
+### `THIC`, `TTHI`, `ITHI`, `PPTHI`, `PVTHI`, And `PTHI`: Expletive-`It` License For `THi` Clauses
 
 These connector families encode the filler/expletive-`it` evidence required
 by `THi` that-clause predicates:
@@ -714,6 +715,7 @@ THIC   direct filler/expletive-it certificate for THi predicates
 TTHI   object-raising carrier from the higher predicate to infinitival to
 ITHI   carrier from infinitival to or an inverted auxiliary to the lower predicate
 PPTHI  carrier from a perfect auxiliary to the lower predicate
+PVTHI  passive carrier from a filler-it be auxiliary to a passive participle
 PTHI   lower-predicate link to the THi adjective or copula
 ```
 
@@ -737,6 +739,9 @@ does --ITHI-- seem --PTHI-- likely --THi-- that
 
 has --SFIsi-- it
 has --PPTHI-- seemed --PTHI-- likely --THi-- that
+
+it --SFsi-- is
+is --PVTHI-- believed --THi-- that
 ```
 
 Cleft clauses such as `It was in Paris that ...` are a same-copula case:
@@ -1238,9 +1243,10 @@ coming from the filler-`it` copular branch.
 #### Cost Preservation
 
 The certificate links are licensing substitutes, not intended cost resets.
-When a `PTHI`, `ITHI`, `PPTHI`, or `TTHI` path replaces a former predicative
-or auxiliary path, the replacement must preserve the old branch's inherited
-ranking cost unless a different ranking is explicitly intended.
+When a `PTHI`, `ITHI`, `PPTHI`, `PVTHI`, or `TTHI` path replaces a former
+predicative, auxiliary, or passive path, the replacement must preserve the old
+branch's inherited ranking cost unless a different ranking is explicitly
+intended.
 
 Focused regression checks include:
 
@@ -1251,6 +1257,8 @@ Focused regression checks include:
 | `I want it to be likely that he came.` | `want --TTHI-- to --ITHI-- be --PTHI-- likely --THi-- that` | first linkage `DIS=0.05` |
 | `It has seemed likely that Joe came.` | `has --PPTHI-- seemed --PTHI-- likely --THi-- that` | first linkage `DIS=1.00`; no-wall variant `DIS=4.00` |
 | `It may be likely that he came.` | `may --ITHI-- be --PTHI-- likely --THi-- that` | first linkage `DIS=0.05` |
+| `It is believed that even the troops loyal to Hussein will soon be forced to surrender.` | `is --PVTHI-- believed --THi-- that` | first linkage `DIS=1.26` |
+| `It is taken for granted that he came.` | `is --PVTHI-- taken --THi-- that`, with `taken --Vtg-- granted` | first linkage `DIS=0.10` |
 
 The object-complement path remains a direct `THIC` case: `I made it clear
 that he came` keeps the zero-cost preferred linkage, with `it --THIC-- clear`
