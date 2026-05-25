@@ -4991,6 +4991,12 @@ For object noun phrases, a direct certificate from the degree word can cross
 the verb-object link, so the branch also accepts `CMPS`, `CMPP`, or `CMPX`
 from the noun endpoint.
 
+Plural currency nouns use a specialized `NIn` object branch rather than the
+ordinary plural noun-main path.  That branch also exposes optional `CMPP`
+evidence, so examples such as `I earn as many dollars as John does.` keep the
+same comparative `as.e-c` first linkage as ordinary plural-object
+comparatives.
+
 Plain adjective comparatives with only `EAy`, such as `as intelligent as John
 does`, do not expose any of these certificates and cannot use the `MV#c`
 branch.
