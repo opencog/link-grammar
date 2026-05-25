@@ -4945,6 +4945,23 @@ I did as much as he did.
 I earned as much as John earned.
 ```
 
+Accepted-linkage comparison found one intentional preferred-analysis change.
+For `I did as much as he did.`, the pre-migration dictionary's first accepted
+linkage used the temporal `as.#while` path at `DIS=0.10`. The migrated
+grammar can build the comparative object-clause path directly:
+
+```text
+did --MVzo-- as.e-c
+did --Oy-- much --CMPO-- as.e-c
+as.e-c --Ct/Bc-- he did
+```
+
+That comparative analysis sorts at `DIS=0.00`, and is the intended analysis
+for this construction. The ordinary `the same as it did last year` control
+keeps first cost `DIS=0.00`. `I earned as much as John earned.` is new
+zero-null comparative-object coverage; the pre-migration dictionary had no
+complete zero-null linkage for that sentence.
+
 Focused rejected examples include:
 
 ```text
@@ -4967,10 +4984,10 @@ Expected results:
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
+corpus-basic.batch: 87 errors
 corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1496 errors
+corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 48: Certify Comparative `MV#c` Auxiliary-Clause Paths
