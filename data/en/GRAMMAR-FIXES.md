@@ -47,6 +47,10 @@ Added uppercase connector families:
 | `THBS` / `THBI` | Certify direct and inverted subject links for `THb` predicate that-clause complements. |
 | `ITHB` / `PPTHB` / `PVTHB` | Carry the `THb` predicate license across modal, perfect, and passive auxiliary chains. |
 | `TSIC` | Certifies that a `TSi` subjunctive that-clause predicate is licensed by filler/expletive `it`. |
+| `TTSI` | Carries object-raising `TSi` evidence from an object-raising predicate to infinitival `to`. |
+| `ITSI` | Carries `TSi` evidence across infinitival and inverted auxiliary paths. |
+| `PPTSI` | Carries `TSi` evidence across perfect auxiliary paths. |
+| `PTSI` | Connects an auxiliary carrier to a lower predicate that owns the `TSi` complement. |
 | `TOIC` | Certifies that a `TOi` infinitive-complement predicate is licensed by filler/expletive `it`. |
 | `TTOI` | Carries object-raising `TOi` evidence from an object-raising predicate to infinitival `to`. |
 | `ITOI` | Carries `TOi` evidence across infinitival and inverted auxiliary paths. |
@@ -114,7 +118,7 @@ Changed or retired connector forms:
 | comparative auxiliary-clause `MV#c` on `as.e-c` | Tightened so `CX` / `CQ` continuations require `CMPCX` or an existing comparative antecedent certificate from a local witness. |
 | `than to ...` infinitival comparative after `way` / `ways` | Added `WTHAN` so valid `way ... than to ...` comparatives do not depend on the retired naked `to.r I*a+` fallback. |
 | `THb` predicate licensing | Split away from broad copular `be` paths. `THb` predicates now require `THBS`/`THBI` directly or an auxiliary-chain certificate through `ITHB`, `PPTHB`, or `PVTHB`. |
-| `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require a `TSIC` certificate from filler/expletive `it` when they select a subjunctive that-clause complement. Ordinary `THi` and `TOi` paths remain separate. |
+| `TSi` subjunctive that-clause predicate licensing | `TSi+` predicate branches now require direct `TSIC` evidence from filler/expletive `it`, or a carrier path through `TTSI`/`ITSI`/`PPTSI` and `PTSI`. Ordinary `THi` and `TOi` paths remain separate. |
 | `TOi` infinitive-complement predicate licensing | `TOi+` predicate branches now require direct `TOIC` evidence from filler/expletive `it`, or a carrier path through `TTOI`/`ITOI`/`PPTOI` and `PTOI`. Tough-subject infinitives continue to use separate paths such as `TOt`. |
 | `THi` that-clause predicate licensing | `THi+` predicate branches now require direct `THIC` evidence from filler/expletive `it`, direct same-copula `SFsi`/`SFIsi` evidence for clefts, or a carrier path through `TTHI`/`ITHI`/`PPTHI` and `PTHI`. `THi` certificates deliberately exclude comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
 | cleft-object `O#i` paths | `Osi` / `Opi` cleft-object branches on `be` are no longer exposed through generic copular complement paths. They require direct `SFsi` / `SFIsi` evidence, an object-raising or auxiliary carrier through `TOCL` / `IOCT`, `IOCL`, or `PPOCL`, or an `ROCL` path to a filler `it` inside the following clause. |
@@ -611,25 +615,35 @@ subscripted `S`, `I`, `PP`, or `Pv` forms. This is intentional: broad connector
 matching would let an ordinary connector match a subscripted certificate and
 make an unlicensed predicate appear licensed.
 
-### `TSIC`: Expletive-`It` License For `TSi` That-Clauses
+### `TSIC`, `TTSI`, `ITSI`, `PPTSI`, And `PTSI`: Expletive-`It` License For `TSi` That-Clauses
 
-`TSIC` connects filler/expletive `it` to a predicate that selects a
-subjunctive `TSi` that-clause complement:
+`TSIC` connects filler/expletive `it` directly to a predicate that selects a
+subjunctive `TSi` that-clause complement.  The carrier families carry the same
+evidence through copular and auxiliary chains when a direct `TSIC` link would
+cross the normal predicate path or would otherwise change the inherited cost:
 
 ```text
 TSIC  filler/expletive-it certificate for TSi predicates
+TTSI  object-raising TSi evidence carried to infinitival to
+ITSI  TSi evidence carried across infinitival or inverted auxiliary paths
+PPTSI TSi evidence carried across perfect auxiliary paths
+PTSI  TSi evidence carried from an auxiliary/copula to the lower predicate
 ```
 
 Focused linkage fragment, in schematic edge-list notation:
 
 ```text
-it --SFsi-- is --Paf-- important --TSi-- that
-it ----------------TSIC------------------ important
+it --SFsi-- is --PTSI-- important --TSi-- that
 ```
 
 The direct subject path, inverted subject path, and object-complement filler
-path for `it` can supply `TSIC`. Predicate entries that still expose `TSi+`
-through the migrated branch consume `TSIC-` in the same predicate disjunct.
+path for `it` can supply direct `TSIC` or start a carrier chain.
+Object-complement predicates can still use direct `TSIC` when the certificate
+is local. Direct copular, modal, perfect, and object-raising examples use
+carrier paths such as `PTSI`, `ITSI -- PTSI`, `PPTSI -- PTSI`, and
+`TTSI -- ITSI -- PTSI` so the replacement preserves the old predicative-link
+ranking cost.
+
 This keeps grammatical examples such as `It is important that women be ready`
 available while preventing an ordinary subject from licensing `TSi`, as in
 `*Joe is important that women be ready`.
@@ -1683,10 +1697,11 @@ ordinary subject to a `TSi` predicate and accept examples such as:
 
 ### Implementation
 
-The dictionary now uses a dedicated uppercase certificate family:
+The dictionary now uses dedicated uppercase certificate and carrier families:
 
 ```text
 <tsi-verb>: TSIC- & TSi+;
+<tsi-raise-verb>: PTSI- & TSi+;
 ```
 
 The filler/expletive `it` entry can supply `TSIC+` on the direct subject,
@@ -1699,23 +1714,26 @@ SFIsi -> TSIC
 OXi   -> TSIC
 ```
 
-Predicate entries that still expose `TSi+` through the migrated branch now
-consume `<tsi-verb>` instead of bare `TSi+`. The resulting constraint is local
-to the selected predicate disjunct: if the predicate uses `TSi`, the same
-linkage must also connect it to a filler/expletive `it` certificate.
+Object-complement predicate entries can consume direct `TSIC` when the
+certificate is local to the object-complement shape. Copular and auxiliary
+chains use `TTSI`, `ITSI`, `PPTSI`, and `PTSI` to carry the same evidence to
+the lower `TSi` predicate without adding a crossing direct link from `it` to
+the adjective. Predicate entries that still expose `TSi+` through the
+migrated branch now consume either a direct `TSIC` link or a carrier path
+instead of bare `TSi+`.
 
 ### Implications
 
-This is a dictionary replacement for rule 21. Valid `TSi` linkages may show an
-additional `TSIC` link where the old grammar used PP to infer the same
-condition after extraction. Ordinary `THi` that-clause complements and `TOi`
-infinitival complements remain separate paths and are not licensed by this
-rule.
+This is a dictionary replacement for rule 21. Valid `TSi` linkages may show
+either a direct `TSIC` link or a carrier path where the old grammar used PP to
+infer the same condition after extraction. Ordinary `THi` that-clause
+complements and `TOi` infinitival complements remain separate paths and are
+not licensed by this rule.
 
-Some accepted linkages for examples in this area can prefer an existing `THi`
-analysis over a `TSi` analysis after sorting. That does not weaken the rule-21
-migration: the dictionary constraint applies precisely when the selected
-predicate branch creates a `TSi` link.
+The carrier paths are cost-preserving replacements, not intended ranking
+changes. Direct copular examples use `PTSI` in place of the old predicative
+`Pa`/`Paf` link, while object-complement examples can still use direct
+`TSIC`.
 
 ### Verification
 
@@ -1725,12 +1743,31 @@ accepted linkages for:
 ```text
 It is important that women be ready when they make these choices.
 Is it important that women be ready?
+It may be important that women be ready.
+It has been important that women be ready.
+I want it to be important that women be ready.
 I considered it important that women be ready.
+It is imperative that assistance be provided through a variety of channels.
 ```
 
 The same grammatical constructions remain accepted. When a displayed linkage
-uses `TSi`, it also carries `TSIC`; when a preferred displayed linkage uses
-`THi`, it follows the pre-existing non-`TSi` complement path.
+uses `TSi`, it also carries direct `TSIC` or a `PTSI`-based carrier path.
+
+#### Cost Preservation
+
+The `TSi` replacement paths preserve the old preferred costs for representative
+direct, inverted, auxiliary, object-raising, object-complement, and passive
+subjunctive-that examples:
+
+| Sentence | Migrated path | Required displayed cost |
+| --- | --- | --- |
+| `It is important that women be ready when they make these choices.` | `is --PTSI-- important --TSi-- that` | first linkage `DIS=0.08` |
+| `Is it important that women be ready?` | `it --TSIC-- important --TSi-- that` or `is --PTSI-- important --TSi-- that` | first linkage `DIS=0.08` |
+| `It may be important that women be ready.` | `may --ITSI-- be --PTSI-- important --TSi-- that` | first linkage `DIS=0.08` |
+| `It has been important that women be ready.` | `has --PPTSI-- been --PTSI-- important --TSi-- that` | first linkage `DIS=0.08` |
+| `I want it to be important that women be ready.` | `want --TTSI-- to --ITSI-- be --PTSI-- important --TSi-- that` | first linkage `DIS=0.08` |
+| `I considered it important that women be ready.` | `it --TSIC-- important --TSi-- that` | first linkage `DIS=0.03` |
+| `It is imperative that assistance be provided through a variety of channels.` | `is --PTSI-- imperative --TSi-- that` | first linkage `DIS=0.15` |
 
 The rule 21 migration was validated with ordinary parser runs:
 
@@ -1746,10 +1783,10 @@ Observed results:
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
+corpus-basic.batch: 87 errors
+corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1497 errors
+corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 23: License `TOi` Complements With Filler `It`
