@@ -3369,6 +3369,12 @@ rest.w: Ix- & Pv+;
 <thr-tof-s>: TTHRS+;
 <thr-tof-p>: TTHRP+;
 <thr-tof-u>: TTHRU+;
+<thr-going-s>: [PGTHRS+]-0.03;
+<thr-going-p>: [PGTHRP+]-0.03;
+<thr-going-u>: [PGTHRU+]-0.03;
+<thr-path-s>: [PATHRS-]0.02 & <thr-tof-s>;
+<thr-path-p>: [PATHRP-]0.02 & <thr-tof-p>;
+<thr-path-u>: [PATHRU-]0.02 & <thr-tof-u>;
 
 <vc-be-thrs-obj>:
   {hHM+} & {@EBm+} & ((Ost+ or Omt+ or Omm+) or [B**t-]) & {@MV+};
@@ -3541,8 +3547,8 @@ is.v:
   or ({@E-} & SFsi- & <vc-be-ocleft>)
   or ({@E-} & THRS- & <vc-be-thrs>)
   or ({@E-} & THRU- & <vc-be-thru>)
-  or ({@E-} & THRS- & <verb-wall> & PGTHRS+)
-  or ({@E-} & THRU- & <verb-wall> & PGTHRU+)
+  or ({@E-} & THRS- & <verb-wall> & <thr-going-s>)
+  or ({@E-} & THRU- & <verb-wall> & <thr-going-u>)
   or ({<verb-rq>} & THBI+ & {<vc-be-thb>})
   or ({<verb-rq>} & BIQI+ & {<vc-be-biq>})
   or ({<verb-rq>} & THRS+ & {<vc-be-thrs>})
@@ -3581,8 +3587,8 @@ is.v:
   or ({@E-} & SFsi- & <verb-wall> & {hHM+} & <vc-be-ocleft-no-wall>)
   or ({@E-} & THRS- & <verb-wall> & {hHM+} & <vc-be-thrs-obj>)
   or ({@E-} & THRU- & <verb-wall> & {hHM+} & <vc-be-thru-obj>)
-  or ({@E-} & THRS- & <verb-wall> & PGTHRS+)
-  or ({@E-} & THRU- & <verb-wall> & PGTHRU+)
+  or ({@E-} & THRS- & <verb-wall> & <thr-going-s>)
+  or ({@E-} & THRU- & <verb-wall> & <thr-going-u>)
   or (<verb-z-s,u> & {hHM+} &
     (({@EBm+} & (((
         (O*t+ & <verb-wall>)
@@ -3614,7 +3620,7 @@ are.v:
   ({@E-} & THBS- & (<vc-be-thb-sp> or <vc-be-thb-no-wall>))
   or ({@E-} & BIQS- & (<vc-be-biq> or <vc-be-biq-no-wall>))
   or ({@E-} & THRP- & (<vc-be-thrp> or <vc-be-thrp-obj>))
-  or ({@E-} & THRP- & <verb-wall> & PGTHRP+)
+  or ({@E-} & THRP- & <verb-wall> & <thr-going-p>)
   or ({<verb-rq>} & THBI+ & {<vc-be-thb>})
   or ({<verb-rq>} & BIQI+ & {<vc-be-biq>})
   or [({<verb-rq>} & THRP+ & {<vc-be-thrp>})]-1.0
@@ -10139,9 +10145,9 @@ wise.a unwise.a smart.a intelligent.a:
 
 unlikely.a:
   ({EA- or EF+} & (
-    (PATHRS- & <thr-tof-s>) or
-    (PATHRP- & <thr-tof-p>) or
-    (PATHRU- & <thr-tof-u>) or
+    <thr-path-s> or
+    <thr-path-p> or
+    <thr-path-u> or
     <thi-post-adj-lic> or
     POST_ADJ_LIC(Paf- or AF+ or dMJra-, <tof-verb> & {LE+}) or
     <thi-adj-extra> or
@@ -10155,9 +10161,9 @@ unlikely.a:
 
 likely.a:
   ({EA- or EF+} & (
-    (PATHRS- & <thr-tof-s>) or
-    (PATHRP- & <thr-tof-p>) or
-    (PATHRU- & <thr-tof-u>) or
+    <thr-path-s> or
+    <thr-path-p> or
+    <thr-path-u> or
     <thi-post-adj-lic> or
     POST_ADJ_LIC(Paf- or AF+ or dMJra-, <tof-verb> & {LE+}) or
     <thi-adj-extra> or
