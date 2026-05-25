@@ -68,8 +68,9 @@ Added uppercase connector families:
 | `ROCL` | Certifies the special cleft-object path where the licensing filler `it` appears inside the following clause. |
 | `QIIC` | Certifies that a `QIi` question-clause predicate is licensed by filler/expletive `it` on direct subject, inverted subject, and object-complement paths. |
 | `TQII` | Carries object-raising `QIi` evidence from an object-raising predicate to infinitival `to`. |
-| `IQII` | Carries the same object-raising `QIi` evidence from infinitival `to` to the lower predicate. |
-| `PQII` | Connects the lower predicate to a `QIi` adjective in object-raising `it to be ...` paths. |
+| `IQII` | Carries `QIi` evidence across infinitival and inverted auxiliary paths. |
+| `PPQII` | Carries `QIi` evidence across perfect auxiliary paths. |
+| `PQII` | Connects an auxiliary carrier to a lower predicate that owns the `QIi` complement. |
 | `CIIC` | Certifies that a `Ci` finite-clause predicate is licensed by filler/expletive `it` on direct subject, inverted subject, and object-complement paths. |
 | `TCII` | Carries object-raising `Ci` evidence from an object-raising predicate to infinitival `to`. |
 | `ICII` | Carries the same object-raising `Ci` evidence from infinitival `to` to the lower predicate. |
@@ -122,7 +123,7 @@ Changed or retired connector forms:
 | `TOi` infinitive-complement predicate licensing | `TOi+` predicate branches now require direct `TOIC` evidence from filler/expletive `it`, or a carrier path through `TTOI`/`ITOI`/`PPTOI` and `PTOI`. Tough-subject infinitives continue to use separate paths such as `TOt`. |
 | `THi` that-clause predicate licensing | `THi+` predicate branches now require direct `THIC` evidence from filler/expletive `it`, direct same-copula `SFsi`/`SFIsi` evidence for clefts, or a carrier path through `TTHI`/`ITHI`/`PPTHI` and `PTHI`. `THi` certificates deliberately exclude comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
 | cleft-object `O#i` paths | `Osi` / `Opi` cleft-object branches on `be` are no longer exposed through generic copular complement paths. They require direct `SFsi` / `SFIsi` evidence, an object-raising or auxiliary carrier through `TOCL` / `IOCT`, `IOCL`, or `PPOCL`, or an `ROCL` path to a filler `it` inside the following clause. |
-| `QIi` question-clause predicate licensing | `QIi+` predicate branches now require direct `QIIC` evidence from filler/expletive `it`, or an object-raising carrier path through `TQII`, `IQII`, and `PQII`. |
+| `QIi` question-clause predicate licensing | `QIi+` predicate branches now require direct `QIIC` evidence from filler/expletive `it`, or a carrier path through `TQII`/`IQII`/`PPQII` and `PQII`. |
 | `Ci` finite-clause predicate licensing | `Ci+` predicate branches now require direct `CIIC` evidence from filler/expletive `it`, or an object-raising carrier path through `TCII`, `ICII`, and `PCII`. The `Ci` certificate intentionally excludes comparative `AF` predicate paths so an outer `it` cannot license a distant comparative clause. |
 | `BIq` predicate licensing | Split away from broad copular `be` paths. `BIq` predicates now require `BIQS`/`BIQI` directly or an auxiliary-chain certificate through `IBIQ` or `PPBIQ`. |
 | result-clause `that.j-c` with `MVh` | Bare `MVh-` on `that.j-c` was replaced by certified paths. Adverbial and noun result clauses use `RTHAT- & MVh-`; adjective result clauses use `MVH-`. |
@@ -770,7 +771,7 @@ The `ROCL` path is deliberately narrower than the old ordinary `R` path: the
 target must be the `it` disjunct that also carries the filler-`it` subject
 relation into the following clause.
 
-### `QIIC`, `TQII`, `IQII`, And `PQII`: Expletive-`It` License For `QIi` Questions
+### `QIIC`, `TQII`, `IQII`, `PPQII`, And `PQII`: Expletive-`It` License For `QIi` Questions
 
 These connector families encode the filler/expletive-`it` evidence required
 by `QIi` question-clause predicates:
@@ -778,27 +779,25 @@ by `QIi` question-clause predicates:
 ```text
 QIIC  direct filler/expletive-it certificate for QIi predicates
 TQII  object-raising carrier from the higher predicate to infinitival to
-IQII  object-raising carrier from infinitival to to the lower predicate
+IQII  QIi evidence carried across infinitival or inverted auxiliary paths
+PPQII QIi evidence carried across perfect auxiliary paths
 PQII  lower-predicate link to the QIi adjective
 ```
 
-Direct subject and direct object-complement cases use `QIIC`:
+Direct object-complement cases can use local `QIIC`:
 
 ```text
-it --SFsi-- is --Paf-- unknown --QIi-- whether
-it ----------------QIIC----------------- unknown
-
 made --OXi-- it
 made --Paf*j-- clear --QIi-- how
 it ----------QIIC---------- clear
 ```
 
-Object-raising `it to be ...` paths cannot use the direct `QIIC` link from
-`it` to the adjective, because it would cross the infinitival predicate path.
-They therefore use a carrier chain modeled on the existing existential
-`there` carrier families:
+Direct copular, modal, perfect, and object-raising paths use carrier links so
+the replacement does not add a crossing direct link from `it` to the adjective
+or bypass the inherited predicative cost:
 
 ```text
+it --SFsi-- is --PQII-- unknown --QIi-- whether
 want --OXi-- it
 want --TQII-- to --IQII-- be --PQII-- obvious --QIi-- how
 ```
@@ -1985,11 +1984,11 @@ expletive `it`.
 
 ### Implementation
 
-The direct subject, inverted subject, and direct object-complement cases use a
-dedicated certificate:
+The dictionary uses a direct certificate and carrier forms:
 
 ```text
 <qii-verb>: QIIC- & QIi+;
+<qii-raise-verb>: PQII- & QIi+;
 ```
 
 The filler/expletive `it` entry can supply `QIIC+` on the same three witness
@@ -2001,22 +2000,19 @@ SFIsi -> QIIC
 OXi   -> QIIC
 ```
 
-Direct object-complement adjectives need the opposite left-connector order
-from direct subject predicates. In `It is unknown whether...`, the predicate
-sees the closer `Paf-` link before the farther `QIIC-` link. In `I made it
-clear how...`, the adjective sees the closer `QIIC-` link from `it` before the
-farther `Paf-` link from the higher verb. The dictionary therefore includes
-both orders for the affected adjective classes.
+Object-complement adjectives need the opposite left-connector order from
+direct subject predicates. In `I made it clear how...`, the adjective sees the
+closer `QIIC-` link from `it` before the farther `Paf-` link from the higher
+verb. Direct copular and auxiliary paths use `PQII`, `IQII`, or `PPQII` so
+the replacement preserves the old predicative-link cost.
 
-Object-raising `it to be ...` cases need a carrier rather than a direct
-`QIIC` link, because a direct link from `it` to the lower adjective would
-cross the infinitival predicate structure. The replacement uses a carrier
-chain analogous to the existential-`there` carrier families:
+Object-raising `it to be ...` cases use a carrier chain analogous to the
+existential-`there` carrier families:
 
 ```text
 <qii-too-verb>: TQII+;
 to.r: ... TQII- & IQII+ ...
-be.v: ... IQII- & PQII+ ...
+be.v: ... IQII- & [PQII+]0.05 ...
 adjective: PQII- & QIi+
 ```
 
@@ -2027,15 +2023,14 @@ Thus `I want it to be obvious how...` carries the `OXi` evidence through
 
 This is a dictionary replacement for rule 22. Valid `QIi` linkages now show
 one of the explicit certificate paths where the old grammar used PP to infer
-the same condition after extraction. The direct `QIIC` path and the
-object-raising `TQII` / `IQII` / `PQII` path are technical links whose purpose
-is to encode filler/expletive-`it` licensing in the dictionary.
+the same condition after extraction. The `QIIC`, `TQII`, `IQII`, `PPQII`, and
+`PQII` links are technical links whose purpose is to encode
+filler/expletive-`it` licensing in the dictionary.
 
-The object-raising path intentionally changes the visible carrier links in
-that construction. Before this migration, accepted linkages used the ordinary
-`TOo` / `IV` / `Ixt` / `Paf` shape and then relied on PP to verify the `OXi`
-witness. The migrated path uses `TQII` / `IQII` / `PQII` to make the witness
-explicit before PP.
+The carrier paths are cost-preserving replacements, not intended ranking
+changes. Direct copular examples use `PQII` in place of the old predicative
+`Pa`/`Paf` link, while object-complement examples can still use direct
+`QIIC`.
 
 ### Verification
 
@@ -2044,15 +2039,34 @@ accepted linkages for:
 
 ```text
 It is unknown whether he came.
+It is unclear whether he came.
+It is unknown why he came.
+Is it unknown whether he came?
+It may be unknown whether he came.
+It has been unknown whether he came.
 I made it clear how to use the program.
 I want it to be obvious how to use the program.
 ```
 
-The same grammatical constructions remain accepted. Direct subject and direct
-object-complement examples preserve the public `QIi`, `SFsi`/`OXi`, and
-predicate links while adding `QIIC`. The object-raising example remains
-accepted through `OXi` and `QIi`, with the old ordinary infinitival carrier
-replaced by `TQII` / `IQII` / `PQII`.
+The same grammatical constructions remain accepted. The `QIi` examples carry
+direct `QIIC` or a `PQII`-based carrier path.
+
+#### Cost Preservation
+
+The `QIi` replacement paths preserve the old preferred costs for
+representative direct, inverted, auxiliary, object-complement, and
+object-raising question-clause examples:
+
+| Sentence | Migrated path | Required displayed cost |
+| --- | --- | --- |
+| `It is unknown whether he came.` | `is --PQII-- unknown --QIi-- whether` | first linkage `DIS=0.05` |
+| `It is unclear whether he came.` | `is --PQII-- unclear --QIi-- whether` | first linkage `DIS=0.05` |
+| `It is unknown why he came.` | `is --PQII-- unknown --QIi-- why` | first linkage `DIS=0.05` |
+| `Is it unknown whether he came?` | `it --QIIC-- unknown --QIi-- whether` or `is --PQII-- unknown --QIi-- whether` | first linkage `DIS=0.05` |
+| `It may be unknown whether he came.` | `may --IQII-- be --PQII-- unknown --QIi-- whether` | first linkage `DIS=0.05` |
+| `It has been unknown whether he came.` | `has --PPQII-- been --PQII-- unknown --QIi-- whether` | first linkage `DIS=0.05` |
+| `I made it clear how to use the program.` | `it --QIIC-- clear --QIi-- how` | first linkage `DIS=0.00` |
+| `I want it to be obvious how to use the program.` | `want --TQII-- to --IQII-- be --PQII-- obvious --QIi-- how` | first linkage `DIS=0.05` |
 
 The rule 22 migration was validated with ordinary parser runs:
 
@@ -2068,10 +2082,10 @@ Observed results:
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
+corpus-basic.batch: 87 errors
+corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1496 errors
+corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 24: License `Ci` Complements With Filler `It`
