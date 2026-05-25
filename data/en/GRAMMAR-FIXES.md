@@ -4260,6 +4260,13 @@ comparison against the pre-removal outputs for `corpus-knowledge.batch`,
 `corpus-basic.batch`, `corpus-fixes.batch`, and `corpus-failures.batch`; all
 comparisons had zero error differences.
 
+A later cost audit found that the plural existential question path initially
+paid one more disjunct-cost unit than the old `SFIp` branch: `Are there dogs
+in the park?` sorted at `DIS=0.54` instead of the baseline `DIS=-0.46`. The
+`are.v` `Qd`/`THRP` branch now carries the corresponding cost-preservation
+adjustment. Singular `Is there a dog in the park?` remains at the baseline
+`DIS=0.54`.
+
 ```text
 corpus-knowledge.batch: 0 errors
 corpus-basic.batch: 88 errors
@@ -6198,6 +6205,12 @@ The same families are used in the opposite direction for inverted questions,
 so `Is there a dog?` and `Are there dogs?` do not need the old `SFIst` and
 `SFIp` PP checks.
 
+The plural inverted branch also preserves the old `SFIp` ranking. The
+replacement `are.v` `Qd`/`THRP` branch carries a cost adjustment so
+`Are there dogs in the park?` keeps the same first cost as the old
+`SFIp` linkage, while singular `THRS` inversion keeps the historical
+`SFIst` cost.
+
 The agreement requirement is carried through common predicate chains by
 dedicated connector families:
 
@@ -6310,6 +6323,14 @@ SFst  -> THRS
 PP    -> PPTHRS
 TOf/I -> TTHRS/ITHRS
 Paf   -> PATHRS
+```
+
+The cost-preserving plural inverted question path was also checked after the
+audit:
+
+```text
+Are there dogs in the park?  first linkage DIS=-0.46
+Is there a dog in the park?  first linkage DIS= 0.54
 ```
 
 For `I want there to be a problem`, the preferred accepted linkages use `MVp`
