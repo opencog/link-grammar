@@ -133,7 +133,8 @@ Changed or retired connector forms:
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
-| `AFdi` | Retired from `than.e` comparative paths. Valid expletive-`it` comparative clauses use other certified complement or comparative analyses; the old `AFdi` arm allowed a lower ordinary subject clause to satisfy the local shape before PP rejected it. |
+| `ITAF` | Added as a local filler-`it` certificate for accepted comparative `than.e` paths that formerly used `AFdi`. It is exposed only by filler/expletive-`it` copula branches, so ordinary lower-subject clauses cannot satisfy the retired `AFdi` shape by prefix matching. |
+| `AFdi` | Retired from `than.e` comparative paths. Accepted local filler-`it` comparative clauses that still need the old cost-carrying lower-copula evidence now use `ITAF`; other valid examples continue through certified complement or comparative analyses. |
 | `to.r` with `SFsx` | The infinitival `to.r` branch no longer exposes a direct `SFsx+ & <S-CLAUSE>` subject path. Valid infinitival nominal subjects use local `TOn` / `IV` evidence instead. |
 | `than.e` with `AFd` and `THc` | The finite that-clause comparative arm no longer combines `AFd+` with `THc+`. `AFd+` remains available on infinitival comparative continuations such as `TOic` and `TOfc`. |
 
@@ -1561,11 +1562,25 @@ to:
 LEi- & ...
 ```
 
+For accepted local filler-`it` comparative clauses that relied on the old
+`AFdi` cost-carrying lower-copula path, `than.e` now uses a dedicated
+certificate:
+
+```text
+LEi- & ITAF+ & ...
+```
+
+The copula exposes `ITAF-` only on filler/expletive-`it` branches, with the
+same disjunct cost formerly paid by the lower `AF-` path. `ITAF` deliberately
+does not share the `AF` prefix, because a broad ordinary `AF-` lower predicate
+would otherwise match the certificate and recreate the old overgeneration.
+
 The `AFdi` selector is also removed from the still-active expletive-`it`
 backstop rules 37-39, because the current dictionary no longer forms completed
-`AFdi` links. Valid examples in this area continue to parse through existing
-certified complement or comparative paths, such as `THIC` / `THi`, `THBS` /
-`THb`, and ordinary infinitival comparative analyses.
+`AFdi` links. Valid examples in this area continue to parse through the
+dedicated `ITAF` certificate, existing certified complement paths such as
+`THIC` / `THi` and `THBS` / `THb`, or ordinary infinitival comparative
+analyses.
 
 ### Verification
 
@@ -1578,11 +1593,21 @@ It is more likely that Joe died than it is that Fred died.
 It is easier to ignore the problem than it is to solve it.
 ```
 
-The accepted parses remain available without `AFdi`. The first two examples
-use the existing certified filler/expletive-`it` complement paths; the
-infinitival comparative example remains on its ordinary tough/infinitival
-comparative path. The negative example above has no accepted zero-null
-linkage after the migration.
+The accepted parses remain available without `AFdi`. The finite
+`than it is that ...` example uses `ITAF` and preserves the former first
+displayed cost:
+
+```text
+than.e     0.000  LEi- ITAF+ THc+
+is.v       1.000  SFs- ITAF-
+```
+
+The ordinary finite example without local `it` continues through the direct
+`LE` / `THc` path. The infinitival comparative example remains accepted
+through ordinary `AFd` and `ITAF` alternatives; its remaining preferred-cost
+difference from the pre-migration reference is caused by the separate rule-23
+`TOi` / `TOIC` certificate migration and is audited with that rule. The
+negative example above has no accepted zero-null linkage after the migration.
 
 The rule 30 migration was validated with ordinary parser runs:
 
@@ -1598,10 +1623,10 @@ Observed results:
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
+corpus-basic.batch: 87 errors
+corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1496 errors
+corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 21: License `TSi` Complements With Filler `It`
