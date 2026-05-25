@@ -6525,6 +6525,14 @@ connector variants when they provide the `Ma-` anchor. These variants are
 exposed only by adjective paths that carry a complement license, so the old PP
 condition is now represented by dictionary connector structure.
 
+The `MJX` conjunction alternatives keep the old `[Ma-]` cost on the
+conjunction-side postposed-adjective anchor. This preserves the old preferred
+ranking for licensed conjoined postposed adjectives: for example, the `but`
+path in `Many Democrats unhappy about the economy but doubtful that Clinton
+can be elected probably won't vote at all` still pays the old postnominal
+`Ma` cost while using `MJXr` to prove that `doubtful` has the `TH` complement
+license.
+
 ### Implications
 
 This is a structural replacement for rule 63. Ordinary adjectives remain in

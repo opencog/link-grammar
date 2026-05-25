@@ -9404,7 +9404,7 @@ and.j-s:
 % cost on MJ*j: allow but.misc-ex take the first shot.
 but.j-m and.j-m vs.j-m vs..j-m versus.j-m v.j-m v..j-m:
   ({Xd-} & ((hMJXl- & {EBb+} & hMJra+) or
-            (hMJla- & {EBb+} & hMJXr+)) & Ma-) or
+            (hMJla- & {EBb+} & hMJXr+)) & [Ma-]) or
   ({Xd-} & hMJla- & {EBb+} & hMJra+ & <post-nom-a>) or
   ({Xd-} & hMJlp- & {EBb+} & hMJrp+ & <post-nom-p>) or
   [{Xd-} & hMJlj- & {EBb+} & hMJrj+ & {Xc+} & <post-nom-j>]0.5 or
@@ -9416,7 +9416,7 @@ but.j-m and.j-m vs.j-m vs..j-m versus.j-m v.j-m v..j-m:
 %    "either by hammering or chemicals"
 or.j-m:
   ({Xd-} & ((hMJXl- & {XJo-} & {EBb+} & hMJra+) or
-            (hMJla- & {XJo-} & {EBb+} & hMJXr+)) & Ma-) or
+            (hMJla- & {XJo-} & {EBb+} & hMJXr+)) & [Ma-]) or
   ({Xd-} & hMJla- & {XJo-} & {EBb+} & hMJra+ & <post-nom-a>) or
   ({Xd-} & hMJlp- & {XJo-} & {EBb+} & (hMJrp+ or hSJr+) & <post-nom-p>) or
   ({Xd-} & hMJlj- & {XJo-} & {EBb+} & hMJrj+ & {Xc+} & <post-nom-j>) or
@@ -9425,7 +9425,7 @@ or.j-m:
 % XJn-: Neither .. nor ...
 nor.j-m:
   ({Xd-} & ((hMJXl- & {XJn-} & {EBb+} & hMJra+) or
-            (hMJla- & {XJn-} & {EBb+} & hMJXr+)) & Ma-) or
+            (hMJla- & {XJn-} & {EBb+} & hMJXr+)) & [Ma-]) or
   ({Xd-} & hMJla- & {XJn-} & {EBb+} & hMJra+ & <post-nom-a>) or
   ({Xd-} & hMJlp- & {XJn-} & {EBb+} & hMJrp+ & <post-nom-p>) or
   ({Xd-} & hMJlj- & {XJn-} & {EBb+} & hMJrj+ & {Xc+} & <post-nom-j>) or
