@@ -5917,6 +5917,11 @@ PP    -> PPTHB
 Pvf   -> PVTHB
 ```
 
+The passive certificate path also preserves the old passive auxiliary disjunct
+cost.  In `An allegation was made that he did it.`, the migrated
+`was --PVTHB-- made` path carries the same `0.10` cost formerly paid by the
+`was --Pvf-- made` path.
+
 The focused bad examples above still have no accepted zero-null linkage in the
 examined set; their remaining raw parses are rejected by other active PP
 checks such as the S-V inversion and cycle rules.

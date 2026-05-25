@@ -3409,7 +3409,7 @@ rest.w: Ix- & Pv+;
 <vc-be-thb-sp>:      <vc-be-thb-no-obj> or (<vc-be-thb-obj-sp> & <verb-wall>);
 <vc-be-thb-no-wall>: <vc-be-thb-no-obj> or <vc-be-thb-obj>;
 <vc-be-thb-opt-wall>: <vc-be-thb> or [<vc-be-thb-no-wall>]0.03;
-<vc-be-thb-passive>: {@EBm+} & {MV+} & PVTHB+;
+<vc-be-thb-passive>: [{@EBm+} & {MV+} & PVTHB+]0.1;
 
 <vc-be-itaf>:
   [ITAF-]1.0;
