@@ -3360,11 +3360,12 @@ longer accepted. `corpus-failures.batch` has zero `lgerror` differences.
 
 ## `Qd , MX`: Require Punctuation For Name-Based Direct Question Openers
 
-**Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+**Status:** dictionary tightening implemented; the classic PP rule remains as
+an authoritative backstop.
 
 ### Rule / Area
 
-The removed PP rule was the ID-less subject-inversion check:
+The PP rule is the ID-less subject-inversion check:
 
 ```text
 Qd , MX , "Bad subject inversion"
@@ -3391,9 +3392,14 @@ simultaneously use an `MX` relation, producing accepted raw linkages such as:
 
 ### Old Mechanism
 
-PP rejected completed domains that contained both `Qd` and `MX`. That blocked
-the bad capitalized-name path, but it also kept a rule for a distinction that
-is local to the dictionary's opener analysis.
+PP rejects completed domains that contain both `Qd` and `MX`. That blocks the
+bad capitalized-name path. Later audit also found that the same domain pattern
+can arise from ordinary direct questions whose inverted subject is a noun with
+a postnominal `MX` wh modifier, for example:
+
+```text
+*Does the matter what Ted does?
+```
 
 ### Overgeneration Cause
 
@@ -3412,6 +3418,10 @@ capitalized entities and given names. In that entity-specific expression,
 non-entity opener heads, preserving idiomatic wh-adverbial questions such as
 `Which way did they go?`. The `Wq` opener fallback is unchanged.
 
+The classic `Qd,MX` PP rule is retained because the opener rewrite is not an
+exact replacement for the full rule. It does not cover direct-question noun
+subjects that can carry postnominal `MX`.
+
 ### Examples
 
 Focused examples are recorded in `corpus-knowledge.batch`:
@@ -3422,6 +3432,8 @@ Anyhow, am I right?
 It doesn't matter what Ted does.
 *Joe doesn't matter what Ted does.
 *Mary doesn't matter what Ted does.
+*Does Joe matter what Ted does?
+*Does the matter what Ted does?
 ```
 
 ### Verification
@@ -3433,14 +3445,15 @@ accepted displayed linkages. Later cost-preservation audit found that
 filler-`it` `matter --QIi-- what` path to a higher-cost direct `QIIC` path;
 the rule-22 `matter` repair restores the old first cost with an `IQII`
 carrier. The focused regression checks also preserved `Which way did they
-go?` and `Which way did you come?`.
+go?` and `Which way did you come?`. The retained PP backstop rejects the
+general `Qd+MX` noun-subject cases.
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
+corpus-basic.batch: 87 errors
+corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1498 errors
+corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 62 (`Pa##j`): License Predicative-Adjective Objects With `OAJ`

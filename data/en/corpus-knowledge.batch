@@ -509,13 +509,15 @@ John imagines himself singing from a mountaintop.
 *John imagines himself sings from a mountaintop.
 
 % CONTAINS_NONE subject-inversion rule: directive-opener Qd questions require
-% punctuation, so capitalized nouns cannot create the old Qd+MX path.
+% punctuation, and the PP backstop still blocks direct-question Qd+MX domains.
 
 Joe, are you ready?
 Anyhow, am I right?
 It doesn't matter what Ted does.
 *Joe doesn't matter what Ted does.
 *Mary doesn't matter what Ted does.
+*Does Joe matter what Ted does?
+*Does the matter what Ted does?
 
 % CONTAINS_ONE rule 7a: Wb bare-what openers require an inverted verb
 % question certificate.
