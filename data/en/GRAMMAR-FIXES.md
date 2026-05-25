@@ -2918,6 +2918,18 @@ The older lowercase `EExk`, `EAxk`, and `D...k` links remain available for
 ordinary non-result-clause uses such as `so quickly`, `so big`, and `such
 eloquence`.
 
+The `so much that ...` path needs one additional cost-preservation detail.
+Before the rule migration, `much` used its ordinary `EE-` branch and paid the
+cost on `[[MVa-]]` when it modified the result-clause predicate. The replacement
+path therefore assigns the same inherited cost to the certified branch:
+
+```text
+[EEXK- & MVa- & RTHAT+]2.0
+```
+
+This keeps the local `RTHAT` certificate while preserving the old preferred
+ranking for `so much that ...` examples.
+
 ### Examples
 
 Focused accepted examples include:
@@ -2947,16 +2959,19 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
 ```
 
-Expected results for the current documented state:
+A cost-preservation audit compared representative accepted linkages against
+the pre-migration behavior:
 
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
-corpus-fix-long.batch: 8 errors
-```
+| Example | Replacement path | First linkage |
+| --- | --- | --- |
+| `He ran so quickly that he fell.` | `so --EEXK-- quickly`, `quickly --RTHAT-- that`, `ran --MVh-- that` | `DIS=2.00` |
+| `It went almost so well that we thought we won!` | `so --EEXK-- well`, `well --RTHAT-- that`, `went --MVh-- that` | `DIS=2.00` |
+| `I love her so much that I can't let her go.` | `so --EEXK-- much`, `much --RTHAT-- that`, `love --MVh-- that`; the `much` branch preserves the old result-modifier cost | `DIS=4.00` |
+| `The shuttle is so big that it has to be carried.` | `so --EAXK-- big`, `big --MVH-- that` | `DIS=2.10` |
+| `She presented her case with such eloquence that we could only admire her.` | `such --DTHAT-- eloquence`, `eloquence --RTHAT-- that`, `presented --MVh-- that` | `DIS=1.39` |
 
 ## Rule 68: License `B#m` Through Wh/Degree Dictionary Certificates
 
