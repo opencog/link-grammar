@@ -3407,6 +3407,9 @@ rest.w: Ix- & Pv+;
 <vc-be-thb-opt-wall>: <vc-be-thb> or [<vc-be-thb-no-wall>]0.03;
 <vc-be-thb-passive>: {@EBm+} & {MV+} & PVTHB+;
 
+<vc-be-itaf>:
+  [ITAF-]1.0;
+
 % QIi, THi, and Ci complements can be licensed by filler/expletive "it".
 % IQII/ITHI/ICII carry this evidence through auxiliary and object-raising
 % chains to lower predicates whose direct link to "it" would cross the chain.
@@ -3475,11 +3478,13 @@ is.v:
   or ({<verb-rq>} & BIQI+ & {<vc-be-biq>})
   or ({<verb-rq>} & THRS+ & {<vc-be-thrs>})
   or ({<verb-rq>} & THRU+ & {<vc-be-thru>})
+  or ({@E-} & SFs- & <vc-be-itaf>)
   or (<verb-x-s,u> & <vc-be>)
   or (<verb-and-s-> & <vc-be-and>)
   or (<vc-be-and> & <verb-and-s+>)
   or ({<verb-rq>} & (SIs*x+ or SIs*b+) & {<vc-be>})
   or (<verb-rq-required> & SFIs+ & {<vc-be>})
+  or (<verb-rq-required> & SFIs+ & {<vc-be-itaf>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-thb>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-thi-pred>})
   or (<verb-rq-required> & SFIs+ & {<vc-be-thi-cleft>})
@@ -10510,6 +10515,8 @@ than.e:
   or (MVt- & (CMPP- or CMPX-) & Sp*c+)
   or ((MVta- or LE-) & Cta+ & ((AFd+ & {Pa+}) or PFc+))
   or ((LE- or LEi-) & THc+)
+  or (LEi- & ITAF+ &
+    (THc+ or (TOic+ & <inf-verb>) or (TOfc+ & <inf-verb>) or (TOtc+ & B+)))
   or (((LE- & {AFd+}) or LEi-)
     & ((TOic+ & <inf-verb>) or (TOfc+ & <inf-verb>) or (TOtc+ & B+)))
   or (((CMPO- & MVto- & Ct+ & Bc+ & {U+}) or (MVto- & CMPO- & Ct+ & Bc+ & {U+})
