@@ -4611,10 +4611,14 @@ CMPP  plural antecedent
 CMPX  agreement-neutral comparative head
 ```
 
-Singular and mass noun-main paths can optionally carry `CMPS+`; plural
-noun-main paths can optionally carry `CMPP+`. Bare comparative object and
-preposition-object paths such as `more` with `Omm-` or `Jm-` can carry
-`CMPX+`, because those paths were agreement-neutral under the PP rule.
+Singular and mass noun-main subject/object paths can optionally carry
+`CMPS+`; plural noun-main subject/object paths can optionally carry `CMPP+`.
+The certificates are not exposed by every noun-main continuation. In
+particular, ordinary prepositional-object and postnominal noun paths do not
+get `CMPS`/`CMPP` just because they occur before a comparative marker. Bare
+comparative object and preposition-object paths such as `more` with `Omm-` or
+`Jm-` can carry `CMPX+`, because those paths were agreement-neutral under the
+PP rule.
 
 The `S**c+` comparative-clause branch is split in both `than.e` and `as.e-c`:
 
@@ -4664,6 +4668,17 @@ More people came to the party than was expected.
 Our program was better than was expected.
 ```
 
+The singular `More people came to the party than was expected` case is not a
+singular-antecedent agreement example. It keeps the old passive/expletive
+comparative-clause analysis:
+
+```text
+came --MVt-- than --SFsic-- was --Pvf-- expected
+```
+
+The `party --CMPS-- than` path is deliberately blocked because `party` is only
+an ordinary prepositional object here, not the comparative antecedent.
+
 Focused rejected examples include:
 
 ```text
@@ -4687,9 +4702,10 @@ Expected results:
 
 ```text
 corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
+corpus-basic.batch: 87 errors
+corpus-fixes.batch: 355 errors
 corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 56: Comparative `Cc` Clauses Require A Modifier License

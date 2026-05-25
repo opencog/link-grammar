@@ -166,8 +166,9 @@ changecom(`%')
 %        requires plural object.  See "are.v" for examples.
 %
 <noun-main-s>:
-  ((Ss*s+ & <CLAUSE>) or SIs- or (Js- & ({Jk-} or {Mf+})) or Os-
-  or <post-nominal-s>) & {CMPS+};
+  (((Ss*s+ & <CLAUSE>) or SIs- or Os-) & {CMPS+})
+  or (Js- & ({Jk-} or {Mf+}))
+  or <post-nominal-s>;
 
 % noun-main-e: used for proper names (named entities)
 % Os*e- is used to allow certain adjectival uses.
@@ -180,16 +181,17 @@ changecom(`%')
 
 % noun-main-p -- plural
 <noun-main-p>:
-  ((Sp+ & <CLAUSE>) or SIp- or Jp-
-  or Op- or OAJ-
-  or <post-nominal-p>) & {CMPP+};
+  (((Sp+ & <CLAUSE>) or SIp- or Op- or OAJ-) & {CMPP+})
+  or Jp-
+  or <post-nominal-p>;
 
 % noun-main-u -- u == uncountable
 % TODO: alter this to use Su+, SIu- someday. likewise Buj+
 % Doing this requires adding Su- links to many entries
 <noun-main-u>:
-  ((Ss+ & <CLAUSE>) or SIs- or Ju- or Ou-
-  or <post-nominal-s>) & {CMPS+};
+  (((Ss+ & <CLAUSE>) or SIs- or Ou-) & {CMPS+})
+  or Ju-
+  or <post-nominal-s>;
 
 % noun-main-m -- m == mass
 % TODO: get rid of this someday.
@@ -197,8 +199,9 @@ changecom(`%')
 % two: the countable form, which will used <noun-main-s> and the
 % uncountable form, which will use <noun-main-u>
 <noun-main-m>:
-  ((Ss+ & <CLAUSE>) or SIs- or Jp- or Os-
-  or <post-nominal-s>) & {CMPS+};
+  (((Ss+ & <CLAUSE>) or SIs- or Os-) & {CMPS+})
+  or Jp-
+  or <post-nominal-s>;
 
 % Used only for this.p, that.j-p
 % (Jd- & Dmu- & Os-): they have plenty of this
