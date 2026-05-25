@@ -8199,7 +8199,7 @@ to.r:
   % the required filler/gap relation. Keep that relation in the dictionary
   % instead of relying on postprocessing rule "incorrect use of 'to'6".
   or (([J+] or Mgp+) & <prep-main-no-rel>)
-  or (JW+ & (<prep-main-rel> or <prep-main-whq>))
+  or ([JW+] & (<prep-main-rel> or <prep-main-whq>))
   or (JQ+ & ([J+] or Mgp+) & <prep-main-jq-a>)
   or <locative>
   or [MVp- & B-]1.1

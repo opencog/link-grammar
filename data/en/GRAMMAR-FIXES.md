@@ -2433,6 +2433,12 @@ preposition --JW-- wh-word
 This makes the wh-object witness part of the dictionary construction instead
 of relying only on a later PP rejection.
 
+The `to.r` entry preserves its historical cost on wh-preposition object paths
+by keeping the replacement `JW+` connector in the same cost position as the
+old `[J+]` object connector. For example, `To what do you owe your success?`
+still pays the inherited `to.r` disjunct cost even though the public wh-object
+link is now `JW` instead of `Jw`.
+
 The PP rule has been removed from `4.0.knowledge`; the dictionary construction
 is now responsible for enforcing this condition before PP.
 
@@ -2466,6 +2472,23 @@ Diagnostic bad examples include:
 *The man with whom I play tennis with is here.
 ```
 
+#### Cost Preservation
+
+The rule 12 replacement preserves the old preferred costs for representative
+fronted-preposition questions and relatives. Internal helper-token links are
+suppressed from displayed linkages, so the public link name changes from old
+`Jw` to dictionary-side `JW` where appropriate, but the inherited displayed
+cost is preserved:
+
+| Sentence | Migrated path | Required displayed cost |
+| --- | --- | --- |
+| `With whom did you play tennis?` | `with --JW-- whom` with fronted `Wj` evidence | first linkage `DIS=0.00` |
+| `For whom were you mistaken?` | `for --JW-- whom` with fronted `Wj` evidence | first linkage `DIS=0.05` |
+| `To what do you owe your success?` | `to --JW-- what` with fronted `Wj` evidence; `to.r` keeps the old `[J+]` cost as `[JW+]` | first linkage `DIS=1.00` |
+| `Of which person were you speaking?` | `of --JQ-- which` and `of --J-- person` | first linkage `DIS=0.00` |
+| `By what means will you arrive?` | `by --JQ-- what`, `by --J-- means`, and `by --Qp-- will` | first linkage `DIS=0.00` |
+| `The man with whom I play tennis is here.` | relative `man --Mj-- with --JW-- whom` | first linkage `DIS=0.00` |
+
 ### Verification
 
 The rule 12 removal was validated with ordinary parser runs:
@@ -2475,12 +2498,17 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
+link-parser < ./data/en/corpus-failures.batch
 ```
 
-is expected to report:
+Observed results:
 
 ```text
-0 errors
+corpus-knowledge.batch: 0 errors
+corpus-basic.batch: 87 errors
+corpus-fixes.batch: 355 errors
+corpus-fix-long.batch: 8 errors
+corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 6: Infinitival `to` Requires A Filler/Gap Witness
