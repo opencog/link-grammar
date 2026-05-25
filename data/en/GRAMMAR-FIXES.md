@@ -140,7 +140,7 @@ Changed or retired connector forms:
 | existential `there` with `SFst`, `SFp`, `SFut`, `SFIst`, `SFIp` | Replaced for existential `there.r` and the related deictic `here` path by agreement-specific `THR*` connectors. The old broad `SF*` forms remain available to unrelated grammar paths. |
 | `there.r OXt-` | Removed. Locative `there` uses ordinary modifier paths such as `MVp`; existential and presentational `there` use agreement-specific `THR*` links. |
 | filler-`it` inverted auxiliary paths | `SFI` question auxiliaries now use `IFI` to reach lower raising predicates instead of broad ordinary `I` continuations. Ordinary-subject question auxiliaries keep the existing `I` paths. |
-| naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. The remaining rule-6 limitations are documented separately below. |
+| naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. Wh/degree object infinitives that formerly used this zero-cost fallback now use local `DWH`/`B` evidence plus `TOn` to preserve the old preferred cost. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
 | `ITAF` | Added as a local filler-`it` certificate for accepted comparative `than.e` paths that formerly used `AFdi`. It is exposed only by filler/expletive-`it` copula branches, so ordinary lower-subject clauses cannot satisfy the retired `AFdi` shape by prefix matching. |
@@ -2587,14 +2587,29 @@ The `WTHAN` link is supplied by `way` / `ways` nouns. This lets `than.e`
 connect to both `to.r` and the infinitival verb directly without accepting
 arbitrary adjective comparatives with a broad `MVp` modifier link.
 
+Wh/degree object infinitives are another valid use that formerly depended on
+the zero-cost `I*a+` branch. Those paths now use the `DWH`/`B` extraction
+certificate on the noun together with `TOn` from the same noun to `to.r`:
+
+```text
+which --DWHs-- book --Bsm-- read
+book  --TOn--  to.r --I*t-- read
+```
+
+The `B` link proves the extracted object gap and the `TOn` link ties the same
+noun to the infinitival `to`, so the linkage no longer depends on a global PP
+scan for an unrelated `B#m` or `B#w` witness. This repair also preserves the
+old preferred cost for representative singular, plural, and mass wh-object
+infinitives.
+
 This is stricter and more local than the old PP rule: the dictionary should not
 generate an infinitival path whose correctness depends on finding an unrelated
 `B#m` or `B#w` elsewhere in the sentence.
 
 If future valid examples require the removed path, do not restore naked
-`I*a+`. Add a local simulated-cross-link style connector family with a new
-uppercase connector name, so generic `I-` connectors cannot accidentally match
-it.
+`I*a+`. Add a local certificate or carrier path that ties the relevant filler,
+`to.r`, and infinitival predicate together, so generic `I-` connectors cannot
+accidentally match it.
 
 ### Examples
 
@@ -2603,6 +2618,8 @@ Focused examples include:
 ```text
 Tell me what to do.
 Tell me which book to read.
+Tell me which books to read.
+Tell me how much water to drink.
 The book to read is here.
 What are you going to do?
 What is there to do?
@@ -2630,6 +2647,18 @@ link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
+
+A cost-preservation audit compared representative accepted linkages against
+the pre-migration behavior. The wh-object infinitives below preserve
+the old first displayed disjunct cost while replacing the old `to.r I*a+`
+branch with `DWH`/`B` plus `TOn` evidence:
+
+| Example | Replacement path | First linkage |
+| --- | --- | --- |
+| `Tell me which book to read.` | `which --DWHs-- book --Bsm-- read`, `book --TOn-- to.r --I*t-- read` | `DIS=1.50` |
+| `Tell me which books to read.` | `which --DWHp-- books --Bpm-- read`, `books --TOn-- to.r --I*t-- read` | `DIS=1.50` |
+| `Tell me what books to read.` | `what --DWHp-- books --Bpm-- read`, `books --TOn-- to.r --I*t-- read` | `DIS=1.50` |
+| `Tell me how much water to drink.` | `much --DWHu-- water --Bsm-- drink`, `water --TOn-- to.r --I*t-- drink` | `DIS=1.50` |
 
 ## Rule 13: `JQ` Requires A Preposition Companion
 

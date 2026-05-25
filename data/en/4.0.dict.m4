@@ -296,11 +296,13 @@ changecom(`%')
 % Btm is used for time expressions.  It is used to constrain the verb
 % "last.v" which only makes sense for time.
 % BWH carries an HA witness to B#m extraction branches.  D##w and H
-% witnesses use wh/degree-specific D connectors on the noun itself.
-<b-raw-x>: {Rw+} & B*m+;
-<b-raw-s>: {Rw+} & Bsm+;
-<b-raw-p>: {Rw+} & Bpm+;
-<b-raw-t>: {Rw+} & Btm+;
+% witnesses use wh/degree-specific D connectors on the noun itself.  The
+% TOn alternative keeps infinitival wh-object gaps local, e.g. "which book to
+% read", without restoring the broad to.r I*a fallback.
+<b-raw-x>: {Rw+ or TOn+} & B*m+;
+<b-raw-s>: {Rw+ or TOn+} & Bsm+;
+<b-raw-p>: {Rw+ or TOn+} & Bpm+;
+<b-raw-t>: {Rw+ or TOn+} & Btm+;
 
 <b-wh-x>: BWH- & <b-raw-x>;
 <b-wh-s>: BWH- & <b-raw-s>;
