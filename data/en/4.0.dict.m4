@@ -170,6 +170,12 @@ changecom(`%')
   or (Js- & ({Jk-} or {Mf+}))
   or <post-nominal-s>;
 
+<noun-main-s-cmpo>:
+  (((Ss*s+ & <CLAUSE>) or SIs-) & {CMPS+})
+  or (Os- & {CMPS+} & (CMPOA+ or CMPOPA+))
+  or (Js- & ({Jk-} or {Mf+}))
+  or <post-nominal-s>;
+
 % noun-main-e: used for proper names (named entities)
 % Os*e- is used to allow certain adjectival uses.
 % OAJ- licenses predicative-adjective objects.
@@ -185,11 +191,24 @@ changecom(`%')
   or Jp-
   or <post-nominal-p>;
 
+<noun-main-p-cmpo>:
+  (((Sp+ & <CLAUSE>) or SIp-) & {CMPP+})
+  or (Op- & {CMPP+} & (CMPOA+ or CMPOPA+))
+  or OAJ-
+  or Jp-
+  or <post-nominal-p>;
+
 % noun-main-u -- u == uncountable
 % TODO: alter this to use Su+, SIu- someday. likewise Buj+
 % Doing this requires adding Su- links to many entries
 <noun-main-u>:
   (((Ss+ & <CLAUSE>) or SIs- or Ou-) & {CMPS+})
+  or Ju-
+  or <post-nominal-s>;
+
+<noun-main-u-cmpo>:
+  (((Ss+ & <CLAUSE>) or SIs-) & {CMPS+})
+  or (Ou- & {CMPS+} & (CMPOA+ or CMPOPA+))
   or Ju-
   or <post-nominal-s>;
 
@@ -200,6 +219,12 @@ changecom(`%')
 % uncountable form, which will use <noun-main-u>
 <noun-main-m>:
   (((Ss+ & <CLAUSE>) or SIs- or Os-) & {CMPS+})
+  or Jp-
+  or <post-nominal-s>;
+
+<noun-main-m-cmpo>:
+  (((Ss+ & <CLAUSE>) or SIs-) & {CMPS+})
+  or (Os- & {CMPS+} & (CMPOA+ or CMPOPA+))
   or Jp-
   or <post-nominal-s>;
 
@@ -571,6 +596,7 @@ Hallowe'en:
 <noun-mass-count>:
   <noun-modifiers> &
     (({NM+} & AN+)
+    or (Dmu- & <noun-rel-s> & <noun-main-m-cmpo>)
     or ({NM+ or ({Jd-} & D*u-)} & <noun-rel-s> & (<noun-main-m> or <rel-clause-s>))
     or ({NM+ or ({Jd-} & D*u-)} & <noun-and-p,u>)
     or (YS+ & {D*u-})
@@ -592,6 +618,7 @@ Hallowe'en:
 <generic-plural-id>:
   <noun-modifiers> &
     ([[AN+]]
+    or (Dmc- & <noun-rel-p> & <noun-main-p-cmpo>)
     or ({NM+ or ({{Dmc-} & Jd-} & Dmc-)} &
       <noun-rel-p> & (<noun-main-p> or <rel-clause-p>))
     or (DWSp- & <noun-rel-p> & <noun-main-p>)
@@ -831,6 +858,7 @@ USMC.y USN.y:
     or (GN+ & (DD- or [()]))
     or Up-
     or ({Dmu-} & Wa-)
+    or (Dmu- & <noun-rel-s> & <noun-main-u-cmpo>)
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
     or (DWSu- & <noun-rel-s> & <noun-main-u>)
@@ -848,6 +876,7 @@ USMC.y USN.y:
     ((GN+ & (DD- or [()]))
     or Up-
     or [<noun-assert>]0.02
+    or (Dmu- & <noun-rel-s> & <noun-main-u-cmpo>)
     or ({NM+ or ({{Dmu-} & Jd-} & Dmu-)}
       & ((<noun-rel-s> & (<noun-main-u> or <rel-clause-s>)) or <noun-and-p,u>))
     or (DWSu- & <noun-rel-s> & <noun-main-u>)
@@ -7853,6 +7882,7 @@ doubling.g tripling.g quadrupling.g quintupling.g:
 <prep-main-b>:
   <conjoin-preps>
   or [Mp-]0.4 or MVp- or [Mp- & MVp-]-0.61
+  or [CMPOPA- & MVp- & CMPOA+]-0.61
   or ({EA-} & Pp-)
   or (Xc+ & {Xd-} & dCOw+)
   or [({Xc+ & {Xd-}} & (dCOa+ or dCOd+))]
@@ -10589,7 +10619,8 @@ as.e-c:
   or ((CMPP- or CMPX-) & MVz- & Sp*c+ & {Mp+})
   or (MVz- & (CMPS- or CMPX-) & Ss*c+ & {Mp+})
   or (MVz- & (CMPP- or CMPX-) & Sp*c+ & {Mp+})
-  or ((CMPO- & MVzo- & Ct+ & Bc+ & {U+}) or (MVzo- & CMPO- & Ct+ & Bc+ & {U+}))
+  or (((CMPO- or CMPOA-) & MVzo- & Ct+ & Bc+ & {U+})
+      or (MVzo- & (CMPO- or CMPOA-) & Ct+ & Bc+ & {U+}))
   or (((CMPCX- or CMPS- or CMPP- or CMPX-) & MVzc- & (CX+ or CQ+))
       or (MVzc- & (CMPCX- or CMPS- or CMPP- or CMPX-) & (CX+ or CQ+)))
   or (MVZP- & Pa+)
