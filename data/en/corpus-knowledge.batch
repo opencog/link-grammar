@@ -52,11 +52,17 @@ I considered it important that women be ready.
 *Joe is important that women be ready when they make these choices.
 
 % CONTAINS_ONE rule 23: TOi infinitive complements require filler/expletive
-% it evidence.  TOIC carries that evidence to the predicate that owns the TOi
-% link.  Tough-subject infinitives remain on TOt.
+% it evidence.  TOIC/PTOI carriers carry that evidence to the predicate that
+% owns the TOi link.  Tough-subject infinitives remain on TOt.
 
 It is easy to use the program.
+Is it easy to use the program?
+It may be easy to use the program.
+It has been easy to use the program.
+I want it to be easy to use the program.
+I considered it easy to use the program.
 It is necessary to use the program.
+It is easier to ignore the problem than it is to solve it.
 Our program is easy to use.
 *Our program is easier to use it than to understand.
 
