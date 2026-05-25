@@ -197,6 +197,25 @@ FORM_A_CYCLE_RULES:
         @MUST_FORM_A_CYCLE_LINKS  ,  "'must form a cycle' violation0"
 
 
+; The PARSE_* stanzas use the same row syntax as the active PP stanzas, but
+; are consumed by parser/extractor constraints.  Keep duplicated active PP rows
+; for metric-classic-pp validation and ordinary non-metric extraction.
+
+PARSE_CONTAINS_ONE_CONSTRAINTS:
+ SI#*  ,  Wq Qp Qd Qw  CQ  PFc   Wp   Wb Xc , "S-V inversion domain constraint1" ,
+ SI#x  ,  Wq Qp Qd     CQ  PFc   Wp   Wb    , "S-V inversion domain constraint2" ,
+ Wq    ,  SI    SFI   SXI                   , "S-V inversion domain constraint7"
+
+PARSE_CONTAINS_ONE_GLOBAL_CONSTRAINTS:
+; The metric extractor chooses exact global-constraint slots dynamically per
+; sentence; rule order is not intended to control extraction performance.
+ SI#*  ,  Wq Qp Qd Qw  CQ  PFc   Wp   Wb Xc , "S-V inversion global constraint1" ,
+ SI#x  ,  Wq Qp Qd     CQ  PFc   Wp   Wb    , "S-V inversion global constraint2" ,
+ Wq    ,  SI    SFI   SXI                   , "S-V inversion global constraint7"
+
+PARSE_CONTAINS_NONE_CONSTRAINTS:
+ Qd    ,  MX                               , "Bad subject inversion"
+
 ; For the following rules, if a domain contains a link matching the 1st
 ; column, it must also contain a linkage matching one of the members of the
 ; set in the 2nd column. The individual rules are demarcated by semicolons and

@@ -1069,11 +1069,18 @@ Entries use precise maintainer-facing technical prose. Claims are stated in
 terms of observed linkages, dictionary expressions, PP rules, and test
 evidence. Limitations and inferred analyses are identified as such.
 
-## Deferred PP Migration Candidates
+Verification for this migration campaign used focused accepted/rejected
+examples and broad corpus comparisons with `lgerror`. The rule sections
+therefore describe sentence-level differences and intentional ranking or cost
+changes, rather than recording raw corpus error totals. Raw totals are
+omitted because the sections are organized by rule family, not by
+implementation chronology.
 
-The following PP rules were tested for simple removal or identified as likely
-future dictionary-migration work. They remain active because the current
-dictionary does not yet encode the rejected condition narrowly enough.
+## Deferred PP Dictionary-Migration Candidates
+
+The following PP rule families were tested for simple removal or
+dictionary-only replacement, but no exact dictionary migration was completed
+for them.
 
 | Rule(s) | Area | Current status |
 | --- | --- | --- |
@@ -1081,36 +1088,52 @@ dictionary does not yet encode the rejected condition narrowly enough.
 | 7 | `Wq` question/opening link | Simple removal improves `corpus-fixes.batch` by six and `corpus-failures.batch` by four, but it accepts one `corpus-knowledge.batch` negative and twenty `corpus-basic.batch` negatives, including `*Which dog you chased` and `*How much money you earn`. A dictionary-only prototype with direct-question certificates (`RQ`, `DQW*`, `HWQ`, `EAHQ`/`EEHQ`, `ECQ`, `EAMQ`/`EEMQ`, `NDQ`) blocked the original non-inverted object cases, but it was not complete: grammatical adjective cases such as `How certain are you that John is coming` and `How efficient a program is it` require additional valency-aware certificates, while several `how much more...` negatives moved to `Ws` or cycle-style raw paths. A replacement needs to separate valid fragment/exclamative uses such as `How quickly?` and `What a great day was today!` from ordinary wh questions that still need inversion evidence, without turning the whole `how` degree system into sentence-specific certificates. |
 | BOUNDED `s` | `s` domain boundedness | Simple removal is unsafe: it accepts the `corpus-knowledge.batch` negative `*How much of the book you read` and multiple `corpus-basic.batch` negatives, including `*He ran I know how quickly`. The accepted bad paths are not one connector family: observed examples include `Ww`/`CPi`/`Ca`/`CV` quantity-question paths, embedded wh-inversion paths, and wall/root paths such as `Wg`, `Wp`, and `WV` whose computed `s` domains reach left of their domain root. A replacement therefore needs a domain-local boundedness primitive or an equivalent root-vs-embedded domain split, not a small local connector rename. |
 
+This table is about dictionary migration only. Rules 1, 2, and 7 are still
+handled in production metric extraction by exact extractor constraints. The
+bounded `s` rule remains classic-PP authoritative; metric extraction only
+learns bounded-domain feedback from PP failures so later same-shape violations
+can be skipped earlier.
+
 `FORM_A_CYCLE_RULES` is intentionally not listed as a dictionary-migration
 candidate. For metric-ordered extraction, this class is handled by
 extractor-side cycle state, not by English dictionary connector replacement.
 
-### Approval-Gated Domain-Summary Support Proposal
+### Historical Domain-Summary Proposal
 
-The remaining `CONTAINS_ONE` inversion rules and bounded `s` rule are
-domain-local constraints. The relevant fact is not just that a selector link
-and a witness link exist in the same linkage, but that they occur in the same
-computed PP domain child set. Earlier dictionary-certificate attempts failed
-because local evidence such as `Rw`, direct-question certificates, or
-wh-word-specific branches cannot reliably distinguish matrix/fronted question
-domains from embedded domains that reuse the same local link shape.
+During the dictionary-migration audit, a domain-summary mechanism was
+considered for the `CONTAINS_ONE` inversion rules and bounded `s`. The
+`CONTAINS_ONE` part is superseded for metric extraction by
+`PARSE_CONTAINS_ONE_CONSTRAINTS` and
+`PARSE_CONTAINS_ONE_GLOBAL_CONSTRAINTS`. This note is retained as background
+for why dictionary-only migration was not completed, and what a future
+ordinary-parser or dictionary replacement would need. Bounded `s` remains
+different: rule 78 is still classic-PP authoritative, while metric extraction
+uses PP-taught bounded-domain feedback.
 
-The proposed library-assisted dictionary support is therefore a
-domain-summary mechanism. The first implementation stage should be attached to
+Both rule families are domain-local constraints. The relevant fact is not just
+that a selector link and a witness link exist in the same linkage, but that
+they occur in the same computed PP domain child set. Earlier
+dictionary-certificate attempts failed because local evidence such as `Rw`,
+direct-question certificates, or wh-word-specific branches cannot reliably
+distinguish matrix/fronted question domains from embedded domains that reuse
+the same local link shape.
+
+The considered library-assisted dictionary support was therefore a
+domain-summary mechanism. The first implementation stage would be attached to
 parse-set construction, where actual retained `Parse_choice` children are
-available. A `do_count()` / `Table_tracon` implementation may be considered
+available. A `do_count()` / `Table_tracon` implementation could be considered
 later as an optimization, after the parse-set summary model is shown to be
 equivalent; doing it first would require carrying additional state in the
 counting table before the exact domain boundary model is proven.
 
-For `CONTAINS_ONE`, the summary needs selector and witness bits for each
-active rule. For bounded `s`, it needs the domain root word and the minimum
-left word touched by the domain. During validation, the existing PP rules
-should remain authoritative: if PP still rejects a linkage for a rule that the
-summary mechanism claims to handle, that is a support bug, not an accepted
-migration. Only after focused examples and ordinary corpus runs show
-equivalence should the corresponding PP rule be removed and documented as a
-completed migration.
+For a future ordinary-parser or dictionary replacement, a `CONTAINS_ONE`
+summary would need selector and witness bits for each active rule. For bounded
+`s`, it would need the domain root word and the minimum left word touched by
+the domain. During validation, the existing PP rules should remain
+authoritative: if PP still rejects a linkage for a rule that the summary
+mechanism claims to handle, that is a support bug, not an accepted migration.
+Only after focused examples and ordinary corpus runs show equivalence should
+the corresponding PP rule be removed and documented as a completed migration.
 
 ## Stale Expletive-It Companion Selectors
 
@@ -1157,16 +1180,6 @@ link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
-```
-
-The observed counts were:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1497 errors
 ```
 
 ## Rule 20: License `THi` Complements With Filler `It`
@@ -1292,16 +1305,6 @@ link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
-```
-
-Observed results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1496 errors
 ```
 
 ## Rule 31: License Cleft-Object `O#i` Paths With Filler `It`
@@ -1451,16 +1454,6 @@ link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
 ```
 
-Observed results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1496 errors
-```
-
 ## Rules 37, 38, And 39: Remove Expletive-It Backstops
 
 **Status:** implemented; PP rules 37, 38, and 39 have been removed from
@@ -1557,16 +1550,6 @@ link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
-```
-
-Observed results after the rule 38 migration:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
 ```
 
 Compared with the previous rule-43 baseline, the ordinary corpus error sets
@@ -1693,16 +1676,6 @@ link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
 ```
 
-Observed results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
-```
-
 ## Rule 21: License `TSi` Complements With Filler `It`
 
 **Status:** implemented; PP rule 21 has been removed from `4.0.knowledge`.
@@ -1825,16 +1798,6 @@ link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
-```
-
-Observed results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 23: License `TOi` Complements With Filler `It`
@@ -1973,16 +1936,6 @@ link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
-```
-
-Observed results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 22: License `QIi` Complements With Filler `It`
@@ -2134,16 +2087,6 @@ link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
-```
-
-Observed results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 24: License `Ci` Complements With Filler `It`
@@ -2321,16 +2264,6 @@ link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
 ```
 
-Observed results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
-```
-
 ## Library-Assisted Dictionary Helper Tokens
 
 **Status:** implemented as dictionary support; used by the preposition
@@ -2412,15 +2345,6 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results for the current documented state are:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
 ```
 
 ## Rule 12: `Wj` Requires `Jw` Or `JQ`
@@ -2554,16 +2478,6 @@ link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
-```
-
-Observed results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
 ```
 
 ## Rule 6: Infinitival `to` Requires A Filler/Gap Witness
@@ -2807,15 +2721,6 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
-```
-
 ## Controlled-Subject Rules: `Sj` Requires `I#j`, `Sg` Requires `Pg`
 
 **Status:** implemented; both PP rules have been removed from
@@ -2896,15 +2801,6 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results for the current documented state:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
-corpus-fix-long.batch: 8 errors
 ```
 
 ## Rule 67: Result-Clause `that` Requires A Degree Or `such` Witness
@@ -3290,13 +3186,6 @@ The expected visible difference is that subject `Ws` how-quantity linkages use
 `HWS`/`DWSu`, and `how long before ...` uses `EEHWS`, instead of ordinary
 `H`/`Dmu`/`EEh` on those specific migrated paths.
 
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
-corpus-fix-long.batch: 8 errors
-```
-
 ## Rule 5: `Ws` Requires Subject-Wh Evidence
 
 **Status:** implemented; PP rule 5 has been removed from `4.0.knowledge`.
@@ -3372,24 +3261,14 @@ link structure is unchanged for `Who died?` and `How many dogs ran?`. For
 `Which dog chased you?`, the new first displayed linkage uses `DWSs` where the
 old linkage used `D**w`; this is the intended subject-wh certificate split.
 
-Corpus results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
-```
-
 The only `corpus-basic.batch` error-count difference against the pre-migration
 dictionary is positive: `*What John said he thought you should do` is no
 longer accepted. `corpus-failures.batch` has zero `lgerror` differences.
 
 ## `Qd , MX`: Require Punctuation For Name-Based Direct Question Openers
 
-**Status:** dictionary tightening implemented; the classic PP rule remains as
-an authoritative backstop.
+**Status:** dictionary tightening implemented; exact metric-extractor handling
+implemented; the classic PP rule remains as an authoritative backstop.
 
 ### Rule / Area
 
@@ -3446,9 +3325,12 @@ capitalized entities and given names. In that entity-specific expression,
 non-entity opener heads, preserving idiomatic wh-adverbial questions such as
 `Which way did they go?`. The `Wq` opener fallback is unchanged.
 
-The classic `Qd,MX` PP rule is retained because the opener rewrite is not an
-exact replacement for the full rule. It does not cover direct-question noun
-subjects that can carry postnominal `MX`.
+The classic `Qd,MX` PP rule is retained for ordinary extraction and metric
+tripwire validation because the opener rewrite is not an exact dictionary
+replacement for the full rule. It does not cover direct-question noun subjects
+that can carry postnominal `MX`. Metric extraction enforces the same rule
+through `PARSE_CONTAINS_NONE_CONSTRAINTS` so the classic PP row does not become
+a repeated ordered-extraction blocker.
 
 ### Examples
 
@@ -3475,14 +3357,6 @@ the rule-22 `matter` repair restores the old first cost with an `IQII`
 carrier. The focused regression checks also preserved `Which way did they
 go?` and `Which way did you come?`. The retained PP backstop rejects the
 general `Qd+MX` noun-subject cases.
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
-```
 
 ## Rule 62 (`Pa##j`): License Predicative-Adjective Objects With `OAJ`
 
@@ -3565,14 +3439,7 @@ Accepted-linkage comparison against the pre-migration baseline used
 structure; the intended public-link change is that ordinary `Osm`, `Os*e`,
 and `Ox` object rows become `OAJ`.
 
-The migration was also validated with ordinary parser runs:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
-corpus-fix-long.batch: 8 errors
-```
+The migration was also validated with ordinary parser runs.
 
 ## Rule 14: Wh Preposition Objects Require A Companion
 
@@ -3683,15 +3550,6 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
 ```
 
 ## Rule 19: License `Qe` How-Adverb Questions In The Dictionary
@@ -3805,16 +3663,6 @@ link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
-```
-
 Accepted-linkage comparison against the pre-migration baseline used
 `-test=auto-next-linkage:3` with `!links`, `!limit=10000`, `!short=254`, and
 `!null=0` to display the first three accepted linkages. The first three
@@ -3886,8 +3734,9 @@ them for the tracked behavior.
 
 The seven rules are removed from `4.0.knowledge`.
 
-Rules 71, 72, 73, and the ID-less `Bad subject inversion` rule were migrated
-later by dedicated dictionary changes.
+Rules 71, 72, and 73 were migrated later by dedicated dictionary changes. The
+ID-less `Bad subject inversion` rule was narrowed by dictionary changes and is
+also enforced by metric extraction through `PARSE_CONTAINS_NONE_CONSTRAINTS`.
 
 ### Implications
 
@@ -3905,15 +3754,6 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
 ```
 
 ## Rule 72: Split Filler-Subject `SF` From Ordinary Continuations
@@ -4041,16 +3881,6 @@ link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
 ```
 
-Observed results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1496 errors
-```
-
 ## Rule 73: Separate Filler-It Inversion From Ordinary `I`
 
 **Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
@@ -4160,16 +3990,6 @@ link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
 ```
 
-Expected results at the time of this migration:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1497 errors
-```
-
 Focused accepted-linkage comparison against the pre-migration baseline
 inspected the first three displayed accepted linkages for:
 
@@ -4247,16 +4067,6 @@ with `!links`, `!limit=10000`, `!short=254`, `!null=0`, and graph output
 disabled; the first three accepted public link rows match. The total linkage
 and no-PP-violation counts differ because the PP rule itself has been removed.
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1497 errors
-```
-
 `corpus-failures.batch` improves by one; the changed sentence is a long
 relative-clause example headed by `whose nefarious activities add so much to
 the cost of doing business in New York`.
@@ -4322,14 +4132,6 @@ in the park?` sorted at `DIS=0.54` instead of the baseline `DIS=-0.46`. The
 `are.v` `Qd`/`THRP` branch now carries the corresponding cost-preservation
 adjustment. Singular `Is there a dog in the park?` remains at the baseline
 `DIS=0.54`.
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1499 errors
-```
 
 ## Rule 7a: Bare-`what` `Wb` Requires An Inverted Verb
 
@@ -4408,16 +4210,6 @@ link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
 ```
 
-Results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1498 errors
-```
-
 Focused accepted-linkage comparison against `master` for `What did you
 think?`, `What were you thinking?`, and `What the hell were you thinking?`
 showed the expected replacement in the first displayed linkage: the old `Rw`
@@ -4490,15 +4282,7 @@ I wonder how important it is to turn off the computer.
 ### Verification
 
 The change was validated with focused positive and negative examples, plus
-ordinary parser runs:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 359 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1497 errors
-```
+ordinary parser runs.
 
 Focused accepted-linkage comparison against `master` for `Is it important to
 turn off the computer?`, `Is it likely that Joe came?`, and `I wonder how
@@ -4562,14 +4346,6 @@ against the pre-removal outputs for `corpus-knowledge.batch`,
 `corpus-basic.batch`, `corpus-fixes.batch`, and `corpus-failures.batch`.
 `corpus-failures.batch` improved by one accepted sentence, the `here am I`
 example above. The other comparisons had zero error differences.
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1498 errors
-```
 
 ## Rules 58 And 59: Comparative Clauses Require A Compatible Antecedent
 
@@ -4718,16 +4494,6 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
-```
-
 ## Rule 56: Comparative `Cc` Clauses Require A Modifier License
 
 **Status:** implemented; PP rule 56 has been removed from `4.0.knowledge`.
@@ -4842,16 +4608,6 @@ link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 86 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
-```
-
 ## Rule 44: Split Predicative `as.e-c` From Verb-Side `MVz`
 
 **Status:** implemented; PP rule 44 has been removed from `4.0.knowledge`.
@@ -4945,15 +4701,6 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
 ```
 
 ## Rule 47: Certify Comparative `MV#o` Object-Clause Paths
@@ -5059,16 +4806,6 @@ link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 87 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
-```
-
 ## Rule 48: Certify Comparative `MV#c` Auxiliary-Clause Paths
 
 **Status:** implemented; PP rule 48 has been removed from `4.0.knowledge`.
@@ -5154,16 +4891,6 @@ link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1496 errors
-```
-
 ## Rule 43: Remove Redundant `MVt` Comparative Check
 
 **Status:** implemented; PP rule 43 has been removed from `4.0.knowledge`.
@@ -5230,16 +4957,6 @@ link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 link-parser < ./data/en/corpus-failures.batch
-```
-
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 355 errors
-corpus-fix-long.batch: 8 errors
-corpus-failures.batch: 1495 errors
 ```
 
 Compared with the previous rule-48 baseline, `corpus-basic.batch`,
@@ -5358,15 +5075,6 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
-corpus-fix-long.batch: 8 errors
-```
-
 ## Rules 49 And 50: Remove Overbroad `Pafc` Comparative Checks
 
 **Status:** implemented; both PP rules have been removed from
@@ -5439,15 +5147,6 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
 ```
 
 ## Rules 51-54: Remove Overbroad `MVat` / `MVpt` Comparative Checks
@@ -5523,15 +5222,6 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
-```
-
 ## Rules 60 And 61: Remove Redundant `THc` / `TOc` Comparative Checks
 
 **Status:** implemented; both PP rules have been removed from
@@ -5591,15 +5281,6 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
-```
-
 ## Rules 45 And 46: Remove Redundant `MV#a` / `MV#i` Comparative Checks
 
 **Status:** implemented; both PP rules have been removed from
@@ -5656,15 +5337,6 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
 ```
 
 ## Rules 55 And 57: Remove Redundant Comparative Checks
@@ -5746,15 +5418,6 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
-```
-
 ## Rule 62: Remove Redundant `TOtc` Comparative Check
 
 **Status:** implemented; the PP rule has been removed from
@@ -5808,15 +5471,6 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
 ```
 
 ## Rules 15 And 16: Tie `Jr` To Postnominal `B#j`
@@ -6065,15 +5719,6 @@ link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
 ```
 
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
-corpus-fix-long.batch: 8 errors
-```
-
 ## Rule 41: Remove Redundant `BIh` Predicate Check
 
 **Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
@@ -6271,15 +5916,6 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
-corpus-fix-long.batch: 8 errors
 ```
 
 ## Rules 32s, 32p, 32u, 34, 35, 36: Encode Existential `there`
@@ -6511,15 +6147,6 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 361 errors
-corpus-fix-long.batch: 8 errors
 ```
 
 ## Rule 63: License Postposed `Ma` Adjectives In The Dictionary
@@ -7049,13 +6676,4 @@ link-parser < ./data/en/corpus-knowledge.batch
 link-parser < ./data/en/corpus-basic.batch
 link-parser < ./data/en/corpus-fixes.batch
 link-parser < ./data/en/corpus-fix-long.batch
-```
-
-Expected results:
-
-```text
-corpus-knowledge.batch: 0 errors
-corpus-basic.batch: 88 errors
-corpus-fixes.batch: 362 errors
-corpus-fix-long.batch: 9 errors
 ```

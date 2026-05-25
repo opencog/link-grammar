@@ -195,7 +195,7 @@ static void print_parse_statistics(Sentence sent, Parse_Options opts,
 		if (sentence_num_linkages_found(sent) >
 			parse_options_get_linkage_limit(opts))
 		{
-			fprintf(stdout, "Found %d linkage%s (%d of %d random " \
+			fprintf(stdout, "Found %d linkage%s (%d of %d examined " \
 					"linkages had no P.P. violations)",
 					sentence_num_linkages_found(sent),
 					sentence_num_linkages_found(sent) == 1 ? "" : "s",
