@@ -71,12 +71,16 @@ Our program is easy to use.
 *Our program is easier to use it than to understand.
 
 % CONTAINS_ONE rule 22: QIi question-clause complements require
-% filler/expletive it evidence.  QIIC carries that evidence to the predicate
-% that owns the QIi link; object-raising "it to be" uses TQII/IQII/PQII.
+% filler/expletive it evidence.  QIIC/PQII carriers carry that evidence to
+% the predicate that owns the QIi link; object-raising "it to be" uses
+% TQII/IQII/PQII.
 
 It is unknown whether he came.
 It is unclear whether he came.
 It is unknown why he came.
+Is it unknown whether he came?
+It may be unknown whether he came.
+It has been unknown whether he came.
 I made it clear how to use the program.
 I want it to be obvious how to use the program.
 *Joe is unknown how he came.
