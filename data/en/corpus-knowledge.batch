@@ -1,0 +1,535 @@
+!batch
+!echo
+!limit=1000
+!short=20
+!constituents=1
+!spell=0
+
+% Focused tests for dictionary replacements of 4.0.knowledge rules.
+% Keep examples small and diagnostic.  Artificial examples are fine when they
+% exercise a replaced postprocessing rule without depending on unrelated
+% grammar behavior.
+
+% CONTAINS_ONE rule 6: I#a requires B#m or B#w.
+% The broad to.r I*a+ fallback was removed, so these infinitival
+% filler/gap constructions must still use licensed dictionary paths.
+
+Tell me what to do.
+Tell me which book to read.
+Tell me which books to read.
+Tell me how much water to drink.
+The book to read is here.
+What are you going to do?
+What is there to do?
+There is no nicer way than to leave now.
+There is no nicer way to round off the evening than to have a quiet nightcap.
+
+% CONTAINS_ONE rule 8: Qd direct question inversion is now constrained by the
+% dictionary question paths and existential-there THR paths. Rule 9's PFc
+% selector is unreachable in the current dictionary because PFc has no matching
+% negative connector occurrence; no active sentence can exercise that stale
+% PP check.
+
+Does he drink?
+Are you insane?
+Is there a dog in the park?
+Are there dogs in the park?
+
+% CONTAINS_ONE rules 3 and 38: filler-it SFI inversion must have real
+% question-root evidence.  Direct matrix questions keep SFIsi, while embedded
+% how clauses use ordinary non-inverted order.
+
+Is it important to turn off the computer?
+Is it likely that Joe came?
+I wonder how important it is to turn off the computer.
+*I wonder how important is it to turn off the computer.
+
+% CONTAINS_ONE rule 21: TSi that-clause complements require filler/expletive
+% it evidence.  TSIC/PTSI carriers carry that evidence from subject, inverted
+% subject, or object filler-it to the predicate that owns the TSi link.
+
+It is important that women be ready when they make these choices.
+Is it important that women be ready?
+It may be important that women be ready.
+It has been important that women be ready.
+I want it to be important that women be ready.
+I considered it important that women be ready.
+It is imperative that assistance be provided through a variety of channels.
+*Joe is important that women be ready when they make these choices.
+
+% CONTAINS_ONE rule 23: TOi infinitive complements require filler/expletive
+% it evidence.  TOIC/PTOI carriers carry that evidence to the predicate that
+% owns the TOi link.  Tough-subject infinitives remain on TOt.
+
+It is easy to use the program.
+Is it easy to use the program?
+It may be easy to use the program.
+It has been easy to use the program.
+I want it to be easy to use the program.
+I considered it easy to use the program.
+It is necessary to use the program.
+It is easier to ignore the problem than it is to solve it.
+Our program is easy to use.
+*Our program is easier to use it than to understand.
+
+% CONTAINS_ONE rule 22: QIi question-clause complements require
+% filler/expletive it evidence.  QIIC/PQII carriers carry that evidence to
+% the predicate that owns the QIi link; object-raising "it to be" uses
+% TQII/IQII/PQII.
+
+It is unknown whether he came.
+It is unclear whether he came.
+It is unknown why he came.
+Is it unknown whether he came?
+It may be unknown whether he came.
+It has been unknown whether he came.
+I made it clear how to use the program.
+I want it to be obvious how to use the program.
+*Joe is unknown how he came.
+*The answer is unknown why he came.
+
+% CONTAINS_ONE rule 24: Ci finite-clause complements require filler/expletive
+% it evidence.  CIIC carries local direct it evidence to the predicate that
+% owns the Ci link; copular, auxiliary, and object-raising paths use
+% TCII/ICII/PPCII/PCII carriers.
+
+It is likely he came.
+Is it likely he came?
+It is surprising he came.
+It may be likely he came.
+It has been likely he came.
+I considered it likely he came.
+I want it to be likely he came.
+*Joe is likely he came.
+*I considered Anne likely he came.
+*Does it act likely that Joe came?
+*Did it act likely that Joe came?
+
+% CONTAINS_ONE rule 20: THi that-clause complements require filler/expletive
+% it evidence.  THIC carries direct it evidence to the predicate that owns the
+% THi link; object-raising and auxiliary paths use TTHI, ITHI, PPTHI, and
+% PTHI carriers.  Clefts use a same-copula SFsi/SFIsi and THi branch.
+
+It is likely that he came.
+Is it likely that he came?
+Does it seem likely that Joe came?
+Can it be likely that Joe came?
+Has it seemed likely that Joe came?
+It happened that he came.
+It seems that he came.
+It was hoped that he came.
+I made it clear that he came.
+I want it to be likely that he came.
+It was in Paris that Debussy first heard Balinese music.
+Wasn't it in 1955 that Sally first met Joe?
+*Joe is likely that he came.
+*I made Anne clear that he came.
+*Does it act likely that Joe came?
+*Did it act likely that Joe came?
+*Can it act likely that Joe came?
+
+% CONTAINS_ONE rule 30: the old AFdi comparative branch on than.e is
+% retired.  Valid comparative expletive-it examples parse through other
+% certified complement or comparative paths; the lower ordinary subject
+% example below must not be accepted through than.e--AFdi--is.
+
+It is more likely that Joe died than that Fred died.
+It is more likely that Joe died than it is that Fred died.
+It is easier to ignore the problem than it is to solve it.
+*It is more likely that Joe died than John is that Fred died.
+
+% CONTAINS_NONE rule 72: filler-subject SF domains must not license ordinary
+% infinitival and comparative continuations.  The former PP backstop is moved
+% into local dictionary splits on to.r and than.e.
+
+Failure to comply may result in dismissal.
+It is easier to ignore the problem than it is to solve it.
+It is more likely that Joe died than that Fred died.
+*Absence to comply may result in dismissal.
+*It is more likely that Joe died than John is that Fred died.
+
+% CONTAINS_ONE rules 37, 38, and 39: broad expletive-it backstops are now
+% redundant after the dedicated predicate certificates and the root-attached
+% SFIsi question evidence split.
+
+It is likely that he came.
+I made it clear that he came.
+*Joe is likely that he came.
+*I made Anne clear that he came.
+
+% CONTAINS_ONE rule 31: cleft-like O#i object paths require
+% filler/expletive it evidence.  Direct copulas use SFsi/SFIsi with the Osi
+% or Opi branch; auxiliary and object-raising paths carry this evidence with
+% TOCL, IOCL, and PPOCL.  ROCL licenses the special case where the needed
+% filler it appears inside the following clause.
+
+It was John who stole the priceless documents.
+It's John who stole the priceless documents.
+Was it John who stole the priceless documents?
+Isn't it John who stole the priceless documents?
+It might be John who stole the priceless documents.
+Could it be John who stole the priceless documents?
+I want it to be John who stole the priceless documents.
+It has been John who stole the priceless documents.
+It may have been John who stole the priceless documents.
+The shame of it is, is that it was a good idea.
+*How likely is John that he will come?
+*I believe Fred was John who stole the priceless documents.
+*That is the man, in Joe's opinion, we should hire.
+
+% CONTAINS_ONE rule 4: SXI also occurs in fronted locative/adverbial
+% inversion licensed by PFb, not only in question or comparative paths.
+
+Here am I.
+Here was I.
+There was I.
+
+% CONTAINS_ONE rule 68: B#m extraction is licensed in dictionary paths.
+% Wh/degree witnesses are carried by dedicated dictionary paths so ordinary
+% determiner and quantity paths do not depend on the old "Bad use of
+% gerund68" postprocessing rule.
+
+Which dog did you chase?
+How many do you want?
+How many more times did you do it?
+How many miles did you bike?
+How much of a man is he?
+How much effort did you give it?
+What degree of trust do you put in him?
+He won't divulge what type it is.
+How big a department is it?
+*The telling John to leave was stupid.
+*How much more efficient programs are available.
+
+% CONTAINS_NONE rule 71: Ws must not license extracted B#m or Ca paths.
+% Subject and temporal-fragment how questions use dedicated dictionary
+% certificate links, while extracted-object and non-inverted clause paths stay
+% under the ordinary Wq/QI checks.
+
+How many people died?
+How much sugar is needed?
+How long before you got home?
+Approximately how long before you got home?
+How much money did you earn?
+How many times did you do it?
+*How much money you earn
+*How many times you did it
+*How much of the book you read
+
+% CONTAINS_ONE rule 5: Ws now appears only on subject-wh paths that are
+% certified by the wh word or wh determiner expression itself.  Object-gap
+% and non-subject paths use Wq or embedded-question connectors instead.
+
+Who died?
+Who bought your flat from?
+Which dog chased you?
+How many dogs ran?
+How much oil spilled?
+*Who to invite to the party.
+*Which dog you chased.
+*How quickly Joe ran.
+How much more quickly did you run.
+
+% CONTAINS_NONE rule 73: filler-it inverted auxiliary paths must not license
+% ordinary lower verbs.  Valid filler-it raising questions use IFI to reach
+% the lower predicate; ordinary-subject raising keeps the existing I path.
+
+Does it seem likely that Joe came?
+Does it appear likely that Joe came?
+Did it seem likely that Joe came?
+Does Joe seem likely to come?
+*Does it act likely that Joe came?
+*Did it act likely that Joe came?
+
+% CONTAINS_ONE rule 12: Wj requires Jw or JQ.
+% Fronted prepositions in wh questions and relatives must be licensed by the
+% matching wh object, including when the object is a multiword phrase.
+
+With whom did you play tennis?
+For whom were you mistaken?
+To what do you owe your success?
+Of which person were you speaking?
+By what means will you arrive?
+
+I know to what you owe your success.
+Sophy wondered up to what number she should count.
+Do you know in which room the procedure was performed?
+
+The man with whom I play tennis is here.
+The friend for whom Joe works is kind.
+The subject about which Mary spoke was difficult.
+The book of which I spoke was old.
+
+With whom did you say Mary played tennis?
+The man with whom John said Mary played tennis is here.
+The man with whom Mary believes John played tennis is here.
+With whom did Mary believe John played tennis?
+
+That is the man for whom and with whom Joe works.
+
+*With did you play tennis?
+*To do you owe your success?
+*Of person were you speaking?
+*The man with whom I play tennis with is here.
+*That is the man for whom and with Janet Joe works.
+
+% CONTAINS_ONE rule 13: JQ requires Mj, Wj, MX#j, or MVp.
+% Wh-preposition questions and relatives must keep a companion link in the
+% same postprocessing domain.
+
+By what means will you arrive?
+Of which person were you speaking?
+Sophy wondered up to what number she should count.
+Do you know in which room the procedure was performed?
+Exactly what mark did it reach?
+Up to what mark did it reach?
+
+% CONTAINS_ONE rule 14: Jw requires Mj, Wj, or MX#j.
+% Ordinary J object paths must not match wh-object relations. The dictionary
+% uses the distinct JW connector family for those wh-object continuations.
+
+With whom did you play tennis?
+For whom were you mistaken?
+The friend for whom Joe works is kind.
+That is the man for whom and with whom Joe works.
+
+He replied with a yes.
+He greeted me with a loud hallo!
+He wanted to look at and listen to everything.
+
+*That is the man for whom and with Janet Joe works.
+*The man with whom I play tennis with is here.
+
+% CONTAINS_ONE rules 10 and 11: Mj/MX#j require Jw or JQ.
+% Prep-object relatives must keep a wh-object or question-preposition witness.
+
+The friend for whom Joe works is kind.
+The subject about which Mary spoke was difficult.
+The subject, about which Mary spoke, was difficult.
+That is the man for whom and with whom Joe works.
+The book of which I spoke was old.
+
+% CONTAINS_ONE rules 15 and 16: B#j and Jr must license each other.
+% The relative "of whom" path uses OFJ so Jr cannot attach to an ordinary
+% object and B#j cannot appear without the matching relative "of" relation.
+
+The doctors, many of whom are surgeons, were angry.
+The box contained many books, some of which were badly damaged.
+The male of which bears a tail ran.
+
+% CONTAINS_ONE rule 41: BIh no longer needs a separate PP check.
+% The current BIh dictionary paths are already constrained enough for these
+% embedded-clause examples; related predicate rules remain active.
+
+It was as if he knew.
+*It was as if knew.
+I left because I was tired.
+*I left because was tired.
+I know when he left.
+
+% CONTAINS_ONE rule 42: BIq predicate complements require a question-like
+% subject or auxiliary-chain certificate.
+
+The question is who we should invite.
+The question may be who we should invite.
+The issue has been whether we should leave.
+This is who we should invite.
+*The answer is who we should invite.
+*The problem is who we should invite.
+*The big mind on everybody's question is who killed OJ.
+
+% CONTAINS_ONE rule 65: the MX#a postnominal-adjective rule was overbroad.
+% Parenthetical adjective uses should not require the old complement-style
+% criterion links.
+
+The lady, unpleased, spoke sharply.
+The lady, displeased, spoke sharply.
+The dog, unsatisfied, barked loudly.
+
+% CONTAINS_ONE rule 66: second-object connectors must not accept pronoun Ox-.
+% Ditransitive-like frames keep noun/name/time/mass second objects but exclude
+% pronouns from the O*n+ family.
+
+I gave him Mary.
+I gave him a rose.
+I gave him for his birthday a very expensive present.
+Please paint it all white.
+John made himself familiar with the drawings.
+You should hear him sing.
+*I gave Mary him.
+*I gave my brother it.
+*I gave him for his birthday it.
+
+% CONTAINS_ONE rule 62: Pa##j predicative adjectives require an object
+% class licensed by the dictionary OAJ link.
+
+I want it green.
+I want John sober.
+I want them ready.
+I want these green.
+The doctor declared him insane.
+*I want a gift inexpensive.
+
+% CONTAINS_ONE rule 63: postposed Ma adjectives need local complement
+% licensing.
+% CONTAINS_ONE rule 64: postposed Mam comparative adjectives need local
+% complement licensing.
+
+I need something useful.
+The apartment available is small.
+A man proud of his work arrived.
+Voters angry about the economy will probably vote for Clinton.
+Many Democrats unhappy about the economy but doubtful that Clinton can be elected probably won't vote at all.
+We need a programmer knowledgeable about Lisp.
+It is believed that even the troops loyal to Hussein will soon be forced to surrender.
+He cried, his heart heavy with sadness.
+*A gift inexpensive arrived.
+*A child little arrived.
+*A man proud arrived.
+*Many Democrats unhappy but doubtful probably won't vote at all.
+I saw a man taller than John.
+The man taller than John arrived.
+I need a box bigger than this.
+A box bigger than this arrived.
+A man taller and wider than Bill arrived.
+*I saw a man taller.
+*The man taller arrived.
+*A man bigger quickly arrived.
+*A man taller and wider arrived.
+
+% CONTAINS_ONE rules 58 and 59: comparative-clause subjects need a
+% compatible comparative antecedent.
+
+She interviewed more programmers than were hired.
+*She interviewed more programmers than was hired.
+She spent more money than was budgeted.
+She spent less money than was budgeted.
+She spent more than was budgeted.
+She spoke to more than was expected.
+She interviewed as many programmers as were hired.
+*She interviewed as many programmers as was hired.
+More people came to the party than were expected.
+More people came to the party than was expected.
+
+% CONTAINS_ONE rule 56: comparative Cc clauses need a local comparative
+% license. CONTAINS_NONE rule 78: comparative EAy must not pair with ordinary
+% subordinate-as MVs. Temporal "as" now uses a verb-side MVSWH link instead,
+% so comparative adjectives cannot accidentally license it.
+
+I am as intelligent as John.
+You are as sweet as sugar.
+Any program as good as ours should be useful.
+The coffee tastes the same as it did last year.
+I slipped on the ice as I ran home.
+*I am as intelligent as John does.
+
+% CONTAINS_ONE rule 44: MVz comparative-as paths need local comparative
+% evidence, but the old PP check was too broad for predicative/adjectival
+% parenthetical "as" clauses.  The Pa branch now uses adjective-only MVZP.
+
+Ridiculous as it seems, the tale is true.
+He earns as much as was expected.
+The claim, unclear as worded, deserves attention.
+*I am as intelligent as John does.
+
+% CONTAINS_ONE rule 47: MV#o comparative object-clause paths need local
+% comparative object or measure evidence.  The MV#o branches now require CMPO.
+
+The coffee tastes the same as it did last year.
+I did as much as he did.
+I earned as much as John earned.
+*I am as intelligent as John does.
+
+% CONTAINS_ONE rule 48: MV#c comparative auxiliary-clause paths need local
+% comparative modifier, object, or measure evidence.  The MV#c branch now
+% requires CMPCX or an existing comparative antecedent certificate.
+
+I earn as much money as John does.
+I earn as many dollars as John does.
+I run as much as John does.
+He runs as quickly as John does.
+*I am as intelligent as John does.
+
+% CONTAINS_ONE rule 43: the remaining MVt comparative check is redundant
+% after the surrounding comparative certificate migrations.
+
+I am more happy now than I was in college.
+She spent more money than was budgeted.
+*I earn as much money in a month than John earns in a year.
+
+% CONTAINS_ONE rules 32s, 32p, 32u, 34, 35, and 36: existential "there"
+% agreement is carried by dictionary connectors instead of PP checks; the old
+% broad object-like OXt branch on there.r is removed.
+
+There is a dog in the park.
+There are dogs in the park.
+There is water on the table.
+Is there a dog in the park?
+Are there dogs in the park?
+There is going to be an important meeting in January.
+There has been a problem.
+There have been problems.
+There will be a dog.
+Will there be a dog?
+Does there seem to be a dog in the park?
+There seems to appear to have been likely to be a problem.
+I want there to be a problem.
+I want there to be more.
+There goes the cutest guy ever.
+Oh great, there went my ride.
+*There is chasing dogs.
+*There are a dog in the park.
+*Are there a dog in the park?
+*There has been problems.
+*There seems to appear to have been likely to be problems.
+*There seems to appear to have been likely to be stupid.
+
+% CONTAINS_ONE rule 67: result-clause "that" needs a degree or such-noun
+% certificate supplied by the modified word.
+
+He ran so quickly that he fell.
+It went almost so well that we thought we won!
+I love her so much that I can't let her go.
+The shuttle is so big that it has to be carried.
+She presented her case with such eloquence that we could only admire her.
+*He ran quickly that he fell.
+*The shuttle is big that it fell.
+*She presented her case with eloquence that we could only admire her.
+
+% CONTAINS_ONE rules for controlled subjects: bare infinitive and present
+% participle controlled-subject links use dictionary connector families
+% instead of PP backstop checks.
+
+You should hear John sing.
+You should hear him sing.
+I feel him breathing down my back.
+John imagines himself singing from a mountaintop.
+*You should hear him sings.
+*I feel him breathes down my back.
+*John imagines himself sings from a mountaintop.
+
+% CONTAINS_NONE subject-inversion rule: directive-opener Qd questions require
+% punctuation, and the PP backstop still blocks direct-question Qd+MX domains.
+
+Joe, are you ready?
+Anyhow, am I right?
+It doesn't matter what Ted does.
+*Joe doesn't matter what Ted does.
+*Mary doesn't matter what Ted does.
+*Does Joe matter what Ted does?
+*Does the matter what Ted does?
+
+% CONTAINS_ONE rule 7a: Wb bare-what openers require an inverted verb
+% question certificate.
+
+What did you think?
+What were you thinking?
+What the hell were you thinking?
+*What the outcome is, I'm sure he'll still be popular.
+
+% BOUNDED r-domain cleanup: possessive relative clauses should not need the
+% old PP-level r-domain boundedness backstop.
+
+The syndicates whose activities add to the cost left.
+The syndicates whose activities add to the cost of business left.
+The syndicates whose activities add to the cost of doing business left.

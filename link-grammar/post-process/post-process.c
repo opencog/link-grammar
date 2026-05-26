@@ -251,23 +251,570 @@ const char * linkage_get_violation_name(const Linkage linkage)
 	return linkage->lifo.pp_violation_msg;
 }
 
+const PP_failure *post_process_get_failure(Postprocessor *pp)
+{
+	return (NULL == pp) ? NULL : &pp->failure;
+}
+
+bool post_process_link_ignored(Postprocessor *pp, const char *link_name)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge) || (NULL == link_name))
+		return false;
+
+	return pp_linkset_match(pp->knowledge->ignore_these_links, link_name);
+}
+
+bool post_process_link_must_form_cycle(Postprocessor *pp,
+                                       const char *link_name)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge) || (NULL == link_name))
+		return false;
+
+	return pp_linkset_match(pp->knowledge->must_form_a_cycle_links,
+	                        link_name);
+}
+
+bool post_process_link_restricted(Postprocessor *pp, const char *link_name)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge) || (NULL == link_name))
+		return false;
+
+	return pp_linkset_match(pp->knowledge->restricted_links, link_name);
+}
+
+PP_domain_kind post_process_link_domain_kind(Postprocessor *pp,
+                                             const char *link_name)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge) || (NULL == link_name))
+		return PP_DOMAIN_NONE;
+
+	if (pp_linkset_match(pp->knowledge->ignore_these_links, link_name))
+		return PP_DOMAIN_NONE;
+	if (pp_linkset_match(pp->knowledge->domain_starter_links, link_name))
+		return PP_DOMAIN_REGULAR;
+	if (pp_linkset_match(pp->knowledge->urfl_domain_starter_links, link_name))
+		return PP_DOMAIN_URFL;
+	if (pp_linkset_match(pp->knowledge->urfl_only_domain_starter_links,
+	                     link_name))
+		return PP_DOMAIN_URFL_ONLY;
+	if (pp_linkset_match(pp->knowledge->left_domain_starter_links, link_name))
+		return PP_DOMAIN_LEFT;
+
+	return PP_DOMAIN_NONE;
+}
+
+bool post_process_link_domain_starter(Postprocessor *pp, const char *link_name)
+{
+	return PP_DOMAIN_REGULAR == post_process_link_domain_kind(pp, link_name);
+}
+
+bool post_process_link_domain_contains(Postprocessor *pp, const char *link_name)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge) || (NULL == link_name))
+		return false;
+
+	return pp_linkset_match(pp->knowledge->domain_contains_links, link_name);
+}
+
+/* PARSE_CONTAINS_* constraints are encoded as bit masks so metric candidates
+ * can accumulate selector/criterion facts without repeated string matching
+ * during root-candidate filtering. */
+static size_t parse_rule_mask_count(size_t count)
+{
+	size_t max_bits = 8 * sizeof(uint64_t);
+	return (count < max_bits) ? count : max_bits;
+}
+
+static size_t parse_contains_one_mask_count(Postprocessor *pp)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge)) return 0;
+
+	return parse_rule_mask_count(pp->knowledge->n_parse_contains_one_rules);
+}
+
+static size_t parse_contains_one_global_mask_count(Postprocessor *pp)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge)) return 0;
+
+	return parse_rule_mask_count(
+		pp->knowledge->n_parse_contains_one_global_rules);
+}
+
+static size_t parse_contains_none_mask_count(Postprocessor *pp)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge)) return 0;
+
+	return parse_rule_mask_count(pp->knowledge->n_parse_contains_none_rules);
+}
+
+uint64_t post_process_parse_contains_one_selector_mask(Postprocessor *pp,
+                                                       const char *link_name)
+{
+	uint64_t mask = 0;
+	size_t count = parse_contains_one_mask_count(pp);
+
+	if (NULL == link_name) return 0;
+	for (size_t i = 0; i < count; i++)
+	{
+		pp_rule *rule = &pp->knowledge->parse_contains_one_rules[i];
+		if (post_process_match(rule->selector, link_name))
+			mask |= (uint64_t)1 << i;
+	}
+	return mask;
+}
+
+uint64_t post_process_parse_contains_one_criterion_mask(Postprocessor *pp,
+                                                        const char *link_name)
+{
+	uint64_t mask = 0;
+	size_t count = parse_contains_one_mask_count(pp);
+
+	if (NULL == link_name) return 0;
+	for (size_t i = 0; i < count; i++)
+	{
+		pp_rule *rule = &pp->knowledge->parse_contains_one_rules[i];
+		if (string_in_list(link_name, rule->link_array))
+			mask |= (uint64_t)1 << i;
+	}
+	return mask;
+}
+
+uint64_t post_process_parse_contains_one_active_mask(Postprocessor *pp)
+{
+	size_t count = parse_contains_one_mask_count(pp);
+
+	if (0 == count) return 0;
+	if (8 * sizeof(uint64_t) == count) return UINT64_MAX;
+	return ((uint64_t)1 << count) - 1;
+}
+
+size_t post_process_parse_contains_one_rule_count(Postprocessor *pp)
+{
+	return parse_contains_one_mask_count(pp);
+}
+
+const char *post_process_parse_contains_one_rule_message(Postprocessor *pp,
+                                                         size_t idx)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge)) return NULL;
+	if (parse_contains_one_mask_count(pp) <= idx) return NULL;
+	return pp->knowledge->parse_contains_one_rules[idx].msg;
+}
+
+uint64_t post_process_parse_contains_one_global_selector_mask(
+	Postprocessor *pp, const char *link_name)
+{
+	uint64_t mask = 0;
+	size_t count = parse_contains_one_global_mask_count(pp);
+
+	if (NULL == link_name) return 0;
+	for (size_t i = 0; i < count; i++)
+	{
+		pp_rule *rule = &pp->knowledge->parse_contains_one_global_rules[i];
+		if (post_process_match(rule->selector, link_name))
+			mask |= (uint64_t)1 << i;
+	}
+	return mask;
+}
+
+uint64_t post_process_parse_contains_one_global_criterion_mask(
+	Postprocessor *pp, const char *link_name)
+{
+	uint64_t mask = 0;
+	size_t count = parse_contains_one_global_mask_count(pp);
+
+	if (NULL == link_name) return 0;
+	for (size_t i = 0; i < count; i++)
+	{
+		pp_rule *rule = &pp->knowledge->parse_contains_one_global_rules[i];
+		if (string_in_list(link_name, rule->link_array))
+			mask |= (uint64_t)1 << i;
+	}
+	return mask;
+}
+
+size_t post_process_parse_contains_one_global_rule_count(Postprocessor *pp)
+{
+	return parse_contains_one_global_mask_count(pp);
+}
+
+const char *post_process_parse_contains_one_global_rule_message(
+	Postprocessor *pp, size_t idx)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge)) return NULL;
+	if (parse_contains_one_global_mask_count(pp) <= idx) return NULL;
+	return pp->knowledge->parse_contains_one_global_rules[idx].msg;
+}
+
+uint64_t post_process_parse_contains_none_selector_mask(Postprocessor *pp,
+                                                        const char *link_name)
+{
+	uint64_t mask = 0;
+	size_t count = parse_contains_none_mask_count(pp);
+
+	if (NULL == link_name) return 0;
+	for (size_t i = 0; i < count; i++)
+	{
+		pp_rule *rule = &pp->knowledge->parse_contains_none_rules[i];
+		if (post_process_match(rule->selector, link_name))
+			mask |= (uint64_t)1 << i;
+	}
+	return mask;
+}
+
+uint64_t post_process_parse_contains_none_forbidden_mask(Postprocessor *pp,
+                                                         const char *link_name)
+{
+	uint64_t mask = 0;
+	size_t count = parse_contains_none_mask_count(pp);
+
+	if (NULL == link_name) return 0;
+	for (size_t i = 0; i < count; i++)
+	{
+		pp_rule *rule = &pp->knowledge->parse_contains_none_rules[i];
+		if (string_in_list(link_name, rule->link_array))
+			mask |= (uint64_t)1 << i;
+	}
+	return mask;
+}
+
+uint64_t post_process_parse_contains_none_active_mask(Postprocessor *pp)
+{
+	size_t count = parse_contains_none_mask_count(pp);
+
+	if (0 == count) return 0;
+	if (8 * sizeof(uint64_t) == count) return UINT64_MAX;
+	return ((uint64_t)1 << count) - 1;
+}
+
+size_t post_process_parse_contains_none_rule_count(Postprocessor *pp)
+{
+	return parse_contains_none_mask_count(pp);
+}
+
+const char *post_process_parse_contains_none_rule_message(Postprocessor *pp,
+                                                          size_t idx)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge)) return NULL;
+	if (parse_contains_none_mask_count(pp) <= idx) return NULL;
+	return pp->knowledge->parse_contains_none_rules[idx].msg;
+}
+
+bool post_process_has_parse_constraints(Postprocessor *pp)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge)) return false;
+
+	return (0 < pp->knowledge->n_parse_contains_one_rules) ||
+	       (0 < pp->knowledge->n_parse_contains_one_global_rules) ||
+	       (0 < pp->knowledge->n_parse_contains_none_rules);
+}
+
+/* Tell classic PP which exact rule families metric extraction has already
+ * enforced.  The flags are sentence-local mode bits on the Postprocessor and
+ * are intentionally separate from noPP's dictionary-debug rule suppression. */
+void post_process_set_metric_rule_suppression(Postprocessor *pp,
+                                              bool skip_mfc,
+                                              bool skip_parse_contains_one,
+                                              bool skip_parse_contains_none)
+{
+	if (NULL == pp) return;
+
+	pp->skip_metric_mfc_rules = skip_mfc;
+	pp->skip_metric_parse_contains_one_rules = skip_parse_contains_one;
+	pp->skip_metric_parse_contains_none_rules = skip_parse_contains_none;
+}
+
+static void pp_failure_clear(Postprocessor *pp)
+{
+	memset(&pp->failure, 0, sizeof(pp->failure));
+	pp->failure.type = PP_FAILURE_NONE;
+	pp->failure.domain = -1;
+}
+
+static bool pp_failure_enabled(Postprocessor *pp)
+{
+	if ((NULL != pp) && pp->capture_failures) return true;
+	return (NULL != test_enabled("pp-parse-set-trace")) ||
+	       (NULL != test_enabled("pp-parse-set-trace-all-links"));
+}
+
+static void pp_failure_add_link(unsigned int *links, size_t *num_links,
+                                bool *truncated, size_t link)
+{
+	if (*num_links == PP_FAILURE_MAX_LINKS)
+	{
+		*truncated = true;
+		return;
+	}
+
+	links[(*num_links)++] = (unsigned int)link;
+}
+
+static void pp_failure_add_domain(PP_failure *failure, Domain *domain)
+{
+	for (DTreeLeaf *dtl = domain->child; dtl != NULL; dtl = dtl->next)
+		pp_failure_add_link(failure->domain_links,
+		                    &failure->num_domain_links,
+		                    &failure->truncated, dtl->link);
+}
+
+static bool pp_failure_set_rule(Postprocessor *pp, PP_failure_type type,
+                                pp_rule *rule)
+{
+	PP_failure *failure = &pp->failure;
+
+	if (!pp_failure_enabled(pp)) return false;
+
+	pp_failure_clear(pp);
+	failure->type = type;
+	failure->message = rule->msg;
+	if ((PP_FAILURE_MUST_FORM_CYCLE != type) && (PP_FAILURE_BOUNDED != type))
+	{
+		failure->selector = rule->selector;
+		failure->criteria = rule->link_array;
+	}
+	return true;
+}
+
+static void pp_failure_contains_one(Postprocessor *pp, Linkage sublinkage,
+                                    pp_rule *rule, size_t domain)
+{
+	PP_failure *failure;
+
+	if (!pp_failure_set_rule(pp, PP_FAILURE_CONTAINS_ONE, rule)) return;
+	failure = &pp->failure;
+	failure->domain = (int)domain;
+	failure->domain_start_link =
+		(unsigned int)pp->pp_data.domain_array[domain].start_link;
+	failure->has_domain_start_link = true;
+	pp_failure_add_domain(failure, &pp->pp_data.domain_array[domain]);
+
+	for (DTreeLeaf *dtl = pp->pp_data.domain_array[domain].child;
+	     dtl != NULL; dtl = dtl->next)
+	{
+		if (post_process_match(rule->selector,
+		    sublinkage->link_array[dtl->link].link_name))
+			pp_failure_add_link(failure->selector_links,
+			                    &failure->num_selector_links,
+			                    &failure->truncated, dtl->link);
+	}
+}
+
+static void pp_failure_contains_none(Postprocessor *pp, Linkage sublinkage,
+                                     pp_rule *rule, size_t domain)
+{
+	PP_failure *failure;
+
+	if (!pp_failure_set_rule(pp, PP_FAILURE_CONTAINS_NONE, rule)) return;
+	failure = &pp->failure;
+	failure->domain = (int)domain;
+	failure->domain_start_link =
+		(unsigned int)pp->pp_data.domain_array[domain].start_link;
+	failure->has_domain_start_link = true;
+	pp_failure_add_domain(failure, &pp->pp_data.domain_array[domain]);
+
+	for (DTreeLeaf *dtl = pp->pp_data.domain_array[domain].child;
+	     dtl != NULL; dtl = dtl->next)
+	{
+		const char *link_name = sublinkage->link_array[dtl->link].link_name;
+
+		if (post_process_match(rule->selector, link_name))
+			pp_failure_add_link(failure->selector_links,
+			                    &failure->num_selector_links,
+			                    &failure->truncated, dtl->link);
+
+		if (string_in_list(link_name, rule->link_array))
+			pp_failure_add_link(failure->criterion_links,
+			                    &failure->num_criterion_links,
+			                    &failure->truncated, dtl->link);
+	}
+}
+
+static void pp_failure_contains_one_global(Postprocessor *pp,
+                                           Linkage sublinkage,
+                                           pp_rule *rule)
+{
+	PP_failure *failure;
+
+	if (!pp_failure_set_rule(pp, PP_FAILURE_CONTAINS_ONE_GLOBAL, rule)) return;
+	failure = &pp->failure;
+
+	for (size_t link = 0; link < sublinkage->num_links; link++)
+	{
+		if (post_process_match(rule->selector,
+		    sublinkage->link_array[link].link_name))
+			pp_failure_add_link(failure->selector_links,
+			                    &failure->num_selector_links,
+			                    &failure->truncated, link);
+	}
+}
+
+static void pp_failure_must_form_cycle(Postprocessor *pp, pp_rule *rule,
+                                       size_t link)
+{
+	PP_failure *failure;
+
+	if (!pp_failure_set_rule(pp, PP_FAILURE_MUST_FORM_CYCLE, rule)) return;
+	failure = &pp->failure;
+	pp_failure_add_link(failure->offending_links,
+	                    &failure->num_offending_links,
+	                    &failure->truncated, link);
+}
+
+static void pp_failure_bounded(Postprocessor *pp, pp_rule *rule,
+                               size_t domain, size_t link)
+{
+	PP_failure *failure;
+
+	if (!pp_failure_set_rule(pp, PP_FAILURE_BOUNDED, rule)) return;
+	failure = &pp->failure;
+	failure->domain = (int)domain;
+	failure->domain_start_link =
+		(unsigned int)pp->pp_data.domain_array[domain].start_link;
+	failure->has_domain_start_link = true;
+	pp_failure_add_domain(failure, &pp->pp_data.domain_array[domain]);
+	pp_failure_add_link(failure->offending_links,
+	                    &failure->num_offending_links,
+	                    &failure->truncated, link);
+}
+
 /************************ rule application *******************************/
+
+/* Dictionary debugging helper: -test=noPP:AABBCC suppresses PP rules by
+ * their two-digit message IDs, so later PP blockers can be inspected without
+ * editing the dictionary knowledge file.
+ */
+static bool pp_rule_id(const char *msg, unsigned int *id)
+{
+	const char *end;
+	const char *start;
+	unsigned int value = 0;
+
+	if (NULL == msg) return false;
+
+	end = msg + strlen(msg);
+	while ((msg < end) && !isdigit((unsigned char)end[-1]))
+		end--;
+	if (msg == end) return false;
+
+	start = end;
+	while ((msg < start) && isdigit((unsigned char)start[-1]))
+		start--;
+
+	for (const char *p = start; p < end; p++)
+		value = 10 * value + (unsigned int)(*p - '0');
+
+	*id = value;
+	return true;
+}
+
+/* Active PP rows and PARSE_* rows can have different wording.  Prefer the
+ * shared numeric suffix when present; ID-less rows must use exact text. */
+static bool pp_rule_id_matches(const char *left, const char *right)
+{
+	unsigned int left_id;
+	unsigned int right_id;
+	bool left_has_id = pp_rule_id(left, &left_id);
+	bool right_has_id = pp_rule_id(right, &right_id);
+
+	if (left_has_id && right_has_id) return left_id == right_id;
+	if (left_has_id || right_has_id) return false;
+	if ((NULL == left) || (NULL == right)) return false;
+	return 0 == strcmp(left, right);
+}
+
+/* Return true when an active CONTAINS_ONE row is duplicated by a PARSE_*
+ * row that metric extraction can enforce before classic PP runs. */
+static bool pp_metric_parse_contains_one_rule(Postprocessor *pp,
+                                              pp_rule *rule)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge) || (NULL == rule->msg))
+		return false;
+
+	for (size_t i = 0; i < pp->knowledge->n_parse_contains_one_rules; i++)
+		if (pp_rule_id_matches(
+		    rule->msg, pp->knowledge->parse_contains_one_rules[i].msg))
+			return true;
+
+	for (size_t i = 0; i < pp->knowledge->n_parse_contains_one_global_rules;
+	     i++)
+		if (pp_rule_id_matches(
+		    rule->msg,
+		    pp->knowledge->parse_contains_one_global_rules[i].msg))
+			return true;
+
+	return false;
+}
+
+/* Return true when an active CONTAINS_NONE row is duplicated by a PARSE_*
+ * row that metric extraction can enforce before classic PP runs. */
+static bool pp_metric_parse_contains_none_rule(Postprocessor *pp,
+                                               pp_rule *rule)
+{
+	if ((NULL == pp) || (NULL == pp->knowledge) || (NULL == rule->msg))
+		return false;
+
+	for (size_t i = 0; i < pp->knowledge->n_parse_contains_none_rules; i++)
+		if (pp_rule_id_matches(
+		    rule->msg, pp->knowledge->parse_contains_none_rules[i].msg))
+			return true;
+
+	return false;
+}
+
+/* Rule suppression has two users: noPP for dictionary debugging, and metric
+ * extraction for exact pre-PP rule families that should not be double-checked
+ * unless metric-classic-pp is active. */
+static bool pp_rule_suppressed(Postprocessor *pp, PP_failure_type type,
+                               pp_rule *rule)
+{
+	const char *no_pp = test_enabled("noPP");
+	unsigned int id;
+
+	if ((PP_FAILURE_MUST_FORM_CYCLE == type) &&
+	    pp->skip_metric_mfc_rules)
+		return true;
+
+	if ((PP_FAILURE_CONTAINS_ONE == type) &&
+	    pp->skip_metric_parse_contains_one_rules &&
+	    pp_metric_parse_contains_one_rule(pp, rule))
+		return true;
+
+	if ((PP_FAILURE_CONTAINS_NONE == type) &&
+	    pp->skip_metric_parse_contains_none_rules &&
+	    pp_metric_parse_contains_none_rule(pp, rule))
+		return true;
+
+	if ((NULL == no_pp) || (':' != no_pp[0])) return false;
+	if (!pp_rule_id(rule->msg, &id)) return false;
+
+	for (const char *p = no_pp + 1; isdigit((unsigned char)p[0]); p += 2)
+	{
+		if (!isdigit((unsigned char)p[1])) break;
+		if (id == (unsigned int)(10 * (p[0] - '0') + (p[1] - '0')))
+			return true;
+	}
+
+	return false;
+}
 
 static void clear_visited(PP_data *pp_data)
 {
 	memset(pp_data->visited, 0, pp_data->num_words * sizeof(bool));
 }
 
-static bool apply_rules(PP_data *pp_data,
-                        bool (applyfn) (PP_data *, Linkage, pp_rule *),
+static bool apply_rules(Postprocessor *pp,
+                        bool (applyfn)(Postprocessor *, Linkage, pp_rule *),
                         Linkage sublinkage,
                         pp_rule *rule_array,
+                        PP_failure_type type,
                         const char **msg)
 {
 	int i;
 	for (i = 0; (*msg = rule_array[i].msg) != NULL; i++)
 	{
-		if (!applyfn(pp_data, sublinkage, &(rule_array[i])))
+		if (pp_rule_suppressed(pp, type, &rule_array[i])) continue;
+		if (!applyfn(pp, sublinkage, &(rule_array[i])))
 		{
 			rule_array[i].use_count ++;
 			return false;
@@ -278,26 +825,28 @@ static bool apply_rules(PP_data *pp_data,
 
 static bool
 apply_relevant_rules(Postprocessor *pp,
-                     bool (applyfn)(PP_data *, Linkage, pp_rule *),
+                     bool (applyfn)(Postprocessor *, Linkage, pp_rule *),
                      Linkage sublinkage,
                      pp_rule *rule_array,
                      int *relevant_rules,
+                     PP_failure_type type,
                      const char **msg)
 {
 	int i, idx;
-	PP_data *pp_data = &pp->pp_data;
 
 	/* If we didn't accumulate link names for this sentence, we need
 	 *  to apply all rules. */
 	if (pp_linkset_population(pp->set_of_links_of_sentence) == 0) {
-		return apply_rules(pp_data, applyfn, sublinkage, rule_array, msg);
+		return apply_rules(pp, applyfn, sublinkage, rule_array, type, msg);
 	}
 
 	/* We did, and we don't. */
 	for (i = 0; (idx = relevant_rules[i]) != -1; i++)
 	{
 		*msg = rule_array[idx].msg;
-		if (!applyfn(pp_data, sublinkage, &(rule_array[idx]))) return false;
+		if (pp_rule_suppressed(pp, type, &rule_array[idx])) continue;
+		if (!applyfn(pp, sublinkage, &(rule_array[idx])))
+			return false;
 	}
 	return true;
 }
@@ -308,10 +857,11 @@ apply_relevant_rules(Postprocessor *pp,
  * string matching)
  */
 static bool
-apply_contains_one(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
+apply_contains_one(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 {
 	DTreeLeaf * dtl;
 	size_t d, count;
+	PP_data *pp_data = &pp->pp_data;
 
 	for (d=0; d<pp_data->N_domains; d++)
 	{
@@ -333,7 +883,11 @@ apply_contains_one(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 					break;
 				}
 			}
-			if (count == 0) return false;
+			if (count == 0)
+			{
+				pp_failure_contains_one(pp, sublinkage, rule, d);
+				return false;
+			}
 		}
 	}
 	return true;
@@ -346,9 +900,10 @@ apply_contains_one(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
  * from the link_array contained in the rule. Uses exact string matching.
  */
 static bool
-apply_contains_none(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
+apply_contains_none(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 {
 	size_t d;
+	PP_data *pp_data = &pp->pp_data;
 
 	for (d=0; d<pp_data->N_domains; d++)
 	{
@@ -365,7 +920,10 @@ apply_contains_none(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 			{
 				if (string_in_list(sublinkage->link_array[dtl->link].link_name,
 				                   rule->link_array))
+				{
+					pp_failure_contains_none(pp, sublinkage, rule, d);
 					return false;
+				}
 			}
 		}
 	}
@@ -378,7 +936,8 @@ apply_contains_none(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
  * (2) it does, and it also contains one or more from the rule's link set
  */
 static bool
-apply_contains_one_globally(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
+apply_contains_one_globally(Postprocessor *pp, Linkage sublinkage,
+                            pp_rule *rule)
 {
 	size_t i;
 	for (i = 0; i < sublinkage->num_links; i++)
@@ -397,7 +956,12 @@ apply_contains_one_globally(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 			break;
 		}
 	}
-	if (count == 0) return false; else return true;
+	if (count == 0)
+	{
+		pp_failure_contains_one_global(pp, sublinkage, rule);
+		return false;
+	}
+	return true;
 }
 
 /**
@@ -434,10 +998,11 @@ static void reachable_without_dfs(PP_data *pp_data,
  * these links.
  */
 static bool
-apply_must_form_a_cycle(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
+apply_must_form_a_cycle(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 {
 	List_o_links *lol;
 	size_t w;
+	PP_data *pp_data = &pp->pp_data;
 
 	for (w = 0; w < pp_data->num_words; w++)
 	{
@@ -448,7 +1013,11 @@ apply_must_form_a_cycle(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 
 			clear_visited(pp_data);
 			reachable_without_dfs(pp_data, sublinkage, w, lol->word, w);
-			if (!pp_data->visited[lol->word]) return false;
+			if (!pp_data->visited[lol->word])
+			{
+				pp_failure_must_form_cycle(pp, rule, lol->link);
+				return false;
+			}
 		}
 	}
 
@@ -462,10 +1031,65 @@ apply_must_form_a_cycle(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 		reachable_without_dfs(pp_data, sublinkage, w, lol->word, w);
 
 		assert(lol->word < pp_data->num_words, "Bad word index");
-		if (!pp_data->visited[lol->word]) return false;
+		if (!pp_data->visited[lol->word])
+		{
+			pp_failure_must_form_cycle(pp, rule, lol->link);
+			return false;
+		}
 	}
 
 	return true;
+}
+
+static void build_graph(Postprocessor *pp, Linkage sublinkage);
+
+bool post_process_must_form_cycle(Postprocessor *pp, Linkage sublinkage,
+                                  PP_failure *failure)
+{
+	const char *msg = NULL;
+	PP_data *pp_data;
+	bool saved_capture_failures;
+	bool ok;
+
+	if (NULL != failure)
+	{
+		memset(failure, 0, sizeof(*failure));
+		failure->type = PP_FAILURE_NONE;
+		failure->domain = -1;
+	}
+	if (NULL == pp) return true;
+
+	post_process_free_data(&pp->pp_data);
+	pp_failure_clear(pp);
+	pp->violation = NULL;
+
+	pp_data = &pp->pp_data;
+	pp_data->num_words = sublinkage->num_words;
+	if (pp_data->vlength <= pp_data->num_words)
+	{
+		size_t newsz;
+		pp_data->vlength += pp_data->num_words;
+		newsz = pp_data->vlength * sizeof(bool);
+		pp_data->visited = (bool *) realloc(pp_data->visited, newsz);
+	}
+
+	saved_capture_failures = pp->capture_failures;
+	if (NULL != failure) pp->capture_failures = true;
+
+	build_graph(pp, sublinkage);
+	ok = apply_rules(pp, apply_must_form_a_cycle, sublinkage,
+	                 pp->knowledge->form_a_cycle_rules,
+	                 PP_FAILURE_MUST_FORM_CYCLE, &msg);
+	if (!ok)
+	{
+		pp->n_local_rules_firing++;
+		pp->violation = msg;
+		if (NULL != failure) *failure = *post_process_get_failure(pp);
+	}
+
+	pp->capture_failures = saved_capture_failures;
+	post_process_free_data(&pp->pp_data);
+	return ok;
 }
 
 /**
@@ -474,11 +1098,12 @@ apply_must_form_a_cycle(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
  * of the root word of the domain.
  */
 static bool
-apply_bounded(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
+apply_bounded(Postprocessor *pp, Linkage sublinkage, pp_rule *rule)
 {
 	size_t d, lw;
 	List_o_links * lol;
 	char d_type = rule->domain;
+	PP_data *pp_data = &pp->pp_data;
 
 	for (d = 0; d < pp_data->N_domains; d++)
 	{
@@ -486,7 +1111,11 @@ apply_bounded(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 		lw = sublinkage->link_array[pp_data->domain_array[d].start_link].lw;
 		for (lol = pp_data->domain_array[d].lol; lol != NULL; lol = lol->next)
 		{
-			if (sublinkage->link_array[lol->link].lw < lw) return false;
+			if (sublinkage->link_array[lol->link].lw < lw)
+			{
+				pp_failure_bounded(pp, rule, d, lol->link);
+				return false;
+			}
 		}
 	}
 	return true;
@@ -712,9 +1341,11 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 		if (NULL == sublinkage->link_array[link].link_name) continue;
 		const char *s = sublinkage->link_array[link].link_name;
 
-		if (pp_linkset_match(pp->knowledge->ignore_these_links, s)) continue;
-		if (pp_linkset_match(pp->knowledge->domain_starter_links, s))
+		switch (post_process_link_domain_kind(pp, s))
 		{
+		case PP_DOMAIN_NONE:
+			continue;
+		case PP_DOMAIN_REGULAR:
 			setup_domain_array(pp, s, link);
 			if (pp_linkset_match(pp->knowledge->domain_contains_links, s))
 				add_link_to_domain(pp_data, link);
@@ -722,10 +1353,8 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 			clear_visited(pp_data);
 			depth_first_search(pp, sublinkage, sublinkage->link_array[link].rw,
 			                   sublinkage->link_array[link].lw, link);
-		}
-		else
-		if (pp_linkset_match(pp->knowledge->urfl_domain_starter_links, s))
-		{
+			break;
+		case PP_DOMAIN_URFL:
 			setup_domain_array(pp, s, link);
 			/* always add the starter link to its urfl domain */
 			add_link_to_domain(pp_data, link);
@@ -733,25 +1362,22 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 			clear_visited(pp_data);
 			bad_depth_first_search(pp, sublinkage,sublinkage->link_array[link].rw,
 			                       sublinkage->link_array[link].lw, link);
-		}
-		else
-		if (pp_linkset_match(pp->knowledge->urfl_only_domain_starter_links, s))
-		{
+			break;
+		case PP_DOMAIN_URFL_ONLY:
 			setup_domain_array(pp, s, link);
 			/* do not add the starter link to its urfl_only domain */
 			clear_visited(pp_data);
 			d_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
 			                     sublinkage->link_array[link].lw,
 			                     sublinkage->link_array[link].rw, link);
-		}
-		else
-		if (pp_linkset_match(pp->knowledge->left_domain_starter_links, s))
-		{
+			break;
+		case PP_DOMAIN_LEFT:
 			setup_domain_array(pp, s, link);
 			/* do not add the starter link to a left domain */
 			clear_visited(pp_data);
 			left_depth_first_search(pp, sublinkage, sublinkage->link_array[link].lw,
 			                        sublinkage->link_array[link].rw, link);
+			break;
 		}
 	}
 
@@ -828,7 +1454,8 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 	if (!apply_relevant_rules(pp, apply_contains_one_globally,
 	                          sublinkage,
 	                          pp->knowledge->contains_one_rules,
-	                          pp->relevant_contains_one_rules, msg))
+	                          pp->relevant_contains_one_rules,
+	                          PP_FAILURE_CONTAINS_ONE, msg))
 	{
 		for (size_t i = 0; i < pp_data->wowlen; i++)
 			pp_data->word_links[i] = NULL;
@@ -851,14 +1478,18 @@ internal_process(Postprocessor *pp, Linkage sublinkage, const char **msg)
 	/* The order below should be optimal for most cases */
 	if (!apply_relevant_rules(pp, apply_contains_one, sublinkage,
 	                          pp->knowledge->contains_one_rules,
-	                          pp->relevant_contains_one_rules, msg)) return 1;
+	                          pp->relevant_contains_one_rules,
+	                          PP_FAILURE_CONTAINS_ONE, msg)) return 1;
 	if (!apply_relevant_rules(pp, apply_contains_none, sublinkage,
 	                          pp->knowledge->contains_none_rules,
-	                          pp->relevant_contains_none_rules, msg)) return 1;
-	if (!apply_rules(pp_data, apply_must_form_a_cycle, sublinkage,
-	                 pp->knowledge->form_a_cycle_rules,msg)) return 1;
-	if (!apply_rules(pp_data, apply_bounded, sublinkage,
-	                 pp->knowledge->bounded_rules, msg)) return 1;
+	                          pp->relevant_contains_none_rules,
+	                          PP_FAILURE_CONTAINS_NONE, msg)) return 1;
+	if (!apply_rules(pp, apply_must_form_a_cycle, sublinkage,
+	                 pp->knowledge->form_a_cycle_rules,
+	                 PP_FAILURE_MUST_FORM_CYCLE, msg)) return 1;
+	if (!apply_rules(pp, apply_bounded, sublinkage,
+	                 pp->knowledge->bounded_rules,
+	                 PP_FAILURE_BOUNDED, msg)) return 1;
 	return 0; /* This linkage satisfied all the rules */
 }
 
@@ -950,10 +1581,14 @@ Postprocessor * post_process_new(pp_knowledge * kno)
 	pp->relevant_contains_one_rules[0] = -1;
 	pp->relevant_contains_none_rules[0] = -1;
 	pp->violation = NULL;
+	pp_failure_clear(pp);
 	pp->n_local_rules_firing = 0;
 	pp->n_global_rules_firing = 0;
 
 	pp->q_pruned_rules = false;
+	pp->skip_metric_mfc_rules = false;
+	pp->skip_metric_parse_contains_one_rules = false;
+	pp->skip_metric_parse_contains_none_rules = false;
 
 	pp_data = &pp->pp_data;
 	pp_data->vlength = PP_INITLEN;
@@ -991,6 +1626,20 @@ void post_process_free(Postprocessor *pp)
 	free(pp_data->word_links);
 
 	free(pp);
+}
+
+void post_process_reset(Postprocessor *pp)
+{
+	if (NULL == pp) return;
+
+	pp_linkset_clear(pp->set_of_links_of_sentence);
+	pp_linkset_clear(pp->set_of_links_in_an_active_rule);
+	pp->relevant_contains_one_rules[0] = -1;
+	pp->relevant_contains_none_rules[0] = -1;
+	pp->q_pruned_rules = false;
+	pp->violation = NULL;
+	pp_failure_clear(pp);
+	post_process_free_data(&pp->pp_data);
 }
 
 /**
@@ -1074,6 +1723,7 @@ void do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 	PP_data *pp_data;
 
 	if (pp == NULL) return;
+	pp_failure_clear(pp);
 	pp_data = &pp->pp_data;
 
 	// XXX wtf .. why is this not leaking memory ?
@@ -1125,7 +1775,9 @@ void do_post_process(Postprocessor *pp, Linkage sublinkage, bool is_long)
 /**
  * This does basic post-processing for all linkages.
  */
-void post_process_lkgs(Sentence sent, Parse_Options opts)
+static void post_process_lkgs_internal(Sentence sent, Parse_Options opts,
+                                       PP_failure *failures,
+                                       size_t failures_len)
 {
 	size_t in;
 	size_t N_linkages_post_processed = 0;
@@ -1133,6 +1785,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 	size_t N_linkages_alloced = sent->num_linkages_alloced;
 	bool twopass = sent->length >= opts->twopass_length;
 	Postprocessor *pp = sent->postprocessor;
+	bool saved_capture_failures;
 
 	/* Special-case the "amy/ady" morphology handling. */
 	/* More generally, it there's no post-processor, do nothing. */
@@ -1148,6 +1801,9 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 		}
 		return;
 	}
+
+	saved_capture_failures = pp->capture_failures;
+	pp->capture_failures = (NULL != failures);
 
 #define TCD 512 /* timer checking divisor */
 
@@ -1191,6 +1847,8 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 			/* Set the message, only if not set */
 			if (NULL == lifo->pp_violation_msg)
 				lifo->pp_violation_msg = pp->violation;
+			if ((NULL != failures) && (in < failures_len))
+				failures[in] = *post_process_get_failure(pp);
 		}
 		N_linkages_post_processed++;
 
@@ -1217,6 +1875,7 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 	}
 
 	print_time(opts, "Postprocessed all linkages");
+	pp->capture_failures = saved_capture_failures;
 
 	if (verbosity_level(6))
 	{
@@ -1226,6 +1885,32 @@ void post_process_lkgs(Sentence sent, Parse_Options opts)
 
 	sent->num_linkages_post_processed = N_linkages_post_processed;
 	sent->num_valid_linkages = N_valid_linkages;
+}
+
+void post_process_lkgs(Sentence sent, Parse_Options opts)
+{
+	post_process_lkgs_internal(sent, opts, NULL, 0);
+}
+
+void post_process_lkgs_with_failures(Sentence sent, Parse_Options opts,
+                                     PP_failure *failures,
+                                     size_t failures_len)
+{
+	post_process_lkgs_internal(sent, opts, failures, failures_len);
+}
+
+const PP_failure *post_process_find_failure(Sentence sent, Linkage lkg,
+                                            Parse_Options opts)
+{
+	Postprocessor *pp = sent->postprocessor;
+
+	if (NULL == pp) return NULL;
+
+	post_process_reset(pp);
+	do_post_process(pp, lkg, sent->length >= opts->twopass_length);
+	post_process_free_data(&pp->pp_data);
+
+	return post_process_get_failure(pp);
 }
 
 /* ================ compute the domain names ============= */

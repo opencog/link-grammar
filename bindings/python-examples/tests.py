@@ -796,6 +796,61 @@ class HEnglishLinkageTestCase(unittest.TestCase):
 "\n\n")
 
 
+class HMetricExtractionTestCase(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.d = Dictionary(lang='en')
+
+    @classmethod
+    def tearDownClass(cls):
+        del cls.d
+
+    @staticmethod
+    def cost_vector(linkage):
+        return (linkage.unused_word_cost(),
+                linkage.disjunct_cost(),
+                linkage.link_cost())
+
+    def test_low_limit_linkage_is_in_first_ordinary_cost_bucket(self):
+        text = 'It is just as I suspected.'
+        limited_po = ParseOptions(linkage_limit=1,
+                                  short_length=254,
+                                  display_morphology=False,
+                                  spell_guess=False)
+        ordinary_po = ParseOptions(linkage_limit=2000,
+                                   short_length=254,
+                                   display_morphology=False,
+                                   spell_guess=False)
+
+        limited_sent = Sentence(text, self.d, limited_po)
+        limited_linkage = next(limited_sent.parse(), None)
+        self.assertTrue(limited_linkage)
+        limited_found = clg.sentence_num_linkages_found(limited_sent._obj)
+        limited_cost = self.cost_vector(limited_linkage)
+        limited_diagram = limited_linkage.diagram(screen_width=9999)
+
+        ordinary_sent = Sentence(text, self.d, ordinary_po)
+        ordinary_linkages = ordinary_sent.parse()
+        ordinary_found = clg.sentence_num_linkages_found(ordinary_sent._obj)
+
+        self.assertEqual(limited_found, ordinary_found)
+        self.assertGreater(ordinary_found, 100)
+        self.assertLessEqual(ordinary_found, ordinary_po.linkage_limit)
+
+        first_cost = None
+        first_bucket = []
+        for linkage in ordinary_linkages:
+            cost = self.cost_vector(linkage)
+            if first_cost is None:
+                first_cost = cost
+            elif cost != first_cost:
+                break
+            first_bucket.append(linkage.diagram(screen_width=9999))
+
+        self.assertEqual(limited_cost, first_cost)
+        self.assertIn(limited_diagram, first_bucket)
+
+
 @unittest.skipIf(NO_SQLITE_ERROR, NO_SQLITE_ERROR)
 class GSQLDictTestCase(unittest.TestCase):
     @classmethod
@@ -853,10 +908,10 @@ class ZENLangTestCase(unittest.TestCase):
         del cls.d, cls.po
 
     def test_getting_links(self):
-        linkage_testfile(self, self.d, self.po)
+        linkage_testfile(self, self.d, ParseOptions())
 
     def test_quotes(self):
-        linkage_testfile(self, self.d, self.po, 'quotes')
+        linkage_testfile(self, self.d, ParseOptions(), 'quotes')
 
     def test_null_link_range_starting_with_zero(self):
         """Test parsing with a minimal number of null-links, including 0."""

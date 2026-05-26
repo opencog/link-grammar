@@ -1,5 +1,7 @@
 Version 5.13.1 (Maybe in 2026?)
- * (Nothing yet)
+ * Move most post-processing checks from en/4.0.knowledge into the dictionary.
+ * Use Viterbi-style search to return linkages in cost order when a
+   sentence has more linkages than requested.
 
 Version 5.13.0 (28 October 2025)
  * Minor English dictionary fixes.
