@@ -408,6 +408,11 @@ static Metric_state metric_exact_state_mask(Metric_state state)
 	return (Metric_state)1 << state;
 }
 
+static inline Metric_state_id metric_state_id(Metric_state state)
+{
+	return (Metric_state_id)state;
+}
+
 static bool metric_mfc_terminal_exact_enabled(const extractor_t *pex)
 {
 	return pex->metric.pp.mfc_enabled;
@@ -576,6 +581,8 @@ static Metric_ranker *metric_ranker_new(extractor_t *pex)
 		ranker->state_count = metric_exact_state_count(pex);
 	else
 		ranker->state_count = 1;
+	assert(ranker->state_count <= (size_t)UINT8_MAX + 1,
+	       "Too many metric state IDs");
 	ranker->cache_table_size = metric_ranker_cache_table_size(pex);
 	ranker->cache_table_limit = metric_ranker_cache_table_limit(pex);
 	ranker->cache_table = calloc(ranker->cache_table_size,
@@ -941,12 +948,16 @@ static Metric_link_id metric_link_id_for_connectors(extractor_t *pex,
 	return id;
 }
 
+#define METRIC_CHOICE_LINK_ID_DONE(side) ((uint8_t)(1U << (side)))
+#define METRIC_CHOICE_PARSE_RELEVANT_DONE ((uint8_t)4)
+#define METRIC_CHOICE_PARSE_RELEVANT ((uint8_t)8)
+
 static Metric_link_id choice_link_id(extractor_t *pex,
                                      Parse_choice *pc,
                                      const Parse_set *set,
                                      int side)
 {
-	uint8_t mask = (uint8_t)1 << side;
+	uint8_t mask = METRIC_CHOICE_LINK_ID_DONE(side);
 	Connector *lc = side ? get_tracon_by_id(pc->md, pc->r_id, 1) : set->le;
 	Connector *rc;
 
@@ -983,6 +994,10 @@ static const char *choice_link_name(extractor_t *pex,
 static bool metric_choice_parse_constraint_relevant(
 	extractor_t *pex, Parse_choice *choice, const Parse_set *set)
 {
+	if (choice->metric_link_id_done & METRIC_CHOICE_PARSE_RELEVANT_DONE)
+		return 0 != (choice->metric_link_id_done &
+		             METRIC_CHOICE_PARSE_RELEVANT);
+
 	for (int side = 0; side < 2; side++)
 	{
 		Metric_link_id id = choice_link_id(pex, choice, set, side);
@@ -991,15 +1006,21 @@ static bool metric_choice_parse_constraint_relevant(
 		if (METRIC_LINK_ID_NONE == id) continue;
 		cls = metric_link_class(pex, id);
 		if (metric_link_class_parse_constraint_relevant(pex, cls))
+		{
+			choice->metric_link_id_done |=
+				METRIC_CHOICE_PARSE_RELEVANT_DONE |
+				METRIC_CHOICE_PARSE_RELEVANT;
 			return true;
+		}
 	}
+	choice->metric_link_id_done |= METRIC_CHOICE_PARSE_RELEVANT_DONE;
 	return false;
 }
 
 static bool choice_link_ignored(extractor_t *pex, Parse_choice *pc,
                                 int side, const char *name)
 {
-	uint8_t mask = (uint8_t)1 << side;
+	uint8_t mask = METRIC_CHOICE_LINK_ID_DONE(side);
 
 	if (!(pc->metric_link_id_done & mask))
 		return post_process_link_ignored(pex->postprocessor, name);
@@ -1011,7 +1032,7 @@ static bool choice_link_ignored(extractor_t *pex, Parse_choice *pc,
 static bool choice_link_must_form_cycle(extractor_t *pex, Parse_choice *pc,
                                         int side, const char *name)
 {
-	uint8_t mask = (uint8_t)1 << side;
+	uint8_t mask = METRIC_CHOICE_LINK_ID_DONE(side);
 
 	if (!(pc->metric_link_id_done & mask))
 		return post_process_link_must_form_cycle(pex->postprocessor, name);
@@ -2518,7 +2539,8 @@ static void metric_ranker_init_root_states(extractor_t *pex,
 	{
 		if (!metric_root_state_allowed(pex, ranker, state))
 			continue;
-		ranker->root_states[ranker->num_root_states++] = state;
+		ranker->root_states[ranker->num_root_states++] =
+			metric_state_id(state);
 	}
 }
 
@@ -2695,10 +2717,10 @@ static bool metric_push_state_candidate(extractor_t *pex,
 	candidate->choice = choice;
 	candidate->rank[0] = left_rank;
 	candidate->rank[1] = right_rank;
-	candidate->state = requested_state;
-	candidate->child_state[0] = left_state;
-	candidate->child_state[1] = right_state;
 	candidate->metric = metric;
+	candidate->state = metric_state_id(requested_state);
+	candidate->child_state[0] = metric_state_id(left_state);
+	candidate->child_state[1] = metric_state_id(right_state);
 	if (bounded_active)
 		memcpy(candidate->bounded_domain_state, bounded_state,
 		       sizeof(candidate->bounded_domain_state));
@@ -2754,10 +2776,10 @@ static bool metric_push_exact_candidate(extractor_t *pex,
 	candidate->choice = choice;
 	candidate->rank[0] = left_rank;
 	candidate->rank[1] = right_rank;
-	candidate->state = parent_state;
-	candidate->child_state[0] = left_state;
-	candidate->child_state[1] = right_state;
 	candidate->metric = metric;
+	candidate->state = metric_state_id(parent_state);
+	candidate->child_state[0] = metric_state_id(left_state);
+	candidate->child_state[1] = metric_state_id(right_state);
 	if (bounded_active)
 		memcpy(candidate->bounded_domain_state, bounded_state,
 		       sizeof(candidate->bounded_domain_state));
@@ -2778,9 +2800,11 @@ static bool metric_push_exact_candidate(extractor_t *pex,
 static Metric_state_stream *metric_get_stream(Metric_set_cache *cache,
                                               Metric_state state)
 {
+	Metric_state_id state_id = metric_state_id(state);
+
 	for (size_t i = 0; i < cache->num_streams; i++)
 	{
-		if (cache->streams[i].state == state)
+		if (cache->streams[i].state == state_id)
 			return &cache->streams[i];
 	}
 
@@ -2797,7 +2821,7 @@ static Metric_state_stream *metric_get_stream(Metric_set_cache *cache,
 	Metric_state_stream *stream =
 		&cache->streams[cache->num_streams++];
 	memset(stream, 0, sizeof(*stream));
-	stream->state = state;
+	stream->state = state_id;
 	return stream;
 }
 

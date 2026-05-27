@@ -42,6 +42,7 @@ typedef struct Metric_bounded_domain_feedback_struct Metric_bounded_domain_feedb
 
 typedef uint32_t Metric_link_id;
 typedef uint64_t Metric_state;
+typedef uint8_t Metric_state_id; /* Concrete state number, not a state mask. */
 
 typedef struct
 {
@@ -101,7 +102,7 @@ struct Parse_choice_struct
 	Disjunct    *md;           /* the chosen disjunct for the middle word */
 	int32_t     l_id, r_id;    /* the tracon IDs used in this disjunct */
 	Metric_link_id metric_link_id[2];
-	uint8_t     metric_link_id_done;
+	uint8_t     metric_link_id_done; /* Link-ID and relevance cache bits. */
 #ifdef PC_DISPLAY
 	bool done;
 	bool dolr;
@@ -273,11 +274,11 @@ struct Metric_candidate_struct
 	 * candidates.  A candidate is therefore a lazy recipe for one
 	 * linkage, not a copied linkage or copied parse tree. */
 	size_t rank[2];
-	Metric_state state;
-	Metric_state child_state[2];
 	Parse_metric metric;
-	uint8_t bounded_domain_state[METRIC_BOUNDED_DOMAIN_MAX_MARKS];
 	uint64_t serial;
+	uint8_t bounded_domain_state[METRIC_BOUNDED_DOMAIN_MAX_MARKS];
+	Metric_state_id state;          /* Concrete parent ranker state. */
+	Metric_state_id child_state[2]; /* Concrete states for rank[]. */
 	bool parse_constraint_relevant;
 	/* Bounded feedback skips this candidate only after the stream has
 	 * advanced its successor frontier, so later valid rank combinations are
@@ -294,7 +295,6 @@ struct Metric_heap_struct
 
 struct Metric_state_stream_struct
 {
-	Metric_state state;
 	/* One stream enumerates the K-best candidates for one Parse_set and
 	 * one requested state.  The heap starts with the best child ranks for
 	 * every compatible Parse_choice; after a candidate is emitted, its
@@ -304,6 +304,7 @@ struct Metric_state_stream_struct
 	size_t num_ranked;
 	size_t ranked_size;
 	size_t next_emit_rank;
+	Metric_state_id state;
 	bool started;
 	bool done;
 };
@@ -331,7 +332,7 @@ struct Metric_ranker_struct
 	 * the meaning and count of states, so rankers are discarded when new
 	 * summary marks are learned. */
 	size_t state_count;
-	Metric_state *root_states;
+	Metric_state_id *root_states;
 	size_t num_root_states;
 	Metric_set_cache **cache_table;
 	size_t cache_table_size;
