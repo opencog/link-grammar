@@ -276,10 +276,14 @@ struct Metric_candidate_struct
 	size_t rank[2];
 	Parse_metric metric;
 	uint64_t serial;
+	/* Stable duplicate-suppression hash for this lazy linkage recipe. */
+	uint64_t signature;
 	uint8_t bounded_domain_state[METRIC_BOUNDED_DOMAIN_MAX_MARKS];
 	Metric_state_id state;          /* Concrete parent ranker state. */
 	Metric_state_id child_state[2]; /* Concrete states for rank[]. */
-	bool parse_constraint_relevant;
+	bool parse_contains_one_selector;
+	bool parse_contains_none_selector;
+	bool parse_contains_none_forbidden;
 	/* Bounded feedback skips this candidate only after the stream has
 	 * advanced its successor frontier, so later valid rank combinations are
 	 * not hidden behind a PP-rejected parent candidate. */

@@ -687,8 +687,10 @@ static Metric_set_cache *metric_get_set_cache(extractor_t *pex,
 static Metric_candidate *metric_get_state_rank(extractor_t *, Metric_ranker *,
                                                Parse_set *, Metric_state,
                                                size_t);
-static uint64_t metric_candidate_signature(extractor_t *, Metric_ranker *,
-                                           Parse_set *, Metric_candidate *);
+static uint64_t metric_candidate_signature(Parse_choice *,
+                                           Metric_candidate *[2]);
+static void metric_candidate_set_parse_bits(Metric_candidate *, uint8_t,
+                                            Metric_candidate *[2]);
 static bool metric_seen_insert(extractor_t *, uint64_t);
 static void metric_choice_link_words(Parse_choice *, const Parse_set *, int,
                                      WordIdx *, WordIdx *);
@@ -903,14 +905,6 @@ static const Metric_link_class *metric_link_class(extractor_t *pex,
 	return cls;
 }
 
-static bool metric_link_class_parse_constraint_relevant(
-	extractor_t *pex, const Metric_link_class *cls)
-{
-	(void)pex;
-	return (0 != cls->parse_contains_one_selector) ||
-	       (0 != cls->parse_contains_none_selector);
-}
-
 static Metric_link_id metric_link_id_for_connectors(extractor_t *pex,
                                                     const Connector *left,
                                                     const Connector *right)
@@ -949,8 +943,10 @@ static Metric_link_id metric_link_id_for_connectors(extractor_t *pex,
 }
 
 #define METRIC_CHOICE_LINK_ID_DONE(side) ((uint8_t)(1U << (side)))
-#define METRIC_CHOICE_PARSE_RELEVANT_DONE ((uint8_t)4)
-#define METRIC_CHOICE_PARSE_RELEVANT ((uint8_t)8)
+#define METRIC_CHOICE_PARSE_BITS_DONE ((uint8_t)4)
+#define METRIC_CHOICE_PARSE_CONTAINS_ONE_SELECTOR ((uint8_t)8)
+#define METRIC_CHOICE_PARSE_CONTAINS_NONE_SELECTOR ((uint8_t)16)
+#define METRIC_CHOICE_PARSE_CONTAINS_NONE_FORBIDDEN ((uint8_t)32)
 
 static Metric_link_id choice_link_id(extractor_t *pex,
                                      Parse_choice *pc,
@@ -991,12 +987,12 @@ static const char *choice_link_name(extractor_t *pex,
 	return metric_link_class(pex, id)->name;
 }
 
-static bool metric_choice_parse_constraint_relevant(
-	extractor_t *pex, Parse_choice *choice, const Parse_set *set)
+static uint8_t metric_choice_parse_bits(extractor_t *pex,
+                                        Parse_choice *choice,
+                                        const Parse_set *set)
 {
-	if (choice->metric_link_id_done & METRIC_CHOICE_PARSE_RELEVANT_DONE)
-		return 0 != (choice->metric_link_id_done &
-		             METRIC_CHOICE_PARSE_RELEVANT);
+	if (choice->metric_link_id_done & METRIC_CHOICE_PARSE_BITS_DONE)
+		return choice->metric_link_id_done;
 
 	for (int side = 0; side < 2; side++)
 	{
@@ -1005,16 +1001,18 @@ static bool metric_choice_parse_constraint_relevant(
 
 		if (METRIC_LINK_ID_NONE == id) continue;
 		cls = metric_link_class(pex, id);
-		if (metric_link_class_parse_constraint_relevant(pex, cls))
-		{
+		if (0 != cls->parse_contains_one_selector)
 			choice->metric_link_id_done |=
-				METRIC_CHOICE_PARSE_RELEVANT_DONE |
-				METRIC_CHOICE_PARSE_RELEVANT;
-			return true;
-		}
+				METRIC_CHOICE_PARSE_CONTAINS_ONE_SELECTOR;
+		if (0 != cls->parse_contains_none_selector)
+			choice->metric_link_id_done |=
+				METRIC_CHOICE_PARSE_CONTAINS_NONE_SELECTOR;
+		if (0 != cls->parse_contains_none_forbidden)
+			choice->metric_link_id_done |=
+				METRIC_CHOICE_PARSE_CONTAINS_NONE_FORBIDDEN;
 	}
-	choice->metric_link_id_done |= METRIC_CHOICE_PARSE_RELEVANT_DONE;
-	return false;
+	choice->metric_link_id_done |= METRIC_CHOICE_PARSE_BITS_DONE;
+	return choice->metric_link_id_done;
 }
 
 static bool choice_link_ignored(extractor_t *pex, Parse_choice *pc,
@@ -2445,7 +2443,10 @@ static bool metric_pp_constraints_candidate_ok(
 	extractor_t *pex, Metric_ranker *ranker, Metric_candidate *candidate)
 {
 	if (!metric_pp_constraints_enabled(pex)) return true;
-	if (!candidate->parse_constraint_relevant) return true;
+	if (!candidate->parse_contains_one_selector &&
+	    !(candidate->parse_contains_none_selector &&
+	      candidate->parse_contains_none_forbidden))
+		return true;
 
 	size_t max_links = metric_domain_link_capacity(pex);
 	Metric_domain_link *links = alloca(max_links * sizeof(*links));
@@ -2725,13 +2726,12 @@ static bool metric_push_state_candidate(extractor_t *pex,
 		memcpy(candidate->bounded_domain_state, bounded_state,
 		       sizeof(candidate->bounded_domain_state));
 	candidate->serial = pex->metric.serial++;
+	candidate->signature =
+		metric_candidate_signature(choice, child_candidate);
 	candidate->bounded_domain_rejected = bounded_rejected;
-	candidate->parse_constraint_relevant =
-		metric_choice_parse_constraint_relevant(pex, choice, set) ||
-		((NULL != child_candidate[0]) &&
-		 child_candidate[0]->parse_constraint_relevant) ||
-		((NULL != child_candidate[1]) &&
-		 child_candidate[1]->parse_constraint_relevant);
+	metric_candidate_set_parse_bits(
+		candidate, metric_choice_parse_bits(pex, choice, set),
+		child_candidate);
 
 	metric_heap_push(stream->heap, candidate);
 	pex->metric.trace.state_assignments_pushed++;
@@ -2784,13 +2784,12 @@ static bool metric_push_exact_candidate(extractor_t *pex,
 		memcpy(candidate->bounded_domain_state, bounded_state,
 		       sizeof(candidate->bounded_domain_state));
 	candidate->serial = pex->metric.serial++;
+	candidate->signature =
+		metric_candidate_signature(choice, child_candidate);
 	candidate->bounded_domain_rejected = bounded_rejected;
-	candidate->parse_constraint_relevant =
-		metric_choice_parse_constraint_relevant(pex, choice, set) ||
-		((NULL != child_candidate[0]) &&
-		 child_candidate[0]->parse_constraint_relevant) ||
-		((NULL != child_candidate[1]) &&
-		 child_candidate[1]->parse_constraint_relevant);
+	metric_candidate_set_parse_bits(
+		candidate, metric_choice_parse_bits(pex, choice, set),
+		child_candidate);
 
 	metric_heap_push(stream->heap, candidate);
 	pex->metric.trace.state_assignments_pushed++;
@@ -3378,14 +3377,9 @@ static uint64_t metric_hash_mix(uint64_t h, uint64_t v)
 	return h;
 }
 
-static uint64_t metric_candidate_signature(extractor_t *pex,
-                                           Metric_ranker *ranker,
-                                           Parse_set *set,
-                                           Metric_candidate *candidate)
+static uint64_t metric_candidate_signature(Parse_choice *pc,
+                                           Metric_candidate *child_candidate[2])
 {
-	if ((NULL == set) || (NULL == candidate)) return 0xcbf29ce484222325ULL;
-
-	Parse_choice *pc = candidate->choice;
 	uint64_t h = 0xcbf29ce484222325ULL;
 	/* Hash the chosen Parse_choice identities and child signatures, not
 	 * the emitted link strings, because duplicate suppression is only a
@@ -3397,15 +3391,44 @@ static uint64_t metric_candidate_signature(extractor_t *pex,
 
 	for (int side = 0; side < 2; side++)
 	{
-		Metric_candidate *child =
-			metric_get_state_rank(pex, ranker, pc->set[side],
-			                      candidate->child_state[side],
-			                      candidate->rank[side]);
-		h = metric_hash_mix(h, metric_candidate_signature(
-			pex, ranker, pc->set[side], child));
+		uint64_t child_signature =
+			(NULL == child_candidate[side]) ?
+			0xcbf29ce484222325ULL :
+			child_candidate[side]->signature;
+		h = metric_hash_mix(h, child_signature);
 	}
 
 	return (0 == h) ? 1 : h;
+}
+
+static void metric_candidate_set_parse_bits(
+	Metric_candidate *candidate, uint8_t parse_bits,
+	Metric_candidate *child_candidate[2])
+{
+	/* These subtree facts are only a cheap "could reject" summary.  Exact
+	 * domain replay still handles candidates that can violate a parse
+	 * constraint. */
+	candidate->parse_contains_one_selector =
+		(0 != (parse_bits &
+		       METRIC_CHOICE_PARSE_CONTAINS_ONE_SELECTOR)) ||
+		((NULL != child_candidate[0]) &&
+		 child_candidate[0]->parse_contains_one_selector) ||
+		((NULL != child_candidate[1]) &&
+		 child_candidate[1]->parse_contains_one_selector);
+	candidate->parse_contains_none_selector =
+		(0 != (parse_bits &
+		       METRIC_CHOICE_PARSE_CONTAINS_NONE_SELECTOR)) ||
+		((NULL != child_candidate[0]) &&
+		 child_candidate[0]->parse_contains_none_selector) ||
+		((NULL != child_candidate[1]) &&
+		 child_candidate[1]->parse_contains_none_selector);
+	candidate->parse_contains_none_forbidden =
+		(0 != (parse_bits &
+		       METRIC_CHOICE_PARSE_CONTAINS_NONE_FORBIDDEN)) ||
+		((NULL != child_candidate[0]) &&
+		 child_candidate[0]->parse_contains_none_forbidden) ||
+		((NULL != child_candidate[1]) &&
+		 child_candidate[1]->parse_contains_none_forbidden);
 }
 
 static bool metric_seen_insert(extractor_t *pex, uint64_t hash)
@@ -3768,9 +3791,7 @@ bool extract_metric_links(extractor_t *pex, Linkage lkg)
 		}
 
 		pex->metric.next_rank++;
-		uint64_t signature = metric_candidate_signature(
-			pex, ranker, pex->parse_set, candidate);
-		if (!metric_seen_insert(pex, signature))
+		if (!metric_seen_insert(pex, candidate->signature))
 		{
 			pex->metric.seen.duplicate_skipped++;
 			metric_trace_report(pex, "skip-duplicate", false);
