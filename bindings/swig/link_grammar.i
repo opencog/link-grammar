@@ -281,14 +281,14 @@ static void PythonCallBack(lg_errinfo *lge, void *func_and_data)
    }
    else
    {
-      if (!PyInt_Check($input))
+      if (!PyLong_Check($input))
       {
          SWIG_exception_fail(SWIG_TypeError, errmsg);
          error = true;
       }
       else
       {
-          arg = (int)PyInt_AsLong($input);
+          arg = (int)PyLong_AsLong($input);
       }
 
       if ((arg < 0) || (arg > lg_None))
@@ -358,7 +358,7 @@ PyObject *_py_error_printall(PyObject *func_and_data)
    int n = lg_error_printall(PythonCallBack, func_and_data);
    Py_DECREF(func_and_data);
 
-   PyObject *py_n = PyInt_FromLong(n);
+   PyObject *py_n = PyLong_FromLong(n);
    return py_n;
 }
 
