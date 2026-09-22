@@ -1,6 +1,7 @@
 Version 5.13.1 (Maybe in 2026?)
  * Fix CC passing in Makefile.am #1540
  * link_grammar.i: Use PyLong_* instead of PyInt_* #1543
+ * node.js dependencies update. Security issue #1
 
 Version 5.13.0 (28 October 2025)
  * Minor English dictionary fixes.

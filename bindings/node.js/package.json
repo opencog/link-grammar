@@ -28,12 +28,13 @@
     "ffi": "latest",
     "ref": "latest",
     "ref-struct": "latest",
-    "underscore": "latest"
+    "underscore": ">=1.13.8"
   },
   "devDependencies": {
     "coffeescript": "latest",
     "mocha": "latest",
-    "should": "latest"
+    "should": "latest",
+    "underscore": ">=1.13.8"
   },
   "homepage": "https://github.com/rompetoto/link-grammar",
   "bugs": "https://github.com/rompetoto/link-grammar/issues",
