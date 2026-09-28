@@ -1178,10 +1178,12 @@ are --THRP-- there
 are --Opt-- problems
 ```
 
-Distinct uppercase families prevent a future bare connector from matching
-all agreement states as it could with subscripted variants. See the
+The uppercase naming trades a larger family inventory for structural
+protection against accidental broad matching. See
+[Uppercase Families Versus Agreement Subscripts](#uppercase-families-versus-agreement-subscripts)
+for the six-family alternative and this maintenance tradeoff, and the
 [existential-there migration](#rules-32s-32p-32u-34-35-36-encode-existential-there)
-for that design rationale, the replaced PP rules, and historical cost audits.
+for the replaced PP rules and historical cost audits.
 The current linkage probes verify the paths above, not historical cost parity.
 
 ### `IFI`: Filler-It Inverted Auxiliary Continuation
@@ -6614,17 +6616,52 @@ locative `there` continues to attach through ordinary modifier paths such as
 `THR*` families above. Removing `OXt-` prevents raw object-like `there` paths
 from being generated at all, so no replacement connector family is needed.
 
-The agreement states are encoded as distinct uppercase families, for example
-`THRS`, `THRP`, and `THRU`, rather than as subscripted forms such as `THRs`,
-`THRp`, and `THRu`. The states are intended to be mutually exclusive. Using
-uppercase-distinct names avoids accidental broad matching if a future bare
-`THR` connector is introduced, since a bare connector would match subscripted
-variants under ordinary LG connector matching.
-
 The remaining PP rule 8 was extended to recognize `THRS`, `THRP`, and `THRU`
 as valid subject-inversion evidence for `Qd` questions. This is a compatibility
 update for the still-active S-V inversion checks, not a migration of those
 checks.
+
+#### Uppercase Families Versus Agreement Subscripts
+
+The current design encodes six propagation roles multiplied by three
+agreement states as 18 distinct uppercase families. An alternative considered
+during design uses six uppercase families with lowercase agreement subscripts:
+
+```text
+THRs   THRp   THRu
+TTHRs  TTHRp  TTHRu
+ITHRs  ITHRp  ITHRu
+PGTHRs PGTHRp PGTHRu
+PPTHRs PPTHRp PPTHRu
+PATHRs PATHRp PATHRu
+```
+
+This reduces the uppercase-family count from 18 to six, but retains 18
+state-specific forms. Renaming alone does not eliminate the dictionary
+alternatives needed to preserve the incoming agreement state through each
+stage of the chain.
+
+Explicitly different subscripts can keep those states separate: `THRs+`
+does not match `THRp-`. Subscripts are not inherently unsafe. However, a
+bare `THR+` would match `THRs-`, `THRp-`, and `THRu-`, whereas it cannot
+match the uppercase-distinct `THRS-`, `THRP-`, and `THRU-`. This broad
+matching is ordinary LG behavior, not a THR-specific defect. For these new
+families, retaining uppercase distinctions principally guards against future
+broadening, rather than a demonstrated collision with an existing bare
+connector.
+
+The retained naming is therefore a maintenance safeguard: more uppercase
+families provide structural matching isolation instead of relying on continued
+restrictions on subscript use. It does not establish that 18 uppercase
+families are grammatically necessary or minimal. The subscripted alternative
+was considered at design level, not implemented and validated; no performance
+advantage or disadvantage is established for it.
+
+If reconsidered, a subscripted design would need checks against bare or
+agreement-wildcarded forms in all six families, together with focused
+agreement tests through every carrier stage. These are possible safeguards
+for a future evaluation, not existing validation tools or an implemented
+alternative.
 
 ### Implications
 
