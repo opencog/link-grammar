@@ -1098,6 +1098,92 @@ for ordinary degree and determiner uses, for example `so quickly`, `so big`,
 and `such eloquence` without a result clause. The uppercase families are used
 only when the target also carries the local `that` certificate.
 
+### Existential There Agreement: THR And Its Carriers
+
+These 18 uppercase families carry singular (`S`), plural (`P`), or
+uncountable (`U`) agreement from existential `there` through a predicate
+chain to a compatible nominal complement. The final letters are parts of
+distinct uppercase families, not subscripts. Each carrier preserves the
+incoming state in its outgoing continuation. Bare group names such as
+`TTHR` in the descriptions below abbreviate the concrete state-specific
+families; they are not additional dictionary connectors.
+
+| Role | Concrete families | Endpoints and continuation |
+| --- | --- | --- |
+| Subject/predicate agreement | `THRS`, `THRP`, `THRU` | Declarative `there.r` to the first predicate or auxiliary; inverted predicates connect rightward to `there.r` with `THRS` or `THRP`. The predicate consumes the state or passes it to a carrier. |
+| Predicate-to-infinitival-to carrier | `TTHRS`, `TTHRP`, `TTHRU` | Raising predicates, `going`, or licensed `likely/unlikely` paths supply `+` to `to.r`, whose matching `-` is paired with the same-state `ITHR` continuation. |
+| Infinitival/modal continuation | `ITHRS`, `ITHRP`, `ITHRU` | `to.r`, modal auxiliaries, or licensed auxiliary paths supply `+` to a following predicate such as `be`, `appear`, or `have`; the receiving branch consumes or propagates the same state. |
+| Going-to continuation | `PGTHRS`, `PGTHRP`, `PGTHRU` | A licensed copular auxiliary supplies `+` to `going.v`, whose matching `-` is paired with a same-state `TTHR+`. |
+| Perfect continuation | `PPTHRS`, `PPTHRP`, `PPTHRU` | A perfect auxiliary supplies `+` to `been.v`; the receiving branch consumes the state or supplies a same-state `PATHR+`. |
+| Predicative-adjective continuation | `PATHRS`, `PATHRP`, `PATHRU` | `been.v` supplies `+` to `likely.a` or `unlikely.a`; the adjective pairs the matching `-` with a same-state `TTHR+`. |
+
+The grouped names in this table do not imply that every lexical entry
+supports every state or continuation. For example, `there.r` supplies
+`dTHRS+`, `dTHRP+`, or `dTHRU+` in declaratives, but only `dTHRS-` and
+`dTHRP-` for inversion. The related deictic `here` branch supplies
+`dTHRS+`. Ordinary locative `there` remains available through separate
+modifier paths, not these existential certificates.
+
+Connector `+` and `-` indicate rightward and leftward surface connections.
+The `d` dependency prefix on `there` is not part of the uppercase family;
+the parser's dependency arrow toward `there` does not reverse those surface
+connector directions. The schematics below show endpoints without dependency
+arrows.
+
+The first accepted linkages of these examples exercise all 18 families:
+
+```text
+There seems to appear to have been likely to be a problem.
+There seem to appear to have been likely to be problems.
+There seems to appear to have been likely to be trouble.
+There is going to be a meeting.
+There are going to be meetings.
+There is going to be trouble.
+```
+
+Singular raising-chain fragments (`to[1]`, `to[2]`, and `to[3]` identify
+successive occurrences of `to` in the first sentence):
+
+```text
+there --THRS-- seems --TTHRS-- to[1] --ITHRS-- appear
+appear --TTHRS-- to[2] --ITHRS-- have --PPTHRS-- been
+been --PATHRS-- likely --TTHRS-- to[3] --ITHRS-- be --Ost-- problem
+```
+
+Singular going-to fragment:
+
+```text
+there --THRS-- is --PGTHRS-- going --TTHRS-- to --ITHRS-- be --Ost-- meeting
+```
+
+The verified plural and uncountable examples have the same carrier topology:
+
+| State | Carrier names | Initial predicates (raising / going-to) | Final nominal link and examples |
+| --- | --- | --- | --- |
+| Singular | The `S` families above | `seems` / `is` | `Ost` to `problem` / `meeting` |
+| Plural | Corresponding `P` families | `seem` / `are` | `Opt` to `problems` / `meetings` |
+| Uncountable | Corresponding `U` families | `seems` / `is` | `Out` to `trouble` in both examples |
+
+These fragments omit determiners, punctuation, and wall links. The final
+copular branches consume the state through their compatible nominal-link
+alternatives; besides `Ost`, `Opt`, or `Out`, the dictionary includes shared
+`Omt`/`Omm` and extraction alternatives. Agreement certification should not
+be read as a claim that each state admits only one object-link spelling.
+
+In `Are there problems?`, the accepted inverted relations are separate edges
+from the same predicate:
+
+```text
+are --THRP-- there
+are --Opt-- problems
+```
+
+Distinct uppercase families prevent a future bare connector from matching
+all agreement states as it could with subscripted variants. See the
+[existential-there migration](#rules-32s-32p-32u-34-35-36-encode-existential-there)
+for that design rationale, the replaced PP rules, and historical cost audits.
+The current linkage probes verify the paths above, not historical cost parity.
+
 ### `IFI`: Filler-It Inverted Auxiliary Continuation
 
 `IFI` connects an inverted question auxiliary with a lower raising predicate
@@ -6043,6 +6129,9 @@ link-parser < ./data/en/corpus-fix-long.batch
 
 **Status:** implemented; these PP rules have been removed from
 `4.0.knowledge`.
+
+See the [THR-family connector reference](#existential-there-agreement-thr-and-its-carriers)
+for all 18 families, their endpoints, and accepted-linkage fragments.
 
 ### Rule / Area
 
