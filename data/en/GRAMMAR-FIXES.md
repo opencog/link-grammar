@@ -65,6 +65,7 @@ Added uppercase connector families:
 | `PPTHI` | Carries `THi` evidence across perfect auxiliary paths. |
 | `PVTHI` | Carries `THi` evidence from filler-`it` passive `be` auxiliaries to passive participles. |
 | `PTHI` | Connects an auxiliary carrier to a lower predicate that owns the `THi` complement. |
+| `ITAF` | Added as a local filler-`it` certificate for accepted comparative `than.e` paths that formerly used `AFdi`. It is exposed only by filler/expletive-`it` copula branches, so ordinary lower-subject clauses cannot satisfy the retired `AFdi` shape by prefix matching. |
 | `TOCL` | Carries object-raising cleft-object evidence from an object-raising predicate to infinitival `to`. |
 | `IOCT` | Carries object-raising cleft-object evidence from infinitival `to` into the lower predicate. |
 | `IOCL` | Carries cleft-object evidence across inverted auxiliary paths. |
@@ -148,7 +149,6 @@ Changed or retired connector forms:
 | naked `I*a+` on `to.r` | Removed from the affected `to.r` branch so infinitival `to` no longer has that unlicensed fallback path. Wh/degree object infinitives that formerly used this zero-cost fallback now use local `DWH`/`B` evidence plus `TOn` to preserve the old preferred cost. The remaining rule-6 limitations are documented separately below. |
 | `Jr` with `of` | No longer appears in the broad `of` object list. It is still available through the explicit `OFJ- & Jr+` path. |
 | `U#t` | Stale PP-only selector from rule 55. The current English dictionary and link-type documentation do not define corresponding `U...t` connector forms, so this was not a retired dictionary connector. |
-| `ITAF` | Added as a local filler-`it` certificate for accepted comparative `than.e` paths that formerly used `AFdi`. It is exposed only by filler/expletive-`it` copula branches, so ordinary lower-subject clauses cannot satisfy the retired `AFdi` shape by prefix matching. |
 | `AFdi` | Retired from `than.e` comparative paths. Accepted local filler-`it` comparative clauses that still need the old cost-carrying lower-copula evidence now use `ITAF`; other valid examples continue through certified complement or comparative analyses. |
 | `to.r` with `SFsx` | The infinitival `to.r` branch no longer exposes a direct `SFsx+ & <S-CLAUSE>` subject path. Valid infinitival nominal subjects use local `TOn` / `IV` evidence instead. |
 | `than.e` with `AFd` and `THc` | The finite that-clause comparative arm no longer combines `AFd+` with `THc+`. `AFd+` remains available on infinitival comparative continuations such as `TOic` and `TOfc`. |
@@ -772,6 +772,39 @@ The `THi` certificate intentionally excludes comparative `AF` predicate paths.
 Otherwise an outer filler `it` could license a distant comparative clause, as
 in the rejected path for `*It is more likely that Joe died than John is that
 Fred died`.
+
+### `ITAF`: Local Filler-It Certificate For Comparatives
+
+`ITAF` connects comparative `than.e` to the lower `is.v` in a local
+filler/expletive-`it` clause. `than.e` supplies `ITAF+`; `is.v` supplies
+`ITAF-` through its filler-it branches using `<vc-be-itaf>`. The current
+dictionary exposes this certificate on `is.v`, not on arbitrary copulas or
+auxiliary chains. There are currently no subtypes.
+
+For example, the first accepted linkage of:
+
+```text
+It is more likely that Joe died than it is that Fred died.
+```
+
+contains these schematic lower-clause edges:
+
+```text
+than --ITAF-- is
+it --SFsi-- is
+than --THc-- that
+```
+
+Here `it`, `is`, and `that` denote their second occurrences in the sentence.
+The two links from `than` are separate relations; the local `it` supplies
+the subject evidence on the same lower copula that receives `ITAF`.
+
+The lower `is.v` disjunct is `SFs- & ITAF-`, with the inherited cost
+`1.000`. `ITAF` is a separate uppercase family so that an ordinary `AF-`
+predicate cannot match the certificate and admit an ordinary lower subject.
+It replaces the relevant retired `AFdi` path, not every comparative `AF`
+relation. See [Rule 30](#rule-30-retire-the-afdi-comparative-filler-it-arm)
+for the migration rationale, alternative analyses, and verification history.
 
 ### `TOCL`, `IOCT`, `IOCL`, `PPOCL`, And `ROCL`: Filler-`It` License For Cleft Objects
 
@@ -1580,6 +1613,9 @@ are unchanged.
 ## Rule 30: Retire The `AFdi` Comparative Filler-`It` Arm
 
 **Status:** implemented; PP rule 30 has been removed from `4.0.knowledge`.
+
+See the [ITAF connector reference](#itaf-local-filler-it-certificate-for-comparatives)
+for its endpoints and an accepted-linkage sketch.
 
 ### Rule / Area
 
