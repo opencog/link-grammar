@@ -790,16 +790,20 @@ Direct finite clefts use the same copula to carry both the filler-`it` subject
 and the `Osi` / `Opi` branch:
 
 ```text
-it --SFsi-- was --Osi-- John
+it --SFsi-- was --Osie-- John
               \--R/B-- who stole ...
 ```
+
+In these cleft sketches, `Osi+` on the copula and `Os*e-` on `John`
+produce the displayed link label `Osie`.
 
 Auxiliary and object-raising paths use carrier links:
 
 ```text
-it --SFsi-- might --IOCL-- be --Osi-- John
-want --OXi-- it --TOCL-- to --IOCT-- be --Osi-- John
-it --SFsi-- has --PPOCL-- been --Osi-- John
+it --SFsi-- might --IOCL-- be --Osie-- John
+want --OXi-- it
+want --TOCL-- to --IOCT-- be --Osie-- John
+it --SFsi-- has --PPOCL-- been --Osie-- John
 ```
 
 Some accepted cleft-object paths have the filler `it` inside the following
@@ -1386,7 +1390,8 @@ IOCL  -> PPOCL
 ```
 
 Thus `It might be John who...` uses `it --SFsi-- might --IOCL-- be`, and
-`I want it to be John who...` uses `want --OXi-- it --TOCL-- to --IOCT-- be`.
+`I want it to be John who...` uses the separate relations `want --OXi-- it`
+and `want --TOCL-- to --IOCT-- be`.
 Perfect paths such as `It has been John who...` use `PPOCL`.
 
 The accepted "shame of it" pattern cannot be handled by same-copula or
@@ -1430,9 +1435,9 @@ cost ladder:
 
 | Sentence | Migrated path | Required displayed cost |
 | --- | --- | --- |
-| `It might be John who stole the priceless documents.` | `might --IOCL-- be --Osi-- John` | first linkage `DIS=0.00`; no-wall variant `DIS=2.03` |
-| `I want it to be John who stole the priceless documents.` | `want --TOCL-- to --IOCT-- be --Osi-- John` | first linkage `DIS=0.00`; no-wall higher-verb variant `DIS=3.00` |
-| `It has been John who stole the priceless documents.` | `has --PPOCL-- been --Osi-- John` | first linkage `DIS=0.00`; no-wall variant `DIS=2.03` |
+| `It might be John who stole the priceless documents.` | `might --IOCL-- be --Osie-- John` | first linkage `DIS=0.00`; no-wall variant `DIS=2.03` |
+| `I want it to be John who stole the priceless documents.` | `want --TOCL-- to --IOCT-- be --Osie-- John` | first linkage `DIS=0.00`; no-wall higher-verb variant `DIS=3.00` |
+| `It has been John who stole the priceless documents.` | `has --PPOCL-- been --Osie-- John` | first linkage `DIS=0.00`; no-wall variant `DIS=2.03` |
 
 The `ROCL` "shame of it" case is an intentional analysis change rather than
 an exact preferred-linkage preservation target. In the reference grammar, the
