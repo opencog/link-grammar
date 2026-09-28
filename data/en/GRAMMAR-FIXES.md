@@ -468,6 +468,41 @@ also carrying a comparative `EAy` link. The dedicated `MVSWH` family keeps the
 temporal subordinate use available to verbs without allowing comparative
 adjectives to satisfy it accidentally.
 
+### `MVZP`: Adjectival Parenthetical As Certificate
+
+`MVZP` connects an adjective to `as.e-c` in the restricted predicative
+parenthetical branch. The adjective's `<adj-opener>` path supplies
+`MVZP+`, matching `MVZP-` on `as.e-c`. The latter supplies `Pa+` to the
+following predicative adjective or participle. There are currently no
+subtypes.
+
+For example, the first accepted linkage of:
+
+```text
+The claim, unclear as worded, deserves attention.
+```
+
+contains this schematic fragment:
+
+```text
+unclear --MVZP-- as --Pa-- worded
+```
+
+Here `worded.v-d` supplies `Pa-` through its adjectival-participle path.
+The fragment omits the noun attachment, punctuation, and main clause. The
+first linkage has `DIS=0.00`.
+
+Uppercase `MVZP` is a distinct family, not the subscripted `MVzp` form of
+`MV`. Ordinary verb-side `MV+` connectors therefore cannot match it. This
+keeps the `as.e-c` `Pa+` branch available through the adjective opener
+path without allowing an ordinary verb modifier slot to license it.
+
+This restriction does not apply to every comparative or parenthetical use
+of `as`; other branches retain their existing connectors. See
+[Rule 44](#rule-44-split-predicative-ase-c-from-verb-side-mvz) for the
+replaced `MVzp` path, rejected comparative analysis, and other accepted
+`as` constructions.
+
 ### `CMPS`, `CMPP`, And `CMPX`: Comparative Clause Antecedents
 
 `CMPS`, `CMPP`, and `CMPX` connect a comparative antecedent to the comparative
@@ -4935,6 +4970,9 @@ corpus-failures.batch: 1495 errors
 ## Rule 44: Split Predicative `as.e-c` From Verb-Side `MVz`
 
 **Status:** implemented; PP rule 44 has been removed from `4.0.knowledge`.
+
+See the [MVZP connector reference](#mvzp-adjectival-parenthetical-as-certificate)
+for its endpoints and an accepted-linkage fragment.
 
 ### Rule / Area
 
