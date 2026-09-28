@@ -924,6 +924,45 @@ These are technical certificate links. They encode in the dictionary the same
 condition previously checked after extraction: a `Ci` predicate in these
 branches is licensed only by the appropriate filler/expletive `it` relation.
 
+### `IBIH` And `PPBIH`: Filler-It Carriers For `BIh` Predicates
+
+These two distinct uppercase families carry filler-subject licensing from
+an auxiliary to a lower `BIh` predicate. Neither currently has subtypes:
+
+- `IBIH+` on a modal auxiliary connects to `IBIH-` on `be.v`.
+- `PPBIH+` on a perfect auxiliary connects to `PPBIH-` on `been.v`.
+
+The declarative modal branches pair `SF-` with `IBIH+`; the perfect
+branches pair `SFsi-` with `PPBIH+`. Inverted auxiliary alternatives pair
+the carrier with a rightward filler-subject connector from the `SFI`
+family, rather than the ordinary-subject `SI` alternatives. These are
+specific auxiliary-to-copula paths, not a general mechanism for carrying
+the license through arbitrary auxiliary chains.
+
+For example, the first accepted linkages of:
+
+```text
+It may be as if he knew.
+It has been as if he knew.
+```
+
+contain these schematic fragments:
+
+```text
+it --SFsi-- may --IBIH-- be --BIh-- if
+it --SFsi-- has --PPBIH-- been --BIh-- if
+```
+
+Here `if` belongs to `as if`; these fragments omit the `as` connection
+and the rest of the subordinate clause. The carrier ends at `be` or
+`been`. The following `BIh` predicate link is separate, formed by `BI+`
+in `<vc-be-bih-pred>` matching `BIh-` on `if`.
+
+Both examples have first-linkage `DIS=0.00`; this focused check does not
+establish cost preservation for other constructions. See
+[Rule 41](#rule-41-remove-redundant-bih-predicate-check) for the PP-rule
+removal, direct copular paths, and ordinary-subject alternative analyses.
+
 ### `BIQS`, `BIQI`, `IBIQ`, And `PPBIQ`: `BIq` Predicate Licenses
 
 These connector families encode the subject or auxiliary evidence required for
@@ -6118,6 +6157,9 @@ corpus-fix-long.batch: 8 errors
 ## Rule 41: Remove Redundant `BIh` Predicate Check
 
 **Status:** implemented; the PP rule has been removed from `4.0.knowledge`.
+
+See the [IBIH/PPBIH connector reference](#ibih-and-ppbih-filler-it-carriers-for-bih-predicates)
+for the auxiliary carriers and accepted-linkage fragments.
 
 ### Rule / Area
 
