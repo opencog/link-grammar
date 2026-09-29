@@ -89,6 +89,11 @@ typedef enum
 /* - Post linkage stage. */
 #define WS_PL      (1<<14) /* Post-Linkage, not belonging to tokenization */
 
+/* Dictionary-requested helper-token alternatives use this debug/display label.
+ * The label lets linkage presentation hide helper words and links after
+ * postprocessing has seen them. */
+#define DICT_HELPER_LABEL_PREFIX "~dict-helper:"
+
 #define WS_GUESS (WS_SPELL|WS_RUNON|WS_REGEX)
 
 /* Only TS_DONE is actually used. */

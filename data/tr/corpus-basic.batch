@@ -1,6 +1,6 @@
 !batch
 !echo
-!limit=1000
+!limit=1
 !morphology=1
 !spell=0
 

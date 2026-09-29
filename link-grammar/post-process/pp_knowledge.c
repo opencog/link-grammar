@@ -346,6 +346,20 @@ static bool read_contains_rules(pp_knowledge *k, const char *label,
 
 static bool read_rules(pp_knowledge *k)
 {
+  /* PARSE_CONTAINS_*_CONSTRAINTS reuse active PP row syntax, but are stored
+   * separately so metric extraction can validate equivalent constraints
+   * without changing active PP enforcement. */
+  if (!read_contains_rules(k, "PARSE_CONTAINS_ONE_CONSTRAINTS",
+      &(k->parse_contains_one_rules), &(k->n_parse_contains_one_rules)))
+    return false;
+  if (!read_contains_rules(k, "PARSE_CONTAINS_ONE_GLOBAL_CONSTRAINTS",
+      &(k->parse_contains_one_global_rules),
+      &(k->n_parse_contains_one_global_rules)))
+    return false;
+  if (!read_contains_rules(k, "PARSE_CONTAINS_NONE_CONSTRAINTS",
+      &(k->parse_contains_none_rules), &(k->n_parse_contains_none_rules)))
+    return false;
+
   if (!read_form_a_cycle_rules(k, "FORM_A_CYCLE_RULES")) return false;
   if (!read_bounded_rules(k,  "BOUNDED_RULES")) return false;
   if (!read_contains_rules(k, "CONTAINS_ONE_RULES" ,
@@ -357,32 +371,38 @@ static bool read_rules(pp_knowledge *k)
   return true;
 }
 
+static void free_contains_rule_array(pp_rule *rules)
+{
+	size_t r;
+	pp_rule *rule;
+
+	if (NULL == rules) return;
+	for (r=0; rules[r].msg!=0; r++)
+	{
+		rule = &(rules[r]);    /* shorthand */
+		free(rule->link_array);
+		pp_linkset_close(rule->link_set);
+	}
+	free(rules);
+}
+
+static void free_form_a_cycle_rule_array(pp_rule *rules, size_t count)
+{
+	for (size_t r = 0; r < count; r++)
+		pp_linkset_close(rules[r].link_set);
+	free(rules);
+}
+
 static void free_rules(pp_knowledge *k)
 {
-  size_t r;
-  pp_rule *rule;
-  if (NULL != k->contains_one_rules)
-  {
-    for (r=0; k->contains_one_rules[r].msg!=0; r++)
-    {
-      rule = &(k->contains_one_rules[r]);    /* shorthand */
-      free(rule->link_array);
-      pp_linkset_close(rule->link_set);
-    }
-    for (r=0; k->contains_none_rules[r].msg!=0; r++)
-    {
-      rule = &(k->contains_none_rules[r]);   /* shorthand */
-      free(rule->link_array);
-      pp_linkset_close(rule->link_set);
-    }
-  }
-
-  for (r = 0; r < k->n_form_a_cycle_rules; r++)
-    pp_linkset_close(k->form_a_cycle_rules[r].link_set);
   free(k->bounded_rules);
-  free(k->form_a_cycle_rules);
-  free(k->contains_one_rules);
-  free(k->contains_none_rules);
+  free_form_a_cycle_rule_array(k->form_a_cycle_rules,
+                               k->n_form_a_cycle_rules);
+  free_contains_rule_array(k->contains_one_rules);
+  free_contains_rule_array(k->contains_none_rules);
+  free_contains_rule_array(k->parse_contains_one_rules);
+  free_contains_rule_array(k->parse_contains_one_global_rules);
+  free_contains_rule_array(k->parse_contains_none_rules);
 }
 
 /********************* exported functions ***************************/

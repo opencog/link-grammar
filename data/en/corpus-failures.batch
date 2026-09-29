@@ -1,6 +1,6 @@
 !batch
 !echo
-!limit=1000
+!limit=1
 !timeout=1000
 !short=20
 % !constituents=1

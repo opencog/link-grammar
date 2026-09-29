@@ -69,10 +69,18 @@ struct Postprocessor_s
 	int *relevant_contains_none_rules;
 	bool q_pruned_rules;       /* don't prune rules more than once in p.p. */
 	String_set *string_set;      /* Link names seen for sentence */
+	bool capture_failures;       /* Store detailed PP failures for caller. */
+	/* Metric extraction can exactly enforce selected PP rule families
+	 * before linkage materialization.  These flags suppress duplicate
+	 * classic PP rows unless metric-classic-pp asks to run them. */
+	bool skip_metric_mfc_rules;
+	bool skip_metric_parse_contains_one_rules;
+	bool skip_metric_parse_contains_none_rules;
 
 	/* Per-linkage state; this data must be reset prior to processing
 	 * each new linkage. */
 	const char *violation;
+	PP_failure failure;
 	PP_data pp_data;
 };
 
@@ -151,11 +159,17 @@ struct pp_knowledge_s
 	pp_rule *contains_one_rules;
 	pp_rule *contains_none_rules;
 	pp_rule *bounded_rules;
+	pp_rule *parse_contains_one_rules;
+	pp_rule *parse_contains_one_global_rules;
+	pp_rule *parse_contains_none_rules;
 
 	size_t n_form_a_cycle_rules;
 	size_t n_contains_one_rules;
 	size_t n_contains_none_rules;
 	size_t n_bounded_rules;
+	size_t n_parse_contains_one_rules;
+	size_t n_parse_contains_one_global_rules;
+	size_t n_parse_contains_none_rules;
 
 	size_t nStartingLinks;
 	pp_linkset *set_of_links_starting_bounded_domain;

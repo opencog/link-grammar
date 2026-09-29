@@ -64,3 +64,23 @@ O    +--->Wa----+----Os---+
 O    |          |         |
 OLEFT-WALL test\*[?].v \*[?].n
 O
+
+% Low-limit metric extraction smoke test for a large finite parse set.
+-linkage_limit=1
+
+IIn this case, surface tension of the liquid solder will pull on one side more than the other, and the part will tombstone.
+O
+O    +----------------------------------------------------------------------------------Xp---------------------------------------------------------------------------------+
+O    +----------------------------------------->WV---------------------------------------->+                                                                               |
+O    +------------------->Wd-------------------+                                           |                                                                               |
+O    |       +<--------------COw<--------------+-----------------Ss-----------------+      +-----------MVp-----------+                  +----------->SJrs---------->+      |
+O    |       +-------Xc-------+                |       +---------Ju--------+        |      +--------MVm--------+     +--------Ju--------+     +--------Ds**x--------+      |
+O    |       +-----Js-----+   |                |       |  +-------Dmu------+        |      |    +---Js---+     |     |         +<-SJls<-+     |     +-------AN------+      |
+O    |       |     +-Dsu*c+   |     +----AN----+---Mp--+  |      +----AN---+        +---I--+-MVp+  +Ds**c+     |     |    +-DD-+   +-Xd-+     |     |      +---AN---+      |
+O    |       |     |      |   |     |          |       |  |      |         |        |      |    |  |     |     |     |    |    |   |    |     |     |      |        |      |
+OLEFT-WALL in.r this.d case.n , surface.n tension.n-u of the liquid.n solder.n-u will.v pull.v on one side.n more than.e the other , and.j-n the part.n will.n tombstone.n .
+O
+
+% If more sentences are added below, reset parse options before them;
+% do not rely on an unexercised trailing reset line in this file.
+%-linkage_limit=1000
